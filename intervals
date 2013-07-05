@@ -1,0 +1,722 @@
+#!/usr/bin/perl
+
+=head1 NAME
+
+intervals - Expose musical chord relationships
+
+=head1 SYNOPSIS
+
+ perl intervals --size=3 --chords --equalt --intervals C E G
+ perl intervals --ch --e --i C E G      # Same as above
+ perl intervals --ch --r --j --p --i C D E
+ perl intervals --j --f --i C pM3 pM7   # Pythagoras would be proud
+ perl intervals --j --e --ce C D D\#    # Analysis...
+ perl intervals --j --e --ce C D Eb
+ perl intervals --s=8 --j --e --ce --f --i C D D\# Eb E E\# Fb F
+ perl intervals --j --e --f --ce --i C 11h 7h  # Crazy!
+
+=head1 DESCRIPTION
+
+ This program reveals the "guts" of chords within a given tonality.
+ By guts I mean, the measurements of the notes and the intervals
+ between them.  Both just intonation (ratio) and equal temperament
+ (decimal) are handled, with over 400 intervals, mind you. :)
+
+=head2 Options and Defaults
+
+ cents:      0 - Show cents
+ chords:     0 - Show chord names
+ concert   440 - Equal temperament concert pitch.
+ debug:      1 - The point is to investigate, Watson
+ equalt:     0 - Use equal temperament
+ freqs:      0 - Show note frequencies
+ help:       0 - Brief help
+ interv:     0 - Show chord intervals
+ justin:     0 - Use just intonation
+ man:        0 - Full documentation
+ num:        0 - Show integer notation
+ octave:     4 - Computations based on the 4th octave, middle C
+ prime       0 - Show prime factorizations
+ rootless:   0 - Show 'no-root' chords
+ semitones: 12 - Number of scale notes.
+ size:       3 - Number of notes in a chord
+ temper: 1200/log(2) - Equal temperament factor
+ tonic:      C - We are C-based. C == 1/1 unison
+
+=cut
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Math::Combinatorics;
+use Math::Factor::XS qw( prime_factors );
+use Music::Chord::Namer qw(chordname);
+use MIDI::Pitch qw(name2freq);
+use Number::Fraction;
+use Pod::Usage;
+use Sort::ArbBiLex;
+use Music::Scales;
+
+# Declare the command-line options and their default values.
+my %options = (
+    'debug'       => 1,
+    'man'         => 0,
+    'help|?'      => 0,
+    'size=i'      => 3,
+    'tonic=s'     => 'C', # TODO Set with MIDI::Pitch::basefreq()
+    'octave=i'    => 4,   # TODO ^ same
+    'concert=i'   => 440, # TODO ^ same
+    'temper=i'    => undef,
+    'num'         => 0,
+    'justin'      => 0,
+    'equalt'      => 0,
+    'chords'      => 0,
+    'rootless'    => 0,
+    'cents'       => 0,
+    'freqs'       => 0,
+    'prime'       => 0,
+    'intervals'   => 0,
+    'semitones=i' => 12,
+);
+
+# Collect the CLI arguments or show the usage.
+getopts( \%options );
+# Show the usage if necessary.
+usage( \%options );
+
+# Compute the temperament if not defined by options.
+$options{temper} ||= ( $options{semitones} * 100 ) / log(2);
+
+# Set the note list from which to choose chords.
+my @notes = @ARGV ? @ARGV : get_scale_notes($options{tonic});
+
+# Build a note to ratio to named description model from the known intervals.
+my ( %notes, %ratios );
+while (<DATA>) {
+    chomp;
+    next if /^\s*#/;
+    my ( $ratio, $note, $name ) = split /\s*;\s*/;
+    $notes{$note}   = $ratio;
+    $ratios{$ratio} = $name;
+}
+
+# Create a sorted scale by comparing the interval ratios.
+my @scale;
+push @scale, $_
+  for sort { eval( $notes{$a} ) <=> eval( $notes{$b} ) } keys %notes;
+*chromatic_sort = Sort::ArbBiLex::maker( join ' ', @scale );
+
+# Build the names, cents, frequencies and intervals for each possible chord.
+my %x;
+for my $c ( combine( $options{size}, @notes ) ) {
+
+    # Interval calculation: f2/f1 = n/m.
+    my %dyads = dyads( $c, \%notes );
+
+    @$c = chromatic_sort(@$c);
+
+    # Find the chord names.
+    if ( $options{chords} ) {
+
+        # Do we know any named chords?
+        my @chordname = eval { chordname(@$c) };
+
+        # Exclude "rootless" chords unless requested.
+        @chordname = grep { !/no-root/ } @chordname unless $options{rootless};
+
+        # Set the names of this chord combination.
+        $x{"@$c"}{chords} = @chordname ? \@chordname : undef;
+    }
+
+    # Calculate the just intonation.
+    if ( $options{justin} ) {
+
+        # Natural frequencies of the notes.
+        $x{"@$c"}{natural_frequencies} = {
+            map {
+                $_ => {
+                    $notes{$_} => $ratios{ $notes{$_} }
+                }
+            } @$c
+          }
+          if $options{freqs};
+
+        # Natural intervals based on the note ratios.
+        $x{"@$c"}{natural_intervals} = {
+            map {
+                $_ => {
+                    $dyads{$_}->{natural} => $ratios{ $dyads{$_}->{natural} }
+                      || eval $dyads{$_}->{natural} }
+            } keys %dyads
+        } if $options{intervals};
+
+        # Natural cents given the note interval ratio temperament factor.
+        $x{"@$c"}{natural_cents} = {
+            map {
+                $_ => log( eval $dyads{$_}->{natural} ) * $options{temper}
+            } keys %dyads }
+          if $options{cents};
+
+        # Prime factors of the note interval ratios.
+        $x{"@$c"}{natural_prime_factors} = {
+            map {
+                $_ => {
+                    $dyads{$_}->{natural} => scalar ratio_factorize( $dyads{$_}->{natural} )
+                  }
+            } keys %dyads
+        } if $options{prime};
+    }
+
+    # Calculate equal temperament.
+    if ( $options{equalt} ) {
+
+        # Equal temperament frequencies of the notes.
+        $x{"@$c"}{eq_tempered_frequencies} = {
+            map {
+                $_ => name2freq( $_ . $options{octave} ) || eval $notes{$_}
+            } @$c
+        } if $options{freqs};
+
+        # Equal temperament intervals based on the note ratios.
+        $x{"@$c"}{eq_tempered_intervals} = {
+            map {
+                $_ => $dyads{$_}->{eq_tempered}
+            } keys %dyads
+        } if $options{intervals};
+
+        # Equal temperament cents given the note interval ratio temperament factor.
+        $x{"@$c"}{eq_tempered_cents} = {
+            map {
+                $_ => log( $dyads{$_}->{eq_tempered} ) * $options{temper}
+            } keys %dyads
+        } if $options{cents};
+    }
+
+    # Integer notation given the note interval ratio temperament factor.
+    $x{"@$c"}{integer_notation} = {
+        map {
+            $_ => 69 + ( $options{semitones} * log2( $dyads{$_}->{eq_tempered} / $options{concert} ) )
+        } keys %dyads
+    } if $options{num};
+}
+
+# Curiosity may or may not have killed Schrödinger's cat.
+use Data::Dumper;
+print Data::Dumper->new([ \%x ])->Indent(1)->Terse(1)->Sortkeys(1)->Dump
+    if $options{debug};
+
+sub log2 {
+    my $n = shift;
+    return log($n) / log(2);
+}
+
+sub dyads {
+    my ( $c, $n ) = @_;
+
+    # Sort the dyads into the scale.
+    my @pairs = map { [ chromatic_sort(@$_) ] } combine( 2, @$c );
+
+    my %dyads;
+    for my $i (@pairs) {
+
+        # Construct our "dyadic" fraction.
+        my $numerator   = Number::Fraction->new( $n->{ $i->[1] } );
+        my $denominator = Number::Fraction->new( $n->{ $i->[0] } );
+        my $fraction    = $numerator / $denominator;
+
+        # Calculate both natural and equal temperament values for our ratio.
+        $dyads{"@$i"} = {
+            natural => $fraction->to_string(),
+
+# The value is either the known pitch ratio or the numerical evaluation of the fraction.
+            eq_tempered =>
+              ( name2freq( $i->[1] . $options{octave} ) || $numerator->to_num() ) /
+              ( name2freq( $i->[0] . $options{octave} ) || $denominator->to_num() ),
+        };
+    }
+
+    return %dyads;
+}
+
+# Return the factorization of the parts of a fraction.
+sub ratio_factorize {
+    my $dyad = shift;
+
+    my ( $numerator, $denominator ) = split /\//, $dyad;
+    $numerator   = [ prime_factors($numerator) ];
+    $denominator = [ prime_factors($denominator) ];
+
+    return wantarray
+        ? ( $numerator, $denominator )
+        : sprintf( '(%s) / (%s)',
+            join( '*', @$numerator ),
+            join( '*', @$denominator )
+        );
+}
+
+# Redefine the arguments for Getopt::Long and get the options.
+sub getopts {
+    my $options = shift;
+
+    # Collect the argument specs for Getopt.
+    my @specs = keys %$options;
+
+    # Recreate the options hash with "simpler" keys.
+    %$options = simple_keys(%$options);
+
+    # Get the commandline arguments.
+    GetOptions( $options, @specs ) or pod2usage(2);
+}
+
+# Turn the arguments into a hash of "simple" \w+ based keys for Getopt.
+sub simple_keys {
+    my %hash = @_;    # Copy the options hash.
+    my %simple;       # Bucket for (/w+) keys
+
+    # Build a subset of key-names for Getopt::Long.
+    for my $key ( keys %hash ) {
+        if ( $key =~ m/^(\w+)\W/ ) {
+            $simple{$1} = $hash{$key};
+        }
+        else {
+            $simple{$key} = $hash{$key};
+        }
+    }
+
+    return %simple;
+}
+
+# Trap behavior that requests or deserves the usage text.
+sub usage {
+    my $options = shift;
+    pod2usage(1) if $options->{help};
+    pod2usage( -exitstatus => 0, -verbose => 2 ) if $options->{man};
+}
+
+=head1 SEE ALSO
+
+The DATA section where the intervals are listed.
+
+L<http://en.wikipedia.org/wiki/List_of_musical_intervals>
+
+L<http://en.wikipedia.org/wiki/Equal_temperament>
+
+L<http://en.wikipedia.org/wiki/Just_intonation>
+
+L<http://mwolf.net/archive/golfing-with-prime-factors/>
+
+=head1 AUTHOR
+
+Gene Boggs E<lt>gene@cpan.orgE<gt>
+
+=cut
+
+__DATA__
+# Note ratios, names and desciptions:
+1/1; C; unison, perfect prime, tonic
+2/1; C'; octave
+3/2; G; perfect fifth
+4/3; F; perfect fourth
+5/3; A; major sixth, BP sixth
+5/4; E; major third
+6/5; Eb; minor third
+7/3; m10; minimal tenth, BP tenth
+7/4; 7h; seventh harmonic
+7/5; st; septimal or Huygens' tritone, BP fourth
+7/6; sm3; septimal minor third
+8/5; Ab; minor sixth
+8/7; swt; septimal whole tone
+9/4; M9; major ninth
+9/5; Bb; just minor seventh, BP seventh, large minor seventh
+9/7; sM3; septimal major third, BP third
+9/8; D; major whole tone
+10/7; et; Euler's tritone, septimal tritone
+10/9; mwt; minor whole tone
+11/10; P2; 4/5-tone, Ptolemy's second
+11/5; n9; neutral ninth
+11/6; un7; 21/4-tone, undecimal neutral seventh, undecimal "median" seventh
+11/7; ua5; undecimal augmented fifth, undecimal minor sixth
+11/8; 11h; undecimal semi-augmented fourth, undecimal tritone (11th harmonic)
+11/9; un3; undecimal neutral third, undecimal "median" third
+12/11; un2; 3/4-tone, undecimal neutral second, undecimal "median" 1/2-step
+12/7;  sM6; septimal major sixth
+13/10; tsd4; tridecimal semi-diminished fourth
+13/11; tm3; tridecimal minor third
+13/12; t23t; tridecimal 2/3-tone, 3/4-tone (Avicenna)
+13/7;  163t; 16/3-tone
+13/8;  tn10; tridecimal neutral sixth, overtone sixth
+13/9;  td5; tridecimal diminished fifth
+14/11; ud4; undecimal diminished fourth or major third
+14/13; 23t; 2/3-tone
+14/9;  sm6; septimal minor sixth
+15/11; ua4; undecimal augmented fourth
+15/13; t54t; tridecimal 5/4-tone
+15/14; Mds; major diatonic semitone, Cowell just half-step
+15/7;  sm9; septimal minor ninth, BP ninth
+15/8;  B; classic major seventh
+16/11; usd5; undecimal semi-diminished fifth
+16/13; tnt; tridecimal neutral third
+16/15; mds; minor diatonic semitone, major half-step
+16/7;  sM9; septimal major ninth
+16/9;  pm7; Pythagorean small minor seventh
+17/10; sdds; septendecimal diminished seventh
+17/12; 2st; 2nd septendecimal tritone
+17/14; st; supraminor third
+17/16; 17h; 17th harmonic, overtone half-step
+17/8;  sdm9; septendecimal minor ninth
+17/9;  sdM7; septendecimal major seventh
+18/11; un6; undecimal neutral sixth, undecimal "median" sixth
+18/13; ta4; tridecimal augmented fourth
+18/17; alif; Arabic lute index finger, ET half-step approximation
+19/10; uvM7; undevicesimal major seventh
+19/12; uvm6; undevicesimal minor sixth
+19/15; uvd; undevicesimal ditone
+19/16; 19h; 19th harmonic, overtone minor third
+19/17; qm; quasi-meantone
+19/18; uvs; undevicesimal semitone
+20/11; lm7; large minor seventh
+20/13; tsa5; tridecimal semi-augmented fifth
+20/17; sda2; septendecimal augmented second
+20/19; suvs; small undevicesimal semitone
+20/9;  s9; small ninth
+21/11; uM7; undecimal major seventh
+21/16; n4; narrow fourth, septimal fourth
+21/17; s3; submajor third
+21/20; ms; minor semitone
+22/13; tM6; tridecimal major sixth
+22/15; ud5; undecimal diminished fifth
+22/21; ums; undecimal minor semitone, hard 1/2-step (Ptolemy, Avicenna, Safiud)
+23/12; vM7; vicesimotertial major seventh
+23/16; G#; 23rd harmonic
+23/18; vM3; vicesimotertial major third
+24/13; tn7; tridecimal neutral seventh
+24/17; 1sdt; 1st septendecimal tritone
+24/19; suvM3; smaller undevicesimal major third
+25/12; cao; classic augmented octave
+25/14; mm7; middle minor seventh
+25/16; ca5; classic augmented fifth (G#?)
+25/18; F#; classic augmented fourth
+25/21; qtm3; BP second, quasi-tempered minor third
+25/24; C#; classic chromatic semitone, minor chroma, minor half-step
+25/9;  ca11; classic augmented eleventh, BP twelfth
+26/15; tsa6; tridecimal semi-augmented sixth
+26/25; 13t; 1/3-tone (Avicenna)
+27/14; sM7; septimal major seventh
+27/16; pM6; Pythagorean major sixth
+27/17; sdm6; septendecimal minor sixth
+27/20; a4; acute fourth
+27/22; n3; neutral third, Zalzal wosta of al-Farabi
+27/23; vm3; vicesimotertial minor third
+27/25; Db; large limma, BP small semitone (minor second), alternate Renaissance half-step
+27/26; tc; tridecimal comma
+28/15; gM7; grave major seventh
+28/17; subM6; submajor sixth
+28/25; m2; middle second
+28/27; a13t; Archytas' 1/3-tone, inferior quarter-tone (Archytas)
+29/16; 29h; 29th harmonic
+30/19; suvm6; smaller undevicesimal minor sixth
+31/16; 31h; 31st harmonic
+31/30; 31pc; 31st-partial chroma, superior quarter-tone (Didymus)
+32/15; m9; minor ninth
+32/17; 17sh; 17th subharmonic
+32/19; 19sh; 19th subharmonic
+32/21; w5; wide fifth
+32/23; 23sh; 23rd subharmonic
+32/25; Fb; classic diminished fourth
+32/27; pm3; Pythagorean minor third
+32/29; 29sh; 29th subharmonic
+32/31; ge14t; Greek enharmonic 1/4-tone, inferior quarter-tone (Didymus)
+33/25; 2p; 2 pentatones
+33/26; tM3; tridecimal major third
+33/28; um3; undecimal minor third
+33/32; 33h; undecimal comma, al-Farabi's 1/4-tone, 33rd harmonic
+34/21; supm6; supraminor sixth
+34/27; sdM3; septendecimal major third
+35/18; ssdo; septimal semi-diminished octave
+35/24; ssd5; septimal semi-diminished fifth
+35/27; ssd4; 9/4-tone, septimal semi-diminished fourth
+35/32; 35h; septimal neutral second, 35th harmonic
+35/34; sd14t; septendecimal 1/4-tone, E.T. 1/4-tone approximation
+36/19; suvM7; smaller undevicesimal major seventh
+36/25; Gb; classic diminished fifth
+36/35; sd; septimal diesis, 1/4-tone, superior quarter-tone (Archytas)
+37/32; 37h; 37th harmonic
+39/32; 39h; 39th harmonic, Zalzal wosta of Ibn Sina
+39/38; sqt; superior quarter-tone (Eratosthenes)
+40/21; aM7; acute major seventh
+40/27; g5; grave fifth, dissonant "wolf" fifth
+40/39; tmd; tridecimal minor diesis
+41/32; 41h; 41st harmonic
+42/25; qtM6; quasi-tempered major sixth
+43/32; 43h; 43rd harmonic
+44/27; n6; neutral sixth
+45/32; dt; diatonic tritone, high tritone
+45/44; 15t; 1/5-tone
+46/45; 23pc; 23rd-partial chroma, inferior quarter-tone (Ptolemy)
+47/32; 47h; 47th harmonic
+48/25; Cb; classic diminished octave
+48/35; ssa4; septimal semi-augmented fourth
+49/25; bp8; BP eighth
+49/30; lan6; larger approximation to neutral sixth
+49/32; 49h; 49th harmonic
+49/36; ala4; Arabic lute acute fourth
+49/40; lan3; larger approximation to neutral third
+49/45; bpms; BP minor semitone
+49/48; sld; slendro diesis, 1/6-tone
+50/27; gM7-2; grave major seventh
+50/33; 3p; 3 pentatones
+50/49; ttd; Erlich's decatonic comma, tritonic diesis
+51/32; 51h; 51st harmonic
+51/50; 17pc; 17th-partial chroma
+52/33; tm6; tridecimal minor sixth
+53/32; 53h; 53rd harmonic
+54/35; ssa5; septimal semi-augmented fifth
+54/49; zm; Zalzal's mujannab
+55/49; qeM2; quasi-equal major second
+55/64; 55h; 55th harmonic
+56/55; pe; Ptolemy's enharmonic
+57/32; 57h; 57th harmonic
+59/32; 59h; 59th harmonic
+60/49; san3; smaller approximation to neutral third
+61/32; 61h; 61st harmonic
+63/25; qeM10; quasi-equal major tenth, BP eleventh
+63/32; 63h; octave - septimal comma, 63rd harmonic
+63/40; nm6; narrow minor sixth
+63/50; qeM3; quasi-equal major third
+64/33; 33sh; 33rd subharmonic
+64/35; sn7; septimal neutral seventh
+64/37; 37sh; 37th subharmonic
+64/39; 39sh; 39th subharmonic
+64/45; 2tt; 2nd tritone, low tritone
+64/49; stM3; 2 septatones or septatonic major third
+64/63; sc; septimal comma, Archytas' comma
+65/64; 65h; 13th-partial chroma, 65th harmonic
+67/64; 67h; 67th harmonic
+68/35; 234t; 23/4-tone
+69/64; 69h; 69th harmonic
+71/64; 71h; 71st harmonic
+72/49; alg5; Arabic lute grave fifth
+73/64; 73h; 73rd harmonic
+75/49; bp5; BP fifth
+75/64; D#; classic augmented second
+77/76; a53tc; approximation to 53-tone comma
+79/64; 79h; 79th harmonic
+80/49; san6; smaller approximation to neutral sixth
+80/63; wM3; wide major third
+81/44; 2un7; 2nd undecimal neutral seventh
+81/50; am6; acute minor sixth
+81/64; pM3; Pythagorean major third
+81/68; pw; Persian wosta
+81/70; lmf; Al-Hwarizmi's lute middle finger 
+81/80; syc; syntonic comma, Didymus comma
+83/64; 83h; 83rd harmonic
+85/64; 85h; 85th harmonic
+87/64; 87h; 87th harmonic
+88/81; 2un2; 2nd undecimal neutral second
+89/64; 89h; 89th harmonic
+89/84; aes; approximation to equal semitone
+91/59; 154t; 15/4-tone
+91/64; 91h; 91st harmonic
+93/64; 93h; 93rd harmonic
+95/64; 95h; 95th harmonic
+96/95; 19pc; 19th-partial chroma
+97/64; 97h; 97th harmonic
+98/55; qem7; quasi-equal minor seventh
+99/64; 99h; 99th harmonic
+99/70; 2qett; 2nd quasi-equal tritone
+99/98; suc; small undecimal comma
+100/63;  qem6; quasi-equal minor sixth
+100/81;  gM3; grave major third
+100/99;  pc; Ptolemy's comma
+101/64; 101h; 101st harmonic
+103/64; 103h; 103rd harmonic
+105/64;  sn6; septimal neutral sixth, 105th harmonic
+107/64; 107h; 107th harmonic
+109/64; 109h; 109th harmonic
+111/64; 111h; 111th harmonic
+113/64; 113h; 113th harmonic
+115/64; 115h; 115th harmonic
+117/64; 117h; 117th harmonic
+119/64; 119h; 119th harmonic
+121/120; u2c; undecimal seconds comma
+121/64; 121h; 121st harmonic
+123/64; 123h; 123rd harmonic
+125/108; sawt; semi-augmented whole tone
+125/112; cas; classic augmented semitone
+125/64;  B#; classic augmented seventh, octave - minor diesis
+125/72;  A#; classic augmented sixth
+125/96;  E#; classic augmented third
+126/125; smsc; small septimal comma
+127/64; 127h; 127th harmonic
+128/105; sn3; septimal neutral third
+128/121; us; undecimal semitone
+128/125; mdd; minor diesis, diesis, diminished second
+128/75;  d7; diminished seventh
+128/81;  pm6; Pythagorean minor sixth
+131/90;  134t; 13/4-tone
+135/128; Mc; major chroma, major limma, limma ascendant
+140/99;  qett; quasi-equal tritone
+144/125; cd3; classic diminished third
+145/144; 29pc; 29th-partial chroma
+153/125; 74t; 7/4-tone
+160/81;  osyc; octave - syntonic comma
+161/93;  194t; 19/4-tone
+162/149; pn2; Persian neutral second
+192/125; cd6; classic diminished sixth
+196/169; ci; consonant interval (Avicenna)
+216/125; sa6; semi-augmented sixth
+225/128; a6; augmented sixth
+225/224; sk; septimal kleisma
+231/200; 54t; 5/4-tone
+241/221; m34t; Meshaqah's 3/4-tone
+243/125; omaxd; octave - maximal diesis
+243/128; pM7; Pythagorean major seventh
+243/160; a5; acute fifth
+243/200; am3; acute minor third
+243/242; n3c; neutral third comma
+245/243; mbpd; minor BP diesis
+246/239; m14t; Meshaqah's 1/4-tone
+248/243; tpc; tricesoprimal comma
+250/153; 174t; 17/4-tone
+250/243; maxd; maximal diesis
+256/135; oMc; octave - major chroma
+256/225; d3; diminished third
+256/243; pm2; limma, Pythagorean minor second
+256/255; sdk; septendecimal kleisma
+261/256; vnc; vicesimononal comma
+272/243; pwt; Persian whole tone
+273/256; ism2; Ibn Sina's minor second
+320/243; g4; grave fourth
+375/256; da4; double augmented fourth
+375/343; bpMs; BP major semitone
+385/384; uk; undecimal kleisma
+400/243; gM6; grave major sixth
+405/256; wa5; wide augmented fifth
+512/343; st5; 3 septatones or septatonic fifth
+512/375; dd5; double diminished fifth
+512/405; nd4; narrow diminished fourth
+513/512; uvc; undevicesimal comma, Boethius' comma
+525/512; aed; Avicenna enharmonic diesis
+540/539; swc; Swets' comma
+625/324; oMd; octave - major diesis
+625/567; bpgs; BP great semitone
+648/625; Md; major diesis
+675/512; wa3; wide augmented third
+687/500; 114t; 11/4-tone
+729/400; am7; acute minor seventh
+729/512; ptt; high Pythagorean tritone
+729/640; aM2; acute major second
+729/704; uMd; undecimal major diesis
+736/729; vtc; vicesimotertial comma
+749/500; acqe5; ancient Chinese quasi-equal fifth
+750/749; act; ancient Chinese tempering
+800/729; gwt; grave whole tone
+896/891; usc; undecimal semicomma
+1024/675; nd6; narrow diminished sixth
+1024/729; pd5; Pythagorean diminished fifth, low Pythagorean tritone
+1029/1024; gr; gamelan residue
+1053/1024; tMd; tridecimal major diesis
+1125/1024; dap; double augmented prime
+1215/1024; wa2; wide augmented second
+1216/1215; ec; Eratosthenes' comma
+1280/729;  gm7; grave minor seventh
+1288/1287; tp; triaphonisma
+1728/1715; oc; Orwell comma
+1732/1731; a1c; approximation to 1 cent
+1875/1024; da6; double augmented sixth
+2025/1024; 2tts; 2 tritones
+2048/1125; ddo; double diminished octave
+2048/1215; nd7; narrow diminished seventh
+2048/1875; dd3; double diminished third
+2048/2025; dch; diaschisma
+2058/2057; xen; xenisma
+2187/1280; aM6; acute major sixth
+2187/2048; ap; apotome
+2187/2176; sdc; septendecimal comma
+2401/2400; br; Breedsma
+2560/2187; gm3; grave minor third
+3025/3024; leh; lehmerisma
+3125/3072; smd; small diesis
+3125/3087; Mbpd; major BP diesis
+3375/2048; da5; double augmented fifth
+4000/3969; ssc; septimal semicomma
+4096/2187; pdo; Pythagorean diminished octave
+4096/2401; stM6; 4 septatones or septatonic major sixth
+4096/3375; dd4; double diminished fourth
+4096/4095; ts; tridecimal schisma, Sagittal schismina
+4375/4374; rag; ragisma
+4608/4235; an2; Arabic neutral second
+5120/5103; b5; Beta 5
+5625/4096; da3; double augmented third
+6144/3125; osd; octave - small diesis
+6561/4096; pa5; Pythagorean augmented fifth, Pythagorean "schismatic" sixth
+6561/5120; aM3; acute major third
+6561/6125; bpMl; BP major link
+6561/6400; msd; Mathieu superdiesis
+8192/5625; dd6; double diminished sixth
+8192/6561; pd4; Pythagorean diminished fourth, Pythagorean "schismatic" third
+8192/8019; umd; undecimal minor diesis
+9801/9800; gc; kalisma, Gauss' comma
+10125/8192; da2; double augmented second
+10240/6561; gm6; grave minor sixth
+10648/10647; har; harmonisma
+10935/8192; 4s; fourth + schisma, approximation to ET fourth
+15625/15309; gbpd; great BP diesis
+15625/15552; scm; kleisma, semicomma majeur
+16384/10125; dd7; double diminished seventh
+16384/10935; 5s; fifth - schisma, approximation to ET fifth
+16875/16807; sbpd; small BP diesis
+19657/19656; gh; greater harmonisma
+19683/10000; omind; octave - minimal diesis
+19683/10240; aM7-2; acute major seventh
+19683/16384; pa2; Pythagorean augmented second
+20000/19683; mind; minimal diesis
+20480/19683; gm2; grave minor second
+23232/23231; lh; lesser harmonisma
+32768/16807; sdo; 5 septatones or septatonic diminished octave
+32768/19683; pd7; Pythagorean diminished seventh
+32805/32768; sch; schisma
+59049/32768; pa6; Pythagorean augmented sixth
+59049/57344; hc; Harrison's comma
+65536/32805; os; octave - schisma
+65536/59049; pd3; Pythagorean diminished third
+78732/78125; msc; medium semicomma
+83349/78125; bpml; BP minor link
+177147/131072; pa3; Pythagorean augmented third
+262144/177147; pd6; Pythagorean diminished sixth
+390625/196608; owc; octave - Würschmidt's comma
+393216/390625; wc; Würschmidt's comma
+413343/390625; bpsl; BP small link
+531441/262144; pa7; Pythagorean augmented seventh
+531441/524288; pc; Pythagorean comma, ditonic comma
+1048576/531441; pd9; Pythagorean diminished ninth
+1594323/1048576; pda4; Pythagorean double augmented fourth
+1600000/1594323; ks; kleisma - schisma
+2097152/1594323; pdd5; Pythagorean double diminished fifth
+2109375/2097152; fsc; semicomma, Fokker's comma
+4782969/4194304; pdap; Pythagorean double augmented prime
+8388608/4782969; pddo; Pythagorean double diminished octave
+14348907/8388608; pda5; Pythagorean double augmented fifth
+16777216/14348907; pdd4; Pythagorean double diminished fourth
+33554432/33480783; ssch; Beta 2, septimal schisma
+34171875/33554432; ac; Ampersand's comma
+43046721/33554432; pda2; Pythagorean double augmented second
+67108864/43046721; pdd7; Pythagorean double diminished seventh
+67108864/66430125; dschs; diaschisma - schisma
+129140163/67108864; pda6; Pythagorean double augmented sixth
+134217728/129140163; pdd3; Pythagorean double diminished third
+387420489/268435456; pda3; Pythagorean double augmented third
+536870912/387420489; pdd6; Pythagorean double diminished sixth
+1162261467/1073741824; p19c; Pythagorean-19 comma
+1162261467/536870912; pda7; Pythagorean double augmented seventh
+1224440064/1220703125; pkl; parakleisma
+6115295232/6103515625; vc; Vishnu comma
+274877906944/274658203125; stc; semithirds comma
+1001158530539/618750000000; phi; approximation of the golden ratio
+7629394531250/7625597484987; enlc; ennealimmal comma
+19073486328125/19042491875328; 19tc; '19-tone' comma
+123606797749979/200000000000000; inv; approximation of the inverse of the golden ratio
+450359962737049600/450283905890997363; mz; monzisma
+36893488147419103232/36472996377170786403; 41tc; '41-tone' comma
+19383245667680019896796723/19342813113834066795298816; mercc; Mercator's comma

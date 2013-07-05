@@ -1,0 +1,128 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use List::Util qw(min);
+
+use constant {
+    SIZE  => 3,  # Triad chord
+    SCALE => 12, # Scale notes
+};
+
+my @chords = get_chords(@ARGV);
+#use Data::Dumper;warn Data::Dumper->new(\@chords)->Indent(1)->Terse(1)->Dump;
+#printf "D: %.3f\n", distance($chords[0], $chords[1]);
+#use Data::Dumper;warn Data::Dumper->new([ cyclic_permutation(@{$chords[0]}) ])->Indent(1)->Terse(1)->Dump;
+#print join(', ',barycenter(4)),"\n";
+#print distance(@chords), "\n";
+#print orbit_distance(@chords), "\n";
+#print forte_distance(@chords), "\n";
+
+sub get_chords {
+    my @args = @_;
+    my $size = 0;
+    my @chords = ();
+    for my $chord (@args) {
+        my @chord = split /,/, $chord;
+        die "Chords must be the same size\n" if $size > 0 and $size != @chord;
+        $size = @chord;
+        push @chords, \@chord;
+    }
+    @chords = [qw(3 4 5)] unless @chords; # Major triad default.
+    return @chords;
+}
+
+sub barycenter {
+    my $size  = shift || SIZE;  # Default to a triad
+    my $scale = shift || SCALE; # Default to the common scale notes
+    return ($scale / $size) x $size;
+}
+
+sub distance {
+    my ($chord1, $chord2) = @_;
+    my $distance = 0;
+    for my $note (0 .. @$chord1 - 1) {
+        $distance += ($chord1->[$note] - $chord2->[$note]) ** 2;
+    }
+    $distance /= 2;
+    return sqrt $distance;
+}
+
+sub orbit_distance {
+    my ($chord1, $chord2) = @_;
+    my @distance = ();
+    for my $perm (cyclic_permutation(@$chord2)) {
+        push @distance, distance($chord1, $perm);
+    }
+    return min(@distance);
+}
+
+sub forte_distance {
+    my ($chord1, $chord2) = @_;
+    my @distance = ();
+    for my $perm (cyclic_permutation(@$chord2)) {
+        push @distance, distance($chord1, $perm);
+        push @distance, distance($chord1, [reverse @$perm]);
+    }
+    return min(@distance);
+}
+
+sub cyclic_permutation {
+    my @set = @_;
+    my @cycles = ();
+    for my $backward (reverse 0 .. @set - 1) {
+        for my $forward (0 .. @set - 1) {
+            push @{ $cycles[$backward] }, $set[$forward - $backward];
+        }
+    }
+    return @cycles;
+}
+
+__END__
+=head1 DESCRIPTION
+
+Barycentric chord analysis
+
+=head2 CONCEPTS
+
+ Pitch-class: [p1, p2 .. pn]
+ Interval notation: (i1, i2 .. in)
+ Cyclic permutation group: S^n (uppercase sigma)
+ Cyclic permutation generator: s (lowercase sigma)
+ (triad) Barycentric coordinate system (metric space): T^n = 10x10x10 simplex grid
+ Triad barycenter: B = (4,4,4)
+ Quotient space "emerged" by s(x1,x2 .. xn): T^n/S^n
+ Epimorphism: p: T^n -> T^2/S^n => p(x1,x2 .. xn) = |(x1,x2 .. xn)
+ Orbit (equilateral of all S^n in T^n centered on B): |(x1,x2 .. xn)
+ Distance: d = distance(P,Q)
+ Interval space: (T^n, d)
+ Evenness index: abs(distance(P,B))
+ Orbital space of n-chords: (T^n/S^n, d^S) = d^S(|(x1,x2 .. xn), |(y1,y2 .. yn))
+                                           = min(d(p1(x1,x2 .. xn), p2(y1,y2 .. yn)))
+                                           = min((x1,x2 .. xn), p2(y1,y2 .. yn))
+ (triad) Inversion: I (by S^n) = (i1,i2,i3) <=> (i2,i3,i1) <=> (i3,i1,i2) = |(i1,i2,i3)
+ I-symmetric (invariant under inversion): |(2,5,5)
+ co-I-symmetric (distinct but related by inversion): |(2,3,7) and |(3,2,7)
+ Y-symmetric (same distance but unrelated by inversion): |(2,5,5) and |(3,3,6)
+ Chord enrichment: (x1,x2,x3) => (j,x1-j,x2,x3)
+ Chord reduction: (x1,x2,x3,x4) => (x1,x2+x3,x4)
+ Chord degeneration: 
+ Polar chords: 
+ Equitorial chords: 
+ Complementary chords: 
+
+=head1 SEE ALSO
+
+http://www.amazon.com/Geometry-Musical-Chords-Interval-Representation/dp/145022797X
+
+=head1 AUTHOR
+
+Gene Boggs E<lt>gene@cpan.orgE<gt>
+
+=head1 COPYRIGHT
+
+Copyright 2012, Gene Boggs
+
+This code is licensed under the same terms as Perl itself.
+
+=cut
