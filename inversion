@@ -10,8 +10,6 @@
 use strict;
 use warnings;
 
-use Data::Dumper;local$Data::Dumper::Indent=1;local$Data::Dumper::Terse=1;local$Data::Dumper::Sortkeys=1;
-
 # Load handy modules.
 use Math::Combinatorics;
 use Music::Chord::Namer qw(chordname);
@@ -36,7 +34,13 @@ for my $i (@p) {
         push @{$y{"@$i"}}, $c;
     }
 }
-warn Dumper(\%x, \%y);
+
+# Curiosity may or may not have killed Schrodinger's cat.
+use Data::Dumper;
+# Show chord-name to permutations.
+warn Data::Dumper->new([\%x])->Indent(1)->Terse(1)->Quotekeys(0)->Sortkeys(1)->Dump;
+# Show permutation to chord-names.
+warn Data::Dumper->new([\%y])->Indent(1)->Terse(1)->Quotekeys(0)->Sortkeys(1)->Dump;
 
 __END__
 In vi exec:
