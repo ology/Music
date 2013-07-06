@@ -15,32 +15,32 @@ use Math::Combinatorics;
 use Music::Chord::Namer qw(chordname);
 
 # Get a list of notes from the command-line or use a Cmaj triad.
-my @n = @ARGV ? map { ucfirst } @ARGV : qw(C E G);
+my @notes = @ARGV ? map { ucfirst } @ARGV : qw(C E G);
 
 # Get a list of all possible permutations.
-my @p = permute(@n);
+my @perms = permute(@notes);
 
-# The chord-name x permutation dictionaries.
-my %x = ();
-my %y = ();
+# Declare chord-name <=> permutation dictionaries.
+my %chords_by_perms = ();
+my %perms_by_chords = ();
 
 # Traverse each permutation.
-for my $i (@p) {
+for my $p (@perms) {
     # Record the chord names for each permutation.
-    for my $c (chordname(@$i)) {
+    for my $name (chordname(@$p)) {
         # Make a chord-name to permutation table entry.
-        push @{$x{$c}}, "@$i";
+        push @{$chords_by_perms{$name}}, "@$p";
         # Make a permutation to chord-name table entry.
-        push @{$y{"@$i"}}, $c;
+        push @{$perms_by_chords{"@$p"}}, $name;
     }
 }
 
 # Curiosity may or may not have killed Schrodinger's cat.
 use Data::Dumper;
 # Show chord-name to permutations.
-warn Data::Dumper->new([\%x])->Indent(1)->Terse(1)->Quotekeys(0)->Sortkeys(1)->Dump;
+warn Data::Dumper->new([\%chords_by_perms])->Indent(1)->Terse(1)->Quotekeys(0)->Sortkeys(1)->Dump;
 # Show permutation to chord-names.
-warn Data::Dumper->new([\%y])->Indent(1)->Terse(1)->Quotekeys(0)->Sortkeys(1)->Dump;
+warn Data::Dumper->new([\%perms_by_chords])->Indent(1)->Terse(1)->Quotekeys(0)->Sortkeys(1)->Dump;
 
 __END__
 In vi exec:
