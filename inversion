@@ -35,7 +35,7 @@ for my $p ( @perms ) {
     }
 }
 
-# Curiosity may or may not have killed Schrodinger's cat.
+# Curiosity may or may not have killed Schrödinger's cat.
 use Data::Dumper;
 # Show chord-name to permutations.
 warn Data::Dumper->new([\%chords_by_perms])->Indent(1)->Terse(1)->Quotekeys(0)->Sortkeys(1)->Dump;
