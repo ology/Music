@@ -1,24 +1,43 @@
 #!/usr/bin/perl
+#
+# Program: Chord-Perversions
+# Copyright 2011 gene@ology.net
+#
+# This program names all musical chord permutations given a set of notes.
+# The lists generated are not musical inversions but rather mathematical
+# perversions of chords.
+#
 use strict;
 use warnings;
 
 use Data::Dumper;local$Data::Dumper::Indent=1;local$Data::Dumper::Terse=1;local$Data::Dumper::Sortkeys=1;
 
+# Load handy modules.
 use Math::Combinatorics;
 use Music::Chord::Namer qw(chordname);
 
-# Show all names of a permuted chord ("inversions").
+# Get a list of notes from the command-line or use a Cmaj triad.
 my @n = @ARGV ? map { ucfirst } @ARGV : qw(C E G);
+
+# Get a list of all possible permutations.
 my @p = permute(@n);
+
+# The chord-name x permutation dictionaries.
 my %x = ();
 my %y = ();
+
+# Traverse each permutation.
 for my $i (@p) {
+    # Get the chord name for the permutation.
     for my $c (chordname(@$i)) {
+        # Make a chord-name to permutation table.
         push @{$x{$c}}, "@$i";
+        # Make a permutation to chord-name table.
         push @{$y{"@$i"}}, $c;
     }
 }
 warn Dumper(\%x, \%y);
 
 __END__
-perl chordname c\# e gb
+In vi exec:
+:!perl % c\# e gb|less
