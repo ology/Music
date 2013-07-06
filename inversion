@@ -24,7 +24,7 @@ my @perms = permute( @notes );
 my %chords_by_perms = ();
 my %perms_by_chords = ();
 
-# Traverse each permutation.
+# Traverse the permutations.
 for my $p ( @perms ) {
     # Record the chord names for each permutation.
     for my $name ( chordname(@$p) ) {
