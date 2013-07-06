@@ -26,11 +26,11 @@ my %y = ();
 
 # Traverse each permutation.
 for my $i (@p) {
-    # Get the chord name for the permutation.
+    # Record the chord names for each permutation.
     for my $c (chordname(@$i)) {
-        # Make a chord-name to permutation table.
+        # Make a chord-name to permutation table entry.
         push @{$x{$c}}, "@$i";
-        # Make a permutation to chord-name table.
+        # Make a permutation to chord-name table entry.
         push @{$y{"@$i"}}, $c;
     }
 }
