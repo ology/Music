@@ -12,26 +12,26 @@ use warnings;
 
 # Load handy modules.
 use Math::Combinatorics;
-use Music::Chord::Namer qw(chordname);
+use Music::Chord::Namer qw( chordname );
 
 # Get a list of notes from the command-line or use a Cmaj triad.
-my @notes = @ARGV ? map { ucfirst } @ARGV : qw(C E G);
+my @notes = @ARGV ? map { ucfirst } @ARGV : qw( C E G );
 
 # Get a list of all possible permutations.
-my @perms = permute(@notes);
+my @perms = permute( @notes );
 
 # Declare chord-name <=> permutation dictionaries.
 my %chords_by_perms = ();
 my %perms_by_chords = ();
 
 # Traverse each permutation.
-for my $p (@perms) {
+for my $p ( @perms ) {
     # Record the chord names for each permutation.
-    for my $name (chordname(@$p)) {
+    for my $name ( chordname(@$p) ) {
         # Make a chord-name to permutation table entry.
-        push @{$chords_by_perms{$name}}, "@$p";
+        push @{ $chords_by_perms{ $name } }, "@$p";
         # Make a permutation to chord-name table entry.
-        push @{$perms_by_chords{"@$p"}}, $name;
+        push @{ $perms_by_chords{ "@$p" } }, $name;
     }
 }
 
