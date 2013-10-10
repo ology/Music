@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# http://mathworld.wolfram.com/Multiset.html
+# List all possible fret fingerings - gene@ology.net
 #
 use strict;
 use warnings;
@@ -44,4 +44,5 @@ while (my @m = $c->next_multiset) {
         printf "%*d. %s%s\n", $n, ++$i, join(' ', @s), ($flag ? ' *' : '');
     }
 }
+print "* Indicates an unplayable fingering\n";
 
