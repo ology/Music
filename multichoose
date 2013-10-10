@@ -36,7 +36,7 @@ while (my @m = $c->next_multiset) {
     # Visit each subset.
     while (my @s = $p->next_string) {
         # Q: Is this a playable group?
-        my $flag = 0; # A: Not yet.
+        my $flag = 0; # A: Yes. So far...
 
         # Consider pairs of the fret group.
         for my $x (1 .. @s - 1) {
