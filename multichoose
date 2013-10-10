@@ -38,11 +38,30 @@ while (my @m = $c->next_multiset) {
         # Q: Is this a playable group?
         my $flag = 0; # A: Not yet.
 
+        # Consider pairs of the fret group.
+        for my $x (1 .. @s - 1) {
+            # Less subscrpt referencing.
+            my $previous = $s[$x - 1];
+            my $current  = $s[$x];
+
+            # The middle-ring finger pair can only span 1 fret.
+            # "Next to the adjacent" can only span 2 frets. Etc.
+            # TODO This logic restricts all by fret, not finger, yet.
+            if ($previous && $current
+                && $previous != $current
+                && $current >= $previous + 2
+            ) {
+                $flag++;
+                last;
+            }
+        }
+
+        unless ($flag) {
         # The open position (0) is ignored. Remove zeros.
         my @no_z = grep { defined $_ && $_ } @s;
 
         if (@no_z >= 2) {
-            # Consider pairs of the fret group.
+            # Consider pairs of the no-zero fret group.
             for my $x (1 .. @no_z - 1) {
                 # Consider the items to the tail.
                 my @sliver = @no_z[$x .. @no_z - 1];
@@ -53,6 +72,7 @@ while (my @m = $c->next_multiset) {
                     last;
                 }
             }
+        }
         }
 
         # Print the string representation.
