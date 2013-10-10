@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+#
+# http://mathworld.wolfram.com/Multiset.html
+#
+use strict;
+use warnings;
+use Math::Combinatorics;
+
+my $frets   = shift || 4;
+my $fingers = @ARGV ? \@ARGV : [qw( i m r p )];
+
+my $c = Math::Combinatorics->new(
+    count => $frets,
+    data => $fingers,
+    frequency => [ map{ $frets } 1 .. @$fingers ],
+);
+
+while (my @m = $c->next_multiset) {
+    my $p = Math::Combinatorics->new(data => \@m, frequency => [ map{1} @m ]);
+    while (my @s = $p->next_string) {
+        print join(' ', @s), "\n";
+    }
+}
+
