@@ -33,8 +33,16 @@ while (my @m = $c->next_multiset) {
     );
     # Visit each subset.
     while (my @s = $p->next_string) {
+        # Is this a playable group?
+        my $flag = 0;
+        for my $x (1 .. @s - 1) {
+            if ($s[$x - 1] > $s[$x] && $s[$x] != 0) {
+                $flag++;
+                last;
+            }
+        }
         # Print the string representation.
-        printf "%*d. %s\n", $n, ++$i, join(' ', @s);
+        printf "%*d. %s%s\n", $n, ++$i, join(' ', @s), ($flag ? ' *' : '');
     }
 }
 
