@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use Math::Combinatorics;
 
-my $frets   = shift || 4;
+my $frets = shift || 4;
 my $fingers = @ARGV ? \@ARGV : [qw( i m r p )];
 
 my $c = Math::Combinatorics->new(
@@ -15,10 +15,16 @@ my $c = Math::Combinatorics->new(
     frequency => [ map{ $frets } 1 .. @$fingers ],
 );
 
+my $n = 3; # TODO Compute width with Math::Counting::bcomb()
+my $i = 0; # Loop counter
+
 while (my @m = $c->next_multiset) {
-    my $p = Math::Combinatorics->new(data => \@m, frequency => [ map{1} @m ]);
+    my $p = Math::Combinatorics->new(
+        data => \@m,
+        frequency => [ map{1} @m ],
+    );
     while (my @s = $p->next_string) {
-        print join(' ', @s), "\n";
+        printf "%*d. %s\n", $n, ++$i, join(' ', @s);
     }
 }
 
