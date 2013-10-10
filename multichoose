@@ -6,24 +6,34 @@ use strict;
 use warnings;
 use Math::Combinatorics;
 
+# Set the size of the fret grid or "the maximum number of frets."
 my $frets = shift || 4;
-my $fingers = @ARGV ? \@ARGV : [qw( i m r p )];
+# Set the symbols to use for the fret occupant.
+# For guitar: * x o i m r p
+my $fingers = @ARGV ? \@ARGV : [qw( 0 1 2 3 4 )];
 
+# Set the super set of multisets!
 my $c = Math::Combinatorics->new(
     count => $frets,
     data => $fingers,
     frequency => [ map{ $frets } 1 .. @$fingers ],
 );
 
+# Line number format width.
 my $n = 3; # TODO Compute width with Math::Counting::bcomb()
-my $i = 0; # Loop counter
+# Loop counter for fret group.
+my $i = 0;
 
+# Visit each multiset.
 while (my @m = $c->next_multiset) {
+    # Consider each subset.
     my $p = Math::Combinatorics->new(
         data => \@m,
         frequency => [ map{1} @m ],
     );
+    # Visit each subset.
     while (my @s = $p->next_string) {
+        # Print the string representation.
         printf "%*d. %s\n", $n, ++$i, join(' ', @s);
     }
 }
