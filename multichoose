@@ -35,7 +35,12 @@ while (my @m = $c->next_multiset) {
         # Is this a playable group?
         my $flag = 0;
         for my $x (1 .. @s - 1) {
-            if ($s[$x - 1] > $s[$x] && $s[$x] != 0) {
+            # Rules:
+            # 1 The open position (0) is ignored.
+            # 2 Higher fret numbers for lower fingers are not allowed.
+            if ($s[$x] != 0
+                && grep { $s[$_] != 0 && $s[$x - 1] > $s[$_] } @s[$x .. @s - 1]
+            ) {
                 $flag++;
                 last;
             }
