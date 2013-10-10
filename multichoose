@@ -8,14 +8,14 @@ use Math::Combinatorics;
 
 # Set the size of the fret grid or "the maximum number of frets."
 my $frets = shift || 4;
-# Set the symbols to use for the fret occupant.
-my $fingers = @ARGV ? \@ARGV : [qw( 0 1 2 3 4 )];
+# Set the symbols to use for the fret position.
+my $positions = @ARGV ? \@ARGV : [qw( 0 1 2 3 4 )];
 
 # Set the super set of multisets!
 my $c = Math::Combinatorics->new(
     count => $frets,
-    data => $fingers,
-    frequency => [ map{ $frets } 1 .. @$fingers ],
+    data => $positions,
+    frequency => [ map{ $frets } 1 .. @$positions ],
 );
 
 # Line number format width.
