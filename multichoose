@@ -6,6 +6,9 @@ use strict;
 use warnings;
 use Math::Combinatorics;
 
+# See warnings in output context.
+$|++;
+
 # Set the size of the fret grid or "the maximum number of frets."
 my $frets = shift || 4;
 # Set the symbols to use for the fret position.
@@ -32,22 +35,30 @@ while (my @m = $c->next_multiset) {
     );
     # Visit each subset.
     while (my @s = $p->next_string) {
-        # Is this a playable group?
-        my $flag = 0;
-        for my $x (1 .. @s - 1) {
-            # Rules:
-            # 1 The open position (0) is ignored.
-            # 2 Higher fret numbers for lower fingers are not allowed.
-            if ($s[$x] != 0
-                && grep { $s[$_] != 0 && $s[$x - 1] > $s[$_] } @s[$x .. @s - 1]
-            ) {
+        # Q: Is this a playable group?
+        my $flag = 0; # A: Not yet.
+
+        # The open position (0) is ignored. Remove zeros.
+        my @no_z = grep { defined $_ && $_ } @s;
+
+        if (@no_z >= 2) {
+        # Consider pairs of the fret group.
+        for my $x (1 .. @no_z - 1) {
+            # Consider the items to the tail.
+            my @sliver = @no_z[$x .. @no_z - 1];
+
+            # Higher fret numbers for lower fingers are not allowed.
+            if (grep { $no_z[$x - 1] > $_ } @sliver) {
                 $flag++;
                 last;
             }
         }
+        }
+
         # Print the string representation.
-        printf "%*d. %s%s\n", $n, ++$i, join(' ', @s), ($flag ? ' *' : '');
+        printf "%*d. %s%s\n", $n, ++$i, join(' ', @s), ($flag ? ' u' : '');
     }
 }
-print "* Indicates an unplayable fingering\n";
+# Consider the lilies of the field.
+print "u Indicates an unplayable fingering\n";
 
