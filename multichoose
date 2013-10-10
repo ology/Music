@@ -36,7 +36,7 @@ while (my @m = $c->next_multiset) {
     # Visit each subset.
     while (my @s = $p->next_string) {
         # Q: Is this a playable group?
-        my $flag = 0; # A: Yes. So far...
+        my $flag = ''; # A: Yes. So far...
 
         # Consider pairs of the fret group.
         for my $x (1 .. @s - 1) {
@@ -46,12 +46,12 @@ while (my @m = $c->next_multiset) {
 
             # The middle-ring finger pair can only span 1 fret.
             # "Next to the adjacent" can only span 2 frets. Etc.
-            # TODO This logic restricts all by fret, not finger, yet.
+            # TODO This logic restricts by fret, not finger, yet.
             if ($previous && $current
                 && $previous != $current
                 && $current >= $previous + 2
             ) {
-                $flag++;
+                $flag = 's'; # Flag a span issue
                 last;
             }
         }
@@ -68,7 +68,7 @@ while (my @m = $c->next_multiset) {
 
                 # Higher fret numbers for lower fingers are not allowed.
                 if (grep { $no_z[$x - 1] > $_ } @sliver) {
-                    $flag++;
+                    $flag = 'b'; # Flag a backward issue
                     last;
                 }
             }
@@ -76,7 +76,7 @@ while (my @m = $c->next_multiset) {
         }
 
         # Print the string representation.
-        printf "%*d. %s%s\n", $n, ++$i, join(' ', @s), ($flag ? ' u' : '');
+        printf "%*d. %s %s\n", $n, ++$i, join(' ', @s), $flag;
     }
 }
 # Consider the lilies of the field.
