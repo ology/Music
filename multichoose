@@ -42,17 +42,17 @@ while (my @m = $c->next_multiset) {
         my @no_z = grep { defined $_ && $_ } @s;
 
         if (@no_z >= 2) {
-        # Consider pairs of the fret group.
-        for my $x (1 .. @no_z - 1) {
-            # Consider the items to the tail.
-            my @sliver = @no_z[$x .. @no_z - 1];
+            # Consider pairs of the fret group.
+            for my $x (1 .. @no_z - 1) {
+                # Consider the items to the tail.
+                my @sliver = @no_z[$x .. @no_z - 1];
 
-            # Higher fret numbers for lower fingers are not allowed.
-            if (grep { $no_z[$x - 1] > $_ } @sliver) {
-                $flag++;
-                last;
+                # Higher fret numbers for lower fingers are not allowed.
+                if (grep { $no_z[$x - 1] > $_ } @sliver) {
+                    $flag++;
+                    last;
+                }
             }
-        }
         }
 
         # Print the string representation.
