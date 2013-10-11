@@ -12,7 +12,7 @@ use Math::Combinatorics;
 $|++;
 
 # Set the number of instrument strings.
-my $frets = shift || 6; # TODO Feature coming soon...
+my $strings = 6; # TODO Feature coming soon...
 
 # Set the number of frets.
 my $frets = shift || 4;
