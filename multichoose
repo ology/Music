@@ -13,14 +13,14 @@ $|++;
 # Set the maximum number of frets.
 my $frets = shift || 4;
 
-# Set the numbers of the fret position, where 0 = open string
+# Set the fret positions. 0 = open string & 4 is "frets from the start position.
 my $positions = @ARGV ? \@ARGV : [qw( 0 1 2 3 4 )];
 
-# Set the finger symbols.
-# Legend: i=index m=middle r=ring p=pinky _=none x=muted *=harmonic
+# Set the finger symbols. i=index m=middle r=ring p=pinky
+#   Options: _=none x=muted *=harmonic
 my $fingers = [qw( i m r p )];
 
-# Set the super set of multisets!
+# Make an object to hold all possible fret positions.
 my $c = Math::Combinatorics->new(
     count => $frets,
     data => $positions,
@@ -28,26 +28,26 @@ my $c = Math::Combinatorics->new(
 );
 
 # Line number format width.
-my $n = 3; # TODO Compute length of perms with Math::Big?
-# Loop counter for fret group.
+my $n = 3; # TODO Compute with Math::Big?
+# Loop counter for each fret group used in the final output.
 my $i = 0;
 
 # Visit each multiset.
 while (my @m = $c->next_multiset) {
-    # Consider each subset.
+    # Make an object to hold this positions fret groups.
     my $p = Math::Combinatorics->new(
         data => \@m,
         frequency => [ map{1} @m ],
     );
 
-    # Visit each subset.
+    # Visit each set.
     while (my @s = $p->next_string) {
-        # Q: Is this a playable group?
-        my $flag = ''; # A: Yes. So far...
+        # This is a string to hold reasons why this group is unplayable.
+        my $flag = '';
 
-        # Consider pairs of the fret group.
+        # Consider adjacent pairs of the fret group.
         for my $x (1 .. @s - 1) {
-            # Less subscrpt referencing.
+            # Hide the ugliness of array subscript indexing.
             my $previous = $s[$x - 1];
             my $current  = $s[$x];
 
@@ -63,6 +63,7 @@ while (my @m = $c->next_multiset) {
             }
         }
 
+        # If this group has no "playability infractions", proceed.
         unless ($flag) {
             # The open position (0) is ignored. Remove zeros.
             my @no_z = grep { defined $_ && $_ } @s;
@@ -86,10 +87,8 @@ while (my @m = $c->next_multiset) {
         my @limited = @{$fingers}[0 .. @s - 1];
         my @pairs = pairwise { $a . $b } @limited, @s;
 
-        # Print the string representation.
+        # Print a string representation of the fret group.
         printf "%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag;
     }
 }
-# Consider the lilies of the field.
-print "u Indicates an unplayable fingering\n";
 
