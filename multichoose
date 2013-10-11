@@ -11,7 +11,10 @@ use Math::Combinatorics;
 # See warnings in output context.
 $|++;
 
-# Set the maximum number of frets.
+# Set the number of instrument strings.
+my $frets = shift || 6; # TODO Feature coming soon...
+
+# Set the number of frets.
 my $frets = shift || 4;
 
 # Set the fret positions. 0 = open string & 4 is "frets from the start position.
@@ -22,7 +25,7 @@ my $positions = @ARGV ? \@ARGV : [qw( 0 1 2 3 4 )];
 my $fingers = [qw( i m r p )];
 
 # Adjacent finger span. Both i<->m & r<->p span 2 frets, but m<->r is only 1.
-my $spans = [qw( 2 1 2 )];
+my $spans = [qw( 2 1 2 )]; # TODO Feature coming soon...
 
 # Make an object to hold all possible fret positions.
 my $c = Math::Combinatorics->new(
