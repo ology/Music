@@ -30,11 +30,13 @@ my $c = Math::Combinatorics->new(
 
 # Line number format width.
 my $n = 3; # TODO Compute with Math::Big?
+
 # Loop counter for each fret group used in the final output.
 my $i = 0;
 
 # Visit each multiset.
 while (my @m = $c->next_multiset) {
+
     # Make an object to hold this positions fret groups.
     my $p = Math::Combinatorics->new(
         data => \@m,
@@ -43,11 +45,13 @@ while (my @m = $c->next_multiset) {
 
     # Visit each set.
     while (my @s = $p->next_string) {
+
         # This is a string to hold reasons why this group is unplayable.
         my $flag = '';
 
         # Consider adjacent pairs of the fret group.
         for my $x (1 .. @s - 1) {
+
             # Hide the ugliness of array subscript indexing.
             my $previous = $s[$x - 1];
             my $current  = $s[$x];
@@ -57,6 +61,7 @@ while (my @m = $c->next_multiset) {
             # E.g. The middle-ring finger pair only spans 1 fret in most people.
             if ($previous && $current && $previous != $current
                 && $current >= $previous + 2) {
+
                 $flag = 's'; # Flag a finger span issue.
                 last;
             }
@@ -64,17 +69,21 @@ while (my @m = $c->next_multiset) {
 
         # If this group has no "playability infractions", proceed.
         unless ($flag) {
+
             # The open position (0) is ignored. Remove zeros.
             my @no_z = grep { defined $_ && $_ } @s;
 
             if (@no_z >= 2) {
+
                 # Consider adjacent pairs of the no-zero fret group.
                 for my $x (1 .. @no_z - 1) {
+
                     # Consider the items to the tail.
                     my @sliver = @no_z[$x .. @no_z - 1];
 
                     # Higher fret numbers for lower fingers are not allowed.
                     if (grep { $no_z[$x - 1] > $_ } @sliver) {
+
                         $flag = 'b'; # Flag a backward issue
                         last;
                     }
@@ -82,7 +91,7 @@ while (my @m = $c->next_multiset) {
             }
         }
 
-        # Concatinate fingers with frets.
+        # Concatinate pairs of fingers and frets.
         my @limited = @{$fingers}[0 .. @s - 1];
         my @pairs = pairwise { $a . $b } @limited, @s;
 
