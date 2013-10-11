@@ -56,9 +56,10 @@ while (my @m = $c->next_multiset) {
             my $previous = $s[$x - 1];
             my $current  = $s[$x];
 
+            # Rule:
             # "Next to the adjacent" can only span 2 frets. Etc.
             # TODO This logic restricts by fret, not finger, yet.
-            # E.g. The middle-ring finger pair only spans 1 fret in most people.
+            # E.g. Middle-ring finger only spans 1 fret in most people.
             if ($previous && $current && $previous != $current
                 && $current >= $previous + 2) {
 
@@ -78,9 +79,10 @@ while (my @m = $c->next_multiset) {
                 # Consider adjacent pairs of the no-zero fret group.
                 for my $x (1 .. @no_z - 1) {
 
-                    # Consider the items to the tail.
+                    # Consider the current tail of no-zero elements.
                     my @sliver = @no_z[$x .. @no_z - 1];
 
+                    # Rule:
                     # Higher fret numbers for lower fingers are not allowed.
                     if (grep { $no_z[$x - 1] > $_ } @sliver) {
 
