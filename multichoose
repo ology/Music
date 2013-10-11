@@ -68,7 +68,7 @@ while (my @m = $c->next_multiset) {
             my @no_z = grep { defined $_ && $_ } @s;
 
             if (@no_z >= 2) {
-                # Consider pairs of the no-zero fret group.
+                # Consider adjacent pairs of the no-zero fret group.
                 for my $x (1 .. @no_z - 1) {
                     # Consider the items to the tail.
                     my @sliver = @no_z[$x .. @no_z - 1];
