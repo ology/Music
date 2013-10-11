@@ -101,7 +101,6 @@ while (my @m = $c->next_multiset) {
 
         # Concatinate pairs of fingers and frets.
         my @limited = @{$fingers}[0 .. @s - 1];
-        my ($a, $b); # XXX Declare to avoid warning.
         my @pairs = pairwise { $a . $b } @limited, @s;
 
         # Print a string representation of the fret group.
