@@ -61,22 +61,22 @@ while (my @m = $c->next_multiset) {
         }
 
         unless ($flag) {
-        # The open position (0) is ignored. Remove zeros.
-        my @no_z = grep { defined $_ && $_ } @s;
+            # The open position (0) is ignored. Remove zeros.
+            my @no_z = grep { defined $_ && $_ } @s;
 
-        if (@no_z >= 2) {
-            # Consider pairs of the no-zero fret group.
-            for my $x (1 .. @no_z - 1) {
-                # Consider the items to the tail.
-                my @sliver = @no_z[$x .. @no_z - 1];
+            if (@no_z >= 2) {
+                # Consider pairs of the no-zero fret group.
+                for my $x (1 .. @no_z - 1) {
+                    # Consider the items to the tail.
+                    my @sliver = @no_z[$x .. @no_z - 1];
 
-                # Higher fret numbers for lower fingers are not allowed.
-                if (grep { $no_z[$x - 1] > $_ } @sliver) {
-                    $flag = 'b'; # Flag a backward issue
-                    last;
+                    # Higher fret numbers for lower fingers are not allowed.
+                    if (grep { $no_z[$x - 1] > $_ } @sliver) {
+                        $flag = 'b'; # Flag a backward issue
+                        last;
+                    }
                 }
             }
-        }
         }
 
         # Print the string representation.
