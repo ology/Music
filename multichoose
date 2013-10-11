@@ -9,10 +9,13 @@ use Math::Combinatorics;
 # See warnings in output context.
 $|++;
 
-# Set the size of the fret grid or "the maximum number of frets."
+# Set the maximum number of frets.
 my $frets = shift || 4;
-# Set the symbols to use for the fret position.
+# Set the numbers of the fret position, where 0 = open string
 my $positions = @ARGV ? \@ARGV : [qw( 0 1 2 3 4 )];
+# Set the finger symbols.
+# Legend: i=index m=middle r=ring p=pinky x=muted *=harmonic
+my $fingers = @ARGV ? \@ARGV : [qw( i m r p )];
 
 # Set the super set of multisets!
 my $c = Math::Combinatorics->new(
@@ -22,7 +25,7 @@ my $c = Math::Combinatorics->new(
 );
 
 # Line number format width.
-my $n = 3; # TODO Compute width with Math::Counting::bcomb()
+my $n = 3; # TODO Compute with Math::Big.
 # Loop counter for fret group.
 my $i = 0;
 
@@ -33,6 +36,7 @@ while (my @m = $c->next_multiset) {
         data => \@m,
         frequency => [ map{1} @m ],
     );
+
     # Visit each subset.
     while (my @s = $p->next_string) {
         # Q: Is this a playable group?
