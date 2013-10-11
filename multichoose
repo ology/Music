@@ -21,6 +21,9 @@ my $positions = @ARGV ? \@ARGV : [qw( 0 1 2 3 4 )];
 #   Options: _=none x=muted *=harmonic
 my $fingers = [qw( i m r p )];
 
+# Adjacent finger span. Both i<->m & r<->p span 2 frets, but m<->r is only 1.
+my $spans = [qw( 2 1 2 )];
+
 # Make an object to hold all possible fret positions.
 my $c = Math::Combinatorics->new(
     count => $frets,
