@@ -4,7 +4,7 @@
 #
 use strict;
 use warnings;
-use List::MoreUtils qw( pairwise zip );
+use List::MoreUtils qw( pairwise );
 use Math::Combinatorics;
 
 # See warnings in output context.
