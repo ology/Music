@@ -4,6 +4,7 @@
 #
 use strict;
 use warnings;
+use List::MoreUtils qw( pairwise zip );
 use Math::Combinatorics;
 
 # See warnings in output context.
@@ -11,11 +12,13 @@ $|++;
 
 # Set the maximum number of frets.
 my $frets = shift || 4;
+
 # Set the numbers of the fret position, where 0 = open string
 my $positions = @ARGV ? \@ARGV : [qw( 0 1 2 3 4 )];
+
 # Set the finger symbols.
-# Legend: i=index m=middle r=ring p=pinky x=muted *=harmonic
-my $fingers = @ARGV ? \@ARGV : [qw( i m r p )];
+# Legend: i=index m=middle r=ring p=pinky _=none x=muted *=harmonic
+my $fingers = [qw( i m r p )];
 
 # Set the super set of multisets!
 my $c = Math::Combinatorics->new(
@@ -25,7 +28,7 @@ my $c = Math::Combinatorics->new(
 );
 
 # Line number format width.
-my $n = 3; # TODO Compute with Math::Big.
+my $n = 3; # TODO Compute length of perms with Math::Big?
 # Loop counter for fret group.
 my $i = 0;
 
@@ -79,8 +82,12 @@ while (my @m = $c->next_multiset) {
             }
         }
 
+        # Concatinate fingers with frets.
+        my @limited = @{$fingers}[0 .. @s - 1];
+        my @pairs = pairwise { $a . $b } @limited, @s;
+
         # Print the string representation.
-        printf "%*d. %s %s\n", $n, ++$i, join(' ', @s), $flag;
+        printf "%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag;
     }
 }
 # Consider the lilies of the field.
