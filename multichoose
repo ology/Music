@@ -4,6 +4,7 @@
 #
 use strict;
 use warnings;
+
 use List::MoreUtils qw( pairwise );
 use Math::Combinatorics;
 
@@ -37,7 +38,7 @@ while (my @m = $c->next_multiset) {
     # Make an object to hold this positions fret groups.
     my $p = Math::Combinatorics->new(
         data => \@m,
-        frequency => [ map{1} @m ],
+        frequency => [ map { 1 } @m ],
     );
 
     # Visit each set.
@@ -51,14 +52,12 @@ while (my @m = $c->next_multiset) {
             my $previous = $s[$x - 1];
             my $current  = $s[$x];
 
-            # The middle-ring finger pair can only span 1 fret.
             # "Next to the adjacent" can only span 2 frets. Etc.
             # TODO This logic restricts by fret, not finger, yet.
-            if ($previous && $current
-                && $previous != $current
-                && $current >= $previous + 2
-            ) {
-                $flag = 's'; # Flag a span issue
+            # E.g. The middle-ring finger pair only spans 1 fret in most people.
+            if ($previous && $current && $previous != $current
+                && $current >= $previous + 2) {
+                $flag = 's'; # Flag a finger span issue.
                 last;
             }
         }
