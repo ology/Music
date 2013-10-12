@@ -7,6 +7,8 @@ use List::MoreUtils qw( pairwise );
 use Math::Combinatorics;
 use Pod::Usage;
 
+our $VERSION = '0.01';
+
 =head1 NAME
 
 multichoose - List all possible fret fingerings
@@ -21,20 +23,15 @@ multichoose - List all possible fret fingerings
 
 This program lists all possible fret fingerings and flags unplayable fingerings.
 
-With the following options, you can define different sizes for fret groups,
+With the following settings, you can define different sizes for fret groups,
 number of available fingers and (TODO) number of instrument strings.
 
-These options are all required to be set, so the defaults are used unless given
+These settings are all required to be set, so the defaults are used unless given
 on the command_line.
 
-=head2 OPTIONS
+=head2 SETTINGS
 
 =cut
-
-our $VERSION = '0.01';
-
-# See warnings in output context.
-$|++;
 
 # Set the default values for our computations.
 my $opt = {
@@ -55,11 +52,14 @@ my $opt = {
     'span=i@'    => [qw( 2 1 2 )], # TODO Feature coming soon...
 };
 
-# Collect the command-line options.
-GetOptions($opt, keys %$opt);
+# See warnings in output context.
+$|++;
 
 # Set handy auto-documentation features.
 Configure(qw( auto_version auto_help ));
+
+# Collect the command-line arguments.
+GetOptions($opt, keys %$opt);
 
 # Set the unspecified defaults.
 set_defaults($opt);
@@ -147,16 +147,16 @@ while (my @m = $c->next_multiset) {
 
 sub set_defaults {
     # Intake a hashref of default Go::L spec=>default entries.
-    my $options = shift;
+    my $setting = shift;
 
     # Inspect each option.
-    for my $spec (keys %$options) {
+    for my $spec (keys %$setting) {
 
         # Extract the option label from the spec.
         (my $label = $spec) =~ s/^(\w+)\b.+$/$1/;
 
         # Add the default value, if it has not already been given.
-        $options->{$label} ||= $options->{$spec};
+        $setting->{$label} ||= $setting->{$spec};
     }
 }
 
