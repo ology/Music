@@ -138,7 +138,11 @@ while (my @m = $c->next_multiset) {
 
         # Concatinate pairs of fingers and frets.
         my @limited = @{$opt->{fingers}}[0 .. @s - 1];
-        my @pairs = pairwise { $a . $b } @limited, @s;
+        my @pairs;
+        {
+            no warnings 'once';
+            @pairs = pairwise { $a . $b } @limited, @s;
+        }
 
         # Print a string representation of the fret group.
         printf "%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag;
