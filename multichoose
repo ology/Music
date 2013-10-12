@@ -56,7 +56,7 @@ my $opt = {
 $|++;
 
 # Set handy auto-documentation features.
-Configure(qw( auto_version auto_help ));
+Getopt::Long::Configure(qw( auto_version auto_help ));
 
 # Collect the command-line arguments.
 GetOptions($opt, keys %$opt);
