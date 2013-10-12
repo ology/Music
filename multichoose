@@ -1,4 +1,41 @@
 #!/usr/bin/perl
+
+=head1 NAME
+
+multichoose - List all possible fret fingerings
+
+=head1 DESCRIPTION
+
+This program lists all possible fret fingerings and flags unplayable fingerings.
+
+With the following settings, you can define different sizes for fret groups,
+number of available fingers and (TODO) number of instrument strings.
+
+These settings are all required, so the defaults are used unless given on the
+command_line.
+
+=head1 SYNOPSIS
+
+ $ perl multichoose --version
+ $ perl multichoose --help
+ $ perl multichoose --man
+
+=head1 ARGUMENTS
+
+  help|?  - Brief documentation (0)
+  man     - Full documentation  (0)
+  frets   - Number of frets     (4)
+  range   - Fret position range (1..4)
+  fingers - Finger symbols      (i m r p)
+
+=head2 NOTES
+
+Range: 0 = Open string. 4 = Number of frets from the start position.
+
+Fingers: i=index m=middle r=ring p=pinky. Options: _=none x=muted *=harmonic
+
+=cut
+
 use strict;
 use warnings;
 
@@ -9,47 +46,13 @@ use Pod::Usage;
 
 our $VERSION = '0.01';
 
-=head1 NAME
-
-multichoose - List all possible fret fingerings
-
-=head1 SYNOPSYS
-
- $ perl multichoose --version
- $ perl multichoose --help
- $ perl multichoose --man
-
-=head1 DESCRIPTION
-
-This program lists all possible fret fingerings and flags unplayable fingerings.
-
-With the following settings, you can define different sizes for fret groups,
-number of available fingers and (TODO) number of instrument strings.
-
-These settings are all required to be set, so the defaults are used unless given
-on the command_line.
-
-=head2 SETTINGS
-
-=cut
-
-# Set the default values for our computations.
+# Set the default values.
 my $opt = {
-    # Show the full documentation.
+    'help|?'     => 0,
     'man'        => 0,
-    # The fret start position.
-    'start=i'    => 1,
-    # The number of frets.
     'frets=i'    => 4,
-    # The number of instrument strings.
-    'strings=i'  => 6, # TODO Feature coming soon...
-    # The fret positions. 0 = open string & 4 is "frets from the start"
     'range=i@'   => [qw( 0 1 2 3 4 )],
-    # Set the finger symbols. i=index m=middle r=ring p=pinky
-    #   Options: _=none x=muted *=harmonic
     'fingers=s@' => [qw( i m r p )],
-    # Adjacent finger span. i<->m & r<->p span 2 frets, but m<->r is 1.
-    'span=i@'    => [qw( 2 1 2 )], # TODO Feature coming soon...
 };
 
 # See warnings in output context.
@@ -59,7 +62,10 @@ $|++;
 Getopt::Long::Configure(qw( auto_version auto_help ));
 
 # Collect the command-line arguments.
-GetOptions($opt, keys %$opt);
+GetOptions($opt, keys %$opt) || pod2usage(-verbose => 0);
+
+pod2usage(-verbose => 1) if $opt->{help};
+pod2usage(-verbose => 2) if $opt->{man};
 
 # Set the unspecified defaults.
 set_defaults($opt);
@@ -163,6 +169,17 @@ sub set_defaults {
         $setting->{$label} ||= $setting->{$spec};
     }
 }
+__END__
+
+=head1 TO DO
+
+* span=i@ - Adjacent finger span (2 1 2)
+
+(That is, fingers i<->m & r<->p span 2 frets, but m<->r is only 1.)
+
+* start=i - Fret start position (1)
+
+* strings=i - Number of instrument strings (6)
 
 =head1 AUTHOR
 
