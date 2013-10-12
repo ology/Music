@@ -5,33 +5,43 @@
 use strict;
 use warnings;
 
+use Getopt::Long;
 use List::MoreUtils qw( pairwise );
 use Math::Combinatorics;
+
+our $VERSION = '0.01';
 
 # See warnings in output context.
 $|++;
 
-# Set the number of instrument strings.
-my $strings = 6; # TODO Feature coming soon...
+# Set the default values for our computations.
+my $opt = {
+    # The fret start position.
+    'start=i'    => 1,
+    # The number of frets.
+    'frets=i'    => 4,
+    # The number of instrument strings.
+    'strings=i'  => 6, # TODO Feature coming soon...
+    # The fret positions. 0 = open string & 4 is "frets from the start"
+    'range=i@'   => [qw( 0 1 2 3 4 )],
+    # Set the finger symbols. i=index m=middle r=ring p=pinky
+    #   Options: _=none x=muted *=harmonic
+    'fingers=s@' => [qw( i m r p )],
+    # Adjacent finger span. i<->m & r<->p span 2 frets, but m<->r is 1.
+    'span=i@'    => [qw( 2 1 2 )], # TODO Feature coming soon...
+};
 
-# Set the number of frets.
-my $frets = shift || 4;
+# Collect the command-line options.
+GetOptions($opt, keys %$opt);
 
-# Set the fret positions. 0 = open string & 4 is "frets from the start position.
-my $positions = @ARGV ? \@ARGV : [qw( 0 1 2 3 4 )];
-
-# Set the finger symbols. i=index m=middle r=ring p=pinky
-#   Options: _=none x=muted *=harmonic
-my $fingers = [qw( i m r p )];
-
-# Adjacent finger span. Both i<->m & r<->p span 2 frets, but m<->r is only 1.
-my $spans = [qw( 2 1 2 )]; # TODO Feature coming soon...
+# Set the unspecified defaults.
+set_defaults($opt);
 
 # Make an object to hold all possible fret positions.
 my $c = Math::Combinatorics->new(
-    count => $frets,
-    data => $positions,
-    frequency => [ map{ $frets } 1 .. @$positions ],
+    count => $opt->{frets},
+    data => $opt->{range},
+    frequency => [ map{ $opt->{frets} } 1 .. @{$opt->{range}} ],
 );
 
 # Line number format width.
@@ -100,11 +110,26 @@ while (my @m = $c->next_multiset) {
         }
 
         # Concatinate pairs of fingers and frets.
-        my @limited = @{$fingers}[0 .. @s - 1];
+        my @limited = @{$opt->{fingers}}[0 .. @s - 1];
         my @pairs = pairwise { $a . $b } @limited, @s;
 
         # Print a string representation of the fret group.
         printf "%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag;
+    }
+}
+
+sub set_defaults {
+    # Intake a hashref of default Go::L spec=>default entries.
+    my $options = shift;
+
+    # Inspect each option.
+    for my $spec (keys %$options) {
+
+        # Extract the option label from the spec.
+        (my $label = $spec) =~ s/^(\w+)\b.+$/$1/;
+
+        # Add the default value, if it has not already been given.
+        $options->{$label} ||= $options->{$spec};
     }
 }
 
