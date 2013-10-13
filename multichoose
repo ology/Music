@@ -18,8 +18,8 @@ command_line.
 =head1 SYNOPSIS
 
  $ perl multichoose --version
- $ perl multichoose --help
- $ perl multichoose --man
+ $ perl multichoose --help  # Brief summary
+ $ perl multichoose --man   # Full docs
  $ perl multichoose --frets 2 --range '0 1 2' --fingers 'i m'
 
 =head1 ARGUMENTS
