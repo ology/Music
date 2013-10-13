@@ -6,10 +6,11 @@ multichoose - List all possible fret fingerings
 
 =head1 DESCRIPTION
 
-This program lists all possible fret fingerings and flags unplayable fingerings.
+This program lists all possible fret fingerings and flags those that are
+deemed unplayable.
 
-With the following settings, you can define different sizes for fret groups,
-number of available fingers and (TODO) number of instrument strings.
+With the settings below, you can define different sizes for fret groups and
+number of available fingers.
 
 These settings are all required, so the defaults are used unless given on the
 command_line.
@@ -19,18 +20,19 @@ command_line.
  $ perl multichoose --version
  $ perl multichoose --help
  $ perl multichoose --man
+ $ perl multichoose --frets 2 --range '0 1 2' --fingers 'i m'
 
 =head1 ARGUMENTS
 
   help|?  - Brief documentation (0)
   man     - Full documentation  (0)
   frets   - Number of frets     (4)
-  range   - Fret position range (1..4)
+  range   - Fret position range (0 1 2 3 4)
   fingers - Finger symbols      (i m r p)
 
 =head2 NOTES
 
-Range: 0 = Open string. 4 = Number of frets from the start position.
+Range: 0 = No fret, "open string". 4 = Number of frets to consider.
 
 Fingers: i=index m=middle r=ring p=pinky. Options: _=none x=muted *=harmonic
 
@@ -44,15 +46,15 @@ use List::MoreUtils qw( pairwise );
 use Math::Combinatorics;
 use Pod::Usage;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 # Set the default values.
 my $opt = {
-    'help|?'     => 0,
-    'man'        => 0,
-    'frets=i'    => 4,
-    'range=i@'   => [qw( 0 1 2 3 4 )],
-    'fingers=s@' => [qw( i m r p )],
+    'help|?' => 0,
+    'man'    => 0,
+    'frets=i'   => 4,
+    'range=s'   => '0 1 2 3 4',
+    'fingers=s' => 'i m r p',
 };
 
 # See warnings in output context.
@@ -64,10 +66,11 @@ Getopt::Long::Configure(qw( auto_version auto_help ));
 # Collect the command-line arguments.
 GetOptions($opt, keys %$opt) || pod2usage(-verbose => 0);
 
+# Show documentation if requested.
 pod2usage(-verbose => 1) if $opt->{help};
 pod2usage(-verbose => 2) if $opt->{man};
 
-# Set the unspecified defaults.
+# Set unspecified defaults.
 set_defaults($opt);
 
 # Make an object to hold all possible fret positions.
@@ -105,10 +108,7 @@ while (my @m = $c->next_multiset) {
             my $previous = $s[$x - 1];
             my $current  = $s[$x];
 
-            # Rule:
-            # "Next to the adjacent" can only span 2 frets. Etc.
-            # TODO This logic restricts by fret, not finger, yet.
-            # E.g. Middle-ring finger only spans 1 fret in most people.
+            # Rule: Restrict spanning.
             if ($previous && $current && $previous != $current
                 && $current >= $previous + 2) {
 
@@ -117,12 +117,13 @@ while (my @m = $c->next_multiset) {
             }
         }
 
-        # If this group has no "playability infractions", proceed.
+        # Proceed if this group has no "play-infractions" flagged.
         unless ($flag) {
 
             # The open position (0) is ignored. Remove zeros.
             my @no_z = grep { defined $_ && $_ } @s;
 
+            # Is there a pair of elements?
             if (@no_z >= 2) {
 
                 # Consider adjacent pairs of the no-zero fret group.
@@ -131,8 +132,7 @@ while (my @m = $c->next_multiset) {
                     # Consider the current tail of no-zero elements.
                     my @sliver = @no_z[$x .. @no_z - 1];
 
-                    # Rule:
-                    # Higher fret numbers for lower fingers are not allowed.
+                    # Rule: Higher frets for lower fingers are not allowed.
                     if (grep { $no_z[$x - 1] > $_ } @sliver) {
 
                         $flag = 'b'; # Flag a backward issue
@@ -146,6 +146,7 @@ while (my @m = $c->next_multiset) {
         my @limited = @{$opt->{fingers}}[0 .. @s - 1];
         my @pairs;
         {
+            # XXX Can't make this not warn yet...
             no warnings 'once';
             @pairs = pairwise { $a . $b } @limited, @s;
         }
@@ -156,19 +157,27 @@ while (my @m = $c->next_multiset) {
 }
 
 sub set_defaults {
-    # Intake a hashref of default Go::L spec=>default entries.
+    # Intake a Go::L spec=>default hashref of settings.
     my $setting = shift;
 
-    # Inspect each option.
+    # Inspect each option and add the setting if needed.
     for my $spec (keys %$setting) {
 
-        # Extract the option label from the spec.
+        # Extract the option label from the Go::L spec.
         (my $label = $spec) =~ s/^(\w+)\b.+$/$1/;
 
-        # Add the default value, if it has not already been given.
+        # Add the default, if not already given.
         $setting->{$label} ||= $setting->{$spec};
+
+        # Handle list arguments.
+        # XXX Hard-coding ahead:
+        if ($label eq 'range' || $label eq 'fingers') {
+            # Transform a comma or space separated list into an arrayref.
+            $setting->{$label} = [ split /,?\s+/, $setting->{$spec} ];
+        }
     }
 }
+
 __END__
 
 =head1 TO DO
@@ -180,6 +189,8 @@ __END__
 * start=i - Fret start position (1)
 
 * strings=i - Number of instrument strings (6)
+
+* User defined rules.
 
 =head1 AUTHOR
 
