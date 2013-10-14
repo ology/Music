@@ -146,13 +146,13 @@ while (my @m = $c->next_multiset) {
         }
 
         # Concatinate pairs of fingers and frets.
-        my @limited = @{$opt->{fingers}}[ 0 .. @s - 1 ];
         my @pairs;
         {
             # XXX Can't make this call not warn, yet.
             no warnings 'once';
-            @pairs = pairwise { $a . $b } @limited, @s;
+            @pairs = pairwise { $a . $b } @{ $opt->{fingers} }, @s;
         }
+#warn "P: '@pairs'\n";
 
         # Print a string representation of the fret group.
         printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
@@ -185,24 +185,16 @@ sub set_defaults {
             # Capture label.
             my $label = $1;
 
-            # Add the default, if not already given.
-            $set->{$label} = defined $set->{$label}
-                ? $set->{$label} : $set->{$spec};
-
-            # Inflate lists.
-            if ($label eq 'fingers') {
-
-                # Transform the comma or space separated list into an array.
-                my @spec = split /\s*,?\s+/, $set->{$label};
-
-                # Slice the the list by the fret max.
-                @spec = @spec[ 0 .. ($set->{max} || $set->{'max=i'}) - 1 ];
-
-                # Set the ranged list.
-                $set->{$label} = \@spec;
-            }
+            # Add the default, if not given as an argument.
+            $set->{$label} = $set->{$spec} unless defined $set->{$label};
         }
     }
+
+    # Inflate list(s).
+    my @items = split /\s*[,\s]\s*/, $set->{fingers};
+    @items = @items[ 0 .. $set->{max} - 1 ];
+    $set->{fingers} = \@items;
+
 }
 
 __END__
