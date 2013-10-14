@@ -166,15 +166,6 @@ sub set_defaults {
     my $set = shift;
 
     # Set the fret range unless already given.
-    unless (exists $set->{range}) {
-
-        # Set the range.
-        $set->{range} = [ 1 .. ($set->{max} || $set->{'max=1'})];
-
-        # Prepend 0 (the open position) to the range, if requested.
-        unshift @{ $set->{range} }, 0 if $set->{open};
-    }
-
     # Inspect each option and add the setting if needed.
     for my $spec (keys %$set) {
 
@@ -187,6 +178,15 @@ sub set_defaults {
             # Add the default, if not given as an argument.
             $set->{$label} = $set->{$spec} unless defined $set->{$label};
         }
+    }
+
+    # Set the range unless given.
+    unless (exists $set->{range}) {
+
+        $set->{range} = [ 1 .. $set->{max} ];
+
+        # Prepend 0 (the open position) to the range, if requested.
+        unshift @{ $set->{range} }, 0 if $set->{open};
     }
 
     # Inflate list(s).
