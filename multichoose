@@ -152,7 +152,6 @@ while (my @m = $c->next_multiset) {
             no warnings 'once';
             @pairs = pairwise { $a . $b } @{ $opt->{fingers} }, @s;
         }
-#warn "P: '@pairs'\n";
 
         # Print a string representation of the fret group.
         printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
@@ -191,10 +190,8 @@ sub set_defaults {
     }
 
     # Inflate list(s).
-    my @items = split /\s*[,\s]\s*/, $set->{fingers};
-    @items = @items[ 0 .. $set->{max} - 1 ];
-    $set->{fingers} = \@items;
-
+    my $key = 'fingers';
+    $set->{$key} = [ split /\s*[,\s]\s*/, $set->{$key} ];
 }
 
 __END__
