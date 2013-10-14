@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-multichoose - List all possible fret fingerings
+multichoose - List all possible fret positions
 
 =head1 DESCRIPTION
 
-This program lists all possible fret fingerings and flags those that are
-deemed unplayable.
+This program lists all possible fret positions and flags those that are deemed
+unplayable.
 
-With the settings below, you can define different sizes for fret groups and
+With the L</ARGUMENTS>, you can define different sizes for fret groups and
 number of available fingers.
 
 These settings are all required, so the defaults are used unless given on the
@@ -17,24 +17,23 @@ command_line.
 
 =head1 SYNOPSIS
 
- $ perl multichoose --version
- $ perl multichoose --help  # Brief summary
- $ perl multichoose --man   # Full docs
- $ perl multichoose --frets 2 --range '0 1 2' --fingers 'i m'
+ $ perl multichoose
+ $ perl multichoose -v
+ $ perl multichoose --doc
+ $ perl multichoose --max 4 --open
+ $ perl multichoose --max 4 --open --unplayable
+ $ perl multichoose -m 2 -o -u --fingers 'x y'
+ $ perl multichoose -m 3 -o -u -f 'x y z'
 
-=head1 ARGUMENTS
+=head2 ARGUMENTS
 
-  help|?  - Brief documentation (0)
-  man     - Full documentation  (0)
-  frets   - Number of frets     (4)
-  range   - Fret position range (0 1 2 3 4)
-  fingers - Finger symbols      (i m r p)
-
-=head2 NOTES
-
-Range: 0 = No fret, "open string". 4 = Number of frets to consider.
-
-Fingers: i=index m=middle r=ring p=pinky. Options: _=none x=muted *=harmonic
+  None | --help | -h | -? : Usage (0)
+  --version | -v : The version!
+  --doc | -d : The documentation (0)
+  --max | -m : Maximum number of frets (4)
+  --fingers | -f : Finger symbols (i m r p)
+  --open : Use the open position (0)
+  --unplayable : Show impossible fret groups (0)
 
 =cut
 
@@ -46,19 +45,23 @@ use List::MoreUtils qw( pairwise );
 use Math::Combinatorics;
 use Pod::Usage;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 # Set the default values.
 my $opt = {
-    'help|?' => 0,
-    'man'    => 0,
-    'frets=i'   => 4,
-    'range=s'   => '0 1 2 3 4',
     'fingers=s' => 'i m r p',
+    'help|?' => 0,
+    'doc' => 0,
+    'max=i' => 4,
+    'open' => 0,
+    'unplayable' => 0,
 };
 
 # See warnings in output context.
 $|++;
+
+# Auto-help if we are called with no arguments.
+pod2usage(-verbose => 1) unless @ARGV;
 
 # Set handy auto-documentation features.
 Getopt::Long::Configure(qw( auto_version auto_help ));
@@ -75,15 +78,15 @@ set_defaults($opt);
 
 # Make an object to hold all possible fret positions.
 my $c = Math::Combinatorics->new(
-    count => $opt->{frets},
+    count => $opt->{max},
     data => $opt->{range},
-    frequency => [ map{ $opt->{frets} } 1 .. @{$opt->{range}} ],
+    frequency => [ map{ $opt->{max} } @{ $opt->{range} } ],
 );
 
 # Line number format width.
-my $n = 3; # TODO Compute with Math::Big?
+my $n = 3; # XXX Hard-coding. Compute with Math::Big?
 
-# Loop counter for each fret group used in the final output.
+# Loop counter for each fret group shown in the final output.
 my $i = 0;
 
 # Visit each multiset.
@@ -143,37 +146,61 @@ while (my @m = $c->next_multiset) {
         }
 
         # Concatinate pairs of fingers and frets.
-        my @limited = @{$opt->{fingers}}[0 .. @s - 1];
+        my @limited = @{$opt->{fingers}}[ 0 .. @s - 1 ];
         my @pairs;
         {
-            # XXX Can't make this not warn yet...
+            # XXX Can't make this call not warn, yet.
             no warnings 'once';
             @pairs = pairwise { $a . $b } @limited, @s;
         }
 
         # Print a string representation of the fret group.
-        printf "%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag;
+        printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
+            if !$flag || ($flag && $opt->{unplayable});
     }
 }
 
+# Assign default settings to all parameters.
 sub set_defaults {
+
     # Intake a Go::L spec=>default hashref of settings.
-    my $setting = shift;
+    my $set = shift;
+
+    # Set the fret range unless already given.
+    unless (exists $set->{range}) {
+
+        # Set the range.
+        $set->{range} = [ 1 .. $set->{max} ];
+
+        # Prepend 0 (the open position) to the range, if requested.
+        unshift @{ $set->{range} }, 0 if $set->{open};
+    }
 
     # Inspect each option and add the setting if needed.
-    for my $spec (keys %$setting) {
+    for my $spec (keys %$set) {
 
         # Extract the option label from the Go::L spec.
-        (my $label = $spec) =~ s/^(\w+)\b.+$/$1/;
+        if ($spec =~ /^(\w+)\b.*$/) {
 
-        # Add the default, if not already given.
-        $setting->{$label} ||= $setting->{$spec};
+            # Capture label.
+            my $label = $1;
 
-        # Handle list arguments.
-        # XXX Hard-coding ahead:
-        if ($label eq 'range' || $label eq 'fingers') {
-            # Transform a comma or space separated list into an arrayref.
-            $setting->{$label} = [ split /,?\s+/, $setting->{$spec} ];
+            # Add the default, if not already given.
+            $set->{$label} = defined $set->{$label}
+                ? $set->{$label} : $set->{$spec};
+
+            # Inflate lists.
+            if ($label eq 'fingers') {
+
+                # Transform the comma or space separated list into an array.
+                my @spec = split /\s*,?\s+/, $set->{$label};
+
+                # Slice the the list by the fret max.
+                @spec = @spec[ 0 .. ($set->{max} || $set->{'max=i'}) - 1 ];
+
+                # Set the ranged list.
+                $set->{$label} = \@spec;
+            }
         }
     }
 }
@@ -184,7 +211,7 @@ __END__
 
 * span=i@ - Adjacent finger span (2 1 2)
 
-(That is, fingers i<->m & r<->p span 2 frets, but m<->r is only 1.)
+Fingers i<->m & r<->p span 2 frets, but m<->r is only 1 in most.
 
 * start=i - Fret start position (1)
 
