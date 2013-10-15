@@ -30,7 +30,7 @@ command_line.
 =head2 ARGUMENTS
 
   None | --help | -h | -? : Usage (0)
-  --version | -v : The version!
+  --version | -v : The version
   --doc | -d : The documentation (0)
   --max | -m : Maximum number of frets (4)
   --fingers | -f : Finger symbols (i m r p)
