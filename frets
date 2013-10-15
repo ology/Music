@@ -41,9 +41,11 @@ command-line.
 use strict;
 use warnings;
 
+use Algorithm::Combinatorics qw(
+    variations_with_repetition
+);
 use Getopt::Long;
 use List::MoreUtils qw( pairwise );
-use Math::Combinatorics;
 use Pod::Usage;
 
 our $VERSION = '0.04';
@@ -77,55 +79,43 @@ pod2usage(-verbose => 2) if $opt->{man};
 # Set unspecified defaults.
 set_defaults($opt);
 
-# Make an object to hold all possible fret positions.
-my $c = Math::Combinatorics->new(
-    count => $opt->{max},
-    data => $opt->{range},
-    frequency => [ map{ $opt->{max} } @{ $opt->{range} } ],
-);
-
 # Line number format width.
 my $n = 3; # XXX Hard-coding. Compute with Math::Big?
 
 # Loop counter for each fret group shown in the final output.
 my $i = 0;
 
-# Visit each multiset.
-while (my @m = $c->next_multiset) {
+# Fret groups (per finger).
+my $v = variations_with_repetition($opt->{range}, $opt->{max});
 
-    # Make an object to hold this positions fret groups.
-    my $p = Math::Combinatorics->new(
-        data => \@m,
-        frequency => [ map { 1 } @m ],
-    );
+# Declare a holder for the last seen position.
+my $previous;
 
-    # Visit each set.
-    while (my @s = $p->next_string) {
+# Flag unplayable fret groups.
+my $flag = '';
 
-        # This is a string to hold reasons why this group is unplayable.
-        my $flag = '';
+while (my $position = $v->next) {
 
-        # Consider adjacent pairs of the fret group.
-        for my $x (1 .. @s - 1) {
+    # Inspect overlapping pairs of positions.
+    for my $current (@$position) {
 
-            # Hide the ugliness of array subscript indexing.
-            my $previous = $s[$x - 1];
-            my $current  = $s[$x];
-
-            # Rule: Restrict spanning.
-            if ($previous && $current && $previous != $current
-                && $current >= $previous + 2) {
-
-                $flag = 's'; # Flag a finger span issue.
-                last;
-            }
+        # Set the first item of the pair and move on.
+        if (not defined $previous) {
+            $previous = $current;
+            next;
         }
 
-        # Proceed if this group has no "play-infractions" flagged.
+        # Rule: Restrict spanning.
+        if ($previous != $current && $current >= $previous + 2) {
+            $flag = 's'; # Flag a finger span issue.
+            last;
+        }
+
+        # Proceed if no "play-infractions" have been flagged.
         unless ($flag) {
 
             # The open position (0) is ignored. Remove zeros.
-            my @no_z = grep { defined $_ && $_ } @s;
+            my @no_z = grep { defined $_ && $_ } @$position;
 
             # Is there a pair of elements?
             if (@no_z >= 2) {
@@ -144,19 +134,19 @@ while (my @m = $c->next_multiset) {
                     }
                 }
             }
-        }
 
-        # Concatinate pairs of fingers and frets.
-        my @pairs;
-        {
-            # XXX Can't make this call not warn, yet.
-            no warnings 'once';
-            @pairs = pairwise { $a . $b } @{ $opt->{fingers} }, @s;
-        }
+            # Concatinate pairs of fingers and frets.
+            my @pairs;
+            {
+                # XXX Can't make this call not warn, yet.
+                no warnings 'once';
+                @pairs = pairwise { $a . $b } @{ $opt->{fingers} }, @$position;
+            }
 
-        # Print a string representation of the fret group.
-        printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
-            if !$flag || ($flag && $opt->{unplayable});
+            # Print a string representation of the fret group.
+            printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
+                if !$flag || ($flag && $opt->{unplayable});
+        }
     }
 }
 
