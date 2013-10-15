@@ -13,15 +13,15 @@ With the L</ARGUMENTS>, you can define different sizes for fret groups and
 number of available fingers.
 
 These settings are all required, so the defaults are used unless given on the
-command_line.
+command-line.
 
 =head1 SYNOPSIS
 
  $ perl frets
  $ perl frets -v
  $ perl frets --doc
- $ perl frets --max 4 --open
- $ perl frets -m 3 -o
+ $ perl frets --max 3
+ $ perl frets -m 4 --open
  $ perl frets -m 4 -o --unplayable
  $ perl frets -fingers 'x y' -u
  $ perl frets -f 'x y z'
