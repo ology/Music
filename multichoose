@@ -180,6 +180,27 @@ sub set_defaults {
         }
     }
 
+    # Make a proper list of the fingers.
+    my $key = 'fingers';
+    my @key = split /\s*[,\s]\s*/, $set->{$key};
+
+    # Max greater than fingers.
+    if ($set->{max} > @key) {
+
+        # Set the max to the number of fingers.
+        $set->{max} = @key;
+        warn "WARNING: Setting max to $set->{max}\n";
+
+        # Set the finger list.
+        $set->{$key} = \@key;
+    }
+    # Fingers greater than max.
+    else {
+
+        # Limit the finger list to the max.
+        $set->{$key} = [ @key[ 0 .. $set->{max} - 1 ] ];
+    }
+
     # Set the range unless given.
     unless (exists $set->{range}) {
 
@@ -188,10 +209,6 @@ sub set_defaults {
         # Prepend 0 (the open position) to the range, if requested.
         unshift @{ $set->{range} }, 0 if $set->{open};
     }
-
-    # Inflate list(s).
-    my $key = 'fingers';
-    $set->{$key} = [ split /\s*[,\s]\s*/, $set->{$key} ];
 }
 
 __END__
