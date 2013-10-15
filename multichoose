@@ -215,6 +215,34 @@ sub set_defaults {
 
 __END__
 
+=head1 EXAMPLE OUTPUT
+
+ $ perl multichoose -m 2
+  1. i1 m2 
+  2. i2 m2 
+  3. i1 m1 
+
+ $ perl multichoose -m 2 -o
+  1. i1 m2 
+  2. i1 m0 
+  3. i0 m1 
+  4. i1 m1 
+  5. i0 m2 
+  6. i2 m0 
+  7. i2 m2 
+  8. i0 m0 
+
+ $ perl multichoose -m 2 -o -u
+  1. i2 m1 b
+  2. i1 m2 
+  3. i1 m0 
+  4. i0 m1 
+  5. i1 m1 
+  6. i0 m2 
+  7. i2 m0 
+  8. i2 m2 
+  9. i0 m0 
+
 =head1 TO DO
 
 * span=i@ - Adjacent finger span (2 1 2)
