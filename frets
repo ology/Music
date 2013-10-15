@@ -46,7 +46,7 @@ use List::MoreUtils qw( pairwise );
 use Math::Combinatorics;
 use Pod::Usage;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 # Set the default values.
 my $opt = {
