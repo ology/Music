@@ -22,9 +22,10 @@ command_line.
  $ perl multichoose --doc
  $ perl multichoose --max 4 --open
  $ perl multichoose -m 4 -o --unplayable
- $ perl multichoose --fingers 'x y'
- $ perl multichoose -f 'x y' -o
- $ perl multichoose -f 'x y z' -u
+ $ perl multichoose -m 3 -o
+ $ perl multichoose -m 2 -o -u
+ $ perl multichoose -fingers 'x y' -u
+ $ perl multichoose -f 'x y z'
 
 =head2 ARGUMENTS
 
