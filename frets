@@ -23,7 +23,7 @@ command-line.
  $ perl frets -v
  $ perl frets --doc
  $ perl frets --max 3
- $ perl frets -m 4 --open
+ $ perl frets -m 3 --open
  $ perl frets -m 4 -o --unplayable
  $ perl frets -fingers 'x y' -u
  $ perl frets -f 'x y z'
@@ -99,7 +99,7 @@ sub infraction { # Flag unplayable fret groups.
     my @no_z = grep { $_ } @$pos;
 
     # Return unless there is more than one no-zero position list.
-    return '' unless @no_z >= 1;
+    return '' unless @no_z > 1;
 
     # Declare the flag to return.
     my $flag = '';
