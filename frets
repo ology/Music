@@ -143,10 +143,6 @@ sub pair_up { # Concatinate pairs of fingers and frets.
     return pairwise { $a . $b } @{ $set->{fingers} }, @$pos;
 }
 
-sub show_progress { # Show the current fret group.
-    my ($set, $args, $flag) = @_;
-}
-
 sub set_defaults { # Assign default settings to all parameters.
 
     # Intake a Go::L spec=>default hashref of settings.
