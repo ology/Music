@@ -90,7 +90,7 @@ while (my $position = $v->next) {
     my @pairs = pair_up($opt, $position);
 
     # Print a string representation of the fret group.
-    printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
+    printf("%*d. %s %s\n", $n, $i++, join(' ', @pairs), $flag)
         if !$flag || ($flag && $opt->{unplayable});
 }
 
