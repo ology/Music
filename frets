@@ -63,27 +63,17 @@ my $opt = {
 # See warnings in output context.
 $|++;
 
-# Auto-help if we are called with no arguments.
-pod2usage(-verbose => 1) unless @ARGV;
-
-# Set handy auto-documentation features.
-Getopt::Long::Configure(qw( auto_version auto_help ));
-
-# Collect the command-line arguments.
-GetOptions($opt, keys %$opt) || pod2usage(-verbose => 0);
-
-# Show documentation if requested.
-pod2usage(-verbose => 1) if $opt->{help};
-pod2usage(-verbose => 2) if $opt->{man};
-
 # Set unspecified defaults.
-set_defaults($opt);
+set_defaults($opt, \@ARGV);
 
 # Line number format width.
-my $n = 3; # XXX Hard-coding. Compute with Math::Big?
+my $n = 3; # TODO Compute this instead of hard-coding it.
 
 # Loop counter for each fret group shown in the final output.
 my $i = 0;
+
+# Flag unplayable fret groups.
+my $flag = '';
 
 # Fret groups (per finger).
 my $v = variations_with_repetition($opt->{range}, $opt->{max});
@@ -91,70 +81,83 @@ my $v = variations_with_repetition($opt->{range}, $opt->{max});
 # Declare a holder for the last seen position.
 my $previous;
 
-# Flag unplayable fret groups.
-my $flag = '';
+POSN: while (my $position = $v->next) {
 
-while (my $position = $v->next) {
-
+#warn "@$position\n"; next;
     # Inspect overlapping pairs of positions.
     for my $current (@$position) {
 
         # Set the first item of the pair and move on.
-        if (not defined $previous) {
-            $previous = $current;
-            next;
-        }
+#        if (not defined $previous) {
+#            $previous = $current;
+#            next POSN;
+#        }
+#warn "($previous, $current)\n"; next;
 
         # Rule: Restrict spanning.
-        if ($previous != $current && $current >= $previous + 2) {
-            $flag = 's'; # Flag a finger span issue.
-            last;
-        }
+#        if ($previous != $current && $current >= $previous + 2) {
+#            $flag = 's'; # Flag a finger span issue.
+#            next POSN;
+#        }
 
         # Proceed if no "play-infractions" have been flagged.
-        unless ($flag) {
+#        unless ($flag) {
 
             # The open position (0) is ignored. Remove zeros.
-            my @no_z = grep { defined $_ && $_ } @$position;
+#            my @no_z = grep { defined $_ && $_ } @$position;
 
             # Is there a pair of elements?
-            if (@no_z >= 2) {
+#            if (@no_z >= 2) {
 
                 # Consider adjacent pairs of the no-zero fret group.
-                for my $x (1 .. @no_z - 1) {
+#                for my $x (1 .. @no_z - 1) {
 
                     # Consider the current tail of no-zero elements.
-                    my @sliver = @no_z[$x .. @no_z - 1];
+#                    my @sliver = @no_z[$x .. @no_z - 1];
 
                     # Rule: Higher frets for lower fingers are not allowed.
-                    if (grep { $no_z[$x - 1] > $_ } @sliver) {
+#                    if (grep { $no_z[$x - 1] > $_ } @sliver) {
 
-                        $flag = 'b'; # Flag a backward issue
-                        last;
-                    }
-                }
-            }
+#                        $flag = 'b'; # Flag a backward issue
+#                        next POSN;
+#                    }
+#                }
+#            }
 
             # Concatinate pairs of fingers and frets.
-            my @pairs;
-            {
+#            my @pairs;
+#            {
                 # XXX Can't make this call not warn, yet.
-                no warnings 'once';
-                @pairs = pairwise { $a . $b } @{ $opt->{fingers} }, @$position;
-            }
-
-            # Print a string representation of the fret group.
-            printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
-                if !$flag || ($flag && $opt->{unplayable});
-        }
+#                no warnings 'once';
+#                @pairs = pairwise { $a . $b } @{ $opt->{fingers} }, @$position;
+#            }
+#        }
     }
+
+    # Print a string representation of the fret group.
+#    printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
+    printf("%*d. %s %s\n", $n, ++$i, join(' ', @$position), $flag)
+        if !$flag || ($flag && $opt->{unplayable});
 }
 
 # Assign default settings to all parameters.
 sub set_defaults {
 
     # Intake a Go::L spec=>default hashref of settings.
-    my $set = shift;
+    my ($set, $args) = @_;
+
+    # Auto-help if we are called with no arguments.
+    pod2usage(-verbose => 1) unless @$args;
+
+    # Set handy auto-documentation features.
+    Getopt::Long::Configure(qw( auto_version auto_help ));
+
+    # Collect the command-line arguments.
+    GetOptions($opt, keys %$opt) || pod2usage(-verbose => 0);
+
+    # Show documentation if requested.
+    pod2usage(-verbose => 1) if $opt->{help};
+    pod2usage(-verbose => 2) if $opt->{man};
 
     # Set the fret range unless already given.
     # Inspect each option and add the setting if needed.
