@@ -32,7 +32,7 @@ command-line.
 
   None | --help | -h | -? : Usage (0)
   --version | -v : The version
-  --doc | -d : The documentation (0)
+  --docs | -d : The documentation (0)
   --max | -m : Maximum number of frets (4)
   --fingers | -f : Finger symbols (i m r p)
   --open : Use the open position (0)
@@ -57,7 +57,7 @@ use Pod::Usage;
 my $setting = {
     'fingers=s' => 'i m r p',
     'help|?' => 0,
-    'doc' => 0,
+    'docs' => 0,
     'max=i' => 4,
     'open' => 0,
     'unplayable' => 0,
@@ -167,7 +167,7 @@ sub set_defaults { # Assign default settings to all parameters.
 
     # Show documentation if requested.
     pod2usage(-verbose => 1) if $set->{help};
-    pod2usage(-verbose => 2) if $set->{man};
+    pod2usage(-verbose => 2) if $set->{docs};
 
     # Inspect each option and add the setting if needed.
     for my $spec (keys %$set) {
