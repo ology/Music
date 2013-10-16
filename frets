@@ -137,10 +137,10 @@ sub flag_backwards { # Flag backwards fret groups.
 }
 
 sub pair_up { # Concatinate pairs of fingers and frets.
-    my( $set, $pos) = @_;
+    my( $set, $posn) = @_;
     # XXX Can't make this call not warn, yet.
     no warnings 'once';
-    return pairwise { $a . $b } @{ $set->{fingers} }, @$pos;
+    return pairwise { $a . $b } @{ $set->{fingers} }, @$posn;
 }
 
 sub set_defaults { # Assign default settings to all parameters.
@@ -197,13 +197,10 @@ sub set_defaults { # Assign default settings to all parameters.
     }
 
     # Set the range unless given.
-    unless (exists $set->{range}) {
+    $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
 
-        $set->{range} = [ 1 .. $set->{max} ];
-
-        # Prepend 0 (the open position) to the range, if requested.
-        unshift @{ $set->{range} }, 0 if $set->{open};
-    }
+    # Prepend 0 (the open position) to the range, if requested.
+    unshift @{ $set->{range} }, 0 if $set->{open};
 }
 
 __END__
