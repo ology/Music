@@ -91,25 +91,32 @@ while (my $position = $v->next) {
 }
 
 sub infraction { # Flag unplayable fret groups.
+
     # The position to consider.
     my $pos = shift;
+
     # Declare the flag to return.
     my $flag = '';
 
     # Declare a holder for the last seen position.
     my $previous;
+
     # Inspect overlapping pairs of positions.
     for my $current (@$pos) {
+
         # Set the first item of the pair and move on.
         if (not defined $previous) {
             $previous = $current;
         }
+
         #warn "($previous, $current)\n"; next;
         # Rule: Restrict spanning.
         if ($previous != $current && $current >= $previous + 2) {
             $flag = 'S'; # Flag a finger span issue.
         }
     }
+
+    # Return any insfractions found.
     return $flag;
 }
 
