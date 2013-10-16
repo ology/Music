@@ -66,11 +66,11 @@ my $setting = {
 # Set unspecified defaults.
 set_defaults($setting, \@ARGV);
 
-# Line number format width.
-my $n = 3; # TODO Compute this instead of hard-coding it.
-
 # Fret groups (per finger).
 my $v = variations_with_repetition($setting->{range}, $setting->{max});
+
+# Line number format width.
+my $width = 3; # TODO Compute this instead of hard-coding it.
 
 # Flag unplayable fret groups.
 my $flag = '';
@@ -86,7 +86,7 @@ while (my $position = $v->next) {
     my @pairs = pair_up($setting, $position);
 
     # Print a string representation of the fret group.
-    printf("%*d. %s %s\n", $n, $i++, join(' ', @pairs), $flag)
+    printf("%*d. %s %s\n", $width, $i++, join(' ', @pairs), $flag)
         if !$flag || ($flag && $setting->{unplayable});
 }
 
