@@ -69,75 +69,85 @@ set_defaults($opt, \@ARGV);
 # Line number format width.
 my $n = 3; # TODO Compute this instead of hard-coding it.
 
-# Loop counter for each fret group shown in the final output.
-my $i = 0;
+# Fret groups (per finger).
+my $v = variations_with_repetition($opt->{range}, $opt->{max});
 
 # Flag unplayable fret groups.
 my $flag = '';
 
-# Fret groups (per finger).
-my $v = variations_with_repetition($opt->{range}, $opt->{max});
-
 # Declare a holder for the last seen position.
 my $previous;
 
-POSN: while (my $position = $v->next) {
+# Loop counter for each fret group shown in the final output.
+my $i = 0;
 
-#    # The open position (0) is ignored. Remove zeros.
-#    my @no_z = grep { defined $_ && $_ } @$position;
-#    # Is there a pair of elements?
-#    if (@no_z >= 2) {
-#        # Consider adjacent pairs of the no-zero fret group.
-#        for my $x (1 .. $#no_z) {
-#            # Consider the current tail of no-zero elements.
-#            my @sliver = @no_z[$x .. $#no_z];
-#            # Rule: Higher frets for lower fingers are not allowed.
-#            if (grep { $no_z[$x - 1] > $_ } @sliver) {
-#                $flag .= 'b'; # Flag a backward issue.
-#                show_progress();
-#                next POSN;
-#            }
-#        }
-#    }
+while (my $position = $v->next) {
 
-    # Inspect overlapping pairs of positions.
-#    for my $current (@$position) {
-        # Set the first item of the pair and move on.
-#        if (not defined $previous) {
-#            $previous = $current;
-#            next POSN;
-#        }
-#warn "($previous, $current)\n"; next;
-            # Rule: Restrict spanning.
-#            if ($previous != $current && $current >= $previous + 2) {
-#                $flag = 's'; # Flag a finger span issue.
-#                next POSN;
-#            }
-#    }
+#    $flag .= flag_backwards($position);
+#    $flag .= flag_span($position);
 
     # Concatinate pairs of fingers and frets.
     my @pairs = pair_up($opt, $position);
 
-    show_progress($opt, [$n, ++$i, join(' ', @pairs)], $flag)
+    # Print a string representation of the fret group.
+    printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
+        if !$flag || ($flag && $opt->{unplayable});
 }
 
-sub pair_up {
+sub flag_span { # Flag fret groups with impossible finger spans.
+    # The position to consider.
+    my ($posn, $prev) = @_;
+    # Declare the flag to return.
+    my $flag = '';
+    # Inspect overlapping pairs of positions.
+    for my $current (@$posn) {
+        # Set the first item of the pair and move on.
+        if (not defined $prev) {
+            $prev = $current;
+        }
+        #warn "($prev, $current)\n"; next;
+        # Rule: Restrict spanning.
+        if ($prev != $current && $current >= $prev + 2) {
+            $flag = 'S'; # Flag a finger span issue.
+        }
+    }
+    return $flag;
+}
+
+sub flag_backwards { # Flag backwards fret groups.
+    # The position to consider.
+    my $posn = shift;
+    # Declare the flag to return.
+    my $flag = '';
+    # The open position (0) is ignored. Remove zeros.
+    my @no_z = grep { $_ } @$posn;
+    # Is there a pair of elements?
+    if (@no_z >= 2) {
+        # Consider adjacent pairs of the no-zero fret group.
+        for my $x (1 .. $#no_z) {
+            # Consider the current tail of no-zero elements.
+            my @tail = @no_z[$x .. $#no_z];
+            # Rule: Higher frets for lower fingers are not allowed.
+            if (grep { $no_z[$x - 1] > $_ } @tail) {
+                $flag .= 'B'; # Flag a backward issue.
+            }
+        }
+    }
+    return $flag;
+}
+
+sub pair_up { # Concatinate pairs of fingers and frets.
     my( $set, $pos) = @_;
     # XXX Can't make this call not warn, yet.
     no warnings 'once';
     return pairwise { $a . $b } @{ $set->{fingers} }, @$pos;
 }
 
-# Show the current fret group.
-sub show_progress {
+sub show_progress { # Show the current fret group.
     my ($set, $args, $flag) = @_;
-    # Print a string representation of the fret group.
-    printf("%*d. %s %s\n", @$args, $flag)
-        if !$flag || ($flag && $set->{unplayable});
 }
 
-# Assign default settings to all parameters.
-sub set_defaults {
+sub set_defaults { # Assign default settings to all parameters.
 
     # Intake a Go::L spec=>default hashref of settings.
     my ($set, $args) = @_;
