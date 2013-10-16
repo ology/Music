@@ -161,7 +161,6 @@ sub set_defaults { # Assign default settings to all parameters.
     pod2usage(-verbose => 1) if $opt->{help};
     pod2usage(-verbose => 2) if $opt->{man};
 
-    # Set the fret range unless already given.
     # Inspect each option and add the setting if needed.
     for my $spec (keys %$set) {
 
