@@ -41,6 +41,9 @@ command-line.
 use strict;
 use warnings;
 
+# See warnings in output context.
+$|++;
+
 use Algorithm::Combinatorics qw(
     variations_with_repetition
 );
@@ -59,9 +62,6 @@ my $opt = {
     'open' => 0,
     'unplayable' => 0,
 };
-
-# See warnings in output context.
-$|++;
 
 # Set unspecified defaults.
 set_defaults($opt, \@ARGV);
