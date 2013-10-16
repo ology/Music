@@ -157,11 +157,11 @@ sub set_defaults { # Assign default settings to all parameters.
     Getopt::Long::Configure(qw( auto_version auto_help ));
 
     # Collect the command-line arguments.
-    GetOptions($opt, keys %$opt) || pod2usage(-verbose => 0);
+    GetOptions($set, keys %$set) || pod2usage(-verbose => 0);
 
     # Show documentation if requested.
-    pod2usage(-verbose => 1) if $opt->{help};
-    pod2usage(-verbose => 2) if $opt->{man};
+    pod2usage(-verbose => 1) if $set->{help};
+    pod2usage(-verbose => 2) if $set->{man};
 
     # Inspect each option and add the setting if needed.
     for my $spec (keys %$set) {
