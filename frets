@@ -75,16 +75,12 @@ my $v = variations_with_repetition($setting->{range}, $setting->{max});
 # Flag unplayable fret groups.
 my $flag = '';
 
-# Declare a holder for the last seen position.
-my $previous;
-
 # Loop counter for each fret group shown in the final output.
 my $i = 0;
 
 while (my $position = $v->next) {
 
-#    $flag .= flag_backwards($position);
-    $flag .= flag_span($position);
+    $flag .= infraction($position);
 
     # Concatinate pairs of fingers and frets.
     my @pairs = pair_up($setting, $position);
@@ -94,11 +90,14 @@ while (my $position = $v->next) {
         if !$flag || ($flag && $setting->{unplayable});
 }
 
-sub flag_span { # Flag fret groups with impossible finger spans.
+sub infraction { # Flag unplayable fret groups.
     # The position to consider.
-    my ($pos, $prev) = @_;
+    my $pos = shift;
     # Declare the flag to return.
     my $flag = '';
+
+    # Declare a holder for the last seen position.
+    my $prev;
     # Inspect overlapping pairs of positions.
     for my $current (@$pos) {
         # Set the first item of the pair and move on.
