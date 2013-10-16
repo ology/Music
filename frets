@@ -97,16 +97,16 @@ sub infraction { # Flag unplayable fret groups.
     my $flag = '';
 
     # Declare a holder for the last seen position.
-    my $prev;
+    my $previous;
     # Inspect overlapping pairs of positions.
     for my $current (@$pos) {
         # Set the first item of the pair and move on.
-        if (not defined $prev) {
-            $prev = $current;
+        if (not defined $previous) {
+            $previous = $current;
         }
-        #warn "($prev, $current)\n"; next;
+        #warn "($previous, $current)\n"; next;
         # Rule: Restrict spanning.
-        if ($prev != $current && $current >= $prev + 2) {
+        if ($previous != $current && $current >= $previous + 2) {
             $flag = 'S'; # Flag a finger span issue.
         }
     }
