@@ -54,7 +54,7 @@ use List::MoreUtils qw( pairwise );
 use Pod::Usage;
 
 # Set the default values.
-my $opt = {
+my $setting = {
     'fingers=s' => 'i m r p',
     'help|?' => 0,
     'doc' => 0,
@@ -64,13 +64,13 @@ my $opt = {
 };
 
 # Set unspecified defaults.
-set_defaults($opt, \@ARGV);
+set_defaults($setting, \@ARGV);
 
 # Line number format width.
 my $n = 3; # TODO Compute this instead of hard-coding it.
 
 # Fret groups (per finger).
-my $v = variations_with_repetition($opt->{range}, $opt->{max});
+my $v = variations_with_repetition($setting->{range}, $setting->{max});
 
 # Flag unplayable fret groups.
 my $flag = '';
@@ -84,14 +84,14 @@ my $i = 0;
 while (my $position = $v->next) {
 
 #    $flag .= flag_backwards($position);
-#    $flag .= flag_span($position);
+    $flag .= flag_span($position);
 
     # Concatinate pairs of fingers and frets.
-    my @pairs = pair_up($opt, $position);
+    my @pairs = pair_up($setting, $position);
 
     # Print a string representation of the fret group.
     printf("%*d. %s %s\n", $n, $i++, join(' ', @pairs), $flag)
-        if !$flag || ($flag && $opt->{unplayable});
+        if !$flag || ($flag && $setting->{unplayable});
 }
 
 sub flag_span { # Flag fret groups with impossible finger spans.
