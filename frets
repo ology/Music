@@ -83,61 +83,57 @@ my $previous;
 
 POSN: while (my $position = $v->next) {
 
-#warn "@$position\n"; next;
-    # Inspect overlapping pairs of positions.
-    for my $current (@$position) {
+#    # The open position (0) is ignored. Remove zeros.
+#    my @no_z = grep { defined $_ && $_ } @$position;
+#    # Is there a pair of elements?
+#    if (@no_z >= 2) {
+#        # Consider adjacent pairs of the no-zero fret group.
+#        for my $x (1 .. $#no_z) {
+#            # Consider the current tail of no-zero elements.
+#            my @sliver = @no_z[$x .. $#no_z];
+#            # Rule: Higher frets for lower fingers are not allowed.
+#            if (grep { $no_z[$x - 1] > $_ } @sliver) {
+#                $flag .= 'b'; # Flag a backward issue.
+#                show_progress();
+#                next POSN;
+#            }
+#        }
+#    }
 
+    # Inspect overlapping pairs of positions.
+#    for my $current (@$position) {
         # Set the first item of the pair and move on.
 #        if (not defined $previous) {
 #            $previous = $current;
 #            next POSN;
 #        }
 #warn "($previous, $current)\n"; next;
-
-        # Rule: Restrict spanning.
-#        if ($previous != $current && $current >= $previous + 2) {
-#            $flag = 's'; # Flag a finger span issue.
-#            next POSN;
-#        }
-
-        # Proceed if no "play-infractions" have been flagged.
-#        unless ($flag) {
-
-            # The open position (0) is ignored. Remove zeros.
-#            my @no_z = grep { defined $_ && $_ } @$position;
-
-            # Is there a pair of elements?
-#            if (@no_z >= 2) {
-
-                # Consider adjacent pairs of the no-zero fret group.
-#                for my $x (1 .. @no_z - 1) {
-
-                    # Consider the current tail of no-zero elements.
-#                    my @sliver = @no_z[$x .. @no_z - 1];
-
-                    # Rule: Higher frets for lower fingers are not allowed.
-#                    if (grep { $no_z[$x - 1] > $_ } @sliver) {
-
-#                        $flag = 'b'; # Flag a backward issue
-#                        next POSN;
-#                    }
-#                }
+            # Rule: Restrict spanning.
+#            if ($previous != $current && $current >= $previous + 2) {
+#                $flag = 's'; # Flag a finger span issue.
+#                next POSN;
 #            }
+#    }
 
-            # Concatinate pairs of fingers and frets.
-#            my @pairs;
-#            {
-                # XXX Can't make this call not warn, yet.
-#                no warnings 'once';
-#                @pairs = pairwise { $a . $b } @{ $opt->{fingers} }, @$position;
-#            }
-#        }
-    }
+    # Concatinate pairs of fingers and frets.
+    my @pairs = pair_up($opt, $position);
 
+    show_progress($opt, [$n, ++$i, join(' ', @pairs)], $flag)
+}
+
+sub pair_up {
+    my( $set, $pos) = @_;
+    # XXX Can't make this call not warn, yet.
+    no warnings 'once';
+    return pairwise { $a . $b } @{ $set->{fingers} }, @$pos;
+}
+
+# Show the current fret group.
+sub show_progress {
+    my ($set, $args, $flag) = @_;
     # Print a string representation of the fret group.
-#    printf("%*d. %s %s\n", $n, ++$i, join(' ', @pairs), $flag)
-    printf("%*d. %s %s\n", $n, ++$i, join(' ', @$position), $flag)
-        if !$flag || ($flag && $opt->{unplayable});
+    printf("%*d. %s %s\n", @$args, $flag)
+        if !$flag || ($flag && $set->{unplayable});
 }
 
 # Assign default settings to all parameters.
