@@ -72,15 +72,13 @@ my $v = variations_with_repetition($setting->{range}, $setting->{max});
 # Line number format width.
 my $width = 3; # TODO Compute this instead of hard-coding it.
 
-# Flag unplayable fret groups.
-my $flag = '';
-
 # Loop counter for each fret group shown in the final output.
 my $i = 0;
 
 while (my $position = $v->next) {
 
-    $flag = infraction($position);
+    # Flag unplayable fret groups.
+    my $flag = infraction($position);
 
     # Concatinate pairs of fingers and frets.
     my @pairs = pair_up($setting, $position);
@@ -130,8 +128,8 @@ sub infraction { # Flag unplayable fret groups.
             last;
         }
 
-        #warn "($previous, $current)\n"; next;
-        # Rule: Restrict spanning.
+        # Rule: Adjacent fingers spanning more than N fret(s) is not allowed.
+        # TODO Use the --span option to define a profile to reference.
         if ($previous != $current && $current >= $previous + 2) {
             $flag = 'S'; # Flag a finger span issue.
             last;
