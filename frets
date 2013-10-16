@@ -140,7 +140,8 @@ sub pair_up { # Concatinate pairs of fingers and frets.
     my( $set, $posn) = @_;
     # XXX Can't make this call not warn, yet.
     no warnings 'once';
-    return pairwise { $a . $b } @{ $set->{fingers} }, @$posn;
+    # Don't join fingers with zeros.
+    return pairwise { $b ? $a . $b : $b } @{ $set->{fingers} }, @$posn;
 }
 
 sub set_defaults { # Assign default settings to all parameters.
