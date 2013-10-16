@@ -80,7 +80,7 @@ my $i = 0;
 
 while (my $position = $v->next) {
 
-    $flag .= infraction($position);
+    $flag = infraction($position);
 
     # Concatinate pairs of fingers and frets.
     my @pairs = pair_up($setting, $position);
