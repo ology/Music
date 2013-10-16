@@ -96,11 +96,11 @@ while (my $position = $v->next) {
 
 sub flag_span { # Flag fret groups with impossible finger spans.
     # The position to consider.
-    my ($posn, $prev) = @_;
+    my ($position, $prev) = @_;
     # Declare the flag to return.
     my $flag = '';
     # Inspect overlapping pairs of positions.
-    for my $current (@$posn) {
+    for my $current (@$position) {
         # Set the first item of the pair and move on.
         if (not defined $prev) {
             $prev = $current;
@@ -116,11 +116,11 @@ sub flag_span { # Flag fret groups with impossible finger spans.
 
 sub flag_backwards { # Flag backwards fret groups.
     # The position to consider.
-    my $posn = shift;
+    my $position = shift;
     # Declare the flag to return.
     my $flag = '';
     # The open position (0) is ignored. Remove zeros.
-    my @no_z = grep { $_ } @$posn;
+    my @no_z = grep { $_ } @$position;
     # Is there a pair of elements?
     if (@no_z >= 2) {
         # Consider adjacent pairs of the no-zero fret group.
@@ -137,12 +137,12 @@ sub flag_backwards { # Flag backwards fret groups.
 }
 
 sub pair_up { # Concatinate pairs of fingers and frets.
-    my( $set, $posn) = @_;
+    my( $set, $position) = @_;
     # XXX Can't make this call not warn, yet.
     no warnings 'once';
     # Don't join fingers with zeros.
     return pairwise { sprintf '%2s', $b ? $a . $b : $b }
-        @{ $set->{fingers} }, @$posn;
+        @{ $set->{fingers} }, @$position;
 }
 
 sub set_defaults { # Assign default settings to all parameters.
