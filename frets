@@ -95,19 +95,39 @@ sub infraction { # Flag unplayable fret groups.
     # The position to consider.
     my $pos = shift;
 
+    # The open position (0) is ignored. Remove zeros.
+    my @no_z = grep { $_ } @$pos;
+
+    # Return unless there is more than one no-zero position list.
+    return '' unless @no_z >= 1;
+
     # Declare the flag to return.
     my $flag = '';
 
     # Declare a holder for the last seen position.
     my $previous;
 
-    # Inspect overlapping pairs of positions.
+    # Location counter used for reverse-tail checking.
+    my $loc = 0;
+
+    # Inspect pairs of positions.
     for my $current (@$pos) {
+
+        # Increment!
+        $loc++;
 
         # Set the first item of the pair and move on.
         if (not defined $previous) {
             $previous = $current;
             next;
+        }
+
+        # Rule: Higher frets for lower fingers are not allowed.
+        # Consider the current tail of no-zero elements.
+        my @tail = @no_z[$loc - 1 .. $#no_z];
+        if (grep { $previous > $_ } @tail) {
+            $flag .= 'B'; # Flag a backward issue.
+            last;
         }
 
         #warn "($previous, $current)\n"; next;
@@ -118,29 +138,7 @@ sub infraction { # Flag unplayable fret groups.
         }
     }
 
-    # Return any insfractions found.
-    return $flag;
-}
-
-sub flag_backwards { # Flag backwards fret groups.
-    # The position to consider.
-    my $pos = shift;
-    # Declare the flag to return.
-    my $flag = '';
-    # The open position (0) is ignored. Remove zeros.
-    my @no_z = grep { $_ } @$pos;
-    # Is there a pair of elements?
-    if (@no_z >= 2) {
-        # Consider adjacent pairs of the no-zero fret group.
-        for my $x (1 .. $#no_z) {
-            # Consider the current tail of no-zero elements.
-            my @tail = @no_z[$x .. $#no_z];
-            # Rule: Higher frets for lower fingers are not allowed.
-            if (grep { $no_z[$x - 1] > $_ } @tail) {
-                $flag .= 'B'; # Flag a backward issue.
-            }
-        }
-    }
+    # Return any infractions.
     return $flag;
 }
 
