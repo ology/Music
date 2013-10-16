@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+our $VERSION = '0.04';
+
 =head1 NAME
 
 frets - List all possible fret positions
@@ -50,8 +52,6 @@ use Algorithm::Combinatorics qw(
 use Getopt::Long;
 use List::MoreUtils qw( pairwise );
 use Pod::Usage;
-
-our $VERSION = '0.04';
 
 # Set the default values.
 my $opt = {
