@@ -57,6 +57,7 @@ use Pod::Usage;
 # Set the default values.
 my $setting = {
     'fingers=s' => 'i m r p',
+    'numbers=s' => '1 2 3 4',
     'help|?' => 0,
     'docs' => 0,
     'max=i' => 4,
@@ -173,6 +174,13 @@ sub set_defaults { # Assign default settings to all parameters.
     pod2usage(-verbose => 1) if $set->{help};
     pod2usage(-verbose => 2) if $set->{docs};
 
+    # Set the original fingers to use.
+    my @fingers = split /\s*[,\s]\s*/, $set->{'fingers=s'};
+
+    # Set the original finger=>number order association.
+    my @numbers = split /\s*[,\s]\s*/, $set->{'numbers=s'};
+    $set->{'numbers=s'} = { pairwise { ($a => $b) } @fingers, @numbers };
+
     # Inspect each option and add the setting if needed.
     for my $spec (keys %$set) {
 
@@ -188,7 +196,7 @@ sub set_defaults { # Assign default settings to all parameters.
     }
 
     # Set the finger list to the default or user given.
-    my @fingers = split /\s*[,\s]\s*/, $set->{fingers};
+    @fingers = split /\s*[,\s]\s*/, $set->{fingers};
 
     # If the max is greater than the number of fingers...
     if ($set->{max} > @fingers) {
@@ -205,6 +213,10 @@ sub set_defaults { # Assign default settings to all parameters.
 
     # Set the finger list.
     $set->{fingers} = \@fingers;
+
+    # Set any new finger=>number order association.
+    @numbers = split /\s*[,\s]\s*/, $set->{numbers};
+    $set->{'numbers=s'} = { pairwise { ($a => $b) } @fingers, @numbers };
 
     # Set the range unless given.
     $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
