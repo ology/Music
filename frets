@@ -37,6 +37,7 @@ command-line.
   --fingers | -f : Finger symbols (i m r p)
   --open : Use the open position (0)
   --unplayable : Show impossible fret groups (0)
+  --accumulate : Tally all infractions seen (0)
 
 =cut
 
@@ -61,6 +62,7 @@ my $setting = {
     'max=i' => 4,
     'open' => 0,
     'unplayable' => 0,
+    'accumulate' => 0,
 };
 
 # Set unspecified defaults.
@@ -125,14 +127,14 @@ sub infraction { # Flag unplayable fret groups.
         my @tail = @no_z[$loc - 1 .. $#no_z];
         if (grep { $previous > $_ } @tail) {
             $flag .= 'B'; # Flag a backward issue.
-            last;
+            last unless $set->{accumulate};
         }
 
         # Rule: Fingers spanning more than N fret(s) is not allowed.
         # TODO Absolute diff of m-r can't be more than 1. Other issues TBD
         if ($current >= $previous + 2) {
-            $flag = 'S'; # Flag a finger span issue.
-            last;
+            $flag .= 'S'; # Flag a finger span issue.
+            last unless $set->{accumulate};
         }
 
         # Update the previously seen item.
