@@ -134,6 +134,9 @@ sub infraction { # Flag unplayable fret groups.
             $flag = 'S'; # Flag a finger span issue.
             last;
         }
+
+        # Update the previously seen item.
+        $previous = $current;
     }
 
     # Return any infractions.
