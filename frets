@@ -230,7 +230,7 @@ sub set_defaults { # Assign default settings to all parameters.
 
     # Set any new finger=>number order association.
     @numbers = split /\s*[,\s]\s*/, $set->{numbers};
-    $set->{'numbers=s'} = { pairwise { ($a => $b) } @fingers, @numbers };
+    $set->{numbers} = { pairwise { ($a => $b) } @fingers, @numbers };
 
     # Set the range unless given.
     $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
