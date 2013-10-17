@@ -212,13 +212,33 @@ sub set_defaults { # Assign default settings to all parameters.
 
 __END__
 
-=head1 EXAMPLE OUTPUT
+=head1 EXAMPLES
 
  $ perl frets -m 2
+   0. i1 m1
+   1. i1 m2
+   2. i2 m2
 
  $ perl frets -m 2 -o
+   0.  0  0
+   1.  0 m1
+   2.  0 m2
+   3. i1  0
+   4. i1 m1
+   5. i1 m2
+   6. i2  0
+   7. i2 m2
 
  $ perl frets -m 2 -o -u
+  0.  0  0
+  1.  0 m1
+  2.  0 m2
+  3. i1  0
+  4. i1 m1
+  5. i1 m2
+  6. i2  0
+  7. i2 m1 B
+  8. i2 m2
 
 =head1 TO DO
 
