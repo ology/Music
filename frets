@@ -24,7 +24,8 @@ command-line.
  $ perl frets --doc
  $ perl frets --max 3
  $ perl frets -m 3 --open
- $ perl frets -m 4 -o --unplayable
+ $ perl frets -m 4 --unplayable
+ $ perl frets -m 4 -o -u --accumulate
  $ perl frets -fingers 'x y'
  $ perl frets -f 'x y z' -u
 
