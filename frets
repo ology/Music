@@ -71,8 +71,11 @@ my $setting = {
     'accumulate' => 0,
 };
 
+# Harvest with Go::L and call P::U.
+setup($setting, \@ARGV);
+
 # Set unspecified defaults.
-set_defaults($setting, \@ARGV);
+set_defaults($setting);
 
 # Fret groups (per finger).
 my $v = variations_with_repetition($setting->{range}, $setting->{max});
@@ -161,7 +164,7 @@ sub pair_up { # Concatinate pairs of fingers and frets.
         @{ $set->{fingers} }, @$pos;
 }
 
-sub set_defaults { # Assign default settings to all parameters.
+sub setup { # Harvest command-line arguments and use magical POD.Assign default settings to all parameters.
 
     # Intake a Go::L spec=>default hashref of settings.
     my ($set, $args) = @_;
@@ -178,6 +181,12 @@ sub set_defaults { # Assign default settings to all parameters.
     # Show documentation if requested.
     pod2usage(-verbose => 1) if $set->{help};
     pod2usage(-verbose => 2) if $set->{docs};
+}
+
+sub set_defaults { # Assign default settings to all parameters.
+
+    # Get the settings.
+    my $set = shift;
 
     # Set the original fingers to use.
     my @fingers = split /\s*[,\s]\s*/, $set->{'fingers=s'};
