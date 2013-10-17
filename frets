@@ -108,10 +108,10 @@ sub infraction { # Flag unplayable fret groups.
     # Location counter.
     my $loc = 0;
 
-    # Inspect pairs of positions.
+    # Inspect pairs of the position.
     for my $current (@$pos) {
 
-        # Increment!
+        # Increment first since we've seen at least one.
         $loc++;
 
         # Set the first item of the pair and move on.
@@ -130,7 +130,7 @@ sub infraction { # Flag unplayable fret groups.
 
         # Rule: Fingers spanning more than N fret(s) is not allowed.
         # TODO Absolute diff of m-r can't be more than 1. Other issues TBD
-        if ($previous != $current && $current >= $previous + 2) {
+        if ($current >= $previous + 2) {
             $flag = 'S'; # Flag a finger span issue.
             last;
         }
