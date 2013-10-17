@@ -78,7 +78,7 @@ my $i = 0;
 while (my $position = $v->next) {
 
     # Flag unplayable fret groups.
-    my $flag = infraction($position);
+    my $flag = infraction($setting, $position);
 
     # Concatinate pairs of fingers and frets.
     my @pairs = pair_up($setting, $position);
@@ -91,7 +91,7 @@ while (my $position = $v->next) {
 sub infraction { # Flag unplayable fret groups.
 
     # The position to consider.
-    my $pos = shift;
+    my($set, $pos) = @_;
 
     # The open position (0) is ignored. Remove zeros.
     my @no_z = grep { $_ } @$pos;
@@ -105,7 +105,7 @@ sub infraction { # Flag unplayable fret groups.
     # Declare a holder for the last seen position.
     my $previous;
 
-    # Location counter used for reverse-tail checking.
+    # Location counter.
     my $loc = 0;
 
     # Inspect pairs of positions.
@@ -128,8 +128,8 @@ sub infraction { # Flag unplayable fret groups.
             last;
         }
 
-        # Rule: Adjacent fingers spanning more than N fret(s) is not allowed.
-        # TODO Use the --span option to define a profile to reference.
+        # Rule: Fingers spanning more than N fret(s) is not allowed.
+        # TODO Absolute diff of m-r can't be more than 1. Other issues TBD
         if ($previous != $current && $current >= $previous + 2) {
             $flag = 'S'; # Flag a finger span issue.
             last;
@@ -141,7 +141,7 @@ sub infraction { # Flag unplayable fret groups.
 }
 
 sub pair_up { # Concatinate pairs of fingers and frets.
-    my( $set, $pos) = @_;
+    my($set, $pos) = @_;
     # XXX Can't make this call not warn, yet.
     no warnings 'once';
     # Don't join fingers with zeros.
@@ -181,25 +181,26 @@ sub set_defaults { # Assign default settings to all parameters.
         }
     }
 
-    # Make a proper list of the fingers.
-    my $key = 'fingers';
-    my @key = split /\s*[,\s]\s*/, $set->{$key};
+    # Set original finger=>number order association.
+    my @fingers = split /\s*[,\s]\s*/, $set->{fingers};
+# TODO Handle finger span with numerical association.
+#    $set->{'numbered=s'} = { pairwise { ($a => $b) } @fingers, @$pos };
 
     # Max greater than fingers.
-    if ($set->{max} > @key) {
+    if ($set->{max} > @fingers) {
 
         # Set the max to the number of fingers.
-        $set->{max} = @key;
+        $set->{max} = @fingers;
         warn "WARNING: Setting max to $set->{max}\n";
 
         # Set the finger list.
-        $set->{$key} = \@key;
+        $set->{fingers} = \@fingers;
     }
     # Fingers greater than max.
     else {
 
         # Limit the finger list to the max.
-        $set->{$key} = [ @key[ 0 .. $set->{max} - 1 ] ];
+        $set->{fingers} = [ @fingers[ 0 .. $set->{max} - 1 ] ];
     }
 
     # Set the range unless given.
@@ -214,42 +215,20 @@ __END__
 =head1 EXAMPLE OUTPUT
 
  $ perl frets -m 2
-  1. i1 m2 
-  2. i2 m2 
-  3. i1 m1 
 
  $ perl frets -m 2 -o
-  1. i1 m2 
-  2. i1 m0 
-  3. i0 m1 
-  4. i1 m1 
-  5. i0 m2 
-  6. i2 m0 
-  7. i2 m2 
-  8. i0 m0 
 
  $ perl frets -m 2 -o -u
-  1. i2 m1 b
-  2. i1 m2 
-  3. i1 m0 
-  4. i0 m1 
-  5. i1 m1 
-  6. i0 m2 
-  7. i2 m0 
-  8. i2 m2 
-  9. i0 m0 
 
 =head1 TO DO
 
-* span=i@ - Adjacent finger span (2 1 2)
-
-Fingers i<->m & r<->p span 2 frets, but m<->r is only 1 in most.
+Handle finger spanning i<->m & r<->p span 2 frets, but m<->r is only 1 in most.
 
 * start=i - Fret start position (1)
 
 * strings=i - Number of instrument strings (6)
 
-* User defined rules.
+* User defined rules?
 
 =head1 AUTHOR
 
