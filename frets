@@ -25,19 +25,19 @@ command-line.
  $ perl frets --max 3
  $ perl frets -m 3 --open
  $ perl frets -m 4 -o --unplayable
- $ perl frets -fingers 'x y' -u
- $ perl frets -f 'x y z'
+ $ perl frets -fingers 'x y'
+ $ perl frets -f 'x y z' -u
 
 =head2 ARGUMENTS
 
   None | --help | -h | -? : Usage (0)
   --version | -v : The version
-  --docs | -d : The documentation (0)
-  --max | -m : Maximum number of frets (4)
+  --docs | -d    : The documentation (0)
+  --max | -m     : Maximum number of frets (4)
   --fingers | -f : Finger symbols (i m r p)
-  --open : Use the open position (0)
-  --unplayable : Show impossible fret groups (0)
-  --accumulate : Tally all infractions seen (0)
+  --open         : Use the open position (0)
+  --unplayable   : Show impossible fret groups (0)
+  --accumulate   : Tally all infractions seen (0)
 
 =cut
 
@@ -77,6 +77,7 @@ my $width = 3; # TODO Compute this instead of hard-coding it.
 # Loop counter for each fret group shown in the final output.
 my $i = 0;
 
+# Inspect each position AKA fret group.
 while (my $position = $v->next) {
 
     # Flag unplayable fret groups.
@@ -191,17 +192,16 @@ sub set_defaults { # Assign default settings to all parameters.
 # TODO Handle finger span with numerical association.
 #    $set->{'numbered=s'} = { pairwise { ($a => $b) } @fingers, @$pos };
 
-    # Max greater than fingers.
+    # If the max is greater than the number of fingers...
     if ($set->{max} > @fingers) {
 
         # Set the max to the number of fingers.
-        $set->{max} = @fingers;
         warn "WARNING: Setting max to $set->{max}\n";
+        $set->{max} = @fingers;
 
         # Set the finger list.
         $set->{fingers} = \@fingers;
     }
-    # Fingers greater than max.
     else {
 
         # Limit the finger list to the max.
