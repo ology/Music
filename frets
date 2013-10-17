@@ -93,11 +93,11 @@ sub infraction { # Flag unplayable fret groups.
     # The position to consider.
     my($set, $pos) = @_;
 
-    # The open position (0) is ignored. Remove zeros.
-    my @no_z = grep { $_ } @$pos;
-
     # Declare the flag to return.
     my $flag = '';
+
+    # The open position (0) is ignored. Remove zeros.
+    my @no_z = grep { $_ } @$pos;
 
     # Return unless there is more than one no-zero position list.
     return $flag unless @no_z > 1;
