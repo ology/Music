@@ -187,10 +187,8 @@ sub set_defaults { # Assign default settings to all parameters.
         }
     }
 
-    # Set original finger=>number order association.
+    # Set the finger list to the default or user given.
     my @fingers = split /\s*[,\s]\s*/, $set->{fingers};
-# TODO Handle finger span with numerical association.
-#    $set->{'numbered=s'} = { pairwise { ($a => $b) } @fingers, @$pos };
 
     # If the max is greater than the number of fingers...
     if ($set->{max} > @fingers) {
@@ -198,15 +196,15 @@ sub set_defaults { # Assign default settings to all parameters.
         # Set the max to the number of fingers.
         warn "WARNING: Setting max to $set->{max}\n";
         $set->{max} = @fingers;
-
-        # Set the finger list.
-        $set->{fingers} = \@fingers;
     }
     else {
 
         # Limit the finger list to the max.
-        $set->{fingers} = [ @fingers[ 0 .. $set->{max} - 1 ] ];
+        @fingers = @fingers[ 0 .. $set->{max} - 1 ];
     }
+
+    # Set the finger list.
+    $set->{fingers} = \@fingers;
 
     # Set the range unless given.
     $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
