@@ -11,11 +11,9 @@ frets - List all possible fret positions
 This program lists all possible fret positions and flags those that are deemed
 unplayable.
 
-With the L</ARGUMENTS>, you can define different sizes for fret groups and
-number of available fingers.
+With the L</ARGUMENTS>, you can define fret group sizes and the number (and name) of available fingers.  Additionally, you can show unplayable fingerings and the reasons: A B<B>ackwards or reverse fingering and finger B<S>pan impossibilities.
 
-These settings are all required, so the defaults are used unless given on the
-command-line.
+Only the max setting is required, but all the defaults are used unless given.
 
 =head1 SYNOPSIS
 
@@ -41,7 +39,8 @@ command-line.
   --unplayable   : Show flagged fret groups  (0)
   --accumulate   : Tally all infractions     (0)
 
-* Computed at run-time based on default fingers.
+* Computed at run-time based on default fingers,
+  if not provided as a --fingers --numbers pair.
 
 =cut
 
