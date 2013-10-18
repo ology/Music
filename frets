@@ -156,7 +156,7 @@ sub finger_fret { # Concatinate pairs of fingers and frets.
         @{ $set->{fingers} }, @$pos;
 }
 
-sub setup { # Harvest command-line arguments and use magical POD.Assign default settings to all parameters.
+sub setup { # Harvest command-line arguments and use magical POD.
 
     # Intake a Go::L spec=>default hashref of settings.
     my ($set, $args) = @_;
