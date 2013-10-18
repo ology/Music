@@ -217,6 +217,9 @@ sub set_defaults { # Assign default settings to all parameters.
     # Turn the number string into a proper array.
     my @numbers = split $pattern, ($set->{numbers} || $set->{'numbers-s'});
 
+    # Limit the numbers list to the max.
+    @numbers = @numbers[ 0 .. $set->{max} - 1 ];
+
     # Make a finger=>number association.
     my %findex = pairwise { ($a => $b) } @fingers, @numbers;
     $set->{numbers} = \%findex;
