@@ -218,7 +218,7 @@ sub set_defaults { # Assign either default or given settings.
     $set->{fingers} = \@fingers;
 
     # Turn the number string into a proper array.
-    my @numbers = split $pattern, ($set->{numbers} || $set->{'numbers-s'});
+    my @numbers = split $pattern, ($set->{numbers} || $set->{'numbers=s'});
 
     # Limit the numbers list to the max.
     @numbers = @numbers[ 0 .. $set->{max} - 1 ];
