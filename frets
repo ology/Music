@@ -31,15 +31,15 @@ command-line.
 
 =head2 ARGUMENTS
 
-  None | --help | -h | -? : Usage              (0)
+  None | --help | -h | -? : Usage            (0)
   --version | -v : The current version
-  --docs | -d    : The full documentation      (0)
-  --max | -m     : Maximum number of frets     (4)
-  --fingers | -f : Finger symbols        (i m r p)
-  --numbers | -n : Indicies of fingers   (1 2 3 4) *
-  --open         : Use the open position       (0)
-  --unplayable   : Show impossible fret groups (0)
-  --accumulate   : Tally all infractions seen  (0)
+  --docs | -d    : The full documentation    (0)
+  --max | -m     : Maximum number of frets   (4)
+  --fingers | -f : Finger symbols      (i m r p)
+  --numbers | -n : Indicies of fingers (1 2 3 4) *
+  --open         : Use the open position     (0)
+  --unplayable   : Show flagged fret groups  (0)
+  --accumulate   : Tally all infractions     (0)
 
 * If not given, this is computed at run-time to
 correspond to variations of the default fingers.
