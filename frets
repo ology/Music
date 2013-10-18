@@ -90,7 +90,7 @@ while (my $position = $v->next) {
     my $flag = infraction($setting, $position);
 
     # Concatinate pairs of fingers and frets.
-    my @pairs = pair_up($setting, $position);
+    my @pairs = finger_fret($setting, $position);
 
     # Print a string representation of the fret group.
     printf("%*d. %s %s\n", $width, $i++, join(' ', @pairs), $flag)
@@ -142,11 +142,14 @@ sub infraction { # Flag unplayable fret groups.
     return $flag;
 }
 
-sub pair_up { # Concatinate pairs of fingers and frets.
+sub finger_fret { # Concatinate pairs of fingers and frets.
+
+    # The settings and current fret position.
     my($set, $pos) = @_;
+
+    # Don't join fingers with zeros.
     # XXX Can't make this call not warn, yet.
     no warnings 'once';
-    # Don't join fingers with zeros.
     return pairwise { sprintf '%2s', $b ? $a . $b : $b }
         @{ $set->{fingers} }, @$pos;
 }
@@ -178,12 +181,6 @@ sub set_defaults { # Assign default settings to all parameters.
     # This is the blade with which we split things.
     my $pattern = qr/\s*[,\s]\s*/;
 
-    # Set the original fingers to use and finger=>number order association.
-    my @fingers = split $pattern, $set->{'fingers=s'};
-    my @numbers = split $pattern, $set->{'numbers=s'};
-    my %numbers = pairwise { ($a => $b) } @fingers, @numbers;
-    $set->{'numbers=s'} = \%numbers;
-
     # Inspect each option and add the setting if needed.
     for my $spec (keys %$set) {
 
@@ -198,8 +195,8 @@ sub set_defaults { # Assign default settings to all parameters.
         }
     }
 
-    # Set the finger list to the default or user given.
-    @fingers = split $pattern, $set->{fingers};
+    # Set the original fingers to use and finger=>number order association.
+    my @fingers = split $pattern, ($set->{fingers} || $set->{'fingers=s'});
 
     # If the max is greater than the number of fingers...
     if ($set->{max} > @fingers) {
@@ -217,14 +214,12 @@ sub set_defaults { # Assign default settings to all parameters.
     # Set the finger list.
     $set->{fingers} = \@fingers;
 
-    # If the numbers list remains unset...
-    unless (ref $set->{numbers}) {
+    # Turn the number string into a proper array.
+    my @numbers = split $pattern, ($set->{numbers} || $set->{'numbers-s'});
 
-        # Make a finger=>number association.
-        @numbers = split $pattern, $set->{numbers};
-        %numbers = pairwise { ($a => $b) } @fingers, @numbers;
-        $set->{numbers} = \%numbers;
-    }
+    # Make a finger=>number association.
+    my %findex = pairwise { ($a => $b) } @fingers, @numbers;
+    $set->{numbers} = \%findex;
 
     # Set the range unless given.
     $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
