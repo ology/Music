@@ -111,7 +111,7 @@ sub infraction { # Flag unplayable fret groups.
     # Inspect pairs of the position.
     for my $current (@$pos) {
 
-        # Increment first since we've seen at least one.
+        # Increment the 1st position (since we've seen at least one).
         $loc++;
 
         # Set the first item of the pair and move on.
