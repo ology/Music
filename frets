@@ -279,8 +279,6 @@ __END__
 
 =head1 TO DO
 
-Handle finger spanning i<->m & r<->p span 2 frets, but m<->r is only 1 in most.
-
 * start=i - Fret start position (1)
 
 * strings=i - Number of instrument strings (6)
