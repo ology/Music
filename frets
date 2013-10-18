@@ -290,8 +290,6 @@ Handle finger spanning i<->m & r<->p span 2 frets, but m<->r is only 1 in most.
 
 * strings=i - Number of instrument strings (6)
 
-* User defined rules?
-
 =head1 AUTHOR
 
 Gene Boggs, E<lt>gene+music@ology.netE<gt>
