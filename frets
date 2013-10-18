@@ -108,12 +108,6 @@ sub infraction { # Flag unplayable fret groups.
     # Declare the flag to return.
     my $flag = '';
 
-    # The open position (0) is ignored. Remove zeros.
-    my @no_z = grep { $_ } @$pos;
-
-    # Return unless there is more than one no-zero position list.
-    return $flag unless @no_z > 1;
-
     # Declare a holder for the last seen position.
     my $previous;
 
@@ -132,19 +126,19 @@ sub infraction { # Flag unplayable fret groups.
             next;
         }
 
-        # Rule: Higher frets for lower fingers are not allowed.
-        # Consider the current tail of no-zero elements.
-        my @tail = @no_z[$loc - 1 .. $#no_z];
-        if (grep { $previous > $_ } @tail) {
-            $flag .= 'B'; # Flag a backward issue.
-            last unless $set->{accumulate};
-        }
+        if ($current && $previous) {
+            # Rule: Higher frets for adjacent lower fingers are not allowed.
+            if ($previous > $current) {
+                $flag .= 'B'; # Flag a backward issue.
+                last unless $set->{accumulate};
+            }
 
-        # Rule: Fingers spanning more than N fret(s) is not allowed.
-        # TODO Absolute diff of m-r can't be more than 1. Other issues TBD
-        if ($current >= $previous + 2) {
-            $flag .= 'S'; # Flag a finger span issue.
-            last unless $set->{accumulate};
+            # Rule: Fingers spanning more than N fret(s) is not allowed.
+            # TODO Absolute diff of m-r can't be more than 1. Other issues TBD
+            if ($current >= $previous + 2) {
+                $flag .= 'S'; # Flag a finger span issue.
+                last unless $set->{accumulate};
+            }
         }
 
         # Update the previously seen item.
