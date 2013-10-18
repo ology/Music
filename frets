@@ -283,6 +283,8 @@ __END__
 
 * strings=i - Number of instrument strings (6)
 
+* Allow less fingers than the max.
+
 =head1 AUTHOR
 
 Gene Boggs, E<lt>gene+music@ology.netE<gt>
