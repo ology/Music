@@ -80,11 +80,9 @@ set_defaults($setting);
 # Fret groups (per finger).
 my $v = variations_with_repetition($setting->{range}, $setting->{max});
 
-# Line number format width.
-my $width = 3; # TODO Compute this instead of hard-coding it.
-
+# Line number format width. # TODO Compute instead of hard-coding.
 # Loop counter for each fret group shown in the final output.
-my $i = 0;
+my ($width, $i) = (3, 0);
 
 # Inspect each position AKA fret group.
 while (my $position = $v->next) {
@@ -106,13 +104,9 @@ sub infraction { # Flag unplayable fret groups.
     my($set, $pos) = @_;
 
     # Declare the flag to return.
-    my $flag = '';
-
     # Declare a holder for the last seen position.
-    my $previous;
-
-    # Location counter.
-    my $loc = 0;
+    # Declare a location counter.
+    my ($flag, $previous, $loc) = ('', undef, 0);
 
     # Inspect pairs of the position.
     for my $current (@$pos) {
