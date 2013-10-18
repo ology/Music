@@ -187,7 +187,8 @@ sub set_defaults { # Assign either default or given settings.
     for my $spec (keys %$set) {
 
         # Extract the option label from the Go::L spec.
-        if ($spec =~ /^(\w+)\b.*$/) {
+        # TODO Use Go::L::ParseOptionSpec() instead.
+        if ($spec =~ /^(\w+)(?:\b\w+?)?$/) {
 
             # Capture label.
             my $label = $1;
