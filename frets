@@ -221,8 +221,7 @@ sub set_defaults { # Assign default settings to all parameters.
     @numbers = @numbers[ 0 .. $set->{max} - 1 ];
 
     # Make a finger=>number association.
-    my %findex = pairwise { ($a => $b) } @fingers, @numbers;
-    $set->{numbers} = \%findex;
+    $set->{numbers} = { pairwise { ($a => $b) } @fingers, @numbers };
 
     # Set the range unless given.
     $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
