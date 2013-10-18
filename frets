@@ -120,6 +120,7 @@ sub infraction { # Flag unplayable fret groups.
             next;
         }
 
+        # Skip all pairs with zeros.
         if ($current && $previous) {
             # Rule: Higher frets for adjacent lower fingers are not allowed.
             if ($previous > $current) {
@@ -128,7 +129,6 @@ sub infraction { # Flag unplayable fret groups.
             }
 
             # Rule: Fingers spanning more than N fret(s) is not allowed.
-            # TODO Absolute diff of m-r can't be more than 1. Other issues TBD
             if ($current >= $previous + 2) {
                 $flag .= 'S'; # Flag a finger span issue.
                 last unless $set->{accumulate};
