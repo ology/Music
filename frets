@@ -262,9 +262,12 @@ __END__
  $ perl frets -m 3 -o -u -a
    0.  0  0  0 
    1.  0  0 r1 
-   2.  0  0 r2 
   ...
-  61. i3 m3 r1 B
+  28. i1 m3  0 S
+  29. i1 m3 r1 SB
+  30. i1 m3 r2 SB
+  31. i1 m3 r3 S
+  ...
   62. i3 m3 r2 B
   63. i3 m3 r3 
 
