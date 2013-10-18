@@ -41,8 +41,7 @@ command-line.
   --unplayable   : Show flagged fret groups  (0)
   --accumulate   : Tally all infractions     (0)
 
-* If not given, this is computed at run-time to
-correspond to variations of the default fingers.
+* Computed at run-time based on default fingers.
 
 =cut
 
