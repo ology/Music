@@ -217,9 +217,10 @@ sub set_defaults { # Assign default settings to all parameters.
     # Set the finger list.
     $set->{fingers} = \@fingers;
 
-    # If the numbers list remains unset, make a new finger=>number association.
+    # If the numbers list remains unset...
     unless (ref $set->{numbers}) {
 
+        # Make a finger=>number association.
         @numbers = split $pattern, $set->{numbers};
         %numbers = pairwise { ($a => $b) } @fingers, @numbers;
         $set->{numbers} = \%numbers;
