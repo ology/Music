@@ -175,10 +175,8 @@ sub set_defaults { # Assign default settings to all parameters.
     # Get the settings.
     my $set = shift;
 
-    # Set the original fingers to use.
+    # Set the original fingers to use and finger=>number order association.
     my @fingers = split /\s*[,\s]\s*/, $set->{'fingers=s'};
-
-    # Set the original finger=>number order association.
     my @numbers = split /\s*[,\s]\s*/, $set->{'numbers=s'};
     my %numbers = pairwise { ($a => $b) } @fingers, @numbers;
     $set->{'numbers=s'} = \%numbers;
@@ -218,6 +216,7 @@ sub set_defaults { # Assign default settings to all parameters.
 
     # If the numbers list remains unset, make a new finger=>number association.
     unless (ref $set->{numbers}) {
+
         @numbers = split /\s*[,\s]\s*/, $set->{numbers};
         %numbers = pairwise { ($a => $b) } @fingers, @numbers;
         $set->{numbers} = \%numbers;
