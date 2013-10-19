@@ -68,7 +68,7 @@ use Pod::Usage;
 # Set the default values.
 my $setting = {
     'fingers=s' => 'p i m a q',
-    'numbers=s' => '0 1 2 3 4',
+    'indexes=s' => '0 1 2 3 4',
     'help|?' => 0,
     'docs' => 0,
     'max=i' => 4,
@@ -232,13 +232,13 @@ sub set_defaults { # Assign either default or given settings.
     $set->{fingers} = \@fingers;
 
     # Turn the number string into a proper array.
-    my @numbers = split $pattern, ($set->{numbers} || $set->{'numbers=s'});
+    my @indexes = split $pattern, ($set->{indexes} || $set->{'indexes=s'});
 
-    # Limit the numbers list to the max.
-    @numbers = @numbers[ 0 .. $set->{max} - 1 ];
+    # Limit the indexes list to the max.
+    @indexes = @indexes[ 0 .. $set->{max} - 1 ];
 
     # Make a finger=>number association.
-    $set->{numbers} = { pairwise { ($a => $b) } @fingers, @numbers };
+    $set->{indexes} = { pairwise { ($a => $b) } @fingers, @indexes };
 
     # Set the range unless given.
     $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
