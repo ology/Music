@@ -115,6 +115,9 @@ sub infraction { # Flag unplayable fingerings.
     # " a finger counter.
     my ($flag, $previous, $loc, $fcount) = ('', undef, 0, 0);
 
+    # Declare a bucket to keep track of fingers and their fret positions.
+    my $track = {};
+
     # Inspect pairs of the position.
     for my $current (@$pos) {
 
@@ -130,31 +133,37 @@ sub infraction { # Flag unplayable fingerings.
         # Increment the finger counter.
         $fcount++;
 
-        # Skip all pairs with zeros.
+        # Skip pairs with zeros ("open frets").
         if ($current && $previous) {
 
             # Set the previous and current fingers.
             my $seen = $fcount ? $set->{fingers}[$fcount - 1] : '?';
             my $finger = $set->{fingers}[$fcount] || '?';
 
+            # Keep track of the fingers and their frets.
+            $track->{$seen}   = $set->{indexes}{$seen}
+                unless exists $track->{$seen};
+            $track->{$finger} = $set->{indexes}{$finger}
+                unless exists $track->{$finger};
+
             # Show our progress if requested.
             if ($set->{debug}) {
-                warn "Finger: $seen($set->{indexes}{$seen}) $finger($set->{indexes}{$finger})\n";
+                warn "Finger: $seen($track->{$seen}) $finger($track->{$finger})\n";
                 warn "Fret:     $previous    $current\n";
             }
+
             # Rule: Higher frets for adjacent lower fingers are not allowed.
             if ($previous > $current) {
                 $flag .= 'B'; # Flag a backward issue.
                 last unless $set->{accumulate};
             }
 
-            # Are we the "middle pair?"
-            # TODO Seen-hash of middle fingers => their fret & don't big spans.
-            my $mid = ($set->{indexes}{$seen} == 2 && $set->{indexes}{$finger} == 3)
-                   || ($set->{indexes}{$seen} == 3 && $set->{indexes}{$finger} == 2);
+            # Is there a "middle pair" span that is too big?
+            my $is_mid = exists $track->{$seen} && exists $track->{$finger}
+                && (abs($track->{$finger} - $track->{$seen}) > 1);
 
             # Rule: Fingers spanning more than N fret(s) is not allowed.
-            if ($current >= $previous + 2 && $mid) {
+            if ($current >= $previous + 2 && $is_mid) {
                 $flag .= 'S'; # Flag a finger span issue.
                 last unless $set->{accumulate};
             }
