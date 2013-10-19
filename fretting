@@ -34,7 +34,7 @@ Only the max setting is required, but all the defaults are used unless given.
  $ perl fretting --max 3
  $ perl fretting -m 3 --open
  $ perl fretting -m 4 --unplayable --debug
- $ perl fretting -m 4 -o -u -e --accumulate
+ $ perl fretting -m 4 -o -u -d --accumulate
  $ perl fretting -fingers 'x y'
  $ perl fretting -f 'x y z' -u
 
@@ -42,8 +42,8 @@ Only the max setting is required, but all the defaults are used unless given.
 
  None | --help | -h | -? : Usage              (0)
  --version    | -v : The current version
- --docs       | -d : The full documentation   (0)
- --debug      | -e : "Elicit" progress        (0)
+ --docs       | -c : The full documentation   (0)
+ --debug      | -d : Show progress            (0)
  --max        | -m : Maximum number frets     (4)
  --fingers    | -f : Finger symbols   (i m a q p)
  --open       | -o : Use the open position    (0)
@@ -69,8 +69,8 @@ use Pod::Usage;
 my $setting = {
     'fingers=s' => 'i m a q p',
     'help|?' => 0,
-    'docs' => 0,
-    'debug|e' => 0,
+    'docs|c' => 0,
+    'debug|d' => 0,
     'max=i' => 4,
     'open' => 0,
     'unplayable' => 0,
