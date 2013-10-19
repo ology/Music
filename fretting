@@ -234,11 +234,11 @@ sub set_defaults { # Assign either default or given settings.
     @fingers = split $pattern, $set->{fingers} if exists $set->{fingers};
 
     # If the max is greater than the number of fingers...
-    if ($set->{max} > @fingers) {
+    if (not $set->{max} or $set->{max} > @fingers) {
 
         # Set the max to the number of fingers.
-        warn "WARNING: Setting max to $set->{max}\n" if $set->{debug};
         $set->{max} = @fingers;
+        warn "WARNING: Setting max to $set->{max}\n" if $set->{debug};
     }
     else {
 
