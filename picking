@@ -141,8 +141,17 @@ sub set_defaults { # Assign either default or given settings.
         }
     }
 
-    # Set the original fingers to use and the finger=>number order association.
-    my @fingers = split $pattern, ($set->{fingers} || $set->{'fingers=s'});
+    # Set our fingers!
+    my @fingers = split $pattern, $set->{'fingers=s'};
+
+    # Set the initial indexes.
+    my @indexes = 0 .. $#fingers;
+
+    # Limit the indexes list to the max.
+    @indexes = @indexes[ 0 .. $set->{max} - 1 ];
+
+    # Make a finger=>number association.
+    $set->{indexes} = { pairwise { ($a => $b) } @fingers, @indexes };
 
     # If the max is greater than the number of fingers...
     if ($set->{max} > @fingers) {
@@ -159,15 +168,6 @@ sub set_defaults { # Assign either default or given settings.
 
     # Set the finger list.
     $set->{fingers} = \@fingers;
-
-    # Turn the number string into a proper array.
-    my @indexes = split $pattern, ($set->{indexes} || $set->{'indexes=s'});
-
-    # Limit the indexes list to the max.
-    @indexes = @indexes[ 0 .. $set->{max} - 1 ];
-
-    # Make a finger=>number association.
-    $set->{indexes} = { pairwise { ($a => $b) } @fingers, @indexes };
 
     # Set the range unless given.
     $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
