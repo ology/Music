@@ -139,8 +139,8 @@ sub infraction { # Flag unplayable fingerings.
 
             # Show our progress if requested.
             if ($set->{debug}) {
-                warn "Finger: $seen($set->{indexes}{$seen}), $finger($set->{indexes}{$finger})\n";
-                warn "Fret:     $previous,    $current\n";
+                warn "Finger: $seen($set->{indexes}{$seen}) $finger($set->{indexes}{$finger})\n";
+                warn "Fret:     $previous    $current\n";
             }
             # Rule: Higher frets for adjacent lower fingers are not allowed.
             if ($previous > $current) {
