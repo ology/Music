@@ -107,7 +107,8 @@ sub infraction { # Flag unplayable fret groups.
     # Declare the flag to return.
     # Declare a holder for the last seen position.
     # Declare a location counter.
-    my ($flag, $previous, $loc) = ('', undef, 0);
+    # Declare a finger counter.
+    my ($flag, $previous, $loc, $fcount) = ('', undef, 0, 0);
 
     # Inspect pairs of the position.
     for my $current (@$pos) {
@@ -115,14 +116,22 @@ sub infraction { # Flag unplayable fret groups.
         # Increment the 1st position (since we've seen at least one).
         $loc++;
 
+        # Increment the finger counter.
+        $fcount++;
+
         # Set the first item of the pair and move on.
         if (not defined $previous) {
             $previous = $current;
             next;
         }
 
+        my $seen = $fcount ? $set->{fingers}[$fcount] : '?';
+        my $finger = $set->{fingers}[$fcount + 1] || '?';
+warn "S,F: $seen, $finger ($fcount)\n";
+
         # Skip all pairs with zeros.
         if ($current && $previous) {
+
             # Rule: Higher frets for adjacent lower fingers are not allowed.
             if ($previous > $current) {
                 $flag .= 'B'; # Flag a backward issue.
