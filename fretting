@@ -33,8 +33,8 @@ Only the max setting is required, but all the defaults are used unless given.
  $ perl fretting --doc
  $ perl fretting --max 3
  $ perl fretting -m 3 --open
- $ perl fretting -m 4 --unplayable
- $ perl fretting -m 4 -o -u --accumulate
+ $ perl fretting -m 4 --unplayable --debug
+ $ perl fretting -m 4 -o -u -e --accumulate
  $ perl fretting -fingers 'x y'
  $ perl fretting -f 'x y z' -u
 
@@ -43,6 +43,7 @@ Only the max setting is required, but all the defaults are used unless given.
  None | --help | -h | -? : Usage              (0)
  --version    | -v : The current version
  --docs       | -d : The full documentation   (0)
+ --debug      | -e : "Elicit" progress        (0)
  --max        | -m : Maximum number frets     (4)
  --fingers    | -f : Finger symbols   (i m a q p)
  --open       | -o : Use the open position    (0)
@@ -69,6 +70,7 @@ my $setting = {
     'fingers=s' => 'i m a q p',
     'help|?' => 0,
     'docs' => 0,
+    'debug|e' => 0,
     'max=i' => 4,
     'open' => 0,
     'unplayable' => 0,
@@ -131,18 +133,27 @@ sub infraction { # Flag unplayable fingerings.
         # Skip all pairs with zeros.
         if ($current && $previous) {
 
-        my $seen = $fcount ? $set->{fingers}[$fcount - 1] : '?';
-        my $finger = $set->{fingers}[$fcount] || '?';
-warn "S,F: $seen, $finger ($fcount)\n";
+            # Set the previous and current fingers.
+            my $seen = $fcount ? $set->{fingers}[$fcount - 1] : '?';
+            my $finger = $set->{fingers}[$fcount] || '?';
 
+            # Show our progress if requested.
+            if ($set->{debug}) {
+                warn "Finger: $seen($set->{indexes}{$seen}), $finger($set->{indexes}{$finger})\n";
+                warn "Fret:     $previous,    $current\n";
+            }
             # Rule: Higher frets for adjacent lower fingers are not allowed.
             if ($previous > $current) {
                 $flag .= 'B'; # Flag a backward issue.
                 last unless $set->{accumulate};
             }
 
+            # Are we the "middle pair?"
+            my $mid = ($set->{indexes}{$seen} == 2 && $set->{indexes}{$finger} == 3)
+                   || ($set->{indexes}{$seen} == 3 && $set->{indexes}{$finger} == 2);
+
             # Rule: Fingers spanning more than N fret(s) is not allowed.
-            if ($current >= $previous + 2) {
+            if ($current >= $previous + 2 && $mid) {
                 $flag .= 'S'; # Flag a finger span issue.
                 last unless $set->{accumulate};
             }
@@ -226,7 +237,7 @@ sub set_defaults { # Assign either default or given settings.
     if ($set->{max} > @fingers) {
 
         # Set the max to the number of fingers.
-        warn "WARNING: Setting max to $set->{max}\n";
+        warn "WARNING: Setting max to $set->{max}\n" if $set->{debug};
         $set->{max} = @fingers;
     }
     else {
