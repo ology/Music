@@ -4,7 +4,7 @@ our $VERSION = '0.0701';
 
 =head1 NAME
 
-frets - List all possible fret positions
+fretting - List all possible fret positions
 
 =head1 DESCRIPTION
 
@@ -28,15 +28,15 @@ Only the max setting is required, but all the defaults are used unless given.
 
 =head1 SYNOPSIS
 
- $ perl frets
- $ perl frets -v
- $ perl frets --doc
- $ perl frets --max 3
- $ perl frets -m 3 --open
- $ perl frets -m 4 --unplayable
- $ perl frets -m 4 -o -u --accumulate
- $ perl frets -fingers 'x y'
- $ perl frets -f 'x y z' -u
+ $ perl fretting
+ $ perl fretting -v
+ $ perl fretting --doc
+ $ perl fretting --max 3
+ $ perl fretting -m 3 --open
+ $ perl fretting -m 4 --unplayable
+ $ perl fretting -m 4 -o -u --accumulate
+ $ perl fretting -fingers 'x y'
+ $ perl fretting -f 'x y z' -u
 
 =head2 ARGUMENTS
 
@@ -251,12 +251,12 @@ __END__
 
 =head1 EXAMPLES
 
- $ perl frets -m 2
+ $ perl fretting -m 2
    0. i1 m1
    1. i1 m2
    2. i2 m2
 
- $ perl frets -m 2 -o
+ $ perl fretting -m 2 -o
    0.  0  0
    1.  0 m1
    2.  0 m2
@@ -266,7 +266,7 @@ __END__
    6. i2  0
    7. i2 m2
 
- $ perl frets -m 2 -o -u
+ $ perl fretting -m 2 -o -u
   0.  0  0
   1.  0 m1
   2.  0 m2
@@ -277,7 +277,7 @@ __END__
   7. i2 m1 B
   8. i2 m2
 
- $ perl frets -m 3 -o -u -a
+ $ perl fretting -m 3 -o -u -a
    0.  0  0  0 
    1.  0  0 r1 
   ...
@@ -289,7 +289,7 @@ __END__
   62. i3 m3 r2 B
   63. i3 m3 r3 
 
- $ perl frets -m 4 -u -a
+ $ perl fretting -m 4 -u -a
     0. i1 m1 r1 p1 
     1. i1 m1 r1 p2 
     2. i1 m1 r1 p3 S
