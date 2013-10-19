@@ -9,8 +9,8 @@ picking - List picking groups for stringed instruments
 =head1 DESCRIPTION
 
 This program lists all possible picking techniques for one measure of quarter
-notes for time signatures 2/2, 3/4 and 4/4.  For higher signatures, use joined,
-composite measures.
+notes for time signatures 2/4, 3/4 and 4/4 (for convenience).  For higher
+signatures, use joined, composite measures.
 
 With the L</ARGUMENTS>, you can define parallel and simultaneous picking
 figures.
@@ -30,16 +30,17 @@ Only the max setting is required, but all the defaults are used unless given.
  $ perl picking
  $ perl picking -v
  $ perl picking --doc
- $ perl picking --max 4
+ $ perl picking --max 3
  $ perl picking -fingers 'p m i a'
 
 =head2 ARGUMENTS
 
- None | --help | -h | -? : Usage          (0)
- --version | -v : The current version
- --docs    | -d : The full documentation  (0)
- --max     | -m : Maximum number strings  (4)
- --fingers | -f : Finger symbols  (p i m a q)
+ None | --help | -h | -? : Usage            (0)
+ --version   | -v : The current version
+ --docs      | -d : The full documentation  (0)
+ --max       | -m : Maximum number strings  (4)
+ --fingers   | -f : Finger symbols  (p i m a q)
+ --signature | -s : Time signature          (4)
 
 =cut
 
@@ -126,6 +127,18 @@ sub set_defaults { # Assign either default or given settings.
     # The split pattern is space or comma separated.
     my $pattern = qr/\s*[,\s]\s*/;
 
+    # Set our fingers!
+    my @fingers = split $pattern, $set->{'fingers=s'};
+
+    # Set the initial indexes.
+    my @indexes = 0 .. $#fingers;
+
+    # Limit the indexes list to the max.
+    @indexes = @indexes[ 0 .. $set->{max} - 1 ];
+
+    # Make a finger=>number association.
+    $set->{indexes} = { pairwise { ($a => $b) } @fingers, @indexes };
+
     # Inspect each option and add the setting if needed.
     for my $spec (keys %$set) {
 
@@ -140,18 +153,6 @@ sub set_defaults { # Assign either default or given settings.
             $set->{$label} = $set->{$spec} unless defined $set->{$label};
         }
     }
-
-    # Set our fingers!
-    my @fingers = split $pattern, $set->{'fingers=s'};
-
-    # Set the initial indexes.
-    my @indexes = 0 .. $#fingers;
-
-    # Limit the indexes list to the max.
-    @indexes = @indexes[ 0 .. $set->{max} - 1 ];
-
-    # Make a finger=>number association.
-    $set->{indexes} = { pairwise { ($a => $b) } @fingers, @indexes };
 
     # If the max is greater than the number of fingers...
     if ($set->{max} > @fingers) {
@@ -171,9 +172,6 @@ sub set_defaults { # Assign either default or given settings.
 
     # Set the range unless given.
     $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
-
-    # Prepend 0 (the open position) to the range, if requested.
-    unshift @{ $set->{range} }, 0 if $set->{open};
 }
 
 __END__
