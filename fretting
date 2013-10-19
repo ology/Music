@@ -220,7 +220,7 @@ sub set_defaults { # Assign either default or given settings.
     }
 
     # Set the original fingers to use and the finger=>number order association.
-    my @fingers = split $pattern, $set->{fingers} if exists $set->{fingers};
+    @fingers = split $pattern, $set->{fingers} if exists $set->{fingers};
 
     # If the max is greater than the number of fingers...
     if ($set->{max} > @fingers) {
