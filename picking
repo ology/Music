@@ -31,7 +31,7 @@ Only the max setting is required, but all the defaults are used unless given.
  $ perl picking -v
  $ perl picking --doc
  $ perl picking --max 3
- $ perl picking -fingers 'i a m q'
+ $ perl picking -fingers 'p m i a'
 
 =head2 ARGUMENTS
 
