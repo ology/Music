@@ -63,6 +63,7 @@ my $setting = {
     'help|?' => 0,
     'docs' => 0,
     'max=i' => 4,
+    'strings=i' => 4,
 };
 
 # Harvest with Go::L and call P::U.
