@@ -149,6 +149,7 @@ sub infraction { # Flag unplayable fingerings.
             }
 
             # Are we the "middle pair?"
+            # TODO Seen-hash of middle fingers => their fret & don't big spans.
             my $mid = ($set->{indexes}{$seen} == 2 && $set->{indexes}{$finger} == 3)
                    || ($set->{indexes}{$seen} == 3 && $set->{indexes}{$finger} == 2);
 
