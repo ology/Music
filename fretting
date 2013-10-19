@@ -238,8 +238,8 @@ sub set_defaults { # Assign either default or given settings.
     # Set the finger list.
     $set->{fingers} = \@fingers;
 
-    # Set the range unless given.
-    $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
+    # Set the range over which to vary.
+    $set->{range} = [ 1 .. $set->{max} ];
 
     # Prepend 0 (the open position) to the range, if requested.
     unshift @{ $set->{range} }, 0 if $set->{open};
