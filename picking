@@ -30,7 +30,7 @@ Only the max setting is required, but all the defaults are used unless given.
  $ perl picking
  $ perl picking -v
  $ perl picking --doc
- $ perl picking --max 3
+ $ perl picking --max 4
  $ perl picking -fingers 'p m i a'
 
 =head2 ARGUMENTS
@@ -38,9 +38,8 @@ Only the max setting is required, but all the defaults are used unless given.
  None | --help | -h | -? : Usage          (0)
  --version | -v : The current version
  --docs    | -d : The full documentation  (0)
- --max     | -m : Maximum number frets    (4)
+ --max     | -m : Maximum number strings  (4)
  --fingers | -f : Finger symbols  (p i m a q)
- --strings | -s : Number of strings       (4)
 
 =cut
 
@@ -63,7 +62,6 @@ my $setting = {
     'help|?' => 0,
     'docs' => 0,
     'max=i' => 4,
-    'strings=i' => 4,
 };
 
 # Harvest with Go::L and call P::U.
