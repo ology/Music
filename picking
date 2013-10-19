@@ -72,7 +72,7 @@ setup($setting, \@ARGV);
 set_defaults($setting);
 
 # Fret groups (per finger).
-my $v = variations_with_repetition($setting->{range}, $setting->{max});
+my $v = variations_with_repetition([0 .. $setting->{max} - 1], $setting->{max});
 
 # Line number format width. # TODO Compute instead of hard-coding.
 # Loop counter for each fret group shown in the final output.
@@ -169,9 +169,6 @@ sub set_defaults { # Assign either default or given settings.
 
     # Set the finger list.
     $set->{fingers} = \@fingers;
-
-    # Set the range unless given.
-    $set->{range} = [ 1 .. $set->{max} ] unless exists $set->{range};
 }
 
 __END__
