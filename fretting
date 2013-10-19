@@ -116,24 +116,24 @@ sub infraction { # Flag unplayable fingerings.
     # Inspect pairs of the position.
     for my $current (@$pos) {
 
-        # Increment the 1st position (since we've seen at least one).
-        $loc++;
-
-        # Increment the finger counter.
-        $fcount++;
-
         # Set the first item of the pair and move on.
         if (not defined $previous) {
             $previous = $current;
             next;
         }
 
-        my $seen = $fcount ? $set->{fingers}[$fcount] : '?';
-        my $finger = $set->{fingers}[$fcount + 1] || '?';
-#warn "S,F: $seen, $finger ($fcount)\n";
+        # Increment the 1st position (since we've seen at least one).
+        $loc++;
+
+        # Increment the finger counter.
+        $fcount++;
 
         # Skip all pairs with zeros.
         if ($current && $previous) {
+
+        my $seen = $fcount ? $set->{fingers}[$fcount - 1] : '?';
+        my $finger = $set->{fingers}[$fcount] || '?';
+warn "S,F: $seen, $finger ($fcount)\n";
 
             # Rule: Higher frets for adjacent lower fingers are not allowed.
             if ($previous > $current) {
