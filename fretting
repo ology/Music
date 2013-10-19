@@ -311,8 +311,6 @@ __END__
 
 * start=i - Fret start position (1)
 
-* strings=i - Number of instrument strings (6)
-
 * Allow less fingers than the max.
 
 =head1 AUTHOR
