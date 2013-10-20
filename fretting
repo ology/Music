@@ -163,20 +163,17 @@ sub infraction { # Flag unplayable fingerings.
                 warn "Fret:     $previous    $current\n";
             }
 
-            # Rule: Higher frets for adjacent lower fingers are not allowed.
+            # Rule: Lower fingers on higher frets are not allowed.
             if ($previous > $current) {
     
                 $flag .= BACKWARD_INFRACTION;
                 last unless $set->{accumulate};
             }
 
-            # Is there a "middle pair" span that is greater than one?
-            my $is_mid = ($seen eq 'm'   || $seen eq 'a')
-                      && ($finger eq 'm' || $finger eq 'a')
-                      && (abs($current - $previous) > 1);
-
             # Rule: Middle finger pairs with wide fret spans are not allowed.
-            if ($is_mid) {
+            if (   ($seen   eq 'm' || $seen   eq 'a')
+                && ($finger eq 'm' || $finger eq 'a')
+                && (abs($current - $previous) > 1) ) {
 
                 $flag .= SPAN_INFRACTION;
                 last unless $set->{accumulate};
