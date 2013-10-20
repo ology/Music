@@ -172,7 +172,7 @@ sub infraction { # Flag unplayable fingerings.
 
             # Is there a "middle pair" span that is greater than one?
             my $is_mid = exists $track->{$seen} && exists $track->{$finger}
-                && (abs($track->{$finger} - $track->{$seen}) > 1);
+                && (abs($current - $previous) > 1);
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
             if ($current >= $previous + $span && $is_mid) {
