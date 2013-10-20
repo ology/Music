@@ -155,12 +155,14 @@ sub infraction { # Flag unplayable fingerings.
 
             # Show our progress if requested.
             if ($set->{debug}) {
+
                 warn "Finger: $seen($track->{$seen}) $finger($track->{$finger})\n";
                 warn "Fret:     $previous    $current\n";
             }
 
             # Rule: Higher frets for adjacent lower fingers are not allowed.
             if ($previous > $current) {
+    
                 $flag .= BACKWARD_INFRACTION;
                 last unless $set->{accumulate};
             }
@@ -171,6 +173,7 @@ sub infraction { # Flag unplayable fingerings.
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
             if ($current >= $previous + $span && $is_mid) {
+
                 $flag .= SPAN_INFRACTION;
                 last unless $set->{accumulate};
             }
