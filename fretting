@@ -171,9 +171,10 @@ sub infraction { # Flag unplayable fingerings.
             }
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
-            if (   ($seen   eq 'm' || $finger eq 'a')
-                && ($finger eq 'm' || $seen   eq 'a')
-                && (abs($current - $previous) > 1) ) {
+            if ( (($seen eq 'm' && $finger eq 'a') ||
+                  ($seen eq 'a' && $seen eq 'm'))
+                && (abs($current - $previous) > 1)
+            ) {
 
                 $flag .= SPAN_INFRACTION;
                 last unless $set->{accumulate};
