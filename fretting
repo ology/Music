@@ -119,7 +119,8 @@ sub infraction { # Flag unplayable fingerings.
     # " a holder for the last seen position.
     # " a location counter.
     # " a finger counter.
-    my ($flag, $previous, $loc, $fcount) = ('', undef, 0, 0);
+    # Declare the "too wide" span offset.
+    my ($flag, $previous, $loc, $fcount, $span) = ('', undef, 0, 0, 2);
 
     # Declare a bucket to keep track of fingers and their fret positions.
     my $track = {};
@@ -169,7 +170,7 @@ sub infraction { # Flag unplayable fingerings.
                 && (abs($track->{$finger} - $track->{$seen}) > 1);
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
-            if ($current >= $previous + 2 && $is_mid) {
+            if ($current >= $previous + $span && $is_mid) {
                 $flag .= SPAN_INFRACTION;
                 last unless $set->{accumulate};
             }
