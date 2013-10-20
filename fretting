@@ -151,10 +151,8 @@ sub infraction { # Flag unplayable fingerings.
             my $finger = $set->{fingers}[$fcount] || '?';
 
             # Keep track of the fingers and their frets.
-            $track->{$seen}   = $set->{indexes}{$seen}
-                unless exists $track->{$seen};
-            $track->{$finger} = $set->{indexes}{$finger}
-                unless exists $track->{$finger};
+            $track->{$seen}   = $previous unless exists $track->{$seen};
+            $track->{$finger} = $current  unless exists $track->{$finger};
 
             # Show our progress if requested.
             if ($set->{debug}) {
@@ -164,16 +162,17 @@ sub infraction { # Flag unplayable fingerings.
             }
 
             # Rule: Lower fingers on higher frets are not allowed.
-            if ($previous > $current) {
+            if (($previous > $current && ($set->{indexes}{$seen} <= $set->{indexes}{$finger}))
+             || ($previous < $current && ($set->{indexes}{$seen} >= $set->{indexes}{$finger}))
+            ) {
     
                 $flag .= BACKWARD_INFRACTION;
                 last unless $set->{accumulate};
             }
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
-            if ( (($seen eq 'm' && $finger eq 'a') ||
-                  ($seen eq 'a' && $seen eq 'm'))
-                && (abs($current - $previous) > 1)
+            if ((($finger eq 'm' && exists $track->{a}) && (abs($current - $track->{a}) > 1)) ||
+                (($finger eq 'a' && exists $track->{m}) && (abs($current - $track->{m}) > 1))
             ) {
 
                 $flag .= SPAN_INFRACTION;
