@@ -90,6 +90,9 @@ my $v = variations_with_repetition($setting->{range}, $setting->{max});
 # Loop counter for each fret group shown in the final output.
 my ($width, $i) = (3, 0);
 
+# Increment our counter if --open is not given.
+$i++ unless $setting->{open};
+
 # Inspect each position AKA fret group.
 while (my $position = $v->next) {
 
