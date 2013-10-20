@@ -106,8 +106,11 @@ while (my $position = $v->next) {
     my @pairs = finger_fret($setting, $position);
 
     # Print a string representation of the fret group.
-    printf("%*d. %s %s\n", $width, $i++, join(' ', @pairs), ($flag ? "-$flag" : $flag))
-        if !$flag || ($flag && $setting->{unplayable});
+    printf("%*d. %s %s\n",
+        $width, $i++,
+        join(' ', @pairs),
+        ($flag ? "-$flag" : $flag)
+    ) if !$flag || ($flag && $setting->{unplayable});
 }
 
 sub infraction { # Flag unplayable fingerings.
@@ -144,7 +147,7 @@ sub infraction { # Flag unplayable fingerings.
         if ($current && $previous) {
 
             # Set the previous and current fingers.
-            my $seen = $fcount ? $set->{fingers}[$fcount - 1] : '?';
+            my $seen   = $fcount ? $set->{fingers}[$fcount - 1] : '?';
             my $finger = $set->{fingers}[$fcount] || '?';
 
             # Keep track of the fingers and their frets.
