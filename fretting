@@ -65,6 +65,9 @@ use Getopt::Long;
 use List::MoreUtils qw( pairwise );
 use Pod::Usage;
 
+use constant BACKWARD_INFRACTION => 'B';
+use constant SPAN_INFRACTION     => 'S';
+
 # Set the default values.
 my $setting = {
     'fingers=s' => 'i m a q p',
@@ -157,7 +160,7 @@ sub infraction { # Flag unplayable fingerings.
 
             # Rule: Higher frets for adjacent lower fingers are not allowed.
             if ($previous > $current) {
-                $flag .= 'B'; # Flag a backward issue.
+                $flag .= BACKWARD_INFRACTION;
                 last unless $set->{accumulate};
             }
 
@@ -167,7 +170,7 @@ sub infraction { # Flag unplayable fingerings.
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
             if ($current >= $previous + 2 && $is_mid) {
-                $flag .= 'S'; # Flag a finger span issue.
+                $flag .= SPAN_INFRACTION;
                 last unless $set->{accumulate};
             }
         }
