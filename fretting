@@ -33,6 +33,7 @@ Only the max setting is required, but all the defaults are used unless given.
  $ perl fretting --doc
  $ perl fretting --max 3
  $ perl fretting -m 3 --open
+ $ perl fretting -m 3 --muted
  $ perl fretting -m 4 --unplayable --debug
  $ perl fretting -m 4 -o -u -d --accumulate
  $ perl fretting -fingers 'x y'
