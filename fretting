@@ -164,7 +164,8 @@ sub infraction { # Flag unplayable fingerings.
 
             # Rule: Lower fingers on higher frets are not allowed.
             if (($previous > $current && ($set->{indexes}{$seen} <= $set->{indexes}{$finger}))
-             || ($previous < $current && ($set->{indexes}{$seen} >= $set->{indexes}{$finger}))
+                ||
+                ($previous < $current && ($set->{indexes}{$seen} >= $set->{indexes}{$finger}))
             ) {
     
                 push @$flag, BACKWARD_INFRACTION;
