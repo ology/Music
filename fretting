@@ -100,7 +100,7 @@ $i++ unless $setting->{open};
 while (my $position = $v->next) {
 
     # Flag unplayable fret groups.
-    my $flag = infraction($setting, $position);
+    my @flags = infraction($setting, $position);
 
     # Concatinate pairs of fingers and frets.
     my @pairs = finger_fret($setting, $position);
@@ -109,8 +109,8 @@ while (my $position = $v->next) {
     printf("%*d. %s %s\n",
         $width, $i++,
         join(' ', @pairs),
-        ($flag ? "-$flag" : $flag)
-    ) if !$flag || ($flag && $setting->{unplayable});
+        (@flags ? '-' . join(',', @flags) : '')
+    ) if !@flags || $setting->{unplayable};
 }
 
 sub infraction { # Flag unplayable fingerings.
@@ -123,7 +123,7 @@ sub infraction { # Flag unplayable fingerings.
     # " a location counter.
     # " a finger counter.
     # Declare the "too wide" span offset.
-    my ($flag, $previous, $loc, $fcount, $span) = ('', undef, 0, 0, 2);
+    my ($flag, $previous, $loc, $fcount, $span) = ([], undef, 0, 0, 2);
 
     # Declare a bucket to keep track of fingers and their fret positions.
     my $track = {};
@@ -166,7 +166,7 @@ sub infraction { # Flag unplayable fingerings.
              || ($previous < $current && ($set->{indexes}{$seen} >= $set->{indexes}{$finger}))
             ) {
     
-                $flag .= BACKWARD_INFRACTION;
+                push @$flag, BACKWARD_INFRACTION;
                 last unless $set->{accumulate};
             }
 
@@ -175,7 +175,7 @@ sub infraction { # Flag unplayable fingerings.
                 (($finger eq 'a' && exists $track->{m}) && (abs($current - $track->{m}) > 1))
             ) {
 
-                $flag .= SPAN_INFRACTION;
+                push @$flag, SPAN_INFRACTION;
                 last unless $set->{accumulate};
             }
         }
@@ -184,8 +184,8 @@ sub infraction { # Flag unplayable fingerings.
         $previous = $current;
     }
 
-    # Return any infractions.
-    return $flag;
+    # Return the list of infractions found.
+    return @$flag;
 }
 
 sub finger_fret { # Concatinate pairs of fingers and frets.
