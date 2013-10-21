@@ -27,8 +27,8 @@ The symbols for the fingers are from Spanish (de Flamenco).
 There are a few special cases that are handled by the L</infraction> routine.
 Specifically the middle and ring fingers cannot span more than a fret
 comfortably.  Also, certain "backwards" fret positions cannot physically by
-played.  TODO: Lastly, the thumb can only play or mute the leftmost fret (which
-corresponds to the bottom string of an instrument).
+played.  Also, the thumb can only play or mute the leftmost fret (which
+corresponds to the bottom string of an instrument) and mute the "2nd left-most."
 
 Only the max setting is required, but all the defaults are used unless given.
 
@@ -139,6 +139,8 @@ sub infraction { # Flag unplayable fingerings.
     # Inspect pairs of the position.
     # This is referred to by `last` unless we are accumulating.
     FLAG: for my $current (@$pos) {
+
+        # TODO Flag if thumb plays any but the bottom or mutes the next.
 
         # Set the first item of the pair and move on.
         if (not defined $previous) {
