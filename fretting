@@ -163,13 +163,19 @@ sub infraction { # Flag unplayable fingerings.
             }
 
             # Rule: Lower fingers on higher frets are not allowed.
-            if (($previous > $current && ($set->{indexes}{$seen} <= $set->{indexes}{$finger}))
-                ||
-                ($previous < $current && ($set->{indexes}{$seen} >= $set->{indexes}{$finger}))
-            ) {
-    
-                push @$flag, BACKWARD_INFRACTION;
-                last unless $set->{accumulate};
+            #       Higher fingers on lower frets are not allowed.
+            my @seen = grep { exists $track->{$_} }
+                @{ $set->{fingers} }[ 0 ..  $set->{indexes}{$seen} - 1 ];
+            for my $s (@seen) {
+
+                if (($track->{$s} > $current && ($set->{indexes}{$s} <= $set->{indexes}{$finger}))
+                    ||
+                    ($track->{$s} < $current && ($set->{indexes}{$s} >= $set->{indexes}{$finger}))
+                ) {
+
+                    push @$flag, BACKWARD_INFRACTION;
+                    last unless $set->{accumulate};
+                }
             }
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
