@@ -175,7 +175,7 @@ sub infraction { # Flag unplayable fingerings.
             for my $s (@seen) {
 
                 # Rule: Lower fingers on higher frets are not allowed.
-                #       Higher fingers on lower frets are not allowed.
+                #       Higher fingers on lower "
                 if (($track->{$s} > $current
                         && ($set->{indexes}{$s} <= $set->{indexes}{$finger}))
                     ||
