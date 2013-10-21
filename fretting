@@ -47,6 +47,7 @@ Only the max setting is required, but all the defaults are used unless given.
  --max         | -m : Maximum number frets     (4)
  --fingers     | -f : Finger symbols   (i m a q p)
  --open        | -o : Use the open position    (0)
+ --muted       | -x : Use the muted position   (0)
  --unplayable  | -u : Show flagged fret groups (0)
  --accumulate  | -a : Tally all infractions    (0)
 
@@ -74,8 +75,9 @@ my $setting = {
     'help|?' => 0,
     'docs|c' => 0,
     'debug|d' => 0,
-    'max=i' => 4,
+    'max|m=i' => 4,
     'open' => 0,
+    'muted|x' => 0,
     'unplayable' => 0,
     'accumulate' => 0,
 };
@@ -93,8 +95,8 @@ my $v = variations_with_repetition($setting->{range}, $setting->{max});
 # Loop counter for each fret group shown in the final output.
 my ($width, $i) = (3, 0);
 
-# Increment our counter if --open is not given.
-$i++ unless $setting->{open};
+# Increment our counter unless --open or -muted are given.
+$i++ unless $setting->{open} || $setting->{muted};
 
 # Inspect each position AKA fret group.
 while (my $position = $v->next) {
@@ -205,6 +207,13 @@ sub finger_fret { # Concatinate pairs of fingers and frets.
     # Don't join fingers with zeros.
     # XXX Can't make this call not warn, yet.
     no warnings 'once';
+
+    # Change zeros to x's if --muted
+    if ($set->{muted}) {
+        @$pos = map { $_ ? $_ : 'x' } @$pos;
+    }
+
+    # Return the (possibly single) pairs, in a width of 2 columns.
     return pairwise { sprintf '%2s', $b ? $a . $b : $b }
         @{ $set->{fingers} }, @$pos;
 }
@@ -239,7 +248,7 @@ sub set_defaults { # Assign either default or given settings.
     # Get the initial finger list.
     my @fingers = split $pattern, $set->{'fingers=s'};
 
-    # Fingers begin with 1. 0 would mean "No finger" wich is handled by --open.
+    # Fingers are 1 based. 0 means no finger, handled by --open & --muted.
     my @indexes = 1 .. @fingers;
 
     # Make a finger=>number association.
@@ -283,7 +292,7 @@ sub set_defaults { # Assign either default or given settings.
     $set->{range} = [ 1 .. $set->{max} ];
 
     # Prepend 0 (the open position) to the range, if requested.
-    unshift @{ $set->{range} }, 0 if $set->{open};
+    unshift @{ $set->{range} }, 0 if $set->{open} || $set->{muted};
 }
 
 __END__
