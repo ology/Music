@@ -129,7 +129,8 @@ sub infraction { # Flag unplayable fingerings.
     my $track = {};
 
     # Inspect pairs of the position.
-    for my $current (@$pos) {
+    # This is referred to by `last` unless we are accumulating.
+    FLAG: for my $current (@$pos) {
 
         # Set the first item of the pair and move on.
         if (not defined $previous) {
@@ -162,19 +163,23 @@ sub infraction { # Flag unplayable fingerings.
                     $previous, $current;
             }
 
-            # Rule: Lower fingers on higher frets are not allowed.
-            #       Higher fingers on lower frets are not allowed.
+            # Collect and loop over the fingers that have already been seen.
             my @seen = grep { exists $track->{$_} }
                 @{ $set->{fingers} }[ 0 ..  $set->{indexes}{$seen} - 1 ];
+
             for my $s (@seen) {
 
-                if (($track->{$s} > $current && ($set->{indexes}{$s} <= $set->{indexes}{$finger}))
+                # Rule: Lower fingers on higher frets are not allowed.
+                #       Higher fingers on lower frets are not allowed.
+                if (($track->{$s} > $current
+                        && ($set->{indexes}{$s} <= $set->{indexes}{$finger}))
                     ||
-                    ($track->{$s} < $current && ($set->{indexes}{$s} >= $set->{indexes}{$finger}))
+                    ($track->{$s} < $current
+                        && ($set->{indexes}{$s} >= $set->{indexes}{$finger}))
                 ) {
 
                     push @$flag, BACKWARD_INFRACTION;
-                    last unless $set->{accumulate};
+                    last FLAG unless $set->{accumulate};
                 }
             }
 
@@ -183,7 +188,7 @@ sub infraction { # Flag unplayable fingerings.
                 && (abs($track->{a} - $track->{m}) > 1)) {
 
                 push @$flag, SPAN_INFRACTION;
-                last unless $set->{accumulate};
+                last FLAG unless $set->{accumulate};
             }
         }
 
