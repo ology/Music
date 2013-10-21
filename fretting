@@ -157,8 +157,9 @@ sub infraction { # Flag unplayable fingerings.
             # Show our progress if requested.
             if ($set->{debug}) {
 
-                warn "Finger: $seen($track->{$seen}) $finger($track->{$finger})\n";
-                warn "Fret:     $previous    $current\n";
+                warn sprintf "Finger: %s(%d) %s(%d)\nFret:%6d%5d\n",
+                    $seen, $track->{$seen}, $finger, $track->{$finger},
+                    $previous, $current;
             }
 
             # Rule: Lower fingers on higher frets are not allowed.
