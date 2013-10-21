@@ -47,7 +47,7 @@ Only the max setting is required, but all the defaults are used unless given.
  --max         | -m : Maximum number frets     (4)
  --fingers     | -f : Finger symbols   (i m a q p)
  --open        | -o : Use the open position    (0)
- --muted       | -x : Use the muted position   (0)
+ --muted       | -x : Mute with a finger       (0)
  --unplayable  | -u : Show flagged fret groups (0)
  --accumulate  | -a : Tally all infractions    (0)
 
