@@ -159,6 +159,14 @@ sub infraction { # Flag unplayable fingerings.
                     $previous, $current;
             }
 
+            # Rule: Middle finger pairs with wide fret spans are not allowed.
+            if (exists $track->{m} && exists $track->{a}
+                && (abs($track->{a} - $track->{m}) > 1)) {
+
+                push @$flag, SPAN_INFRACTION;
+                last FLAG unless $set->{accumulate};
+            }
+
             # Collect and loop over the fingers that have already been seen.
             my @seen = grep { exists $track->{$_} }
                 @{ $set->{fingers} }[ 0 ..  $set->{indexes}{$seen} - 1 ];
@@ -177,14 +185,6 @@ sub infraction { # Flag unplayable fingerings.
                     push @$flag, BACKWARD_INFRACTION;
                     last FLAG unless $set->{accumulate};
                 }
-            }
-
-            # Rule: Middle finger pairs with wide fret spans are not allowed.
-            if (exists $track->{m} && exists $track->{a}
-                && (abs($track->{a} - $track->{m}) > 1)) {
-
-                push @$flag, SPAN_INFRACTION;
-                last FLAG unless $set->{accumulate};
             }
         }
 
