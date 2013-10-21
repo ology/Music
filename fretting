@@ -40,15 +40,15 @@ Only the max setting is required, but all the defaults are used unless given.
 
 =head2 ARGUMENTS
 
- None | --help | -h | -? : Usage              (0)
- --version    | -v : The current version
- --docs       | -c : The full documentation   (0)
- --debug      | -d : Show progress            (0)
- --max        | -m : Maximum number frets     (4)
- --fingers    | -f : Finger symbols   (i m a q p)
- --open       | -o : Use the open position    (0)
- --unplayable | -u : Show flagged fret groups (0)
- --accumulate | -a : Tally all infractions    (0)
+ None | --help | -h | -? : Usage               (0)
+ --version     | -v : The current version
+ --docs        | -c : The full documentation   (0)
+ --debug       | -d : Show progress            (0)
+ --max         | -m : Maximum number frets     (4)
+ --fingers     | -f : Finger symbols   (i m a q p)
+ --open        | -o : Use the open position    (0)
+ --unplayable  | -u : Show flagged fret groups (0)
+ --accumulate  | -a : Tally all infractions    (0)
 
 =cut
 
