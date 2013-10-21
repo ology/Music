@@ -14,7 +14,7 @@ unplayable.
 With the L</ARGUMENTS>, you can define fret group sizes and the number (and
 name) of available fingers.  Additionally, you can show unplayable fingerings
 and the reasons: A B<B>ackwards or reverse fingering and finger B<S>pan
-impossibilities.
+impossibilities.  Also, the "open position" and "finger muting" can be shown.
 
 The symbols for the fingers are from Spanish (de Flamenco).
 
@@ -23,6 +23,12 @@ The symbols for the fingers are from Spanish (de Flamenco).
   ring   : anular  (a)
   little : meñeque (q)
   thumb  : pulgar  (p)
+
+There are a few special cases that are handled by the L</infraction> routine.
+Specifically the middle and ring fingers cannot span more than a fret
+comfortably.  Also, certain "backwards" fret positions cannot physically by
+played.  TODO: Lastly, the thumb can only play or mute the leftmost fret (which
+corresponds to the bottom string of an instrument).
 
 Only the max setting is required, but all the defaults are used unless given.
 
