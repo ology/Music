@@ -120,10 +120,9 @@ sub infraction { # Flag unplayable fingerings.
 
     # Declare the flag to return.
     # " a holder for the last seen position.
-    # " a location counter.
     # " a finger counter.
     # Declare the "too wide" span offset.
-    my ($flag, $previous, $loc, $fcount, $span) = ([], undef, 0, 0, 2);
+    my ($flag, $previous, $count, $span) = ([], undef, 0, 2);
 
     # Declare a bucket to keep track of fingers and their fret positions.
     my $track = {};
@@ -138,18 +137,15 @@ sub infraction { # Flag unplayable fingerings.
             next;
         }
 
-        # Increment the 1st position (since we've seen at least one).
-        $loc++;
-
         # Increment the finger counter.
-        $fcount++;
+        $count++;
 
         # Skip pairs with zeros i.e. the 0th fret i.e. an open string.
         if ($current && $previous) {
 
             # Set the previous and current fingers.
-            my $seen   = $fcount ? $set->{fingers}[$fcount - 1] : '?';
-            my $finger = $set->{fingers}[$fcount] || '?';
+            my $seen   = $count ? $set->{fingers}[$count - 1] : '?';
+            my $finger = $set->{fingers}[$count] || '?';
 
             # Keep track of the fingers and their frets.
             $track->{$seen}   = $previous unless exists $track->{$seen};
