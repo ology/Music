@@ -170,7 +170,8 @@ sub infraction { # Flag unplayable fingerings.
             if ($set->{debug}) {
 
                 warn sprintf "Finger: %s(%d) %s(%d)\nFret:%6d%5d\n",
-                    $seen, $track->{$seen}, $finger, $track->{$finger},
+                    $seen, $track->{$seen},
+                    $finger, $track->{$finger},
                     $previous, $current;
             }
 
