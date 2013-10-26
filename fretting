@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 =head1 NAME
 
@@ -8,10 +8,13 @@ fretting - List all possible fret and barre positions
 
 =head1 DESCRIPTION
 
-This program lists all possible fret and barre fingering positions and flags those that are deemed unplayable.
+This program lists all possible fret and barre fingering positions and flags
+those that are deemed unplayable.
 
-With the L</ARGUMENTS>, you can define fret group sizes, the number (and names) of available fingers.  Also, you can show unplayable fingerings and the reasons: B<B>ackwards or reverse fingering, finger B<S>pan
-impossibilities and barre finger overlaps.  Also, the "open position" and "finger muting" can be shown.
+With the L</ARGUMENTS>, you can define fret group sizes, the number (and names)
+of available fingers.  Also, you can show unplayable fingerings and the reasons:
+B<B>ackwards or reverse fingering, finger B<S>pan impossibilities and barre
+finger overlaps.  Also, the "open position" and "finger muting" can be shown.
 
 The symbols for the fingers are from Spanish (de Flamenco).
 
@@ -73,21 +76,21 @@ use List::MoreUtils qw( pairwise );
 use Pod::Usage;
 
 use constant BACKWARD_INFRACTION => 'B';
-use constant SPAN_INFRACTION     => 'S';
 use constant OVERLAP_INFRACTION  => 'O';
+use constant SPAN_INFRACTION     => 'S';
 
 # Set the default values.
 my $setting = {
-    'fingers=s' => 'i m a q p',
-    'help|?' => 0,
-    'docs|c' => 0,
-    'debug|d' => 0,
-    'max|m=i' => 4,
-    'open' => 0,
-    'muted|x' => 0,
-    'unplayable' => 0,
     'accumulate' => 0,
-    'barre' => 0,
+    'barre'      => 0,
+    'debug|d'    => 0,
+    'docs|c'     => 0,
+    'fingers=s'  => 'i m a q p',
+    'help|?'     => 0,
+    'max|m=i'    => 4,
+    'muted|x'    => 0,
+    'open'       => 0,
+    'unplayable' => 0,
 };
 
 # Harvest with Go::L and call P::U.
