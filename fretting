@@ -178,16 +178,14 @@ sub infraction { # Flag unplayable fingerings.
             # Rule: Overlapping frets are not allowed.
             if ($set->{barre} && $previous == $current) {
 
-                push @$flag, OVERLAP_INFRACTION;
-                last FLAG unless $set->{accumulate};
+                flag($set, $flag, OVERLAP_INFRACTION);
             }
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
             if (exists $track->{m} && exists $track->{a}
                 && (abs($track->{a} - $track->{m}) > 1)) {
 
-                push @$flag, SPAN_INFRACTION;
-                last FLAG unless $set->{accumulate};
+                flag($set, $flag, SPAN_INFRACTION);
             }
 
             # Collect the fingers that have already been seen.
@@ -206,8 +204,7 @@ sub infraction { # Flag unplayable fingerings.
                         && ($set->{indexes}{$s} >= $set->{indexes}{$finger}))
                 ) {
 
-                    push @$flag, BACKWARD_INFRACTION;
-                    last FLAG unless $set->{accumulate};
+                    flag($set, $flag, BACKWARD_INFRACTION);
                 }
             }
         }
@@ -218,6 +215,14 @@ sub infraction { # Flag unplayable fingerings.
 
     # Return the list of infractions found.
     return @$flag;
+}
+
+sub flag { # Flag an infraction.
+    my ($set, $flag, $infraction) = @_;
+    # Flag the given type of infraction.
+    push @$flag, $infraction;
+    # This is the end, unless we are accumulating infractions.
+    last FLAG unless $set->{accumulate};
 }
 
 sub finger_fret { # Concatinate pairs of fingers and frets.
