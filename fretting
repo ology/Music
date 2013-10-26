@@ -369,7 +369,13 @@ __END__
   255. i4 m4 r4 p4
 
  $ perl fretting m 3 -b -u -a
-  0. TODO
+  1. i1 m1 a1 -O,O
+  2. i1 m1 a2 -O
+  3. i1 m1 a3 -O,S
+ ...
+ 25. i3 m3 a1 -O,S,B,B
+ 26. i3 m3 a2 -O,B,B
+ 27. i3 m3 a3 -O,O
 
 =head1 TO DO
 
