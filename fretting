@@ -176,17 +176,13 @@ sub infraction { # Flag unplayable fingerings.
             }
 
             # Rule: Overlapping frets are not allowed.
-            if ($set->{barre} && $previous == $current) {
-
-                flag($set, $flag, OVERLAP_INFRACTION);
-            }
+            flag($set, $flag, OVERLAP_INFRACTION)
+                if $set->{barre} && $previous == $current;
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
-            if (exists $track->{m} && exists $track->{a}
-                && (abs($track->{a} - $track->{m}) > 1)) {
-
-                flag($set, $flag, SPAN_INFRACTION);
-            }
+            flag($set, $flag, SPAN_INFRACTION)
+                if exists $track->{m} && exists $track->{a}
+                    && (abs($track->{a} - $track->{m}) > 1);
 
             # Collect the fingers that have already been seen.
             my @seen = grep { exists $track->{$_} }
@@ -197,15 +193,11 @@ sub infraction { # Flag unplayable fingerings.
 
                 # Rule: Lower fingers on higher frets are not allowed.
                 #       Higher fingers on lower "
-                if (($track->{$s} > $current
-                        && ($set->{indexes}{$s} <= $set->{indexes}{$finger}))
-                    ||
-                    ($track->{$s} < $current
-                        && ($set->{indexes}{$s} >= $set->{indexes}{$finger}))
-                ) {
-
-                    flag($set, $flag, BACKWARD_INFRACTION);
-                }
+                flag($set, $flag, BACKWARD_INFRACTION)
+                    if ($track->{$s} > $current
+                        && $set->{indexes}{$s} <= $set->{indexes}{$finger})
+                    || ($track->{$s} < $current
+                        && $set->{indexes}{$s} >= $set->{indexes}{$finger});
             }
         }
 
@@ -218,9 +210,13 @@ sub infraction { # Flag unplayable fingerings.
 }
 
 sub flag { # Flag an infraction.
+
+    # The settings, the flags reference & the infraction type.
     my ($set, $flag, $infraction) = @_;
+
     # Flag the given type of infraction.
     push @$flag, $infraction;
+
     # This is the end, unless we are accumulating infractions.
     last FLAG unless $set->{accumulate};
 }
