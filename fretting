@@ -4,17 +4,14 @@ our $VERSION = '0.10';
 
 =head1 NAME
 
-fretting - List all possible fret positions
+fretting - List all possible fret and barre positions
 
 =head1 DESCRIPTION
 
-This program lists all possible fret positions and flags those that are deemed
-unplayable.
+This program lists all possible fret and barre fingering positions and flags those that are deemed unplayable.
 
-With the L</ARGUMENTS>, you can define fret group sizes and the number (and
-name) of available fingers.  Additionally, you can show unplayable fingerings
-and the reasons: A B<B>ackwards or reverse fingering and finger B<S>pan
-impossibilities.  Also, the "open position" and "finger muting" can be shown.
+With the L</ARGUMENTS>, you can define fret group sizes, the number (and names) of available fingers.  Also, you can show unplayable fingerings and the reasons: B<B>ackwards or reverse fingering, finger B<S>pan
+impossibilities and barre finger overlaps.  Also, the "open position" and "finger muting" can be shown.
 
 The symbols for the fingers are from Spanish (de Flamenco).
 
@@ -44,6 +41,7 @@ Only the max setting is required, but all the defaults are used unless given.
  $ perl fretting -m 4 -o -u -d --accumulate
  $ perl fretting -fingers 'x y'
  $ perl fretting -f 'x y z' -u
+ $ perl fretting -m 3 --barre -u -a
 
 =head2 ARGUMENTS
 
@@ -51,12 +49,13 @@ Only the max setting is required, but all the defaults are used unless given.
  --version     | -v : The current version
  --docs        | -c : The full documentation   (0)
  --debug       | -d : Show progress            (0)
- --max         | -m : Maximum number frets     (4)
- --fingers     | -f : Finger symbols   (i m a q p)
+ --max=i       | -m : Maximum number frets     (4)
+ --fingers=s   | -f : Finger symbols   (i m a q p)
  --open        | -o : Use the open position    (0)
  --muted       | -x : Mute with a finger       (0)
  --unplayable  | -u : Show flagged fret groups (0)
  --accumulate  | -a : Tally all infractions    (0)
+ --barre       | -b : Use single finger spans  (0)
 
 =cut
 
@@ -75,6 +74,7 @@ use Pod::Usage;
 
 use constant BACKWARD_INFRACTION => 'B';
 use constant SPAN_INFRACTION     => 'S';
+use constant OVERLAP_INFRACTION  => 'O';
 
 # Set the default values.
 my $setting = {
@@ -87,6 +87,7 @@ my $setting = {
     'muted|x' => 0,
     'unplayable' => 0,
     'accumulate' => 0,
+    'barre' => 0,
 };
 
 # Harvest with Go::L and call P::U.
@@ -168,6 +169,13 @@ sub infraction { # Flag unplayable fingerings.
                 warn sprintf "Finger: %s(%d) %s(%d)\nFret:%6d%5d\n",
                     $seen, $track->{$seen}, $finger, $track->{$finger},
                     $previous, $current;
+            }
+
+            # Rule: Overlapping frets are not allowed.
+            if ($set->{barre} && $previous == $current) {
+
+                push @$flag, OVERLAP_INFRACTION;
+                last FLAG unless $set->{accumulate};
             }
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
@@ -354,6 +362,9 @@ __END__
   253. i4 m4 r4 p2 B
   254. i4 m4 r4 p3 B
   255. i4 m4 r4 p4
+
+ $ perl fretting m 3 -b -u -a
+  0. TODO
 
 =head1 TO DO
 
