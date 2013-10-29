@@ -186,7 +186,7 @@ sub infraction { # Flag unplayable fingerings.
 
             # Collect the fingers that have already been seen.
             my @seen = grep { exists $track->{$_} }
-                @{ $set->{fingers} }[ 0 ..  $set->{indexes}{$seen} - 1 ];
+                @{ $set->{fingers} }[ 0 .. $set->{indexes}{$seen} - 1 ];
 
             # Loop over the seen fingers.
             for my $s (@seen) {
