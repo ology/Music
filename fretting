@@ -1,15 +1,27 @@
 #!/usr/bin/perl
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
+
+use strict;
+use warnings;
+
+use Algorithm::Combinatorics qw( variations_with_repetition );
+use Getopt::Long;
+use Getopt::Simple qw( $switch );
+use List::MoreUtils qw( pairwise );
+use Pod::Usage;
+
+use constant BACKWARD_INFRACTION => 'B';
+use constant OVERLAP_INFRACTION  => 'O';
+use constant SPAN_INFRACTION     => 'S';
 
 =head1 NAME
 
-fretting - List all possible fret and barre positions
+fretting - Stringed musical instrument fretboard positions
 
 =head1 DESCRIPTION
 
-This program lists all possible fret and barre fingering positions and flags
-those that are deemed unplayable.
+Show all possible stringed musical instrument fretboard positions.
 
 With the L</ARGUMENTS>, you can define fret group sizes, the number (and names)
 of available fingers.  Also, you can show unplayable fingerings and the reasons:
@@ -26,7 +38,7 @@ The symbols for the fingers are from Spanish (de Flamenco).
 
 There are a few special cases that are handled by the L</infraction> routine.
 Specifically the middle and ring fingers cannot span more than a fret
-comfortably.  Also, certain "backwards" fret positions cannot physically by
+comfortably.  Also, certain "backwards" fret positions cannot physically be
 played.  Also, the thumb can only play or mute the leftmost fret (which
 corresponds to the bottom string of an instrument) and mute the "2nd left-most."
 
@@ -34,102 +46,172 @@ Only the max setting is required, but all the defaults are used unless given.
 
 =head1 SYNOPSIS
 
- $ perl fretting
- $ perl fretting -v
- $ perl fretting --doc
- $ perl fretting --max 3
- $ perl fretting -m 3 --open
- $ perl fretting -m 3 --muted
- $ perl fretting -m 4 --unplayable --debug
- $ perl fretting -m 4 -o -u -d --accumulate
- $ perl fretting -fingers 'x y'
- $ perl fretting -f 'x y z' -u
- $ perl fretting -m 3 --barre -u -a
+ $ perl fretting [--help|-h|--docs|-d]
+ $ perl fretting --debug \
+    --sfr=1 --nfr=4 \
+    --fin="i m r p" --sfi=0 --nfi=4 \
+    --str="e a d g b e'" --sst=2 --nst=4 --open \
+    --unplayable --accumulate
 
 =head2 ARGUMENTS
 
- None | --help | -h | -? : Usage               (0)
- --version     | -v : The current version
- --docs        | -c : The full documentation   (0)
- --debug       | -d : Show progress            (0)
- --max=i       | -m : Maximum number frets     (4)
- --fingers=s   | -f : Finger symbols   (i m a q p)
- --open        | -o : Use the open position    (0)
- --muted       | -x : Mute with a finger       (0)
- --unplayable  | -u : Show flagged fret groups (0)
- --accumulate  | -a : Tally all infractions    (0)
- --barre       | -b : Use single finger spans  (0)
+ Ex: --arg : Description = Default setting
+
+ --help       : This exciting help message!
+ --docs       : The full documentation
+ --version    : Program version
+ --debug      : Show progress        = 0
+ --sfret      : Starting fret        = 1
+ --nfret      : Number of frets      = 4
+ --fingers    : Finger symbols       = i m a q p
+ --sfinger    : Starting finger      = 0
+ --nfinger    : Number of fingers    = 4
+ --strings    : String symbols       = e a d g b e'
+ --sstring    : Starting string      = 2
+ --nstring    : Number of strings    = 4
+ --open       : Use the open string  = 0
+ --unplayable : Unplayable positions = 0
+ --accumulate : Show all infractions = 0
 
 =cut
 
-use strict;
-use warnings;
+# Default, initial parameters.
+my $setting = {
+    sfret      => { type => '=i', default => 1 },
+    nfret      => { type => '=i', default => 4 },
+    fingers    => { type => '=s', default => q/i m a q p/ },
+    sfinger    => { type => '=i', default => 0 },
+    nfinger    => { type => '=i', default => 4 },
+    strings    => { type => '=s', default => q/e a d g b e'/ },
+    sstring    => { type => '=i', default => 2 },
+    nstring    => { type => '=i', default => 4 },
+    open       => { type => '',   default => 0 },
+    barre      => { type => '',   default => 0 },
+    docs       => { type => '',   default => 0 },
+    debug      => { type => '',   default => 0 },
+    indexes    => { type => '',   default => 0 },
+    unplayable => { type => '',   default => 0 },
+    accumulate => { type => '',   default => 0 },
+};
 
 # See warnings in output context.
 $|++;
 
-use Algorithm::Combinatorics qw(
-    variations_with_repetition
-);
-use Getopt::Long;
-use List::MoreUtils qw( pairwise );
-use Pod::Usage;
+# Get the command line arguments and specify doc level.
+setup($setting, @ARGV); # NOTE: This populates the $switch glpbal hashref.
 
-use constant BACKWARD_INFRACTION => 'B';
-use constant OVERLAP_INFRACTION  => 'O';
-use constant SPAN_INFRACTION     => 'S';
+# Transform space-separated lists into proper arrays.
+transform($switch);
 
-# Set the default values.
-my $setting = {
-    'accumulate' => 0,
-    'barre'      => 0,
-    'debug|d'    => 0,
-    'docs|c'     => 0,
-    'fingers=s'  => 'i m a q p',
-    'help|?'     => 0,
-    'max|m=i'    => 4,
-    'muted|x'    => 0,
-    'open'       => 0,
-    'unplayable' => 0,
+# Set the fret range.
+set_range($switch);
+
+# Fingers are 1 based. 0 means no finger, handled by --open & --muted.
+my @indexes = 1 .. @{ $switch->{fingers} };
+# Make a finger=>number association.
+$switch->{indexes} = {
+    pairwise { ($a => $b) } @{ $switch->{fingers} }, @indexes
 };
 
-# Harvest with Go::L and call P::U.
-setup($setting, \@ARGV);
-
-# Set unspecified defaults.
-set_defaults($setting);
-
-# Fret groups (per finger).
-my $v = variations_with_repetition($setting->{range}, $setting->{max});
+# Fret groups per finger.
+my $v = variations_with_repetition($switch->{range}, $switch->{nfinger});
 
 # Line number format width. # TODO Compute instead of hard-coding.
 # Loop counter for each fret group shown in the final output.
 my ($width, $i) = (3, 0);
 
 # Increment our counter unless --open or -muted are given.
-$i++ unless $setting->{open} || $setting->{muted};
+$i++ unless $switch->{open};
 
 # Inspect each position AKA fret group.
 while (my $position = $v->next) {
 
     # Flag unplayable fret groups.
-    my @flags = infraction($setting, $position);
+    my @flags = infraction($switch, $position);
 
-    # Concatinate pairs of fingers and frets.
-    my @pairs = finger_fret($setting, $position);
+    # Interleave space-separated lists.
+    my @pairs = pairs($switch->{fingers}, $position);
+#    @pairs = pairs($switch->{strings}, \@pairs);
 
     # Print a string representation of the fret group.
     printf("%*d. %s %s\n",
         $width, $i++,
         join(' ', @pairs),
         (@flags ? '-' . join(',', @flags) : '')
-    ) if !@flags || $setting->{unplayable};
+    ) if !@flags || $switch->{unplayable};
+}
+
+sub setup { # Harvest command-line arguments and use magical POD.
+
+    # Intake a Go::L spec=>default hashref of settings.
+    my ($set, @args) = @_;
+
+    # Auto-help if we are called with no arguments.
+    pod2usage(-verbose => 1) unless @args;
+
+    # Set handy auto-documentation features.
+    Getopt::Long::Configure(qw( auto_version auto_help ));
+
+    # Collect the command-line arguments.
+    my $options = Getopt::Simple->new;
+    # NOTE: Populates global switch variable.
+    $options->getOptions($set) || pod2usage(-verbose => 0);
+
+    # Show documentation if requested.
+    pod2usage(-verbose => 1) if $switch->{help};
+    pod2usage(-verbose => 2) if $switch->{docs};
+}
+
+sub pairs { # Interleave two arrayrefs.
+    my ($A, $B) = @_;
+
+    if (@$A > @$B) {
+        @$A = @$A[ 0 .. @$B - 1];
+    }
+    elsif (@$B > @$A) {
+        @$B = @$B[ 0 .. @$A - 1];
+    }
+
+    # Return the (possibly single) pairs, in a width of 2 columns.
+    return pairwise { sprintf '%2s', $b ? $a . $b : $b } @$A, @$B;
+}
+
+sub transform { # Transform space-separated lists into proper arrays.
+
+    # Pass-in settings.
+    my $set = shift;
+
+    # Traverse the settings.
+    for my $option (keys %$set) {
+
+        # If the setting is not an integer...
+        if ($set->{$option} !~ /^\d+$/) {
+
+            # Split the setting by whitespace.
+            $set->{$option} = [ split /\s+/, $set->{$option} ];
+        }
+    }
+}
+
+sub set_range { # Define the fret range.
+
+    # Pass-in settings.
+    my $set = shift;
+
+    # Set the fret range.
+    my @range = ($set->{sfret} .. $set->{sfret} + $set->{nfret} - 1);
+
+    # Prepend zero if requested.
+    unshift @range, 0 if $set->{open};
+
+    # Add the range to the settings.
+    $set->{range} = \@range;
 }
 
 sub infraction { # Flag unplayable fingerings.
 
-    # The position to consider.
-    my($set, $pos) = @_;
+    # The settings and position to consider.
+    my ($set, $pos) = @_;
 
     # Declare the flag to return.
     # " a holder for the last seen position.
@@ -176,13 +258,25 @@ sub infraction { # Flag unplayable fingerings.
             }
 
             # Rule: Overlapping frets are not allowed.
-            flag($set, $flag, OVERLAP_INFRACTION)
-                if $set->{barre} && $previous == $current;
+            if ($set->{barre} && $previous == $current) {
+
+                # Flag the infraction.
+                flag($set, $flag, OVERLAP_INFRACTION);
+
+                # Skip to the next position unless we are accumulating.
+                last if $set->{accumulate};
+            }
 
             # Rule: Middle finger pairs with wide fret spans are not allowed.
-            flag($set, $flag, SPAN_INFRACTION)
-                if exists $track->{m} && exists $track->{a}
-                    && (abs($track->{a} - $track->{m}) > 1);
+            if (exists $track->{m} && exists $track->{a}
+                    && (abs($track->{a} - $track->{m}) > 1)) {
+
+                # Flag the infraction.
+                flag($set, $flag, SPAN_INFRACTION);
+
+                # Skip to the next position unless we are accumulating.
+                last if $set->{accumulate};
+            }
 
             # Collect the fingers that have already been seen.
             my @seen = grep { exists $track->{$_} }
@@ -193,11 +287,17 @@ sub infraction { # Flag unplayable fingerings.
 
                 # Rule: Lower fingers on higher frets are not allowed.
                 #       Higher fingers on lower "
-                flag($set, $flag, BACKWARD_INFRACTION)
-                    if ($track->{$s} > $current
+                if (($track->{$s} > $current
                         && $set->{indexes}{$s} <= $set->{indexes}{$finger})
                     || ($track->{$s} < $current
-                        && $set->{indexes}{$s} >= $set->{indexes}{$finger});
+                        && $set->{indexes}{$s} >= $set->{indexes}{$finger})) {
+
+                    # Flag the infraction.
+                    flag($set, $flag, BACKWARD_INFRACTION);
+
+                    # Skip to the next position unless we are accumulating.
+                    last if $set->{accumulate};
+                }
             }
         }
 
@@ -216,172 +316,10 @@ sub flag { # Flag an infraction.
 
     # Flag the given type of infraction.
     push @$flag, $infraction;
-
-    # This is the end, unless we are accumulating infractions.
-    last FLAG unless $set->{accumulate};
 }
 
-sub finger_fret { # Concatinate pairs of fingers and frets.
-
-    # The settings and current fret position.
-    my($set, $pos) = @_;
-
-    # Don't join fingers with zeros.
-    # XXX Can't make this call not warn, yet.
-    no warnings 'once';
-
-    # Change zeros to x's if --muted
-    if ($set->{muted}) {
-        @$pos = map { $_ ? $_ : 'x' } @$pos;
-    }
-
-    # Return the (possibly single) pairs, in a width of 2 columns.
-    return pairwise { sprintf '%2s', $b ? $a . $b : $b }
-        @{ $set->{fingers} }, @$pos;
-}
-
-sub setup { # Harvest command-line arguments and use magical POD.
-
-    # Intake a Go::L spec=>default hashref of settings.
-    my ($set, $args) = @_;
-
-    # Auto-help if we are called with no arguments.
-    pod2usage(-verbose => 1) unless @$args;
-
-    # Set handy auto-documentation features.
-    Getopt::Long::Configure(qw( auto_version auto_help ));
-
-    # Collect the command-line arguments.
-    GetOptions($set, keys %$set) || pod2usage(-verbose => 0);
-
-    # Show documentation if requested.
-    pod2usage(-verbose => 1) if $set->{help};
-    pod2usage(-verbose => 2) if $set->{docs};
-}
-
-sub set_defaults { # Assign either default or given settings.
-
-    # Get the default settings.
-    my $set = shift;
-
-    # The split pattern is space or comma separated.
-    my $pattern = qr/\s*[,\s]\s*/;
-
-    # Get the initial finger list.
-    my @fingers = split $pattern, $set->{'fingers=s'};
-
-    # Fingers are 1 based. 0 means no finger, handled by --open & --muted.
-    my @indexes = 1 .. @fingers;
-
-    # Make a finger=>number association.
-    $set->{indexes} = { pairwise { ($a => $b) } @fingers, @indexes };
-
-    # Inspect each option and add the setting if needed.
-    for my $spec (keys %$set) {
-
-        # Extract the option label from the Go::L spec.
-        # TODO Use Go::L::ParseOptionSpec() instead.
-        if ($spec =~ /^(\w+)(?:\b\w+?)?$/) {
-
-            # Capture label.
-            my $label = $1;
-
-            # If not given, add the default setting.
-            $set->{$label} = $set->{$spec} unless defined $set->{$label};
-        }
-    }
-
-    # Set the original fingers to use and the finger=>number order association.
-    @fingers = split $pattern, $set->{fingers} if exists $set->{fingers};
-
-    # If the max is greater than the number of fingers...
-    if (not $set->{max} or $set->{max} > @fingers) {
-
-        # Set the max to the number of fingers.
-        $set->{max} = @fingers;
-        warn "WARNING: Setting max to $set->{max}\n" if $set->{debug};
-    }
-    else {
-
-        # Else limit the finger list to the max.
-        @fingers = @fingers[ 0 .. $set->{max} - 1 ];
-    }
-
-    # Set the finger list.
-    $set->{fingers} = \@fingers;
-
-    # Set the range over which to vary.
-    $set->{range} = [ 1 .. $set->{max} ];
-
-    # Prepend 0 (the open position) to the range, if requested.
-    unshift @{ $set->{range} }, 0 if $set->{open} || $set->{muted};
-}
 
 __END__
-
-=head1 EXAMPLES
-
- $ perl fretting -m 2
-   0. i1 m1
-   1. i1 m2
-   2. i2 m2
-
- $ perl fretting -m 2 -o
-   0.  0  0
-   1.  0 m1
-   2.  0 m2
-   3. i1  0
-   4. i1 m1
-   5. i1 m2
-   6. i2  0
-   7. i2 m2
-
- $ perl fretting -m 2 -o -u
-  0.  0  0
-  1.  0 m1
-  2.  0 m2
-  3. i1  0
-  4. i1 m1
-  5. i1 m2
-  6. i2  0
-  7. i2 m1 B
-  8. i2 m2
-
- $ perl fretting -m 3 -o -u -a
-   0.  0  0  0 
-   1.  0  0 r1 
-  ...
-  28. i1 m3  0 S
-  29. i1 m3 r1 SB
-  30. i1 m3 r2 SB
-  31. i1 m3 r3 S
-  ...
-  62. i3 m3 r2 B
-  63. i3 m3 r3 
-
- $ perl fretting -m 4 -u -a
-    0. i1 m1 r1 p1 
-    1. i1 m1 r1 p2 
-    2. i1 m1 r1 p3 S
-  ...
-  253. i4 m4 r4 p2 B
-  254. i4 m4 r4 p3 B
-  255. i4 m4 r4 p4
-
- $ perl fretting m 3 -b -u -a
-  1. i1 m1 a1 -O,O
-  2. i1 m1 a2 -O
-  3. i1 m1 a3 -O,S
- ...
- 25. i3 m3 a1 -O,S,B,B
- 26. i3 m3 a2 -O,B,B
- 27. i3 m3 a3 -O,O
-
-=head1 TO DO
-
-* start=i - Fret start position (1)
-
-* Allow less fingers than the max.
 
 =head1 AUTHOR
 
@@ -400,4 +338,3 @@ Software Foundation; or the Artistic License.
 See http://dev.perl.org/licenses/ for more information.
 
 =cut
-
