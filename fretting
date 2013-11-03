@@ -80,6 +80,7 @@ my $setting = {
     sfret      => { type => '=i', default => 1 },
     nfret      => { type => '=i', default => 4 },
     fingers    => { type => '=s', default => q/i m a q p/ },
+    fspan      => { type => '=s', default => q/2 1 2/ },
     sfinger    => { type => '=i', default => 0 },
     nfinger    => { type => '=i', default => 4 },
     strings    => { type => '=s', default => q/e a d g b e'/ },
@@ -297,6 +298,10 @@ sub infraction { # Flag unplayable fingerings.
 
                     # Skip to the next position unless we are accumulating.
                     last FLAG unless $set->{accumulate};
+                }
+
+                # Rule: Fingers can't be more than their index +- X fret span.
+                if () {
                 }
             }
         }
