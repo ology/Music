@@ -99,7 +99,7 @@ my $setting = {
 $|++;
 
 # Get the command line arguments and specify doc level.
-setup($setting, @ARGV); # NOTE: This populates the $switch glpbal hashref.
+setup($setting, @ARGV); # NOTE: This populates the $switch global hashref.
 
 # Transform space-separated lists into proper arrays.
 transform($switch);
