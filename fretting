@@ -8,7 +8,7 @@ use warnings;
 use Algorithm::Combinatorics qw( variations_with_repetition );
 use Getopt::Long;
 use Getopt::Simple qw( $switch );
-use List::MoreUtils qw( pairwise );
+use List::AllUtils qw( pairwise sum );
 use Pod::Usage;
 
 use constant BACKWARD_INFRACTION => 'B';
@@ -185,8 +185,8 @@ sub transform { # Transform space-separated lists into proper arrays.
     # Traverse the settings.
     for my $option (keys %$set) {
 
-        # If the setting is not an integer...
-        if ($set->{$option} !~ /^\d+$/) {
+        # If the setting contains a space character...
+        if ($set->{$option} =~ /\s/) {
 
             # Split the setting by whitespace.
             $set->{$option} = [ split /\s+/, $set->{$option} ];
@@ -245,6 +245,9 @@ sub infraction { # Flag unplayable fingerings.
             my $seen   = $count ? $set->{fingers}[$count - 1] : '?';
             my $finger = $set->{fingers}[$count] || '?';
 
+            # Set the current finger index.
+            my $fidx = $set->{indexes}{$finger};
+
             # Keep track of the fingers and their frets.
             $track->{$seen}   = $previous unless exists $track->{$seen};
             $track->{$finger} = $current  unless exists $track->{$finger};
@@ -268,17 +271,6 @@ sub infraction { # Flag unplayable fingerings.
                 last FLAG unless $set->{accumulate};
             }
 
-            # Rule: Middle finger pairs with wide fret spans are not allowed.
-            if (exists $track->{m} && exists $track->{a}
-                    && (abs($track->{a} - $track->{m}) > 1)) {
-
-                # Flag the given type of infraction.
-                push @$flag, SPAN_INFRACTION;
-
-                # Skip to the next position unless we are accumulating.
-                last FLAG unless $set->{accumulate};
-            }
-
             # Collect the fingers that have already been seen.
             my @seen = grep { exists $track->{$_} }
                 @{ $set->{fingers} }[ 0 .. $set->{indexes}{$seen} - 1 ];
@@ -286,12 +278,15 @@ sub infraction { # Flag unplayable fingerings.
             # Loop over the seen fingers.
             for my $s (@seen) {
 
+                # Set the index of the current seen finger.
+                my $sidx = $set->{indexes}{$s};
+
                 # Rule: Lower fingers on higher frets are not allowed.
                 #       Higher fingers on lower "
-                if (($track->{$s} > $current
-                        && $set->{indexes}{$s} <= $set->{indexes}{$finger})
-                    || ($track->{$s} < $current
-                        && $set->{indexes}{$s} >= $set->{indexes}{$finger})) {
+                if (($track->{$s} > $current && $sidx <= $fidx)
+                    ||
+                    ($track->{$s} < $current && $sidx >= $fidx)
+                ) {
 
                     # Flag the given type of infraction.
                     push @$flag, BACKWARD_INFRACTION;
@@ -300,8 +295,18 @@ sub infraction { # Flag unplayable fingerings.
                     last FLAG unless $set->{accumulate};
                 }
 
-                # Rule: Fingers can't be more than their index +- X fret span.
-                if () {
+                # Compute span metrics.
+                my $fret_span = abs($current - $track->{$s});
+                my $sum = sum_span($sidx - 1, $fidx - 1, @{ $set->{fspan} });
+
+                # Rule: Frets can't be more than the allowed finger span.
+                if ($sidx != $fidx && $fret_span > $sum) {
+
+                    # Flag the given type of infraction.
+                    push @$flag, SPAN_INFRACTION;
+
+                    # Skip to the next position unless we are accumulating.
+                    last FLAG unless $set->{accumulate};
                 }
             }
         }
@@ -312,6 +317,18 @@ sub infraction { # Flag unplayable fingerings.
 
     # Return the list of infractions found.
     return @$flag;
+}
+
+sub sum_span { # Return the sum of the bounded list.
+
+    # Get the list and bounds from the call.
+    my ($x, $y, @list) = @_;
+
+    # Restrict the list by the bounds.
+    my @new = @list[ $x > $y ? ($y .. $x - 1) : ($x .. $y - 1) ];
+
+    # Return the list sum based on the relative sizes of x and y.
+    return sum(@new);
 }
 
 __END__
