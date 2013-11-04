@@ -70,6 +70,7 @@ Only the max setting is required, but all the defaults are used unless given.
  --sstring    : Starting string      = 2
  --nstring    : Number of strings    = 4
  --open       : Use the open string  = 0
+ --mute       : Use muted strings    = 0
  --unplayable : Unplayable positions = 0
  --accumulate : Show all infractions = 0
 
@@ -87,6 +88,7 @@ my $setting = {
     sstring    => { type => '=i', default => 2 },
     nstring    => { type => '=i', default => 4 },
     open       => { type => '',   default => 0 },
+    mute       => { type => '',   default => 0 },
     barre      => { type => '',   default => 0 },
     docs       => { type => '',   default => 0 },
     debug      => { type => '',   default => 0 },
@@ -122,13 +124,18 @@ my $v = variations_with_repetition($switch->{range}, $switch->{nfinger});
 my ($width, $i) = (3, 0);
 
 # Increment our counter unless --open or -muted are given.
-$i++ unless $switch->{open};
+$i++ unless $switch->{open} || $switch->{mute};
 
 # Inspect each position AKA fret group.
 while (my $position = $v->next) {
 
     # Flag unplayable fret groups.
     my @flags = infraction($switch, $position);
+
+    # Change zeros to x's if --muted
+    if ($switch->{mute}) {
+        @$position = map { $_ ? $_ : 'x' } @$position;
+    }
 
     # Interleave space-separated lists.
     my @pairs = pairs($switch->{fingers}, $position);
