@@ -49,8 +49,8 @@ Only the max setting is required, but all the defaults are used unless given.
  $ perl fretting [--help|-h|--docs|-d]
  $ perl fretting --debug \
     --sfr=1 --nfr=4 \
-    --fin="i m r p" --sfi=0 --nfi=4 \
-    --str="e a d g b e'" --sst=2 --nst=4 --open \
+    --fin="i m r p t" --sfi=0 --nfi=4 \
+    --str="E A D G B E'" --sst=2 --nst=4 --open \
     --unplayable --accumulate
 
 =head2 ARGUMENTS
