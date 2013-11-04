@@ -109,9 +109,9 @@ transform($switch);
 # Set the fret range.
 set_range($switch);
 
-# Fingers are 1 based. 0 means no finger, handled by --open & --muted.
+# Fingers are 1 based. 0 means no finger.
 my @indexes = 1 .. @{ $switch->{fingers} };
-# Make a finger=>number association.
+# Make a finger=>index association.
 $switch->{indexes} = {
     pairwise { ($a => $b) } @{ $switch->{fingers} }, @indexes
 };
@@ -123,7 +123,7 @@ my $v = variations_with_repetition($switch->{range}, $switch->{nfinger});
 # Loop counter for each fret group shown in the final output.
 my ($width, $i) = (3, 0);
 
-# Increment our counter unless --open or -muted are given.
+# Increment our counter unless --open or --mute are given.
 $i++ unless $switch->{open} || $switch->{mute};
 
 # Inspect each position AKA fret group.
@@ -132,7 +132,7 @@ while (my $position = $v->next) {
     # Flag unplayable fret groups.
     my @flags = infraction($switch, $position);
 
-    # Change zeros to x's if --muted
+    # Change zeros to x's if muting.
     if ($switch->{mute}) {
         @$position = map { $_ ? $_ : 'x' } @$position;
     }
@@ -210,7 +210,7 @@ sub set_range { # Define the fret range.
     my @range = ($set->{sfret} .. $set->{sfret} + $set->{nfret} - 1);
 
     # Prepend zero if requested.
-    unshift @range, 0 if $set->{open};
+    unshift @range, 0 if $set->{open} || $set->{mute};
 
     # Add the range to the settings.
     $set->{range} = \@range;
