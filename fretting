@@ -171,8 +171,8 @@ sub pairs { # Interleave two arrayrefs.
         @$B = @$B[ 0 .. @$A - 1];
     }
 
-    # Return the (possibly single) pairs, in a width of 2 columns.
-    return pairwise { sprintf '%2s', $b ? $a . $b : $b } @$A, @$B;
+    # Return pairs unless the second is 0 (open) or x (mute).
+    return pairwise { sprintf '%2s', $b =~ /^[1-9]$/ ? $a . $b : $b } @$A, @$B;
 }
 
 sub transform { # Transform space-separated lists into proper arrays.
