@@ -163,6 +163,7 @@ sub setup { # Harvest command-line arguments and use magical POD.
 sub pairs { # Interleave two arrayrefs.
     my ($A, $B) = @_;
 
+    # Make the arrays the same size (by smallest).
     if (@$A > @$B) {
         @$A = @$A[ 0 .. @$B - 1];
     }
