@@ -48,31 +48,28 @@ Only the max setting is required, but all the defaults are used unless given.
 
  $ perl fretting [--help|-h|--docs|-d]
  $ perl fretting --debug \
-    --sfr=1 --nfr=4 \
-    --fin="i m r p t" --sfi=0 --nfi=4 \
-    --str="E A D G B E'" --sst=2 --nst=4 --open \
-    --unplayable --accumulate
+    --fin "i m r p" --sfr 1 --nfr 4 \
+    --str "D G B E'" --ss 0 --ns 4  \
+    --open --mute --unplayable --accumulate
 
 =head2 ARGUMENTS
-
- Ex: --arg : Description = Default setting
 
  --help       : This exciting help message!
  --docs       : The full documentation
  --version    : Program version
- --debug      : Show progress        = 0
- --sfret      : Starting fret        = 1
- --nfret      : Number of frets      = 4
- --fingers    : Finger symbols       = i m a q p
- --sfinger    : Starting finger      = 0
- --nfinger    : Number of fingers    = 4
- --strings    : String symbols       = e a d g b e'
- --sstring    : Starting string      = 2
- --nstring    : Number of strings    = 4
- --open       : Use the open string  = 0
- --mute       : Use muted strings    = 0
- --unplayable : Unplayable positions = 0
- --accumulate : Show all infractions = 0
+ --debug      : Show progress                0
+ --sfret      : Starting fret                1
+ --nfret      : Number of frets              4
+ --fingers    : Finger symbols       i m a q p
+ --sfinger    : Starting finger              0
+ --nfinger    : Number of fingers            4
+ --strings    : String symbols    e a d g b e'
+ --sstring    : Starting string              2
+ --nstring    : Number of strings            4
+ --open       : Show open strings            0
+ --mute       : Show muted strings           0
+ --unplayable : Show unplayable positions    0
+ --accumulate : Show all infractions         0
 
 =cut
 
