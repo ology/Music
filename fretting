@@ -55,19 +55,20 @@ corresponds to the bottom string of an instrument) and mute the "2nd left-most."
  --help       : This exciting help message!
  --docs       : The full documentation
  --version    : Program version
- --debug      : Show progress                0
- --sfret      : Starting fret                1
- --nfret      : Number of frets              4
- --fingers    : Finger symbols       i m a q p
- --sfinger    : Starting finger              0
- --nfinger    : Number of fingers            4
- --strings    : String symbols    e a d g b e'
- --sstring    : Starting string              2
- --nstring    : Number of strings            4
- --open       : Show open strings            0
- --mute       : Show muted strings           0
- --unplayable : Show unplayable positions    0
- --accumulate : Show all infractions         0
+ --debug      : Show progress                  0
+ --sfret      : Starting fret                  1
+ --nfret      : Number of frets                4
+ --fingers    : Finger symbols         i m a q p
+ --fspan      : Adjacent finger fret span  2 1 2
+ --sfinger    : Starting finger                0
+ --nfinger    : Number of fingers              4
+ --strings    : String symbols      e a d g b e'
+ --sstring    : Starting string                2
+ --nstring    : Number of strings              4
+ --open       : Show open strings              0
+ --mute       : Show muted strings             0
+ --unplayable : Show unplayable positions      0
+ --accumulate : Show all infractions           0
 
 =cut
 
