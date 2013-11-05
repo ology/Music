@@ -77,6 +77,7 @@ my $setting = {
     sfret      => { type => '=i', default => 1 },
     nfret      => { type => '=i', default => 4 },
     fingers    => { type => '=s', default => q/i m a q p/ },
+    indexes    => { type => '=s', default => q/0 1 2 3 4/ },
     fspan      => { type => '=s', default => q/2 1 2/ },
     sfinger    => { type => '=i', default => 0 },
     nfinger    => { type => '=i', default => 4 },
@@ -90,8 +91,6 @@ my $setting = {
     debug      => { type => '',   default => 0 },
     unplayable => { type => '',   default => 0 },
     accumulate => { type => '',   default => 0 },
-    # Used for internal bookkeeping:
-    indexes    => { type => '',   default => 0 },
 };
 
 # See warnings in output context.
@@ -105,9 +104,6 @@ transform($switch);
 
 # Set the fret range.
 set_range($switch);
-
-# Set the original finger number association.
-set_indexes($switch);
 
 # Fret groups per finger.
 my $v = variations_with_repetition($switch->{range}, $switch->{nfinger});
@@ -208,20 +204,6 @@ sub set_range { # Define the fret range.
 
     # Add the range to the settings.
     $set->{range} = \@range;
-}
-
-sub set_indexes { # Make a finger=>index association.
-
-    # Pass-in settings.
-    my $set = shift;
-
-    # Fingers are 1 based. 0 means no finger.
-    my @indexes = 1 .. @{ $set->{fingers} };
-
-    # Set the indexes.
-    $set->{indexes} = {
-        pairwise { ($a => $b) } @{ $set->{fingers} }, @indexes
-    };
 }
 
 sub infraction { # Flag unplayable fingerings.
