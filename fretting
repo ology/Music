@@ -88,9 +88,10 @@ my $setting = {
     barre      => { type => '',   default => 0 },
     docs       => { type => '',   default => 0 },
     debug      => { type => '',   default => 0 },
-    indexes    => { type => '',   default => 0 },
     unplayable => { type => '',   default => 0 },
     accumulate => { type => '',   default => 0 },
+    # Used for internal bookkeeping:
+    indexes    => { type => '',   default => 0 },
 };
 
 # See warnings in output context.
