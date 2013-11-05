@@ -190,6 +190,11 @@ sub transform { # Transform space-separated lists into proper arrays.
             $set->{$option} = [ split /\s+/, $set->{$option} ];
         }
     }
+
+    # Make a finger => index association.
+    $set->{indexes} = {
+        pairwise { ($a => $b) } @{ $set->{fingers} }, @{ $set->{indexes} }
+    };
 }
 
 sub set_range { # Define the fret range.
