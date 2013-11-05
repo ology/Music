@@ -137,9 +137,10 @@ while (my $position = $v->next) {
         @$position = map { $_ ? $_ : 'x' } @$position;
     }
 
-    # Interleave space-separated lists.
-    my @pairs = pairs($switch->{fingers}, $position);
-#    @pairs = pairs($switch->{strings}, \@pairs);
+    # Interleave the position with the fingers or strings.
+    my @pairs = $switch->{barre}
+        ? pairs($switch->{strings}, $position)
+        : pairs($switch->{fingers}, $position);
 
     # Print a string representation of the fret group.
     printf("%*d. %s %s\n",
