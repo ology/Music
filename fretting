@@ -97,7 +97,7 @@ my $setting = {
 $|++;
 
 # Get the command line arguments and specify doc level.
-setup($setting, @ARGV); # NOTE: This populates the $switch global hashref.
+setup($setting, @ARGV); # This populates the $switch global hashref.
 
 # Transform space-separated lists into proper arrays.
 transform($switch);
@@ -105,12 +105,8 @@ transform($switch);
 # Set the fret range.
 set_range($switch);
 
-# Fingers are 1 based. 0 means no finger.
-my @indexes = 1 .. @{ $switch->{fingers} };
-# Make a finger=>index association.
-$switch->{indexes} = {
-    pairwise { ($a => $b) } @{ $switch->{fingers} }, @indexes
-};
+# Set the original finger number association.
+set_indexes($switch);
 
 # Fret groups per finger.
 my $v = variations_with_repetition($switch->{range}, $switch->{nfinger});
@@ -159,7 +155,7 @@ sub setup { # Harvest command-line arguments and use magical POD.
 
     # Collect the command-line arguments.
     my $options = Getopt::Simple->new;
-    # NOTE: Populates global switch variable.
+    # This populates the global switch variable.
     $options->getOptions($set) || pod2usage(-verbose => 0);
 
     # Show documentation if requested.
@@ -211,6 +207,20 @@ sub set_range { # Define the fret range.
 
     # Add the range to the settings.
     $set->{range} = \@range;
+}
+
+sub set_indexes { # Make a finger=>index association.
+
+    # Pass-in settings.
+    my $set = shift;
+
+    # Fingers are 1 based. 0 means no finger.
+    my @indexes = 1 .. @{ $set->{fingers} };
+
+    # Set the indexes.
+    $set->{indexes} = {
+        pairwise { ($a => $b) } @{ $set->{fingers} }, @indexes
+    };
 }
 
 sub infraction { # Flag unplayable fingerings.
