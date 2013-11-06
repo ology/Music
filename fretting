@@ -260,12 +260,12 @@ sub infraction { # Flag unplayable fingerings.
     # Declare the "too wide" span offset.
     my ($flag, $previous, $count, $span) = ([], undef, 0, 2);
 
-    # Declare a bucket to keep track of fingers and their fret positions.
-    my $track = {};
-
     # Inspect pairs of the position.
     # This is referred to by `last` unless we are accumulating.
     FLAG: for my $current (@$pos) {
+
+        # Declare a bucket to keep track of fingers and their fret positions.
+        my $track = {};
 
         # TODO Flag if thumb plays any but the bottom or mutes the next.
 
