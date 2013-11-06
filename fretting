@@ -61,6 +61,7 @@ does not share a span with any other finger.
  --sfret      : Starting fret                  1
  --nfret      : Number of frets                4
  --fingers    : Finger symbols         i m a q p
+ --indexes    : One-based finger order list
  --fspan      : Adjacent finger fret span  2 1 2
  --sfinger    : Starting finger                0
  --nfinger    : Number of fingers              4
