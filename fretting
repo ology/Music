@@ -5,6 +5,8 @@ our $VERSION = '0.15';
 use strict;
 use warnings;
 
+use integer;
+
 use Algorithm::Combinatorics qw( variations_with_repetition );
 use Getopt::Long;
 use Getopt::Simple qw( $switch );
@@ -46,7 +48,7 @@ corresponds to the bottom string of an instrument) and mute the "2nd left-most."
 
  $ perl fretting [--help|-h|--docs|-d]
  $ perl fretting --debug \
-    --fin "i m a q" --sfr 1 --nfr 4  \
+    --fin "i m a q"  --sfr 1 --nfr 4 \
     --str "d g b e'" --sst 0 --nst 4 \
     --open --mute --unplayable --accumulate
 
