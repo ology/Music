@@ -119,7 +119,7 @@ $i++ unless $switch->{open} || $switch->{mute};
 while (my $position = $v->next) {
 
     # Flag unplayable fret groups.
-    my @flags = infraction($switch, $position);
+    my @infractions = infraction($switch, $position);
 
     # Change zeros to x's if muting.
     if ($switch->{mute}) {
@@ -135,8 +135,8 @@ while (my $position = $v->next) {
     printf("%*d. %s %s\n",
         $width, $i++,
         join(' ', @pairs),
-        (@flags ? '-' . join(',', @flags) : '')
-    ) if !@flags || $switch->{unplayable};
+        (@infractions ? '-' . join(',', @infractions) : '')
+    ) if !@infractions || $switch->{unplayable};
 }
 
 sub setup { # Harvest command-line arguments and use magical POD.
