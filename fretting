@@ -46,8 +46,8 @@ corresponds to the bottom string of an instrument) and mute the "2nd left-most."
 
  $ perl fretting [--help|-h|--docs|-d]
  $ perl fretting --debug \
-    --fin 'i m r p' --sfr 1 --nfr 4 \
-    --str 'D G B E' --sst 0 --nst 4 \
+    --fin "i m a q" --sfr 1 --nfr 4  \
+    --str "d g b e'" --sst 0 --nst 4 \
     --open --mute --unplayable --accumulate
 
 =head2 ARGUMENTS
@@ -96,6 +96,12 @@ my $setting = {
 # See warnings in output context.
 $|++;
 
+# Make an initial finger => index association.
+$switch->{indexes} = associate(
+    $setting->{fingers}{default},
+    $setting->{indexes}{default}
+);
+
 # Get the command line arguments and specify doc level.
 setup($setting, @ARGV); # This populates the $switch global hashref.
 
@@ -138,6 +144,19 @@ while (my $position = $v->next) {
         join(' ', @pairs),
         (@infractions ? '-' . join(',', @infractions) : '')
     ) if !@infractions || $switch->{unplayable};
+}
+
+sub associate { # Make a finger => index association.
+
+    # Get space separated strings.
+    my ($fingers, $indexes) = @_;
+
+    # Convert them to arrays.
+    my @fingers = split /\s+/, $fingers;
+    my @indexes = split /\s+/, $indexes;
+
+    # Return a finger => index hashref.
+    return { pairwise { ($a => $b) } @fingers, @indexes };
 }
 
 sub setup { # Harvest command-line arguments and use magical POD.
@@ -191,11 +210,6 @@ sub transform { # Transform space-separated lists into proper arrays.
             $set->{$option} = [ split /\s+/, $set->{$option} ];
         }
     }
-
-    # Make a finger => index association.
-    $set->{indexes} = {
-        pairwise { ($a => $b) } @{ $set->{fingers} }, @{ $set->{indexes} }
-    };
 }
 
 sub set_range { # Define the fret range.
