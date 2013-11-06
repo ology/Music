@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 use strict;
 use warnings;
@@ -77,7 +77,7 @@ my $setting = {
     sfret      => { type => '=i', default => 1 },
     nfret      => { type => '=i', default => 4 },
     fingers    => { type => '=s', default => q/i m a q p/ },
-    indexes    => { type => '=s', default => q/0 1 2 3 4/ },
+    indexes    => { type => '=s', default => q/1 2 3 4 5/ },
     fspan      => { type => '=s', default => q/2 1 2/ },
     sfinger    => { type => '=i', default => 0 },
     nfinger    => { type => '=i', default => 4 },
@@ -245,21 +245,21 @@ sub infraction { # Flag unplayable fingerings.
         if ($current && $previous) {
 
             # Set the previous and current fingers.
-            my $seen   = $count ? $set->{fingers}[$count - 1] : '?';
-            my $finger = $set->{fingers}[$count] || '?';
+            my $last   = $set->{fingers}[$count - 1];
+            my $finger = $set->{fingers}[$count];
 
             # Set the current finger index.
             my $fidx = $set->{indexes}{$finger};
 
             # Keep track of the fingers and their frets.
-            $track->{$seen}   = $previous unless exists $track->{$seen};
+            $track->{$last}   = $previous unless exists $track->{$last};
             $track->{$finger} = $current  unless exists $track->{$finger};
 
             # Show our progress if requested.
             if ($set->{debug}) {
 
                 warn sprintf "Finger: %s(%d) %s(%d)\nFret:%6d%5d\n",
-                    $seen, $track->{$seen},
+                    $last, $track->{$last},
                     $finger, $track->{$finger},
                     $previous, $current;
             }
@@ -276,7 +276,7 @@ sub infraction { # Flag unplayable fingerings.
 
             # Collect the fingers that have already been seen.
             my @seen = grep { exists $track->{$_} }
-                @{ $set->{fingers} }[ 0 .. $set->{indexes}{$seen} - 1 ];
+                @{ $set->{fingers} }[ 0 .. $set->{indexes}{$last} - 1 ];
 
             # Loop over the seen fingers.
             for my $s (@seen) {
@@ -300,7 +300,7 @@ sub infraction { # Flag unplayable fingerings.
 
                 # Compute span metrics.
                 my $fret_span = abs($current - $track->{$s});
-                my $sum = sum_span($sidx - 1, $fidx - 1, @{ $set->{fspan} });
+                my $sum = sum_span($sidx, $fidx, @{ $set->{fspan} });
 
                 # Rule: Frets can't be more than the allowed finger span.
                 if ($sidx != $fidx && $fret_span > $sum) {
@@ -314,7 +314,7 @@ sub infraction { # Flag unplayable fingerings.
             }
         }
 
-        # Update the previously seen item.
+        # Update the previous to the current finger and start again.
         $previous = $current;
     }
 
@@ -322,15 +322,19 @@ sub infraction { # Flag unplayable fingerings.
     return @$flag;
 }
 
-sub sum_span { # Return the sum of the bounded list.
+sub sum_span { # Return the "absolute sum" from a finger span list.
 
     # Get the list and bounds from the call.
     my ($x, $y, @list) = @_;
 
-    # Restrict the list by the bounds.
+    # Convert from finger index to span list position.
+    $x--;
+    $y--;
+
+    # Restrict the list based on the relative sizes of the bounds.
     my @new = @list[ $x > $y ? ($y .. $x - 1) : ($x .. $y - 1) ];
 
-    # Return the list sum based on the relative sizes of x and y.
+    # Return the sum of the span.
     return sum(@new);
 }
 
