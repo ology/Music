@@ -103,7 +103,7 @@ my $indexes = associate($setting->{fingers}{default});
 setup($setting, @ARGV); # This populates the $switch global hashref.
 
 # Transform space-separated lists into proper arrays.
-transform($switch, $indexes);
+transform($switch, $setting, $indexes);
 
 # Set the fret range.
 set_range($switch);
@@ -205,22 +205,22 @@ sub pairs { # Interleave two arrayrefs.
 sub transform { # Transform space-separated lists into proper arrays.
 
     # Get settings and default finger indexes.
-    my ($set, $indexes) = @_;
+    my ($set, $default, $indexes) = @_;
 
     # Traverse the settings.
     for my $option (keys %$set) {
 
-        # If the setting contains a space character...
-        if ($set->{$option} =~ /\s/) {
+        # If the type of this option is a string (list)...
+        if ($default->{$option}{type} eq '=s') {
 
             # Split the setting by whitespace.
             $set->{$option} = [ split /\s+/, $set->{$option} ];
         }
     }
 
-    # If we have been given a finger=>index list, re-associate.
+    # If we have been given a new index list, re-associate.
     # Otherwise use the given defaults.
-    $set->{indexes} = $set->{indexes}
+    $set->{indexes} = $set->{indexes} && @{ $set->{indexes} }
         ? associate($set->{fingers}, $set->{indexes})
         : $indexes;
 }
