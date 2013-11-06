@@ -304,10 +304,13 @@ sub infraction { # Flag unplayable fingerings.
 
             # Collect the fingers that have already been seen.
             my @seen = grep { exists $track->{$_} }
-                @{ $set->{fingers} }[ 0 .. $set->{indexes}{$last} - 1 ];
+                @{ $set->{fingers} }[ 0 .. $set->{indexes}{$last} ];
 
             # Loop over the seen fingers.
             for my $s (@seen) {
+
+                # Skip identical fingers.
+                next if $s eq $finger;
 
                 # Set the index of the current seen finger.
                 my $sidx = $set->{indexes}{$s};
@@ -362,8 +365,11 @@ sub sum_span { # Return the "absolute sum" from a finger span list.
     # Restrict the list based on the relative sizes of the bounds.
     my @new = @list[ $x > $y ? ($y .. $x - 1) : ($x .. $y - 1) ];
 
-    # Return the sum of the span.
-    return sum(@new);
+    # Get the sum of the bounded list.
+    my $sum = sum(@new);
+
+    # Return the sum of the span, less one for multi-finger spans.
+    return @new > 1 ? $sum - 1 : $sum;
 }
 
 __END__
