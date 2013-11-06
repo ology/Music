@@ -114,36 +114,42 @@ set_range($switch);
 # Fret groups per finger.
 my $v = variations_with_repetition($switch->{range}, $switch->{nfinger});
 
-# Line number format width. # TODO Compute instead of hard-coding.
-# Loop counter for each fret group shown in the final output.
-my ($width, $i) = (3, 0);
+# Inspect each variation and flag infractions.
+inspect_each($switch, $v);
 
-# Increment our counter unless --open or --mute are given.
-$i++ unless $switch->{open} || $switch->{mute};
+sub inspect_each { # 
 
-# Inspect each position AKA fret group.
-while (my $position = $v->next) {
+    # Line number format width. # TODO Compute instead of hard-coding.
+    # Loop counter for each fret group shown in the final output.
+    my ($width, $i) = (3, 0);
 
-    # Flag unplayable fret groups.
-    my @infractions = infraction($switch, $position);
+    # Increment our counter unless --open or --mute are given.
+    $i++ unless $switch->{open} || $switch->{mute};
 
-    # Change zeros to x's if muting.
-    # TODO Decouple muting and open so we can have both.
-    if ($switch->{mute}) {
-        @$position = map { $_ ? $_ : 'x' } @$position;
+    # Inspect each position AKA fret group.
+    while (my $position = $v->next) {
+
+        # Flag unplayable fret groups.
+        my @infractions = infraction($switch, $position);
+
+        # Change zeros to x's if muting.
+        # TODO Decouple muting and open so we can have both.
+        if ($switch->{mute}) {
+            @$position = map { $_ ? $_ : 'x' } @$position;
+        }
+
+        # Interleave the position with either fingers or strings.
+        my @pairs = $switch->{barre}
+            ? pairs($switch->{strings}, $position)
+            : pairs($switch->{fingers}, $position);
+
+        # Print a string representation of the fret group.
+        printf("%*d. %s %s\n",
+            $width, $i++,
+            join(' ', @pairs),
+            (@infractions ? '-' . join(',', @infractions) : '')
+        ) if !@infractions || $switch->{unplayable};
     }
-
-    # Interleave the position with either fingers or strings.
-    my @pairs = $switch->{barre}
-        ? pairs($switch->{strings}, $position)
-        : pairs($switch->{fingers}, $position);
-
-    # Print a string representation of the fret group.
-    printf("%*d. %s %s\n",
-        $width, $i++,
-        join(' ', @pairs),
-        (@infractions ? '-' . join(',', @infractions) : '')
-    ) if !@infractions || $switch->{unplayable};
 }
 
 sub associate { # Make a finger => index association.
