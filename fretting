@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 use strict;
 use warnings;
@@ -77,7 +77,7 @@ my $setting = {
     sfret      => { type => '=i', default => 1 },
     nfret      => { type => '=i', default => 4 },
     fingers    => { type => '=s', default => q/i m a q p/ },
-    indexes    => { type => '=s', default => q/1 2 3 4 5/ },
+    indexes    => { type => '=s', default => '' },
     fspan      => { type => '=s', default => q/2 1 2/ },
     sfinger    => { type => '=i', default => 0 },
     nfinger    => { type => '=i', default => 4 },
@@ -97,16 +97,13 @@ my $setting = {
 $|++;
 
 # Make an initial finger => index association.
-$switch->{indexes} = associate(
-    $setting->{fingers}{default},
-    $setting->{indexes}{default}
-);
+my $indexes = associate($setting->{fingers}{default});
 
 # Get the command line arguments and specify doc level.
 setup($setting, @ARGV); # This populates the $switch global hashref.
 
 # Transform space-separated lists into proper arrays.
-transform($switch);
+transform($switch, $indexes);
 
 # Set the fret range.
 set_range($switch);
@@ -148,12 +145,22 @@ while (my $position = $v->next) {
 
 sub associate { # Make a finger => index association.
 
-    # Get space separated strings.
+    # Get either strings or array references.
     my ($fingers, $indexes) = @_;
 
-    # Convert them to arrays.
-    my @fingers = split /\s+/, $fingers;
-    my @indexes = split /\s+/, $indexes;
+    # Convert to a proper array.
+    my @fingers = ref($fingers) ? @$fingers : split(/\s+/, $fingers);
+
+    # Index the fingers.
+    my @indexes;
+    if ($indexes) {
+        # Convert to a proper array.
+        @indexes = ref($indexes) ? @$indexes : split(/\s+/, $indexes);
+    }
+    else {
+        # Index by the number of fingers.
+        @indexes = 1 .. @fingers;
+    }
 
     # Return a finger => index hashref.
     return { pairwise { ($a => $b) } @fingers, @indexes };
@@ -197,8 +204,8 @@ sub pairs { # Interleave two arrayrefs.
 
 sub transform { # Transform space-separated lists into proper arrays.
 
-    # Pass-in settings.
-    my $set = shift;
+    # Get settings and default finger indexes.
+    my ($set, $indexes) = @_;
 
     # Traverse the settings.
     for my $option (keys %$set) {
@@ -210,6 +217,12 @@ sub transform { # Transform space-separated lists into proper arrays.
             $set->{$option} = [ split /\s+/, $set->{$option} ];
         }
     }
+
+    # If we have been given a finger=>index list, re-associate.
+    # Otherwise use the given defaults.
+    $set->{indexes} = $set->{indexes}
+        ? associate($set->{fingers}, $set->{indexes})
+        : $indexes;
 }
 
 sub set_range { # Define the fret range.
