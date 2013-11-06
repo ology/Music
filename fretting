@@ -122,11 +122,12 @@ while (my $position = $v->next) {
     my @infractions = infraction($switch, $position);
 
     # Change zeros to x's if muting.
+    # TODO Decouple muting and open so we can have both.
     if ($switch->{mute}) {
         @$position = map { $_ ? $_ : 'x' } @$position;
     }
 
-    # Interleave the position with the fingers or strings.
+    # Interleave the position with either fingers or strings.
     my @pairs = $switch->{barre}
         ? pairs($switch->{strings}, $position)
         : pairs($switch->{fingers}, $position);
