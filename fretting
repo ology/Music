@@ -14,7 +14,6 @@ use List::AllUtils qw( pairwise sum );
 use Pod::Usage;
 
 use constant BACKWARD_INFRACTION => 'B';
-use constant OVERLAP_INFRACTION  => 'O';
 use constant SPAN_INFRACTION     => 'S';
 
 =head1 NAME
@@ -27,8 +26,8 @@ Show all possible stringed musical instrument fretboard positions.
 
 With the L</ARGUMENTS>, you can define fret group sizes, the number (and names)
 of available fingers.  Also, you can show unplayable fingerings and the reasons:
-B<B>ackwards or reverse fingering, finger B<S>pan impossibilities and barre
-finger overlaps.  Also, the "open position" and "finger muting" can be shown.
+B<B>ackwards or reverse fingering and finger B<S>pan impossibilities.  Also, the
+"open position" can be shown.
 
 The symbols for the fingers are from Spanish (de Flamenco).
 
@@ -38,19 +37,12 @@ The symbols for the fingers are from Spanish (de Flamenco).
   little : meñeque (q)
   thumb  : pulgar  (p)
 
-There are a few special cases that are handled by the L</infraction> routine.
-Specifically the middle and ring fingers cannot span more than a fret
-comfortably.  "Backwards" fret positions cannot physically be played.  And, the
-thumb can only play or mute the left- or bottom-most strings.  Also, the thumb
-does not share a span with any other finger.
-
 =head1 SYNOPSIS
 
  $ perl fretting [--help|-h|--docs|-d]
  $ perl fretting --debug \
     --fin "i m a q"  --sfr 1 --nfr 4 \
-    --str "d g b e'" --sst 0 --nst 4 \
-    --open --mute --unplayable --accumulate
+    --open --unplayable --accumulate
 
 =head2 ARGUMENTS
 
@@ -65,11 +57,7 @@ does not share a span with any other finger.
  --fspan      : Adjacent finger fret span  2 1 2
  --sfinger    : Starting finger                0
  --nfinger    : Number of fingers              4
- --strings    : String symbols      e a d g b e'
- --sstring    : Starting string                2
- --nstring    : Number of strings              4
  --open       : Show open strings              0
- --mute       : Show muted strings             0
  --unplayable : Show unplayable positions      0
  --accumulate : Show all infractions           0
 
@@ -84,12 +72,7 @@ my $setting = {
     fspan      => { type => '=s', default => q/2 1 2/ },
     sfinger    => { type => '=i', default => 0 },
     nfinger    => { type => '=i', default => 4 },
-    strings    => { type => '=s', default => q/e a d g b e'/ },
-    sstring    => { type => '=i', default => 2 },
-    nstring    => { type => '=i', default => 4 },
     open       => { type => '',   default => 0 },
-    mute       => { type => '',   default => 0 },
-    barre      => { type => '',   default => 0 },
     docs       => { type => '',   default => 0 },
     debug      => { type => '',   default => 0 },
     unplayable => { type => '',   default => 0 },
@@ -123,8 +106,8 @@ sub inspect_each { #
     # Loop counter for each fret group shown in the final output.
     my ($width, $i) = (3, 0);
 
-    # Increment our counter unless --open or --mute are given.
-    $i++ unless $switch->{open} || $switch->{mute};
+    # Increment our counter unless --open is given.
+    $i++ unless $switch->{open};
 
     # Inspect each position AKA fret group.
     while (my $position = $v->next) {
@@ -132,16 +115,8 @@ sub inspect_each { #
         # Flag unplayable fret groups.
         my @infractions = infraction($switch, $position);
 
-        # Change zeros to x's if muting.
-        # TODO Decouple muting and open so we can have both.
-        if ($switch->{mute}) {
-            @$position = map { $_ ? $_ : 'x' } @$position;
-        }
-
-        # Interleave the position with either fingers or strings.
-        my @pairs = $switch->{barre}
-            ? pairs($switch->{strings}, $position)
-            : pairs($switch->{fingers}, $position);
+        # Interleave the position with fingers.
+        my @pairs = pairs($switch->{fingers}, $position);
 
         # Print a string representation of the fret group.
         printf("%*d. %s %s\n",
@@ -154,7 +129,7 @@ sub inspect_each { #
 
 sub associate { # Make a finger => index association.
 
-    # Get either strings or array references.
+    # Get either fingers or array references.
     my ($fingers, $indexes) = @_;
 
     # Convert to a proper array.
@@ -207,7 +182,7 @@ sub pairs { # Interleave two arrayrefs.
         @$B = @$B[ 0 .. @$A - 1];
     }
 
-    # Return pairs unless the second is 0 (open) or x (mute).
+    # Return pairs unless the second is 0 (open).
     return pairwise { sprintf '%2s', $b =~ /^[1-9]$/ ? $a . $b : $b } @$A, @$B;
 }
 
@@ -243,7 +218,7 @@ sub set_range { # Define the fret range.
     my @range = ($set->{sfret} .. $set->{sfret} + $set->{nfret} - 1);
 
     # Prepend zero if requested.
-    unshift @range, 0 if $set->{open} || $set->{mute};
+    unshift @range, 0 if $set->{open};
 
     # Add the range to the settings.
     $set->{range} = \@range;
@@ -266,8 +241,6 @@ sub infraction { # Flag unplayable fingerings.
 
         # Declare a bucket to keep track of fingers and their fret positions.
         my $track = {};
-
-        # TODO Flag if thumb plays any but the bottom or mutes the next.
 
         # Set the first item of the pair and move on.
         if (not defined $previous) {
@@ -299,16 +272,6 @@ sub infraction { # Flag unplayable fingerings.
                     $last, $track->{$last},
                     $finger, $track->{$finger},
                     $previous, $current;
-            }
-
-            # Rule: Overlapping frets are not allowed.
-            if ($set->{barre} && $previous == $current) {
-
-                # Flag the given type of infraction.
-                push @$flag, OVERLAP_INFRACTION;
-
-                # Skip to the next position unless we are accumulating.
-                last FLAG unless $set->{accumulate};
             }
 
             # Collect the fingers that have already been seen.
