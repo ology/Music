@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use MIDI::Simple;
+
+my $file = shift || die "Usage: perl $0 file.mid\n"
+;
+my $score = MIDI::Simple->read_score($file);
+#use Data::Dumper;warn Data::Dumper->new([$score])->Indent(1)->Terse(1)->Quotekeys(0)->Sortkeys(1)->Dump;
+#print $score->dump_score;
+#warn "T: ",$score->Tempo, "\n";
+warn "V: ",$score->Volume, "\n";
+
+for my $event ( $score->Score )
+{
+    next if $event->[0] eq 'note';
+    print "@$event\n";
+    if ( $event->[0] eq 'time_signature' )
+    {
+        my $n = $event->[2];
+        my $d = $event->[3] ** 2;
+        print "\tTS: $n/$d\n";
+    }
+    if ( $event->[0] eq 'set_tempo' )
+    {
+        my $bpm = 60_000_000 / $event->[2];
+        print "\tBPM: $bpm\n";
+    }
+}
