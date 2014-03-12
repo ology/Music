@@ -4,10 +4,11 @@ use warnings;
 
 use MIDI::Simple;
 
-my $file = shift || die "Usage: perl $0 file.mid\n"
-;
+my $file = shift || die "Usage: perl $0 file.mid\n";
+
 my $score = MIDI::Simple->read_score($file);
 #use Data::Dumper;warn Data::Dumper->new([$score])->Indent(1)->Terse(1)->Quotekeys(0)->Sortkeys(1)->Dump;
+
 #print $score->dump_score;
 #warn "T: ",$score->Tempo, "\n";
 warn "V: ",$score->Volume, "\n";
