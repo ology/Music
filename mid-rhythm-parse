@@ -35,6 +35,7 @@ TODO
 
 Nuance or change beat on
     cue_point
+    patch_change
     set_tempo
     time_signature
 
