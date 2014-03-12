@@ -29,3 +29,17 @@ for my $event ( $score->Score )
         print "\tBPM: $bpm\n";
     }
 }
+
+__END__
+TODO
+
+Nuance or change beat on
+    cue_point
+    set_tempo
+    time_signature
+
+Minimize on lyric
+
+Look ahead for
+    All above nuance changes
+    end_track!
