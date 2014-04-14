@@ -1,8 +1,8 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use strict;
 use warnings;
 
-use List::Util qw(min);
+use List::Util qw( min );
 
 use constant {
     SIZE  => 3,  # Triad chord
