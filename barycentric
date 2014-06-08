@@ -23,10 +23,11 @@ my @chords = get_chords(@ARGV);
 #use Data::Dumper::Concise;warn Dumper\@chords;
 #printf "D: %.3f\n", distance($chords[0], $chords[1]);
 #use Data::Dumper::Concise;warn Dumper cyclic_permutation(@{$chords[0]});
-print join(', ',barycenter(3)),"\n";
+#print join(', ',barycenter(3)),"\n";
 #print distance(@chords), "\n";
 #print orbit_distance(@chords), "\n";
 #print forte_distance(@chords), "\n";
+print evenness_index($chords[0]);
 
 =head2 get_chords()
 
@@ -112,6 +113,17 @@ sub cyclic_permutation {
         }
     }
     return @cycles;
+}
+
+=head2 evenness_index()
+
+=cut
+
+sub evenness_index {
+    my $chord = shift;
+    my @b = barycenter( scalar @$chord );
+    my $i = distance( $chord, \@b );
+    return $i;
 }
 
 __END__
