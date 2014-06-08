@@ -2,6 +2,16 @@
 use strict;
 use warnings;
 
+=head1 NAME
+
+Barycentric Musical Interval Space
+
+=head1 DESCRIPTION
+
+Barycentric chord analysis
+
+=cut
+
 use List::Util qw( min );
 
 use constant {
@@ -105,9 +115,6 @@ sub cyclic_permutation {
 }
 
 __END__
-=head1 DESCRIPTION
-
-Barycentric chord analysis
 
 =head1 SEE ALSO
 
