@@ -4,7 +4,7 @@ use warnings;
 
 =head1 NAME
 
-Barycentric Musical Interval Space
+Music::Interval::Barycentric - Barycentric Musical Interval Space
 
 =head1 DESCRIPTION
 
