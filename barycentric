@@ -18,6 +18,10 @@ print join(', ',barycenter(3)),"\n";
 #print orbit_distance(@chords), "\n";
 #print forte_distance(@chords), "\n";
 
+=head2 get_chords()
+
+=cut
+
 sub get_chords {
     my @args = @_;
     my $size = 0;
@@ -31,6 +35,10 @@ sub get_chords {
     @chords = [qw(3 4 5)] unless @chords; # Major triad default.
     return @chords;
 }
+
+=head2 barycenter()
+
+=cut
 
 sub barycenter {
     my $size  = shift || SIZE;  # Default to a triad
@@ -54,6 +62,10 @@ sub distance {
     return sqrt $distance;
 }
 
+=head2 orbit_distance()
+
+=cut
+
 sub orbit_distance {
     my ($chord1, $chord2) = @_;
     my @distance = ();
@@ -62,6 +74,10 @@ sub orbit_distance {
     }
     return min(@distance);
 }
+
+=head2 forte_distance()
+
+=cut
 
 sub forte_distance {
     my ($chord1, $chord2) = @_;
@@ -72,6 +88,10 @@ sub forte_distance {
     }
     return min(@distance);
 }
+
+=head2 cyclic_permutation()
+
+=cut
 
 sub cyclic_permutation {
     my @set = @_;
