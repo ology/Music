@@ -1,16 +1,13 @@
-#!/usr/bin/env perl
-use strict;
-use warnings;
-
 =head1 NAME
 
 Music::Interval::Barycentric - Barycentric Musical Interval Space
 
-=head1 DESCRIPTION
-
-Barycentric chord analysis
-
 =cut
+
+package Music::Interval::Barycentric;
+
+use strict;
+use warnings;
 
 use List::Util qw( min );
 
@@ -19,15 +16,23 @@ use constant {
     SCALE => 12, # Scale notes
 };
 
-my @chords = get_chords(@ARGV);
-#use Data::Dumper::Concise;warn Dumper\@chords;
-#printf "D: %.3f\n", distance($chords[0], $chords[1]);
-#use Data::Dumper::Concise;warn Dumper cyclic_permutation(@{$chords[0]});
-#print join(', ',barycenter(3)),"\n";
-#print distance(@chords), "\n";
-#print orbit_distance(@chords), "\n";
-#print forte_distance(@chords), "\n";
-print evenness_index($chords[0]);
+our $VERSION = '0.01';
+
+=head1 DESCRIPTION
+
+Barycentric chord analysis
+
+=head1 SYNOPSIS
+
+ my @chords = get_chords(@ARGV);
+ printf "D: %.3f\n", distance($chords[0], $chords[1]);
+ print join(', ',barycenter(3)),"\n";
+ print distance(@chords), "\n";
+ print evenness_index($chords[0]);
+ print orbit_distance(@chords), "\n";
+ print forte_distance(@chords), "\n";
+
+=cut
 
 =head2 get_chords()
 
