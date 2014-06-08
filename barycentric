@@ -10,10 +10,10 @@ use constant {
 };
 
 my @chords = get_chords(@ARGV);
-#use Data::Dumper;warn Data::Dumper->new(\@chords)->Indent(1)->Terse(1)->Dump;
+#use Data::Dumper::Concise;warn Dumper\@chords;
 #printf "D: %.3f\n", distance($chords[0], $chords[1]);
-#use Data::Dumper;warn Data::Dumper->new([ cyclic_permutation(@{$chords[0]}) ])->Indent(1)->Terse(1)->Dump;
-#print join(', ',barycenter(4)),"\n";
+#use Data::Dumper::Concise;warn Dumper cyclic_permutation(@{$chords[0]});
+print join(', ',barycenter(3)),"\n";
 #print distance(@chords), "\n";
 #print orbit_distance(@chords), "\n";
 #print forte_distance(@chords), "\n";
@@ -37,6 +37,12 @@ sub barycenter {
     my $scale = shift || SCALE; # Default to the common scale notes
     return ($scale / $size) x $size;
 }
+
+=head2 distance()
+
+Interval space distance metric.
+
+=cut
 
 sub distance {
     my ($chord1, $chord2) = @_;
@@ -82,34 +88,6 @@ __END__
 =head1 DESCRIPTION
 
 Barycentric chord analysis
-
-=head2 CONCEPTS
-
- Pitch-class: [p1, p2 .. pn]
- Interval notation: (i1, i2 .. in)
- Cyclic permutation group: S^n (uppercase sigma)
- Cyclic permutation generator: s (lowercase sigma)
- (triad) Barycentric coordinate system (metric space): T^n = 10x10x10 simplex grid
- Triad barycenter: B = (4,4,4)
- Quotient space "emerged" by s(x1,x2 .. xn): T^n/S^n
- Epimorphism: p: T^n -> T^2/S^n => p(x1,x2 .. xn) = |(x1,x2 .. xn)
- Orbit (equilateral of all S^n in T^n centered on B): |(x1,x2 .. xn)
- Distance: d = distance(P,Q)
- Interval space: (T^n, d)
- Evenness index: abs(distance(P,B))
- Orbital space of n-chords: (T^n/S^n, d^S) = d^S(|(x1,x2 .. xn), |(y1,y2 .. yn))
-                                           = min(d(p1(x1,x2 .. xn), p2(y1,y2 .. yn)))
-                                           = min((x1,x2 .. xn), p2(y1,y2 .. yn))
- (triad) Inversion: I (by S^n) = (i1,i2,i3) <=> (i2,i3,i1) <=> (i3,i1,i2) = |(i1,i2,i3)
- I-symmetric (invariant under inversion): |(2,5,5)
- co-I-symmetric (distinct but related by inversion): |(2,3,7) and |(3,2,7)
- Y-symmetric (same distance but unrelated by inversion): |(2,5,5) and |(3,3,6)
- Chord enrichment: (x1,x2,x3) => (j,x1-j,x2,x3)
- Chord reduction: (x1,x2,x3,x4) => (x1,x2+x3,x4)
- Chord degeneration: 
- Polar chords: 
- Equitorial chords: 
- Complementary chords: 
 
 =head1 SEE ALSO
 
