@@ -52,8 +52,10 @@ while ( my @bass = $bass_mc->next_permutation ) {
         # Output the permutations, frequencies and intervals
         print "$i\t@treble -> ", mapf(@treble_freq), "\n";
         print "\t@bass -> ", mapf(@bass_freq), "\n";
-        print "\t= @intervals\n";
+        print "=\t@intervals\n";
     }
+
+    last;
 }
 
 sub mapf { # Turn a list of floats into 2 digit precision
