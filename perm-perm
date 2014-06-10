@@ -5,38 +5,59 @@ use warnings;
 use Math::Combinatorics;
 use Music::Scala;
 
+# Use the standard 12-tone scale
 my @scale = qw( 1 16/15 9/8 6/5 5/4 4/3 25/18 3/2 8/5 5/3 16/9 15/8 2 );
 my $scala = Music::Scala->new;
 $scala->set_notes(@scale);
 
+# Choose wisely, Grasshopper
 my $bass_notes   = [qw( 9 2 4 7 21 )]; # A D E G A'
 my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
 
+# Set the number of permutaions seen
 my $i = 0;
 
-my $bass_mc = Math::Combinatorics->new(
-    data => $bass_notes,
-);
+# Instantiate a combinatorics object for the bass notes
+my $bass_mc = Math::Combinatorics->new( data => $bass_notes );
+
+# Iterate over the bass notes
 while ( my @bass = $bass_mc->next_permutation ) {
+    # Throw away the last element of the permutation
     pop @bass;
+
+    # Find the physical frequencies of the notes
     my @bass_freq = $scala->interval2freq(@bass);
+
+    # Instantiate a combinatorics object for the bass notes
     my $treble_mc = Math::Combinatorics->new(
         data => $treble_notes,
     );
+
+    # Iterate over the bass notes
     while ( my @treble = $treble_mc->next_permutation ) {
+        # Throw away the last element of the permutation
         pop @treble;
+
+        # Find the physical frequencies of the notes
         my @treble_freq = $scala->interval2freq(@treble);
+
+        # Find the interval set comprising each bass and treble note
         my @intervals = ();
         for my $n ( 0 .. @bass - 1 ) {
+            # An interval is the absolute difference of two pitches, modulo the number of semitones
             push @intervals, abs( $bass[$n] - $treble[$n] ) % 12;
         }
+
+        # Output the permutations, frequencies and intervals
         print "$i. @treble -> ", mapf(@treble_freq), "\n";
         print "\t@bass -> ", mapf(@bass_freq), "\n";
         print "\t= @intervals\n";
+
+        # Iterate the number of permutations
         $i++;
     }
 }
 
-sub mapf {
+sub mapf { # Turn a list of floats into 2 digit precision
     return join ' ', map { sprintf '%.2f', $_ } @_;
 }
