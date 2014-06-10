@@ -5,10 +5,9 @@ use warnings;
 use Math::Combinatorics;
 use Music::Scala;
 
-# Use the standard 12-tone scale
-my @scale = qw( 1 16/15 9/8 6/5 5/4 4/3 25/18 3/2 8/5 5/3 16/9 15/8 2 );
-my $scala = Music::Scala->new;
-$scala->set_notes(@scale);
+# Choose wisely, Grasshopper
+my $bass_notes   = [qw( 9 2 4 7 21 )]; # A D E G A'
+my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
 
 # Named pitches and integer notation
 my %name = (
@@ -27,9 +26,10 @@ my %name = (
     21 => 'A',
 );
 
-# Choose wisely, Grasshopper
-my $bass_notes   = [qw( 9 2 4 7 21 )]; # A D E G A'
-my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
+# Use the standard 12-tone scale
+my @scale = qw( 1 16/15 9/8 6/5 5/4 4/3 25/18 3/2 8/5 5/3 16/9 15/8 2 );
+my $scala = Music::Scala->new;
+$scala->set_notes(@scale);
 
 # Set the number of permutaions seen
 my $i = 0;
@@ -44,8 +44,9 @@ while ( my @bass = $bass_mc->next_permutation ) {
 
     # Find the physical frequencies of the notes
     my @bass_freq = $scala->interval2freq(@bass);
+
     # Set item precision
-    @bass_freq    = mapf(@bass_freq);
+    @bass_freq = mapf(@bass_freq);
 
     # Join names with pitches
     for my $n ( 0 .. @bass - 1 ) {
