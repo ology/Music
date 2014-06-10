@@ -29,6 +29,7 @@ my %name = (
 # Use the standard 12-tone scale
 my @scale = qw( 1 16/15 9/8 6/5 5/4 4/3 25/18 3/2 8/5 5/3 16/9 15/8 2 );
 my $scala = Music::Scala->new;
+$scala->set_concertfreq(261.626);
 $scala->set_notes(@scale);
 
 # Set the number of permutaions seen
