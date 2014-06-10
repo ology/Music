@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Math::Combinatorics;
+use Music::Scala;
+
+my @scale = qw( 1 16/15 9/8 6/5 5/4 4/3 25/18 3/2 8/5 5/3 16/9 15/8 2 );
+my $scala = Music::Scala->new;
+$scala->set_notes(@scale);
+
+my $bass_notes   = [qw( 9 2 4 7 21 )]; # A D E G A'
+my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
+
+my $i = 0;
+
+my $bass_mc = Math::Combinatorics->new(
+    data => $bass_notes,
+);
+while ( my @bass = $bass_mc->next_permutation ) {
+    pop @bass;
+    my @bass_freq = $scala->interval2freq(@bass);
+    my $treble_mc = Math::Combinatorics->new(
+        data => $treble_notes,
+    );
+    while ( my @treble = $treble_mc->next_permutation ) {
+        pop @treble;
+        my @treble_freq = $scala->interval2freq(@treble);
+        my @intervals = ();
+        for my $n ( 0 .. @bass - 1 ) {
+            push @intervals, abs( $bass[$n] - $treble[$n] ) % 12;
+        }
+        print "$i. @treble -> ", mapf(@treble_freq), "\n";
+        print "\t@bass -> ", mapf(@bass_freq), "\n";
+        print "\t= @intervals\n";
+        $i++;
+    }
+}
+
+sub mapf {
+    return join ' ', map { sprintf '%.2f', $_ } @_;
+}
