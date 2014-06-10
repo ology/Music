@@ -33,6 +33,9 @@ while ( my @bass = $bass_mc->next_permutation ) {
 
     # Iterate over the bass notes
     while ( my @treble = $treble_mc->next_permutation ) {
+        # Iterate the number of permutations
+        $i++;
+
         # Throw away the last element of the permutation
         pop @treble;
 
@@ -50,10 +53,9 @@ while ( my @bass = $bass_mc->next_permutation ) {
         print "$i. @treble -> ", mapf(@treble_freq), "\n";
         print "\t@bass -> ", mapf(@bass_freq), "\n";
         print "\t= @intervals\n";
-
-        # Iterate the number of permutations
-        $i++;
     }
+
+    last;
 }
 
 sub mapf { # Turn a list of floats into 2 digit precision
