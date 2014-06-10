@@ -10,6 +10,23 @@ my @scale = qw( 1 16/15 9/8 6/5 5/4 4/3 25/18 3/2 8/5 5/3 16/9 15/8 2 );
 my $scala = Music::Scala->new;
 $scala->set_notes(@scale);
 
+# Named pitches and integer notation
+my %name = (
+    0  => 'C',
+    1  => 'C#',
+    2  => 'D',
+    3  => 'D#',
+    4  => 'E',
+    5  => 'F',
+    6  => 'F#',
+    7  => 'G',
+    8  => 'G#',
+    9  => 'A',
+    10 => 'A#',
+    11 => 'B',
+    21 => 'A',
+);
+
 # Choose wisely, Grasshopper
 my $bass_notes   = [qw( 9 2 4 7 21 )]; # A D E G A'
 my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
@@ -27,6 +44,13 @@ while ( my @bass = $bass_mc->next_permutation ) {
 
     # Find the physical frequencies of the notes
     my @bass_freq = $scala->interval2freq(@bass);
+    # Set item precision
+    @bass_freq    = mapf(@bass_freq);
+
+    # Join names with pitches
+    for my $n ( 0 .. @bass - 1 ) {
+        $bass_freq[$n] = $name{ $bass[$n] } . $bass_freq[$n];
+    }
 
     # Instantiate a combinatorics object for the bass notes
     my $treble_mc = Math::Combinatorics->new( data => $treble_notes );
@@ -41,6 +65,8 @@ while ( my @bass = $bass_mc->next_permutation ) {
 
         # Find the physical frequencies of the notes
         my @treble_freq = $scala->interval2freq(@treble);
+        # Set item precision
+        @treble_freq = mapf(@treble_freq);
 
         # Find the interval set comprising each bass and treble note
         my @intervals = ();
@@ -49,9 +75,14 @@ while ( my @bass = $bass_mc->next_permutation ) {
             push @intervals, abs( $bass[$n] - $treble[$n] ) % 12;
         }
 
+        # Join names with pitches
+        for my $n ( 0 .. @treble - 1 ) {
+            $treble_freq[$n] = $name{ $treble[$n] } . $treble_freq[$n];
+        }
+
         # Output the permutations, frequencies and intervals
-        print "$i\t@treble -> ", mapf(@treble_freq), "\n";
-        print "\t@bass -> ", mapf(@bass_freq), "\n";
+        print "$i\t@treble -> ", join( ' ', @treble_freq ), "\n";
+        print "\t@bass -> ", join( ' ', @bass_freq ), "\n";
         print "=\t@intervals\n";
     }
 
@@ -59,5 +90,5 @@ while ( my @bass = $bass_mc->next_permutation ) {
 }
 
 sub mapf { # Turn a list of floats into 2 digit precision
-    return join ' ', map { sprintf '%.2f', $_ } @_;
+    return map { sprintf '%.2f', $_ } @_;
 }
