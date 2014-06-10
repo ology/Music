@@ -29,9 +29,7 @@ while ( my @bass = $bass_mc->next_permutation ) {
     my @bass_freq = $scala->interval2freq(@bass);
 
     # Instantiate a combinatorics object for the bass notes
-    my $treble_mc = Math::Combinatorics->new(
-        data => $treble_notes,
-    );
+    my $treble_mc = Math::Combinatorics->new( data => $treble_notes );
 
     # Iterate over the bass notes
     while ( my @treble = $treble_mc->next_permutation ) {
