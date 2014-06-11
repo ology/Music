@@ -9,7 +9,7 @@ use Music::Scala;
 my $bass_notes   = [qw( 9 2 4 7 21 )]; # A D E G A'
 my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
 
-# Named pitches and integer notation
+# Perl-MIDI named pitches and integer notation
 my %name = (
     0  => 'C',
     1  => 'Cs',
@@ -32,14 +32,19 @@ my $scala = Music::Scala->new;
 $scala->set_concertfreq(264);
 $scala->set_notes(@scale);
 
-# Set the number of permutaions seen
+# Set the number of bass permutaions seen
 my $i = 0;
+# Set the number of treble permutaions seen
+my $j = 0;
 
 # Instantiate a combinatorics object for the bass notes
 my $treble_mc = Math::Combinatorics->new( data => $treble_notes );
 
 # Iterate over the bass notes
 while ( my @treble = $treble_mc->next_permutation ) {
+    # Iterate the number of permutations
+    $j++;
+
     # Throw away the last element of the permutation
     pop @treble;
 
@@ -81,12 +86,12 @@ while ( my @treble = $treble_mc->next_permutation ) {
         push @treble_names, $name{ $treble[$_] } for 0 .. @treble - 1;
 
         # Output the permutations, frequencies and intervals
-        print "$i\t@treble -> @treble_freq -> @treble_names\n",
+        print "$i,$j\t@treble -> @treble_freq -> @treble_names\n",
               "\t@bass -> @bass_freq -> @bass_names\n",
               "=\t@intervals\n";
     }
 
-#    last;
+    last;
 }
 
 sub mapf { # Turn a list of floats into 2 digit precision
