@@ -6,8 +6,8 @@ use Math::Combinatorics;
 use Music::Scala;
 
 # Choose wisely, Grasshopper
-my $bass_notes   = [qw( 9 2 4 7 21 )]; # A D E G A'
-my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
+my $bass_notes   = @ARGV ? [split /,/, shift @ARGV] : [qw( 9 2 4 7 21 )]; # A D E G A'
+my $treble_notes = @ARGV ? [split /,/, shift @ARGV] : [qw( 0 2 4 5 9 )];  # C D E F A
 my $critical_t   = 0; # Zero means "show everything"
 my $critical_b   = 0; # "
 
