@@ -8,6 +8,8 @@ use Music::Scala;
 # Choose wisely, Grasshopper
 my $bass_notes   = [qw( 9 2 4 7 21 )]; # A D E G A'
 my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
+my $critical_t   = 1;
+my $critical_b   = 1;
 
 # Perl-MIDI named pitches and integer notation
 my %name = (
@@ -32,16 +34,16 @@ my $scala = Music::Scala->new;
 $scala->set_concertfreq(264);
 $scala->set_notes(@scale);
 
-# Set the number of bass permutaions seen
-my $i = 0;
 # Set the number of treble permutaions seen
 my $j = 0;
 
 # Instantiate a combinatorics object for the bass notes
 my $treble_mc = Math::Combinatorics->new( data => $treble_notes );
 
-# Iterate over the bass notes
-while ( my @treble = $treble_mc->next_permutation ) {
+# Iterate over the treble notes
+TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
+    # Are we critical?
+    last TREBLE if $j > $critical_t - 1;
     # Iterate the number of permutations
     $j++;
 
@@ -53,11 +55,16 @@ while ( my @treble = $treble_mc->next_permutation ) {
     # Set item precision
     @treble_freq = mapf(@treble_freq);
 
+    # Set the number of bass permutaions seen
+    my $i = 0;
+
     # Instantiate a combinatorics object for the bass notes
     my $bass_mc = Math::Combinatorics->new( data => $bass_notes );
 
     # Iterate over the bass notes
-    while ( my @bass = $bass_mc->next_permutation ) {
+    BASS: while ( my @bass = $bass_mc->next_permutation ) {
+        # Are we critical?
+        last BASS if $i > $critical_b - 1;
         # Iterate the number of permutations
         $i++;
 
@@ -87,7 +94,7 @@ while ( my @treble = $treble_mc->next_permutation ) {
 
         # Output the permutations, frequencies and intervals
         printf "%d,%d\n\t%11s -> %s -> %11s\n\t%11s -> %s -> %11s\n      =\t%s\n",
-            $i, $j,
+            $j, $i,
             joinf(@treble), "@treble_freq", joinf(@treble_names),
             joinf(@bass),   "@bass_freq",   joinf(@bass_names),
             joinf(@intervals);
