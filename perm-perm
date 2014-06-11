@@ -86,12 +86,16 @@ while ( my @treble = $treble_mc->next_permutation ) {
         push @treble_names, $name{ $treble[$_] } for 0 .. @treble - 1;
 
         # Output the permutations, frequencies and intervals
-        print "$i,$j\t@treble -> @treble_freq -> @treble_names\n",
-              "\t@bass -> @bass_freq -> @bass_names\n",
-              "=\t@intervals\n";
+        printf "%d,%d\n\t%11s -> %s -> %11s\n\t%11s -> %s -> %11s\n      =\t%s\n",
+            $i, $j,
+            joinf(@treble), "@treble_freq", joinf(@treble_names),
+            joinf(@bass),   "@bass_freq",   joinf(@bass_names),
+            joinf(@intervals);
     }
+}
 
-    last;
+sub joinf { # Turn a list of integers into 2 digit precision
+    return join ' ', map { sprintf '%2s', $_ } @_;
 }
 
 sub mapf { # Turn a list of floats into 2 digit precision
