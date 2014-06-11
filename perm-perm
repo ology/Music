@@ -47,9 +47,6 @@ TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
     # Iterate the number of permutations
     $j++;
 
-    # Throw away the last element of the permutation
-    pop @treble;
-
     # Find the physical frequencies of the notes
     my @treble_freq = $scala->interval2freq(@treble);
     # Set item precision
@@ -67,9 +64,6 @@ TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
         last BASS if $critical_b && $i > $critical_b - 1;
         # Iterate the number of permutations
         $i++;
-
-        # Throw away the last element of the permutation
-        pop @bass;
 
         # Find the physical frequencies of the notes
         my @bass_freq = $scala->interval2freq(@bass);
