@@ -12,18 +12,18 @@ my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
 # Named pitches and integer notation
 my %name = (
     0  => 'C',
-    1  => 'C#',
+    1  => 'Cs',
     2  => 'D',
-    3  => 'D#',
+    3  => 'Ds',
     4  => 'E',
     5  => 'F',
-    6  => 'F#',
+    6  => 'Fs',
     7  => 'G',
-    8  => 'G#',
+    8  => 'Gs',
     9  => 'A',
-    10 => 'A#',
+    10 => 'As',
     11 => 'B',
-    21 => 'A',
+    21 => "A'",
 );
 
 # Use the standard 12-tone scale
@@ -36,38 +36,38 @@ $scala->set_notes(@scale);
 my $i = 0;
 
 # Instantiate a combinatorics object for the bass notes
-my $bass_mc = Math::Combinatorics->new( data => $bass_notes );
+my $treble_mc = Math::Combinatorics->new( data => $treble_notes );
 
 # Iterate over the bass notes
-while ( my @bass = $bass_mc->next_permutation ) {
+while ( my @treble = $treble_mc->next_permutation ) {
     # Throw away the last element of the permutation
-    pop @bass;
+    pop @treble;
 
     # Find the physical frequencies of the notes
-    my @bass_freq = $scala->interval2freq(@bass);
-
+    my @treble_freq = $scala->interval2freq(@treble);
     # Set item precision
-    @bass_freq = mapf(@bass_freq);
-
-    # List the pitch names
-    my @bass_names;
-    push @bass_names, $name{ $bass[$_] } for 0 .. @bass - 1;
+    @treble_freq = mapf(@treble_freq);
 
     # Instantiate a combinatorics object for the bass notes
-    my $treble_mc = Math::Combinatorics->new( data => $treble_notes );
+    my $bass_mc = Math::Combinatorics->new( data => $bass_notes );
 
     # Iterate over the bass notes
-    while ( my @treble = $treble_mc->next_permutation ) {
+    while ( my @bass = $bass_mc->next_permutation ) {
         # Iterate the number of permutations
         $i++;
 
         # Throw away the last element of the permutation
-        pop @treble;
+        pop @bass;
 
         # Find the physical frequencies of the notes
-        my @treble_freq = $scala->interval2freq(@treble);
+        my @bass_freq = $scala->interval2freq(@bass);
+
         # Set item precision
-        @treble_freq = mapf(@treble_freq);
+        @bass_freq = mapf(@bass_freq);
+
+        # List the pitch names
+        my @bass_names;
+        push @bass_names, $name{ $bass[$_] } for 0 .. @bass - 1;
 
         # Find the interval set comprising each bass and treble note
         my @intervals = ();
@@ -86,7 +86,7 @@ while ( my @bass = $bass_mc->next_permutation ) {
               "=\t@intervals\n";
     }
 
-    last;
+#    last;
 }
 
 sub mapf { # Turn a list of floats into 2 digit precision
