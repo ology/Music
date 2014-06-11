@@ -8,8 +8,8 @@ use Music::Scala;
 # Choose wisely, Grasshopper
 my $bass_notes   = [qw( 9 2 4 7 21 )]; # A D E G A'
 my $treble_notes = [qw( 0 2 4 5 9 )];  # C D E F A
-my $critical_t   = 1;
-my $critical_b   = 1;
+my $critical_t   = 0;
+my $critical_b   = 0;
 
 # Perl-MIDI named pitches and integer notation
 my %name = (
@@ -43,7 +43,7 @@ my $treble_mc = Math::Combinatorics->new( data => $treble_notes );
 # Iterate over the treble notes
 TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
     # Are we critical?
-    last TREBLE if $j > $critical_t - 1;
+    last TREBLE if $critical_t && $j > $critical_t - 1;
     # Iterate the number of permutations
     $j++;
 
@@ -64,7 +64,7 @@ TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
     # Iterate over the bass notes
     BASS: while ( my @bass = $bass_mc->next_permutation ) {
         # Are we critical?
-        last BASS if $i > $critical_b - 1;
+        last BASS if $critical_b && $i > $critical_b - 1;
         # Iterate the number of permutations
         $i++;
 
