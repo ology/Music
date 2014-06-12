@@ -12,6 +12,7 @@ my $treble_notes = @ARGV ? [split /,/, shift @ARGV] : [qw( 0 2 4 5 9 )];  # C5 D
 my $critical_t   = 0; # Zero means "show everything"
 my $critical_b   = 0; # "
 
+# TODO Design smell. Fix it.
 # Perl-MIDI named pitches and integer notation
 my %name = (
     0  => 'C4',
