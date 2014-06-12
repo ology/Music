@@ -12,9 +12,22 @@ my $treble_notes = @ARGV ? [split /,/, shift @ARGV] : [qw( 0 2 4 5 9 )];  # C5 D
 my $critical_t   = 0; # Zero means "show everything"
 my $critical_b   = 0; # "
 
-# TODO Design smell. Fix it.
+# TODO Big code smell. Fix it.
 # Perl-MIDI named pitches and integer notation
+#my @notes = qw( C Cs D Ds E F G Gs A As B );
 my %name = (
+   -11 => 'C3',
+   -10 => 'Cs3',
+   -9  => 'D3',
+   -8  => 'Ds3',
+   -7  => 'E3',
+   -6  => 'F3',
+   -5  => 'Fs3',
+   -4  => 'G3',
+   -3  => 'Gs3',
+   -2  => 'A3',
+   -1  => 'As3',
+   -1  => 'B3',
     0  => 'C4',
     1  => 'Cs4',
     2  => 'D4',
@@ -27,7 +40,19 @@ my %name = (
     9  => 'A4',
     10 => 'As4',
     11 => 'B4',
+    12 => 'C5',
+    13 => 'Cs5',
+    14 => 'D5',
+    15 => 'Ds5',
+    16 => 'E5',
+    17 => 'F5',
+    18 => 'Fs5',
+    19 => 'G5',
+    20 => 'Gs5',
     21 => 'A5',
+    22 => 'As5',
+    23 => 'B5',
+    24 => 'C6',
 );
 
 # Use the standard 12-tone scale
