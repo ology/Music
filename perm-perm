@@ -7,26 +7,26 @@ use MIDI::Simple;
 use Music::Scala;
 
 # Choose wisely, Grasshopper
-my $bass_notes   = @ARGV ? [split /,/, shift @ARGV] : [qw( 9 2 4 7 21 )]; # A D E G A'
-my $treble_notes = @ARGV ? [split /,/, shift @ARGV] : [qw( 0 2 4 5 9 )];  # C D E F A
+my $bass_notes   = @ARGV ? [split /,/, shift @ARGV] : [qw( 9 2 4 7 21 )]; # A3 D3 E3 G3 A5
+my $treble_notes = @ARGV ? [split /,/, shift @ARGV] : [qw( 0 2 4 5 9 )];  # C5 D5 E5 F5 A4
 my $critical_t   = 0; # Zero means "show everything"
 my $critical_b   = 0; # "
 
 # Perl-MIDI named pitches and integer notation
 my %name = (
-    0  => 'C',
-    1  => 'Cs',
-    2  => 'D',
-    3  => 'Ds',
-    4  => 'E',
-    5  => 'F',
-    6  => 'Fs',
-    7  => 'G',
-    8  => 'Gs',
-    9  => 'A',
-    10 => 'As',
-    11 => 'B',
-    21 => "A'",
+    0  => 'C4',
+    1  => 'Cs4',
+    2  => 'D4',
+    3  => 'Ds4',
+    4  => 'E4',
+    5  => 'F4',
+    6  => 'Fs4',
+    7  => 'G4',
+    8  => 'Gs4',
+    9  => 'A4',
+    10 => 'As4',
+    11 => 'B4',
+    21 => 'A5',
 );
 
 # Use the standard 12-tone scale
@@ -114,12 +114,12 @@ sub mapf { # Turn a list of floats into 2 digit precision
 
 sub set_score {
     my %conf = (
-        tempo     => 200_000,
+        tempo     => 187_500, # = 375_000 / 2 = 240BPM, #140_000, # BPM = 428.571428571428571
         volume    => 100,
         signature => 4,
         unit      => 'qn',
         channel   => 1,
-        patch     => 5,
+        patch     => 13,
         octave    => 4,
         kit       => 9,
         pad       => 38,
