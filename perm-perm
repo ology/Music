@@ -10,7 +10,7 @@ use Music::Scala;
 my $bass_notes   = @ARGV ? [split /,/, shift @ARGV] : [qw( 9 2 4 7 21 )]; # A3 D3 E3 G3 A5
 my $treble_notes = @ARGV ? [split /,/, shift @ARGV] : [qw( 0 2 4 5 9 )];  # C5 D5 E5 F5 A4
 my $critical_t   = 0; # Zero means "show everything"
-my $critical_b   = 1; # "
+my $critical_b   = 0; # "
 
 # Perl-MIDI named pitches and integer notation
 my %name = int2name();
@@ -99,8 +99,7 @@ sub int2name
     {
         for my $note (@notes)
         {
-            $name{$int} = $note . $octave;
-            $int++;
+            $name{ $int++ } = $note . $octave;
         }
     }
     return %name;
