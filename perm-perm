@@ -115,12 +115,12 @@ sub mapf { # Turn a list of floats into 2 digit precision
 
 sub set_score {
     my %conf = (
-        tempo     => 187_500, # = 375_000 / 2 = 240BPM, #140_000, # BPM = 428.571428571428571
+        tempo     => 375_000,# / 2 = 240BPM, #140_000, # BPM = 428.571428571428571
         volume    => 100,
         signature => 4,
-        unit      => 'qn',
+        unit      => 'en',
         channel   => 1,
-        patch     => 13,
+        patch     => 108,
         octave    => 4,
         kit       => 9,
         pad       => 38,
