@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Math::Combinatorics;
+use MIDI::Simple;
 use Music::Scala;
 
 # Choose wisely, Grasshopper
@@ -33,6 +34,8 @@ my @scale = qw( 1 16/15 9/8 6/5 5/4 4/3 25/18 3/2 8/5 5/3 16/9 15/8 2 );
 my $scala = Music::Scala->new;
 $scala->set_concertfreq(264);
 $scala->set_notes(@scale);
+
+my $score = set_score();
 
 # Set the number of treble permutaions seen
 my $j = 0;
@@ -86,6 +89,10 @@ TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
         my @treble_names;
         push @treble_names, $name{ $treble[$_] } for 0 .. @treble - 1;
 
+        # Add the interval to the score
+        $score->n( { $score->Cookies }->{unit}, $name{ $treble[$_] }, $name{ $bass[$_] } )
+            for 0 .. @treble - 1;
+
         # Output the permutations, frequencies and intervals
         printf "%d,%d\n\t%11s -> %s -> %11s\n\t%11s -> %s -> %11s\n      =\t%s\n",
             $j, $i,
@@ -95,10 +102,43 @@ TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
     }
 }
 
+$score->write_score( $0 . '.mid' );
+
 sub joinf { # Turn a list of integers into 2 digit precision
     return join ' ', map { sprintf '%2s', $_ } @_;
 }
 
 sub mapf { # Turn a list of floats into 2 digit precision
     return map { sprintf '%.2f', $_ } @_;
+}
+
+sub set_score {
+    my %conf = (
+        tempo     => 200_000,
+        volume    => 100,
+        signature => 4,
+        unit      => 'qn',
+        channel   => 1,
+        patch     => 5,
+        octave    => 4,
+        kit       => 9,
+        pad       => 38,
+    );
+
+    my $score = MIDI::Simple->new_score();
+
+    $score->Volume($conf{volume});
+    $score->set_tempo($conf{tempo});
+
+    # lead-in
+    $score->Channel($conf{kit});
+    $score->n($conf{unit}, $conf{pad}) for 1 .. $conf{signature};
+
+    # passage
+    $score->patch_change($conf{channel}, $conf{patch});
+    $score->Channel($conf{channel});
+    $score->Octave($conf{octave});
+    $score->Cookies(unit => $conf{unit});
+
+    return $score;
 }
