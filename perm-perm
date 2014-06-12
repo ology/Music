@@ -107,7 +107,7 @@ sub int2name
 }
 
 sub joinf { # Turn a list of integers into 2 digit precision
-    return join ' ', map { sprintf '%2s', $_ } @_;
+    return join ' ', map { sprintf '%3s', $_ } @_;
 }
 
 sub mapf { # Turn a list of floats into 2 digit precision
