@@ -13,17 +13,7 @@ my $critical_t   = 0; # Zero means "show everything"
 my $critical_b   = 0; # "
 
 # Perl-MIDI named pitches and integer notation
-my @notes = qw( C Cs D Ds E F G Gs A As B );
-my %name;
-my $int = -12;
-for my $octave ( 3, 4, 5, 6 )
-{
-    for my $note (@notes)
-    {
-        $name{$int} = $note . $octave;
-        $int++;
-    }
-}
+my %name = int2name();
 
 # Use the standard 12-tone scale
 my @scale = qw( 1 16/15 9/8 6/5 5/4 4/3 25/18 3/2 8/5 5/3 16/9 15/8 2 );
@@ -99,6 +89,22 @@ TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
 }
 
 $score->write_score( $0 . '.mid' );
+
+sub int2name
+{
+    my %name;
+    my @notes = qw( C Cs D Ds E F G Gs A As B );
+    my $int = -12;
+    for my $octave ( 3, 4, 5, 6 )
+    {
+        for my $note (@notes)
+        {
+            $name{$int} = $note . $octave;
+            $int++;
+        }
+    }
+    return %name;
+}
 
 sub joinf { # Turn a list of integers into 2 digit precision
     return join ' ', map { sprintf '%2s', $_ } @_;
