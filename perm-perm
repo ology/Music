@@ -10,7 +10,7 @@ use Music::Scala;
 my $bass_notes   = @ARGV ? [split /,/, shift @ARGV] : [qw( 9 2 4 7 21 )]; # A3 D3 E3 G3 A5
 my $treble_notes = @ARGV ? [split /,/, shift @ARGV] : [qw( 0 2 4 5 9 )];  # C5 D5 E5 F5 A4
 my $critical_t   = 0; # Zero means "show everything"
-my $critical_b   = 0; # "
+my $critical_b   = 1; # "
 
 # Perl-MIDI named pitches and integer notation
 my %name = int2name();
@@ -32,7 +32,7 @@ my $treble_mc = Math::Combinatorics->new( data => $treble_notes );
 # Iterate over the treble notes
 TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
     # Are we critical?
-    last TREBLE if $critical_t && $j > $critical_t - 1;
+    last TREBLE if $critical_t && $j >= $critical_t;
     # Iterate the number of permutations
     $j++;
 
@@ -50,7 +50,7 @@ TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
     # Iterate over the bass notes
     BASS: while ( my @bass = $bass_mc->next_permutation ) {
         # Are we critical?
-        last BASS if $critical_b && $i > $critical_b - 1;
+        last BASS if $critical_b && $i >= $critical_b;
         # Iterate the number of permutations
         $i++;
 
