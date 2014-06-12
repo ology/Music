@@ -16,7 +16,7 @@ my $critical_b   = 0; # "
 my @notes = qw( C Cs D Ds E F G Gs A As B );
 my %name;
 my $int = -12;
-for my $octave ( 3, 4, 5 )
+for my $octave ( 3, 4, 5, 6 )
 {
     for my $note (@notes)
     {
