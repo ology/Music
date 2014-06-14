@@ -53,7 +53,7 @@ my $funct = {
     transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
 };
 
-my $x = ALTERATION;
+my $x = $ALTERATION;
 my $alteration = ( keys %$funct )[ rand keys %$funct ];
 print "Alteration: $alteration by $x\n";
 $altered = $funct->{$alteration}->($x);
