@@ -83,7 +83,7 @@ sub process_midi
         {
             if ($RHYTHM)
             {
-                my $duration = ( @$durations )[ rand @$durations ];
+                my $duration = ( @$durations )[ int rand @$durations ];
                 $score->n( $duration, $name{$pitch} );
             }
             else {
