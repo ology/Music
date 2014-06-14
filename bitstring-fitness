@@ -24,7 +24,7 @@ my $DEGREES    = 7;   # Constraining scale
 my $ALTERATION = 2;   # Post mutation phrase alteration factor
 my $PHRASES    = 4;   # Number of times to play the "melody"
 my $RHYTHM     = 0;   # Use rhythmic variations
-my $MOTIF      = 0;   # Use a subset of the possible rhythms
+my $MOTIF      = 4;   # Use a subset of the possible rhythms
 my $TEMPO      = 600_000; # Miliseconds
 my $PATCH      = 108;
 GetOptions (
@@ -33,6 +33,7 @@ GetOptions (
     'alteration=i' => \$ALTERATION,
     'phrases=i'    => \$PHRASES,
     'rhythm'       => \$RHYTHM,
+    'motif=i'      => \$MOTIF,
     'tempo=i'      => \$TEMPO,
     'patch=i'      => \$PATCH,
 ) or die("Error in command line arguments\n");
@@ -92,12 +93,12 @@ sub process_midi
             {
                 if ($MOTIF)
                 {
-                    my $duration = ( @$durations )[ int rand @$durations ];
-                    $score->n( $duration, $name{$pitch} );
-                }
-                else {
                     my $motif = ( @motifs )[ int rand @motifs ];
                     $score->n( $motif, $name{$pitch} );
+                }
+                else {
+                    my $duration = ( @$durations )[ int rand @$durations ];
+                    $score->n( $duration, $name{$pitch} );
                 }
             }
             else {
