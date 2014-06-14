@@ -10,6 +10,7 @@ use MIDI::Simple;
 my $BITS    = shift || 11;  # Maximum pitches
 my $DEGREES = shift || 7;   # Constraining scale
 my $PHRASES = shift || 4;   # Number of times to play the "melody"
+print "BITS/DEGREES/PHRASES: $BITS/$DEGREES/$PHRASES\n";
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
 
@@ -46,6 +47,16 @@ my $atup = $atu->transpose( 0, $pitches );
 #$atup = $atu->invert(6, $p);
 #$atup = $atu->transpose(2, $atup);
 #$atup = $atu->rotate(1, $atup);
+
+# Post mutation, phrase alterations
+my $funct = {
+    invert     => sub { my $x = shift; $atu->invert( $x, $atup ) },
+    retrograde => sub { $atu->retrograde( @$pitches ) },
+    rotate     => sub { my $x = shift; $atu->rotate( $x, $atup ) },
+    transpose  => sub { my $x = shift; $atu->transpose( $x, $atup ) },
+};
+
+#$atup = $funct->{retrograde}->();
 
 # What have we now?
 print '(', join( ',', @$pitches, @$atup ), ')', "\n";
@@ -124,7 +135,7 @@ sub int2name
 
 sub set_score {
     my %conf = (
-        tempo     => 500_000,
+        tempo     => 600_000,
         volume    => 100,
         signature => 4,
         unit      => 'en',
