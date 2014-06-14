@@ -11,6 +11,7 @@ my $BITS       = shift || 11;  # Maximum pitches
 my $DEGREES    = shift || 7;   # Constraining scale
 my $ALTERATION = shift || 2;   # Post mutation phrase alteration factor
 my $PHRASES    = shift || 4;   # Number of times to play the "melody"
+my $RHYTHM     = shift || 0;   # Number of times to play the "melody"
 print "BITS/DEGREES/ALTERATION/PHRASES: $BITS/$DEGREES/$ALTERATION/$PHRASES\n";
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
@@ -52,8 +53,14 @@ sub process_midi
     {
         for my $pitch ( @$pitches )
         {
-            my $duration = ( @$durations )[ rand @$durations ];
-            $score->n( $duration, $name{$pitch} );
+            if ($RHYTHM)
+            {
+                my $duration = ( @$durations )[ rand @$durations ];
+                $score->n( $duration, $name{$pitch} );
+            }
+            else {
+                $score->n( { $score->Cookies }->{unit}, $name{$pitch} );
+            }
             $score->r( { $score->Cookies }->{unit} );
         }
     }
