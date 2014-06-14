@@ -4,7 +4,8 @@ use warnings;
 
 use Algorithm::Evolutionary::Individual::BitString;
  
-my $BITS = shift || 23;
+my $BITS    = shift || 23;
+my $DEGREES = shift || 12;
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
 print $ae->{_str}, "\n";
@@ -68,7 +69,7 @@ sub bits2pitches
 
     my $i = 0;
     for my $bit ( split //, $bitstring ) {
-        push $pitches, $i if $bit;
+        push $pitches, $i % $DEGREES if $bit;
         $i++;
     }
 
