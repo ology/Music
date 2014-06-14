@@ -27,13 +27,13 @@ my $RHYTHM     = 0;   # Number of times to play the "melody"
 my $TEMPO      = 600_000; # Miliseconds
 my $PATCH      = 108;
 GetOptions (
-    "bits=i"       => \$BITS,
-    "degrees=i"    => \$DEGREES,
-    "alteration=i" => \$ALTERATION,
-    "phrases=i"    => \$PHRASES,
-    "rhythm"       => \$RHYTHM,
-    "tempo=i"      => \$TEMPO,
-    "patch=i"      => \$PATCH,
+    'bits=i'       => \$BITS,
+    'degrees=i'    => \$DEGREES,
+    'alteration=i' => \$ALTERATION,
+    'phrases=i'    => \$PHRASES,
+    'rhythm'       => \$RHYTHM,
+    'tempo=i'      => \$TEMPO,
+    'patch=i'      => \$PATCH,
 ) or die("Error in command line arguments\n");
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
