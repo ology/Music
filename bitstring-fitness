@@ -4,7 +4,6 @@ use warnings;
 
 use Algorithm::Evolutionary::Individual::BitString;
  
-my $max  = shift || 1;
 my $bits = shift || 23;
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($bits);
@@ -14,15 +13,12 @@ print $ae->{_str}, "\n";
 while ( not is_fit( $ae->{_str} ) )
 {
     # Mutate!
-    for my $i ( 1 .. $max )
-    {
-        # Get a bit to twiddle
-        my $n = int rand $bits;
-        warn "N:$n\n";
+    # Get a bit to twiddle
+    my $n = int rand $bits;
+    warn "\tN:$n\n";
 
-        # Toggle the bit in the string
-        $ae->Atom( $n, ($ae->Atom($n) ? 0 : 1) );
-    }
+    # Toggle the bit in the string
+    $ae->Atom( $n, ($ae->Atom($n) ? 0 : 1) );
 }
 
 print $ae->{_str}, "\n";
@@ -36,7 +32,7 @@ sub is_fit
     # Count the number of zeros and ones
     my $zeros =()= $str =~ /0/g;
     my $ones  =()= $str =~ /1/g;
-    warn "V:$zeros,$ones\n";
+#    warn "Z,O:$zeros,$ones\n";
     # There should be more pitches (ones) than zeros
     $is_fit = $zeros < (2 * $bits / 3) && $ones > ($bits / 2)
         ? 1 : 0;
