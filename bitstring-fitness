@@ -11,6 +11,8 @@ my $DEGREES = shift || 7;   # Constraining scale
 my $PHRASES = shift || 4;   # Number of times to play the "melody"
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
+
+# Show the initial mutation
 print $ae->{_str}, "\n";
 
 # Find a fit...
@@ -28,10 +30,16 @@ while ( not is_fit( $ae->{_str} ) )
     $ae->Atom( $n, ($ae->Atom($n) ? 0 : 1) );
 }
 
+# Show the final mutation
 print $ae->{_str}, "\n";
 
+# Turn the bitstring into a proper pitch set
 my $pitches = bits2pitches( $ae->{_str} );
+
+# Apply pitch set rules:
 @$pitches = shuffle( @$pitches );
+
+# What have we now?
 print '(', join( ',', @$pitches ), ')', "\n";
 
 # MIDI!
