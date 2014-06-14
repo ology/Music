@@ -4,8 +4,8 @@ use warnings;
 
 use Algorithm::Evolutionary::Individual::BitString;
  
-my $BITS    = shift || 23;
-my $DEGREES = shift || 12;
+my $BITS    = shift || 11;  # Maximum pitches
+my $DEGREES = shift || 7;   # Constraining scale
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
 print $ae->{_str}, "\n";
