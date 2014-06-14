@@ -7,9 +7,10 @@ use List::Util qw( shuffle );
 use Music::AtonalUtil;
 use MIDI::Simple;
  
-my $BITS    = shift || 11;  # Maximum pitches
-my $DEGREES = shift || 7;   # Constraining scale
-my $PHRASES = shift || 4;   # Number of times to play the "melody"
+my $BITS       = shift || 11;  # Maximum pitches
+my $DEGREES    = shift || 7;   # Constraining scale
+my $ALTERATION = shift || 2;   # Post mutation phrase alteration factor
+my $PHRASES    = shift || 4;   # Number of times to play the "melody"
 print "BITS/DEGREES/PHRASES: $BITS/$DEGREES/$PHRASES\n";
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
@@ -52,7 +53,7 @@ my $funct = {
     transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
 };
 
-my $x = 2;
+my $x = ALTERATION;
 my $alteration = ( keys %$funct )[ rand keys %$funct ];
 print "Alteration: $alteration by $x\n";
 $altered = $funct->{$alteration}->($x);
