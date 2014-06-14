@@ -42,31 +42,31 @@ my $pitches = bits2pitches( $ae->{_str} );
 @$pitches = shuffle( @$pitches );
 
 my $atu = Music::AtonalUtil->new;
-my $atup = $atu->transpose( 0, $pitches );
-#$atup = $atu->retrograde( @$pitches );
-#$atup = $atu->invert(6, $p);
-#$atup = $atu->transpose(2, $atup);
-#$atup = $atu->rotate(1, $atup);
+my $altered = $atu->transpose( 0, $pitches );
+#$altered = $atu->retrograde( @$pitches );
+#$altered = $atu->invert(6, $p);
+#$altered = $atu->transpose(2, $altered);
+#$altered = $atu->rotate(1, $altered);
 
 # Post mutation, phrase alterations
 my $funct = {
-    invert     => sub { my $x = shift; $atu->invert( $x, $atup ) },
+    invert     => sub { my $x = shift; $atu->invert( $x, $altered ) },
     retrograde => sub { $atu->retrograde( @$pitches ) },
-    rotate     => sub { my $x = shift; $atu->rotate( $x, $atup ) },
-    transpose  => sub { my $x = shift; $atu->transpose( $x, $atup ) },
+    rotate     => sub { my $x = shift; $atu->rotate( $x, $altered ) },
+    transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
 };
 
-#$atup = $funct->{retrograde}->();
+#$altered = $funct->{retrograde}->();
 
 # What have we now?
-print '(', join( ',', @$pitches, @$atup ), ')', "\n";
+print '(', join( ',', @$pitches, @$altered ), ')', "\n";
 
 # MIDI!
 my %name  = int2name();
 my $score = set_score();
 for my $phrase ( 1 .. $PHRASES )
 {
-    $score->n( { $score->Cookies }->{unit}, $name{$_} ) for @$pitches, @$atup;
+    $score->n( { $score->Cookies }->{unit}, $name{$_} ) for @$pitches, @$altered;
     $score->r( { $score->Cookies }->{unit} );
 }
 $score->write_score( $0 . '.mid' );
