@@ -72,12 +72,15 @@ sub process_midi
     my %name  = int2name();
     my $score = set_score();
 
+    # List possibe rhythmic durations
     my $durations = [qw(
         hn qn  en   sn
            dqn den  dsn
                dden ddsn
            tqn ten  tsn
     )];
+
+    # Constrain durations but the number of motifs, if given
     my @motifs = ();
     if ($MOTIF)
     {
@@ -85,13 +88,17 @@ sub process_midi
         @motifs = ( shuffle @$durations )[ 0 .. $MOTIF - 1 ];
     }
 
+    # Play the number of phrases
     for my $phrase ( 1 .. $PHRASES )
     {
+        # Given each pitch, decide on the duration to use
         for my $pitch ( @$pitches )
         {
+            # If rhythmic variation is requested, draw from the duration list
             if ($RHYTHM)
             {
                 my $duration;
+                # Should we use a subset of the duration list?
                 if ($MOTIF)
                 {
                     $duration = ( @motifs )[ int rand @motifs ];
@@ -99,8 +106,11 @@ sub process_midi
                 else {
                     $duration = ( @$durations )[ int rand @$durations ];
                 }
+
+                # Add the note to the score
                 $score->n( $duration, $name{$pitch} );
             }
+            # If rhythmic variation is not requested, use the given score unit
             else {
                 $score->n( { $score->Cookies }->{unit}, $name{$pitch} );
             }
