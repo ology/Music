@@ -41,19 +41,21 @@ my $pitches = bits2pitches( $ae->{_str} );
 @$pitches = shuffle( @$pitches );
 
 my $atu = Music::AtonalUtil->new;
-my $p = $atu->retrograde( @$pitches );
-$p = $atu->invert(6, $p);
-$p = $atu->transpose(1, $p);
+my $atup = $atu->transpose( 0, $pitches );
+#$atup = $atu->retrograde( @$pitches );
+#$atup = $atu->invert(6, $p);
+#$atup = $atu->transpose(2, $atup);
+#$atup = $atu->rotate(1, $atup);
 
 # What have we now?
-print '(', join( ',', @$pitches, @$p ), ')', "\n";
+print '(', join( ',', @$pitches, @$atup ), ')', "\n";
 
 # MIDI!
 my %name  = int2name();
 my $score = set_score();
 for my $phrase ( 1 .. $PHRASES )
 {
-    $score->n( { $score->Cookies }->{unit}, $name{$_} ) for @$pitches, @$p;
+    $score->n( { $score->Cookies }->{unit}, $name{$_} ) for @$pitches, @$atup;
     $score->r( { $score->Cookies }->{unit} );
 }
 $score->write_score( $0 . '.mid' );
