@@ -42,10 +42,10 @@ sub process_midi
     my $score = set_score();
 
     my $durations = [qw(
-        wn hn  qn   en   sn
-               dqn  den  dsn
-               ddqn dden ddsn
-           thn thn  ten  tsn
+        wn hn qn  en   sn
+              dqn den  dsn
+                  dden ddsn
+              tqn ten  tsn
     )];
 
     for my $phrase ( 1 .. $PHRASES )
