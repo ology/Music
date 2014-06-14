@@ -91,15 +91,15 @@ sub process_midi
         {
             if ($RHYTHM)
             {
+                my $duration;
                 if ($MOTIF)
                 {
-                    my $motif = ( @motifs )[ int rand @motifs ];
-                    $score->n( $motif, $name{$pitch} );
+                    $duration = ( @motifs )[ int rand @motifs ];
                 }
                 else {
-                    my $duration = ( @$durations )[ int rand @$durations ];
-                    $score->n( $duration, $name{$pitch} );
+                    $duration = ( @$durations )[ int rand @$durations ];
                 }
+                $score->n( $duration, $name{$pitch} );
             }
             else {
                 $score->n( { $score->Cookies }->{unit}, $name{$pitch} );
