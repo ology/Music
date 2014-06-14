@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Algorithm::Evolutionary::Individual::BitString;
+use List::Util qw( shuffle );
  
 my $BITS    = shift || 11;  # Maximum pitches
 my $DEGREES = shift || 7;   # Constraining scale
@@ -28,6 +29,7 @@ while ( not is_fit( $ae->{_str} ) )
 print $ae->{_str}, "\n";
 
 my $pitches = bits2pitches( $ae->{_str} );
+@$pitches = shuffle( @$pitches );
 print '(', join( ',', @$pitches ), ')', "\n";
 
 sub is_fit
