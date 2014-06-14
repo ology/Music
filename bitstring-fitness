@@ -10,12 +10,15 @@ my $ae = Algorithm::Evolutionary::Individual::BitString->new($bits);
 print $ae->{_str}, "\n";
 
 # Find a fit...
+my $mutation = 0;
 while ( not is_fit( $ae->{_str} ) )
 {
+    $mutation++;
+
     # Mutate!
     # Get a bit to twiddle
     my $n = int rand $bits;
-    warn "\tN:$n\n";
+    warn "\t$mutation. N:$n\n";
 
     # Toggle the bit in the string
     $ae->Atom( $n, ($ae->Atom($n) ? 0 : 1) );
