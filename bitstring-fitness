@@ -1,4 +1,15 @@
 #!/usr/bin/env perl
+
+=head1 NAME
+
+bitstring-fitness - Bitstring mutation and pitch alteration
+
+=head1 DESCRIPTION
+
+TODO
+
+=cut
+
 use strict;
 use warnings;
 
@@ -46,6 +57,12 @@ print '(', join( ',', @$pitches, @$altered ), ')', "\n";
 
 process_midi( [ @$pitches, @$altered ] );
 
+=head1 FUNCTIONS
+
+=head2 process_midi()
+
+=cut
+
 sub process_midi
 {
     my $pitches = shift;
@@ -79,6 +96,10 @@ sub process_midi
     $score->write_score( $0 . '.mid' );
 }
 
+=head2 mutate()
+
+=cut
+
 sub mutate
 {
     my $species = shift;
@@ -97,6 +118,10 @@ sub mutate
         $species->Atom( $n, ($species->Atom($n) ? 0 : 1) );
     }
 }
+
+=head2 alteration()
+
+=cut
 
 sub alteration
 {
@@ -123,6 +148,10 @@ sub alteration
 
     return $altered;
 }
+
+=head2 is_fit()
+
+=cut
 
 sub is_fit
 {
@@ -154,6 +183,10 @@ sub is_fit
     return $is_fit;
 }
 
+=head2 bits2pitches()
+
+=cut
+
 sub bits2pitches
 {
     # Convert 1001001000101000 form to [0,3,6,10,12] set form
@@ -170,6 +203,10 @@ sub bits2pitches
     return $pitches;
 }
 
+=head2 int2name()
+
+=cut
+
 sub int2name
 {
     # Convert integer pitch notation into MIDI note names
@@ -185,6 +222,10 @@ sub int2name
     }
     return %name;
 }
+
+=head2 set_score()
+
+=cut
 
 sub set_score {
     my %conf = (
