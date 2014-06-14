@@ -16,25 +16,12 @@ print "BITS/DEGREES/ALTERATION/PHRASES: $BITS/$DEGREES/$ALTERATION/$PHRASES\n";
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
 
 # Show the initial mutation
-print 'Seed: ', $ae->{_str}, "\n";
+print "Seed: $ae->{_str}\n";
 
-# Find a fit...
-my $mutation = 0;
-while ( not is_fit( $ae->{_str} ) )
-{
-    $mutation++;
-
-    # Mutate!
-    # Get a bit to twiddle
-    my $n = int rand $BITS;
-    warn "\t$mutation. N:$n\n";
-
-    # Toggle the bit in the string
-    $ae->Atom( $n, ($ae->Atom($n) ? 0 : 1) );
-}
+mutate($ae);
 
 # Show the final mutation
-print $ae->{_str}, "\n";
+print "Final: $ae->{_str}\n";
 
 # Turn the bitstring into a proper pitch set
 my $pitches = bits2pitches( $ae->{_str} );
@@ -77,6 +64,25 @@ sub process_midi
     }
 
     $score->write_score( $0 . '.mid' );
+}
+
+sub mutate
+{
+    my $species = shift;
+
+    my $mutation = 0;
+    # Find a fit...
+    while ( not is_fit( $species->{_str} ) )
+    {
+        $mutation++;
+
+        # Get a bit to twiddle
+        my $n = int rand $BITS;
+        warn "\t$mutation. N:$n\n";
+
+        # Toggle the bit in the string
+        $species->Atom( $n, ($species->Atom($n) ? 0 : 1) );
+    }
 }
 
 sub is_fit
