@@ -41,10 +41,21 @@ sub process_midi
     my %name  = int2name();
     my $score = set_score();
 
+    my $durations = [qw(
+        wn hn  qn   en   sn
+               dqn  den  dsn
+               ddqn dden ddsn
+           thn thn  ten  tsn
+    )];
+
     for my $phrase ( 1 .. $PHRASES )
     {
-        $score->n( { $score->Cookies }->{unit}, $name{$_} ) for @$pitches;
-        $score->r( { $score->Cookies }->{unit} );
+        for my $pitch ( @$pitches )
+        {
+            my $duration = ( @$durations )[ rand @$durations ];
+            $score->n( $duration, $name{$pitch} );
+            $score->r( { $score->Cookies }->{unit} );
+        }
     }
 
     $score->write_score( $0 . '.mid' );
