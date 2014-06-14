@@ -188,12 +188,12 @@ sub int2name
 
 sub set_score {
     my %conf = (
-        tempo     => 600_000,
+        tempo     => $TEMPO,
         volume    => 100,
         signature => 4,
         unit      => 'en',
         channel   => 1,
-        patch     => 108,
+        patch     => $PATCH,
         octave    => 4,
         kit       => 9,
         pad       => 38,
