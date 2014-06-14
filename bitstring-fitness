@@ -4,9 +4,9 @@ use warnings;
 
 use Algorithm::Evolutionary::Individual::BitString;
  
-my $bits = shift || 23;
+my $BITS = shift || 23;
 
-my $ae = Algorithm::Evolutionary::Individual::BitString->new($bits);
+my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
 print $ae->{_str}, "\n";
 
 # Find a fit...
@@ -17,7 +17,7 @@ while ( not is_fit( $ae->{_str} ) )
 
     # Mutate!
     # Get a bit to twiddle
-    my $n = int rand $bits;
+    my $n = int rand $BITS;
     warn "\t$mutation. N:$n\n";
 
     # Toggle the bit in the string
@@ -25,6 +25,9 @@ while ( not is_fit( $ae->{_str} ) )
 }
 
 print $ae->{_str}, "\n";
+
+my $pitches = bits2pitches( $ae->{_str} );
+print '(', join( ',', @$pitches ), ')', "\n";
 
 sub is_fit
 {
@@ -37,7 +40,7 @@ sub is_fit
     my $ones  =()= $str =~ /1/g;
 #    warn "Z,O:$zeros,$ones\n";
     # There should be more pitches (ones) than zeros
-    $is_fit = $zeros < (2 * $bits / 3) && $ones > ($bits / 2)
+    $is_fit = $zeros < (2 * $BITS / 3) && $ones > ($BITS / 2)
         ? 1 : 0;
     return 0 unless $is_fit;
 
@@ -54,4 +57,20 @@ sub is_fit
     $is_fit = $str =~ /1{3,}/ ? 0 : 1;
 
     return $is_fit;
+}
+
+sub bits2pitches
+{
+    # Convert 1001001000101000 form to [0,3,6,10,12] set form
+    my $bitstring = shift;
+
+    my $pitches = [];
+
+    my $i = 0;
+    for my $bit ( split //, $bitstring ) {
+        push $pitches, $i if $bit;
+        $i++;
+    }
+
+    return $pitches;
 }
