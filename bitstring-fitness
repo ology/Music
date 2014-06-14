@@ -187,8 +187,8 @@ sub set_score {
     $score->set_tempo($conf{tempo});
 
     # lead-in
-    $score->Channel($conf{kit});
-    $score->n($conf{unit}, $conf{pad}) for 1 .. $conf{signature};
+#    $score->Channel($conf{kit});
+#    $score->n($conf{unit}, $conf{pad}) for 1 .. $conf{signature};
 
     # passage
     $score->patch_change($conf{channel}, $conf{patch});
