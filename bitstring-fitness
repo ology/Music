@@ -27,7 +27,7 @@ print "Final: $ae->{_str}\n";
 my $pitches = bits2pitches( $ae->{_str} );
 
 # Perform gymnastics with the pitches
-$pitches = alteration($pitches);
+my $altered = alteration($pitches);
 
 # What have we now?
 print '(', join( ',', @$pitches, @$altered ), ')', "\n";
