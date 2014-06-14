@@ -26,24 +26,7 @@ print "Final: $ae->{_str}\n";
 # Turn the bitstring into a proper pitch set
 my $pitches = bits2pitches( $ae->{_str} );
 
-# Apply pitch set rules:
-@$pitches = shuffle( @$pitches );
-
-my $atu = Music::AtonalUtil->new;
-my $altered = $atu->transpose( 0, $pitches );
-
-# Post mutation, phrase alterations
-my $funct = {
-    invert     => sub { my $x = shift; $atu->invert( $x, $altered ) },
-    retrograde => sub { $atu->retrograde( @$pitches ) },
-    rotate     => sub { my $x = shift; $atu->rotate( $x, $altered ) },
-    transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
-};
-
-my $x = $ALTERATION;
-my $alteration = ( keys %$funct )[ rand keys %$funct ];
-print "Alteration: $alteration by $x\n";
-$altered = $funct->{$alteration}->($x);
+$pitches = alteration($pitches);
 
 # What have we now?
 print '(', join( ',', @$pitches, @$altered ), ')', "\n";
@@ -83,6 +66,32 @@ sub mutate
         # Toggle the bit in the string
         $species->Atom( $n, ($species->Atom($n) ? 0 : 1) );
     }
+}
+
+sub alteration
+{
+    my $pitches = shift;
+
+    # Apply pitch set rules:
+    @$pitches = shuffle( @$pitches );
+
+    my $atu = Music::AtonalUtil->new;
+    my $altered = $atu->transpose( 0, $pitches );
+
+    # Post mutation, phrase alterations
+    my $funct = {
+        invert     => sub { my $x = shift; $atu->invert( $x, $altered ) },
+        retrograde => sub { $atu->retrograde( @$pitches ) },
+        rotate     => sub { my $x = shift; $atu->rotate( $x, $altered ) },
+        transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
+    };
+
+    my $x = $ALTERATION;
+    my $alteration = ( keys %$funct )[ rand keys %$funct ];
+    print "Alteration: $alteration by $x\n";
+    $altered = $funct->{$alteration}->($x);
+
+    return $altered;
 }
 
 sub is_fit
