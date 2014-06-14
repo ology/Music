@@ -15,7 +15,7 @@ print "BITS/DEGREES/PHRASES: $BITS/$DEGREES/$PHRASES\n";
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
 
 # Show the initial mutation
-print $ae->{_str}, "\n";
+print 'Seed: ', $ae->{_str}, "\n";
 
 # Find a fit...
 my $mutation = 0;
@@ -43,10 +43,6 @@ my $pitches = bits2pitches( $ae->{_str} );
 
 my $atu = Music::AtonalUtil->new;
 my $altered = $atu->transpose( 0, $pitches );
-#$altered = $atu->retrograde( @$pitches );
-#$altered = $atu->invert(6, $p);
-#$altered = $atu->transpose(2, $altered);
-#$altered = $atu->rotate(1, $altered);
 
 # Post mutation, phrase alterations
 my $funct = {
@@ -64,15 +60,23 @@ $altered = $funct->{$alteration}->($x);
 # What have we now?
 print '(', join( ',', @$pitches, @$altered ), ')', "\n";
 
-# MIDI!
-my %name  = int2name();
-my $score = set_score();
-for my $phrase ( 1 .. $PHRASES )
+process_midi( $pitches, @$altered );
+
+sub process_midi
 {
-    $score->n( { $score->Cookies }->{unit}, $name{$_} ) for @$pitches, @$altered;
-    $score->r( { $score->Cookies }->{unit} );
+    my $pitches = shift;
+
+    my %name  = int2name();
+    my $score = set_score();
+
+    for my $phrase ( 1 .. $PHRASES )
+    {
+        $score->n( { $score->Cookies }->{unit}, $name{$_} ) for @$pitches;
+        $score->r( { $score->Cookies }->{unit} );
+    }
+
+    $score->write_score( $0 . '.mid' );
 }
-$score->write_score( $0 . '.mid' );
 
 sub is_fit
 {
