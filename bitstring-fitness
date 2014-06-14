@@ -56,7 +56,10 @@ my $funct = {
     transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
 };
 
-#$altered = $funct->{retrograde}->();
+my $x = 2;
+my $alteration = ( keys %$funct )[ rand keys %$funct ];
+print "Alteration: $alteration by $x\n";
+$altered = $funct->{$alteration}->($x);
 
 # What have we now?
 print '(', join( ',', @$pitches, @$altered ), ')', "\n";
