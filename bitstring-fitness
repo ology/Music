@@ -11,7 +11,7 @@ my $BITS       = shift || 11;  # Maximum pitches
 my $DEGREES    = shift || 7;   # Constraining scale
 my $ALTERATION = shift || 2;   # Post mutation phrase alteration factor
 my $PHRASES    = shift || 4;   # Number of times to play the "melody"
-print "BITS/DEGREES/PHRASES: $BITS/$DEGREES/$PHRASES\n";
+print "BITS/DEGREES/ALTERATION/PHRASES: $BITS/$DEGREES/$ALTERATION/$PHRASES\n";
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
 
