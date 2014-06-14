@@ -4,6 +4,7 @@ use warnings;
 
 use Algorithm::Evolutionary::Individual::BitString;
 use List::Util qw( shuffle );
+use Music::AtonalUtil;
 use MIDI::Simple;
  
 my $BITS    = shift || 11;  # Maximum pitches
@@ -39,15 +40,20 @@ my $pitches = bits2pitches( $ae->{_str} );
 # Apply pitch set rules:
 @$pitches = shuffle( @$pitches );
 
+my $atu = Music::AtonalUtil->new;
+my $p = $atu->retrograde( @$pitches );
+$p = $atu->invert(6, $p);
+$p = $atu->transpose(1, $p);
+
 # What have we now?
-print '(', join( ',', @$pitches ), ')', "\n";
+print '(', join( ',', @$pitches, @$p ), ')', "\n";
 
 # MIDI!
 my %name  = int2name();
 my $score = set_score();
 for my $phrase ( 1 .. $PHRASES )
 {
-    $score->n( { $score->Cookies }->{unit}, $name{$_} ) for @$pitches;
+    $score->n( { $score->Cookies }->{unit}, $name{$_} ) for @$pitches, @$p;
     $score->r( { $score->Cookies }->{unit} );
 }
 $score->write_score( $0 . '.mid' );
