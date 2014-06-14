@@ -26,6 +26,7 @@ print "Final: $ae->{_str}\n";
 # Turn the bitstring into a proper pitch set
 my $pitches = bits2pitches( $ae->{_str} );
 
+# Perform gymnastics with the pitches
 $pitches = alteration($pitches);
 
 # What have we now?
