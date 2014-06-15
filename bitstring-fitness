@@ -86,7 +86,7 @@ sub process_midi
     my @motifs = ();
     if ($MOTIF)
     {
-        # Rhythmic motif = DEGREES subset of durations
+        # A rhythmic motif is a subset of the durations
         @motifs = ( shuffle @$durations )[ 0 .. $MOTIF - 1 ];
     }
 
