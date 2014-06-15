@@ -26,7 +26,8 @@ my $PHRASES    = 4;   # Number of times to play the "melody"
 my $RHYTHM     = 0;   # Use rhythmic variations
 my $MOTIF      = 4;   # Use a subset of the possible rhythms
 my $TEMPO      = 600_000; # Miliseconds
-my $PATCH      = 108;
+my $PATCH      = 108; # The MID patch to use!
+my $DIATONIC   = 0;   # use the diatonic notes, rather than chromatic
 GetOptions (
     'bits=i'       => \$BITS,
     'degrees=i'    => \$DEGREES,
@@ -36,6 +37,7 @@ GetOptions (
     'motif=i'      => \$MOTIF,
     'tempo=i'      => \$TEMPO,
     'patch=i'      => \$PATCH,
+    'diatonic'     => \$DIATONIC,
 ) or die("Error in command line arguments\n");
 
 my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
@@ -236,7 +238,16 @@ sub int2name
 {
     # Convert integer pitch notation into MIDI note names
     my %name;
-    my @notes = qw( C Cs D Ds E F G Gs A As B );
+    my @notes;
+
+    # Use the diatonic scale notes if requested
+    if ($DIATONIC)
+    {
+        @notes = qw( C D E F G A B );
+    }
+    else {
+        @notes = qw( C Cs D Ds E F G Gs A As B );
+    }
     my $int = -( $BITS + 1 );
     for my $octave ( 3, 4, 5, 6 )
     {
