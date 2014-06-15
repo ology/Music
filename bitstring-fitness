@@ -82,7 +82,7 @@ sub process_midi
            tqn ten  tsn
     )];
 
-    # Constrain durations but the number of motifs, if given
+    # Constrain durations by the number of motifs, if given
     my @motifs = ();
     if ($MOTIF)
     {
