@@ -116,8 +116,8 @@ sub process_midi
             else {
                 $score->n( { $score->Cookies }->{unit}, $name{$pitch} );
             }
-            $score->r( { $score->Cookies }->{unit} );
         }
+        $score->r( { $score->Cookies }->{unit} );
     }
 
     $score->write_score( $0 . '.mid' );
