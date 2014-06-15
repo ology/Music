@@ -117,6 +117,8 @@ sub process_midi
                 $score->n( { $score->Cookies }->{unit}, $name{$pitch} );
             }
         }
+
+        # Rest after each phrase
         $score->r( { $score->Cookies }->{unit} );
     }
 
