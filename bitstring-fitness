@@ -74,7 +74,7 @@ sub process_midi
     my %name  = int2name();
     my $score = set_score();
 
-    # List possibe rhythmic durations
+    # List possible rhythmic durations
     my $durations = [qw(
         hn qn  en   sn
            dqn den  dsn
