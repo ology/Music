@@ -54,12 +54,14 @@ print "Final: $ae->{_str}\n";
 my $pitches = bits2pitches( $ae->{_str} );
 
 # Perform gymnastics with the pitches
-my $altered = alteration($pitches);
+$pitches = [ @$pitches, @{ alteration($pitches) } ];
 
 # What have we now?
-print '(', join( ',', @$pitches, @$altered ), ')', "\n";
+print '(', join( ',', @$pitches ), ')', "\n";
 
-process_midi( [ @$pitches, @$altered ] );
+my $rhythms = add_rhythm($pitches) if $RHYTHM;
+
+process_midi( $pitches, $rhythms );
 
 =head1 FUNCTIONS
 
@@ -69,10 +71,29 @@ process_midi( [ @$pitches, @$altered ] );
 
 sub process_midi
 {
-    my $pitches = shift;
+    my ( $pitches, $rhythms ) = @_;
 
     my %name  = int2name();
     my $score = set_score();
+
+    my $i = 0;
+    for my $pitch ( @$pitches )
+    {
+        my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
+        $score->n( $duration, $name{$pitch} );
+        $i++;
+    }
+
+    $score->write_score( $0 . '.mid' );
+}
+
+=head2 add_rhythm()
+
+=cut
+
+sub add_rhythm
+{
+    my $pitches = shift;
 
     # List possible rhythmic durations
     my $durations = [qw(
@@ -82,7 +103,10 @@ sub process_midi
            tqn ten  tsn
     )];
 
-    # Constrain durations by the number of motifs, if given
+    # We shall construct a list of duration fragments...
+    my @rhythms;
+
+    # Constrain rhythms by the number of motifs, if given
     my @motifs = ();
     if ($MOTIF)
     {
@@ -90,39 +114,24 @@ sub process_midi
         @motifs = ( shuffle @$durations )[ 0 .. $MOTIF - 1 ];
     }
 
-    # Play the number of phrases
-    for my $phrase ( 1 .. $PHRASES )
+    # Given each pitch, decide on the duration to use
+    for my $pitch ( @$pitches )
     {
-        # Given each pitch, decide on the duration to use
-        for my $pitch ( @$pitches )
+        my $duration;
+        # Should we use a subset of the duration list?
+        if ($MOTIF)
         {
-            # If rhythmic variation is requested, draw from the duration list
-            if ($RHYTHM)
-            {
-                my $duration;
-                # Should we use a subset of the duration list?
-                if ($MOTIF)
-                {
-                    $duration = ( @motifs )[ int rand @motifs ];
-                }
-                else {
-                    $duration = ( @$durations )[ int rand @$durations ];
-                }
-
-                # Add the note to the score
-                $score->n( $duration, $name{$pitch} );
-            }
-            # If rhythmic variation is not requested, use the given score unit
-            else {
-                $score->n( { $score->Cookies }->{unit}, $name{$pitch} );
-            }
+            $duration = ( @motifs )[ int rand @motifs ];
+        }
+        else {
+            $duration = ( @$durations )[ int rand @$durations ];
         }
 
-        # Rest after each phrase
-        $score->r( { $score->Cookies }->{unit} );
+        # Add the note to the score
+        push @rhythms, $duration;
     }
 
-    $score->write_score( $0 . '.mid' );
+    return \@rhythms;
 }
 
 =head2 mutate()
