@@ -239,6 +239,40 @@ sub is_fit
     return $is_fit;
 }
 
+sub bits2rhythms
+{
+    # Convert 1001001000101 form to [tsn dsn tqn thn ddqn] set form
+    my $bitstring = shift;
+
+    # List possible rhythmic durations
+    my @durations = qw(
+        tsn
+        sn
+        ten
+        dsn
+        ddsn
+        en
+        tqn
+        den
+        dden
+        qn
+        thn
+        dqn
+        ddqn
+        hn
+    );
+
+    my $rhythms = [];
+
+    my $i = 0;
+    for my $bit ( split //, $bitstring ) {
+        push $rhythms, $durations[ $i % @durations ] if $bit;
+        $i++;
+    }
+
+    return $rhythms;
+}
+
 =head2 bits2pitches()
 
 =cut
