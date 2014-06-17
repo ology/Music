@@ -188,6 +188,12 @@ sub alteration
     print "Alteration: $alteration by $x\n";
     $altered = $funct->{$alteration}->($x);
 
+    # Constrain to the DEGREES
+    for my $alt ( @$altered )
+    {
+        $alt %= $DEGREES;
+    }
+
     return $altered;
 }
 
