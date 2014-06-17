@@ -82,6 +82,7 @@ sub process_midi
     {
         my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
         $score->n( $duration, $name{$pitch} );
+#warn "N:$name{$pitch}, $duration\n";
         $i++;
     }
 
@@ -131,6 +132,7 @@ sub add_rhythm
         # Add the note to the score
         push @rhythms, $duration;
     }
+    warn "Rhythms: (@rhythms)\n";
 
     return \@rhythms;
 }
@@ -261,12 +263,14 @@ sub int2name
     else {
         @notes = qw( C Cs D Ds E F G Gs A As B );
     }
-    my $int = -( $BITS + 1 );
+    my $int = -@notes;
     for my $octave ( 3, 4, 5, 6 )
     {
         for my $note (@notes)
         {
-            $name{ $int++ } = $note . $octave;
+            $name{$int} = $note . $octave;
+#warn "N:$int $name{$int} = $note . $octave\n";
+            $int++;
         }
     }
     return %name;
