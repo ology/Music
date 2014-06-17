@@ -45,7 +45,7 @@ my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
 # Show the initial mutation
 print "Seed: $ae->{_str}\n";
 
-mutate($ae);
+mutate( $ae, type => 'pitch' );
 
 # Show the final mutation
 print "Final: $ae->{_str}\n";
@@ -102,10 +102,10 @@ sub add_rhythm
 
     # List possible rhythmic durations
     my $durations = [qw(
-        hn qn  en   sn
-           dqn den  dsn
-               dden ddsn
-           tqn ten  tsn
+        hn  qn   en   sn
+           dqn  den  dsn
+          ddqn dden ddsn
+           tqn  ten  tsn
     )];
 
     # We shall construct a list of duration fragments...
@@ -147,10 +147,11 @@ sub add_rhythm
 sub mutate
 {
     my $species = shift;
+    my %args    = @_;
 
     my $mutation = 0;
     # Find a fit...
-    while ( not is_fit( $species->{_str} ) )
+    while ( not is_fit( $species->{_str}, %args ) )
     {
         $mutation++;
 
@@ -206,30 +207,34 @@ sub alteration
 
 sub is_fit
 {
-    my $str = shift;
+    my $str  = shift;
+    my %args = @_;
 
     my $is_fit = 0;
 
-    # Count the number of zeros and ones
-    my $zeros =()= $str =~ /0/g;
-    my $ones  =()= $str =~ /1/g;
-#    warn "Z,O:$zeros,$ones\n";
-    # There should be more pitches (ones) than zeros
-    $is_fit = $zeros < (2 * $BITS / 3) && $ones > ($BITS / 2)
-        ? 1 : 0;
-    return 0 unless $is_fit;
+    if ( $args{type} eq 'pitch' )
+    {
+        # Count the number of zeros and ones
+        my $zeros =()= $str =~ /0/g;
+        my $ones  =()= $str =~ /1/g;
+    #    warn "Z,O:$zeros,$ones\n";
+        # There should be more pitches (ones) than zeros
+        $is_fit = $zeros < (2 * $BITS / 3) && $ones > ($BITS / 2)
+            ? 1 : 0;
+        return 0 unless $is_fit;
 
-    # Include consonant pitches
-#    $is_fit = substr( $str, 0, 1 ) ? 1 : 0;
-    $is_fit = substr( $str, 0, 4 )  || substr( $str, 0, 5 )
-           || substr( $str, 0, 7 )  || substr( $str, 0, 9 )  || substr( $str, 0, 11 )
-           || substr( $str, 0, 12 ) || substr( $str, 0, 16 ) || substr( $str, 0, 17 )
-           || substr( $str, 0, 19 ) || substr( $str, 0, 21 ) || substr( $str, 0, 23 )
-        ? 1 : 0;
-    return 0 unless $is_fit;
+        # Include consonant pitches
+    #    $is_fit = substr( $str, 0, 1 ) ? 1 : 0;
+        $is_fit = substr( $str, 0, 4 )  || substr( $str, 0, 5 )
+               || substr( $str, 0, 7 )  || substr( $str, 0, 9 )  || substr( $str, 0, 11 )
+               || substr( $str, 0, 12 ) || substr( $str, 0, 16 ) || substr( $str, 0, 17 )
+               || substr( $str, 0, 19 ) || substr( $str, 0, 21 ) || substr( $str, 0, 23 )
+            ? 1 : 0;
+        return 0 unless $is_fit;
 
-    # Do not allow clusters of more than two pitches
-    $is_fit = $str =~ /1{3,}/ ? 0 : 1;
+        # Do not allow clusters of more than two pitches
+        $is_fit = $str =~ /1{3,}/ ? 0 : 1;
+    }
 
     return $is_fit;
 }
