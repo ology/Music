@@ -59,7 +59,8 @@ $pitches = [ @$pitches, @{ alteration($pitches) } ];
 # What have we now?
 print '(', join( ',', @$pitches ), ')', "\n";
 
-my $rhythms = add_rhythm($pitches) if $RHYTHM;
+my $rhythms;
+$rhythms = add_rhythm($pitches) if $RHYTHM;
 
 process_midi( $pitches, $rhythms );
 
