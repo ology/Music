@@ -22,7 +22,7 @@ use MIDI::Simple;
 my $BITS       = 11;  # Maximum pitches
 my $DEGREES    = 7;   # Constraining scale
 my $ALTERATION = 2;   # Post mutation phrase alteration factor
-my $PHRASES    = 4;   # Number of times to play the "melody"
+my $PHRASES    = 2;   # Number of times to play the "melody"
 my $RHYTHM     = 0;   # Use rhythmic variations
 my $MOTIF      = 4;   # Use a subset of the possible rhythms
 my $TEMPO      = 600_000; # Miliseconds
@@ -77,13 +77,16 @@ sub process_midi
     my %name  = int2name();
     my $score = set_score();
 
-    my $i = 0;
-    for my $pitch ( @$pitches )
+    for ( 1 .. $PHRASES )
     {
-        my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
-        $score->n( $duration, $name{$pitch} );
-#warn "N:$name{$pitch}, $duration\n";
-        $i++;
+        my $i = 0;
+        for my $pitch ( @$pitches )
+        {
+            my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
+            $score->n( $duration, $name{$pitch} );
+    #warn "N:$name{$pitch}, $duration\n";
+            $i++;
+        }
     }
 
     $score->write_score( $0 . '.mid' );
