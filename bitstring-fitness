@@ -52,10 +52,14 @@ $pitches = [ @$pitches, @{ alteration($pitches) } ];
 # What have we now?
 print '(', join( ',', @$pitches ), ')', "\n";
 
-# Evolve a rhythm bitstring.
-$ae_str = ae( type => 'rhythm', bits => $BEATS );
-# Turn the bitstring into a proper duration set
-my $rhythms = bits2rhythms( $ae_str, $pitches );
+my $rhythms;
+if ($RHYTHM)
+{
+    # Evolve a rhythm bitstring.
+    $ae_str = ae( type => 'rhythm', bits => $BEATS );
+    # Turn the bitstring into a proper duration set
+    $rhythms = bits2rhythms( $ae_str, $pitches );
+}
 
 process_midi( $pitches, $rhythms );
 
