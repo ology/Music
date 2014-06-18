@@ -25,7 +25,6 @@ my $DEGREES    = 7;   # Constraining scale
 my $ALTERATION = 2;   # Post mutation phrase alteration factor
 my $PHRASES    = 2;   # Number of times to play the "melody"
 my $RHYTHM     = 0;   # Use rhythmic variations
-my $MOTIF      = 4;   # Use a subset of the possible rhythms
 my $TEMPO      = 600_000; # Miliseconds
 my $PATCH      = 108; # The MID patch to use!
 my $DIATONIC   = 0;   # use the diatonic notes, rather than chromatic
@@ -36,7 +35,6 @@ GetOptions (
     'alteration=i' => \$ALTERATION,
     'phrases=i'    => \$PHRASES,
     'rhythm'       => \$RHYTHM,
-    'motif=i'      => \$MOTIF,
     'tempo=i'      => \$TEMPO,
     'patch=i'      => \$PATCH,
     'diatonic'     => \$DIATONIC,
@@ -83,60 +81,11 @@ sub process_midi
         {
             my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
             $score->n( $duration, $name{$pitch} );
-#warn "N:$name{$pitch}, $duration\n";
             $i++;
         }
     }
 
     $score->write_score( $0 . '.mid' );
-}
-
-=head2 add_rhythm()
-
-=cut
-
-sub add_rhythm
-{
-    my $pitches = shift;
-
-    # List possible rhythmic durations
-    my $durations = [qw(
-        hn  qn   en   sn
-           dqn  den  dsn
-          ddqn dden ddsn
-           tqn  ten  tsn
-    )];
-
-    # We shall construct a list of duration fragments...
-    my @rhythms;
-
-    # Constrain rhythms by the number of motifs, if given
-    my @motifs = ();
-    if ($MOTIF)
-    {
-        # A rhythmic motif is a subset of the durations
-        @motifs = ( shuffle @$durations )[ 0 .. $MOTIF - 1 ];
-    }
-
-    # Given each pitch, decide on the duration to use
-    for my $pitch ( @$pitches )
-    {
-        my $duration;
-        # Should we use a subset of the duration list?
-        if ($MOTIF)
-        {
-            $duration = ( @motifs )[ int rand @motifs ];
-        }
-        else {
-            $duration = ( @$durations )[ int rand @$durations ];
-        }
-
-        # Add the note to the score
-        push @rhythms, $duration;
-    }
-    warn "Rhythms: (@rhythms)\n";
-
-    return \@rhythms;
 }
 
 =head2 mutate()
