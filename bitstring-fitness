@@ -271,6 +271,7 @@ sub bits2rhythms
     my @rhythms;
     for ( @$pitches )
     {
+        # TODO Be more clever.
         push @rhythms, $bitrhythms[ int rand @bitrhythms ];
     }
 
