@@ -79,7 +79,7 @@ sub process_midi
         {
             my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
             $score->n( $duration, $name{$pitch} );
-warn "N:$name{$pitch}, $duration\n";
+#warn "N:$name{$pitch}, $duration\n";
             $i++;
         }
     }
