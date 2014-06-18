@@ -18,8 +18,9 @@ use Getopt::Long;
 use List::Util qw( shuffle );
 use Music::AtonalUtil;
 use MIDI::Simple;
- 
-my $BITS       = 11;  # Maximum pitches
+
+my $BEATS      = 15;  # Possible durations
+my $BITS       = 11;  # Possible pitches
 my $DEGREES    = 7;   # Constraining scale
 my $ALTERATION = 2;   # Post mutation phrase alteration factor
 my $PHRASES    = 2;   # Number of times to play the "melody"
@@ -29,6 +30,7 @@ my $TEMPO      = 600_000; # Miliseconds
 my $PATCH      = 108; # The MID patch to use!
 my $DIATONIC   = 0;   # use the diatonic notes, rather than chromatic
 GetOptions (
+    'beats=i'      => \$BEATS,
     'bits=i'       => \$BITS,
     'degrees=i'    => \$DEGREES,
     'alteration=i' => \$ALTERATION,
@@ -40,27 +42,20 @@ GetOptions (
     'diatonic'     => \$DIATONIC,
 ) or die("Error in command line arguments\n");
 
-my $ae = Algorithm::Evolutionary::Individual::BitString->new($BITS);
-
-# Show the initial mutation
-print "Seed: $ae->{_str}\n";
-
-mutate( $ae, type => 'pitch' );
-
-# Show the final mutation
-print "Final: $ae->{_str}\n";
-
+# Evolve a pitch bitstring.
+my $ae_str = ae( type => 'pitch', bits => $BITS );
 # Turn the bitstring into a proper pitch set
-my $pitches = bits2pitches( $ae->{_str} );
+my $pitches = bits2pitches($ae_str);
 
 # Perform gymnastics with the pitches
 $pitches = [ @$pitches, @{ alteration($pitches) } ];
-
 # What have we now?
 print '(', join( ',', @$pitches ), ')', "\n";
 
-my $rhythms;
-$rhythms = add_rhythm($pitches) if $RHYTHM;
+# Evolve a rhythm bitstring.
+$ae_str = ae( type => 'rhythm', bits => $BEATS );
+# Turn the bitstring into a proper duration set
+my $rhythms = bits2rhythms( $ae_str, $pitches );
 
 process_midi( $pitches, $rhythms );
 
@@ -84,7 +79,7 @@ sub process_midi
         {
             my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
             $score->n( $duration, $name{$pitch} );
-    #warn "N:$name{$pitch}, $duration\n";
+warn "N:$name{$pitch}, $duration\n";
             $i++;
         }
     }
@@ -235,6 +230,9 @@ sub is_fit
         # Do not allow clusters of more than two pitches
         $is_fit = $str =~ /1{3,}/ ? 0 : 1;
     }
+    else {
+        $is_fit = 1; # TODO Make a proper fitness function
+    }
 
     return $is_fit;
 }
@@ -243,6 +241,7 @@ sub bits2rhythms
 {
     # Convert 1001001000101 form to [tsn dsn tqn thn ddqn] set form
     my $bitstring = shift;
+    my $pitches   = shift;
 
     # List possible rhythmic durations
     my @durations = qw(
@@ -262,15 +261,20 @@ sub bits2rhythms
         hn
     );
 
-    my $rhythms = [];
-
+    my @bitrhythms;
     my $i = 0;
     for my $bit ( split //, $bitstring ) {
-        push $rhythms, $durations[ $i % @durations ] if $bit;
+        push @bitrhythms, $durations[ $i % @durations ] if $bit;
         $i++;
     }
 
-    return $rhythms;
+    my @rhythms;
+    for ( @$pitches )
+    {
+        push @rhythms, $bitrhythms[ int rand @bitrhythms ];
+    }
+
+    return \@rhythms;
 }
 
 =head2 bits2pitches()
@@ -357,6 +361,19 @@ sub set_score {
     $score->Cookies(unit => $conf{unit});
 
     return $score;
+}
+
+=head2 ae()
+
+=cut
+
+sub ae {
+    my %args = @_;
+    my $ae = Algorithm::Evolutionary::Individual::BitString->new( $args{bits} );
+    print "Seed: $ae->{_str}\n";
+    mutate( $ae, %args );
+    print "Final: $ae->{_str}\n";
+    return $ae->{_str};
 }
 
 __END__
