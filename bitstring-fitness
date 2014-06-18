@@ -184,10 +184,10 @@ sub is_fit
         $is_fit = $str =~ /1{3,}/ ? 0 : 1;
     }
     else {
-        # Count the number of zeros and ones
-        my $ones  =()= $str =~ /1/g;
+        # Count the number of ones
+        my $ones =()= $str =~ /1/g;
         # There should be at least 1/2 durations
-        $is_fit = $ones > ($args{bits} / 2) ? 1 : 0;
+        $is_fit = $ones >= ($args{bits} / 2) ? 1 : 0;
         return 0 unless $is_fit;
 
         # Include common durations
