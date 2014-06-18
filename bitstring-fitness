@@ -167,7 +167,7 @@ sub is_fit
         my $ones  =()= $str =~ /1/g;
     #    warn "Z,O:$zeros,$ones\n";
         # There should be more pitches (ones) than zeros
-        $is_fit = $zeros < (2 * $BITS / 3) && $ones > ($BITS / 2)
+        $is_fit = $zeros < (2 * $args{bits} / 3) && $ones > ($args{bits} / 2)
             ? 1 : 0;
         return 0 unless $is_fit;
 
@@ -184,7 +184,15 @@ sub is_fit
         $is_fit = $str =~ /1{3,}/ ? 0 : 1;
     }
     else {
-        $is_fit = 1; # TODO Make a proper fitness function
+        # Count the number of zeros and ones
+        my $ones  =()= $str =~ /1/g;
+        # There should be at least 1/2 durations
+        $is_fit = $ones > ($args{bits} / 2) ? 1 : 0;
+        return 0 unless $is_fit;
+
+        # Include common durations
+        $is_fit = substr( $str, 5, 1 ) ? 1 : 0;
+        return 0 unless $is_fit;
     }
 
     return $is_fit;
