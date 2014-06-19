@@ -91,7 +91,7 @@ sub process_midi
             my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
             # Add the note!
             $score->n( $duration, $name{$pitch} );
-            # Increment our phrase counter
+            # Increment the phrase counter
             $i++;
         }
     }
@@ -101,7 +101,7 @@ sub process_midi
 
 =head2 mutate()
 
-Toggle a single bit of a bit string, until a fit is found.
+Toggle a single bit at a time, of a bitstring, until a fit is found.
 
 =cut
 
