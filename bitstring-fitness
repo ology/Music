@@ -173,10 +173,10 @@ sub is_fit
 
         # Include consonant pitches
     #    $is_fit = substr( $str, 0, 1 ) ? 1 : 0;
-        $is_fit = substr( $str, 0, 4 )  || substr( $str, 0, 5 )
-               || substr( $str, 0, 7 )  || substr( $str, 0, 9 )  || substr( $str, 0, 11 )
-               || substr( $str, 0, 12 ) || substr( $str, 0, 16 ) || substr( $str, 0, 17 )
-               || substr( $str, 0, 19 ) || substr( $str, 0, 21 ) || substr( $str, 0, 23 )
+        $is_fit = substr( $str, 4, 1 )  || substr( $str, 5, 1 )
+               || substr( $str, 7, 1 )  || substr( $str, 9, 1 )  || substr( $str, 11, 1 )
+               || substr( $str, 12, 1 ) || substr( $str, 16, 1 ) || substr( $str, 17, 1 )
+               || substr( $str, 19, 1 ) || substr( $str, 21, 1 ) || substr( $str, 23, 1 )
             ? 1 : 0;
         return 0 unless $is_fit;
 
