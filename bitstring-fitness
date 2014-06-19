@@ -189,7 +189,7 @@ sub is_fit
         # Count the number of ones
         my $ones =()= $str =~ /1/g;
         # There should be at least 1/2 durations
-        $is_fit = $ones >= ($args{bits} / 2) ? 1 : 0;
+        $is_fit = $ones > ($args{bits} / 2) ? 1 : 0;
         return 0 unless $is_fit;
 
         # Include common durations
