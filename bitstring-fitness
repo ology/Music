@@ -75,16 +75,23 @@ sub process_midi
 {
     my ( $pitches, $rhythms ) = @_;
 
+    # Convert the pitch-set to MIDI note names
     my %name  = int2name();
+    # Setup the MIDI score
     my $score = set_score();
 
+    # Repeat!
     for ( 1 .. $PHRASES )
     {
+        # Add a note to the score for each pitch
         my $i = 0;
         for my $pitch ( @$pitches )
         {
+            # Add a duration from the given rhythms or the score default
             my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
+            # Add the note!
             $score->n( $duration, $name{$pitch} );
+            # Increment our phrase counter
             $i++;
         }
     }
