@@ -38,7 +38,7 @@ GetOptions (
     'tempo=i'      => \$TEMPO,
     'patch=i'      => \$PATCH,
     'diatonic'     => \$DIATONIC,
-) or die("Error in command line arguments\n");
+) or die( "Error in command line arguments\n" );
 
 # Evolve a pitch bitstring.
 my $ae_str = ae( type => 'pitch', bits => $BITS );
@@ -182,7 +182,7 @@ sub is_fit
             ? 1 : 0;
         return 0 unless $is_fit;
 
-        # Do not allow clusters of more than two pitches
+        # Do not allow clusters of more than three pitches
         $is_fit = $str =~ /1{3,}/ ? 0 : 1;
     }
     else { # Rhythmic fitness profile
@@ -192,11 +192,13 @@ sub is_fit
         $is_fit = $ones > ($args{bits} / 2) ? 1 : 0;
         return 0 unless $is_fit;
 
-        # Include common durations
-        # sn, en, qn
+        # Include common durations (e.g. sn, en, qn)
         $is_fit = substr( $str, 1, 1 ) || substr( $str, 5, 1 ) || substr( $str, 9, 1 )
             ? 1 : 0;
         return 0 unless $is_fit;
+
+        # Do not allow clusters of more than three durations
+        $is_fit = $str =~ /1{3,}/ ? 0 : 1;
     }
 
     return $is_fit;
