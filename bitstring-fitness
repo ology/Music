@@ -65,6 +65,10 @@ process_midi( $pitches, $rhythms );
 
 =head2 process_midi()
 
+Convert a given pitch set into MIDI note names (e.g. A Ds E) and a given
+rhythm set into MIDI durations (e.g. qn, sn, den), then write the score to an
+*.mid file.
+
 =cut
 
 sub process_midi
@@ -90,6 +94,8 @@ sub process_midi
 
 =head2 mutate()
 
+Toggle a single bit of a bit string, until a fit is found.
+
 =cut
 
 sub mutate
@@ -113,6 +119,8 @@ sub mutate
 }
 
 =head2 alteration()
+
+Apply randomized L<Music::AtonalUtil> thematic variations to pitches.
 
 =cut
 
@@ -152,6 +160,9 @@ sub alteration
 }
 
 =head2 is_fit()
+
+Construct a fitness profile for a given bitstring and return 1 if it is fit or
+0 if not.
 
 =cut
 
@@ -204,6 +215,13 @@ sub is_fit
     return $is_fit;
 }
 
+=head2 bits2rhythms()
+
+For each bit, select a corresponding MIDI duration as the rhythm set.  Then
+select a random element from this list for each pitch.
+
+=cut
+
 sub bits2rhythms
 {
     # Convert 1001001000101 form to [tsn dsn tqn thn ddqn] set form
@@ -247,6 +265,8 @@ sub bits2rhythms
 
 =head2 bits2pitches()
 
+For each bit, select a pitch integer.
+
 =cut
 
 sub bits2pitches
@@ -266,6 +286,8 @@ sub bits2pitches
 }
 
 =head2 int2name()
+
+Convert pitch integers into MIDI note names.
 
 =cut
 
@@ -297,6 +319,8 @@ sub int2name
 }
 
 =head2 set_score()
+
+Set up the MIDI score.
 
 =cut
 
@@ -332,6 +356,8 @@ sub set_score {
 }
 
 =head2 ae()
+
+Mutate a bitstring!
 
 =cut
 
