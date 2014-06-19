@@ -344,12 +344,11 @@ sub ae {
 
 __END__
 # Use 11 bits to mutate into a melody
-# Use 2 for any Atonal::Util operation chosen
 # Set tempo in milliseconds
 # Use MIDI patch 1 (Acoustic Grand Piano)
 # Use rhythmic variation
 # Constrain the rhythmic variation to a subset
 # Use the diatonic (as opposed to the chromatic) notes
 
-> perl bitstring-fitness --bits=11 --alteration=2 --tempo=300_000 --patch=1 --rhythm --motif=4 --diatonic
+> perl bitstring-fitness --bits=11 --tempo=300_000 --patch=1 --rhythm --diatonic
 
