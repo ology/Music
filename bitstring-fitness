@@ -306,14 +306,13 @@ sub bits2pitches
 
 =head2 bits2velocities()
 
-For each bit, select a velocity.
+For each pitch, select a velocity.
 
 =cut
 
 sub bits2velocities
 {
-    # Convert 1001001000101000 form to [qw( V96 V95 V94 ... form
-    my $pitches   = shift;
+    my $pitches = shift;
 
     my $velocities = [];
     my $velo = 96;
