@@ -25,6 +25,7 @@ my $DEGREES    = 7;         # Constraining scale
 my $ALTERATION = 0;         # Post mutation phrase alteration factor
 my $PHRASES    = 2;         # Number of times to play the "melody"
 my $RHYTHM     = 0;         # Use rhythmic variations
+my $VELOCITY   = 0;         # Use velocity variation
 my $TEMPO      = 600_000;   # Miliseconds
 my $PATCH      = 108;       # The MID patch to use!
 my $DIATONIC   = 0;         # Use the diatonic notes, rather than chromatic
@@ -35,6 +36,7 @@ GetOptions (
     'alteration=i' => \$ALTERATION,
     'phrases=i'    => \$PHRASES,
     'rhythm'       => \$RHYTHM,
+    'velocity'     => \$VELOCITY,
     'tempo=i'      => \$TEMPO,
     'patch=i'      => \$PATCH,
     'diatonic'     => \$DIATONIC,
@@ -59,7 +61,13 @@ if ($RHYTHM)
     $rhythms = bits2rhythms( $ae_str, $pitches );
 }
 
-process_midi( $pitches, $rhythms );
+my $velocities;
+if ($VELOCITY)
+{
+    $velocities = bits2velocities($pitches);
+}
+
+process_midi( $pitches, $rhythms, $velocities );
 
 =head1 FUNCTIONS
 
@@ -73,7 +81,7 @@ rhythm set into MIDI durations (e.g. qn, sn, den), then write the score to an
 
 sub process_midi
 {
-    my ( $pitches, $rhythms ) = @_;
+    my ( $pitches, $rhythms, $velocities ) = @_;
 
     # Convert the pitch-set to MIDI note names
     my %name  = int2name();
@@ -89,8 +97,12 @@ sub process_midi
         {
             # Add a duration from the given rhythms or the score default
             my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
+
+            my $velocity = $VELOCITY ? $velocities->[$i] : { $score->Cookies }->{velocity};
+
             # Add the note!
-            $score->n( $duration, $name{$pitch} );
+            $score->n( $duration, $name{$pitch}, $velocity );
+
             # Increment the phrase counter
             $i++;
         }
@@ -292,6 +304,41 @@ sub bits2pitches
     return $pitches;
 }
 
+=head2 bits2velocities()
+
+For each bit, select a velocity.
+
+=cut
+
+sub bits2velocities
+{
+    # Convert 1001001000101000 form to ...
+    my $pitches   = shift;
+
+    my $velocities = [];
+    my $velo = 96;
+
+    for my $p (@$pitches)
+    {
+        # Velocity is randomly up-down or stationary
+        if ( int( rand 3 ) == 1 )
+        {
+            # Decrease
+            $velo--;
+        }
+        elsif ( int( rand 3 ) == 2 )
+        {
+            # Increase
+            $velo++;
+        }
+
+        push $velocities, 'V' . $velo;
+    }
+
+    return $velocities;
+}
+
+
 =head2 int2name()
 
 Convert pitch integers into MIDI note names.
@@ -335,6 +382,7 @@ sub set_score {
     my %conf = (
         tempo     => $TEMPO,
         volume    => 100,
+        velocity  => 96,
         signature => 4,
         unit      => 'en',
         channel   => 1,
@@ -349,15 +397,17 @@ sub set_score {
     $score->Volume($conf{volume});
     $score->set_tempo($conf{tempo});
 
-    # lead-in
+    # Lead-in
 #    $score->Channel($conf{kit});
 #    $score->n($conf{unit}, $conf{pad}) for 1 .. $conf{signature};
 
-    # passage
     $score->patch_change($conf{channel}, $conf{patch});
     $score->Channel($conf{channel});
     $score->Octave($conf{octave});
+
+    # For future use:
     $score->Cookies(unit => $conf{unit});
+    $score->Cookies(velocity => $conf{velocity});
 
     return $score;
 }
