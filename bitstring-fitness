@@ -6,7 +6,7 @@ bitstring-fitness - Pitch alteration and rhythmic variation
 
 =head1 DESCRIPTION
 
-TODO
+ perl bitstring-fitness --bits=11 --degrees=7 --alteration=3 --phrases=2 --rhythm --velocity --diatonic
 
 =cut
 
@@ -312,7 +312,7 @@ For each bit, select a velocity.
 
 sub bits2velocities
 {
-    # Convert 1001001000101000 form to ...
+    # Convert 1001001000101000 form to [qw( V96 V95 V94 ... form
     my $pitches   = shift;
 
     my $velocities = [];
@@ -337,7 +337,6 @@ sub bits2velocities
 
     return $velocities;
 }
-
 
 =head2 int2name()
 
