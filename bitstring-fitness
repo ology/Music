@@ -6,7 +6,7 @@ bitstring-fitness - Pitch alteration and rhythmic variation
 
 =head1 DESCRIPTION
 
- perl bitstring-fitness --bits=11 --degrees=7 --alteration=3 --phrases=2 --rhythm --velocity --diatonic
+ perl bitstring-fitness --alteration=3 --rhythm --velocity --diatonic
 
 =cut
 
