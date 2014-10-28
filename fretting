@@ -54,7 +54,7 @@ The symbols for the fingers are from Spanish (de Flamenco).
  --nfret      : Number of frets                4
  --fingers    : Finger symbols         i m a q p
  --indexes    : One-based finger order list
- --fspan      : Adjacent finger fret span  2 1 2
+ --fspan      : Adjacent finger fret span '2 1 2'
  --sfinger    : Starting finger                0
  --nfinger    : Number of fingers              4
  --open       : Show open strings              0
