@@ -44,7 +44,8 @@ print 'Best rhythm genes: ', $ga->getFittest->genes, "\n";
 print 'Best rhythm score: ', $ga->getFittest->score, "\n";
 my $rhythms = bits2rhythms( scalar $ga->getFittest->genes, $pitches );
 
-my $velocities = bits2velocities($pitches) if $VELOCITY;
+my $velocities;
+$velocities = bits2velocities($pitches) if $VELOCITY;
 
 process_midi( $pitches, $rhythms, $velocities );
 
