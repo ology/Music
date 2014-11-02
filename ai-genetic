@@ -10,7 +10,7 @@ use Music::AtonalUtil;
 my $ALTERATION = 3;
 my $DEGREES = 7;
 my $PHRASES = 1;
-my $RHYTHM = 0;
+my $RHYTHM = 1;
 my $VELOCITY = 0;
 my $TEMPO = 600_000;
 my $PATCH = 108;
@@ -26,21 +26,25 @@ my $ga = AI::Genetic->new(
     -mutation   => 0.01,
     -terminate  => \&terminate,
 );
-
 $ga->init($BITS);
 
+## PITCHES ##
 $ga->evolve( 'rouletteTwoPoint', 100 );
-print "Best genes = ", $ga->getFittest->genes, "\n";
-print "Best score = ", $ga->getFittest->score, "\n";
-
+print 'Best pitch genes: ', $ga->getFittest->genes, "\n";
+print 'Best pitch score: ', $ga->getFittest->score, "\n";
 my $pitches = bits2pitches( scalar $ga->getFittest->genes );
-
 # Perform gymnastics with the pitches
 $pitches = [ @$pitches, @{ alteration($pitches) } ];
 # What have we now?
 print '(', join( ',', @$pitches ), ')', "\n";
 
-process_midi($pitches);
+## RHYTHM ##
+$ga->evolve( 'rouletteTwoPoint', 100 );
+print 'Best rhythm genes: ', $ga->getFittest->genes, "\n";
+print 'Best rhythm score: ', $ga->getFittest->score, "\n";
+my $rhythms = bits2rhythms( scalar $ga->getFittest->genes, $pitches );
+
+process_midi( $pitches, $rhythms );
 
 
 sub fitness {
@@ -122,6 +126,32 @@ sub bits2pitches
     }
 
     return $pitches;
+}
+
+sub bits2rhythms
+{
+    # Convert 1001001000101 form to [tsn dsn tqn thn ddqn] set form
+    my $bits = shift;
+    my $pitches = shift;
+
+    # List possible rhythmic durations
+    my @durations = qw( tsn sn ten dsn ddsn en tqn den dden qn thn dqn ddqn hn );
+
+    my @bitrhythms;
+    my $i = 0;
+    for my $bit ( @$bits ) {
+        push @bitrhythms, $durations[ $i % @durations ] if $bit;
+        $i++;
+    }
+
+    my @rhythms;
+    for ( @$pitches )
+    {
+        # TODO Be more clever.
+        push @rhythms, $bitrhythms[ int rand @bitrhythms ];
+    }
+
+    return \@rhythms;
 }
 
 sub set_score {
