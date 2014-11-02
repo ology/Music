@@ -11,7 +11,7 @@ my $ALTERATION = 3;
 my $DEGREES = 7;
 my $PHRASES = 1;
 my $RHYTHM = 1;
-my $VELOCITY = 0;
+my $VELOCITY = 1;
 my $TEMPO = 600_000;
 my $PATCH = 108;
 my $DIATONIC = 1;
@@ -44,7 +44,9 @@ print 'Best rhythm genes: ', $ga->getFittest->genes, "\n";
 print 'Best rhythm score: ', $ga->getFittest->score, "\n";
 my $rhythms = bits2rhythms( scalar $ga->getFittest->genes, $pitches );
 
-process_midi( $pitches, $rhythms );
+my $velocities = bits2velocities($pitches) if $VELOCITY;
+
+process_midi( $pitches, $rhythms, $velocities );
 
 
 sub fitness {
@@ -152,6 +154,33 @@ sub bits2rhythms
     }
 
     return \@rhythms;
+}
+
+sub bits2velocities
+{
+    my $pitches = shift;
+
+    my $velocities = [];
+    my $velo = 96;
+
+    for my $p (@$pitches)
+    {
+        # Velocity is randomly up-down or stationary
+        if ( int( rand 3 ) == 1 )
+        {
+            # Decrease
+            $velo--;
+        }
+        elsif ( int( rand 3 ) == 2 )
+        {
+            # Increase
+            $velo++;
+        }
+
+        push @$velocities, 'V' . $velo;
+    }
+
+    return $velocities;
 }
 
 sub set_score {
