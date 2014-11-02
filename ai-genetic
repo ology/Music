@@ -3,8 +3,11 @@ use strict;
 use warnings;
 
 use AI::Genetic;
+use List::Util qw( shuffle );
 use MIDI::Simple;
+use Music::AtonalUtil;
 
+my $ALTERATION = 3;
 my $DEGREES = 7;
 my $PHRASES = 1;
 my $RHYTHM = 0;
@@ -13,7 +16,7 @@ my $TEMPO = 600_000;
 my $PATCH = 108;
 my $DIATONIC = 1;
 my $THRESHOLD = 0.6;
-my $BITS = 11;
+my $BITS = 23;
 
 my $ga = AI::Genetic->new(
     -fitness    => \&fitness,
@@ -26,11 +29,17 @@ my $ga = AI::Genetic->new(
 
 $ga->init($BITS);
 
-$ga->evolve('rouletteTwoPoint', 100);
+$ga->evolve( 'rouletteTwoPoint', 100 );
 print "Best genes = ", $ga->getFittest->genes, "\n";
 print "Best score = ", $ga->getFittest->score, "\n";
 
 my $pitches = bits2pitches( scalar $ga->getFittest->genes );
+
+# Perform gymnastics with the pitches
+$pitches = [ @$pitches, @{ alteration($pitches) } ];
+# What have we now?
+print '(', join( ',', @$pitches ), ')', "\n";
+
 process_midi($pitches);
 
 
@@ -179,4 +188,39 @@ sub process_midi
     }
 
     $score->write_score( $0 . '.mid' );
+}
+
+sub alteration
+{
+    my $pitches = shift;
+
+    # Apply pitch set rules:
+    @$pitches = shuffle( @$pitches );
+
+    my $atu = Music::AtonalUtil->new;
+    my $altered = $atu->transpose( 0, $pitches );
+
+    # Post mutation, phrase alterations
+    my $funct = {
+        invert     => sub { my $x = shift; $atu->invert( $x, $altered ) },
+        retrograde => sub { $atu->retrograde( @$pitches ) },
+        rotate     => sub { my $x = shift; $atu->rotate( $x, $altered ) },
+        transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
+    };
+
+    # Choose a random function and execute it with the given alteration factor
+    my $x = $ALTERATION
+        ? $ALTERATION
+        : int( rand 3 ) + 2;
+    my $alteration = ( keys %$funct )[ rand keys %$funct ];
+    print "Alteration: $alteration by $x\n";
+    $altered = $funct->{$alteration}->($x);
+
+    # Constrain to the DEGREES
+    for my $alt ( @$altered )
+    {
+        $alt %= $DEGREES;
+    }
+
+    return $altered;
 }
