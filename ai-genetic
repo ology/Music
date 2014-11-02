@@ -1,0 +1,182 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use AI::Genetic;
+use MIDI::Simple;
+
+my $DEGREES = 7;
+my $PHRASES = 1;
+my $RHYTHM = 0;
+my $VELOCITY = 0;
+my $TEMPO = 600_000;
+my $PATCH = 108;
+my $DIATONIC = 1;
+my $THRESHOLD = 0.6;
+my $BITS = 11;
+
+my $ga = AI::Genetic->new(
+    -fitness    => \&fitness,
+    -type       => 'bitvector',
+    -population => 500,
+    -crossover  => 0.9,
+    -mutation   => 0.01,
+    -terminate  => \&terminate,
+);
+
+$ga->init($BITS);
+
+$ga->evolve('rouletteTwoPoint', 100);
+print "Best genes = ", $ga->getFittest->genes, "\n";
+print "Best score = ", $ga->getFittest->score, "\n";
+
+my $pitches = bits2pitches( scalar $ga->getFittest->genes );
+process_midi($pitches);
+
+
+sub fitness {
+    my $genes = shift;
+    my $chrom = join '', @$genes;
+
+    my $fitness = 0;
+
+    # Include consonant pitches
+#    $fitness = substr( $chrom, 0, 1 ) ? 1 : 0;
+    $fitness++ if substr( $chrom, 4, 1 );
+    $fitness++ if substr( $chrom, 5, 1 );
+    $fitness++ if substr( $chrom, 7, 1 );
+    $fitness++ if substr( $chrom, 9, 1 );
+    $fitness++ if substr( $chrom, 11, 1 );
+#   $fitness++ if substr( $chrom, 12, 1 );
+#   $fitness++ if substr( $chrom, 16, 1 );
+#   $fitness++ if substr( $chrom, 17, 1 );
+#   $fitness++ if substr( $chrom, 19, 1 );
+#   $fitness++ if substr( $chrom, 21, 1 );
+#   $fitness++ if substr( $chrom, 23, 1 );
+
+    # Count the number of zeros and ones
+    my $zeros =()= $chrom =~ /0/g;
+    my $ones  =()= $chrom =~ /1/g;
+#warn "0,1:$zeros,$ones => $chrom\n";
+    # There should be more ones than zeros
+    $fitness++ if $zeros < (2 * $BITS / 3) && $ones > ($BITS / 2);
+
+    return $fitness / 6;
+}
+
+sub terminate {
+    my $ga = shift;
+
+    # terminate if reached some threshold.
+    return 1 if $ga->getFittest->score > $THRESHOLD;
+    return 0;
+}
+
+sub int2name
+{
+    # Convert integer pitch notation into MIDI note names
+    my %name;
+    my @notes;
+
+    # Use the diatonic scale notes if requested
+    if ($DIATONIC)
+    {
+        @notes = qw( C D E F G A B );
+    }
+    else {
+        @notes = qw( C Cs D Ds E F G Gs A As B );
+    }
+    my $int = -@notes;
+    for my $octave ( 3, 4, 5, 6 )
+    {
+        for my $note (@notes)
+        {
+            $name{$int} = $note . $octave;
+#warn "N:$int $name{$int} = $note . $octave\n";
+            $int++;
+        }
+    }
+    return %name;
+}
+
+sub bits2pitches
+{
+    # Convert 1001001000101000 form to [0,3,6,10,12] set form
+    my $bits = shift;
+
+    my $pitches = [];
+
+    my $i = 0;
+    for my $bit ( @$bits ) {
+        push @$pitches, $i % $DEGREES if $bit;
+        $i++;
+    }
+
+    return $pitches;
+}
+
+sub set_score {
+    my %conf = (
+        tempo     => $TEMPO,
+        volume    => 100,
+        velocity  => 96,
+        signature => 4,
+        unit      => 'en',
+        channel   => 1,
+        patch     => $PATCH,
+        octave    => 4,
+        kit       => 9,
+        pad       => 38,
+    );
+
+    my $score = MIDI::Simple->new_score();
+
+    $score->Volume($conf{volume});
+    $score->set_tempo($conf{tempo});
+
+    # Lead-in
+#    $score->Channel($conf{kit});
+#    $score->n($conf{unit}, $conf{pad}) for 1 .. $conf{signature};
+
+    $score->patch_change($conf{channel}, $conf{patch});
+    $score->Channel($conf{channel});
+    $score->Octave($conf{octave});
+
+    # For future use:
+    $score->Cookies(unit => $conf{unit});
+    $score->Cookies(velocity => $conf{velocity});
+
+    return $score;
+}
+
+sub process_midi
+{
+    my ( $pitches, $rhythms, $velocities ) = @_;
+
+    # Convert the pitch-set to MIDI note names
+    my %name  = int2name();
+    # Setup the MIDI score
+    my $score = set_score();
+
+    # Repeat!
+    for ( 1 .. $PHRASES )
+    {
+        # Add a note to the score for each pitch
+        my $i = 0;
+        for my $pitch ( @$pitches )
+        {
+            # Add a duration from the given rhythms or the score default
+            my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
+
+            my $velocity = $VELOCITY ? $velocities->[$i] : { $score->Cookies }->{velocity};
+
+            # Add the note!
+            $score->n( $duration, $name{$pitch}, $velocity );
+
+            # Increment the phrase counter
+            $i++;
+        }
+    }
+
+    $score->write_score( $0 . '.mid' );
+}
