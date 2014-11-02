@@ -58,24 +58,17 @@ sub fitness {
 
     # Include consonant pitches
 #    $fitness = substr( $chrom, 0, 1 ) ? 1 : 0;
-    $fitness++ if $BITS >= 4  && substr( $chrom, 4, 1 );
-    $fitness++ if $BITS >= 5  && substr( $chrom, 5, 1 );
-    $fitness++ if $BITS >= 7  && substr( $chrom, 7, 1 );
-    $fitness++ if $BITS >= 9  && substr( $chrom, 9, 1 );
-    $fitness++ if $BITS >= 11 && substr( $chrom, 11, 1 );
-    $fitness++ if $BITS >= 12 && substr( $chrom, 12, 1 );
-    $fitness++ if $BITS >= 16 && substr( $chrom, 16, 1 );
-    $fitness++ if $BITS >= 17 && substr( $chrom, 17, 1 );
-    $fitness++ if $BITS >= 19 && substr( $chrom, 19, 1 );
-    $fitness++ if $BITS >= 21 && substr( $chrom, 21, 1 );
-    $fitness++ if $BITS >= 23 && substr( $chrom, 23, 1 );
+    for my $n (qw( 4 5 7 9 11 12 16 17 19 21 23 ))
+    {
+        $fitness++ if $BITS >= $n && substr( $chrom, $n, 1 );
+    }
 
     # Count the number of zeros and ones
     my $zeros =()= $chrom =~ /0/g;
     my $ones  =()= $chrom =~ /1/g;
 #warn "0,1:$zeros,$ones => $chrom\n";
     # There should be more ones than zeros
-    $fitness++ if $zeros < (2 * $BITS / 3) && $ones > ($BITS / 2);
+    $fitness++ if $zeros < $ones;
 
     return $fitness / 12;
 }
