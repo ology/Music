@@ -248,22 +248,7 @@ sub bits2rhythms
     my $pitches   = shift;
 
     # List possible rhythmic durations
-    my @durations = qw(
-        tsn
-        sn
-        ten
-        dsn
-        ddsn
-        en
-        tqn
-        den
-        dden
-        qn
-        thn
-        dqn
-        ddqn
-        hn
-    );
+    my @durations = qw( tsn sn ten dsn ddsn en tqn den dden qn thn dqn ddqn hn );
 
     my @bitrhythms;
     my $i = 0;
@@ -297,7 +282,7 @@ sub bits2pitches
 
     my $i = 0;
     for my $bit ( split //, $bitstring ) {
-        push $pitches, $i % $DEGREES if $bit;
+        push @$pitches, $i % $DEGREES if $bit;
         $i++;
     }
 
@@ -331,7 +316,7 @@ sub bits2velocities
             $velo++;
         }
 
-        push $velocities, 'V' . $velo;
+        push @$velocities, 'V' . $velo;
     }
 
     return $velocities;
