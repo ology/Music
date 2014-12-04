@@ -18,6 +18,9 @@ my $RHYTHM = 1;
 my $TEMPO = 600_000;
 my $THRESHOLD = 0.6;
 my $VELOCITY = 1;
+my $POPULATION = 500;
+my $CROSSOVER = 0.9;
+my $MUTATION = 0.01;
 GetOptions(
     'alteration=i' => \$ALTERATION,
     'bits=i'       => \$BITS,
@@ -29,14 +32,17 @@ GetOptions(
     'tempo=i'      => \$TEMPO,
     'threshold=i'  => \$THRESHOLD,
     'velocity'     => \$VELOCITY,
+    'population=i' => \$POPULATION,
+    'crossover=i'  => \$CROSSOVER,
+    'mutation=i'   => \$MUTATION,
 ) or die( "Error in command line arguments\n" );
 
 my $ga = AI::Genetic->new(
     -fitness    => \&fitness,
     -type       => 'bitvector',
-    -population => 500,
-    -crossover  => 0.9,
-    -mutation   => 0.01,
+    -population => $POPULATION,
+    -crossover  => $CROSSOVER,
+    -mutation   => $MUTATION,
     -terminate  => \&terminate,
 );
 $ga->init($BITS);
