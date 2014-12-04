@@ -6,17 +6,30 @@ use AI::Genetic;
 use List::Util qw( shuffle );
 use MIDI::Simple;
 use Music::AtonalUtil;
+use Getopt::Long;
 
 my $ALTERATION = 3;
+my $BITS = 23;
 my $DEGREES = 7;
+my $DIATONIC = 1;
+my $PATCH = 108;
 my $PHRASES = 1;
 my $RHYTHM = 1;
-my $VELOCITY = 1;
 my $TEMPO = 600_000;
-my $PATCH = 108;
-my $DIATONIC = 1;
 my $THRESHOLD = 0.6;
-my $BITS = 23;
+my $VELOCITY = 1;
+GetOptions(
+    'alteration=i' => \$ALTERATION,
+    'bits=i'       => \$BITS,
+    'degrees=i'    => \$DEGREES,
+    'diatonic'     => \$DIATONIC,
+    'patch=i'      => \$PATCH,
+    'phrases=i'    => \$PHRASES,
+    'rhythm'       => \$RHYTHM,
+    'tempo=i'      => \$TEMPO,
+    'threshold=i'  => \$THRESHOLD,
+    'velocity'     => \$VELOCITY,
+) or die( "Error in command line arguments\n" );
 
 my $ga = AI::Genetic->new(
     -fitness    => \&fitness,
