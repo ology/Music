@@ -57,14 +57,20 @@ $pitches = [ @$pitches, @{ alteration($pitches) } ];
 # What have we now?
 print '(', join( ',', @$pitches ), ')', "\n";
 
-## RHYTHM ##
-$ga->evolve( 'rouletteTwoPoint', 100 );
-print 'Best rhythm genes: ', $ga->getFittest->genes, "\n";
-print 'Best rhythm score: ', $ga->getFittest->score, "\n";
-my $rhythms = bits2rhythms( scalar $ga->getFittest->genes, $pitches );
+my $rhythms;
+if ($RHYTHM)
+{
+    $ga->evolve( 'rouletteTwoPoint', 100 );
+    print 'Best rhythm genes: ', $ga->getFittest->genes, "\n";
+    print 'Best rhythm score: ', $ga->getFittest->score, "\n";
+    $rhythms = bits2rhythms( scalar $ga->getFittest->genes, $pitches );
+}
 
 my $velocities;
-$velocities = bits2velocities($pitches) if $VELOCITY;
+if ($VELOCITY)
+{
+    $velocities = bits2velocities($pitches);
+}
 
 process_midi( $pitches, $rhythms, $velocities );
 
