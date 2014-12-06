@@ -3,6 +3,8 @@ use Modern::Perl '2012';
 
 use AI::Genetic::Pro;
 use Music::PitchNum;
+use MIDI::Simple;
+use Music::AtonalUtil;
 
 #my @notes = 60 .. 71; # chromatic
 my @notes = qw( 60 62 64 65 67 69 71 ); # diatonic in C
@@ -50,6 +52,76 @@ $ga->init( \@notes );
 
 $ga->evolve(1000);
 
-use Data::Dumper::Concise;
-warn Dumper [ map { Music::PitchNum->pitchname($_) } $ga->as_array($ga->getFittest) ];
-warn $ga->as_value($ga->getFittest);
+# Perform gymnastics with the pitches
+my $pitches = $ga->as_array($ga->getFittest);
+my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
+$pitches = [ map { Music::PitchNum->pitchname($_) } @$pitches, @$alt ];
+use Data::Dumper::Concise;warn Dumper$pitches;
+
+process_midi($pitches);
+
+sub set_score {
+    my %conf = (
+        tempo     => 600_000,
+        volume    => 100,
+        velocity  => 96,
+        signature => 4,
+        unit      => 'en',
+        channel   => 1,
+        patch     => 108,
+        octave    => 4,
+        kit       => 9,
+        pad       => 38,
+    );
+
+    my $score = MIDI::Simple->new_score();
+
+    $score->Volume($conf{volume});
+    $score->set_tempo($conf{tempo});
+
+    # Lead-in
+#    $score->Channel($conf{kit});
+#    $score->n($conf{unit}, $conf{pad}) for 1 .. $conf{signature};
+
+    $score->patch_change($conf{channel}, $conf{patch});
+    $score->Channel($conf{channel});
+    # For future use:
+    $score->Cookies(unit => $conf{unit});
+    $score->Cookies(velocity => $conf{velocity});
+
+    return $score;
+}
+
+sub process_midi
+{
+    my ( $pitches ) = @_;
+    my $score = set_score();
+    for my $p ( @$pitches )
+    {
+        $score->n( { $score->Cookies }->{unit}, $p, { $score->Cookies }->{velocity} );
+    }
+    $score->write_score( $0 . '.mid' );
+}
+
+sub alteration {
+    my $pitches = shift;
+
+    my $atu = Music::AtonalUtil->new;
+    my $altered = $atu->transpose( 0, $pitches );
+
+    # Post mutation, phrase alterations
+    my $funct = {
+        invert     => sub { my $x = shift; $atu->invert( $x, $altered ) },
+        retrograde => sub { $atu->retrograde( @$pitches ) },
+        rotate     => sub { my $x = shift; $atu->rotate( $x, $altered ) },
+        transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
+    };
+
+    # Choose a random function and execute it with the given alteration factor
+    my $x = int( rand 3 ) + 2;
+    my $alteration = ( keys %$funct )[ rand keys %$funct ];
+    print "Alteration: $alteration by $x\n";
+    $altered = $funct->{$alteration}->($x);
+
+    return $altered;
+}
