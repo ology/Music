@@ -1,0 +1,55 @@
+#!/usr/bin/env perl
+use Modern::Perl '2012';
+
+use AI::Genetic::Pro;
+use Music::PitchNum;
+
+#my @notes = 60 .. 71; # chromatic
+my @notes = qw( 60 62 64 65 67 69 71 ); # diatonic in C
+
+sub calc {
+    my ($ar) = @_;
+    my $calc = 0;
+    # Adjacent elements must be within ...
+    for my $n ( 0 .. @$ar - 2 ) {
+        my $v = abs( $ar->[$n] - $ar->[$n + 1] );
+        $calc++ if $v <= 4;
+    }
+#warn "\t = $calc\n";
+    return $calc;
+}
+
+sub fitness {
+    my ($ga, $chromosome) = @_;
+    return calc(scalar $ga->as_array($chromosome));
+}
+
+sub terminate {
+    my ($ga) = @_;
+    return 1 if $ga->as_value($ga->getFittest) >= 1;
+    return;
+}
+
+my $ga = AI::Genetic::Pro->new(        
+        -fitness         => \&fitness,        # fitness function
+        -terminate       => \&terminate,      # terminate function
+        -type            => 'combination',    # type of chromosomes
+        -population      => 100,              # population
+        -crossover       => 0.9,              # probab. of crossover
+        -mutation        => 0.05,             # probab. of mutation
+        -parents         => 2,                # number  of parents
+        -selection       => [ 'Roulette' ],   # selection strategy
+        -strategy        => [ 'PMX' ],        # crossover strategy
+        -cache           => 1,                # cache results
+        -history         => 1,                # remember best results
+        -preserve        => 1,                # remember the bests
+        -variable_length => 0,                # turn variable length OFF
+);
+
+$ga->init( \@notes );
+
+$ga->evolve(1000);
+
+use Data::Dumper::Concise;
+warn Dumper [ map { Music::PitchNum->pitchname($_) } $ga->as_array($ga->getFittest) ];
+warn $ga->as_value($ga->getFittest);
