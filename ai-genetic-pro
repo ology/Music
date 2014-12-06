@@ -6,31 +6,8 @@ use Music::PitchNum;
 use MIDI::Simple;
 use Music::AtonalUtil;
 
-#my @notes = 60 .. 71; # chromatic
-my @notes = qw( 60 62 64 65 67 69 71 ); # diatonic in C
-
-sub calc {
-    my ($ar) = @_;
-    my $calc = 0;
-    # Adjacent elements must be within ...
-    for my $n ( 0 .. @$ar - 2 ) {
-        my $v = abs( $ar->[$n] - $ar->[$n + 1] );
-        $calc++ if $v <= 4;
-    }
-#warn "\t = $calc\n";
-    return $calc;
-}
-
-sub fitness {
-    my ($ga, $chromosome) = @_;
-    return calc(scalar $ga->as_array($chromosome));
-}
-
-sub terminate {
-    my ($ga) = @_;
-    return 1 if $ga->as_value($ga->getFittest) >= 1;
-    return;
-}
+my @notes = 60 .. 71; # chromatic
+#my @notes = qw( 60 62 64 65 67 69 71 ); # diatonic in C
 
 my $ga = AI::Genetic::Pro->new(        
         -fitness         => \&fitness,        # fitness function
@@ -56,9 +33,36 @@ $ga->evolve(1000);
 my $pitches = $ga->as_array($ga->getFittest);
 my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
 $pitches = [ map { Music::PitchNum->pitchname($_) } @$pitches, @$alt ];
+for ( @$pitches, @$alt )
+{
+    $_ =~ s/^(\w)\#\d$/$1s/
+}
 use Data::Dumper::Concise;warn Dumper$pitches;
 
 process_midi($pitches);
+
+sub calc {
+    my ($ar) = @_;
+    my $calc = 0;
+    # Adjacent elements must be within ...
+    for my $n ( 0 .. @$ar - 2 ) {
+        my $v = abs( $ar->[$n] - $ar->[$n + 1] );
+        $calc++ if $v >= 2 && $v <= 4;
+    }
+#warn "\t = $calc\n";
+    return $calc;
+}
+
+sub fitness {
+    my ($ga, $chromosome) = @_;
+    return calc(scalar $ga->as_array($chromosome));
+}
+
+sub terminate {
+    my ($ga) = @_;
+    return 1 if $ga->as_value($ga->getFittest) >= 1;
+    return;
+}
 
 sub set_score {
     my %conf = (
