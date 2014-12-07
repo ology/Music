@@ -35,9 +35,11 @@ my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
 $pitches = [ map { Music::PitchNum->pitchname($_) } @$pitches, @$alt ];
 for ( @$pitches, @$alt )
 {
-    $_ =~ s/^(\w)\#\d$/$1s/
+    $_ =~ s/^(\w)\d$/$1/;
+    $_ =~ s/^(\w)\#\d$/$1s/;
 }
 use Data::Dumper::Concise;warn Dumper$pitches;
+warn $ga->as_value($ga->getFittest), "\n";
 
 process_midi($pitches);
 
@@ -47,7 +49,7 @@ sub calc {
     # Adjacent elements must be within ...
     for my $n ( 0 .. @$ar - 2 ) {
         my $v = abs( $ar->[$n] - $ar->[$n + 1] );
-        $calc++ if $v >= 2 && $v <= 4;
+        $calc++ if $v >= 2 && $v <= 5;
     }
 #warn "\t = $calc\n";
     return $calc;
