@@ -113,21 +113,20 @@ sub alteration {
     my $pitches = shift;
 
     my $atu = Music::AtonalUtil->new;
-    my $altered = $atu->transpose( 0, $pitches );
 
     # Post mutation, phrase alterations
     my $funct = {
-        invert     => sub { my $x = shift; $atu->invert( $x, $altered ) },
+        invert     => sub { my $x = shift; $atu->invert( $x, $pitches ) },
         retrograde => sub { $atu->retrograde( @$pitches ) },
-        rotate     => sub { my $x = shift; $atu->rotate( $x, $altered ) },
-        transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
+        rotate     => sub { my $x = shift; $atu->rotate( $x, $pitches ) },
+        transpose  => sub { my $x = shift; $atu->transpose( $x, $pitches ) },
     };
 
     # Choose a random function and execute it with the given alteration factor
     my $x = int( rand 3 ) + 2;
     my $alteration = ( keys %$funct )[ rand keys %$funct ];
     print "Alteration: $alteration by $x\n";
-    $altered = $funct->{$alteration}->($x);
+    my $altered = $funct->{$alteration}->($x);
 
     return $altered;
 }
