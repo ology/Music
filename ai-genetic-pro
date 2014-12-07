@@ -6,8 +6,8 @@ use Music::PitchNum;
 use MIDI::Simple;
 use Music::AtonalUtil;
 
-my @notes = 60 .. 71; # chromatic
-#my @notes = qw( 60 62 64 65 67 69 71 ); # diatonic in C
+#my @notes = 60 .. 71; # chromatic
+my @notes = qw( 60 62 64 65 67 69 71 ); # diatonic in C
 
 my $ga = AI::Genetic::Pro->new(        
         -fitness         => \&fitness,        # fitness function
