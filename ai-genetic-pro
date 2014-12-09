@@ -35,8 +35,9 @@ my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
 $pitches = [ map { Music::PitchNum->pitchname($_) } @$pitches, @$alt ];
 for ( @$pitches, @$alt )
 {
-#    $_ =~ s/^(\w)\d$/$1/;
-    $_ =~ s/^(\w)\#(\d)$/$1s$2/;
+    $_ =~ s/^(\w)\d$/$1/;
+#    $_ =~ s/^(\w)\#(\d)$/$1s$2/;
+    $_ =~ s/^(\w)\#\d$/$1s/;
 }
 use Data::Dumper::Concise;warn Dumper$pitches;
 warn $ga->as_value($ga->getFittest), "\n";
@@ -71,27 +72,18 @@ sub set_score {
         tempo     => 600_000,
         volume    => 100,
         velocity  => 96,
-        signature => 4,
-        unit      => 'en',
+        unit      => 'qn',
         channel   => 1,
         patch     => 108,
         octave    => 4,
-        kit       => 9,
-        pad       => 38,
     );
 
     my $score = MIDI::Simple->new_score();
 
-    $score->Volume($conf{volume});
     $score->set_tempo($conf{tempo});
-
-    # Lead-in
-#    $score->Channel($conf{kit});
-#    $score->n($conf{unit}, $conf{pad}) for 1 .. $conf{signature};
-
+    $score->noop( 'V' . $conf{volume}, 'c' . $conf{channel}, 'o' . $conf{octave} );
     $score->patch_change($conf{channel}, $conf{patch});
-    $score->Channel($conf{channel});
-    # For future use:
+
     $score->Cookies(unit => $conf{unit});
     $score->Cookies(velocity => $conf{velocity});
 
