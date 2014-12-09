@@ -35,9 +35,9 @@ my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
 $pitches = [ map { Music::PitchNum->pitchname($_) } @$pitches, @$alt ];
 for ( @$pitches, @$alt )
 {
-    $_ =~ s/^(\w)\d$/$1/;
-#    $_ =~ s/^(\w)\#(\d)$/$1s$2/;
-    $_ =~ s/^(\w)\#\d$/$1s/;
+#    $_ =~ s/^(\w)\d$/$1/;
+    $_ =~ s/^(\w)\#(\d)$/$1s$2/;
+#    $_ =~ s/^(\w)\#\d$/$1s/;
 }
 use Data::Dumper::Concise;warn Dumper$pitches;
 warn $ga->as_value($ga->getFittest), "\n";
