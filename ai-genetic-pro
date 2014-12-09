@@ -73,7 +73,7 @@ sub set_score {
         velocity  => 96,
         unit      => 'qn',
         channel   => 1,
-        patch     => 108,
+        patch     => 1,
     );
 
     my $score = MIDI::Simple->new_score();
