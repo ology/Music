@@ -35,9 +35,8 @@ my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
 $pitches = [ map { Music::PitchNum->pitchname($_) } @$pitches, @$alt ];
 for ( @$pitches, @$alt )
 {
-#    $_ =~ s/^(\w)\d$/$1/;
+    $_ =~ s/^([A-Z])(\d)$/$1$2/;
     $_ =~ s/^(\w)\#(\d)$/$1s$2/;
-#    $_ =~ s/^(\w)\#\d$/$1s/;
 }
 use Data::Dumper::Concise;warn Dumper$pitches;
 warn $ga->as_value($ga->getFittest), "\n";
@@ -75,13 +74,12 @@ sub set_score {
         unit      => 'qn',
         channel   => 1,
         patch     => 108,
-        octave    => 4,
     );
 
     my $score = MIDI::Simple->new_score();
 
     $score->set_tempo($conf{tempo});
-    $score->noop( 'V' . $conf{volume}, 'c' . $conf{channel}, 'o' . $conf{octave} );
+    $score->noop('V' . $conf{volume}, 'c' . $conf{channel});
     $score->patch_change($conf{channel}, $conf{patch});
 
     $score->Cookies(unit => $conf{unit});
