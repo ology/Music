@@ -1,0 +1,87 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use Imager;
+
+use Readonly;
+Readonly my $WHITE => 'white';
+Readonly my $BLUE  => 'blue';
+Readonly my $BLACK => 'black';
+Readonly my $SPACE => 20;
+
+my ( $string_num, $fret_num, $chord ) = @ARGV
+    ? @ARGV : ( 6, 4, 'x12340' );
+
+my $i = Imager->new(
+    xsize => $SPACE + $string_num * $SPACE - $string_num,
+    ysize => $SPACE + $fret_num * $SPACE - $fret_num,
+);
+
+$i->box( filled => 1, color => $WHITE );
+
+for my $string (0 .. $string_num - 1) {
+    $i->line(
+        color => $BLUE,
+        x1    => $SPACE + $string * $SPACE,
+        y1    => $SPACE,
+        x2    => $SPACE + $string * $SPACE,
+        y2    => $SPACE + ($fret_num - 1) * $SPACE,
+        aa    => 1,
+        endp  => 1
+    );
+}
+for my $fret (0 .. $fret_num - 1) {
+    $i->line(
+        color => $BLUE,
+        x1    => $SPACE,
+        y1    => $SPACE + $fret * $SPACE,
+        x2    => $SPACE + ($string_num - 1) * $SPACE,
+        y2    => $SPACE + $fret * $SPACE,
+        aa    => 1,
+        endp  => 1
+    );
+}
+
+my $font = Imager::Font->new(
+    file => '/opt/X11/share/fonts/TTF/VeraMono.ttf'
+);
+
+my $string = $string_num;
+for my $note ( split //, reverse $chord ) {
+    if ( $note =~ /[xX.-]/ ) {
+        print "an X at $string\n";
+        $i->string(
+            font  => $font,
+            text  => 'X',
+            color => $BLACK,
+            x     => $SPACE + ( $string - 1 ) * $SPACE - $SPACE / 4,
+            y     => $SPACE - 2,
+            size  => $SPACE - 2,
+            aa    => 1,
+        );
+    }
+    elsif ( $note =~ /[oO0]/ ) {
+        print "an O or an open circle at $string\n";
+        $i->circle(
+            color  => $BLACK,
+            r      => $SPACE / 4,
+            x      => $SPACE + ( $string - 1 ) * $SPACE,
+            y      => $SPACE / 2,
+            filled => 0,
+        );
+    }
+    else {
+        print "a circle at $note,$string\n";
+        $i->circle(
+            color => $BLACK,
+            r     => $SPACE / 4,
+            x     => $SPACE + ( $string - 1 ) * $SPACE,
+            y     => $SPACE + $SPACE / 2 + ( $note - 1 ) * $SPACE,
+        );
+    }
+    $string--;
+}
+
+my $type = 'png';
+$i->write(type => $type, file => "$0.$type") or die("Can't save $0.$type ", $i->errstr);
