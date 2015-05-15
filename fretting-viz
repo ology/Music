@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Collect the possible fingering patterns
+my @positions = qx/ perl fretting --sfr 1 /;
+my @chords;
+for my $pos ( @positions ) {
+    my @i = $pos =~ /[a-z](\d)/g;
+    push @chords, join( '', @i );
+}
+
+# Render diagrams for each fingering pattern
+for my $chord ( @chords ) {
+    system( qw/ perl fretboard 4 5 /, $chord, $chord );
+}
