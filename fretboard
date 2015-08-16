@@ -10,8 +10,9 @@ Readonly my $BLUE  => 'blue';
 Readonly my $BLACK => 'black';
 Readonly my $SPACE => 20;
 
-my ( $string_num, $fret_num, $chord ) = @ARGV
-    ? @ARGV : ( 6, 4, 'x12340' );
+my ( $string_num, $fret_num, $chord, $outfile ) = @ARGV == 4
+    ? @ARGV : ( 6, 4, 'x12340', $0 );
+my $type = 'png';
 
 my $i = Imager->new(
     xsize => $SPACE + $string_num * $SPACE - $string_num,
@@ -83,5 +84,5 @@ for my $note ( split //, reverse $chord ) {
     $string--;
 }
 
-my $type = 'png';
-$i->write(type => $type, file => "$0.$type") or die("Can't save $0.$type ", $i->errstr);
+$i->write( type => $type, file => "$outfile.$type" )
+    or die "Can't save $outfile.$type ", $i->errstr;
