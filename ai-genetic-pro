@@ -1,5 +1,4 @@
 #!/usr/bin/env perl
-use Modern::Perl '2012';
 
 use AI::Genetic::Pro;
 use Music::PitchNum;
