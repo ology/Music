@@ -31,11 +31,11 @@ GetOptions(
     'phrases=i'    => \$PHRASES,
     'rhythm'       => \$RHYTHM,
     'tempo=i'      => \$TEMPO,
-    'threshold=i'  => \$THRESHOLD,
+    'threshold=s'  => \$THRESHOLD,
     'velocity'     => \$VELOCITY,
     'population=i' => \$POPULATION,
-    'crossover=i'  => \$CROSSOVER,
-    'mutation=i'   => \$MUTATION,
+    'crossover=s'  => \$CROSSOVER,
+    'mutation=s'   => \$MUTATION,
     'outfile=s'    => \$OUTFILE,
 ) or die( "Error in command line arguments\n" );
 
