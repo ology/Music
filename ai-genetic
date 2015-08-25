@@ -8,6 +8,7 @@ use MIDI::Simple;
 use Music::AtonalUtil;
 use Getopt::Long;
 
+my $HTML       = 0;
 my $ALTERATION = 3;
 my $BITS       = 23;
 my $DEGREES    = 7;
@@ -23,6 +24,7 @@ my $CROSSOVER  = 0.9;
 my $MUTATION   = 0.01;
 my $OUTFILE    = "$0.mid";
 GetOptions(
+    'html'         => \$HTML,
     'alteration=i' => \$ALTERATION,
     'bits=i'       => \$BITS,
     'degrees=i'    => \$DEGREES,
@@ -51,20 +53,20 @@ $ga->init($BITS);
 
 ## PITCHES ##
 $ga->evolve( 'rouletteTwoPoint', 100 );
-print 'Best pitch genes: ', $ga->getFittest->genes, "\n";
-print 'Best pitch score: ', $ga->getFittest->score, "\n";
+print 'Best pitch genes: ', $ga->getFittest->genes, "\n", ( $HTML ? '<br/>' : '' );
+print 'Best pitch score: ', $ga->getFittest->score, "\n", ( $HTML ? '<br/>' : '' );
 my $pitches = bits2pitches( scalar $ga->getFittest->genes );
 # Perform gymnastics with the pitches
 $pitches = [ @$pitches, @{ alteration($pitches) } ];
 # What have we now?
-print '(', join( ',', @$pitches ), ')', "\n";
+print '(', join( ',', @$pitches ), ')', "\n", ( $HTML ? '<br/>' : '' );
 
 my $rhythms;
 if ($RHYTHM)
 {
     $ga->evolve( 'rouletteTwoPoint', 100 );
-    print 'Best rhythm genes: ', $ga->getFittest->genes, "\n";
-    print 'Best rhythm score: ', $ga->getFittest->score, "\n";
+    print 'Best rhythm genes: ', $ga->getFittest->genes, "\n", ( $HTML ? '<br/>' : '' );
+    print 'Best rhythm score: ', $ga->getFittest->score, "\n", ( $HTML ? '<br/>' : '' );
     $rhythms = bits2rhythms( scalar $ga->getFittest->genes, $pitches );
 }
 
@@ -286,7 +288,7 @@ sub alteration {
         ? $ALTERATION
         : int( rand 3 ) + 2;
     my $alteration = ( keys %$funct )[ rand keys %$funct ];
-    print "Alteration: $alteration by $x\n";
+    print "Alteration: $alteration by $x\n", ( $HTML ? '<br/>' : '' );
     $altered = $funct->{$alteration}->($x);
 
     # Constrain to the DEGREES
