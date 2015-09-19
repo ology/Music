@@ -33,7 +33,7 @@ sub setup_midi {
     $score->Volume($volume);
     # Lead-in
     $score->Channel(9);
-    $score->n( 'qn', 38 ) for 1 .. $sig;
+    $score->n( 'qn', 42 ) for 1 .. $sig;
     # Passage
     $score->Channel($instrument);
     $score->patch_change( $instrument, $patch );
