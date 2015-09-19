@@ -4,43 +4,51 @@ use warnings;
 
 use MIDI::Simple;
 use Math::Combinatorics;
-use List::MoreUtils qw( pairwise );
+use List::Util qw( shuffle );
+use List::UtilsBy qw( zip_by );
 
 my $phrases = 1;
 
-my @treb_notes = qw( C5 D5 E5 A5 );
-my @bass_notes = qw( C3 F3 G3 C3 );
+my @treb_notes = qw( C5 D5 E5 );
+my @bass_notes = qw( C3 F3 G3 );
+my @durations  = qw( en den qn );
 
-my @treb_combos = permute(@treb_notes);
-my @bass_combos = permute(@bass_notes);
+my @treb_combos = shuffle permute(@treb_notes);
+my @bass_combos = shuffle permute(@bass_notes);
+my @dura_combos = shuffle permute(@durations);
 
-my $score = setup_midi( scalar(@treb_notes), 'qn', 5, 9, 38, 1, 0, 120 );
+my $score = setup_midi( scalar(@treb_notes), 5, 9, 38, 1, 0, 120 );
+
+my $i = 0;
 
 for ( 1 .. $phrases ) {
     for my $t ( 0 .. @treb_combos - 1 ) {
-        my @pairs = pairwise { [ $a, $b ] } @{ $treb_combos[$t] }, @{ $bass_combos[$t] };
+        my @pairs = zip_by { [ $_[0], $_[1], $_[2] ] }
+            $dura_combos[$t], $treb_combos[$t], $bass_combos[$t];
         for my $pair ( @pairs ) {
+            $i++;
             $score->n(
-                { $score->Cookies }->{unit},
                 $pair->[0],
-                $pair->[1]
+                $pair->[1],
+                $pair->[2]
             );
         }
     }
 }
 
+print $i, "\n";
+
 $score->write_score($0.'.mid');
 
 sub setup_midi {
-    my ( $sig, $unit, $octave, $kit, $pad, $instrument, $patch, $volume ) = @_;
+    my ( $sig, $octave, $kit, $pad, $instrument, $patch, $volume ) = @_;
     my $score = MIDI::Simple->new_score();
     $score->Volume($volume);
     # Lead-in
     $score->Channel($kit);
-    $score->n( $unit, $pad ) for 1 .. $sig;
+    $score->n( 'qn', $pad ) for 1 .. $sig;
     # Passage
     $score->Channel($instrument);
     $score->patch_change($instrument, $patch );
-    $score->Cookies( unit => $unit );
     return $score;
 }
