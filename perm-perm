@@ -7,10 +7,10 @@ use Math::Combinatorics;
 use List::Util qw( shuffle );
 use List::UtilsBy qw( zip_by );
 
-my @treb_notes = qw( C5 D5 E5 );
-my @treb_dura  = qw( en en den );
-my @bass_notes = qw( C3 F3 G3 );
-my @bass_dura  = qw( en qn qn );
+my @treb_notes = qw( C5 D5 E5 F5 );
+my @treb_dura  = qw( en qn qn en );
+my @bass_notes = qw( C3 F3 G3 C3 );
+my @bass_dura  = qw( qn qn qn qn );
 
 my @treb_combos = shuffle permute(@treb_notes);
 my @treb_dura_combos = shuffle permute(@treb_dura);
