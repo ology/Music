@@ -8,20 +8,22 @@ use List::Util qw( shuffle );
 use List::UtilsBy qw( zip_by );
 
 my @treb_notes = qw( C5 D5 E5 );
+my @treb_dura  = qw( en qn ten );
 my @bass_notes = qw( C3 F3 G3 );
-my @durations  = qw( en qn dqn );
+my @bass_dura  = qw( en qn dqn );
 
 my @treb_combos = shuffle permute(@treb_notes);
+my @treb_dura_combos = shuffle permute(@treb_dura);
 my @bass_combos = shuffle permute(@bass_notes);
-my @dura_combos = shuffle permute(@durations);
+my @bass_dura_combos = shuffle permute(@bass_dura);
 
 my $score = setup_midi( scalar(@treb_notes), 1, 0, 120 );
 
 for my $i ( 0 .. @treb_combos - 1 ) {
-    my @tuples = zip_by { [ $_[0], $_[1], $_[2] ] }
-        $dura_combos[$i], $treb_combos[$i], $bass_combos[$i];
-    for my $tuple ( @tuples ) {
-        $score->n(@$tuple);
+    my @tuple = zip_by { [ $_[0], $_[1], $_[2] ] }
+        $treb_dura_combos[$i], $treb_combos[$i], $bass_combos[$i];
+    for my $params ( @tuple ) {
+        $score->n( @$params );
     }
 }
 
