@@ -11,7 +11,7 @@ my $phrases = 1;
 
 my @treb_notes = qw( C5 D5 E5 );
 my @bass_notes = qw( C3 F3 G3 );
-my @durations  = qw( en den qn );
+my @durations  = qw( en dqn qn );
 
 my @treb_combos = shuffle permute(@treb_notes);
 my @bass_combos = shuffle permute(@bass_notes);
