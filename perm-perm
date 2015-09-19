@@ -2,144 +2,45 @@
 use strict;
 use warnings;
 
-use Math::Combinatorics;
 use MIDI::Simple;
-use Music::Scala;
+use Math::Combinatorics;
+use List::MoreUtils qw( pairwise );
 
-# Choose wisely, Grasshopper
-my $bass_notes   = @ARGV ? [split /,/, shift @ARGV] : [qw( 9 2 4 7 21 )]; # A3 D3 E3 G3 A5
-my $treble_notes = @ARGV ? [split /,/, shift @ARGV] : [qw( 0 2 4 5 9 )];  # C5 D5 E5 F5 A4
-my $critical_t   = 0; # Zero means "show everything"
-my $critical_b   = 0; # "
+my $phrases = 1;
 
-# Perl-MIDI named pitches and integer notation
-my %name = int2name();
+my @treb_notes = qw( C5 D5 E5 A5 );
+my @bass_notes = qw( C3 F3 G3 C3 );
 
-# Use the standard 12-tone scale
-my @scale = qw( 1 16/15 9/8 6/5 5/4 4/3 25/18 3/2 8/5 5/3 16/9 15/8 2 );
-my $scala = Music::Scala->new;
-$scala->set_concertfreq(264);
-$scala->set_notes(@scale);
+my @treb_combos = permute(@treb_notes);
+my @bass_combos = permute(@bass_notes);
 
-my $score = set_score();
+my $score = setup_midi( scalar(@treb_notes), 'qn', 5, 9, 38, 1, 0, 120 );
 
-# Set the number of treble permutaions seen
-my $j = 0;
-
-# Instantiate a combinatorics object for the bass notes
-my $treble_mc = Math::Combinatorics->new( data => $treble_notes );
-
-# Iterate over the treble notes
-TREBLE: while ( my @treble = $treble_mc->next_permutation ) {
-    # Are we critical?
-    last TREBLE if $critical_t && $j >= $critical_t;
-    # Iterate the number of permutations
-    $j++;
-
-    # Find the physical frequencies of the notes
-    my @treble_freq = $scala->interval2freq(@treble);
-    # Set item precision
-    @treble_freq = mapf(@treble_freq);
-
-    # Set the number of bass permutaions seen
-    my $i = 0;
-
-    # Instantiate a combinatorics object for the bass notes
-    my $bass_mc = Math::Combinatorics->new( data => $bass_notes );
-
-    # Iterate over the bass notes
-    BASS: while ( my @bass = $bass_mc->next_permutation ) {
-        # Are we critical?
-        last BASS if $critical_b && $i >= $critical_b;
-        # Iterate the number of permutations
-        $i++;
-
-        # Find the physical frequencies of the notes
-        my @bass_freq = $scala->interval2freq(@bass);
-
-        # Set item precision
-        @bass_freq = mapf(@bass_freq);
-
-        # List the pitch names
-        my @bass_names;
-        push @bass_names, $name{ $bass[$_] } for 0 .. @bass - 1;
-
-        # Find the interval set comprising each bass and treble note
-        my @intervals = ();
-        for my $n ( 0 .. @bass - 1 ) {
-            # An interval is the absolute difference of two pitches, modulo the number of semitones
-            push @intervals, abs( $bass[$n] - $treble[$n] ) % 12;
-        }
-
-        # List the pitch names
-        my @treble_names;
-        push @treble_names, $name{ $treble[$_] } for 0 .. @treble - 1;
-
-        # Add the interval to the score
-        $score->n( { $score->Cookies }->{unit}, $name{ $treble[$_] }, $name{ $bass[$_] } )
-            for 0 .. @treble - 1;
-
-        # Output the permutations, frequencies and intervals
-        printf "%d,%d\n\t%11s -> %s -> %11s\n\t%11s -> %s -> %11s\n      =\t%s\n",
-            $j, $i,
-            joinf(@treble), "@treble_freq", joinf(@treble_names),
-            joinf(@bass),   "@bass_freq",   joinf(@bass_names),
-            joinf(@intervals);
-    }
-}
-
-$score->write_score( $0 . '.mid' );
-
-sub int2name
-{
-    my %name;
-    my @notes = qw( C Cs D Ds E F G Gs A As B );
-    my $int = -12;
-    for my $octave ( 3, 4, 5, 6 )
-    {
-        for my $note (@notes)
-        {
-            $name{ $int++ } = $note . $octave;
+for ( 1 .. $phrases ) {
+    for my $t ( 0 .. @treb_combos - 1 ) {
+        my @pairs = pairwise { [ $a, $b ] } @{ $treb_combos[$t] }, @{ $bass_combos[$t] };
+        for my $pair ( @pairs ) {
+            $score->n(
+                { $score->Cookies }->{unit},
+                $pair->[0],
+                $pair->[1]
+            );
         }
     }
-    return %name;
 }
 
-sub joinf { # Turn a list of integers into 2 digit precision
-    return join ' ', map { sprintf '%3s', $_ } @_;
-}
+$score->write_score($0.'.mid');
 
-sub mapf { # Turn a list of floats into 2 digit precision
-    return map { sprintf '%.2f', $_ } @_;
-}
-
-sub set_score {
-    my %conf = (
-        tempo     => 375_000,
-        volume    => 100,
-        signature => 4,
-        unit      => 'en',
-        channel   => 1,
-        patch     => 108,
-        octave    => 4,
-        kit       => 9,
-        pad       => 38,
-    );
-
+sub setup_midi {
+    my ( $sig, $unit, $octave, $kit, $pad, $instrument, $patch, $volume ) = @_;
     my $score = MIDI::Simple->new_score();
-
-    $score->Volume($conf{volume});
-    $score->set_tempo($conf{tempo});
-
-    # lead-in
-    $score->Channel($conf{kit});
-    $score->n($conf{unit}, $conf{pad}) for 1 .. $conf{signature};
-
-    # passage
-    $score->patch_change($conf{channel}, $conf{patch});
-    $score->Channel($conf{channel});
-    $score->Octave($conf{octave});
-    $score->Cookies(unit => $conf{unit});
-
+    $score->Volume($volume);
+    # Lead-in
+    $score->Channel($kit);
+    $score->n( $unit, $pad ) for 1 .. $sig;
+    # Passage
+    $score->Channel($instrument);
+    $score->patch_change($instrument, $patch );
+    $score->Cookies( unit => $unit );
     return $score;
 }
