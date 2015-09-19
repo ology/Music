@@ -9,7 +9,7 @@ use List::UtilsBy qw( zip_by );
 
 my $max = defined $ARGV[0] ? shift : 16;  # Maximum notes to play
 
-my @treb_notes = qw( C5 D5 E5 F5 ); # Sharp = Cs, Ds, etc
+my @treb_notes = qw( C5 D5 Ds5 As4 ); # Sharp = Cs, Ds, etc
 my @treb_dura  = qw( en en qn qn ); # Also: sn, dsn, ddsn, tsn, etc
 my @bass_notes = qw( C3 F3 G3 C3 );
 my @bass_dura  = qw( qn qn qn qn );
@@ -26,7 +26,7 @@ my $n = 0;
 for my $i ( 0 .. @treb_combos - 1 ) {
     for my $j ( 0 .. @{ $treb_combos[$i] } - 1 ) {
         $n++;
-        last if $n && $n > $max;
+        last if $max && $n > $max;
 
         if ( $treb_dura_combos[$i][$j] eq $bass_dura_combos[$i][$j] ) {
             $score->n(
@@ -41,7 +41,7 @@ for my $i ( 0 .. @treb_combos - 1 ) {
         }
     }
 
-    last if $n && $n > $max;
+    last if $max && $n > $max;
 }
 
 $score->write_score( $0 . '.mid' );
