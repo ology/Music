@@ -15,7 +15,7 @@ my @treb_combos = shuffle permute(@treb_notes);
 my @bass_combos = shuffle permute(@bass_notes);
 my @dura_combos = shuffle permute(@durations);
 
-my $score = setup_midi( scalar(@treb_notes), 5, 1, 0, 120 );
+my $score = setup_midi( scalar(@treb_notes), 1, 0, 120 );
 
 for my $t ( 0 .. @treb_combos - 1 ) {
     my @pairs = zip_by { [ $_[0], $_[1], $_[2] ] }
@@ -32,7 +32,7 @@ for my $t ( 0 .. @treb_combos - 1 ) {
 $score->write_score($0.'.mid');
 
 sub setup_midi {
-    my ( $sig, $octave, $instrument, $patch, $volume ) = @_;
+    my ( $sig, $instrument, $patch, $volume ) = @_;
     my $score = MIDI::Simple->new_score();
     $score->Volume($volume);
     # Lead-in
@@ -40,6 +40,6 @@ sub setup_midi {
     $score->n( 'qn', 38 ) for 1 .. $sig;
     # Passage
     $score->Channel($instrument);
-    $score->patch_change($instrument, $patch );
+    $score->patch_change( $instrument, $patch );
     return $score;
 }
