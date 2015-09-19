@@ -26,7 +26,7 @@ my $n = 0;
 for my $i ( 0 .. @treb_combos - 1 ) {
     for my $j ( 0 .. @{ $treb_combos[$i] } - 1 ) {
         $n++;
-        last if $n > $max;
+        last if $n && $n > $max;
 
         if ( $treb_dura_combos[$i][$j] eq $bass_dura_combos[$i][$j] ) {
             $score->n(
@@ -41,7 +41,7 @@ for my $i ( 0 .. @treb_combos - 1 ) {
         }
     }
 
-    last if $n > $max;
+    last if $n && $n > $max;
 }
 
 $score->write_score( $0 . '.mid' );
