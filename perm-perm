@@ -9,7 +9,7 @@ use List::UtilsBy qw( zip_by );
 
 my @treb_notes = qw( C5 D5 E5 );
 my @bass_notes = qw( C3 F3 G3 );
-my @durations  = qw( en dqn qn );
+my @durations  = qw( en qn dqn );
 
 my @treb_combos = shuffle permute(@treb_notes);
 my @bass_combos = shuffle permute(@bass_notes);
@@ -17,15 +17,11 @@ my @dura_combos = shuffle permute(@durations);
 
 my $score = setup_midi( scalar(@treb_notes), 1, 0, 120 );
 
-for my $t ( 0 .. @treb_combos - 1 ) {
-    my @pairs = zip_by { [ $_[0], $_[1], $_[2] ] }
-        $dura_combos[$t], $treb_combos[$t], $bass_combos[$t];
-    for my $pair ( @pairs ) {
-        $score->n(
-            $pair->[0],
-            $pair->[1],
-            $pair->[2]
-        );
+for my $i ( 0 .. @treb_combos - 1 ) {
+    my @tuples = zip_by { [ $_[0], $_[1], $_[2] ] }
+        $dura_combos[$i], $treb_combos[$i], $bass_combos[$i];
+    for my $tuple ( @tuples ) {
+        $score->n(@$tuple);
     }
 }
 
