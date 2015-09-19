@@ -20,11 +20,24 @@ my @bass_dura_combos = shuffle permute(@bass_dura);
 my $score = setup_midi( scalar(@treb_notes), 1, 0, 120 );
 
 for my $i ( 0 .. @treb_combos - 1 ) {
-    my @tuple = zip_by { [ $_[0], $_[1], $_[2] ] }
-        $treb_dura_combos[$i], $treb_combos[$i], $bass_combos[$i];
-    for my $params ( @tuple ) {
-        $score->n( @$params );
+    for my $j ( 0 .. @{ $treb_combos[$i] } - 1 ) {
+        if ( $treb_dura_combos[$i][$j] eq $bass_dura_combos[$i][$j] ) {
+            $score->n(
+                $treb_dura_combos[$i][$j],
+                $treb_combos[$i][$j],
+                $bass_combos[$i][$j]
+            );
+        }
+        else {
+            $score->n( $treb_dura_combos[$i][$j], $treb_combos[$i][$j] );
+            $score->n( $bass_dura_combos[$i][$j], $bass_combos[$i][$j] );
+        }
     }
+#    my @tuple = zip_by { [ $_[0], $_[1], $_[2] ] }
+#        $treb_dura_combos[$i], $treb_combos[$i], $bass_combos[$i];
+#    for my $params ( @tuple ) {
+#        $score->n( @$params );
+#    }
 }
 
 $score->write_score($0.'.mid');
