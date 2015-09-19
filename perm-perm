@@ -21,7 +21,6 @@ for my $t ( 0 .. @treb_combos - 1 ) {
     my @pairs = zip_by { [ $_[0], $_[1], $_[2] ] }
         $dura_combos[$t], $treb_combos[$t], $bass_combos[$t];
     for my $pair ( @pairs ) {
-        $i++;
         $score->n(
             $pair->[0],
             $pair->[1],
