@@ -7,14 +7,14 @@ use Math::Combinatorics;
 use List::Util qw( shuffle );
 use List::UtilsBy qw( zip_by );
 
-my @treb_notes = qw( C5 D5 E5 F5 );
-my @treb_dura  = qw( en qn qn en );
+my @treb_notes = qw( C5 D5 E5 F5 ); # Sharp = Cs, Ds, etc
+my @treb_dura  = qw( en qn qn en ); # Also: sn, dsn, ddsn, tsn, etc
 my @bass_notes = qw( C3 F3 G3 C3 );
 my @bass_dura  = qw( qn qn qn qn );
 
-my @treb_combos = shuffle permute(@treb_notes);
+my @treb_combos      = shuffle permute(@treb_notes);
 my @treb_dura_combos = shuffle permute(@treb_dura);
-my @bass_combos = shuffle permute(@bass_notes);
+my @bass_combos      = shuffle permute(@bass_notes);
 my @bass_dura_combos = shuffle permute(@bass_dura);
 
 my $score = setup_midi( scalar(@treb_notes), 1, 0, 120 );
