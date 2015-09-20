@@ -60,14 +60,14 @@ for my $i ( 0 .. @treb_combos - 1 ) {
 $score->write_score( $0 . '.mid' );
 
 sub setup_midi {
-    my ( $sig, $instrument, $patch, $volume ) = @_;
+    my ( $sig, $channel, $patch, $volume ) = @_;
     my $score = MIDI::Simple->new_score();
     $score->Volume($volume);
     # Lead-in
     $score->Channel(9);
     $score->n( 'qn', 42 ) for 1 .. $sig;
     # Passage
-    $score->Channel($instrument);
-    $score->patch_change( $instrument, $patch );
+    $score->Channel($channel);
+    $score->patch_change( $channel, $patch );
     return $score;
 }
