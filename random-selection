@@ -1,0 +1,81 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use MIDI::Simple;
+use Music::AtonalUtil;
+
+my $transform = shift || '';
+my $parameter = shift || 0;
+
+my $phrase = 3;
+
+my @notes = qw( C D E F G A B );
+
+my @population = 0 .. @notes - 1;
+
+my @sample;
+
+for my $i ( 0 .. $phrase ) {
+    push @sample, $population[ int rand @population ];
+}
+
+@sample = ( @sample, @sample );
+
+if ( $transform ) {
+    my $atu = Music::AtonalUtil->new;
+    my $p;
+    if ( $transform eq 'invert' ) {
+        $p = $atu->invert( $parameter, \@sample );
+    }
+    elsif ( $transform eq 'retrograde' ) {
+        $p = $atu->retrograde(@sample);
+    }
+    elsif ( $transform eq 'rotate' ) {
+        $p = $atu->rotate( $parameter, \@sample );
+    }
+    elsif ( $transform eq 'transpose' ) {
+        $p = $atu->transpose( $parameter, \@sample );
+    }
+    @sample = ( @sample, @$p );
+}
+
+my %name = int2name();
+
+my @pitches = map { $name{$_} } @sample;
+
+my $score = setup_midi( 1, 0, 120 );
+
+for my $pitch ( @pitches ) {
+    $score->n( 'qn', $pitch );
+}
+
+$score->write_score( $0 . '.mid' );
+
+sub setup_midi {
+    my ( $channel, $patch, $volume ) = @_;
+    my $score = MIDI::Simple->new_score();
+    $score->Volume($volume);
+    # Lead-in
+    $score->Channel(9);
+    $score->n( 'qn', 42 ) for 1 .. 4;
+    # Passage
+    $score->Channel($channel);
+    $score->patch_change( $channel, $patch );
+    return $score;
+}
+
+sub int2name {
+    # Convert integer pitch notation into MIDI note names
+    my %name;
+    my @notes = qw( C D E F G A B );
+    my $int = -@notes;
+    for my $octave ( 3, 4, 5, 6 ) {
+        for my $note (@notes) {
+            $name{$int} = $note . $octave;
+warn "N:$int $name{$int} = $note . $octave\n";
+            $int++;
+        }
+    }
+    return %name;
+}
