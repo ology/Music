@@ -22,7 +22,23 @@ for my $i ( 0 .. $phrase ) {
 
 @sample = ( @sample, @sample );
 
-if ( $transform ) {
+@sample = transform( $transform, @sample ) if $transform;
+
+my %name = int2name();
+
+my @pitches = map { $name{$_} } @sample;
+
+my $score = setup_midi( 1, 0, 120 );
+
+for my $pitch ( @pitches ) {
+    $score->n( 'qn', $pitch );
+}
+
+$score->write_score( $0 . '.mid' );
+
+sub transform {
+    my ( $transform, @phrase ) = @_;
+
     my $atu = Music::AtonalUtil->new;
     my $p;
     if ( $transform eq 'invert' ) {
@@ -37,20 +53,9 @@ if ( $transform ) {
     elsif ( $transform eq 'transpose' ) {
         $p = $atu->transpose( $parameter, \@sample );
     }
-    @sample = ( @sample, @$p );
+
+    return @phrase, @$p;
 }
-
-my %name = int2name();
-
-my @pitches = map { $name{$_} } @sample;
-
-my $score = setup_midi( 1, 0, 120 );
-
-for my $pitch ( @pitches ) {
-    $score->n( 'qn', $pitch );
-}
-
-$score->write_score( $0 . '.mid' );
 
 sub setup_midi {
     my ( $channel, $patch, $volume ) = @_;
