@@ -5,8 +5,8 @@ use warnings;
 use MIDI::Simple;
 use Music::AtonalUtil;
 
-my $transform = shift || '';
-my $parameter = shift || 0;
+my $transform = shift || ''; # Can be: invert, retrograde, rotate, transpose
+my $parameter = shift || 0;  # For: invert, rotate, transpose
 
 my $phrase = 3;
 
