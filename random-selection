@@ -94,7 +94,7 @@ sub int2name {
     for my $octave ( 3, 4, 5, 6 ) {
         for my $note (@notes) {
             $name{$int} = $note . $octave;
-warn "N:$int $name{$int} = $note . $octave\n";
+#warn "N:$int $name{$int} = $note . $octave\n";
             $int++;
         }
     }
