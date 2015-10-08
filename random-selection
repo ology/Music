@@ -4,35 +4,51 @@ use warnings;
 
 use MIDI::Simple;
 use Music::AtonalUtil;
+use Text::Levenshtein qw(distance);
 
 my $transform = shift || ''; # Can be: invert, retrograde, rotate, transpose
 my $parameter = shift || 0;  # For: invert, rotate, transpose
+my $distance  = shift || 0;  # Edits needed to transform subsequent phrases
 
-my $phrase = 3;
+my $phrase = 4;
 
 my @notes = qw( C D E F G A B );
 
 my @population = 0 .. @notes - 1;
 
 my @sample;
-
-for my $i ( 0 .. $phrase ) {
-    push @sample, $population[ int rand @population ];
+for my $i ( 1 .. $phrase ) {
+    my $selection = $population[ int rand @population ];
+    push @sample, $selection;
 }
 
-@sample = ( @sample, @sample );
+my $previous = join '', @sample;
+
+my @constrain;
+for ( 1 ) {
+    for my $i ( 1 .. $phrase ) {
+        my $selection = $population[ int rand @population ];
+        push @constrain, $selection;
+    }
+    my $current = join '', @constrain;
+    my $d = distance( $previous, $current );
+    if ( $d == $distance ) {
+        @sample = ( @sample, @constrain );
+    }
+    else {
+        @constrain = ();
+        redo;
+    }
+}
 
 @sample = transform( $transform, @sample ) if $transform;
 
 my %name = int2name();
-
 my @pitches = map { $name{$_} } @sample;
 
 my $score = setup_midi( 1, 0, 120 );
 
-for my $pitch ( @pitches ) {
-    $score->n( 'qn', $pitch );
-}
+$score->n( 'qn', $_ ) for @pitches;
 
 $score->write_score( $0 . '.mid' );
 
