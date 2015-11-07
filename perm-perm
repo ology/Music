@@ -36,6 +36,16 @@ for my $i ( 0 .. @treb_combos - 1 ) {
         $n++;
         last if $max && $n > $max;
 
+        printf "%d. Treble: %s, %s, %s\n",
+            $n,
+            $treb_velo_combos[$i][$j],
+            $treb_dura_combos[$i][$j],
+            $treb_combos[$i][$j];
+        printf "\tBass: %s, %s, %s\n",
+            $bass_velo_combos[$i][$j],
+            $bass_dura_combos[$i][$j],
+            $bass_combos[$i][$j];
+
         if ( $treb_dura_combos[$i][$j] eq $bass_dura_combos[$i][$j] ) {
             $score->n(
                 $treb_velo_combos[$i][$j],
