@@ -23,7 +23,12 @@ my @bass_combos      = shuffle permute(@bass_notes);
 my @bass_dura_combos = shuffle permute(@bass_dura);
 my @bass_velo_combos = shuffle permute(@bass_velo);
 
-my $score = setup_midi( scalar(@treb_notes), 1, 0, 120 );
+my $score = setup_midi(
+    lead_in => scalar(@treb_notes),
+    channel => 1,
+    patch   => 0,
+    volume  => 120,
+);
 
 my $n = 0;
 
@@ -60,14 +65,14 @@ for my $i ( 0 .. @treb_combos - 1 ) {
 $score->write_score( $0 . '.mid' );
 
 sub setup_midi {
-    my ( $sig, $channel, $patch, $volume ) = @_;
+    my %args = @_;
     my $score = MIDI::Simple->new_score();
-    $score->Volume($volume);
+    $score->Volume($args{volume});
     # Lead-in
     $score->Channel(9);
-    $score->n( 'qn', 42 ) for 1 .. $sig;
+    $score->n( 'qn', 42 ) for 1 .. $args{lead_in};
     # Passage
-    $score->Channel($channel);
-    $score->patch_change( $channel, $patch );
+    $score->Channel($args{channel});
+    $score->patch_change( $args{channel}, $args{patch} );
     return $score;
 }
