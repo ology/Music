@@ -16,11 +16,13 @@ my @notes = qw( C D E F G A B );
 
 my @population = 0 .. @notes - 1;
 
+# Choose a random populatioin sample
 my @sample;
 for my $i ( 1 .. $phrase ) {
     push @sample, $population[ int rand @population ];
 }
 
+# Set the "previous" phrase
 my $previous = join '', @sample;
 
 my @constrain;
@@ -32,6 +34,7 @@ for ( 1 ) {
     my $current = join '', @constrain;
     my $d = distance( $previous, $current );
     if ( $d == $distance ) {
+        # Update with the added constrained sample
         @sample = ( @sample, @constrain );
     }
     else {
@@ -40,8 +43,10 @@ for ( 1 ) {
     }
 }
 
+# Transform the sample, if requested
 @sample = transform( $transform, @sample ) if $transform;
 
+# Process the MIDI...
 my %name = int2name(@notes);
 my @pitches = map { $name{$_} } @sample;
 print "@pitches\n";
