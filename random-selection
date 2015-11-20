@@ -18,8 +18,7 @@ my @population = 0 .. @notes - 1;
 
 my @sample;
 for my $i ( 1 .. $phrase ) {
-    my $selection = $population[ int rand @population ];
-    push @sample, $selection;
+    push @sample, $population[ int rand @population ];
 }
 
 my $previous = join '', @sample;
@@ -43,8 +42,9 @@ for ( 1 ) {
 
 @sample = transform( $transform, @sample ) if $transform;
 
-my %name = int2name();
+my %name = int2name(@notes);
 my @pitches = map { $name{$_} } @sample;
+print "@pitches\n";
 
 my $score = setup_midi( 1, 0, 120 );
 
@@ -87,9 +87,9 @@ sub setup_midi {
 }
 
 sub int2name {
+    my @notes = @_;
     # Convert integer pitch notation into MIDI note names
     my %name;
-    my @notes = qw( C D E F G A B );
     my $int = -@notes;
     for my $octave ( 3, 4, 5, 6 ) {
         for my $note (@notes) {
