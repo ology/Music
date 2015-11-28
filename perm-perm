@@ -10,17 +10,17 @@ my $max = defined $ARGV[0] ? shift : 16;  # Maximum notes to play
 
 my @treb_notes = qw( C5 D5 Ds5 As4 ); # Cs, Ds, etc
 my @treb_dura  = qw( en qn qn qn );   # sn, dsn, ddsn, tsn, etc
-my @treb_velo  = qw( mezzo mezzo mezzo mf ); # ppp pp p mp mezzo mf f ff fff
+my @treb_volu  = qw( mezzo mezzo mezzo mf ); # ppp pp p mp mezzo mf f ff fff
 my @bass_notes = qw( C3 F3 G3 0 );
 my @bass_dura  = qw( qn qn qn qn );
-my @bass_velo  = qw( f f f f );
+my @bass_volu  = qw( f f f f );
 
 my @treb_combos      = shuffle permute(@treb_notes);
 my @treb_dura_combos = shuffle permute(@treb_dura);
-my @treb_velo_combos = shuffle permute(@treb_velo);
+my @treb_volu_combos = shuffle permute(@treb_volu);
 my @bass_combos      = shuffle permute(@bass_notes);
 my @bass_dura_combos = shuffle permute(@bass_dura);
-my @bass_velo_combos = shuffle permute(@bass_velo);
+my @bass_volu_combos = shuffle permute(@bass_volu);
 
 my $score = setup_midi(
     lead_in => scalar(@treb_notes),
@@ -38,18 +38,18 @@ for my $i ( 0 .. @treb_combos - 1 ) {
 
         printf "%d. Treble: %s, %s, %s\n",
             $n,
-            $treb_velo_combos[$i][$j],
+            $treb_volu_combos[$i][$j],
             $treb_dura_combos[$i][$j],
             $treb_combos[$i][$j];
         printf "\tBass: %s, %s, %s\n",
-            $bass_velo_combos[$i][$j],
+            $bass_volu_combos[$i][$j],
             $bass_dura_combos[$i][$j],
             $bass_combos[$i][$j];
 
         if ( $treb_dura_combos[$i][$j] eq $bass_dura_combos[$i][$j] ) {
             if ( $treb_combos[$i][$j] && $bass_combos[$i][$j] ) {
                 $score->n(
-                    $treb_velo_combos[$i][$j],
+                    $treb_volu_combos[$i][$j],
                     $treb_dura_combos[$i][$j],
                     $treb_combos[$i][$j],
                     $bass_combos[$i][$j]
@@ -57,14 +57,14 @@ for my $i ( 0 .. @treb_combos - 1 ) {
             }
             elsif ( $treb_combos[$i][$j] ) {
                 $score->n(
-                    $treb_velo_combos[$i][$j],
+                    $treb_volu_combos[$i][$j],
                     $treb_dura_combos[$i][$j],
                     $treb_combos[$i][$j]
                 );
             }
             elsif ( $bass_combos[$i][$j] ) {
                 $score->n(
-                    $bass_velo_combos[$i][$j],
+                    $bass_volu_combos[$i][$j],
                     $bass_dura_combos[$i][$j],
                     $bass_combos[$i][$j]
                 );
@@ -76,7 +76,7 @@ for my $i ( 0 .. @treb_combos - 1 ) {
         else {
             if ( $treb_combos[$i][$j] ) {
                 $score->n(
-                    $treb_velo_combos[$i][$j],
+                    $treb_volu_combos[$i][$j],
                     $treb_dura_combos[$i][$j],
                     $treb_combos[$i][$j]
                 );
@@ -86,7 +86,7 @@ for my $i ( 0 .. @treb_combos - 1 ) {
             }
             if ( $bass_combos[$i][$j] ) {
                 $score->n(
-                    $bass_velo_combos[$i][$j],
+                    $bass_volu_combos[$i][$j],
                     $bass_dura_combos[$i][$j],
                     $bass_combos[$i][$j]
                 );
