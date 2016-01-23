@@ -8,10 +8,10 @@ use List::Util qw( shuffle );
 
 my $max = defined $ARGV[0] ? shift : 16;  # Maximum notes to play
 
-my @treb_notes = qw( C5 D5 Ds5 As4 ); # Cs, Ds, etc
+my @treb_notes = qw( Ds5 G5 As5 C6 ); # Cs, Ds, etc
 my @treb_dura  = qw( en qn qn qn );   # sn, dsn, ddsn, tsn, etc
 my @treb_volu  = qw( mezzo mezzo mezzo mf ); # ppp pp p mp mezzo mf f ff fff
-my @bass_notes = qw( C4 F4 G4 C4 );
+my @bass_notes = qw( C3 C3 F3 F3 );
 my @bass_dura  = qw( qn qn qn qn );
 my @bass_volu  = qw( mf mf mf mf );
 
@@ -24,9 +24,6 @@ my @bass_volu_combos = shuffle permute(@bass_volu);
 
 my $score = setup_midi(
     lead_in => scalar(@treb_notes),
-    channel => 1,
-    patch   => 0,
-    volume  => 120,
 );
 
 my $n = 0;
@@ -103,12 +100,19 @@ for my $i ( 0 .. @treb_combos - 1 ) {
 $score->write_score( $0 . '.mid' );
 
 sub setup_midi {
-    my %args = @_;
+    my %args = (
+        lead_in => 4,
+        channel => 1,
+        patch   => 0,
+        volume  => 120,
+        patch   => 42,
+        @_,
+    );
     my $score = MIDI::Simple->new_score();
     $score->Volume($args{volume});
     # Lead-in
     $score->Channel(9);
-    $score->n( 'qn', 42 ) for 1 .. $args{lead_in};
+    $score->n( 'qn', $args{patch} ) for 1 .. $args{lead_in};
     # Passage
     $score->Channel($args{channel});
     $score->patch_change( $args{channel}, $args{patch} );
