@@ -29,7 +29,6 @@ my $vertex = $initial;
 
 for my $i ( 1 .. $n ) {
     my $note = $gw->get_vertex_attribute( $vertex, 'pitch' );
-warn __LINE__,". MARK: ",$note,"\n";
     $score->n( 'qn', $note );
     $vertex = next_vertex( $gw, $vertex, 'note' )
         if $i < $n;
@@ -67,7 +66,6 @@ sub next_vertex {
             weight => $gw->get_cost( [ $vertex, $successor ], $attr ),
         };
    }
-use Data::Dumper::Concise;warn Dumper$successors;
 
     my $choice = choose_weighted( $successors, sub{ $_[0]->{weight} } );
 
