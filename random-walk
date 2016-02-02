@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Graph::Weighted;
+use List::Util::WeightedChoice qw( choose_weighted );
+
+my $n = shift || 4;
+my $initial = shift // 0;
+
+my $gw = Graph::Weighted->new();
+$gw->populate(
+    {
+        0 => { label => 'C4', 1 => 0.4, 3 => 0.6 },
+        1 => { label => 'D4', 0 => 0.4, 2 => 0.6 },
+        2 => { label => 'E4', 1 => 0.5, 2 => 0.5 },
+        3 => { label => 'F4', 0 => 0.4, 1 => 0.6 },
+    }
+);
+
+my $vertex = $initial;
+
+for ( 1 .. $n ) {
+    print $gw->get_vertex_attribute( $vertex, 'label' ), "\n";
+    $vertex = next_vertex( $gw, $vertex );
+}
+
+sub next_vertex {
+    my ( $gw, $vertex ) = @_;
+
+    my $neighbors = [];
+    for my $neighbor ( $gw->neighbors($vertex) ) {
+        push @$neighbors, {
+            vertex => $neighbor,
+            weight => $gw->get_cost( [ $vertex, $neighbor ] ),
+        };
+    }
+
+    my $choice = choose_weighted($neighbors, sub{ $_[0]->{weight} } );
+
+    return $choice->{vertex};
+}
