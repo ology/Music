@@ -27,10 +27,12 @@ my $score = setup_midi();
 
 my $vertex = $initial;
 
-for ( 1 .. $n ) {
+for my $i ( 1 .. $n ) {
     my $note = $gw->get_vertex_attribute( $vertex, 'pitch' );
+warn __LINE__,". MARK: ",$note,"\n";
     $score->n( 'qn', $note );
-    $vertex = next_vertex( $gw, $vertex, 'note' );
+    $vertex = next_vertex( $gw, $vertex, 'note' )
+        if $i < $n;
 }
 
 $score->write_score( $0 . '.mid' );
@@ -59,12 +61,13 @@ sub next_vertex {
 
     my $successors = [];
 
-    for my $successor ( $gw->successors($vertex) ) {
+    for my $successor ( $gw->successors( $vertex, $attr ) ) {
         push @$successors, {
             vertex => $successor,
             weight => $gw->get_cost( [ $vertex, $successor ], $attr ),
         };
-    }
+   }
+use Data::Dumper::Concise;warn Dumper$successors;
 
     my $choice = choose_weighted( $successors, sub{ $_[0]->{weight} } );
 
