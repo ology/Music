@@ -10,17 +10,17 @@ my $n = shift || 4;
 my $initial = shift // 0;
 
 my $gw = Graph::Weighted->new();
-
 $gw->populate(
     {
-        0 => { label => 'C4',  2 => 0.4, 6 => 0.6 },
-        1 => { label => 'D4',  3 => 0.4, 4 => 0.6 },
-        2 => { label => 'Ds4', 1 => 0.5, 3 => 0.5 },
-        3 => { label => 'F4',  5 => 0.4, 4 => 0.6 },
-        4 => { label => 'G4',  2 => 0.4, 3 => 0.6 },
-        5 => { label => 'Gs4', 4 => 0.4, 6 => 0.6 },
-        6 => { label => 'As4', 0 => 0.4, 3 => 0.6 },
-    }
+        0 => { pitch => 'C4',  2 => 0.4, 6 => 0.6 },
+        1 => { pitch => 'D4',  3 => 0.4, 4 => 0.6 },
+        2 => { pitch => 'Ds4', 1 => 0.5, 3 => 0.5 },
+        3 => { pitch => 'F4',  5 => 0.4, 4 => 0.6 },
+        4 => { pitch => 'G4',  2 => 0.4, 3 => 0.6 },
+        5 => { pitch => 'Gs4', 4 => 0.4, 6 => 0.6 },
+        6 => { pitch => 'As4', 0 => 0.4, 3 => 0.6 },
+    },
+    'note'
 );
 
 my $score = setup_midi();
@@ -28,9 +28,9 @@ my $score = setup_midi();
 my $vertex = $initial;
 
 for ( 1 .. $n ) {
-    my $note = $gw->get_vertex_attribute( $vertex, 'label' );
+    my $note = $gw->get_vertex_attribute( $vertex, 'pitch' );
     $score->n( 'qn', $note );
-    $vertex = next_vertex( $gw, $vertex );
+    $vertex = next_vertex( $gw, $vertex, 'note' );
 }
 
 $score->write_score( $0 . '.mid' );
@@ -55,18 +55,18 @@ sub setup_midi {
 }
 
 sub next_vertex {
-    my ( $gw, $vertex ) = @_;
+    my ( $gw, $vertex, $attr ) = @_;
 
-    my $neighbors = [];
+    my $successors = [];
 
-    for my $neighbor ( $gw->neighbors($vertex) ) {
-        push @$neighbors, {
-            vertex => $neighbor,
-            weight => $gw->get_cost( [ $vertex, $neighbor ] ),
+    for my $successor ( $gw->successors($vertex) ) {
+        push @$successors, {
+            vertex => $successor,
+            weight => $gw->get_cost( [ $vertex, $successor ], $attr ),
         };
     }
 
-    my $choice = choose_weighted($neighbors, sub{ $_[0]->{weight} } );
+    my $choice = choose_weighted( $successors, sub{ $_[0]->{weight} } );
 
     return $choice->{vertex};
 }
