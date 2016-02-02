@@ -4,11 +4,13 @@ use warnings;
 
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
+use MIDI::Simple;
 
 my $n = shift || 4;
 my $initial = shift // 0;
 
 my $gw = Graph::Weighted->new();
+
 $gw->populate(
     {
         0 => { label => 'C4', 1 => 0.4, 3 => 0.6 },
@@ -18,17 +20,42 @@ $gw->populate(
     }
 );
 
+my $score = setup_midi();
+
 my $vertex = $initial;
 
 for ( 1 .. $n ) {
-    print $gw->get_vertex_attribute( $vertex, 'label' ), "\n";
+    my $note = $gw->get_vertex_attribute( $vertex, 'label' );
+    $score->n( 'qn', $note );
     $vertex = next_vertex( $gw, $vertex );
+}
+
+$score->write_score( $0 . '.mid' );
+
+sub setup_midi {
+    my %args = (
+        lead_in => 4,
+        channel => 1,
+        patch   => 42,
+        volume  => 120,
+        @_,
+    );
+    my $score = MIDI::Simple->new_score();
+    $score->Volume($args{volume});
+    # Lead-in
+    $score->Channel(9);
+    $score->n( 'qn', $args{patch} ) for 1 .. $args{lead_in};
+    # Passage
+    $score->Channel($args{channel});
+    $score->patch_change( $args{channel}, $args{patch} );
+    return $score;
 }
 
 sub next_vertex {
     my ( $gw, $vertex ) = @_;
 
     my $neighbors = [];
+
     for my $neighbor ( $gw->neighbors($vertex) ) {
         push @$neighbors, {
             vertex => $neighbor,
