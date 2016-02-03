@@ -37,17 +37,38 @@ $duration->populate(
     'time'
 );
 
+my $velocity = Graph::Weighted->new();
+$velocity->populate(
+    {
+        0 => { velocity => 'mezzo', 2 => 0.4, 6 => 0.6 },
+        1 => { velocity => 'mf',    3 => 0.4, 4 => 0.6 },
+        2 => { velocity => 'mezzo', 1 => 0.5, 3 => 0.5 },
+        3 => { velocity => 'mezzo', 5 => 0.4, 4 => 0.6 },
+        4 => { velocity => 'mezzo', 2 => 0.4, 3 => 0.6 },
+        5 => { velocity => 'mf',    4 => 0.4, 6 => 0.6 },
+        6 => { velocity => 'mezzo', 0 => 0.4, 3 => 0.6 },
+    },
+    'amplitude'
+);
+
 my $score = setup_midi();
 
 my $p_vertex = $initial;
 my $d_vertex = $initial;
+my $v_vertex = $initial;
 
 for my $i ( 1 .. $n ) {
     my $note = $pitch->get_vertex_attribute( $p_vertex, 'pitch' );
     my $dura = $duration->get_vertex_attribute( $d_vertex, 'duration' );
-    $score->n( $dura, $note );
-    $p_vertex = next_vertex( $pitch, $p_vertex, 'note' ) if $i < $n;
-    $d_vertex = next_vertex( $duration, $d_vertex, 'time' ) if $i < $n;
+    my $velo = $velocity->get_vertex_attribute( $v_vertex, 'velocity' );
+
+    $score->n( $velo, $dura, $note );
+
+    if ( $i < $n ) {
+        $p_vertex = next_vertex( $pitch, $p_vertex, 'note' );
+        $d_vertex = next_vertex( $duration, $d_vertex, 'time' );
+        $v_vertex = next_vertex( $velocity, $v_vertex, 'amplitude' );
+    }
 }
 
 $score->write_score( $0 . '.mid' );
