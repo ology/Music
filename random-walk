@@ -137,4 +137,6 @@ sub collect_notes {
             $v_vertex = next_vertex( $velocity, $v_vertex );
         }
     }
+
+    return $notes;
 }
