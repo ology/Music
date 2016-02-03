@@ -70,9 +70,7 @@ my $notes = collect_notes( $n, $initial, $velocity, $duration, $treble, $bass );
 my $score = setup_midi();
 
 # Add notes to the score
-for my $note ( @$notes ) {
-    $score->n( @$note );
-}
+$score->n( @$_ ) for @$notes;
 
 # Write out the MIDI file
 $score->write_score( $0 . '.mid' );
