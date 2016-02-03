@@ -9,16 +9,27 @@ use MIDI::Simple;
 my $n = shift || 4;
 my $initial = shift // 0;
 
-my $pitch = Graph::Weighted->new();
-$pitch->populate(
+my $treble = Graph::Weighted->new();
+$treble->populate(
     {
-        0 => { label => 'C4',  2 => 0.4, 6 => 0.6 },
-        1 => { label => 'D4',  3 => 0.4, 4 => 0.6 },
-        2 => { label => 'Ds4', 1 => 0.5, 3 => 0.5 },
-        3 => { label => 'F4',  5 => 0.4, 4 => 0.6 },
-        4 => { label => 'G4',  2 => 0.4, 3 => 0.6 },
-        5 => { label => 'Gs4', 4 => 0.4, 6 => 0.6 },
-        6 => { label => 'As4', 0 => 0.4, 3 => 0.6 },
+        0 => { label => 'C5',  2 => 0.4, 6 => 0.6 },
+        1 => { label => 'D5',  3 => 0.4, 4 => 0.6 },
+        2 => { label => 'Ds5', 1 => 0.5, 3 => 0.5 },
+        3 => { label => 'F5',  5 => 0.4, 4 => 0.6 },
+        4 => { label => 'G5',  2 => 0.4, 3 => 0.6 },
+        5 => { label => 'Gs5', 4 => 0.4, 6 => 0.6 },
+        6 => { label => 'As5', 0 => 0.4, 3 => 0.6 },
+    }
+);
+
+my $bass = Graph::Weighted->new();
+$bass->populate(
+    {
+        0 => { label => 'C3',  2 => 0.4, 3 => 0.6 },
+        1 => { label => 'Ds3', 2 => 0.5, 3 => 0.5 },
+        2 => { label => 'F3',  0 => 0.4, 3 => 0.6 },
+        3 => { label => 'G3',  0 => 0.4, 2 => 0.6 },
+        4 => { label => 'As3', 0 => 0.4, 1 => 0.6 },
     }
 );
 
@@ -50,19 +61,22 @@ $velocity->populate(
 
 my $score = setup_midi();
 
-my $p_vertex = $initial;
+my $n_vertex = $initial;
+my $b_vertex = $initial;
 my $d_vertex = $initial;
 my $v_vertex = $initial;
 
 for my $i ( 1 .. $n ) {
-    my $note = $pitch->get_vertex_attribute( $p_vertex, 'label' );
+    my $treb = $treble->get_vertex_attribute( $n_vertex, 'label' );
+    my $low  = $bass->get_vertex_attribute( $b_vertex, 'label' );
     my $dura = $duration->get_vertex_attribute( $d_vertex, 'label' );
     my $velo = $velocity->get_vertex_attribute( $v_vertex, 'label' );
 
-    $score->n( $velo, $dura, $note );
+    $score->n( $velo, $dura, $treb, $low );
 
     if ( $i < $n ) {
-        $p_vertex = next_vertex( $pitch, $p_vertex );
+        $n_vertex = next_vertex( $treble, $n_vertex );
+        $b_vertex = next_vertex( $bass, $b_vertex );
         $d_vertex = next_vertex( $duration, $d_vertex );
         $v_vertex = next_vertex( $velocity, $v_vertex );
     }
