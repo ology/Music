@@ -66,8 +66,10 @@ $velocity->populate(
 # Collect the notes to play
 my $notes = collect_notes( $n, $initial, $velocity, $duration, $treble, $bass );
 
-# Invoke MIDI and add notes to the score
+# Invoke MIDI
 my $score = setup_midi();
+
+# Add notes to the score
 for my $note ( @$notes ) {
     $score->n( @$note );
 }
