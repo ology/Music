@@ -12,43 +12,40 @@ my $initial = shift // 0;
 my $pitch = Graph::Weighted->new();
 $pitch->populate(
     {
-        0 => { pitch => 'C4',  2 => 0.4, 6 => 0.6 },
-        1 => { pitch => 'D4',  3 => 0.4, 4 => 0.6 },
-        2 => { pitch => 'Ds4', 1 => 0.5, 3 => 0.5 },
-        3 => { pitch => 'F4',  5 => 0.4, 4 => 0.6 },
-        4 => { pitch => 'G4',  2 => 0.4, 3 => 0.6 },
-        5 => { pitch => 'Gs4', 4 => 0.4, 6 => 0.6 },
-        6 => { pitch => 'As4', 0 => 0.4, 3 => 0.6 },
-    },
-    'note'
+        0 => { label => 'C4',  2 => 0.4, 6 => 0.6 },
+        1 => { label => 'D4',  3 => 0.4, 4 => 0.6 },
+        2 => { label => 'Ds4', 1 => 0.5, 3 => 0.5 },
+        3 => { label => 'F4',  5 => 0.4, 4 => 0.6 },
+        4 => { label => 'G4',  2 => 0.4, 3 => 0.6 },
+        5 => { label => 'Gs4', 4 => 0.4, 6 => 0.6 },
+        6 => { label => 'As4', 0 => 0.4, 3 => 0.6 },
+    }
 );
 
 my $duration = Graph::Weighted->new();
 $duration->populate(
     {
-        0 => { duration => 'qn', 2 => 0.4, 6 => 0.6 },
-        1 => { duration => 'en', 3 => 0.4, 4 => 0.6 },
-        2 => { duration => 'qn', 1 => 0.5, 3 => 0.5 },
-        3 => { duration => 'qn', 5 => 0.4, 4 => 0.6 },
-        4 => { duration => 'qn', 2 => 0.4, 3 => 0.6 },
-        5 => { duration => 'en', 4 => 0.4, 6 => 0.6 },
-        6 => { duration => 'qn', 0 => 0.4, 3 => 0.6 },
-    },
-    'time'
+        0 => { label => 'qn', 2 => 0.4, 6 => 0.6 },
+        1 => { label => 'en', 3 => 0.4, 4 => 0.6 },
+        2 => { label => 'qn', 1 => 0.5, 3 => 0.5 },
+        3 => { label => 'qn', 5 => 0.4, 4 => 0.6 },
+        4 => { label => 'qn', 2 => 0.4, 3 => 0.6 },
+        5 => { label => 'en', 4 => 0.4, 6 => 0.6 },
+        6 => { label => 'qn', 0 => 0.4, 3 => 0.6 },
+    }
 );
 
 my $velocity = Graph::Weighted->new();
 $velocity->populate(
     {
-        0 => { velocity => 'mezzo', 2 => 0.4, 6 => 0.6 },
-        1 => { velocity => 'mf',    3 => 0.4, 4 => 0.6 },
-        2 => { velocity => 'mezzo', 1 => 0.5, 3 => 0.5 },
-        3 => { velocity => 'mezzo', 5 => 0.4, 4 => 0.6 },
-        4 => { velocity => 'mezzo', 2 => 0.4, 3 => 0.6 },
-        5 => { velocity => 'mf',    4 => 0.4, 6 => 0.6 },
-        6 => { velocity => 'mezzo', 0 => 0.4, 3 => 0.6 },
-    },
-    'amplitude'
+        0 => { label => 'mezzo', 2 => 0.4, 6 => 0.6 },
+        1 => { label => 'mf',    3 => 0.4, 4 => 0.6 },
+        2 => { label => 'mezzo', 1 => 0.5, 3 => 0.5 },
+        3 => { label => 'mezzo', 5 => 0.4, 4 => 0.6 },
+        4 => { label => 'mezzo', 2 => 0.4, 3 => 0.6 },
+        5 => { label => 'mf',    4 => 0.4, 6 => 0.6 },
+        6 => { label => 'mezzo', 0 => 0.4, 3 => 0.6 },
+    }
 );
 
 my $score = setup_midi();
@@ -58,16 +55,16 @@ my $d_vertex = $initial;
 my $v_vertex = $initial;
 
 for my $i ( 1 .. $n ) {
-    my $note = $pitch->get_vertex_attribute( $p_vertex, 'pitch' );
-    my $dura = $duration->get_vertex_attribute( $d_vertex, 'duration' );
-    my $velo = $velocity->get_vertex_attribute( $v_vertex, 'velocity' );
+    my $note = $pitch->get_vertex_attribute( $p_vertex, 'label' );
+    my $dura = $duration->get_vertex_attribute( $d_vertex, 'label' );
+    my $velo = $velocity->get_vertex_attribute( $v_vertex, 'label' );
 
     $score->n( $velo, $dura, $note );
 
     if ( $i < $n ) {
-        $p_vertex = next_vertex( $pitch, $p_vertex, 'note' );
-        $d_vertex = next_vertex( $duration, $d_vertex, 'time' );
-        $v_vertex = next_vertex( $velocity, $v_vertex, 'amplitude' );
+        $p_vertex = next_vertex( $pitch, $p_vertex );
+        $d_vertex = next_vertex( $duration, $d_vertex );
+        $v_vertex = next_vertex( $velocity, $v_vertex );
     }
 }
 
@@ -93,14 +90,14 @@ sub setup_midi {
 }
 
 sub next_vertex {
-    my ( $g, $vertex, $attr ) = @_;
+    my ( $g, $vertex ) = @_;
 
     my $successors = [];
 
-    for my $successor ( $g->successors( $vertex, $attr ) ) {
+    for my $successor ( $g->successors($vertex) ) {
         push @$successors, {
             vertex => $successor,
-            weight => $g->get_cost( [ $vertex, $successor ], $attr ),
+            weight => $g->get_cost( [ $vertex, $successor ] ),
         };
    }
 
