@@ -9,8 +9,8 @@ use MIDI::Simple;
 my $n = shift || 4;
 my $initial = shift // 0;
 
-my $gw = Graph::Weighted->new();
-$gw->populate(
+my $pitch = Graph::Weighted->new();
+$pitch->populate(
     {
         0 => { pitch => 'C4',  2 => 0.4, 6 => 0.6 },
         1 => { pitch => 'D4',  3 => 0.4, 4 => 0.6 },
@@ -23,15 +23,31 @@ $gw->populate(
     'note'
 );
 
+my $duration = Graph::Weighted->new();
+$duration->populate(
+    {
+        0 => { duration => 'qn', 2 => 0.4, 6 => 0.6 },
+        1 => { duration => 'en', 3 => 0.4, 4 => 0.6 },
+        2 => { duration => 'qn', 1 => 0.5, 3 => 0.5 },
+        3 => { duration => 'qn', 5 => 0.4, 4 => 0.6 },
+        4 => { duration => 'qn', 2 => 0.4, 3 => 0.6 },
+        5 => { duration => 'en', 4 => 0.4, 6 => 0.6 },
+        6 => { duration => 'qn', 0 => 0.4, 3 => 0.6 },
+    },
+    'time'
+);
+
 my $score = setup_midi();
 
-my $vertex = $initial;
+my $p_vertex = $initial;
+my $d_vertex = $initial;
 
 for my $i ( 1 .. $n ) {
-    my $note = $gw->get_vertex_attribute( $vertex, 'pitch' );
-    $score->n( 'qn', $note );
-    $vertex = next_vertex( $gw, $vertex, 'note' )
-        if $i < $n;
+    my $note = $pitch->get_vertex_attribute( $p_vertex, 'pitch' );
+    my $dura = $duration->get_vertex_attribute( $d_vertex, 'duration' );
+    $score->n( $dura, $note );
+    $p_vertex = next_vertex( $pitch, $p_vertex, 'note' ) if $i < $n;
+    $d_vertex = next_vertex( $duration, $d_vertex, 'time' ) if $i < $n;
 }
 
 $score->write_score( $0 . '.mid' );
@@ -56,14 +72,14 @@ sub setup_midi {
 }
 
 sub next_vertex {
-    my ( $gw, $vertex, $attr ) = @_;
+    my ( $g, $vertex, $attr ) = @_;
 
     my $successors = [];
 
-    for my $successor ( $gw->successors( $vertex, $attr ) ) {
+    for my $successor ( $g->successors( $vertex, $attr ) ) {
         push @$successors, {
             vertex => $successor,
-            weight => $gw->get_cost( [ $vertex, $successor ], $attr ),
+            weight => $g->get_cost( [ $vertex, $successor ], $attr ),
         };
    }
 
