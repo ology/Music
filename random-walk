@@ -116,7 +116,7 @@ sub next_vertex {
 
     my $successors = [];
 
-    # Collect the vertex successors in the format the choose_weighted understands
+    # Collect the vertex successors in the format that choose_weighted understands
     for my $successor ( $g->successors($vertex) ) {
         push @$successors, {
             vertex => $successor,
