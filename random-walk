@@ -81,6 +81,7 @@ for my $i ( 1 .. $n ) {
 
     $score->n( $velo, $dura, $treb, $low );
 
+    # Find the next vertex for each graph
     if ( $i < $n ) {
         $n_vertex = next_vertex( $treble, $n_vertex );
         $b_vertex = next_vertex( $bass, $b_vertex );
