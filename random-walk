@@ -66,28 +66,11 @@ $velocity->populate(
 # Invoke MIDI!
 my $score = setup_midi();
 
-# Set the initial vertices to the given initial node
-my $n_vertex = $initial;
-my $b_vertex = $initial;
-my $d_vertex = $initial;
-my $v_vertex = $initial;
+my $notes = collect_notes( $n, $initial, $velocity, $duration, $treble, $bass );
 
 # Add notes to the score
-for my $i ( 1 .. $n ) {
-    my $treb = $treble->get_vertex_attribute( $n_vertex, 'label' );
-    my $low  = $bass->get_vertex_attribute( $b_vertex, 'label' );
-    my $dura = $duration->get_vertex_attribute( $d_vertex, 'label' );
-    my $velo = $velocity->get_vertex_attribute( $v_vertex, 'label' );
-
-    $score->n( $velo, $dura, $treb, $low );
-
-    # Find the next vertex for each graph
-    if ( $i < $n ) {
-        $n_vertex = next_vertex( $treble, $n_vertex );
-        $b_vertex = next_vertex( $bass, $b_vertex );
-        $d_vertex = next_vertex( $duration, $d_vertex );
-        $v_vertex = next_vertex( $velocity, $v_vertex );
-    }
+for my $note ( @$notes ) {
+    $score->n( @$note );
 }
 
 # Write out the MIDI file
@@ -126,7 +109,32 @@ sub next_vertex {
     }
 
     # Choose the next vertex based on the successor weights
-    my $choice = choose_weighted( $successors, sub{ $_[0]->{weight} } );
+    my $choice = choose_weighted( $successors, sub { $_[0]->{weight} } );
 
     return $choice->{vertex};
+}
+
+sub collect_notes {
+    my ( $n, $initial, $velocity, $duration, $treble, $bass ) = @_;
+
+    # Set the initial vertices to the given initial node
+    my ( $n_vertex, $b_vertex, $d_vertex, $v_vertex ) = ($initial) x 4;
+
+    # Collect MIDI data by randomly walking the graphs
+    for my $i ( 1 .. $n ) {
+        my $treb = $treble->get_vertex_attribute( $n_vertex, 'label' );
+        my $low  = $bass->get_vertex_attribute( $b_vertex, 'label' );
+        my $dura = $duration->get_vertex_attribute( $d_vertex, 'label' );
+        my $velo = $velocity->get_vertex_attribute( $v_vertex, 'label' );
+
+        push @$notes, [ $velo, $dura, $treb, $low ];
+
+        # Find the next vertex for each graph
+        if ( $i < $n ) {
+            $n_vertex = next_vertex( $treble, $n_vertex );
+            $b_vertex = next_vertex( $bass, $b_vertex );
+            $d_vertex = next_vertex( $duration, $d_vertex );
+            $v_vertex = next_vertex( $velocity, $v_vertex );
+        }
+    }
 }
