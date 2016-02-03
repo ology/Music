@@ -6,9 +6,10 @@ use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
 
-my $n = shift || 4;
-my $initial = shift // 0;
+my $n = shift || 4; # Number of notes
+my $initial = shift // 0; # Initial graph node
 
+# Treble notes
 my $treble = Graph::Weighted->new();
 $treble->populate(
     {
@@ -22,6 +23,7 @@ $treble->populate(
     }
 );
 
+# Bass notes
 my $bass = Graph::Weighted->new();
 $bass->populate(
     {
@@ -33,6 +35,7 @@ $bass->populate(
     }
 );
 
+# Note durations
 my $duration = Graph::Weighted->new();
 $duration->populate(
     {
@@ -46,6 +49,7 @@ $duration->populate(
     }
 );
 
+# Note velocities
 my $velocity = Graph::Weighted->new();
 $velocity->populate(
     {
@@ -59,13 +63,16 @@ $velocity->populate(
     }
 );
 
+# Invoke MIDI!
 my $score = setup_midi();
 
+# Set the initial vertices to the given initial node
 my $n_vertex = $initial;
 my $b_vertex = $initial;
 my $d_vertex = $initial;
 my $v_vertex = $initial;
 
+# Add notes to the score
 for my $i ( 1 .. $n ) {
     my $treb = $treble->get_vertex_attribute( $n_vertex, 'label' );
     my $low  = $bass->get_vertex_attribute( $b_vertex, 'label' );
@@ -82,6 +89,7 @@ for my $i ( 1 .. $n ) {
     }
 }
 
+# Write out the MIDI file
 $score->write_score( $0 . '.mid' );
 
 sub setup_midi {
@@ -108,13 +116,15 @@ sub next_vertex {
 
     my $successors = [];
 
+    # Collect the vertex successors in the format the choose_weighted understands
     for my $successor ( $g->successors($vertex) ) {
         push @$successors, {
             vertex => $successor,
             weight => $g->get_cost( [ $vertex, $successor ] ),
         };
-   }
+    }
 
+    # Choose the next vertex based on the successor weights
     my $choice = choose_weighted( $successors, sub{ $_[0]->{weight} } );
 
     return $choice->{vertex};
