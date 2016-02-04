@@ -10,8 +10,10 @@ use Readonly;
 
 Readonly my $MIDDLE_C => 60;
 
-my $n = shift || 4; # Number of notes
-my $initial = shift // 0; # Initial graph node
+my $max       = shift || 4; # Number of notes
+my $initial   = shift // 0; # Initial graph node
+my $transform = shift // 0; # 0=invert, 1=retrograde, 2=rotate
+my $param     = shift // 0; # Used for invert & rotate
 
 # Treble notes
 my $treble = Graph::Weighted->new();
@@ -68,10 +70,10 @@ $velocity->populate(
 );
 
 # Collect the notes to play
-my $notes = collect_notes( $n, $initial, $velocity, $duration, $treble, $bass );
+my $notes = collect_notes( $max, $initial, $velocity, $duration, $treble, $bass );
 
 # Append a transformed phrase
-$notes = transform_treble($notes);
+$notes = transform_treble( $notes, $transform, $param );
 
 # MIDI!
 my $score = setup_midi();
@@ -117,7 +119,7 @@ sub next_vertex {
 }
 
 sub collect_notes {
-    my ( $n, $initial, $velocity, $duration, $treble, $bass ) = @_;
+    my ( $max, $initial, $velocity, $duration, $treble, $bass ) = @_;
 
     # Set the initial vertices to the given initial node
     my ( $t_vertex, $b_vertex, $d_vertex, $v_vertex ) = ($initial) x 4;
@@ -125,7 +127,7 @@ sub collect_notes {
     my $notes = [];
 
     # Collect MIDI data by randomly walking the graphs
-    for my $i ( 1 .. $n ) {
+    for my $i ( 1 .. $max ) {
         my $treb = $treble->get_vertex_attribute( $t_vertex, 'label' );
         my $low  = $bass->get_vertex_attribute( $b_vertex, 'label' );
         my $dura = $duration->get_vertex_attribute( $d_vertex, 'label' );
@@ -134,7 +136,7 @@ sub collect_notes {
         push @$notes, [ $velo, $dura, $treb, $low ];
 
         # Find the next vertex for each graph
-        if ( $i < $n ) {
+        if ( $i < $max ) {
             $t_vertex = next_vertex( $treble, $t_vertex );
             $b_vertex = next_vertex( $bass, $b_vertex );
             $d_vertex = next_vertex( $duration, $d_vertex );
@@ -146,16 +148,13 @@ sub collect_notes {
 }
 
 sub transform_treble {
-    my $phrase = shift;
+    my ( $phrase, $transform, $param ) = @_;
 
     my $pitches = [ map { $_->[2] - $MIDDLE_C } @$phrase ];
 
     my $mau = Music::AtonalUtil->new;
 
     my $new;
-
-    my $transform = int rand 3;
-    my $param     = int rand 4;
 
     if ( $transform == 0 ) {
         print "Transform: invert $param\n";
