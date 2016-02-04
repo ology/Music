@@ -151,7 +151,24 @@ sub transform_treble {
     my $pitches = [ map { $_->[2] - $MIDDLE_C } @$phrase ];
 
     my $mau = Music::AtonalUtil->new;
-    my $new = $mau->invert( 0, $pitches );
+
+    my $new;
+
+    my $transform = int rand 3;
+    my $param     = int rand 4;
+
+    if ( $transform == 0 ) {
+        print "Transform: invert $param\n";
+        $new = $mau->invert( $param, $pitches );
+    }
+    elsif ( $transform == 1 ) {
+        print "Transform: retrograde\n";
+        $new = $mau->retrograde($pitches);
+    }
+    elsif ( $transform == 2 ) {
+        print "Transform: rotate $param\n";
+        $new = $mau->rotate( $param, $pitches );
+    }
 
     my $tansformed = [
         map {
