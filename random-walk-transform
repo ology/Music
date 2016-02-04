@@ -15,7 +15,6 @@ my $initial   = shift // 0; # Initial graph node
 my $transform = shift // 0; # 0=invert, 1=retrograde, 2=rotate
 my $param     = shift // 0; # Used for invert & rotate
 
-# Treble notes
 my $treble = Graph::Weighted->new();
 $treble->populate(
     {
@@ -29,7 +28,6 @@ $treble->populate(
     }
 );
 
-# Bass notes
 my $bass = Graph::Weighted->new();
 $bass->populate(
     {
@@ -41,7 +39,6 @@ $bass->populate(
     }
 );
 
-# Note durations
 my $duration = Graph::Weighted->new();
 $duration->populate(
     {
@@ -55,7 +52,6 @@ $duration->populate(
     }
 );
 
-# Note velocities
 my $velocity = Graph::Weighted->new();
 $velocity->populate(
     {
@@ -69,13 +65,10 @@ $velocity->populate(
     }
 );
 
-# Collect the notes to play
 my $notes = collect_notes( $max, $initial, $velocity, $duration, $treble, $bass );
 
-# Append a transformed phrase
 $notes = transform_treble( $notes, $transform, $param );
 
-# MIDI!
 my $score = setup_midi();
 $score->n( @$_ ) for @$notes;
 $score->write_score( $0 . '.mid' );
@@ -104,7 +97,6 @@ sub next_vertex {
 
     my $successors = [];
 
-    # Collect the vertex successors in the format that choose_weighted understands
     for my $successor ( $g->successors($vertex) ) {
         push @$successors, {
             vertex => $successor,
@@ -112,7 +104,6 @@ sub next_vertex {
         };
     }
 
-    # Choose the next vertex based on the successor weights
     my $choice = choose_weighted( $successors, sub { $_[0]->{weight} } );
 
     return $choice->{vertex};
@@ -121,12 +112,10 @@ sub next_vertex {
 sub collect_notes {
     my ( $max, $initial, $velocity, $duration, $treble, $bass ) = @_;
 
-    # Set the initial vertices to the given initial node
     my ( $t_vertex, $b_vertex, $d_vertex, $v_vertex ) = ($initial) x 4;
 
     my $notes = [];
 
-    # Collect MIDI data by randomly walking the graphs
     for my $i ( 1 .. $max ) {
         my $treb = $treble->get_vertex_attribute( $t_vertex, 'label' );
         my $low  = $bass->get_vertex_attribute( $b_vertex, 'label' );
@@ -135,7 +124,6 @@ sub collect_notes {
 
         push @$notes, [ $velo, $dura, $treb, $low ];
 
-        # Find the next vertex for each graph
         if ( $i < $max ) {
             $t_vertex = next_vertex( $treble, $t_vertex );
             $b_vertex = next_vertex( $bass, $b_vertex );
