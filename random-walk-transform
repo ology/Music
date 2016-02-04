@@ -69,12 +69,11 @@ my $notes = collect_notes( $max, $initial, $velocity, $duration, $treble, $bass 
 
 $notes = transform_treble( $notes, $transform, $param );
 
-my $score = setup_midi();
-$score->n( @$_ ) for @$notes;
-$score->write_score( $0 . '.mid' );
+score_midi( notes => $notes );
 
-sub setup_midi {
+sub score_midi {
     my %args = (
+        notes   => [],
         lead_in => 4,
         channel => 1,
         patch   => 42,
@@ -89,7 +88,10 @@ sub setup_midi {
     # Passage
     $score->Channel($args{channel});
     $score->patch_change( $args{channel}, $args{patch} );
-    return $score;
+    # Add notes to the score
+    $score->n( @$_ ) for @{ $args{notes} };
+    # Write out the score
+    $score->write_score( $0 . '.mid' );
 }
 
 sub next_vertex {
