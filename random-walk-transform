@@ -27,7 +27,6 @@ $treble->populate(
         6 => { label => 70, 0 => 0.4, 3 => 0.6 },
     }
 );
-
 my $bass = Graph::Weighted->new();
 $bass->populate(
     {
@@ -38,7 +37,6 @@ $bass->populate(
         4 => { label => 46, 0 => 0.4, 1 => 0.6 },
     }
 );
-
 my $duration = Graph::Weighted->new();
 $duration->populate(
     {
@@ -46,7 +44,6 @@ $duration->populate(
         1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
     }
 );
-
 my $velocity = Graph::Weighted->new();
 $velocity->populate(
     {
