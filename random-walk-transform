@@ -6,6 +6,9 @@ use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
 use Music::AtonalUtil;
+use Readonly;
+
+Readonly my $MIDDLE_C => 60;
 
 my $n = shift || 4; # Number of notes
 my $initial = shift // 0; # Initial graph node
@@ -145,23 +148,18 @@ sub collect_notes {
 sub transform_treble {
     my $phrase = shift;
 
-    my $pitches = [ map { $_->[2] } @$phrase ];
+    my $pitches = [ map { $_->[2] - $MIDDLE_C } @$phrase ];
 
     my $mau = Music::AtonalUtil->new;
     my $new = $mau->invert( 0, $pitches );
 
-    my @tansformed;
+    my $tansformed = [
+        map {
+            [ $phrase->[$_][0], $phrase->[$_][1], $MIDDLE_C + $new->[$_], $phrase->[$_][3] ]
+        } 0 .. @$phrase - 1
+    ];
 
-    for my $i ( 0 .. @$phrase - 1 ) {
-        push @tansformed, [
-            $phrase->[$i][0],
-            $phrase->[$i][1],
-            60 + $new->[$i],
-            $phrase->[$i][3]
-        ];
-    }
-
-    @$phrase = ( @$phrase, @tansformed );
+    $phrase = [ @$phrase, @$tansformed ];
 
     return $phrase;
 }
