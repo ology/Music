@@ -42,26 +42,16 @@ $bass->populate(
 my $duration = Graph::Weighted->new();
 $duration->populate(
     {
-        0 => { label => 'qn', 2 => 0.4, 6 => 0.6 },
-        1 => { label => 'en', 3 => 0.4, 4 => 0.6 },
-        2 => { label => 'qn', 1 => 0.5, 3 => 0.5 },
-        3 => { label => 'qn', 5 => 0.4, 4 => 0.6 },
-        4 => { label => 'qn', 2 => 0.4, 3 => 0.6 },
-        5 => { label => 'en', 4 => 0.4, 6 => 0.6 },
-        6 => { label => 'qn', 0 => 0.4, 3 => 0.6 },
+        0 => { label => 'qn', 0 => 0.7, 1 => 0.3 },
+        1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
     }
 );
 
 my $velocity = Graph::Weighted->new();
 $velocity->populate(
     {
-        0 => { label => 'mezzo', 2 => 0.4, 6 => 0.6 },
-        1 => { label => 'mf',    3 => 0.4, 4 => 0.6 },
-        2 => { label => 'mezzo', 1 => 0.5, 3 => 0.5 },
-        3 => { label => 'mezzo', 5 => 0.4, 4 => 0.6 },
-        4 => { label => 'mezzo', 2 => 0.4, 3 => 0.6 },
-        5 => { label => 'mf',    4 => 0.4, 6 => 0.6 },
-        6 => { label => 'mezzo', 0 => 0.4, 3 => 0.6 },
+        0 => { label => 'mezzo', 0 => 0.7, 1 => 0.3 },
+        1 => { label => 'mf',    0 => 0.6, 1 => 0.4 },
     }
 );
 
