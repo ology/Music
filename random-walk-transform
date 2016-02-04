@@ -1,0 +1,167 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Graph::Weighted;
+use List::Util::WeightedChoice qw( choose_weighted );
+use MIDI::Simple;
+use Music::AtonalUtil;
+
+my $n = shift || 4; # Number of notes
+my $initial = shift // 0; # Initial graph node
+
+# Treble notes
+my $treble = Graph::Weighted->new();
+$treble->populate(
+    {
+        0 => { label => 60, 2 => 0.4, 6 => 0.6 },
+        1 => { label => 62, 3 => 0.4, 4 => 0.6 },
+        2 => { label => 63, 1 => 0.5, 3 => 0.5 },
+        3 => { label => 65, 5 => 0.4, 4 => 0.6 },
+        4 => { label => 67, 2 => 0.4, 3 => 0.6 },
+        5 => { label => 68, 4 => 0.4, 6 => 0.6 },
+        6 => { label => 70, 0 => 0.4, 3 => 0.6 },
+    }
+);
+
+# Bass notes
+my $bass = Graph::Weighted->new();
+$bass->populate(
+    {
+        0 => { label => 36, 2 => 0.4, 3 => 0.6 },
+        1 => { label => 39, 2 => 0.5, 3 => 0.5 },
+        2 => { label => 41, 0 => 0.4, 3 => 0.6 },
+        3 => { label => 43, 4 => 0.4, 2 => 0.6 },
+        4 => { label => 46, 0 => 0.4, 1 => 0.6 },
+    }
+);
+
+# Note durations
+my $duration = Graph::Weighted->new();
+$duration->populate(
+    {
+        0 => { label => 'qn', 2 => 0.4, 6 => 0.6 },
+        1 => { label => 'en', 3 => 0.4, 4 => 0.6 },
+        2 => { label => 'qn', 1 => 0.5, 3 => 0.5 },
+        3 => { label => 'qn', 5 => 0.4, 4 => 0.6 },
+        4 => { label => 'qn', 2 => 0.4, 3 => 0.6 },
+        5 => { label => 'en', 4 => 0.4, 6 => 0.6 },
+        6 => { label => 'qn', 0 => 0.4, 3 => 0.6 },
+    }
+);
+
+# Note velocities
+my $velocity = Graph::Weighted->new();
+$velocity->populate(
+    {
+        0 => { label => 'mezzo', 2 => 0.4, 6 => 0.6 },
+        1 => { label => 'mf',    3 => 0.4, 4 => 0.6 },
+        2 => { label => 'mezzo', 1 => 0.5, 3 => 0.5 },
+        3 => { label => 'mezzo', 5 => 0.4, 4 => 0.6 },
+        4 => { label => 'mezzo', 2 => 0.4, 3 => 0.6 },
+        5 => { label => 'mf',    4 => 0.4, 6 => 0.6 },
+        6 => { label => 'mezzo', 0 => 0.4, 3 => 0.6 },
+    }
+);
+
+# Collect the notes to play
+my $notes = collect_notes( $n, $initial, $velocity, $duration, $treble, $bass );
+
+# Append a transformed phrase
+$notes = transform_treble($notes);
+
+# MIDI!
+my $score = setup_midi();
+$score->n( @$_ ) for @$notes;
+$score->write_score( $0 . '.mid' );
+
+sub setup_midi {
+    my %args = (
+        lead_in => 4,
+        channel => 1,
+        patch   => 42,
+        volume  => 120,
+        @_,
+    );
+    my $score = MIDI::Simple->new_score();
+    $score->Volume($args{volume});
+    # Lead-in
+    $score->Channel(9);
+    $score->n( 'qn', $args{patch} ) for 1 .. $args{lead_in};
+    # Passage
+    $score->Channel($args{channel});
+    $score->patch_change( $args{channel}, $args{patch} );
+    return $score;
+}
+
+sub next_vertex {
+    my ( $g, $vertex ) = @_;
+
+    my $successors = [];
+
+    # Collect the vertex successors in the format that choose_weighted understands
+    for my $successor ( $g->successors($vertex) ) {
+        push @$successors, {
+            vertex => $successor,
+            weight => $g->get_cost( [ $vertex, $successor ] ),
+        };
+    }
+
+    # Choose the next vertex based on the successor weights
+    my $choice = choose_weighted( $successors, sub { $_[0]->{weight} } );
+
+    return $choice->{vertex};
+}
+
+sub collect_notes {
+    my ( $n, $initial, $velocity, $duration, $treble, $bass ) = @_;
+
+    # Set the initial vertices to the given initial node
+    my ( $t_vertex, $b_vertex, $d_vertex, $v_vertex ) = ($initial) x 4;
+
+    my $notes = [];
+
+    # Collect MIDI data by randomly walking the graphs
+    for my $i ( 1 .. $n ) {
+        my $treb = $treble->get_vertex_attribute( $t_vertex, 'label' );
+        my $low  = $bass->get_vertex_attribute( $b_vertex, 'label' );
+        my $dura = $duration->get_vertex_attribute( $d_vertex, 'label' );
+        my $velo = $velocity->get_vertex_attribute( $v_vertex, 'label' );
+
+        push @$notes, [ $velo, $dura, $treb, $low ];
+
+        # Find the next vertex for each graph
+        if ( $i < $n ) {
+            $t_vertex = next_vertex( $treble, $t_vertex );
+            $b_vertex = next_vertex( $bass, $b_vertex );
+            $d_vertex = next_vertex( $duration, $d_vertex );
+            $v_vertex = next_vertex( $velocity, $v_vertex );
+        }
+    }
+
+    return $notes;
+}
+
+sub transform_treble {
+    my $phrase = shift;
+
+    my $pitches = [ map { $_->[2] } @$phrase ];
+
+    my $mau = Music::AtonalUtil->new;
+    my $new = $mau->invert( 0, $pitches );
+
+    my @tansformed;
+
+    for my $i ( 0 .. @$phrase - 1 ) {
+        push @tansformed, [
+            $phrase->[$i][0],
+            $phrase->[$i][1],
+            60 + $new->[$i],
+            $phrase->[$i][3]
+        ];
+    }
+
+    @$phrase = ( @$phrase, @tansformed );
+
+    return $phrase;
+}
