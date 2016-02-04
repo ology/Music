@@ -1,4 +1,16 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Math::Combinatorics;
+use Math::Factor::XS qw( prime_factors );
+use Music::Chord::Namer qw(chordname);
+use MIDI::Pitch qw(name2freq);
+use Number::Fraction;
+use Pod::Usage;
+use Sort::ArbBiLex;
+use Music::Scales;
 
 =head1 NAME
 
@@ -44,19 +56,6 @@ intervals - Expose musical chord relationships
  tonic:      C - We are C-based. C == 1/1 unison
 
 =cut
-
-use strict;
-use warnings;
-
-use Getopt::Long;
-use Math::Combinatorics;
-use Math::Factor::XS qw( prime_factors );
-use Music::Chord::Namer qw(chordname);
-use MIDI::Pitch qw(name2freq);
-use Number::Fraction;
-use Pod::Usage;
-use Sort::ArbBiLex;
-use Music::Scales;
 
 # Declare the command-line options and their default values.
 my %options = (
@@ -296,7 +295,11 @@ sub usage {
 
 =head1 SEE ALSO
 
-The DATA section where the intervals are listed.
+L<https://metacpan.org/pod/Music::Intervals>
+
+L<https://github.com/ology/Music-Intervals/blob/master/eg/intervals>
+
+The DATA section of this program, where the intervals are listed.
 
 L<http://en.wikipedia.org/wiki/List_of_musical_intervals>
 
