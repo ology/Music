@@ -10,10 +10,11 @@ use Readonly;
 
 Readonly my $MIDDLE_C => 60;
 Readonly my $RANDOM_PARAMETER => 6;
+Readonly my $RANDOM_TRANSFORM => 3;
 
 my $max       = shift || 4; # Number of notes
 my $initial   = shift // 0; # Initial graph node
-my $transform = shift // 0; # 0=invert, 1=retrograde, 2=rotate
+my $transform = shift // 0; # 0=invert, 1=retrograde, 2=rotate. -1=random
 my $param     = shift // 0; # Used for invert & rotate, -1=random
 my $repeat    = shift // 0; # For reapplication of transformation
 
@@ -139,6 +140,10 @@ sub transform_treble {
 
     if ( $param == -1 ) {
         $param = int rand $RANDOM_PARAMETER;
+    }
+
+    if ( $transform == -1 ) {
+        $transform = int rand $RANDOM_TRANSFORM;
     }
 
     if ( $transform == 0 ) {
