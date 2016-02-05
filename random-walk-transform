@@ -9,11 +9,13 @@ use Music::AtonalUtil;
 use Readonly;
 
 Readonly my $MIDDLE_C => 60;
+Readonly my $RANDOM_PARAMETER => 6;
 
 my $max       = shift || 4; # Number of notes
 my $initial   = shift // 0; # Initial graph node
 my $transform = shift // 0; # 0=invert, 1=retrograde, 2=rotate
 my $param     = shift // 0; # Used for invert & rotate
+my $repeat    = shift // 0; # For reapplication of transformation
 
 my $treble = Graph::Weighted->new();
 $treble->populate(
@@ -54,7 +56,9 @@ $velocity->populate(
 
 my $notes = collect_notes( $max, $initial, $velocity, $duration, $treble, $bass );
 
-$notes = transform_treble( $notes, $transform, $param );
+for ( 1 .. $repeat ) {
+    $notes = transform_treble( $notes, $transform, $param );
+}
 
 score_midi( notes => $notes );
 
@@ -132,6 +136,10 @@ sub transform_treble {
     my $mau = Music::AtonalUtil->new;
 
     my $new;
+
+    if ( $param == -1 ) {
+        $param = int rand $RANDOM_PARAMETER;
+    }
 
     if ( $transform == 0 ) {
         print "Transform: invert $param\n";
