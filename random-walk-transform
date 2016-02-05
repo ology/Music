@@ -14,7 +14,7 @@ Readonly my $RANDOM_PARAMETER => 6;
 my $max       = shift || 4; # Number of notes
 my $initial   = shift // 0; # Initial graph node
 my $transform = shift // 0; # 0=invert, 1=retrograde, 2=rotate
-my $param     = shift // 0; # Used for invert & rotate
+my $param     = shift // 0; # Used for invert & rotate, -1=random
 my $repeat    = shift // 0; # For reapplication of transformation
 
 my $treble = Graph::Weighted->new();
