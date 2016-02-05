@@ -13,7 +13,7 @@ Readonly my $RANDOM_PARAMETER => 6;
 Readonly my $RANDOM_TRANSFORM => 3;
 
 my $max       = shift || 4; # Number of notes
-my $initial   = shift // 0; # Initial graph node
+my $initial   = shift // 0; # Initial graph node. -1=random
 my $transform = shift // 0; # 0=invert, 1=retrograde, 2=rotate. -1=random
 my $param     = shift // 0; # Used for invert & rotate, -1=random
 my $repeat    = shift // 0; # For reapplication of transformation
@@ -106,7 +106,16 @@ sub next_vertex {
 sub collect_notes {
     my ( $max, $initial, $velocity, $duration, $treble, $bass ) = @_;
 
-    my ( $t_vertex, $b_vertex, $d_vertex, $v_vertex ) = ($initial) x 4;
+    my ( $t_vertex, $b_vertex, $d_vertex, $v_vertex );
+    if ( $initial == -1 ) {
+        $t_vertex = $treble->random_vertex;
+        $b_vertex = $bass->random_vertex;
+        $d_vertex = $duration->random_vertex;
+        $v_vertex = $velocity->random_vertex;
+    }
+    else {
+        ( $t_vertex, $b_vertex, $d_vertex, $v_vertex ) = ($initial) x 4;
+    }
 
     my $notes = [];
 
