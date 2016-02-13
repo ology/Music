@@ -21,10 +21,7 @@ $m->write_score("$0.mid");
 sub hihat {
     my $self = shift;
     $self->noop('c9', 'fff', 'n42', 'qn');
-    $self->n;
-    $self->n;
-    $self->n;
-    $self->n;
+    $self->n for 1 .. 4;
 }
 
 sub kick {
