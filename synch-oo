@@ -1,0 +1,58 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use MIDI::Simple;
+
+my $bars = shift || 4;
+
+my $m = MIDI::Simple->new_score();
+
+$m->set_tempo(500_000);  # 1 qn => .5 seconds (500,000 microseconds)
+
+my @subs = ( \&hihat, \&kick, \&snare, \&pattern );
+
+my $measure = 0;
+
+$m->synch(@subs) for 1 .. $bars;
+
+$m->write_score("$0.mid");
+
+sub hihat {
+    my $self = shift;
+    $self->noop('c9', 'fff', 'n42', 'qn');
+    $self->n;
+    $self->n;
+    $self->n;
+    $self->n;
+}
+
+sub kick {
+    my $self = shift;
+    $self->noop('c9', 'fff', 'n35', 'qn');
+    $self->n;
+    $self->r;
+    $self->n('en');
+    $self->n;
+    $self->r;
+}
+
+sub snare {
+    my $self = shift;
+    $self->noop('c9', 'fff', 'n38', 'qn');
+    $self->r;
+    $self->n;
+    $self->r;
+    $self->n;
+}
+
+sub pattern {
+    my $self = shift;
+    my @phrase = qw(E5 B4 D5 G4 E4 E4 B4 G4);
+    $self->patch_change(0, 2);
+    $self->noop('c0', 'fff', 'en');
+    $self->n($_) for @phrase[0 .. 4];
+    if ( $measure++ % 2 ) {
+      $self->n($_) for @phrase[5 .. 7];
+    }
+}
