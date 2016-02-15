@@ -78,8 +78,8 @@ sub bassline {
 
     my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
 
-    $self->patch_change(0, 2);
-    $self->noop('c0');
+    $self->patch_change(1, 2);
+    $self->noop('c1');
 
     $self->n( @$_ ) for @phrase;
 }
