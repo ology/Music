@@ -1,0 +1,164 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Graph::Weighted;
+use List::Util::WeightedChoice qw( choose_weighted );
+use MIDI::Simple;
+
+my $bars    = shift || 4;
+my $notes   = shift || 4;
+my $initial = shift // 0; # Initial graph node
+
+sub melody {
+    my $self = shift;
+
+    my $pitch = Graph::Weighted->new();
+    $pitch->populate(
+        {
+            0 => { label => 'C5',  2 => 0.4, 6 => 0.6 },
+            1 => { label => 'D5',  3 => 0.4, 4 => 0.6 },
+            2 => { label => 'Ds5', 1 => 0.5, 3 => 0.5 },
+            3 => { label => 'F5',  5 => 0.4, 4 => 0.6 },
+            4 => { label => 'G5',  2 => 0.4, 3 => 0.6 },
+            5 => { label => 'Gs5', 4 => 0.4, 6 => 0.6 },
+            6 => { label => 'As5', 0 => 0.4, 3 => 0.6 },
+        }
+    );
+    my $velocity = Graph::Weighted->new();
+    $velocity->populate(
+        {
+            0 => { label => 'mf', 0 => 0.6, 1 => 0.4 },
+            1 => { label => 'f',  0 => 0.6, 1 => 0.4 },
+        }
+    );
+    my $duration = Graph::Weighted->new();
+    $duration->populate(
+        {
+            0 => { label => 'qn', 0 => 0.5, 1 => 0.5 },
+            1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
+        }
+    );
+
+    my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
+
+    $self->patch_change(0, 2);
+    $self->noop('c0');
+
+    $self->n( @$_ ) for @phrase;
+}
+
+sub bassline {
+    my $self = shift;
+
+    my $pitch = Graph::Weighted->new();
+    $pitch->populate(
+        {
+            0 => { label => 'C3',  2 => 0.4, 3 => 0.6 },
+            1 => { label => 'Ds3', 2 => 0.4, 3 => 0.6 },
+            2 => { label => 'F3',  0 => 0.4, 3 => 0.6 },
+            3 => { label => 'G3',  4 => 0.4, 2 => 0.6 },
+            4 => { label => 'As3', 0 => 0.4, 1 => 0.6 },
+        }
+    );
+    my $velocity = Graph::Weighted->new();
+    $velocity->populate(
+        {
+            0 => { label => 'f',  0 => 0.7, 1 => 0.3 },
+            1 => { label => 'ff', 0 => 0.6, 1 => 0.4 },
+        }
+    );
+    my $duration = Graph::Weighted->new();
+    $duration->populate(
+        {
+            0 => { label => 'qn', 0 => 0.6, 1 => 0.4 },
+            1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
+        }
+    );
+
+    my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
+
+    $self->patch_change(0, 2);
+    $self->noop('c0');
+
+    $self->n( @$_ ) for @phrase;
+}
+
+my $score = MIDI::Simple->new_score();
+$score->set_tempo(500_000);  # 1 qn => .5 seconds (500,000 microseconds)
+
+my $measure = 0;
+
+my @subs = ( \&hihat, \&kick, \&snare, \&bassline, \&melody );
+
+$score->synch(@subs) for 1 .. $bars;
+
+$score->write_score("$0.mid");
+
+sub hihat {
+    my $self = shift;
+    $self->noop('c9', 'fff', 'n42', 'qn');
+    $self->n for 1 .. 4;
+}
+
+sub kick {
+    my $self = shift;
+    $self->noop('c9', 'fff', 'n35', 'qn');
+    $self->n;
+    $self->r;
+    $self->n('en');
+    $self->n;
+    $self->r;
+}
+
+sub snare {
+    my $self = shift;
+    $self->noop('c9', 'fff', 'n38', 'qn');
+    $self->r;
+    $self->n;
+    $self->r;
+    $self->n;
+}
+
+sub collect_notes {
+    my ( $n, $initial, $pitch, $velocity, $duration ) = @_;
+
+    my $p_vertex = $initial;
+    my $v_vertex = $initial;
+    my $d_vertex = $initial;
+
+    my $notes = [];
+
+    for my $i ( 1 .. $n ) {
+        my $p = $pitch->get_vertex_attribute( $p_vertex, 'label' );
+        my $v = $velocity->get_vertex_attribute( $v_vertex, 'label' );
+        my $d = $duration->get_vertex_attribute( $v_vertex, 'label' );
+
+        push @$notes, [ $d, $v, $p ];
+
+        if ( $i < $n ) {
+            $p_vertex = next_vertex( $pitch, $p_vertex );
+            $v_vertex = next_vertex( $velocity, $v_vertex );
+            $d_vertex = next_vertex( $duration, $d_vertex );
+        }
+    }
+
+    return @$notes;
+}
+
+sub next_vertex {
+    my ( $graph, $vertex ) = @_;
+
+    my $successors = [];
+
+    for my $successor ( $graph->successors($vertex) ) {
+        push @$successors, {
+            vertex => $successor,
+            weight => $graph->get_cost( [ $vertex, $successor ] ),
+        };
+    }
+
+    my $choice = choose_weighted( $successors, sub { $_[0]->{weight} } );
+
+    return $choice->{vertex};
+}
