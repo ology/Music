@@ -33,13 +33,13 @@ warn "Datum: $last -> $next\n";
 }
 use Data::Dumper;warn 'Note transitions: ', Dumper$transitions;
 
-my $freq = {};
+my $frequencies = {};
 
 my $stat = Statistics::Frequency->new;
 
 for my $note ( keys %$transitions ) {
     $stat->add_data( @{ $transitions->{$note} } );
-    $freq->{$note} = { $stat->proportional_frequencies };
+    $frequencies->{$note} = { $stat->proportional_frequencies };
     $stat->clear_data;
 }
-use Data::Dumper;warn 'Transition frequencies: ', Dumper$freq;
+use Data::Dumper;warn 'Transition frequencies: ', Dumper$frequencies;
