@@ -3,14 +3,15 @@ use strict;
 use warnings;
 
 use MIDI::Simple;
+use Music::Chord::Note;
 
 my $bars = shift || 4;
 
 my $m = MIDI::Simple->new_score();
 
-$m->set_tempo(500_000);  # 1 qn => .5 seconds (500,000 microseconds)
+$m->set_tempo(700_000);  # 1 qn => .5 seconds (500,000 microseconds)
 
-my @subs = ( \&hihat, \&kick, \&snare, \&pattern );
+my @subs = ( \&hihat, \&kick, \&snare, \&chords );
 
 my $measure = 0;
 
@@ -52,4 +53,28 @@ sub pattern {
     if ( $measure++ % 2 ) {
       $self->n($_) for @phrase[5 .. 7];
     }
+}
+
+sub chords {
+    my $self = shift;
+
+    my $c = Music::Chord::Note->new;
+
+    my @phrase;
+
+    my @progression = $measure++ % 2
+        ? qw( Gm C Dm Gm )
+#        : qw( Gm F Gm C );
+        : qw( Gm Dm F Gm );
+
+    for my $chord ( @progression ) {
+        my @chord = $c->chord($chord);
+        s/#/s/ for @chord;
+        push @phrase, \@chord;
+    }
+
+    $self->patch_change(0, 2);
+    $self->noop('c0', 'o4', 'f', 'qn');
+
+    $self->n(@$_) for @phrase;
 }
