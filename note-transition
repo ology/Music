@@ -35,10 +35,12 @@ use Data::Dumper::Concise;warn Dumper$seen;
 
 my $freq = {};
 
+my $f = Statistics::Frequency->new;
+
 for my $note ( keys %$seen ) {
-    my $f = Statistics::Frequency->new;
     $f->add_data( @{ $seen->{$note} } );
     my %prop = $f->proportional_frequencies;
     $freq->{$note} = \%prop;
+    $f->clear_data;
 }
 use Data::Dumper::Concise;warn Dumper$freq;
