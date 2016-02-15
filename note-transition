@@ -23,7 +23,7 @@ for my $t ( $opus->tracks ) {
         if ( $last ) {
             my $next = $event->[3]; # The next note in succession
             push @{ $seen->{$last} }, $next;
-warn "$last -> $next\n";
+warn "Datum: $last -> $next\n";
             $last = $next;
         }
         else {
@@ -31,16 +31,15 @@ warn "$last -> $next\n";
         }
     }
 }
-use Data::Dumper::Concise;warn Dumper$seen;
+use Data::Dumper::Concise;warn 'Note transitions: ', Dumper$seen;
 
 my $freq = {};
 
-my $f = Statistics::Frequency->new;
+my $stat = Statistics::Frequency->new;
 
 for my $note ( keys %$seen ) {
-    $f->add_data( @{ $seen->{$note} } );
-    my %prop = $f->proportional_frequencies;
-    $freq->{$note} = \%prop;
-    $f->clear_data;
+    $stat->add_data( @{ $seen->{$note} } );
+    $freq->{$note} = { $stat->proportional_frequencies };
+    $stat->clear_data;
 }
-use Data::Dumper::Concise;warn Dumper$freq;
+use Data::Dumper::Concise;warn 'Transition frequencies: ', Dumper$freq;
