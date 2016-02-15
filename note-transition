@@ -31,7 +31,7 @@ warn "Datum: $last -> $next\n";
         }
     }
 }
-use Data::Dumper::Concise;warn 'Note transitions: ', Dumper$seen;
+use Data::Dumper;warn 'Note transitions: ', Dumper$seen;
 
 my $freq = {};
 
@@ -42,4 +42,4 @@ for my $note ( keys %$seen ) {
     $freq->{$note} = { $stat->proportional_frequencies };
     $stat->clear_data;
 }
-use Data::Dumper::Concise;warn 'Transition frequencies: ', Dumper$freq;
+use Data::Dumper;warn 'Transition frequencies: ', Dumper$freq;
