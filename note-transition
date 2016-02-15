@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use Data::Dumper;
 use MIDI;
 use Statistics::Frequency;
 
@@ -31,7 +32,7 @@ warn "Datum: $last -> $next\n";
         }
     }
 }
-use Data::Dumper;warn 'Note transitions: ', Dumper$transitions;
+warn 'Note transitions: ', Dumper$transitions;
 
 my $frequencies = {};
 
@@ -42,4 +43,4 @@ for my $note ( keys %$transitions ) {
     $frequencies->{$note} = { $stat->proportional_frequencies };
     $stat->clear_data;
 }
-use Data::Dumper;warn 'Transition frequencies: ', Dumper$frequencies;
+warn 'Transition frequencies: ', Dumper$frequencies;
