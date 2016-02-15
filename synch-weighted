@@ -13,6 +13,12 @@ my $initial = shift // 0; # Initial graph node
 sub melody {
     my $self = shift;
 
+    my $channel = 0;
+    my $patch   = 2;
+
+    $self->patch_change( $channel, $patch );
+    $self->noop( 'c' . $channel );
+
     my $pitch = Graph::Weighted->new();
     $pitch->populate(
         {
@@ -42,14 +48,17 @@ sub melody {
 
     my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
 
-    $self->patch_change(0, 2);
-    $self->noop('c0');
-
     $self->n( @$_ ) for @phrase;
 }
 
 sub bassline {
     my $self = shift;
+
+    my $channel = 1;
+    my $patch   = 2;
+
+    $self->patch_change( $channel, $patch );
+    $self->noop( 'c' . $channel );
 
     my $pitch = Graph::Weighted->new();
     $pitch->populate(
@@ -77,9 +86,6 @@ sub bassline {
     );
 
     my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
-
-    $self->patch_change(1, 2);
-    $self->noop('c1');
 
     $self->n( @$_ ) for @phrase;
 }
