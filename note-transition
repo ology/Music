@@ -1,0 +1,44 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use MIDI;
+use Statistics::Frequency;
+
+my $file = shift || die "Usage: perl $0 file.mid\n";
+
+my $opus = MIDI::Opus->new({ from_file => $file });
+
+my $seen = {};
+
+for my $t ( $opus->tracks ) {
+    my @events = grep { $_->[0] eq 'note_on' } $t->events;
+    next unless @events;
+
+    my $last;
+
+    for my $event ( @events ) {
+        next unless $event->[2] == 0; # Skip all but channel 0
+
+        if ( $last ) {
+            my $next = $event->[3]; # The next note in succession
+            push @{ $seen->{$last} }, $next;
+warn "$last -> $next\n";
+            $last = $next;
+        }
+        else {
+            $last = $event->[3]; # The note value
+        }
+    }
+}
+use Data::Dumper::Concise;warn Dumper$seen;
+
+my $freq = {};
+
+for my $note ( keys %$seen ) {
+    my $f = Statistics::Frequency->new;
+    $f->add_data( @{ $seen->{$note} } );
+    my %prop = $f->proportional_frequencies;
+    $freq->{$note} = \%prop;
+}
+use Data::Dumper::Concise;warn Dumper$freq;
