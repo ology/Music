@@ -22,13 +22,14 @@ sub melody {
     my $pitch = Graph::Weighted->new();
     $pitch->populate(
         {
-            0 => { label => 'C5',  2 => 0.4, 6 => 0.6 },
-            1 => { label => 'D5',  3 => 0.4, 4 => 0.6 },
-            2 => { label => 'Ds5', 1 => 0.5, 3 => 0.5 },
-            3 => { label => 'F5',  5 => 0.4, 4 => 0.6 },
-            4 => { label => 'G5',  2 => 0.4, 3 => 0.6 },
-            5 => { label => 'Gs5', 4 => 0.4, 6 => 0.6 },
-            6 => { label => 'As5', 0 => 0.4, 3 => 0.6 },
+            0 => { label => 'C5',  2 => 0.4, 6 => 0.4, 7 => 0.2 },
+            1 => { label => 'D5',  3 => 0.4, 4 => 0.4, 7 => 0.2 },
+            2 => { label => 'Ds5', 1 => 0.4, 3 => 0.4, 7 => 0.2 },
+            3 => { label => 'F5',  5 => 0.4, 4 => 0.4, 7 => 0.2 },
+            4 => { label => 'G5',  2 => 0.4, 3 => 0.4, 7 => 0.2 },
+            5 => { label => 'Gs5', 4 => 0.4, 6 => 0.4, 7 => 0.2 },
+            6 => { label => 'As5', 0 => 0.4, 3 => 0.4, 7 => 0.2 },
+            7 => { label => 'r',   0 => 0.14, 1 => 0.14, 2 => 0.14, 3 => 0.14, 4 => 0.14, 5 => 0.14, 6 => 0.14 },
         }
     );
     my $velocity = Graph::Weighted->new();
@@ -48,7 +49,14 @@ sub melody {
 
     my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
 
-    $self->n( @$_ ) for @phrase;
+    for my $event ( @phrase ) {
+        if ( $event->[2] eq 'r' ) {
+            $self->r( $event->[0] );
+        }
+        else {
+            $self->n( @$event );
+        }
+    }
 }
 
 sub bassline {
@@ -87,7 +95,9 @@ sub bassline {
 
     my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
 
-    $self->n( @$_ ) for @phrase;
+    for my $event ( @phrase ) {
+        $self->n( @$event );
+    }
 }
 
 my $score = MIDI::Simple->new_score();
@@ -95,7 +105,7 @@ $score->set_tempo(500_000);  # 1 qn => .5 seconds (500,000 microseconds)
 
 my $measure = 0;
 
-my @subs = ( \&hihat, \&kick, \&snare, \&bassline, \&melody );
+my @subs = ( \&hihat, \&kick, \&snare, \&melody );
 
 $score->synch(@subs) for 1 .. $bars;
 
