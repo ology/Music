@@ -105,7 +105,7 @@ $score->set_tempo(500_000);  # 1 qn => .5 seconds (500,000 microseconds)
 
 my $measure = 0;
 
-my @subs = ( \&hihat, \&kick, \&snare, \&melody );
+my @subs = ( \&hihat, \&kick, \&snare, \&bassline, \&melody );
 
 $score->synch(@subs) for 1 .. $bars;
 
