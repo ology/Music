@@ -1,4 +1,134 @@
-0,
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Graph::Weighted;
+use List::Util::WeightedChoice qw( choose_weighted );
+use MIDI::Simple;
+use MIDI::Simple::Drummer;
+
+my $bars    = shift || 4;
+my $notes   = shift || 4; # Notes per bar
+my $initial = shift // 0; # Initial graph node
+my $bpm     = shift || 100; # Beats per minute
+my $measure = 0;
+
+my $score = MIDI::Simple->new_score();
+$score->set_tempo( int( 60_000_000 / $bpm ) );
+
+my @subs = ( \&drummer, \&bassline, \&melody );
+$score->synch(@subs) for 1 .. $bars;
+
+$score->write_score("$0.mid");
+
+sub melody {
+    my $self = shift;
+
+    my $channel = 0;
+    my $patch   = 2;
+
+    $self->patch_change( $channel, $patch );
+    $self->noop( 'c' . $channel );
+
+    my $pitch = Graph::Weighted->new();
+    $pitch->populate(
+        {
+            0 => { label => 'C5',  2 => 0.4, 6 => 0.4, 7 => 0.2 },
+            1 => { label => 'D5',  3 => 0.4, 4 => 0.4, 7 => 0.2 },
+            2 => { label => 'Ds5', 1 => 0.4, 3 => 0.4, 7 => 0.2 },
+            3 => { label => 'F5',  5 => 0.4, 4 => 0.4, 7 => 0.2 },
+            4 => { label => 'G5',  2 => 0.4, 3 => 0.4, 7 => 0.2 },
+            5 => { label => 'Gs5', 4 => 0.4, 6 => 0.4, 7 => 0.2 },
+            6 => { label => 'As5', 0 => 0.4, 3 => 0.4, 7 => 0.2 },
+            7 => { label => 'r',   0 => 0.15, 1 => 0.14, 2 => 0.14, 3 => 0.14, 4 => 0.15, 5 => 0.14, 6 => 0.14 },
+        }
+    );
+    my $velocity = Graph::Weighted->new();
+    $velocity->populate(
+        {
+            0 => { label => 'mezzo', 0 => 0.6, 1 => 0.4 },
+            1 => { label => 'mf',    0 => 0.6, 1 => 0.4 },
+        }
+    );
+    my $duration = Graph::Weighted->new();
+    $duration->populate(
+        {
+            0 => { label => 'qn', 0 => 0.5, 1 => 0.5 },
+            1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
+        }
+    );
+
+    my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
+
+    my $durations = {
+        wn => 1,
+        hn => 0.5,
+        qn => 0.25,
+        en => 0.125,
+        sn => 0.0625,
+    };
+
+    my $timing = 0;
+
+    for my $event ( @phrase ) {
+        $timing += $durations->{ $event->[0] };
+        last if $timing > 1;
+
+        if ( $event->[2] eq 'r' ) {
+            $self->r( $event->[0] );
+        }
+        else {
+            $self->n( @$event );
+        }
+    }
+}
+
+sub bassline {
+    my $self = shift;
+
+    my $channel = 1;
+    my $patch   = 2;
+
+    $self->patch_change( $channel, $patch );
+    $self->noop( 'c' . $channel );
+
+    my $pitch = Graph::Weighted->new();
+    $pitch->populate(
+        {
+            0 => { label => 'C3',  2 => 0.4, 3 => 0.6 },
+            1 => { label => 'Ds3', 2 => 0.4, 3 => 0.6 },
+            2 => { label => 'F3',  0 => 0.4, 3 => 0.6 },
+            3 => { label => 'G3',  4 => 0.4, 2 => 0.6 },
+            4 => { label => 'As3', 0 => 0.4, 1 => 0.6 },
+        }
+    );
+    my $velocity = Graph::Weighted->new();
+    $velocity->populate(
+        {
+            0 => { label => 'mf',    0 => 0.7, 1 => 0.3 },
+            1 => { label => 'mezzo', 0 => 0.6, 1 => 0.4 },
+        }
+    );
+    my $duration = Graph::Weighted->new();
+    $duration->populate(
+        {
+            0 => { label => 'qn', 0 => 0.6, 1 => 0.4 },
+            1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
+        }
+    );
+
+    my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
+
+    for my $event ( @phrase ) {
+        $self->n( @$event );
+    }
+}
+
+sub drummer {
+    my $d = MIDI::Simple::Drummer->new(
+        -bpm    => $bpm,
+        -score  => $score,
+        -volume => 120,
     );
     for my $beat ( 1 .. $d->bars ) {
         $d->note( $d->EIGHTH, $d->backbeat_rhythm( -beat => $beat ) );
