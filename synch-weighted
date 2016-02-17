@@ -153,8 +153,8 @@ sub collect_notes {
     my ( $n, $initial, $pitch, $velocity, $duration ) = @_;
 
     my $p_vertex = $initial;
-    my $v_vertex = $initial;
-    my $d_vertex = $initial;
+    my $v_vertex = 0;
+    my $d_vertex = 0;
 
     my $notes = [];
 
