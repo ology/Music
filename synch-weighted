@@ -46,8 +46,8 @@ sub melody {
     my $velocity = Graph::Weighted->new();
     $velocity->populate(
         {
-            0 => { label => 'mf', 0 => 0.6, 1 => 0.4 },
-            1 => { label => 'f',  0 => 0.6, 1 => 0.4 },
+            0 => { label => 'mezzo', 0 => 0.6, 1 => 0.4 },
+            1 => { label => 'mf',    0 => 0.6, 1 => 0.4 },
         }
     );
     my $duration = Graph::Weighted->new();
@@ -105,8 +105,8 @@ sub bassline {
     my $velocity = Graph::Weighted->new();
     $velocity->populate(
         {
-            0 => { label => 'f',  0 => 0.7, 1 => 0.3 },
-            1 => { label => 'ff', 0 => 0.6, 1 => 0.4 },
+            0 => { label => 'mf',    0 => 0.7, 1 => 0.3 },
+            1 => { label => 'mezzo', 0 => 0.6, 1 => 0.4 },
         }
     );
     my $duration = Graph::Weighted->new();
@@ -126,12 +126,18 @@ sub bassline {
 
 sub drummer {
     my $d = MIDI::Simple::Drummer->new(
-        -bpm   => $bpm,
-        -score => $score,
+        -bpm    => $bpm,
+        -score  => $score,
+        -volume => 127,
     );
     for my $beat ( 1 .. $d->bars ) {
-      $d->note( $d->EIGHTH, $d->backbeat_rhythm( -beat => $beat ) );
-      $d->note( $d->EIGHTH, $d->tick );
+        $d->note( $d->EIGHTH, $d->backbeat_rhythm( -beat => $beat ) );
+        if ( $beat == 3 ) {
+            $d->note( $d->EIGHTH, $d->kick );
+        }
+        else {
+            $d->rest( $d->EIGHTH );
+        }
     }
 }
 
