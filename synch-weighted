@@ -10,6 +10,14 @@ my $bars    = shift || 4;
 my $notes   = shift || 4;
 my $initial = shift // 0; # Initial graph node
 
+my $durations = {
+    wn => 1,
+    hn => 0.5,
+    qn => 0.25,
+    en => 0.125,
+    sn => 0.0625,
+};
+
 sub melody {
     my $self = shift;
 
@@ -49,7 +57,12 @@ sub melody {
 
     my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
 
+    my $timing = 0;
+
     for my $event ( @phrase ) {
+        $timing += $durations->{ $event->[0] };
+        last if $timing > 1;
+
         if ( $event->[2] eq 'r' ) {
             $self->r( $event->[0] );
         }
