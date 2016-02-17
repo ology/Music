@@ -5,16 +5,18 @@ use warnings;
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
+use MIDI::Simple::Drummer;
 
 my $bars    = shift || 4;
 my $notes   = shift || 4; # Notes per bar
 my $initial = shift // 0; # Initial graph node
+my $bpm     = shift || 100; # Beats per minute
 my $measure = 0;
 
 my $score = MIDI::Simple->new_score();
-$score->set_tempo(500_000);  # 1 qn => .5 seconds (500,000 microseconds)
+$score->set_tempo( int( 60_000_000 / $bpm ) );
 
-my @subs = ( \&hihat, \&kick, \&snare, \&bassline, \&melody );
+my @subs = ( \&drummer, \&bassline, \&melody );
 $score->synch(@subs) for 1 .. $bars;
 
 $score->write_score("$0.mid");
@@ -122,29 +124,15 @@ sub bassline {
     }
 }
 
-sub hihat {
-    my $self = shift;
-    $self->noop('c9', 'fff', 'n42', 'qn');
-    $self->n for 1 .. 4;
-}
-
-sub kick {
-    my $self = shift;
-    $self->noop('c9', 'fff', 'n35', 'qn');
-    $self->n;
-    $self->r;
-    $self->n('en');
-    $self->n;
-    $self->r;
-}
-
-sub snare {
-    my $self = shift;
-    $self->noop('c9', 'fff', 'n38', 'qn');
-    $self->r;
-    $self->n;
-    $self->r;
-    $self->n;
+sub drummer {
+    my $d = MIDI::Simple::Drummer->new(
+        -bpm   => $bpm,
+        -score => $score,
+    );
+    for my $beat ( 1 .. $d->bars ) {
+      $d->note( $d->EIGHTH, $d->backbeat_rhythm( -beat => $beat ) );
+      $d->note( $d->EIGHTH, $d->tick );
+    }
 }
 
 sub collect_notes {
