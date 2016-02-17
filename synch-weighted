@@ -9,6 +9,15 @@ use MIDI::Simple;
 my $bars    = shift || 4;
 my $notes   = shift || 4; # Notes per bar
 my $initial = shift // 0; # Initial graph node
+my $measure = 0;
+
+my $score = MIDI::Simple->new_score();
+$score->set_tempo(500_000);  # 1 qn => .5 seconds (500,000 microseconds)
+
+my @subs = ( \&hihat, \&kick, \&snare, \&bassline, \&melody );
+$score->synch(@subs) for 1 .. $bars;
+
+$score->write_score("$0.mid");
 
 sub melody {
     my $self = shift;
@@ -112,17 +121,6 @@ sub bassline {
         $self->n( @$event );
     }
 }
-
-my $score = MIDI::Simple->new_score();
-$score->set_tempo(500_000);  # 1 qn => .5 seconds (500,000 microseconds)
-
-my $measure = 0;
-
-my @subs = ( \&hihat, \&kick, \&snare, \&bassline, \&melody );
-
-$score->synch(@subs) for 1 .. $bars;
-
-$score->write_score("$0.mid");
 
 sub hihat {
     my $self = shift;
