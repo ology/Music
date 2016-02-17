@@ -10,14 +10,6 @@ my $bars    = shift || 4;
 my $notes   = shift || 4; # Notes per bar
 my $initial = shift // 0; # Initial graph node
 
-my $durations = {
-    wn => 1,
-    hn => 0.5,
-    qn => 0.25,
-    en => 0.125,
-    sn => 0.0625,
-};
-
 sub melody {
     my $self = shift;
 
@@ -56,6 +48,14 @@ sub melody {
     );
 
     my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
+
+    my $durations = {
+        wn => 1,
+        hn => 0.5,
+        qn => 0.25,
+        en => 0.125,
+        sn => 0.0625,
+    };
 
     my $timing = 0;
 
