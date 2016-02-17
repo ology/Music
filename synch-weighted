@@ -7,7 +7,7 @@ use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
 
 my $bars    = shift || 4;
-my $notes   = shift || 4;
+my $notes   = shift || 4; # Notes per bar
 my $initial = shift // 0; # Initial graph node
 
 my $durations = {
