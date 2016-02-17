@@ -60,6 +60,7 @@ sub melody {
 
     my @phrase = collect_notes( $notes, $initial, $pitch, $velocity, $duration );
 
+    my $timing    = 0;
     my $durations = {
         wn => 1,
         hn => 0.5,
@@ -67,8 +68,6 @@ sub melody {
         en => 0.125,
         sn => 0.0625,
     };
-
-    my $timing = 0;
 
     for my $event ( @phrase ) {
         $timing += $durations->{ $event->[0] };
