@@ -12,7 +12,7 @@ my $n       = shift || 4; # Number of notes to play
 my $initial = shift // 1; # Initial graph node: 0=random, 1=lowest note
 
 my $data = retrieve($file);
-#use Data::Dumper::Concise;warn Dumper$data;
+use Data::Dumper::Concise;warn 'Data to process: ', Dumper$data;
 
 if ( $initial == 0 ) {
     $initial = ( keys %$data )[ int( rand keys %$data ) ];
@@ -20,7 +20,7 @@ if ( $initial == 0 ) {
 else {
     $initial = ( sort { $a <=> $b } keys %$data )[0];
 }
-#warn __LINE__,". Initial: $initial\n";
+warn "Initial note: $initial\n";
 
 my $pitches = Graph::Weighted->new;
 $pitches->populate($data);
