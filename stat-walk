@@ -3,11 +3,12 @@ use strict;
 use warnings;
 
 use Graph::Weighted;
-#use List::Util::WeightedChoice qw( choose_weighted );
-#use MIDI::Simple;
+use List::Util::WeightedChoice qw( choose_weighted );
+use MIDI::Simple;
 use Storable;
 
 my $file    = shift || die "Usage: perl $0 proportional-frequencies.dat [0|1]";
+my $n       = shift || 4; # Number of notes to play
 my $initial = shift // 1; # Initial graph node: 0=random, 1=lowest note
 
 my $data = retrieve($file);
@@ -19,8 +20,68 @@ if ( $initial == 0 ) {
 else {
     $initial = ( sort { $a <=> $b } keys %$data )[0];
 }
-#warn __LINE__,". MARK: ",$initial,"\n";
+#warn __LINE__,". Initial: $initial\n";
 
-#my $notes = Graph::Weighted->new();
-#$notes->populate($data);
-#use Data::Dumper::Concise;warn Dumper$notes;
+my $pitches = Graph::Weighted->new;
+$pitches->populate($data);
+
+my @phrase = collect_notes( $n, $initial, $pitches );
+#use Data::Dumper::Concise;warn Dumper\@phrase;
+
+my $score = setup_midi();
+$score->n( @$_ ) for @phrase;
+$score->write_score( "$0.mid" );
+
+sub collect_notes {
+    my ( $n, $initial, $graph ) = @_;
+
+    my $p_vertex = $initial;
+
+    my $notes = [];
+
+    for my $i ( 1 .. $n ) {
+        push @$notes, [ 'qn', 'f', $p_vertex ];
+
+        if ( $i < $n ) {
+            $p_vertex = next_vertex( $graph, $p_vertex );
+        }
+    }
+
+    return @$notes;
+}
+
+sub next_vertex {
+    my ( $graph, $vertex ) = @_;
+
+    my $successors = [];
+
+    for my $successor ( $graph->successors($vertex) ) {
+        push @$successors, {
+            vertex => $successor,
+            weight => $graph->get_cost( [ $vertex, $successor ] ),
+        };
+    }
+
+    my $choice = choose_weighted( $successors, sub { $_[0]->{weight} } );
+
+    return $choice->{vertex};
+}
+
+sub setup_midi {
+    my %args = (
+        lead_in => 4,
+        channel => 1,
+        patch   => 42,
+        volume  => 120,
+        @_,
+    );
+    my $score = MIDI::Simple->new_score();
+    $score->Volume($args{volume});
+    # Lead-in
+    $score->Channel(9);
+    $score->n( 'qn', $args{patch} ) for 1 .. $args{lead_in};
+    # Passage
+    $score->Channel($args{channel});
+    $score->patch_change( $args{channel}, $args{patch} );
+    return $score;
+}
