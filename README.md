@@ -1,4 +1,4 @@
 Music
 =====
 
-Math, Theory, Algorithmic composition experimentation
+Theory, Algorithmic composition, Experimentation
