@@ -7,7 +7,7 @@ use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
 use MIDI::Simple::Drummer;
 
-my $bars    = shift || 4;
+my $phrases = shift || 4;
 my $notes   = shift || 4; # Notes per bar
 my $initial = shift // 0; # Initial graph node
 my $bpm     = shift || 100; # Beats per minute
@@ -16,8 +16,11 @@ my $measure = 0;
 my $score = MIDI::Simple->new_score();
 $score->set_tempo( int( 60_000_000 / $bpm ) );
 
-my @subs = ( \&drummer, \&bassline, \&melody );
-$score->synch(@subs) for 1 .. $bars;
+$score->synch(
+    \&drummer,
+    \&bassline,
+    \&melody
+) for 1 .. $phrases;
 
 $score->write_score("$0.mid");
 
@@ -129,7 +132,7 @@ sub drummer {
         -score  => $score,
         -volume => 120,
     );
-    for my $beat ( 1 .. $d->bars ) {
+    for my $beat ( 1 .. $d->beats ) {
         $d->note( $d->EIGHTH, $d->backbeat_rhythm( -beat => $beat ) );
         if ( $beat == 3 ) {
             $d->note( $d->EIGHTH, $d->kick );
