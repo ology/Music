@@ -6,6 +6,7 @@ use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
 use MIDI::Simple::Drummer;
+use Music::Tempo;
 
 my $phrases = shift || 4;
 my $notes   = shift || 4; # Notes per bar
@@ -14,7 +15,7 @@ my $bpm     = shift || 100; # Beats per minute
 my $measure = 0;
 
 my $score = MIDI::Simple->new_score();
-$score->set_tempo( int( 60_000_000 / $bpm ) );
+$score->set_tempo( bpm_to_ms($bpm) * 1000 );
 
 $score->synch(
     \&drummer,
