@@ -48,4 +48,4 @@ for my $note ( keys %$transitions ) {
 }
 warn 'Transition frequencies: ', Dumper$frequencies;
 
-store $frequencies, 'proportional_frequencies.dat';
+store $frequencies, "$0.dat";
