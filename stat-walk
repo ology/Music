@@ -30,6 +30,7 @@ my @phrase = collect_notes( $n, $initial, $pitches );
 
 my $score = setup_midi();
 $score->n( @$_ ) for @phrase;
+$score->n( 'wn', $initial );
 $score->write_score( "$0.mid" );
 
 sub collect_notes {
