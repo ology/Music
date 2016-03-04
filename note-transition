@@ -17,7 +17,7 @@ my $track = [ $opus->tracks ]->[0];
 my @events = grep { $_->[0] eq 'note_on' } $track->events;
 
 my $transitions = {};
-my @last;
+my @preceeding;
 
 for my $event ( @events ) {
     next unless $event->[2] == 0; # Skip all but channel 0
@@ -25,14 +25,14 @@ for my $event ( @events ) {
 
     my $next = $event->[3]; # The next note in succession
 
-    if ( @last == $notes ) {
-        push @{ $transitions->{ join ' ', @last } }, $next;
-warn "Datum: @last -> $next\n";
-        shift @last;
-        push @last, $next;
+    if ( @preceeding == $notes ) {
+        push @{ $transitions->{ join ' ', @preceeding } }, $next;
+warn "Datum: @preceeding -> $next\n";
+        shift @preceeding;
+        push @preceeding, $next;
     }
     else {
-        push @last, $next;
+        push @preceeding, $next;
     }
 }
 warn 'Note transitions: ', Dumper$transitions;
