@@ -29,7 +29,7 @@ for my $event ( @events ) {
     # The next note in succession
     my $next = $event->[3];
 
-    # Add a transition
+    # Add a transition if there are preceeding notes
     if ( @preceeding == $notes ) {
         push @{ $transitions->{ join ' ', @preceeding } }, $next;
 warn "Datum: @preceeding -> $next\n";
