@@ -9,7 +9,7 @@ use Storable;
 
 # Get the commandline arguments
 my $file  = shift || die "Usage: perl $0 tune.mid\n";
-my $notes = shift || 1;
+my $notes = shift || 1; # Number of notes in the preceeding list
 
 # Collect the MIDI events
 my $opus   = MIDI::Opus->new({ from_file => $file });
