@@ -23,15 +23,16 @@ for my $event ( @events ) {
     next unless $event->[2] == 0; # Skip all but channel 0
 #warn "@$event\n";
 
+    my $next = $event->[3]; # The next note in succession
+
     if ( @last == $notes ) {
-        my $next = $event->[3]; # The next note in succession
         push @{ $transitions->{ join ' ', @last } }, $next;
 warn "Datum: @last -> $next\n";
         shift @last;
         push @last, $next;
     }
     else {
-        push @last, $event->[3]; # The note value
+        push @last, $next;
     }
 }
 warn 'Note transitions: ', Dumper$transitions;
