@@ -20,7 +20,6 @@ for my $t ( $opus->tracks ) {
     my $last;
 
     for my $event ( @events ) {
-        next unless $event->[0] eq 'note_on';
         next unless $event->[2] == 0; # Skip all but channel 0
 #warn "@$event\n";
 
