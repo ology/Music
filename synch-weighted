@@ -67,11 +67,12 @@ sub melody {
     my $timing = 0;
 
     for my $event ( @phrase ) {
-        $timing += $MIDI::Simple::Length{ $event->[0] };
+        my $dura = $event->[0];
+        $timing += $MIDI::Simple::Length{$dura};
         last if $timing > $MIDI::Simple::Length{wn};
 
         if ( $event->[2] eq 'r' ) {
-            $self->r( $event->[0] );
+            $self->r($dura);
         }
         else {
             $self->n( @$event );
