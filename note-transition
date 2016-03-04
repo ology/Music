@@ -29,11 +29,9 @@ for my $event ( @events ) {
         push @{ $transitions->{ join ' ', @preceeding } }, $next;
 warn "Datum: @preceeding -> $next\n";
         shift @preceeding;
-        push @preceeding, $next;
     }
-    else {
-        push @preceeding, $next;
-    }
+
+    push @preceeding, $next;
 }
 warn 'Note transitions: ', Dumper$transitions;
 
