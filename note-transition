@@ -8,6 +8,7 @@ use Statistics::Frequency;
 use Storable;
 
 my $file  = shift || die "Usage: perl $0 tune.mid\n";
+my $notes = shift || 1;
 
 my $opus = MIDI::Opus->new({ from_file => $file });
 
@@ -16,20 +17,21 @@ my $track = [ $opus->tracks ]->[0];
 my @events = grep { $_->[0] eq 'note_on' } $track->events;
 
 my $transitions = {};
-my $last;
+my @last;
 
 for my $event ( @events ) {
     next unless $event->[2] == 0; # Skip all but channel 0
 #warn "@$event\n";
 
-    if ( $last ) {
+    if ( @last == $notes ) {
         my $next = $event->[3]; # The next note in succession
-        push @{ $transitions->{$last} }, $next;
-warn "Datum: $last -> $next\n";
-        $last = $next;
+        push @{ $transitions->{ join ' ', @last } }, $next;
+warn "Datum: @last -> $next\n";
+        shift @last;
+        push @last, $next;
     }
     else {
-        $last = $event->[3]; # The note value
+        push @last, $event->[3]; # The note value
     }
 }
 warn 'Note transitions: ', Dumper$transitions;
