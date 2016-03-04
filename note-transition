@@ -7,38 +7,47 @@ use MIDI;
 use Statistics::Frequency;
 use Storable;
 
+# Get the commandline arguments
 my $file  = shift || die "Usage: perl $0 tune.mid\n";
 my $notes = shift || 1;
 
-my $opus = MIDI::Opus->new({ from_file => $file });
-
-my $track = [ $opus->tracks ]->[0];
-
+# Collect the MIDI events
+my $opus   = MIDI::Opus->new({ from_file => $file });
+my $track  = [ $opus->tracks ]->[0];
 my @events = grep { $_->[0] eq 'note_on' } $track->events;
 
+# Setup the transition buckets
 my $transitions = {};
 my @preceeding;
 
+# Gather the transitions
 for my $event ( @events ) {
-    next unless $event->[2] == 0; # Skip all but channel 0
+    # Skip all but channel 0
+    next unless $event->[2] == 0;
 #warn "@$event\n";
 
-    my $next = $event->[3]; # The next note in succession
+    # The next note in succession
+    my $next = $event->[3];
 
+    # Add a transition
     if ( @preceeding == $notes ) {
         push @{ $transitions->{ join ' ', @preceeding } }, $next;
 warn "Datum: @preceeding -> $next\n";
         shift @preceeding;
     }
 
+    # Add the next event to the preceeding event list
     push @preceeding, $next;
 }
 warn 'Note transitions: ', Dumper$transitions;
 
+# Setup the frequency bucket
 my $frequencies = {};
 
+# Instantiate a new stat object
 my $stat = Statistics::Frequency->new;
 
+# Gather the proportional frequencies of each transition
 for my $note ( keys %$transitions ) {
     $stat->add_data( @{ $transitions->{$note} } );
     $frequencies->{$note} = { $stat->proportional_frequencies };
