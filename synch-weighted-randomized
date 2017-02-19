@@ -1,0 +1,222 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Graph::Weighted;
+use List::Util::WeightedChoice qw( choose_weighted );
+use MIDI::Simple;
+use MIDI::Simple::Drummer;
+use Music::Tempo;
+
+my $phrases = shift || 4;
+my $notes   = shift || 4; # Notes per bar
+my $bpm     = shift || 100; # Beats per minute
+my $measure = 0;
+
+my $score = MIDI::Simple->new_score();
+$score->set_tempo( bpm_to_ms($bpm) * 1000 );
+
+$score->synch(
+    \&drummer,
+    \&bassline,
+    \&melody
+) for 1 .. $phrases;
+
+$score->write_score("$0.mid");
+
+sub melody {
+    my $self = shift;
+
+    my $channel = 0;
+    my $patch   = 2;
+
+    $self->patch_change( $channel, $patch );
+    $self->noop( 'c' . $channel );
+
+    my $pitch = Graph::Weighted->new();
+    $pitch->populate( partially_random_graph( [qw( C5 D5 Ds5 F5 G5 Gs5 As5 r )], 3 ) );
+
+    my $velocity = Graph::Weighted->new();
+    $velocity->populate(
+        {
+            0 => { label => 'mezzo', 0 => 0.6, 1 => 0.4 },
+            1 => { label => 'mf',    0 => 0.6, 1 => 0.4 },
+        }
+    );
+
+    my $duration = Graph::Weighted->new();
+    $duration->populate(
+        {
+            0 => { label => 'qn', 0 => 0.5, 1 => 0.5 },
+            1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
+        }
+    );
+
+    my @phrase = collect_notes( $notes, $pitch, $velocity, $duration );
+
+    my $timing = 0;
+
+    for my $event ( @phrase ) {
+        my $dura = $event->[0];
+        $timing += $MIDI::Simple::Length{$dura};
+        last if $timing > $MIDI::Simple::Length{wn};
+
+        if ( $event->[2] eq 'r' ) {
+            $self->r($dura);
+        }
+        else {
+            $self->n( @$event );
+        }
+    }
+}
+
+sub bassline {
+    my $self = shift;
+
+    my $channel = 1;
+    my $patch   = 2;
+
+    $self->patch_change( $channel, $patch );
+    $self->noop( 'c' . $channel );
+
+    my $pitch = Graph::Weighted->new();
+    $pitch->populate(
+        {
+            0 => { label => 'C3',  2 => 0.4, 3 => 0.6 },
+            1 => { label => 'Ds3', 2 => 0.4, 3 => 0.6 },
+            2 => { label => 'F3',  0 => 0.4, 3 => 0.6 },
+            3 => { label => 'G3',  4 => 0.4, 2 => 0.6 },
+            4 => { label => 'As3', 0 => 0.4, 1 => 0.6 },
+        }
+    );
+    my $velocity = Graph::Weighted->new();
+    $velocity->populate(
+        {
+            0 => { label => 'mf',    0 => 0.7, 1 => 0.3 },
+            1 => { label => 'mezzo', 0 => 0.6, 1 => 0.4 },
+        }
+    );
+    my $duration = Graph::Weighted->new();
+    $duration->populate(
+        {
+            0 => { label => 'qn', 0 => 0.6, 1 => 0.4 },
+            1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
+        }
+    );
+
+    my @phrase = collect_notes( $notes, $pitch, $velocity, $duration );
+
+    for my $event ( @phrase ) {
+        $self->n( @$event );
+    }
+}
+
+sub drummer {
+    my $d = MIDI::Simple::Drummer->new(
+        -bpm    => $bpm,
+        -score  => $score,
+        -volume => 120,
+    );
+    for my $beat ( 1 .. $d->beats ) {
+        $d->note( $d->EIGHTH, $d->backbeat_rhythm( -beat => $beat ) );
+        if ( $beat == 3 ) {
+            $d->note( $d->EIGHTH, $d->kick );
+        }
+        else {
+            $d->rest( $d->EIGHTH );
+        }
+    }
+}
+
+sub collect_notes {
+    my ( $n, $pitch, $velocity, $duration ) = @_;
+
+    my $p_vertex = int( rand $n );
+    my $v_vertex = 0;
+    my $d_vertex = 0;
+
+    my $notes = [];
+
+    for my $i ( 1 .. $n ) {
+        my $p = $pitch->get_vertex_attribute( $p_vertex, 'label' );
+        my $v = $velocity->get_vertex_attribute( $v_vertex, 'label' );
+        my $d = $duration->get_vertex_attribute( $v_vertex, 'label' );
+
+        push @$notes, [ $d, $v, $p ];
+
+        if ( $i < $n ) {
+            $p_vertex = next_vertex( $pitch, $p_vertex );
+            $v_vertex = next_vertex( $velocity, $v_vertex );
+            $d_vertex = next_vertex( $duration, $d_vertex );
+        }
+    }
+
+    return @$notes;
+}
+
+sub next_vertex {
+    my ( $graph, $vertex ) = @_;
+
+    my $successors = [];
+
+    for my $successor ( $graph->successors($vertex) ) {
+        push @$successors, {
+            vertex => $successor,
+            weight => $graph->get_cost( [ $vertex, $successor ] ),
+        };
+    }
+
+    my $choice = choose_weighted( $successors, sub { $_[0]->{weight} } );
+
+    return $choice->{vertex};
+}
+
+sub partially_random_graph {
+    my ( $labels, $n ) = @_;
+
+    my $graph = {};
+    my $i = 0;
+
+    for my $label ( @$labels ) {
+        $graph->{$i} = { label => $label, choose_n( scalar @$labels, $n ) };
+        $i++;
+    }
+
+    return $graph;
+}
+
+sub choose_n {
+    my ( $labels, $n ) = @_;
+
+    my $top = 1;
+    my %distribution;
+    my %seen;
+
+    for my $i ( 1 .. $n ) {
+        my $curr = rand($top);
+        my $next = abs( $top - $curr );
+
+        my $label = get_label( $labels, \%seen );
+
+        $distribution{$label} = $i == $n ? $top : $next;
+
+        $top = $curr;
+    }
+
+    return %distribution;
+}
+
+sub get_label {
+    my ( $labels, $seen ) = @_;
+
+    my $label = int( rand $labels );
+
+    if ( exists $seen->{$label} ) {
+        while ( exists $seen->{$label} ) {
+            $label = int( rand $labels );
+        }
+    }
+    
+    $seen->{$label} = 1;
+    return $label;
+}
