@@ -38,20 +38,10 @@ sub melody {
     $pitch->populate( partially_random_graph( [qw( C5 D5 Ds5 F5 G5 Gs5 As5 r )], 3 ) );
 
     my $velocity = Graph::Weighted->new();
-    $velocity->populate(
-        {
-            0 => { label => 'mezzo', 0 => 0.6, 1 => 0.4 },
-            1 => { label => 'mf',    0 => 0.6, 1 => 0.4 },
-        }
-    );
+    $velocity->populate( partially_random_graph( [qw( mezzo mf )], 2 ) );
 
     my $duration = Graph::Weighted->new();
-    $duration->populate(
-        {
-            0 => { label => 'qn', 0 => 0.5, 1 => 0.5 },
-            1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
-        }
-    );
+    $duration->populate( partially_random_graph( [qw( qn en )], 2 ) );
 
     my @phrase = collect_notes( $notes, $pitch, $velocity, $duration );
 
@@ -81,29 +71,13 @@ sub bassline {
     $self->noop( 'c' . $channel );
 
     my $pitch = Graph::Weighted->new();
-    $pitch->populate(
-        {
-            0 => { label => 'C3',  2 => 0.4, 3 => 0.6 },
-            1 => { label => 'Ds3', 2 => 0.4, 3 => 0.6 },
-            2 => { label => 'F3',  0 => 0.4, 3 => 0.6 },
-            3 => { label => 'G3',  4 => 0.4, 2 => 0.6 },
-            4 => { label => 'As3', 0 => 0.4, 1 => 0.6 },
-        }
-    );
+    $pitch->populate( partially_random_graph( [qw( C3 Ds3 F3 G3 As3 )], 2 ) );
+
     my $velocity = Graph::Weighted->new();
-    $velocity->populate(
-        {
-            0 => { label => 'mf',    0 => 0.7, 1 => 0.3 },
-            1 => { label => 'mezzo', 0 => 0.6, 1 => 0.4 },
-        }
-    );
+    $velocity->populate( partially_random_graph( [qw( mezzo mf )], 2 ) );
+
     my $duration = Graph::Weighted->new();
-    $duration->populate(
-        {
-            0 => { label => 'qn', 0 => 0.6, 1 => 0.4 },
-            1 => { label => 'en', 0 => 0.6, 1 => 0.4 },
-        }
-    );
+    $duration->populate( partially_random_graph( [qw( qn en )], 2 ) );
 
     my @phrase = collect_notes( $notes, $pitch, $velocity, $duration );
 
