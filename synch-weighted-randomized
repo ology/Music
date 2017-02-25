@@ -30,28 +30,28 @@ $score->write_score("$0.mid");
 
 sub melody {
     my $self = shift;
-    phrase( $self, 0, 2, $melody, 3 );
+    phrase( $self, 0, 2, $melody );
 }
 
 sub bassline {
     my $self = shift;
-    phrase( $self, 1, 2, $bass, 2);
+    phrase( $self, 1, 2, $bass );
 }
 
 sub phrase {
-    my ( $s, $channel, $patch, $note_list, $connections ) = @_;
+    my ( $s, $channel, $patch, $note_list ) = @_;
 
     $s->patch_change( $channel, $patch );
     $s->noop( 'c' . $channel );
 
     my $pitch = Graph::Weighted->new();
-    $pitch->populate( partially_random_graph( $note_list, $connections ) );
+    $pitch->populate( random_graph($note_list) );
 
     my $velocity = Graph::Weighted->new();
-    $velocity->populate( partially_random_graph( [qw( mezzo mf )], 2 ) );
+    $velocity->populate( random_graph( [qw( mezzo mf )] ) );
 
     my $duration = Graph::Weighted->new();
-    $duration->populate( partially_random_graph( [qw( qn en )], 2 ) );
+    $duration->populate( random_graph( [qw( qn en )] ) );
 
     my @phrase = collect_notes( $pitch, $velocity, $duration );
 
@@ -133,14 +133,14 @@ sub next_vertex {
     return $choice->{vertex};
 }
 
-sub partially_random_graph {
-    my ( $labels, $n ) = @_;
+sub random_graph {
+    my $labels = shift;
 
     my $graph = {};
     my $i = 0;
 
     for my $label ( @$labels ) {
-        $graph->{$i} = { label => $label, choose_n( scalar @$labels, $n ) };
+        $graph->{$i} = { label => $label, choose_n( scalar @$labels, scalar @$labels ) };
         $i++;
     }
 
