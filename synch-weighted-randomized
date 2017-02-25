@@ -10,7 +10,6 @@ use MIDI::Simple::Drummer;
 use Music::Tempo;
 
 my $phrases = shift || 4;
-my $notes   = shift || 4; # Notes per bar
 my $bpm     = shift || 100; # Beats per minute
 my $measure = 0;
 
@@ -27,15 +26,22 @@ $score->write_score("$0.mid");
 
 sub melody {
     my $self = shift;
+    phrase( $self, 0, 2, [qw( C5 D5 Ds5 F5 G5 Gs5 As5 r )], 3 );
+}
 
-    my $channel = 0;
-    my $patch   = 2;
+sub bassline {
+    my $self = shift;
+    phrase( $self, 1, 2, [qw( C3 Ds3 F3 G3 As3 )], 2);
+}
 
-    $self->patch_change( $channel, $patch );
-    $self->noop( 'c' . $channel );
+sub phrase {
+    my ( $s, $channel, $patch, $note_list, $connections ) = @_;
+
+    $s->patch_change( $channel, $patch );
+    $s->noop( 'c' . $channel );
 
     my $pitch = Graph::Weighted->new();
-    $pitch->populate( partially_random_graph( [qw( C5 D5 Ds5 F5 G5 Gs5 As5 r )], 3 ) );
+    $pitch->populate( partially_random_graph( $note_list, $connections ) );
 
     my $velocity = Graph::Weighted->new();
     $velocity->populate( partially_random_graph( [qw( mezzo mf )], 2 ) );
@@ -43,7 +49,7 @@ sub melody {
     my $duration = Graph::Weighted->new();
     $duration->populate( partially_random_graph( [qw( qn en )], 2 ) );
 
-    my @phrase = collect_notes( $notes, $pitch, $velocity, $duration );
+    my @phrase = collect_notes( $pitch, $velocity, $duration );
 
     my $timing = 0;
 
@@ -53,36 +59,11 @@ sub melody {
         last if $timing > $MIDI::Simple::Length{wn};
 
         if ( $event->[2] eq 'r' ) {
-            $self->r($dura);
+            $s->r($dura);
         }
         else {
-            $self->n( @$event );
+            $s->n( @$event );
         }
-    }
-}
-
-sub bassline {
-    my $self = shift;
-
-    my $channel = 1;
-    my $patch   = 2;
-
-    $self->patch_change( $channel, $patch );
-    $self->noop( 'c' . $channel );
-
-    my $pitch = Graph::Weighted->new();
-    $pitch->populate( partially_random_graph( [qw( C3 Ds3 F3 G3 As3 )], 2 ) );
-
-    my $velocity = Graph::Weighted->new();
-    $velocity->populate( partially_random_graph( [qw( mezzo mf )], 2 ) );
-
-    my $duration = Graph::Weighted->new();
-    $duration->populate( partially_random_graph( [qw( qn en )], 2 ) );
-
-    my @phrase = collect_notes( $notes, $pitch, $velocity, $duration );
-
-    for my $event ( @phrase ) {
-        $self->n( @$event );
     }
 }
 
@@ -104,7 +85,9 @@ sub drummer {
 }
 
 sub collect_notes {
-    my ( $n, $pitch, $velocity, $duration ) = @_;
+    my ( $pitch, $velocity, $duration ) = @_;
+
+    my $n = $pitch->vertices;
 
     my $p_vertex = int( rand $n );
     my $v_vertex = 0;
