@@ -62,12 +62,12 @@ sub phrase {
     my $timing = 0;
 
     for my $event ( @phrase ) {
-        my $dura = $event->[0];
-        $timing += $MIDI::Simple::Length{$dura};
+        my $duration = $event->[0];
+        $timing += $MIDI::Simple::Length{$duration};
         last if $timing > $MIDI::Simple::Length{wn};
 
         if ( $event->[2] eq 'r' ) {
-            $s->r($dura);
+            $s->r($duration);
         }
         else {
             $s->n( @$event );
