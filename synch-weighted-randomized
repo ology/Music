@@ -149,8 +149,8 @@ sub collect_notes {
     my $n = $pitch->vertices;
 
     my $p_vertex = int( rand $n );
-    my $v_vertex = 0;
-    my $d_vertex = 0;
+    my $v_vertex = int( rand $velocity->vertices );
+    my $d_vertex = int( rand $duration->vertices );
 
     my $notes = [];
 
