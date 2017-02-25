@@ -140,7 +140,7 @@ sub random_graph {
     my $i = 0;
 
     for my $label ( @$labels ) {
-        $graph->{$i} = { label => $label, choose_n( scalar @$labels, scalar @$labels ) };
+        $graph->{$i} = { label => $label, choose_n( scalar @$labels ) };
         $i++;
     }
 
@@ -148,13 +148,13 @@ sub random_graph {
 }
 
 sub choose_n {
-    my ( $labels, $n ) = @_;
+    my $labels = shift;
 
     my %seen;
-    my @labels = map { get_label( $labels, \%seen ) } 1 .. $n;
+    my @labels = map { get_label( $labels, \%seen ) } 1 .. $labels;
 
     my %distribution;
-    my $partition = Math::Partition::Rand->new( top => 1, n => $n );
+    my $partition = Math::Partition::Rand->new( top => 1, n => $labels );
     @distribution{@labels} = @{ $partition->choose() };
 
     return %distribution;
