@@ -4,6 +4,7 @@ use warnings;
 
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
+use Math::Partition::Rand;
 use MIDI::Simple;
 use MIDI::Simple::Drummer;
 use Music::Tempo;
@@ -188,20 +189,12 @@ sub partially_random_graph {
 sub choose_n {
     my ( $labels, $n ) = @_;
 
-    my $top = 1;
-    my %distribution;
     my %seen;
+    my @labels = map { get_label( $labels, \%seen ) } 1 .. $n;
 
-    for my $i ( 1 .. $n ) {
-        my $curr = rand($top);
-        my $next = abs( $top - $curr );
-
-        my $label = get_label( $labels, \%seen );
-
-        $distribution{$label} = $i == $n ? $top : $next;
-
-        $top = $curr;
-    }
+    my %distribution;
+    my $partition = Math::Partition::Rand->new( top => 1, n => $n );
+    @distribution{@labels} = @{ $partition->choose() };
 
     return %distribution;
 }
