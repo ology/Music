@@ -18,9 +18,13 @@ my %opts = (
     treble          => 'C5 D5 Ds5 F5 G5 Gs5 As5 r',
     treble_velocity => 'mezzo mf',
     treble_duration => 'qn en',
+    treble_channel  => 0,
+    treble_patch    => 2,
     bass            => 'C3 Ds3 F3 G3 As3',
     bass_velocity   => 'mezzo mf f',
     bass_duration   => 'dqn qn en',
+    bass_channel    => 1,
+    bass_patch      => 2,
     filename        => "$0.mid",
     drummer         => 0,
 );
@@ -34,9 +38,13 @@ GetOptions( \%opts,
     'treble=s',
     'treble_velocity=s',
     'treble_duration=s',
+    'treble_channel=i',
+    'treble_patch=i',
     'bass=s',
     'bass_velocity=s',
     'bass_duration=s',
+    'bass_channel=i',
+    'bass_patch=i',
     'filename=s',
     'drummer',
 ) or pod2usage(2);
@@ -65,8 +73,8 @@ sub melody {
     my $self = shift;
     phrase(
         score     => $self,
-        channel   => 0,
-        patch     => 2,
+        channel   => $opts{treble_channel},
+        patch     => $opts{treble_patch},
         note_list => $opts{treble},
         velo_list => $opts{treble_velocity},
         dura_list => $opts{treble_duration},
@@ -77,8 +85,8 @@ sub bassline {
     my $self = shift;
     phrase(
         score     => $self,
-        channel   => 1,
-        patch     => 2,
+        channel   => $opts{bass_channel},
+        patch     => $opts{bass_patch},
         note_list => $opts{bass},
         velo_list => $opts{bass_velocity},
         dura_list => $opts{bass_duration},
@@ -270,6 +278,14 @@ Default: 'mezzo mf'
 
 Default: 'qn en'
 
+=item B<treble_channel>
+
+Default: 0
+
+=item B<treble_patch>
+
+Default: 2
+
 =item B<bass>
 
 Default: 'C3 Ds3 F3 G3 As3'
@@ -281,6 +297,14 @@ Default: 'mezzo mf f'
 =item B<bass_duration>
 
 Default: 'dqn qn en'
+
+=item B<bass_channel>
+
+Default: 1
+
+=item B<bass_patch>
+
+Default: 2
 
 =item B<filename>
 
@@ -301,6 +325,8 @@ Generate phrases of MIDI music by means of random weighted graphs.
   $ perl synch-weighted-randomized --phrases=8 --treble='C5 D5 E5 F5 G5 A5 B5 C6' --bass='C3 F3 G3'
 
   $ perl synch-weighted-randomized --phrases=8 --treble='C5 D5 Ds5 F5 G5 As5 C6' --bass='C3 F3 G3' --drummer
+
+  $ perl synch-weighted-randomized --treble='C5 D5 E5 F5 G5 A5 B5 C6' --bass='C3 F3 G3 C3' --bass_duration='qn'
 
   $ perl synch-weighted-randomized --treble='C5 Cs5 D5 Ds5 E5 F5 Fs5 G5 Gs5 A5 As5 B5' --bass='C3 F3 G3' --bpm=800
 
