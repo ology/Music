@@ -149,7 +149,7 @@ sub collect_notes {
     for my $i ( 1 .. $n ) {
         my $p = $pitch->get_vertex_attribute( $p_vertex, 'label' );
         my $v = $velocity->get_vertex_attribute( $v_vertex, 'label' );
-        my $d = $duration->get_vertex_attribute( $v_vertex, 'label' );
+        my $d = $duration->get_vertex_attribute( $d_vertex, 'label' );
 
         push @$notes, [ $d, $v, $p ];
 
