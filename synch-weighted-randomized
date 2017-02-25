@@ -13,9 +13,13 @@ my $phrases = shift || 4;
 my $bpm     = shift || 100; # Beats per minute
 my $melody  = shift || 'C5 D5 Ds5 F5 G5 Gs5 As5 r';
 my $bass    = shift || 'C3 Ds3 F3 G3 As3';
+my $velo    = shift || 'mezzo mf';
+my $dura    = shift || 'dqn qn en';
 
 $melody = [ split ' ', $melody ];
 $bass   = [ split ' ', $bass ];
+$velo   = [ split ' ', $velo ];
+$dura   = [ split ' ', $dura ];
 
 my $score = MIDI::Simple->new_score();
 $score->set_tempo( bpm_to_ms($bpm) * 1000 );
@@ -30,16 +34,16 @@ $score->write_score("$0.mid");
 
 sub melody {
     my $self = shift;
-    phrase( $self, 0, 2, $melody );
+    phrase( $self, 0, 2, $melody, $velo, $dura );
 }
 
 sub bassline {
     my $self = shift;
-    phrase( $self, 1, 2, $bass );
+    phrase( $self, 1, 2, $bass, $velo, $dura );
 }
 
 sub phrase {
-    my ( $s, $channel, $patch, $note_list ) = @_;
+    my ( $s, $channel, $patch, $note_list, $velo_list, $dura_list ) = @_;
 
     $s->patch_change( $channel, $patch );
     $s->noop( 'c' . $channel );
@@ -48,10 +52,10 @@ sub phrase {
     $pitch->populate( random_graph($note_list) );
 
     my $velocity = Graph::Weighted->new();
-    $velocity->populate( random_graph( [qw( mezzo mf )] ) );
+    $velocity->populate( random_graph($velo_list) );
 
     my $duration = Graph::Weighted->new();
-    $duration->populate( random_graph( [qw( qn en )] ) );
+    $duration->populate( random_graph($dura_list) );
 
     my @phrase = collect_notes( $pitch, $velocity, $duration );
 
