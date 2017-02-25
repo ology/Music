@@ -11,7 +11,11 @@ use Music::Tempo;
 
 my $phrases = shift || 4;
 my $bpm     = shift || 100; # Beats per minute
-my $measure = 0;
+my $melody  = shift || 'C5 D5 Ds5 F5 G5 Gs5 As5 r';
+my $bass    = shift || 'C3 Ds3 F3 G3 As3';
+
+$melody = [ split ' ', $melody ];
+$bass   = [ split ' ', $bass ];
 
 my $score = MIDI::Simple->new_score();
 $score->set_tempo( bpm_to_ms($bpm) * 1000 );
@@ -26,12 +30,12 @@ $score->write_score("$0.mid");
 
 sub melody {
     my $self = shift;
-    phrase( $self, 0, 2, [qw( C5 D5 Ds5 F5 G5 Gs5 As5 r )], 3 );
+    phrase( $self, 0, 2, $melody, 3 );
 }
 
 sub bassline {
     my $self = shift;
-    phrase( $self, 1, 2, [qw( C3 Ds3 F3 G3 As3 )], 2);
+    phrase( $self, 1, 2, $bass, 2);
 }
 
 sub phrase {
