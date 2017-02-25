@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+use Getopt::Long;
+use Pod::Usage;
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use Math::Partition::Rand;
@@ -9,53 +11,88 @@ use MIDI::Simple;
 use MIDI::Simple::Drummer;
 use Music::Tempo;
 
-my $phrases = shift || 4;
-my $bpm     = shift || 100; # Beats per minute
-my $melody  = shift || 'C5 D5 Ds5 F5 G5 Gs5 As5 r';
-my $bass    = shift || 'C3 Ds3 F3 G3 As3';
-my $velo    = shift || 'mezzo mf';
-my $dura    = shift || 'dqn qn en';
+my %opts = (
+    phrases  => 4,
+    bpm      => 100,
+    volume   => 120,
+    treble   => 'C5 D5 Ds5 F5 G5 Gs5 As5 r',
+    bass     => 'C3 Ds3 F3 G3 As3',
+    velocity => 'mezzo mf',
+    duration => 'dqn qn en',
+    filename => "$0.mid",
+    drummer  => 0,
+);
 
-$melody = [ split ' ', $melody ];
-$bass   = [ split ' ', $bass ];
-$velo   = [ split ' ', $velo ];
-$dura   = [ split ' ', $dura ];
+GetOptions( \%opts, 
+    'help|?',
+    'man',
+    'phrases=i',
+    'bpm=i',
+    'volume=i',
+    'treble=s',
+    'bass=s',
+    'velocity=s',
+    'duration=s',
+    'filename=s',
+    'drummer',
+) or pod2usage(2);
+
+pod2usage(1) if $opts{help};
+pod2usage( -exitval => 0, -verbose => 2 ) if $opts{man};
+
+$opts{treble}   = [ split /\s+/, $opts{treble} ];
+$opts{bass}     = [ split /\s+/, $opts{bass} ];
+$opts{velocity} = [ split /\s+/, $opts{velocity} ];
+$opts{duration} = [ split /\s+/, $opts{duration} ];
 
 my $score = MIDI::Simple->new_score();
-$score->set_tempo( bpm_to_ms($bpm) * 1000 );
+$score->set_tempo( bpm_to_ms($opts{bpm}) * 1000 );
 
-$score->synch(
-    \&drummer,
-    \&bassline,
-    \&melody
-) for 1 .. $phrases;
+my @parts = ( \&bassline, \&melody );
+push @parts, \&drummer if $opts{drummer};
 
-$score->write_score("$0.mid");
+$score->synch(@parts) for 1 .. $opts{phrases};
+
+$score->write_score($opts{filename});
 
 sub melody {
     my $self = shift;
-    phrase( $self, 0, 2, $melody, $velo, $dura );
+    phrase(
+        score     => $self,
+        channel   => 0,
+        patch     => 2,
+        note_list => $opts{treble},
+        velo_list => $opts{velocity},
+        dura_list => $opts{duration},
+    );
 }
 
 sub bassline {
     my $self = shift;
-    phrase( $self, 1, 2, $bass, $velo, $dura );
+    phrase(
+        score     => $self,
+        channel   => 1,
+        patch     => 2,
+        note_list => $opts{bass},
+        velo_list => $opts{velocity},
+        dura_list => $opts{duration},
+    );
 }
 
 sub phrase {
-    my ( $s, $channel, $patch, $note_list, $velo_list, $dura_list ) = @_;
+    my %params = @_;
 
-    $s->patch_change( $channel, $patch );
-    $s->noop( 'c' . $channel );
+    $params{score}->patch_change( $params{channel}, $params{patch} );
+    $params{score}->noop( 'c' . $params{channel} );
 
     my $pitch = Graph::Weighted->new();
-    $pitch->populate( random_graph($note_list) );
+    $pitch->populate( random_graph($params{note_list}) );
 
     my $velocity = Graph::Weighted->new();
-    $velocity->populate( random_graph($velo_list) );
+    $velocity->populate( random_graph($params{velo_list}) );
 
     my $duration = Graph::Weighted->new();
-    $duration->populate( random_graph($dura_list) );
+    $duration->populate( random_graph($params{dura_list}) );
 
     my @phrase = collect_notes( $pitch, $velocity, $duration );
 
@@ -67,19 +104,19 @@ sub phrase {
         last if $timing > $MIDI::Simple::Length{wn};
 
         if ( $event->[2] eq 'r' ) {
-            $s->r($duration);
+            $params{score}->r($duration);
         }
         else {
-            $s->n( @$event );
+            $params{score}->n( @$event );
         }
     }
 }
 
 sub drummer {
     my $d = MIDI::Simple::Drummer->new(
-        -bpm    => $bpm,
+        -bpm    => $opts{bpm},
+        -volume => $opts{volume},
         -score  => $score,
-        -volume => 120,
     );
     for my $beat ( 1 .. $d->beats ) {
         $d->note( $d->EIGHTH, $d->backbeat_rhythm( -beat => $beat ) );
@@ -178,3 +215,79 @@ sub get_label {
     $seen->{$label} = 1;
     return $label;
 }
+
+__END__
+
+=head1 NAME
+
+synch-weighted-randomized - Generate phrases of MIDI music by random weighted graphs
+
+=head1 SYNOPSIS
+
+  $ perl synch-weighted-randomized [--options]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<help>
+
+Print a brief help message and exit.
+
+=item B<man>
+
+Print the manual page and exit.
+
+=item B<phrases>
+
+Groups of 4 quarter notes
+
+Default: 4
+
+=item B<bpm>
+
+Default: 100
+
+=item B<volume>
+
+Default: 120
+
+=item B<treble>
+
+Default: 'C5 D5 Ds5 F5 G5 Gs5 As5 r'
+
+=item B<bass>
+
+Default: 'C3 Ds3 F3 G3 As3'
+
+=item B<velocity>
+
+Default: 'mezzo mf'
+
+=item B<duration>
+
+Default: 'dqn qn en'
+
+=item B<filename>
+
+Default: synch-weighted-randomized.mid
+
+=item B<drummer>
+
+Default: Off
+
+=back
+
+=head1 DESCRIPTION
+
+Generate phrases of MIDI music by means of random weighted graphs.
+
+=head1 EXAMPLES
+
+  $ perl synch-weighted-randomized --phrases=8 --treble='C5 D5 E5 F5 G5 A5 B5 C6' --bass='C3 F3 G3' --duration='qn en'
+
+  $ perl synch-weighted-randomized --phrases=8 --treble='C5 D5 Ds5 F5 G5 As5 C6' --bass='C3 F3 G3' --drummer
+
+  $ perl synch-weighted-randomized --treble='C5 Cs5 D5 Ds5 E5 F5 Fs5 G5 Gs5 A5 As5 B5' --bass='C3 F3 G3' --bpm=800
+
+=cut
