@@ -19,7 +19,7 @@ my %opts = (
     treble_velocity => 'mezzo mf',
     treble_duration => 'qn en',
     bass            => 'C3 Ds3 F3 G3 As3',
-    bass_velocity   => 'mezzo mf',
+    bass_velocity   => 'mezzo mf f',
     bass_duration   => 'dqn qn en',
     filename        => "$0.mid",
     drummer         => 0,
@@ -276,7 +276,7 @@ Default: 'C3 Ds3 F3 G3 As3'
 
 =item B<bass_velocity>
 
-Default: 'mezzo mf'
+Default: 'mezzo mf f'
 
 =item B<bass_duration>
 
