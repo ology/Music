@@ -1,0 +1,92 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use MIDI::Simple;
+use Music::AtonalUtil;
+use Music::Tempo;
+use Music::Voss;
+
+my $max     = shift || 4;
+my $phrases = shift || 2;
+my $bpm     = shift || 100;
+my $sides   = shift || 6;
+my $rollers = shift || 3;
+
+my @notes = qw( C5 Ds5 F5 G5 As5 C6 );
+my @dura  = qw( dqn qn en );
+my @velo  = qw( mezzo mf );
+
+my %index;
+@index{@notes} = 0 .. @notes - 1;
+
+my $pitches;
+
+my $bc = Music::Voss::bitchange(
+    roll    => sub { 1 + int rand $sides },
+    rollers => $rollers,
+);
+
+my $score = MIDI::Simple->new_score;
+$score->set_tempo( bpm_to_ms($bpm) * 1000 );
+$score->noop('c0');
+
+for my $i ( 0 .. $max - 1 ) {
+    my $x = $bc->($i);
+
+    my $n = $x % @notes;
+    my $d = $x % @dura;
+    my $v = $x % @velo;
+
+    printf "%*d. %2d = %s %s %s\n",
+        length($max), $i + 1, $x, $dura[$d], $velo[$v], $notes[$n];
+
+    push @$pitches, $notes[$n];
+
+    $score->n( $dura[$d], $velo[$v], $notes[$n] );
+}
+
+for my $phrase ( 1 .. $phrases - 1 ) {
+    alter_pitches($pitches);
+}
+
+$score->write_score("$0.mid");
+
+sub alter_pitches {
+    my $pitches = shift;
+
+    my $pitch_nums = [ map { $index{$_} } @$pitches ];
+
+    $pitch_nums = alteration($pitch_nums);
+
+    for my $num ( @$pitch_nums ) {
+        my $n = $num % @notes;
+        my $d = $num % @dura;
+        my $v = $num % @velo;
+
+        $score->n( $dura[$d], $velo[$v], $notes[$n] );
+    }
+}
+
+sub alteration {
+    my $pitches = shift;
+
+    my $atu = Music::AtonalUtil->new;
+    my $altered = $atu->transpose( 0, $pitches );
+
+    # Post mutation, phrase alterations
+    my $funct = {
+        invert     => sub { my $x = shift; $atu->invert( $x, $altered ) },
+        retrograde => sub { $atu->retrograde( @$pitches ) },
+        rotate     => sub { my $x = shift; $atu->rotate( $x, $altered ) },
+        transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
+    };
+
+    # Choose a random function and execute it with the given alteration factor
+    my $alteration = ( keys %$funct )[ int rand keys %$funct ];
+use Test::More;diag(__PACKAGE__,' L',__LINE__,'. MARK: ',$alteration,"\n");
+    my $x = int( rand 3 ) + 2;
+    $altered = $funct->{$alteration}->($x);
+
+    return $altered;
+}
