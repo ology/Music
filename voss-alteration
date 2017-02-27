@@ -74,7 +74,7 @@ sub alteration {
     my $atu = Music::AtonalUtil->new;
     my $altered = $atu->transpose( 0, $pitches );
 
-    # Post mutation, phrase alterations
+    # Phrase alterations
     my $funct = {
         invert     => sub { my $x = shift; $atu->invert( $x, $altered ) },
         retrograde => sub { $atu->retrograde($altered) },
