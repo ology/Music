@@ -77,14 +77,14 @@ sub alteration {
     # Post mutation, phrase alterations
     my $funct = {
         invert     => sub { my $x = shift; $atu->invert( $x, $altered ) },
-        retrograde => sub { $atu->retrograde( @$pitches ) },
+        retrograde => sub { $atu->retrograde($altered) },
         rotate     => sub { my $x = shift; $atu->rotate( $x, $altered ) },
         transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
     };
 
     # Choose a random function and execute it with the given alteration factor
     my $alteration = ( keys %$funct )[ int rand keys %$funct ];
-use Test::More;diag(__PACKAGE__,' L',__LINE__,'. MARK: ',$alteration,"\n");
+    print "Alteration: $alteration\n";
     my $x = int( rand 3 ) + 2;
     $altered = $funct->{$alteration}->($x);
 
