@@ -82,7 +82,7 @@ sub alteration {
         transpose  => sub { my $x = shift; $atu->transpose( $x, $altered ) },
     };
 
-    # Choose a random function and execute it with the given alteration factor
+    # Choose a random alteration function
     my $alteration = ( keys %$funct )[ int rand keys %$funct ];
     print "Alteration: $alteration\n";
     my $x = int( rand 3 ) + 2;
