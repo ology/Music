@@ -350,6 +350,8 @@ Generate phrases of MIDI music by means of random weighted graphs.
 
   $ perl synch-weighted-randomized --treble='C5 D5 E5 F5 G5 A5 B5 C6' --bass='C3 F3 G3 C3' --bass_duration='qn'
 
+  $ perl synch-weighted-randomized --treble='C5 Ds5 F5 G5 As5 C6' --treble_duration='ten' --bass='C3 F3 G3' --bass_duration='wn'
+
   $ perl synch-weighted-randomized --treble='C5 Cs5 D5 Ds5 E5 F5 Fs5 G5 Gs5 A5 As5 B5' --bass='C3 F3 G3' --bpm=800
 
 =cut
