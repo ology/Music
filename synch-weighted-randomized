@@ -261,6 +261,8 @@ Default: 4
 
 =item B<bpm>
 
+Beats per minute
+
 Default: 100
 
 =item B<volume>
@@ -275,13 +277,19 @@ Default: 8
 
 =item B<treble>
 
+A string of notes that L<MIDI::Simple> understands.
+
 Default: 'C5 D5 Ds5 F5 G5 Gs5 As5 r'
 
 =item B<treble_velocity>
 
+A string of velocities that L<MIDI::Simple> understands.
+
 Default: 'mezzo mf'
 
 =item B<treble_duration>
+
+A string of durations that L<MIDI::Simple> understands.
 
 Default: 'qn en'
 
@@ -295,13 +303,19 @@ Default: 2
 
 =item B<bass>
 
+A string of notes that L<MIDI::Simple> understands.
+
 Default: 'C3 Ds3 F3 G3 As3'
 
 =item B<bass_velocity>
 
+A string of velocities that L<MIDI::Simple> understands.
+
 Default: 'mezzo mf f'
 
 =item B<bass_duration>
+
+A string of durations that L<MIDI::Simple> understands.
 
 Default: 'dqn qn en'
 
