@@ -15,6 +15,7 @@ my %opts = (
     phrases         => 4,
     bpm             => 100,
     volume          => 120,
+    notes           => 8,
     treble          => 'C5 D5 Ds5 F5 G5 Gs5 As5 r',
     treble_velocity => 'mezzo mf',
     treble_duration => 'qn en',
@@ -146,9 +147,9 @@ sub drummer {
 sub collect_notes {
     my ( $pitch, $velocity, $duration ) = @_;
 
-    my $n = $pitch->vertices;
+    my $n = $opts{notes};
 
-    my $p_vertex = int( rand $n );
+    my $p_vertex = int( rand $pitch->vertices );
     my $v_vertex = int( rand $velocity->vertices );
     my $d_vertex = int( rand $duration->vertices );
 
@@ -265,6 +266,12 @@ Default: 100
 =item B<volume>
 
 Default: 120
+
+=item B<notes>
+
+The number of notes to collect before building a phrase.
+
+Default: 8
 
 =item B<treble>
 
