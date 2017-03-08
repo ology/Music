@@ -28,6 +28,7 @@ my %opts = (
     bass_patch      => 2,
     filename        => "$0.mid",
     drummer         => 0,
+    selfreference   => 0,
 );
 
 GetOptions( \%opts, 
@@ -49,6 +50,7 @@ GetOptions( \%opts,
     'bass_patch=i',
     'filename=s',
     'drummer',
+    'selfreference',
 ) or pod2usage(2);
 
 pod2usage(1) if $opts{help};
@@ -150,9 +152,12 @@ sub collect_notes {
 
     my $n = $opts{notes};
 
-    my $p_vertex = int( rand $pitch->vertices );
-    my $v_vertex = int( rand $velocity->vertices );
-    my $d_vertex = int( rand $duration->vertices );
+    my @vs = $pitch->vertices;
+    my $p_vertex = $vs[ int( rand $pitch->vertices ) ];
+    @vs = $velocity->vertices;
+    my $v_vertex = $vs[ int( rand $velocity->vertices ) ];
+    @vs = $duration->vertices;
+    my $d_vertex = $vs[ int( rand $duration->vertices ) ];
 
     my $notes = [];
 
@@ -194,11 +199,9 @@ sub random_graph {
     my $labels = shift;
 
     my $graph = {};
-    my $i = 0;
 
     for my $label ( @$labels ) {
-        $graph->{$i} = { label => $label, choose_n( scalar @$labels ) };
-        $i++;
+        $graph->{$label} = { label => $label, choose_n( $labels, $label ) };
     }
 
     return $graph;
@@ -206,12 +209,21 @@ sub random_graph {
 
 sub choose_n {
     my $labels = shift;
+    my $x = shift;
+
+    my $n = @$labels;
 
     my %seen;
-    my @labels = map { get_label( $labels, \%seen ) } 1 .. $labels;
+
+    if ( !$opts{selfreference} && defined $x && $n > 1 ) {
+        $n--;
+        $seen{$x}++;
+    }
+
+    my @labels = map { get_label( $labels, \%seen ) } 1 .. $n;
 
     my %distribution;
-    my $partition = Math::Partition::Rand->new( top => 1, n => $labels );
+    my $partition = Math::Partition::Rand->new( top => 1, n => $n );
     @distribution{@labels} = @{ $partition->choose() };
 
     return %distribution;
@@ -220,11 +232,11 @@ sub choose_n {
 sub get_label {
     my ( $labels, $seen ) = @_;
 
-    my $label = int( rand $labels );
+    my $label = $labels->[ int( rand @$labels ) ];
 
     if ( exists $seen->{$label} ) {
         while ( exists $seen->{$label} ) {
-            $label = int( rand $labels );
+            $label = $labels->[ int( rand @$labels ) ];
         }
     }
     
@@ -336,6 +348,12 @@ Default: synch-weighted-randomized.mid
 
 Default: Off
 
+=item B<selfreference>
+
+Include transitions from and to the same note (i.e. "Loops").
+
+Default: Off
+
 =back
 
 =head1 DESCRIPTION
@@ -344,13 +362,13 @@ Generate phrases of MIDI music by means of random weighted graphs.
 
 =head1 EXAMPLES
 
-  $ perl synch-weighted-randomized --phrases=8 --treble='C5 D5 E5 F5 G5 A5 B5 C6' --bass='C3 F3 G3'
+  $ perl synch-weighted-randomized --phrases=8 --treble='C5 D5 E5 F5 G5 A5 B5 C6' --bass='C3 F3 G3' --selfreference
 
-  $ perl synch-weighted-randomized --phrases=8 --treble='C5 D5 Ds5 F5 G5 As5 C6' --bass='C3 F3 G3' --drummer
+  $ perl synch-weighted-randomized --phrases=8 --treble='C5 D5 Ds5 F5 G5 As5 C6' --bass='C3 F3 G3' --selfref --drummer
 
   $ perl synch-weighted-randomized --treble='C5 D5 E5 F5 G5 A5 B5 C6' --bass='C3 F3 G3 C3' --bass_duration='qn'
 
-  $ perl synch-weighted-randomized --treble='C5 Ds5 F5 G5 As5 C6' --treble_duration='ten' --bass='C3 F3 G3' --bass_duration='wn'
+  $ perl synch-weighted-randomized --treble='C5 Ds5 F5 G5 As5' --treble_duration='tqn' --bass='C3 F3 G3' --bass_duration='wn' --notes=4
 
   $ perl synch-weighted-randomized --treble='C5 Cs5 D5 Ds5 E5 F5 Fs5 G5 Gs5 A5 As5 B5' --bass='C3 F3 G3' --bpm=800
 
