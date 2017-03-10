@@ -77,7 +77,7 @@ push @parts, \&drummer
 $score->synch(@parts)
     for 1 .. $opts{phrases};
 
-$score->n( 'wn', $opts{treble}->[0], $opts{bass}->[0] )
+$score->n( "c$opts{bass_channel}", 'wn', $opts{bass}->[0] )
     if $opts{resolve};
 
 $score->write_score($opts{filename});
