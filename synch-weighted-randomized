@@ -71,7 +71,8 @@ my $score = MIDI::Simple->new_score();
 $score->set_tempo( bpm_to_ms($opts{bpm}) * 1000 );
 
 my @parts = ( \&bassline, \&melody );
-push @parts, \&drummer if $opts{drummer};
+push @parts, \&drummer
+    if $opts{drummer};
 
 $score->synch(@parts)
     for 1 .. $opts{phrases};
