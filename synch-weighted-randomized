@@ -295,7 +295,9 @@ Default: 8
 
 =item B<treble>
 
-A string of notes that L<MIDI::Simple> understands.
+A string of space separated notes that L<MIDI::Simple> understands.
+
+Also, the B<r> symbol can be included to indicate a rest.
 
 Default: 'C5 D5 Ds5 F5 G5 Gs5 As5 r'
 
@@ -321,7 +323,7 @@ Default: 2
 
 =item B<bass>
 
-A string of notes that L<MIDI::Simple> understands.
+A string of space separated notes that L<MIDI::Simple> understands.
 
 Default: 'C3 Ds3 F3 G3 As3'
 
