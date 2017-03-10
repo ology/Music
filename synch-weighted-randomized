@@ -58,12 +58,12 @@ GetOptions( \%opts,
 pod2usage(1) if $opts{help};
 pod2usage( -exitval => 0, -verbose => 2 ) if $opts{man};
 
-$opts{treble}          = [ split /\s+/, $opts{treble} ];
-$opts{treble_velocity} = [ split /\s+/, $opts{treble_velocity} ];
-$opts{treble_duration} = [ split /\s+/, $opts{treble_duration} ];
-$opts{bass}            = [ split /\s+/, $opts{bass} ];
-$opts{bass_velocity}   = [ split /\s+/, $opts{bass_velocity} ];
-$opts{bass_duration}   = [ split /\s+/, $opts{bass_duration} ];
+$opts{treble}          = [ split /(?:\s+|\s*,\s*)/, $opts{treble} ];
+$opts{treble_velocity} = [ split /(?:\s+|\s*,\s*)/, $opts{treble_velocity} ];
+$opts{treble_duration} = [ split /(?:\s+|\s*,\s*)/, $opts{treble_duration} ];
+$opts{bass}            = [ split /(?:\s+|\s*,\s*)/, $opts{bass} ];
+$opts{bass_velocity}   = [ split /(?:\s+|\s*,\s*)/, $opts{bass_velocity} ];
+$opts{bass_duration}   = [ split /(?:\s+|\s*,\s*)/, $opts{bass_duration} ];
 
 my $score = MIDI::Simple->new_score();
 $score->set_tempo( bpm_to_ms($opts{bpm}) * 1000 );
@@ -269,11 +269,11 @@ Print a brief help message and exit.
 
 =item B<man>
 
-Print the manual page and exit.
+Print the full manual page and exit.
 
 =item B<phrases>
 
-Groups of 4 quarter notes
+Number of groups of 4 quarter notes
 
 Default: 4
 
@@ -295,7 +295,7 @@ Default: 8
 
 =item B<treble>
 
-A string of space separated notes that L<MIDI::Simple> understands.
+A string of space or comma separated notes that L<MIDI::Simple> understands.
 
 Also, the B<r> symbol can be included to indicate a rest.
 
@@ -303,13 +303,13 @@ Default: 'C5 D5 Ds5 F5 G5 Gs5 As5 r'
 
 =item B<treble_velocity>
 
-A string of velocities that L<MIDI::Simple> understands.
+A string of velocities
 
 Default: 'mezzo mf'
 
 =item B<treble_duration>
 
-A string of durations that L<MIDI::Simple> understands.
+A string of durations
 
 Default: 'qn en'
 
@@ -323,19 +323,19 @@ Default: 2
 
 =item B<bass>
 
-A string of space separated notes that L<MIDI::Simple> understands.
+A string of notes
 
 Default: 'C3 Ds3 F3 G3 As3'
 
 =item B<bass_velocity>
 
-A string of velocities that L<MIDI::Simple> understands.
+A string of velocities
 
 Default: 'mezzo mf f'
 
 =item B<bass_duration>
 
-A string of durations that L<MIDI::Simple> understands.
+A string of durations
 
 Default: 'dqn qn en'
 
