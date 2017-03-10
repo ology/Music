@@ -29,6 +29,7 @@ my %opts = (
     filename        => "$0.mid",
     drummer         => 0,
     selfreference   => 0,
+    resolve         => 0,
 );
 
 GetOptions( \%opts, 
@@ -51,6 +52,7 @@ GetOptions( \%opts,
     'filename=s',
     'drummer',
     'selfreference',
+    'resolve',
 ) or pod2usage(2);
 
 pod2usage(1) if $opts{help};
@@ -70,6 +72,9 @@ my @parts = ( \&bassline, \&melody );
 push @parts, \&drummer if $opts{drummer};
 
 $score->synch(@parts) for 1 .. $opts{phrases};
+
+$score->n( 'wn', $opts{treble}->[0], $opts{bass}->[0] )
+    if $opts{resolve};
 
 $score->write_score($opts{filename});
 
@@ -351,6 +356,12 @@ Default: Off
 =item B<selfreference>
 
 Include transitions from and to the same note (i.e. "Loops").
+
+Default: Off
+
+=item B<resolve>
+
+Play a whole note bar with the first notes in the B<treble> and B<bass> lists, after the generated phrases.
 
 Default: Off
 
