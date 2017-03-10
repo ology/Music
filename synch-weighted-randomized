@@ -55,8 +55,10 @@ GetOptions( \%opts,
     'resolve',
 ) or pod2usage(2);
 
-pod2usage(1) if $opts{help};
-pod2usage( -exitval => 0, -verbose => 2 ) if $opts{man};
+pod2usage(1)
+    if $opts{help};
+pod2usage( -exitval => 0, -verbose => 2 )
+    if $opts{man};
 
 $opts{treble}          = [ split /(?:\s+|\s*,\s*)/, $opts{treble} ];
 $opts{treble_velocity} = [ split /(?:\s+|\s*,\s*)/, $opts{treble_velocity} ];
@@ -71,7 +73,8 @@ $score->set_tempo( bpm_to_ms($opts{bpm}) * 1000 );
 my @parts = ( \&bassline, \&melody );
 push @parts, \&drummer if $opts{drummer};
 
-$score->synch(@parts) for 1 .. $opts{phrases};
+$score->synch(@parts)
+    for 1 .. $opts{phrases};
 
 $score->n( 'wn', $opts{treble}->[0], $opts{bass}->[0] )
     if $opts{resolve};
