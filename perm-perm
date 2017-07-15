@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use MIDIUtil;
 use MIDI::Simple;
 use Math::Combinatorics;
 use List::Util qw( shuffle );
@@ -22,8 +23,9 @@ my @bass_combos      = shuffle permute(@bass_notes);
 my @bass_dura_combos = shuffle permute(@bass_dura);
 my @bass_volu_combos = shuffle permute(@bass_volu);
 
-my $score = setup_midi(
+my $score = MIDIUtil::setup_midi(
     lead_in => scalar(@treb_notes),
+    patch   => 42,
 );
 
 my $n = 0;
@@ -98,22 +100,3 @@ for my $i ( 0 .. @treb_combos - 1 ) {
 }
 
 $score->write_score( $0 . '.mid' );
-
-sub setup_midi {
-    my %args = (
-        lead_in => 4,
-        channel => 1,
-        patch   => 42,
-        volume  => 120,
-        @_,
-    );
-    my $score = MIDI::Simple->new_score();
-    $score->Volume($args{volume});
-    # Lead-in
-    $score->Channel(9);
-    $score->n( 'qn', $args{patch} ) for 1 .. $args{lead_in};
-    # Passage
-    $score->Channel($args{channel});
-    $score->patch_change( $args{channel}, $args{patch} );
-    return $score;
-}

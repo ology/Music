@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use MIDIUtil;
 use MIDI::Simple;
 use Music::AtonalUtil;
 use Text::Levenshtein qw(distance);
@@ -52,7 +53,7 @@ my %name = int2name(@notes);
 my @pitches = map { $name{$_} } @sample;
 print "@pitches\n";
 
-my $score = setup_midi( 1, 0, 120 );
+my $score = MIDIUtil::setup_midi( patch => 0 );
 
 $score->n( 'qn', $_ ) for @pitches;
 
@@ -77,19 +78,6 @@ sub transform {
     }
 
     return @phrase, @$p;
-}
-
-sub setup_midi {
-    my ( $channel, $patch, $volume ) = @_;
-    my $score = MIDI::Simple->new_score();
-    $score->Volume($volume);
-    # Lead-in
-    $score->Channel(9);
-    $score->n( 'qn', 42 ) for 1 .. 4;
-    # Passage
-    $score->Channel($channel);
-    $score->patch_change( $channel, $patch );
-    return $score;
 }
 
 sub int2name {

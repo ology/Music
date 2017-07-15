@@ -5,6 +5,7 @@ use warnings;
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
+use MIDIUtil;
 use Storable;
 
 my $file    = shift || die "Usage: perl $0 proportional-frequencies.dat [0|1]";
@@ -28,7 +29,7 @@ $pitches->populate($data);
 my @phrase = collect_notes( $n, $initial, $pitches );
 #use Data::Dumper::Concise;warn Dumper\@phrase;
 
-my $score = setup_midi();
+my $score = MIDIUtil::setup_midi( patch => 42 );
 $score->n( @$_ ) for @phrase;
 $score->n( 'wn', $initial );
 $score->write_score( "$0.mid" );
@@ -66,23 +67,4 @@ sub next_vertex {
     my $choice = choose_weighted( $successors, sub { $_[0]->{weight} } );
 
     return $choice->{vertex};
-}
-
-sub setup_midi {
-    my %args = (
-        lead_in => 4,
-        channel => 1,
-        patch   => 42,
-        volume  => 120,
-        @_,
-    );
-    my $score = MIDI::Simple->new_score();
-    $score->Volume($args{volume});
-    # Lead-in
-    $score->Channel(9);
-    $score->n( 'qn', $args{patch} ) for 1 .. $args{lead_in};
-    # Passage
-    $score->Channel($args{channel});
-    $score->patch_change( $args{channel}, $args{patch} );
-    return $score;
 }

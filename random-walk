@@ -8,6 +8,7 @@ use warnings;
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
+use MIDIUtil;
 
 my $n = shift || 4; # Number of notes
 my $initial = shift // 0; # Initial graph node
@@ -60,32 +61,13 @@ $velocity->populate(
 my $notes = collect_notes( $n, $initial, $velocity, $duration, $treble, $bass );
 
 # Invoke MIDI
-my $score = setup_midi();
+my $score = MIDIUtil::setup_midi( patch => 42 );
 
 # Add notes to the score
 $score->n( @$_ ) for @$notes;
 
 # Write out the MIDI file
 $score->write_score( $0 . '.mid' );
-
-sub setup_midi {
-    my %args = (
-        lead_in => 4,
-        channel => 1,
-        patch   => 42,
-        volume  => 120,
-        @_,
-    );
-    my $score = MIDI::Simple->new_score();
-    $score->Volume($args{volume});
-    # Lead-in
-    $score->Channel(9);
-    $score->n( 'qn', $args{patch} ) for 1 .. $args{lead_in};
-    # Passage
-    $score->Channel($args{channel});
-    $score->patch_change( $args{channel}, $args{patch} );
-    return $score;
-}
 
 sub next_vertex {
     my ( $g, $vertex ) = @_;
