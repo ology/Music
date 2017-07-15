@@ -31,3 +31,5 @@ sub setup_midi {
 
     return $score;
 }
+
+1;
