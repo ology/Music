@@ -38,8 +38,7 @@ for my $i ( 0 .. $max - 1 ) {
     my $d = $x % @dura;
     my $v = $x % @velo;
 
-    printf "%*d. %2d = %s %s %s\n",
-        length($max), $i + 1, $x, $dura[$d], $velo[$v], $notes[$n];
+    printf "\t%s %s %s\n", $dura[$d], $velo[$v], $notes[$n];
 
     push @$pitches, $notes[$n];
 
@@ -63,6 +62,8 @@ sub alter_pitches {
         my $n = $num % @notes;
         my $d = $num % @dura;
         my $v = $num % @velo;
+
+        printf "\t%s %s %s\n", $dura[$d], $velo[$v], $notes[$n];
 
         $score->n( $dura[$d], $velo[$v], $notes[$n] );
     }
