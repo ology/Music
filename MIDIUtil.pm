@@ -12,7 +12,7 @@ sub setup_midi {
         volume  => 120,
         bpm     => 100,
         channel => 1,
-        patch   => 20,
+        patch   => 0,
         octave  => 5,
         @_,
     );
