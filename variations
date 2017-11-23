@@ -1,0 +1,56 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Algorithm::Combinatorics qw( variations );
+use MIDIUtil;
+ 
+my @data = @ARGV ? @ARGV : qw( 0 C D E );
+
+my $string = '';
+
+my $score = MIDIUtil::setup_midi();
+
+$score->synch(
+    \&variance,
+    \&legato,
+);
+
+$score->write_score( "$0.mid" );
+
+sub variance {
+    MIDIUtil::set_chan_patch( $score, 0, 69 );
+
+    my $c = 1;
+
+    for my $n ( 1 .. @data ) {
+        my @items = variations( \@data, $n );
+
+        for my $i (@items) {
+            print "$c. @$i\n";
+            $c++;
+
+            for my $x ( @$i ) {
+                if ( $x eq '0' ) {
+                    $score->r('qn');
+                }
+                else {
+                    $score->n( 'qn', $x );
+                }
+
+                $string .= $x;
+            }
+        }
+    }
+}
+
+sub legato {
+    MIDIUtil::set_chan_patch( $score, 1, 42 );
+    $score->Volume(60);
+
+    my @notes = grep { $_ ne '0' } @data;
+
+    for my $n ( 1 .. length($string) / 4 ) {
+        $score->n( 'wn', $notes[ int rand @notes ] );
+    }
+}
