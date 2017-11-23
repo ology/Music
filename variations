@@ -9,7 +9,7 @@ my @data = @ARGV ? @ARGV : qw( 0 C D E );
 
 my $string = '';
 
-my $score = MIDIUtil::setup_midi();
+my $score = MIDIUtil::setup_midi( bpm => 400 );
 
 $score->synch(
     \&variance,
