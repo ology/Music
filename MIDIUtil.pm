@@ -32,4 +32,12 @@ sub setup_midi {
     return $score;
 }
 
+sub set_chan_patch {
+    my ( $score, $channel, $patch ) = @_;
+    $channel //= 0;
+    $patch   //= 1;
+    $score->patch_change( $channel, $patch );
+    $score->noop( 'c' . $channel );
+}
+
 1;
