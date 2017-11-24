@@ -1,10 +1,50 @@
 package MIDIUtil;
 
+# ABSTRACT: MIDI Utilities
+
 use strict;
 use warnings;
 
 use MIDI::Simple;
 use Music::Tempo;
+
+our $VERSION = '0.02';
+
+=head1 SYNOPSIS
+
+ use MIDIUtil;
+
+=head1 DESCRIPTION
+
+This module is a collection of MIDI utilities.
+
+=head1 FUNCTIONS
+
+=head2 setup_midi()
+
+  MIDIUtil::setup_midi(
+    lead_in => 4,
+    volume  => 120,
+    bpm     => 100,
+    channel => 1,
+    patch   => 0,
+    octave  => 5,
+  );
+
+Set basic MIDI parameters, play a hi-hat lead-in and return a MIDI score object.
+
+If the lead_in parameter is 0, then no hi-hat lead-in is played.
+
+Named parameters and defaults:
+
+  lead_in => 4
+  volume  => 120
+  bpm     => 100
+  channel => 1
+  patch   => 0
+  octave  => 5
+
+=cut
 
 sub setup_midi {
     my %args = (
@@ -31,6 +71,20 @@ sub setup_midi {
 
     return $score;
 }
+
+=head2 set_chan_patch()
+
+  MIDIUtil::set_chan_patch( $score, $channel, $patch );
+
+Set the MIDI channel and patch.
+
+Positional parameters and defaults:
+
+  score:   undef (required)
+  channel: 0
+  patch:   1
+
+=cut
 
 sub set_chan_patch {
     my ( $score, $channel, $patch ) = @_;
