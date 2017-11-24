@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# Run this, to produce a freq file, then run stat-walk with it.
+
 use strict;
 use warnings;
 

@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# To run this, first produce a freq file with note-transition.
+
 use strict;
 use warnings;
 
