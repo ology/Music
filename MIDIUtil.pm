@@ -10,6 +10,10 @@ use Music::Tempo;
 
 our $VERSION = '0.02';
 
+=head1 NAME
+
+MIDIUtil - MIDI Utilities
+
 =head1 SYNOPSIS
 
   use MIDIUtil;
