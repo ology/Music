@@ -12,7 +12,10 @@ our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
- use MIDIUtil;
+  use MIDIUtil;
+  my $score = MIDIUtil::setup_midi(%args);
+  # ...
+  MIDIUtil::set_chan_patch( $score, $channel, $patch );
 
 =head1 DESCRIPTION
 
