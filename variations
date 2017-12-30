@@ -26,14 +26,14 @@ $score->write_score( "$0.mid" );
 sub variance {
     MIDIUtil::set_chan_patch( $score, 0, 69 );
 
-    my $c = 1;
+    my $count = 1;
 
     for my $n ( 1 .. @data ) {
         my @items = variations( \@data, $n );
 
         for my $i (@items) {
-            print "$c. @$i\n";
-            $c++;
+            print "$count. @$i\n";
+            $count++;
 
             for my $x ( @$i ) {
                 if ( $x eq '0' ) {
