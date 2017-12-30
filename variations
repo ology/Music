@@ -55,7 +55,7 @@ sub legato {
 
     my @notes = grep { $_ ne '0' } @bass;
 
-    for my $n ( 1 .. length($size) / 4 ) {
+    for my $n ( 1 .. $size / 4 ) {
         $score->n( 'wn', $notes[ int rand @notes ] );
     }
 }
