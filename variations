@@ -12,7 +12,7 @@ my $bpm  = shift || 400;
 my @data = split / /, $data;
 my @bass = split / /, $bass;
 
-my $string = '';
+my $size = 0;
 
 my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
@@ -43,7 +43,7 @@ sub variance {
                     $score->n( 'qn', $x );
                 }
 
-                $string .= $x;
+                $size++;
             }
         }
     }
@@ -55,7 +55,7 @@ sub legato {
 
     my @notes = grep { $_ ne '0' } @bass;
 
-    for my $n ( 1 .. length($string) / 4 ) {
+    for my $n ( 1 .. length($size) / 4 ) {
         $score->n( 'wn', $notes[ int rand @notes ] );
     }
 }
