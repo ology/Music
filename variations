@@ -5,7 +5,11 @@ use warnings;
 use Algorithm::Combinatorics qw( variations );
 use MIDIUtil;
  
-my @data = @ARGV ? @ARGV : qw( 0 C D E );
+my $data = shift || '0 C E G';
+my $bass = shift || 'C G F';
+
+my @data = split / /, $data;
+my @bass = split / /, $bass;
 
 my $string = '';
 
@@ -48,7 +52,7 @@ sub legato {
     MIDIUtil::set_chan_patch( $score, 1, 42 );
     $score->Volume(60);
 
-    my @notes = grep { $_ ne '0' } @data;
+    my @notes = grep { $_ ne '0' } @bass;
 
     for my $n ( 1 .. length($string) / 4 ) {
         $score->n( 'wn', $notes[ int rand @notes ] );
