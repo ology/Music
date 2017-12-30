@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Algorithm::Combinatorics qw( variations );
+use List::Util qw( shuffle );
 use MIDIUtil;
  
 my $data = shift || '0 C5 Ds5 A5';
@@ -29,7 +30,7 @@ sub variance {
     my $count = 1;
 
     for my $n ( 1 .. @data ) {
-        my @items = variations( \@data, $n );
+        my @items = shuffle variations( \@data, $n );
 
         for my $i (@items) {
             print "$count. @$i\n";
