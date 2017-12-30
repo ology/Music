@@ -35,12 +35,12 @@ sub variance {
             print "$count. @$i\n";
             $count++;
 
-            for my $x ( @$i ) {
-                if ( $x eq '0' ) {
+            for my $note ( @$i ) {
+                if ( $note eq '0' ) {
                     $score->r('qn');
                 }
                 else {
-                    $score->n( 'qn', $x );
+                    $score->n( 'qn', $note );
                 }
 
                 $size++;
