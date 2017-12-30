@@ -7,13 +7,14 @@ use MIDIUtil;
  
 my $data = shift || '0 C5 Ds5 A5';
 my $bass = shift || 'C4 F4 G4';
+my $bpm  = shift || 400;
 
 my @data = split / /, $data;
 my @bass = split / /, $bass;
 
 my $string = '';
 
-my $score = MIDIUtil::setup_midi( bpm => 400 );
+my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
 $score->synch(
     \&variance,
