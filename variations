@@ -5,8 +5,8 @@ use warnings;
 use Algorithm::Combinatorics qw( variations );
 use MIDIUtil;
  
-my $data = shift || '0 C E G';
-my $bass = shift || 'C G F';
+my $data = shift || '0 C5 Ds5 A5';
+my $bass = shift || 'C4 G4 F4';
 
 my @data = split / /, $data;
 my @bass = split / /, $bass;
