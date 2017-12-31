@@ -18,11 +18,10 @@ my $opus = MIDI::Opus->new({ from_file => $file });
 
 # Collect the MIDI events
 my @events = ();
-my $i = 0;
-while ( @events == 0 ) {
+for my $i ( 0 .. scalar( $opus->tracks ) - 1 ) {
     my $track = [ $opus->tracks ]->[$i];
-    @events = grep { $_->[0] eq 'note_on' } $track->events;
-    $i++;
+
+    push @events, ( grep { $_->[0] eq 'note_on' } $track->events );
 }
 
 # Setup the transition buckets
@@ -31,24 +30,20 @@ my @preceeding;
 
 # Gather the transitions
 for my $event ( @events ) {
-    # Skip all but channel 0
-#    next unless $event->[2] == 0;
-#warn "@$event\n";
-
     # The next note in succession
     my $next = $event->[3];
 
     # Add a transition if there are preceeding notes
     if ( @preceeding == $notes ) {
         push @{ $transitions->{ join ' ', @preceeding } }, $next;
-warn "Datum: @preceeding -> $next\n";
+#warn "Datum: @preceeding -> $next\n";
         shift @preceeding;
     }
 
     # Add the next event to the preceeding event list
     push @preceeding, $next;
 }
-warn 'Note transitions: ', Dumper$transitions;
+#warn 'Note transitions: ', Dumper$transitions;
 
 # Setup the frequency bucket
 my $frequencies = {};
