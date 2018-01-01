@@ -13,10 +13,11 @@ use Storable;
 my $file    = shift || die "Usage: perl $0 proportional-frequencies.dat [0|1]";
 my $n       = shift || 4; # Number of notes to play
 my $initial = shift // 1; # Initial graph node: 0=random, 1=lowest note
+my $patch   = shift || 42;
+
+my $channel = 0;
 
 my @phrases;
-my $patch = 42;
-my $channel = 0;
 
 my $data = retrieve($file);
 #use Data::Dumper::Concise;warn 'Data to process: ', Dumper$data;
@@ -30,7 +31,7 @@ for my $track ( keys %$data ) {
     else {
         $initial = ( sort { $a <=> $b } keys %{ $data->{$track} } )[0];
     }
-#    warn "Initial note: $initial\n";
+#warn "Initial note: $initial\n";
 
     my $pitches = Graph::Weighted->new;
     $pitches->populate( $data->{$track} );
