@@ -6,11 +6,11 @@ use Algorithm::Combinatorics qw( variations );
 use List::Util qw( shuffle );
 use MIDIUtil;
  
-my $data = shift || '0 C5 Ds5 A5';
-my $bass = shift || 'C4 F4 G4';
-my $bpm  = shift || 400;
-my $treb = shift || 69;
-my $bass = shift || 42;
+my $data  = shift || '0 C5 Ds5 A5';
+my $bass  = shift || 'C4 F4 G4';
+my $bpm   = shift || 400;
+my $trebp = shift || 69;
+my $bassp = shift || 42;
 
 my @data = split / /, $data;
 my @bass = split / /, $bass;
@@ -27,7 +27,7 @@ $score->synch(
 $score->write_score( "$0.mid" );
 
 sub variance {
-    MIDIUtil::set_chan_patch( $score, 0, $treb );
+    MIDIUtil::set_chan_patch( $score, 0, $trebp );
 
     my $count = 1;
 
@@ -53,7 +53,7 @@ sub variance {
 }
 
 sub legato {
-    MIDIUtil::set_chan_patch( $score, 1, $bass );
+    MIDIUtil::set_chan_patch( $score, 1, $bassp );
     $score->Volume(60);
 
     my @notes = grep { $_ ne '0' } @bass;
