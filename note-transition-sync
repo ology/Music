@@ -10,7 +10,7 @@ use MIDI;
 use Statistics::Frequency;
 use Storable;
 
-my $file  = shift || die "Usage: perl $0 tune.mid\n";
+my $file = shift || die "Usage: perl $0 tune.mid\n";
 
 my $opus = MIDI::Opus->new({ from_file => $file });
 
@@ -39,7 +39,7 @@ for my $key ( keys %events ) {
         $previous = $next;
     }
 }
-#warn 'Note transitions: ', Dumper$transitions;
+#warn 'Note transitions: ', Dumper $transitions;
 
 # Frequency bucket
 my $frequencies = {};
@@ -57,6 +57,6 @@ for my $track ( keys %$transitions ) {
         $stat->clear_data;
     }
 }
-warn 'Transition frequencies: ', Dumper$frequencies;
+warn 'Transition frequencies: ', Dumper $frequencies;
 
 store $frequencies, "$0.dat";
