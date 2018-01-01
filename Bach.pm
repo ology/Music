@@ -16,7 +16,8 @@ sub read_bach {
     open my $fh, "<:encoding(utf8)", $file
         or die "Can't read $file: $!";
 
-    my %bach;
+    my $progression;
+    my %index;
 
     while ( my $row = $csv->getline($fh) ) {
         # 000106b_ 2 YES  NO  NO  NO YES  NO  NO YES  NO  NO  NO  NO E 5  C_M
@@ -28,20 +29,22 @@ sub read_bach {
         }
 
         if ($byid) {
-            $bach{$id}{$notes}++; # <- For individual stats
+            $index{$id}{$notes}++; # <- For individual stats
         }
         else {
-            $bach{$notes}++;      # <- For global population stat
+            $index{$notes}++;      # <- For global population stat
         }
 
-#        ( my $bass  = $row->[14] ) =~ s/\s*//g;
-#        ( my $chord = $row->[16] ) =~ s/\s*//g;
+        ( my $bass  = $row->[14] ) =~ s/\s*//g;
+        ( my $chord = $row->[16] ) =~ s/\s*//g;
+
+        push @$progression, join( ',', $notes, $bass, $chord );
     }
 
     $csv->eof or $csv->error_diag();
     close $fh;
 
-    return \%bach;
+    return ( \%index, $progression );
 }
 
 1;
