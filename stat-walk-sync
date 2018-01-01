@@ -1,0 +1,84 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# To run this, first produce a freq file with note-transition.
+
+use Graph::Weighted;
+use List::Util::WeightedChoice qw( choose_weighted );
+use MIDI::Simple;
+use MIDIUtil;
+use Storable;
+
+my $file    = shift || die "Usage: perl $0 proportional-frequencies.dat [0|1]";
+my $n       = shift || 4; # Number of notes to play
+my $initial = shift // 1; # Initial graph node: 0=random, 1=lowest note
+
+my $data = retrieve($file);
+#use Data::Dumper::Concise;warn 'Data to process: ', Dumper$data;
+
+my $score = MIDIUtil::setup_midi( patch => 42 );
+
+my @phrases;
+
+for my $track ( keys %$data ) {
+    if ( $initial == 0 ) {
+        $initial = ( keys %{ $data->{$track} } )[ int( rand keys %{ $data->{$track} } ) ];
+    }
+    else {
+        $initial = ( sort { $a <=> $b } keys %{ $data->{$track} } )[0];
+    }
+    warn "Initial note: $initial\n";
+
+    my $pitches = Graph::Weighted->new;
+    $pitches->populate( $data->{$track} );
+
+    my @phrase = collect_notes( $n, $initial, $pitches );
+#use Data::Dumper::Concise;warn Dumper\@phrase;
+
+    my $func = sub {
+        $score->n( @$_ ) for @phrase;
+    };
+
+    push @phrases, $func;
+}
+
+$score->synch(@phrases);
+
+$score->n( 'wn', $initial );
+$score->write_score( "$0.mid" );
+
+sub collect_notes {
+    my ( $n, $initial, $graph ) = @_;
+
+    my $p_vertex = $initial;
+
+    my $notes = [];
+
+    for my $i ( 1 .. $n ) {
+        push @$notes, [ 'qn', 'f', $p_vertex ];
+
+        if ( $i < $n ) {
+            $p_vertex = next_vertex( $graph, $p_vertex );
+        }
+    }
+
+    return @$notes;
+}
+
+sub next_vertex {
+    my ( $graph, $vertex ) = @_;
+
+    my $successors = [];
+
+    for my $successor ( $graph->successors($vertex) ) {
+        push @$successors, {
+            vertex => $successor,
+            weight => $graph->get_cost( [ $vertex, $successor ] ),
+        };
+    }
+
+    my $choice = choose_weighted( $successors, sub { $_[0]->{weight} } );
+
+    return $choice->{vertex};
+}

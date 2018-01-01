@@ -1,0 +1,62 @@
+#!/usr/bin/env perl
+
+# Run this, to produce a freq file, then run stat-walk with it.
+
+use strict;
+use warnings;
+
+use Data::Dumper;
+use MIDI;
+use Statistics::Frequency;
+use Storable;
+
+my $file  = shift || die "Usage: perl $0 tune.mid\n";
+
+my $opus = MIDI::Opus->new({ from_file => $file });
+
+my %events;
+for my $i ( 0 .. scalar( $opus->tracks ) - 1 ) {
+    my $track = [ $opus->tracks ]->[$i];
+    push @{ $events{$i} }, ( grep { $_->[0] eq 'note_on' } $track->events );
+}
+
+# Setup the transition buckets
+my $transitions = {};
+
+# Gather the transitions
+for my $key ( keys %events ) {
+    my $event = $events{$key};
+
+    my $previous;
+
+    for my $e ( @$event ) {
+        my $next = $e->[3];
+
+        if ( $previous ) {
+            push @{ $transitions->{$key}{$previous} }, $next;
+        }
+
+        $previous = $next;
+    }
+}
+#warn 'Note transitions: ', Dumper$transitions;
+
+# Frequency bucket
+my $frequencies = {};
+
+# Gather the proportional frequencies of each transition
+for my $track ( keys %$transitions ) {
+    my $notes = $transitions->{$track};
+
+    my $stat = Statistics::Frequency->new;
+
+    for my $note ( keys %$notes ) {
+        $stat->add_data( @{ $notes->{$note} } );
+        $frequencies->{$track}{$note} = { $stat->proportional_frequencies };
+    }
+
+    $stat->clear_data;
+}
+warn 'Transition frequencies: ', Dumper$frequencies;
+
+store $frequencies, "$0.dat";
