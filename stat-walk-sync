@@ -14,12 +14,14 @@ my $file    = shift || die "Usage: perl $0 proportional-frequencies.dat [0|1]";
 my $n       = shift || 4; # Number of notes to play
 my $initial = shift // 1; # Initial graph node: 0=random, 1=lowest note
 
+my @phrases;
+my $patch = 42;
+my $channel = 0;
+
 my $data = retrieve($file);
 #use Data::Dumper::Concise;warn 'Data to process: ', Dumper$data;
 
-my $score = MIDIUtil::setup_midi( patch => 42 );
-
-my @phrases;
+my $score = MIDIUtil::setup_midi( patch => $patch );
 
 for my $track ( keys %$data ) {
     if ( $initial == 0 ) {
@@ -37,6 +39,7 @@ for my $track ( keys %$data ) {
 #use Data::Dumper::Concise;warn Dumper\@phrase;
 
     my $func = sub {
+        MIDIUtil::set_chan_patch( $score, $channel++, $patch );
         $score->n( @$_ ) for @phrase;
     };
 
