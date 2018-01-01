@@ -28,7 +28,7 @@ for my $track ( keys %$data ) {
     else {
         $initial = ( sort { $a <=> $b } keys %{ $data->{$track} } )[0];
     }
-    warn "Initial note: $initial\n";
+#    warn "Initial note: $initial\n";
 
     my $pitches = Graph::Weighted->new;
     $pitches->populate( $data->{$track} );
