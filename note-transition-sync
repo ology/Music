@@ -48,14 +48,14 @@ my $frequencies = {};
 for my $track ( keys %$transitions ) {
     my $notes = $transitions->{$track};
 
-    my $stat = Statistics::Frequency->new;
-
     for my $note ( keys %$notes ) {
+        my $stat = Statistics::Frequency->new;
+
         $stat->add_data( @{ $notes->{$note} } );
         $frequencies->{$track}{$note} = { $stat->proportional_frequencies };
-    }
 
-    $stat->clear_data;
+        $stat->clear_data;
+    }
 }
 warn 'Transition frequencies: ', Dumper$frequencies;
 
