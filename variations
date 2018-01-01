@@ -6,13 +6,13 @@ use Algorithm::Combinatorics qw( variations );
 use List::Util qw( shuffle );
 use MIDIUtil;
  
-my $data  = shift || '0 C5 Ds5 A5';
+my $treb  = shift || '0 C5 Ds5 A5';
 my $bass  = shift || 'C4 F4 G4';
 my $bpm   = shift || 400;
 my $trebp = shift || 69;
 my $bassp = shift || 42;
 
-my @data = split / /, $data;
+my @treb = split / /, $treb;
 my @bass = split / /, $bass;
 
 my $size = 0;
@@ -31,8 +31,8 @@ sub variance {
 
     my $count = 1;
 
-    for my $n ( 1 .. @data ) {
-        my @items = shuffle variations( \@data, $n );
+    for my $n ( 1 .. @treb ) {
+        my @items = shuffle variations( \@treb, $n );
 
         for my $i (@items) {
             print "$count. @$i\n";
