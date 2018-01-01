@@ -1,9 +1,8 @@
 #!/usr/bin/env perl
-
-# Run this, to produce a freq file, then run stat-walk-sync with it.
-
 use strict;
 use warnings;
+
+# Run this, to produce a freq file, then run stat-walk-sync with it.
 
 use Data::Dumper;
 use MIDI;
