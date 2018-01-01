@@ -6,9 +6,9 @@ use Algorithm::Combinatorics qw( variations );
 use List::Util qw( shuffle );
 use MIDIUtil;
  
-my $treb  = shift || '0 C5 Ds5 A5';
+my $treb  = shift || '0 C5 E5 G5';
 my $bass  = shift || 'C4 F4 G4';
-my $bpm   = shift || 400;
+my $bpm   = shift || 120;
 my $trebp = shift || 69;
 my $bassp = shift || 42;
 
@@ -24,6 +24,7 @@ $score->synch(
     \&legato,
 );
 
+$score->n( 'wn', $bass[0] );
 $score->write_score( "$0.mid" );
 
 sub variance {
