@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# To run this, first produce a freq file with note-transition.
+# To run this, first produce a freq file with note-transition-sync.
 
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
