@@ -1,0 +1,230 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Run bach-choral.R and divide-up the data file, before running this.
+# Then: perl % ~/Documents/data/jsbach_chorals_harmony/bach-choral-000206b_.csv
+
+use MIDIUtil;
+
+use Text::CSV;
+use Graph::Weighted;
+use List::Util::WeightedChoice qw(choose_weighted);
+use Music::Chord::Note;
+use MIDI::Simple;
+use Music::Tempo;
+use List::Util qw(shuffle);
+
+my $file        = shift || die "Usage: perl $0 file.csv\n";
+my $note_number = shift || 15;
+
+my ( $index, $full_score ) = read_bach($file);
+
+my $weights = build_weights($index);
+
+my $g = Graph::Weighted->new;
+$g->populate($weights);
+#$g->dump();
+
+my @notes = collect_notes( $g, $note_number );
+
+my ( $melody, $bassline, $chords ) = split_records( $full_score, @notes );
+
+my $score = MIDIUtil::setup_midi();
+
+my @parts = (
+    \&melody,
+    \&bassline,
+    \&chords,
+);
+
+$score->synch(@parts);
+
+my $name = "$0.mid";
+
+$score->write_score($name);
+
+#system( 'timidity', $name );
+
+sub read_bach {
+    my ($file) = @_;
+
+    my $csv = Text::CSV->new ( { binary => 1 } )
+        or die 'Cannot use CSV: ' . Text::CSV->error_diag ();
+
+    open my $fh, "<:encoding(utf8)", $file
+        or die "Can't read $file: $!";
+
+    my $full_score;
+    my $index;
+    my $previous;
+
+    $csv->getline($fh); # Skip the header.
+
+    while ( my $row = $csv->getline($fh) ) {
+        my $notes = '';
+        for my $note ( 3 .. 14 ) {
+            $notes .= $row->[$note] eq 'YES' ? 1 : 0;
+        }
+
+        my $chord = $row->[17];
+
+        my $bassnote = $row->[15];
+
+        my $current = join( ',', $notes, $bassnote, $chord );
+
+        push @$full_score, $current;
+
+        if ($previous) {
+            $index->{$previous}{$current}++;
+        }
+
+        $previous = $current;
+    }
+
+    $csv->eof or $csv->error_diag();
+    close $fh;
+
+    return ( $index, $full_score );
+}
+
+sub build_weights {
+    my ($index) = @_;
+
+    for my $position ( keys %$index ) {
+        my $n = 0;
+        $n += $index->{$position}{$_}
+            for keys %{ $index->{$position} };
+
+        for my $child ( keys %{ $index->{$position} } ) {
+            $weights->{$position}{$child} = $index->{$position}{$child} / $n;
+        }
+    }
+
+    return $weights;
+}
+
+sub collect_notes {
+    my ( $pitch, $n ) = @_;
+
+    my @v = $pitch->vertices;
+    my $vertex = $v[ int( rand $pitch->vertices ) ];
+
+    my @notes;
+
+    for my $i ( 1 .. $n ) {
+        push @notes, $vertex;
+
+        if ( $i < $n ) {
+            $vertex = next_vertex( $pitch, $vertex );
+        }
+    }
+
+    return @notes;
+}
+
+sub next_vertex {
+    my ( $graph, $vertex ) = @_;
+
+    my $successors = [];
+
+    for my $successor ( $graph->successors($vertex) ) {
+        push @$successors, {
+            vertex => $successor,
+            weight => $graph->get_cost( [ $vertex, $successor ] ),
+        };
+    }
+
+    my $choice = choose_weighted( $successors, sub { $_[0]->{weight} } );
+
+    return $choice->{vertex};
+}
+
+sub split_records {
+    my ( $full_score, @records ) = @_;
+
+    my ( @melody, @bitstrings, @bassline, @chords );
+
+    # Parse records into musical parts.
+    my $counter = 0;
+    for my $record (@records) {
+        my ( $bitstring, $bass, $chord ) = split /,/, $record;
+        push @bitstrings, $bitstring;
+        push @bassline, $bass;
+        push @chords, $chord;
+
+        if ( $counter == $#records ) {
+            my ( $last_bitstring, $last_bass, $last_chord ) = split /,/, $full_score->[-1];
+            push @bitstrings, $last_bitstring;
+            push @bassline, $last_bass;
+            push @chords, $last_chord;
+        }
+
+        $counter++;
+    }
+
+    # Build melody.
+    my @note_index = (qw( C Cs D Ds E F Fs G Gs A As B ));
+    for my $bitstring (@bitstrings) {
+        my $i = 0;
+        my @notes;
+        for my $bit ( split '', $bitstring ) {
+            push @notes, $note_index[$i]
+                if $bit;
+            $i++;
+        }
+        my $duration =
+            @notes == 2 ? 'hn'  :
+            @notes == 3 ? 'thn' :
+            @notes == 4 ? 'qn'  : 'tqn';
+        for my $note (shuffle @notes) {
+            push @melody, [ $duration, $note ];
+        }
+    }
+
+    # Fix-up bass notes.
+    for (@bassline) {
+        s/b/f/;
+        s/#/s/;
+    }
+
+    # Fix-up chord names.
+    for (@chords) {
+        s/\s+//;
+        s/_M$//;
+        s/_//;
+        s/^(\w+)#M$/$1#/;
+        s/^(\w+)bM$/$1b/;
+        s/^([\w\#]+)M4$/$1sus4/;
+        s/^([\w\#]+)d6$/$1d/;
+        s/^([\w\#]+)m4$/$1m/;
+        s/^([\w\#]+)M6$/$1\6/;
+        s/^([\w\#]+)d/$1dim/;
+    }
+
+    return \@melody, \@bassline, \@chords;
+}
+
+sub melody {
+    $score->Channel(3);
+    $score->patch_change( 3, 73 );
+    $score->Octave(5);
+    $score->n( @$_ ) for @$melody;
+}
+sub bassline {
+    $score->Channel(2);
+    $score->patch_change( 2, 32 );
+    $score->Octave(3);
+    $score->n( 'wn', $_ ) for @$bassline;
+}
+sub chords {
+    $score->Channel(1);
+    $score->patch_change( 1, 5 );
+    $score->Octave(5);
+    my $cn = Music::Chord::Note->new();
+    for my $chord (@$chords) {
+        my @tone = $cn->chord($chord);
+        s/#/s/ for @tone;
+        $score->n( 'wn', @tone );
+    }
+}
