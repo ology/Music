@@ -20,7 +20,7 @@ for my $t ( $opus->tracks ) {
 
     $i++;
 
-    printf "\n%d. %s:\n", $i, $t;
+    print "$t $i\n";
 
     my $text = '';
 
