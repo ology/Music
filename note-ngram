@@ -1,0 +1,43 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use MIDI;
+use Music::Note;
+use Lingua::EN::Ngram;
+
+my $file = shift || die "Usage: perl $0 /some/file.mid";
+my $size = shift || 2;
+
+my $opus = MIDI::Opus->new( { from_file => $file } );
+#$opus->dump( { dump_tracks => 1 } );
+
+my $i = 0;
+
+for my $t ( $opus->tracks ) {
+    my @events = grep { $_->[0] eq 'note_on' } $t->events;
+    next unless @events;
+
+    $i++;
+
+    printf "\n%d. %s:\n", $i, $t;
+
+    my $text = '';
+
+    for my $event ( @events ) {
+        my $note = Music::Note->new( $event->[3], 'midinum' );
+        $text .= $note->format('midi') . ' ';
+    }
+
+    my $ngram  = Lingua::EN::Ngram->new( text => $text );
+    my $phrase = $ngram->ngram($size);
+
+    my $j = 0;
+
+    for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} } keys %$phrase ) {
+        next if $phrase->{$p} == 1;
+
+        $j++;
+        printf "%d. %d\t%s\n", $j, $phrase->{$p}, $p;
+    }
+}
