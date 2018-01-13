@@ -55,6 +55,6 @@ for my $t ( $opus->tracks ) {
         # End if we are past the maximum
         last if $max > 0 && $j > $max;
 
-        printf "\t%d. %d\t%s\n", $j, $phrase->{$p}, $p;
+        printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $p;
     }
 }
