@@ -8,6 +8,7 @@ use Lingua::EN::Ngram;
 
 my $file = shift || die "Usage: perl $0 /some/file.mid";
 my $size = shift || 2;
+my $max  = shift || 40;  # -1 for all >1 records
 
 my $opus = MIDI::Opus->new( { from_file => $file } );
 #$opus->dump( { dump_tracks => 1 } );
@@ -38,6 +39,9 @@ for my $t ( $opus->tracks ) {
         next if $phrase->{$p} == 1;
 
         $j++;
+
+        last if $max > 0 && $j > $max;
+
         printf "%d. %d\t%s\n", $j, $phrase->{$p}, $p;
     }
 }
