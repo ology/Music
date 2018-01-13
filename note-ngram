@@ -7,8 +7,8 @@ use Music::Note;
 use Lingua::EN::Ngram;
 
 my $file = shift || die "Usage: perl $0 /some/file.mid";
-my $size = shift || 2;
-my $max  = shift || 40;  # -1 for all >1 records
+my $size = shift || 2;  # ngram size
+my $max  = shift || 40; # -1 for all >1 records
 
 my $opus = MIDI::Opus->new( { from_file => $file } );
 #$opus->dump( { dump_tracks => 1 } );
