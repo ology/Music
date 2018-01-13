@@ -48,7 +48,7 @@ for my $t ( $opus->tracks ) {
 
     # Display the ngrams in order of their repetition amount
     for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} } keys %$phrase ) {
-        next if $phrase->{$p} == 1;
+        last if $phrase->{$p} == 1;
 
         $j++;
 
