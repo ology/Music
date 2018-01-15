@@ -25,7 +25,6 @@ my ( $x1, $y1 ) = $hilbert->CoordinatesFromPoint( $count++ );
 
 # Draw the Hilbert curve
 while ( ( $hilbert->CoordinatesFromPoint($count) )[0] ) {
-    # TODO Add a note to the score
     $score->n( 'qn', $note );
 
     # Get a new point on the curve
