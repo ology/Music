@@ -17,7 +17,8 @@ my $hilbert = Math::Curve::Hilbert->new(
     step      => 4,
 );
 
-my $note  = 60;
+my $treb  = 60;
+my $bass  = 48;
 my $count = 0;
 
 # Start the Hilbert curve
@@ -25,17 +26,25 @@ my ( $x1, $y1 ) = $hilbert->CoordinatesFromPoint( $count++ );
 
 # Draw the Hilbert curve
 while ( ( $hilbert->CoordinatesFromPoint($count) )[0] ) {
-    $score->n( 'qn', $note );
+    $score->n( 'qn', $treb, $bass );
 
     # Get a new point on the curve
     my ( $x2, $y2 ) = $hilbert->CoordinatesFromPoint( $count++ );
 
-    # Inc/Decrement the note
+    # Inc/Decrement the treble note
     if ( $x2 - $x1 > 0 ) {
-        $note += 2;
+        $treb += 2;
     }
     elsif ( $x2 - $x1 < 0 ) {
-        $note -= 2;
+        $treb -= 2;
+    }
+
+    # Inc/Decrement the bass note
+    if ( $y2 - $y1 > 0 ) {
+        $bass += 2;
+    }
+    elsif ( $y2 - $y1 < 0 ) {
+        $bass -= 2;
     }
 
     # Increment the line segment
