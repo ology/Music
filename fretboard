@@ -51,7 +51,7 @@ my $font = Imager::Font->new(
 my $string = $string_num;
 for my $note ( split //, reverse $chord ) {
     if ( $note =~ /[xX.-]/ ) {
-        print "an X at $string\n";
+        print "X at $string\n";
         $i->string(
             font  => $font,
             text  => 'X',
@@ -63,7 +63,7 @@ for my $note ( split //, reverse $chord ) {
         );
     }
     elsif ( $note =~ /[oO0]/ ) {
-        print "an O or an open circle at $string\n";
+        print "O at $string\n";
         $i->circle(
             color  => $BLACK,
             r      => $SPACE / 4,
@@ -73,7 +73,7 @@ for my $note ( split //, reverse $chord ) {
         );
     }
     else {
-        print "a circle at $note,$string\n";
+        print "Dot at $note,$string\n";
         $i->circle(
             color => $BLACK,
             r     => $SPACE / 4,
