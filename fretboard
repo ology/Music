@@ -11,7 +11,7 @@ Readonly my $BLACK => 'black';
 Readonly my $SPACE => 20;
 
 my ( $string_num, $fret_num, $chord, $outfile ) = @ARGV == 4
-    ? @ARGV : ( 6, 4, 'x12340', $0 );
+    ? @ARGV : ( 6, 5, 'x12340', $0 );
 my $type = 'png';
 
 my $i = Imager->new(
