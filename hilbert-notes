@@ -4,7 +4,6 @@ use warnings;
 
 use Math::Curve::Hilbert;
 use MIDIUtil;
-use Music::Scales;
 
 my $max = shift || 64;
 my $bpm = shift || 120;
