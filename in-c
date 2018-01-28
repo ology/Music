@@ -2,6 +2,10 @@
 use strict;
 use warnings;
 
+##
+# This is a Perl orchestration of Terry Riley's venerable composition, "In C."
+##
+
 use MIDIUtil;
 
 my @patches = @ARGV ? @ARGV : qw( 0 8 42 69 );
