@@ -1,0 +1,501 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/Music';
+use MIDIUtil;
+
+my @patches = @ARGV ? @ARGV : qw( 0 8 42 69 );
+die 'No more than 16 patches allowed'
+    if @patches > 16;
+
+my $channel = 0;
+
+my $score = MIDIUtil::setup_midi( bpm => 120 );
+
+my @phrases;
+push @phrases, \&loop
+    for 1 .. @patches;
+
+$score->synch(@phrases);
+
+$score->write_score("$0.mid");
+
+sub rand4 {
+    return 1 + int rand 4;
+}
+
+sub loop {
+    MIDIUtil::set_chan_patch( $score, $channel++, shift(@patches) );
+
+    # 1
+    for ( 1 .. rand4() ) {
+        $score->n( 'qn', 'E4' ) for 1 .. 3;
+    }
+
+    # 2
+    for ( 1 .. rand4() ) {
+        $score->n( 'en', 'E4' );
+        $score->n( 'en', 'F4' );
+        $score->n( 'qn', 'E4' );
+    }
+
+    # 3
+    for ( 1 .. rand4() ) {
+        $score->r('en');
+        $score->n( 'en', 'E4' );
+        $score->n( 'en', 'F4' );
+        $score->n( 'en', 'E4' );
+    }
+
+    # 4
+    for ( 1 .. rand4() ) {
+        $score->r('en');
+        $score->n( 'en', 'E4' );
+        $score->n( 'en', 'F4' );
+        $score->n( 'en', 'G4' );
+    }
+
+    # 5
+    for ( 1 .. rand4() ) {
+        $score->n( 'en', 'E4' );
+        $score->n( 'en', 'F4' );
+        $score->n( 'en', 'G4' );
+        $score->r('en');
+    }
+
+    # 6
+    for ( 1 .. rand4() ) {
+        $score->n( 'wn', 'C5' );
+        $score->n( 'wn', 'C5' );
+    }
+
+    # 7
+    for ( 1 .. rand4() ) {
+        $score->r('qn') for 1 .. 3;
+        $score->r('en');
+        $score->n( 'sn', 'C4' ) for 1 .. 2;
+        $score->n( 'en', 'C4' );
+        $score->r('en');
+        $score->r('qn') for 1 .. 3;
+    }
+
+    # 8
+    for ( 1 .. rand4() ) {
+        $score->n( 'dwn', 'G4' );
+        $score->n( 'wn', 'F4' );
+        $score->n( 'wn', 'F4' );
+    }
+
+    # 9
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+        $score->r('en');
+        $score->r('qn') for 1 .. 3;
+    }
+
+    # 10
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+    }
+
+    # 11
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+    }
+
+    # 12
+    for ( 1 .. rand4() ) {
+        $score->n( 'en', 'F4' );
+        $score->n( 'en', 'G4' );
+        $score->n( 'wn', 'B4' );
+        $score->n( 'qn', 'C3' );
+    }
+
+    # 13
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'B4' );
+        $score->n( 'den', 'G4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'F4' );
+        $score->n( 'qn', 'G4' );
+        $score->r('den');
+        $score->n( 'sn', 'G4' );
+        $score->n( 'dhn', 'G4' );
+    }
+
+    # 14
+    for ( 1 .. rand4() ) {
+        $score->n( 'wn', 'C5' );
+        $score->n( 'wn', 'B4' );
+        $score->n( 'wn', 'G4' );
+        $score->n( 'wn', 'Fs4' );
+    }
+
+    # 15
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'G4' );
+        $score->r('den');
+        $score->r('qn') for 1 .. 3;
+    }
+
+    # 16
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'C5' );
+        $score->n( 'sn', 'B4' );
+    }
+
+    # 17
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'C5' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'C5' );
+        $score->n( 'sn', 'B4' );
+        $score->r('sn');
+    }
+
+    # 18
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'den', 'E4' );
+        $score->n( 'sn', 'E4' );
+    }
+
+    # 19
+    for ( 1 .. rand4() ) {
+        $score->r('dqn');
+        $score->n( 'dqn', 'G5' );
+    }
+
+    # 20
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'den', 'G3' );
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'sn', 'E4' );
+    }
+
+    # 21
+    for ( 1 .. rand4() ) {
+        $score->n( 'dhn', 'Fs4' );
+    }
+
+    # 22
+    for ( 1 .. rand4() ) {
+        $score->n( 'dqn', 'E4' ) for 1 .. 5;
+        $score->n( 'dqn', 'Fs4' );
+        $score->n( 'dqn', 'G4' );
+        $score->n( 'dqn', 'A4' );
+        $score->n( 'en', 'B4' );
+    }
+
+    # 23
+    for ( 1 .. rand4() ) {
+        $score->n( 'en', 'E4' );
+        $score->n( 'dqn', 'Fs4' ) for 1 .. 5;
+        $score->n( 'dqn', 'G4' );
+        $score->n( 'dqn', 'A4' );
+        $score->n( 'qn', 'B4' );
+    }
+
+    # 24
+    for ( 1 .. rand4() ) {
+        $score->n( 'en', 'E4' );
+        $score->n( 'en', 'Fs4' );
+        $score->n( 'dqn', 'G4' ) for 1 .. 5;
+        $score->n( 'dqn', 'A4' );
+        $score->n( 'en', 'B4' );
+    }
+
+    # 25
+    for ( 1 .. rand4() ) {
+        $score->n( 'en', 'E4' );
+        $score->n( 'en', 'Fs4' );
+        $score->n( 'en', 'G4' );
+        $score->n( 'dqn', 'A4' ) for 1 .. 5;
+        $score->n( 'dqn', 'B4' );
+    }
+
+    # 26
+    for ( 1 .. rand4() ) {
+        $score->n( 'en', 'E4' );
+        $score->n( 'en', 'Fs4' );
+        $score->n( 'en', 'G4' );
+        $score->n( 'en', 'A4' );
+        $score->n( 'dqn', 'B4' ) for 1 .. 5;
+    }
+
+    # 27
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'en', 'G4' );
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'sn', 'E4' );
+    }
+
+    # 28
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'sn', 'E4' );
+        $score->n( 'sn', 'Fs4' );
+        $score->n( 'den', 'E4' );
+        $score->n( 'sn', 'E4' );
+    }
+
+    # 29
+    for ( 1 .. rand4() ) {
+        $score->n( 'dhn', 'E4' );
+        $score->n( 'dhn', 'G4' );
+        $score->n( 'dhn', 'C5' );
+    }
+
+    # 30
+    for ( 1 .. rand4() ) {
+        $score->n( 'dwn', 'C5' );
+    }
+
+    # 31
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+    }
+
+    # 32
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'F4' );
+        $score->n( 'dhn', 'F4' );
+        $score->n( 'dqn', 'G4' );
+    }
+
+    # 33
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'F4' );
+        $score->r('en');
+    }
+
+    # 34
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'F4' );
+    }
+
+    # 35
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+        $score->r('en');
+        $score->r('qn') for 1 .. 3;
+        $score->n( 'qn', 'As4' );
+        $score->n( 'dhn', 'G5' );
+        $score->n( 'en', 'A5' );
+        $score->n( 'en', 'G5' );
+        $score->n( 'en', 'G5' );
+        $score->n( 'en', 'B5' );
+        $score->n( 'dqn', 'A5' );
+        $score->n( 'en', 'G5' );
+        $score->n( 'dhn', 'E5' );
+        $score->n( 'en', 'G5' );
+        $score->n( 'en', 'Fs5' );
+        $score->n( 'dhn', 'Fs5' );
+        $score->r('qn') for 1 .. 2;
+        $score->r('en');
+        $score->n( 'en', 'E5' );
+        $score->n( 'hn', 'E5' );
+        $score->n( 'dhn', 'F5' );
+    }
+
+    # 36
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+    }
+
+    # 37
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+    }
+
+    # 38
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+    }
+
+    # 39
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'C5' );
+    }
+
+    # 40
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'F4' );
+    }
+
+    # 41
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'B4' );
+        $score->n( 'sn', 'G4' );
+    }
+
+    # 42
+    for ( 1 .. rand4() ) {
+        $score->n( 'wn', 'C5' );
+        $score->n( 'wn', 'B4' );
+        $score->n( 'wn', 'A4' );
+        $score->n( 'wn', 'C5' );
+    }
+
+    # 43
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F5' );
+        $score->n( 'sn', 'E5' );
+        $score->n( 'sn', 'F5' );
+        $score->n( 'sn', 'E5' );
+        $score->n( 'en', 'E5' );
+        $score->n( 'en', 'E5' );
+        $score->n( 'en', 'E5' );
+        $score->n( 'sn', 'F5' );
+        $score->n( 'sn', 'E5' );
+    }
+
+    # 44
+    for ( 1 .. rand4() ) {
+        $score->n( 'en', 'F5' );
+        $score->n( 'en', 'E5' );
+        $score->n( 'en', 'E5' );
+        $score->n( 'en', 'E5' );
+        $score->n( 'qn', 'C5' );
+    }
+
+    # 45
+    for ( 1 .. rand4() ) {
+        $score->n( 'qn', 'D5' );
+        $score->n( 'qn', 'D5' );
+        $score->n( 'qn', 'G4' );
+    }
+
+    # 46
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'D5' );
+        $score->n( 'sn', 'C5' );
+        $score->n( 'sn', 'D5' );
+        $score->r('en');
+        $score->n( 'en', 'G4' );
+        $score->r('en');
+        $score->n( 'en', 'G4' );
+        $score->r('en');
+        $score->n( 'en', 'G4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'D5' );
+        $score->n( 'sn', 'C5' );
+        $score->n( 'sn', 'D5' );
+    }
+
+    # 47
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'D5' );
+        $score->n( 'sn', 'C5' );
+        $score->n( 'en', 'D5' );
+    }
+
+    # 48
+    for ( 1 .. rand4() ) {
+        $score->n( 'dwn', 'G4' );
+        $score->n( 'wn', 'G4' );
+        $score->n( 'wn', 'F4' );
+        $score->n( 'qn', 'F4' );
+    }
+
+    # 49
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'As4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'As4' );
+        $score->n( 'sn', 'G4' );
+    }
+
+    # 50
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+    }
+
+    # 51
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'F4' );
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'As4' );
+    }
+
+    # 52
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'G4' );
+        $score->n( 'sn', 'As4' );
+    }
+
+    # 53
+    for ( 1 .. rand4() ) {
+        $score->n( 'sn', 'As4' );
+        $score->n( 'sn', 'G4' );
+    }
+}
