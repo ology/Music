@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-use lib '/Users/gene/sandbox/Music';
 use MIDIUtil;
 
 my @patches = @ARGV ? @ARGV : qw( 0 8 42 69 );
