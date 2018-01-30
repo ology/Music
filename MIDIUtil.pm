@@ -33,9 +33,9 @@ This module is a collection of MIDI utilities.
     lead_in => 4,
     volume  => 120,
     bpm     => 100,
-    channel => 1,
-    patch   => 0,
-    octave  => 5,
+    channel => 16,
+    patch   => 42,
+    octave  => 4,
   );
 
 Set basic MIDI parameters, play a hi-hat lead-in and return a MIDI score object.
@@ -47,7 +47,7 @@ Named parameters and defaults:
   lead_in => 4
   volume  => 120
   bpm     => 100
-  channel => 1
+  channel => 0
   patch   => 0
   octave  => 5
 
@@ -58,7 +58,7 @@ sub setup_midi {
         lead_in => 4,
         volume  => 120,
         bpm     => 100,
-        channel => 1,
+        channel => 0,
         patch   => 0,
         octave  => 5,
         @_,
