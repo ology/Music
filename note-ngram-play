@@ -1,0 +1,100 @@
+#!/usr/bin/env perl
+
+# Play the top repeated note phrases of a MIDI file.
+
+use strict;
+use warnings;
+
+use MIDIUtil;
+use MIDI;
+use Lingua::EN::Ngram;
+use List::Util qw( shuffle );
+
+my $file  = shift || die "Usage: perl $0 /some/file.mid size max";
+my $size  = shift || 2;  # ngram size
+my $max   = shift || 40; # -1 for all >1 records
+
+my $opus = MIDI::Opus->new( { from_file => $file } );
+#$opus->dump( { dump_tracks => 1 } );
+
+# Bucket of note phrases
+my %notes;
+
+# Counter for the tracks seen
+my $i = 0;
+
+# Handle each track...
+for my $t ( $opus->tracks ) {
+    # Collect the note events for each track
+    my @events = grep { $_->[0] eq 'note_on' } $t->events;
+
+    # Skip if there are no events
+    next unless @events;
+
+    $i++;
+    print "$t $i\n";
+
+    # Declare the notes to inspect
+    my $text = '';
+
+    # Accumulate the notes
+    for my $event ( @events ) {
+        ( my $num = $event->[3] ) =~ tr/0-9/a-j/;
+        $text .= "$num ";
+    }
+
+    # Parse the note text into ngrams
+    my $ngram  = Lingua::EN::Ngram->new( text => $text );
+    my $phrase = $ngram->ngram($size);
+
+    # Counter for the ngrams seen
+    my $j = 0;
+
+    # Display the ngrams in order of their repetition amount
+    for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} } keys %$phrase ) {
+        last if $phrase->{$p} == 1;
+
+        $j++;
+
+        # End if we are past the maximum
+        last if $max > 0 && $j > $max;
+
+        ( my $num = $p ) =~ tr/a-j/0-9/;
+
+        printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $num;
+        push @{ $notes{$i} }, $num;
+    }
+}
+
+my $score = MIDIUtil::setup_midi();
+
+my @phrases;
+my $channel = 0;
+
+my @durations = qw( tqn qn );
+
+for my $track ( keys %notes ) {
+    my @all;
+
+    for my $phrase ( shuffle @{ $notes{$track} } ) {
+        my @phrase = split /\s/, $phrase;
+        push @all, @phrase;
+    }
+
+    my $func = sub {
+        $channel++;
+
+        MIDIUtil::set_chan_patch( $score, $channel, 0 );
+
+        for my $note ( @all ) {
+            my $duration = $durations[ int rand @durations ];
+            $score->n( $duration, $note );
+        }
+    };
+
+    push @phrases, $func;
+}
+
+$score->synch(@phrases);
+
+$score->write_score( "$0.mid" );
