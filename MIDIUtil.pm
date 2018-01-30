@@ -44,12 +44,12 @@ If the lead_in parameter is 0, then no hi-hat lead-in is played.
 
 Named parameters and defaults:
 
-  lead_in => 4
-  volume  => 120
-  bpm     => 100
-  channel => 0
-  patch   => 0
-  octave  => 5
+  lead_in: 4
+  volume:  120
+  bpm:     100
+  channel: 0
+  patch:   0
+  octave:  5
 
 =cut
 
@@ -89,7 +89,7 @@ Positional parameters and defaults:
 
   score:   undef (required)
   channel: 0
-  patch:   1
+  patch:   0
 
 =cut
 
