@@ -10,9 +10,10 @@ use MIDI;
 use Lingua::EN::Ngram;
 use List::Util qw( shuffle );
 
-my $file  = shift || die "Usage: perl $0 /some/file.mid size max";
-my $size  = shift || 2;  # ngram size
-my $max   = shift || 40; # -1 for all >1 records
+my $file = shift || die "Usage: perl $0 /some/file.mid size max";
+my $size = shift || 2;  # ngram size
+my $max  = shift || 40; # -1 for all >1 records
+my $bpm  = shift || 100;
 
 my $opus = MIDI::Opus->new( { from_file => $file } );
 #$opus->dump( { dump_tracks => 1 } );
@@ -66,7 +67,7 @@ for my $t ( $opus->tracks ) {
     }
 }
 
-my $score = MIDIUtil::setup_midi();
+my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
 my @phrases;
 my $channel = 0;
