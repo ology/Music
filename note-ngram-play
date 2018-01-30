@@ -73,14 +73,17 @@ my $channel = 0;
 
 my @durations = qw( tqn qn );
 
+# Generate a function for the notes of each track
 for my $track ( keys %notes ) {
     my @all;
 
+    # Shuffle the phrases and add the notes to a bucket
     for my $phrase ( shuffle @{ $notes{$track} } ) {
         my @phrase = split /\s/, $phrase;
         push @all, @phrase;
     }
 
+    # Create a function that adds our bucket of notes to the score
     my $func = sub {
         $channel++;
 
