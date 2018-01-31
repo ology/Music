@@ -42,8 +42,8 @@ my @pick = ( shuffle @loops )[ 0 .. $max - 1 ];
 # Generate a phrase for each patch
 my @phrases;
 for my $patch ( @patches ) {
-    # Make a function to play the chosen loops
-    my $fn = sub {
+    # Make a procedure to play the chosen loops
+    my $proc = sub {
         # Avoid the drum channel
         $channel++ if $channel == 9;
 
@@ -55,7 +55,7 @@ for my $patch ( @patches ) {
     };
 
     # Accumulate our phrase functions
-    push @phrases, $fn;
+    push @phrases, $proc;
 }
 
 # Mash the phrases together as MIDI tracks
