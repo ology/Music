@@ -58,7 +58,7 @@ for my $patch ( @patches ) {
     push @phrases, $fn;
 }
 
-# Mash the MIDI tracks together
+# Mash the phrases together as MIDI tracks
 $score->synch(@phrases);
 
 # Write the score to a MIDI file
