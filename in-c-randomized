@@ -9,16 +9,21 @@ use warnings;
 use MIDIUtil;
 use List::Util qw( shuffle );
 
+# Set the number of loop motifs to use
 my $max = shift || 8;
 
+# Set the patches (voices) to use
 my @patches = @ARGV ? @ARGV : qw( 0 8 42 69 );
 die "No more than 15 patches allowed\n"
     if @patches > 15;
 
+# Initialize the MIDI channel
 my $channel = 0;
 
+# Setup the MIDI score
 my $score = MIDIUtil::setup_midi( bpm => 120 );
 
+# Declare the available loops
 my @loops = (
      \&loop1,  \&loop2,  \&loop3,  \&loop4,  \&loop5,  \&loop6,  \&loop7,  \&loop8,  \&loop9, \&loop10,
     \&loop11, \&loop12, \&loop13, \&loop14, \&loop15, \&loop16, \&loop17, \&loop18, \&loop19, \&loop20,
@@ -28,26 +33,40 @@ my @loops = (
     \&loop51, \&loop52, \&loop53,
 );
 
+# Limit the number of loops to be played to the given max
 my @pick = ( shuffle @loops )[ 0 .. $max - 1 ];
 
+# Generate a phrase for each patch
 my @phrases;
 for my $patch ( @patches ) {
+    # Make a function to play the chosen loops
     my $fn = sub {
+        # Avoid the drum channel
         $channel++ if $channel == 9;
+
+        # Increment the channel and patch
         MIDIUtil::set_chan_patch( $score, $channel++, $patch );
+
+        # Call each of the chosen loops
         $_->() for @pick;
     };
 
+    # Accumulate our phrase functions
     push @phrases, $fn;
 }
 
+# Mash the MIDI tracks together
 $score->synch(@phrases);
 
+# Write the score to a MIDI file
 $score->write_score("$0.mid");
 
+# Return a number between 1 and 4
 sub rand4 {
     return 1 + int rand 4;
 }
+
+# Available loops:
 
 sub loop1 {
     for ( 1 .. rand4() ) {
