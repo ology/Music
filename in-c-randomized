@@ -48,7 +48,7 @@ for my $patch ( @patches ) {
         MIDIUtil::set_chan_patch( $score, $channel++, $patch );
 
         # Call each of the chosen loops
-        $_->() for @pick;
+        $_->() for shuffle @pick;
     };
 
     # Accumulate our phrase functions
