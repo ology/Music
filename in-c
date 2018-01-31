@@ -9,7 +9,7 @@ use warnings;
 use MIDIUtil;
 
 my @patches = @ARGV ? @ARGV : qw( 0 8 42 69 );
-die 'No more than 15 patches allowed'
+die "No more than 15 patches allowed\n"
     if @patches > 15;
 
 my $channel = 0;
