@@ -9,8 +9,8 @@ use warnings;
 use MIDIUtil;
 
 my @patches = @ARGV ? @ARGV : qw( 0 8 42 69 );
-die 'No more than 16 patches allowed'
-    if @patches > 16;
+die 'No more than 15 patches allowed'
+    if @patches > 15;
 
 my $channel = 0;
 
@@ -29,6 +29,7 @@ sub rand4 {
 }
 
 sub loop {
+    $channel++ if $channel == 9;
     MIDIUtil::set_chan_patch( $score, $channel++, shift(@patches) );
 
     # 1
