@@ -15,6 +15,8 @@ my $size = shift || 2;  # ngram size
 my $max  = shift || 40; # -1 for all >1 records
 my $bpm  = shift || 100;
 
+my @durations = @ARGV ? @ARGV : qw( tqn qn );
+
 my $opus = MIDI::Opus->new( { from_file => $file } );
 #$opus->dump( { dump_tracks => 1 } );
 
@@ -71,8 +73,6 @@ my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
 my @phrases;
 my $channel = 0;
-
-my @durations = qw( tqn qn );
 
 # Generate a function for the notes of each track
 for my $track ( keys %notes ) {
