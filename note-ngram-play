@@ -31,8 +31,10 @@ for my $t ( $opus->tracks ) {
     # Collect the note events for each track
     my @events = grep { $_->[0] eq 'note_on' && $_->[2] != 9 } $t->events;
 
-    # Skip if there are no events
-    next unless @events;
+    my $track_channel = $events[0][2];
+
+    # Skip if there are no events and no channel
+    next unless @events && $track_channel;
 
     $i++;
     print "$t $i\n";
@@ -65,7 +67,7 @@ for my $t ( $opus->tracks ) {
         ( my $num = $p ) =~ tr/a-j/0-9/;
 
         printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $num;
-        push @{ $notes{$i} }, $num;
+        push @{ $notes{$track_channel} }, $num;
     }
 }
 
