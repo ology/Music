@@ -71,7 +71,7 @@ for my $t ( $opus->tracks ) {
     }
 }
 
-die "\n* Can't handle songs with more than 16 tracks, right now...\n"
+die "\n* Can't handle songs with more than 16 tracks.\n"
     if keys(%notes) > 16;
 
 my $score = MIDIUtil::setup_midi( bpm => $bpm );
