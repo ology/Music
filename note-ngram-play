@@ -29,7 +29,7 @@ my $i = 0;
 # Handle each track...
 for my $t ( $opus->tracks ) {
     # Collect the note events for each track
-    my @events = grep { $_->[0] eq 'note_on' } $t->events;
+    my @events = grep { $_->[0] eq 'note_on' && $_->[2] != 9 } $t->events;
 
     # Skip if there are no events
     next unless @events;
@@ -55,7 +55,7 @@ for my $t ( $opus->tracks ) {
 
     # Display the ngrams in order of their repetition amount
     for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} } keys %$phrase ) {
-        last if $phrase->{$p} == 1;
+        next if $phrase->{$p} == 1; # Skip single occurance phrases
 
         $j++;
 
