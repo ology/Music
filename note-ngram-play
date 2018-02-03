@@ -37,7 +37,7 @@ for my $t ( $opus->tracks ) {
     next unless @events && $track_channel;
 
     $i++;
-    print "$t $i\n";
+    print "$t $i. track: $track_channel\n";
 
     # Declare the notes to inspect
     my $text = '';
