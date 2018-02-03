@@ -20,7 +20,7 @@ my @durations = @ARGV ? @ARGV : qw( tqn qn );
 my $opus = MIDI::Opus->new( { from_file => $file } );
 #$opus->dump( { dump_tracks => 1 } );
 
-# Bucket of note phrases
+# Bucket of note phrases per channel
 my %notes;
 
 # Counter for the tracks seen
