@@ -28,7 +28,7 @@ my @patches = qw(
 );
 
 my $opus = MIDI::Opus->new( { from_file => $file } );
-#$opus->dump( { dump_tracks => 1 } );
+#$opus->dump( { dump_tracks => 1 } ); exit;
 
 # Bucket of note phrases per channel
 my %notes;
@@ -44,7 +44,7 @@ for my $t ( $opus->tracks ) {
     my $track_channel = $events[0][2];
 
     # Skip if there are no events and no channel
-    next unless @events && $track_channel;
+    next unless @events && defined $track_channel;
 
     $i++;
     print "$t $i. channel: $track_channel\n";
