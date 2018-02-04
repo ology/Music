@@ -1,0 +1,120 @@
+#!/usr/bin/env perl
+
+# Play the top repeated note phrases of a MIDI file by weight.
+
+use strict;
+use warnings;
+
+use MIDIUtil;
+use MIDI;
+use Lingua::EN::Ngram;
+use List::Util::WeightedChoice qw( choose_weighted );
+
+my $file = shift || die "Usage: perl $0 /some/file.mid size max bpm randomize_patches [duration list]";
+my $size = shift || 2;  # ngram size
+my $max  = shift || 40; # -1 for all >1 records
+my $bpm  = shift || 100;
+my $ranp = shift || 0;
+my $loop = shift || 4;
+
+my @durations = @ARGV ? @ARGV : qw( tqn qn );
+
+# General MIDI patches that are audible and aren't horrible
+my @patches = qw(
+    0 1 2 4 5 7 8 9
+    13 16 21 24 25 26
+    32 34 35 40 42 60
+    68 69 70 71 72 73
+    74 79
+);
+
+my $opus = MIDI::Opus->new( { from_file => $file } );
+#$opus->dump( { dump_tracks => 1 } ); exit;
+
+# Bucket of note phrases per channel
+my %notes;
+
+# Counter for the tracks seen
+my $i = 0;
+
+# Handle each track...
+for my $t ( $opus->tracks ) {
+    # Collect the note events for each track but channel 9 (percussion)
+    my @events = grep { $_->[0] eq 'note_on' && $_->[2] != 9 && $_->[4] != 0 } $t->events;
+
+    my $track_channel = $events[0][2];
+
+    # Skip if there are no events and no channel
+    next unless @events && defined $track_channel;
+
+    $i++;
+    print "$t $i. channel: $track_channel\n";
+
+    # Declare the notes to inspect
+    my $text = '';
+
+    # Accumulate the notes
+    for my $event ( @events ) {
+        ( my $num = $event->[3] ) =~ tr/0-9/a-j/;
+        $text .= "$num ";
+    }
+
+    # Parse the note text into ngrams
+    my $ngram  = Lingua::EN::Ngram->new( text => $text );
+    my $phrase = $ngram->ngram($size);
+
+    # Counter for the ngrams seen
+    my $j = 0;
+
+    # Display the ngrams in order of their repetition amount
+    for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} } keys %$phrase ) {
+        next if $phrase->{$p} == 1; # Skip single occurance phrases
+
+        $j++;
+
+        # End if we are past the maximum
+        last if $max > 0 && $j > $max;
+
+        ( my $num = $p ) =~ tr/a-j/0-9/;
+
+        printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $num;
+        $notes{$track_channel}{$num} = $phrase->{$p};
+    }
+}
+
+die "\n* Can't handle songs with more than 16 tracks.\n"
+    if keys(%notes) > 16;
+
+my $score = MIDIUtil::setup_midi( bpm => $bpm );
+
+my @phrases;
+
+# Generate a function for the notes of each track
+for my $channel ( keys %notes ) {
+    # Create a function that adds notes to the score
+    my $func = sub {
+        $channel++;
+
+        my $patch = $ranp ? $patches[ int rand @patches ] : 0;
+
+        MIDIUtil::set_chan_patch( $score, $channel, $patch);
+
+        for ( 1 .. $loop ) {
+            my $choice = choose_weighted(
+                [ keys %{ $notes{$channel} } ],
+                [ values %{ $notes{$channel} } ]
+            );
+
+            for my $note ( split /\s+/, $choice ) {
+                my $duration = $durations[ int rand @durations ];
+                $score->n( $duration, $note );
+            }
+        }
+    };
+
+    push @phrases, $func;
+}
+
+$score->synch(@phrases);
+
+$score->write_score( "$0.mid" );
