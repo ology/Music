@@ -15,10 +15,17 @@ my $max = shift || 8;
 # Do or do not shuffle the chosen motifs
 my $shuffle = shift // 0;
 
-# Set the patches (voices) to use
-my @patches = @ARGV ? @ARGV : qw( 0 8 42 69 );
-die "No more than 15 patches allowed\n"
-    if @patches > 15;
+# Set the number of voices
+my $voices = shift || 4;
+
+# General MIDI patches that are audible and aren't horrible
+my @patches = qw(
+    0 1 2 4 5 7 8 9
+    13 16 21 24 25 26
+    32 34 35 40 42 60
+    68 69 70 71 72 73
+    74 79
+);
 
 # Initialize the MIDI channel
 my $channel = 0;
@@ -41,14 +48,14 @@ my @pick = ( shuffle @loops )[ 0 .. $max - 1 ];
 
 # Generate a phrase for each patch
 my @phrases;
-for my $patch ( @patches ) {
+for my $voice ( 1 .. $voices ) {
     # Make a procedure to play the chosen loops
     my $proc = sub {
         # Avoid the drum channel
         $channel++ if $channel == 9;
 
         # Increment the channel and patch
-        MIDIUtil::set_chan_patch( $score, $channel++, $patch );
+        MIDIUtil::set_chan_patch( $score, $channel++, random_patch() );
 
         # Call each of the chosen loops
         $_->() for $shuffle ? shuffle @pick : @pick;
@@ -67,6 +74,11 @@ $score->write_score("$0.mid");
 # Return a number between 1 and 4
 sub rand4 {
     return 1 + int rand 4;
+}
+
+# Return a random patch!
+sub random_patch {
+    return $patches[ int rand @patches ];
 }
 
 # Available loops:
