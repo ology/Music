@@ -11,10 +11,11 @@ use Lingua::EN::Ngram;
 use List::Util qw( shuffle );
 
 my $file = shift || die "Usage: perl $0 /some/file.mid size max bpm randomize_patches [duration list]";
-my $size = shift || 2;  # ngram size
-my $max  = shift || 40; # -1 for all >1 records
-my $bpm  = shift || 100;
-my $ranp = shift || 0;
+my $size = shift || 2;   # ngram size
+my $max  = shift || 40;  # -1 for all >1 records
+my $bpm  = shift || 100; # Beats per minute
+my $ranp = shift || 0;   # Random patch instead of all piano
+my $shuf = shift || 0;   # Shuffle phrases
 
 my @durations = @ARGV ? @ARGV : qw( tqn qn );
 
@@ -93,8 +94,10 @@ my $channel = 0;
 for my $track ( keys %notes ) {
     my @all;
 
+    my @track_notes = $shuf ? shuffle @{ $notes{$track} } : @{ $notes{$track} };
+
     # Shuffle the phrases and add the notes to a bucket
-    for my $phrase ( shuffle @{ $notes{$track} } ) {
+    for my $phrase ( @track_notes ) {
         my @phrase = split /\s/, $phrase;
         push @all, @phrase;
     }
