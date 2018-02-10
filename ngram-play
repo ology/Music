@@ -130,7 +130,6 @@ die "\n* Can't handle songs with more than 16 tracks.\n"
 my $score = MIDIUtil::setup_midi( bpm => $opts{bpm} );
 
 my @phrases;
-my $channel = 0;
 
 # Generate a function for the notes of each track
 if ( $opts{weighted} ) {
