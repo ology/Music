@@ -114,10 +114,11 @@ sub process_midi {
         # Add a note to the score for each pitch
         my $i = 0;
         for my $pitch ( @$pitches ) {
-            # Add a duration from the given rhythms or the score default
-            my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
+            # Add a duration from the given rhythms or default
+            my $duration = $RHYTHM ? $rhythms->[$i] : 'en';
 
-            my $velocity = $VELOCITY ? $velocities->[$i] : { $score->Cookies }->{velocity};
+            # Add a velocity from the given velocities or default
+            my $velocity = $VELOCITY ? $velocities->[$i] : 96;
 
             # Add the note!
             $score->n( $duration, $name{$pitch}, $velocity );
@@ -371,9 +372,7 @@ sub set_score {
     my %conf = (
         tempo     => $TEMPO,
         volume    => 100,
-        velocity  => 96,
         signature => 4,
-        unit      => 'en',
         channel   => 1,
         patch     => $PATCH,
         octave    => 4,
@@ -393,10 +392,6 @@ sub set_score {
     $score->patch_change($conf{channel}, $conf{patch});
     $score->Channel($conf{channel});
     $score->Octave($conf{octave});
-
-    # For future use:
-    $score->Cookies(unit => $conf{unit});
-    $score->Cookies(velocity => $conf{velocity});
 
     return $score;
 }
