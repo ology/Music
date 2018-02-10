@@ -136,7 +136,7 @@ if ( $opts{weighted} ) {
         my $func = sub {
             my $patch = $opts{ranp} ? $patches[ int rand @patches ] : 0;
 
-            MIDIUtil::set_chan_patch( $score, $channel, $patch);
+            MIDIUtil::set_chan_patch( $score, $channel, $patch );
 
             for ( 1 .. $opts{loop} ) {
                 my $choice = choose_weighted(
@@ -155,10 +155,10 @@ if ( $opts{weighted} ) {
     }
 }
 else {
-    for my $track ( keys %notes ) {
+    for my $channel ( keys %notes ) {
         my @all;
 
-        my @track_notes = $opts{shuf} ? shuffle @{ $notes{$track} } : @{ $notes{$track} };
+        my @track_notes = $opts{shuf} ? shuffle @{ $notes{$channel} } : @{ $notes{$channel} };
 
         # Shuffle the phrases and add the notes to a bucket
         for my $phrase ( @track_notes ) {
@@ -168,8 +168,6 @@ else {
 
         # Create a function that adds our bucket of notes to the score
         my $func = sub {
-            $channel++;
-
             my $patch = $opts{ranp} ? random_patch() : 0;
 
             MIDIUtil::set_chan_patch( $score, $channel, $patch);
