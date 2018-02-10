@@ -95,6 +95,7 @@ for my $t ( $opus->tracks ) {
 
     # Accumulate the notes
     for my $event ( @events ) {
+        # Transliterate MIDI note numbers to alpha-code
         ( my $str = $event->[3] ) =~ tr/0-9/a-j/;
         $text .= "$str ";
     }
@@ -120,6 +121,7 @@ for my $t ( $opus->tracks ) {
         # End if we are past the maximum
         last if $opts{max} > 0 && $j > $opts{max};
 
+        # Transliterate our letter code back to MIDI note numbers
         ( my $num = $p ) =~ tr/a-j/0-9/;
 
         printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $num;
