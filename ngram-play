@@ -247,7 +247,7 @@ Play the most repeated phrases in a midi file
 
   $ perl ngram-play --file twinkle_twinkle.mid --size 3 --max 10 --dura 'en qn'
   $ perl ngram-play --file twinkle_twinkle.mid --size 3 --max 10 --ranp --weight --loop 16
-  $ perl ngram-play --file Fantaisie-Impromptu.mid --size 4 --max 20 --dura qn --ranp --pause qn
+  $ perl ngram-play --file Fantaisie-Impromptu.mid --size 4 --max 20 --dura qn --pause qn
 
   $ timidity ngram-play.mid  # Or use your favorite MIDI player
 
