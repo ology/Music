@@ -38,7 +38,7 @@ my $PHRASES    = 2;         # Number of times to play the "melody"
 my $RHYTHM     = 0;         # Use rhythmic variations
 my $VELOCITY   = 0;         # Use velocity variation
 my $TEMPO      = 600_000;   # Miliseconds
-my $PATCH      = 108;       # The MIDI patch to use
+my $PATCH      = 0;         # The MIDI patch to use
 my $DIATONIC   = 0;         # Use diatonic notes, rather than chromatic
 GetOptions (
     'help|?'       => \$HELP,
@@ -110,12 +110,10 @@ sub process_midi {
     my $score = set_score();
 
     # Repeat!
-    for ( 1 .. $PHRASES )
-    {
+    for ( 1 .. $PHRASES ) {
         # Add a note to the score for each pitch
         my $i = 0;
-        for my $pitch ( @$pitches )
-        {
+        for my $pitch ( @$pitches ) {
             # Add a duration from the given rhythms or the score default
             my $duration = $RHYTHM ? $rhythms->[$i] : { $score->Cookies }->{unit};
 
@@ -144,8 +142,7 @@ sub mutate {
 
     my $mutation = 0;
     # Find a fit...
-    while ( not is_fit( $species->{_str}, %args ) )
-    {
+    while ( not is_fit( $species->{_str}, %args ) ) {
         $mutation++;
 
         # Get a bit to twiddle
@@ -210,8 +207,7 @@ sub is_fit {
 
     my $is_fit = 0;
 
-    if ( $args{type} eq 'pitch' )
-    {
+    if ( $args{type} eq 'pitch' ) {
         # Count the number of zeros and ones
         my $zeros =()= $str =~ /0/g;
         my $ones  =()= $str =~ /1/g;
@@ -275,8 +271,7 @@ sub bits2rhythms {
     }
 
     my @rhythms;
-    for ( @$pitches )
-    {
+    for ( @$pitches ) {
         # TODO Be more clever.
         push @rhythms, $bitrhythms[ int rand @bitrhythms ];
     }
@@ -317,16 +312,13 @@ sub bits2velocities {
     my $velocities = [];
     my $velo = 96;
 
-    for my $p (@$pitches)
-    {
+    for my $p (@$pitches) {
         # Velocity is randomly up-down or stationary
-        if ( int( rand 3 ) == 1 )
-        {
+        if ( int( rand 3 ) == 1 ) {
             # Decrease
             $velo--;
         }
-        elsif ( int( rand 3 ) == 2 )
-        {
+        elsif ( int( rand 3 ) == 2 ) {
             # Increase
             $velo++;
         }
@@ -349,23 +341,23 @@ sub int2name {
     my @notes;
 
     # Use the diatonic scale notes if requested
-    if ($DIATONIC)
-    {
+    if ($DIATONIC) {
         @notes = qw( C D E F G A B );
     }
     else {
         @notes = qw( C Cs D Ds E F G Gs A As B );
     }
+
     my $int = -@notes;
-    for my $octave ( 3, 4, 5, 6 )
-    {
-        for my $note (@notes)
-        {
+
+    for my $octave ( 3, 4, 5, 6 ) {
+        for my $note (@notes) {
             $name{$int} = $note . $octave;
 #warn "N:$int $name{$int} = $note . $octave\n";
             $int++;
         }
     }
+
     return %name;
 }
 
