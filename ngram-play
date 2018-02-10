@@ -181,9 +181,10 @@ else {
     for my $channel ( keys %notes ) {
         my @all;
 
+        # Shuffle the phrases if requested
         my @track_notes = $opts{shuf} ? shuffle @{ $notes{$channel} } : @{ $notes{$channel} };
 
-        # Shuffle the phrases and add the notes to a bucket
+        # Add the notes to a bucket
         for my $phrase ( @track_notes ) {
             $n++;
 
