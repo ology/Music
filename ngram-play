@@ -195,7 +195,7 @@ else {
             print "\t$n\t$channel\t$phrase\n";
 
             my @phrase = split /\s/, $phrase;
-            push @all, @phrase;
+            push @all, @phrase, 'r';
         }
 
         # Create a function that adds our bucket of notes to the score
@@ -205,8 +205,13 @@ else {
             MIDIUtil::set_chan_patch( $score, $channel, $patch);
 
             for my $note ( @all ) {
-                my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
-                $score->n( $duration, $note );
+                if ( $note eq 'r' ) {
+                    $score->r( $opts{pause} );
+                }
+                else {
+                    my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
+                    $score->n( $duration, $note );
+                }
             }
         };
 
