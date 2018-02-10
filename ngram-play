@@ -24,6 +24,7 @@ my %opts = (
     ranp     => 0,        # Random patch instead of all piano
     shuf     => 0,        # Shuffle phrases
     single   => 0,        # Allow phrases seen only once
+    dump     => 0,        # Dump out MIDI info and exit
 );
 GetOptions( \%opts, 
     'help|?',
@@ -39,6 +40,7 @@ GetOptions( \%opts,
     'ranp',
     'shuf',
     'single',
+    'dump',
 ) or die 'Failed GetOptions';
 
 pod2usage(1)
@@ -61,7 +63,11 @@ my @patches = qw(
 );
 
 my $opus = MIDI::Opus->new( { from_file => $opts{file} } );
-#$opus->dump( { dump_tracks => 1 } ); exit;
+
+if ( $opts{dump} ) {
+    $opus->dump( { dump_tracks => 1 } );
+    exit;
+}
 
 # Bucket of note phrases per channel
 my %notes;
