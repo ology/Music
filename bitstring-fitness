@@ -101,8 +101,7 @@ rhythm set into MIDI durations (e.g. qn, sn, den), then write the score to an
 
 =cut
 
-sub process_midi
-{
+sub process_midi {
     my ( $pitches, $rhythms, $velocities ) = @_;
 
     # Convert the pitch-set to MIDI note names
@@ -139,8 +138,7 @@ Toggle a single bit at a time, of a bitstring, until a fit is found.
 
 =cut
 
-sub mutate
-{
+sub mutate {
     my $species = shift;
     my %args    = @_;
 
@@ -165,8 +163,7 @@ Apply randomized L<Music::AtonalUtil> thematic variations to pitches.
 
 =cut
 
-sub alteration
-{
+sub alteration {
     my $pitches = shift;
 
     # Apply pitch set rules:
@@ -207,8 +204,7 @@ Construct a fitness profile for a given bitstring and return 1 if it is fit or
 
 =cut
 
-sub is_fit
-{
+sub is_fit {
     my $str  = shift;
     my %args = @_;
 
@@ -263,8 +259,7 @@ select a random element from this list for each pitch.
 
 =cut
 
-sub bits2rhythms
-{
+sub bits2rhythms {
     # Convert 1001001000101 form to [tsn dsn tqn thn ddqn] set form
     my $bitstring = shift;
     my $pitches   = shift;
@@ -295,8 +290,7 @@ For each bit, select a pitch integer.
 
 =cut
 
-sub bits2pitches
-{
+sub bits2pitches {
     # Convert 1001001000101000 form to [0,3,6,10,12] set form
     my $bitstring = shift;
 
@@ -317,8 +311,7 @@ For each pitch, select a velocity.
 
 =cut
 
-sub bits2velocities
-{
+sub bits2velocities {
     my $pitches = shift;
 
     my $velocities = [];
@@ -350,8 +343,7 @@ Convert pitch integers into MIDI note names.
 
 =cut
 
-sub int2name
-{
+sub int2name {
     # Convert integer pitch notation into MIDI note names
     my %name;
     my @notes;
