@@ -10,6 +10,7 @@ use Pod::Usage;
 use MIDIUtil;
 use Lingua::EN::Ngram;
 use List::Util qw( shuffle );
+use List::Util::WeightedChoice qw( choose_weighted );
 
 my %opts = (
     file => undef,    # MIDI file to process
