@@ -94,6 +94,9 @@ for my $t ( $opus->tracks ) {
     for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} } keys %$phrase ) {
         next if !$opts{single} && $phrase->{$p} == 1; # Skip single occurance phrases if requested
 
+        my @items = grep { $_ } split /\s+/, $p;
+        next unless @items == $opts{size};
+
         $j++;
 
         # End if we are past the maximum
