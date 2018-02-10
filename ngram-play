@@ -187,7 +187,8 @@ if ( $opts{weight} ) {
     }
 }
 else {
-    print "Playback:\n\tN\tChan\tPhrase\n";
+    my $type = $opts{shuf} ? 'Shuffled' : 'Ordered';
+    print "$type playback:\n\tN\tChan\tPhrase\n";
 
     my $n = 0;
 
