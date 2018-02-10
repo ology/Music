@@ -54,6 +54,7 @@ GetOptions (
     'tempo=i'      => \$TEMPO,
     'patch=i'      => \$PATCH,
     'diatonic'     => \$DIATONIC,
+    'durations=s'  => \$DURATIONS,
 ) or die( "Error in command line arguments\n" );
 
 pod2usage(1)
