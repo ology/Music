@@ -22,10 +22,22 @@ my $i = 0;
 # Handle each track...
 for my $t ( $opus->tracks ) {
     # Collect the note events for each track
-    my @events = grep { $_->[0] eq 'note_on' } $t->events;
+    my @events = grep { $_->[0] eq 'note_on' && $_->[2] != 9 && $_->[4] != 0 } $t->events;
 
     # Skip if there are no events
     next unless @events;
+
+# Attempt to parse duration:
+#    my $x;
+#    for my $event ( @events ) {
+#        if ( $event->[4] == 0 ) {
+#warn(__PACKAGE__,' L',__LINE__,". MARK: abs($x - $event->[1]) = ",abs($x - $event->[1]),"\n");
+#        }
+#        else {
+#            $x = $event->[1];
+#        }
+#    }
+#next;
 
     $i++;
     print "$t $i\n";
