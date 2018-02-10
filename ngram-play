@@ -1,0 +1,234 @@
+#!/usr/bin/env perl
+
+# Play the top repeated note phrases of a MIDI file.
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Pod::Usage;
+use MIDIUtil;
+use Lingua::EN::Ngram;
+use List::Util qw( shuffle );
+
+my %opts = (
+    file => undef,    # MIDI file to process
+    size => 2,        # ngram size
+    max  => 20,       # -1 for all records
+    bpm  => 100,      # Beats per minute
+    dura => 'qn tqn', # Note durations
+    out  => "$0.mid", # Output MIDI file
+    ranp => 0,        # Random patch instead of all piano
+    shuf => 0,        # Shuffle phrases
+    single => 0,      # Allow phrases seen only once
+);
+GetOptions( \%opts, 
+    'help|?',
+    'man',
+    'file=s',
+    'size=i',
+    'max=i',
+    'bpm=i',
+    'dura=s',
+    'out=s',
+    'ranp',
+    'shuf',
+    'single',
+) or pod2usage(2);
+
+pod2usage(1)
+    if $opts{help};
+pod2usage( -exitval => 0, -verbose => 2 )
+    if $opts{man};
+
+$opts{dura} = [ split /(?:\s+|\s*,\s*)/, $opts{dura} ];
+
+# General MIDI patches that are audible and aren't horrible
+my @patches = qw(
+    0 1 2 4 5 7 8 9
+    13 16 21 24 25 26
+    32 34 35 40 42 60
+    68 69 70 71 72 73
+    74 79
+);
+
+my $opus = MIDI::Opus->new( { from_file => $opts{file} } );
+#$opus->dump( { dump_tracks => 1 } ); exit;
+
+# Bucket of note phrases per channel
+my %notes;
+
+# Counter for the tracks seen
+my $i = 0;
+
+# Handle each track...
+for my $t ( $opus->tracks ) {
+    # Collect the note events for each track but channel 9 (percussion)
+    my @events = grep { $_->[0] eq 'note_on' && $_->[2] != 9 && $_->[4] != 0 } $t->events;
+
+    my $track_channel = $events[0][2];
+
+    # Skip if there are no events and no channel
+    next unless @events && defined $track_channel;
+
+    $i++;
+    print "$t $i. channel: $track_channel\n";
+
+    # Declare the notes to inspect
+    my $text = '';
+
+    # Accumulate the notes
+    for my $event ( @events ) {
+        ( my $num = $event->[3] ) =~ tr/0-9/a-j/;
+        $text .= "$num ";
+    }
+
+    # Parse the note text into ngrams
+    my $ngram  = Lingua::EN::Ngram->new( text => $text );
+    my $phrase = $ngram->ngram( $opts{size} );
+
+    # Counter for the ngrams seen
+    my $j = 0;
+
+    # Display the ngrams in order of their repetition amount
+    for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} } keys %$phrase ) {
+        next if !$opts{single} && $phrase->{$p} == 1; # Skip single occurance phrases if requested
+
+        $j++;
+
+        # End if we are past the maximum
+        last if $opts{max} > 0 && $j > $opts{max};
+
+        ( my $num = $p ) =~ tr/a-j/0-9/;
+
+        printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $num;
+        push @{ $notes{$track_channel} }, $num;
+    }
+}
+
+die "\n* Can't handle songs with more than 16 tracks.\n"
+    if keys(%notes) > 16;
+
+my $score = MIDIUtil::setup_midi( bpm => $opts{bpm} );
+
+my @phrases;
+my $channel = 0;
+
+# Generate a function for the notes of each track
+for my $track ( keys %notes ) {
+    my @all;
+
+    my @track_notes = $opts{shuf} ? shuffle @{ $notes{$track} } : @{ $notes{$track} };
+
+    # Shuffle the phrases and add the notes to a bucket
+    for my $phrase ( @track_notes ) {
+        my @phrase = split /\s/, $phrase;
+        push @all, @phrase;
+    }
+
+    # Create a function that adds our bucket of notes to the score
+    my $func = sub {
+        $channel++;
+
+        my $patch = $opts{ranp} ? random_patch() : 0;
+
+        MIDIUtil::set_chan_patch( $score, $channel, $patch);
+
+        for my $note ( @all ) {
+            my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
+            $score->n( $duration, $note );
+        }
+    };
+
+    push @phrases, $func;
+}
+
+$score->synch(@phrases);
+
+$score->write_score( $opts{out} );
+
+sub random_patch {
+    return $patches[ int rand @patches ];
+}
+
+__END__
+
+=head1 NAME
+
+ngram-play - Play the most repeated phrases in a midi file
+
+=head1 SYNOPSIS
+
+  $ perl ngram-play [--options]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<help>
+
+Print a brief help message and exit.
+
+=item B<man>
+
+Print the full manual page and exit.
+
+=item B<file>
+
+Required.  The MIDI file to process.
+
+=item B<size>
+
+Ngram phrase size
+
+Default: 2
+
+=item B<bpm>
+
+Beats per minute
+
+Default: 100
+
+=item B<max>
+
+The maximum number of phrases to play.
+
+Default: 20
+
+=item B<dura>
+
+The note durations to choose from (at random).
+
+Default: qn, tqn
+
+=item B<out>
+
+Output MIDI file.
+
+Default: ngram-play.mid
+
+=item B<ranp>
+
+Boolean. Choose a random patch (from the hardcoded patches) for each channel.
+
+Default: 0 (piano)
+
+=item B<shuf>
+
+Boolean. Shuffle the phrases before playing them.
+
+Default: 0
+
+=back
+
+=head1 DESCRIPTION
+
+Play the most repeated phrases in a midi file
+
+=head1 EXAMPLES
+
+  $ perl ngram-play --file ~/Music/twinkle_twinkle.mid --size 3 --max 10 --dura 'en qn'
+
+  $ timidity ngram-play.mid  # Or use your favorite MIDI player
+
+=cut
