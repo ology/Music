@@ -6,7 +6,8 @@ use strict;
 use warnings;
 
 use lib '.';
-use MIDIUtil;
+use MIDIUtil;  # This non-CPAN module of mine must be available.
+
 use Getopt::Long;
 use Pod::Usage;
 use Lingua::EN::Ngram;
