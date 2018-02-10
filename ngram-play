@@ -174,14 +174,14 @@ else {
     my $n = 0;
 
     for my $channel ( keys %notes ) {
-        $n++;
-
         my @all;
 
         my @track_notes = $opts{shuf} ? shuffle @{ $notes{$channel} } : @{ $notes{$channel} };
 
         # Shuffle the phrases and add the notes to a bucket
         for my $phrase ( @track_notes ) {
+            $n++;
+
             print "\t$channel\t$n\t$phrase\n";
 
             my @phrase = split /\s/, $phrase;
