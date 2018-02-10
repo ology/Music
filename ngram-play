@@ -146,7 +146,7 @@ my $score = MIDIUtil::setup_midi( bpm => $opts{bpm} );
 my @phrases;
 
 if ( $opts{weight} ) {
-    print "Weighted playback:\n\tChan\tLoop\tPhrase\n";
+    print "Weighted playback:\n\tLoop\tChan\tPhrase\n";
 
     for my $channel ( sort { $a <=> $b } keys %notes ) {
         # Create a function that adds notes to the score
@@ -161,7 +161,7 @@ if ( $opts{weight} ) {
                     [ values %{ $notes{$channel} } ]
                 );
 
-                print "\t$channel\t$n\t$choice\n";
+                print "\t$n\t$channel\t$choice\n";
 
                 # Add each chosen note to the score
                 for my $note ( split /\s+/, $choice ) {
@@ -175,7 +175,7 @@ if ( $opts{weight} ) {
     }
 }
 else {
-    print "Playback:\n\tChan\tN\tPhrase\n";
+    print "Playback:\n\tN\tChan\tPhrase\n";
 
     my $n = 0;
 
@@ -189,7 +189,7 @@ else {
         for my $phrase ( @track_notes ) {
             $n++;
 
-            print "\t$channel\t$n\t$phrase\n";
+            print "\t$n\t$channel\t$phrase\n";
 
             my @phrase = split /\s/, $phrase;
             push @all, @phrase;
