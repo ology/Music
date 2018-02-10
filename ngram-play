@@ -133,7 +133,7 @@ my @phrases;
 
 # Generate a function for the notes of each track
 if ( $opts{weighted} ) {
-    print "Weighted playback:\n";
+    print "Weighted playback:\n\tChan\tLoop\tPhrase\n";
 
     for my $channel ( sort { $a <=> $b } keys %notes ) {
         # Create a function that adds notes to the score
@@ -148,7 +148,7 @@ if ( $opts{weighted} ) {
                     [ values %{ $notes{$channel} } ]
                 );
 
-                print "\tchannel=$channel\t$n.\t$choice\n";
+                print "\t$channel\t$n\t$choice\n";
 
                 for my $note ( split /\s+/, $choice ) {
                     my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
