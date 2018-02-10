@@ -417,10 +417,15 @@ Mutate a bitstring!
 
 sub ae {
     my %args = @_;
+
     my $ae = Algorithm::Evolutionary::Individual::BitString->new( $args{bits} );
+
     print ucfirst( $args{type} ), " seed: $ae->{_str}\n";
+
     mutate( $ae, %args );
+
     print "Final: $ae->{_str}\n";
+
     return $ae->{_str};
 }
 
