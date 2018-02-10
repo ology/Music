@@ -108,7 +108,8 @@ for my $t ( $opus->tracks ) {
 
     # Display the ngrams in order of their repetition amount
     for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} } keys %$phrase ) {
-        next if !$opts{single} && $phrase->{$p} == 1; # Skip single occurance phrases if requested
+        # Skip single occurance phrases if requested
+        next if !$opts{single} && $phrase->{$p} == 1;
 
         # Don't allow phrases that are not the right size
         my @items = grep { $_ } split /\s+/, $p;
