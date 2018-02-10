@@ -134,18 +134,22 @@ my $channel = 0;
 
 # Generate a function for the notes of each track
 if ( $opts{weighted} ) {
-    for my $channel ( keys %notes ) {
+    print "Weighted playback:\n";
+
+    for my $channel ( sort { $a <=> $b } keys %notes ) {
         # Create a function that adds notes to the score
         my $func = sub {
             my $patch = $opts{ranp} ? $patches[ int rand @patches ] : 0;
 
             MIDIUtil::set_chan_patch( $score, $channel, $patch );
 
-            for ( 1 .. $opts{loop} ) {
+            for my $n ( 1 .. $opts{loop} ) {
                 my $choice = choose_weighted(
                     [ keys %{ $notes{$channel} } ],
                     [ values %{ $notes{$channel} } ]
                 );
+
+                print "\tchannel=$channel\t$n.\t$choice\n";
 
                 for my $note ( split /\s+/, $choice ) {
                     my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
