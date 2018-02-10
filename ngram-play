@@ -126,9 +126,11 @@ for my $t ( $opus->tracks ) {
 
         printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $num;
 
+        # If we are playing by weight, save the number of times the phrase is repeated
         if ( $opts{weight} ) {
             $notes{$track_channel}{$num} = $phrase->{$p};
         }
+        # Otherwise, just save the phrase itself
         else {
             push @{ $notes{$track_channel} }, $num;
         }
