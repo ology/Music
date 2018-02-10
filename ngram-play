@@ -129,7 +129,6 @@ for my $t ( $opus->tracks ) {
         # Transliterate our letter code back to MIDI note numbers
         ( my $num = $p ) =~ tr/a-j/0-9/;
 
-
         # Convert MIDI numbers to named notes.
         my $text = _convert($num);
 
