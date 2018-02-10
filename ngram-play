@@ -18,6 +18,7 @@ my %opts = (
     bpm  => 100,      # Beats per minute
     dura => 'qn tqn', # Note durations
     out  => "$0.mid", # Output MIDI file
+    loop => 4,        # Times to choose a weighted phrase
     ranp => 0,        # Random patch instead of all piano
     shuf => 0,        # Shuffle phrases
     single => 0,      # Allow phrases seen only once
@@ -31,6 +32,7 @@ GetOptions( \%opts,
     'bpm=i',
     'dura=s',
     'out=s',
+    'loop=i',
     'ranp',
     'shuf',
     'single',
@@ -106,7 +108,13 @@ for my $t ( $opus->tracks ) {
         ( my $num = $p ) =~ tr/a-j/0-9/;
 
         printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $num;
-        push @{ $notes{$track_channel} }, $num;
+
+        if ( $opts{weighted} ) {
+            $notes{$track_channel}{$num} = $phrase->{$p};
+        }
+        else {
+            push @{ $notes{$track_channel} }, $num;
+        }
     }
 }
 
@@ -119,32 +127,60 @@ my @phrases;
 my $channel = 0;
 
 # Generate a function for the notes of each track
-for my $track ( keys %notes ) {
-    my @all;
+if ( $opts{weighted} ) {
+    for my $channel ( keys %notes ) {
+        # Create a function that adds notes to the score
+        my $func = sub {
+            $channel++;
 
-    my @track_notes = $opts{shuf} ? shuffle @{ $notes{$track} } : @{ $notes{$track} };
+            my $patch = $opts{ranp} ? $patches[ int rand @patches ] : 0;
 
-    # Shuffle the phrases and add the notes to a bucket
-    for my $phrase ( @track_notes ) {
-        my @phrase = split /\s/, $phrase;
-        push @all, @phrase;
+            MIDIUtil::set_chan_patch( $score, $channel, $patch);
+
+            for ( 1 .. $opts{loop} ) {
+                my $choice = choose_weighted(
+                    [ keys %{ $notes{$channel} } ],
+                    [ values %{ $notes{$channel} } ]
+                );
+
+                for my $note ( split /\s+/, $choice ) {
+                    my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
+                    $score->n( $duration, $note );
+                }
+            }
+        };
+
+        push @phrases, $func;
     }
+}
+else {
+    for my $track ( keys %notes ) {
+        my @all;
 
-    # Create a function that adds our bucket of notes to the score
-    my $func = sub {
-        $channel++;
+        my @track_notes = $opts{shuf} ? shuffle @{ $notes{$track} } : @{ $notes{$track} };
 
-        my $patch = $opts{ranp} ? random_patch() : 0;
-
-        MIDIUtil::set_chan_patch( $score, $channel, $patch);
-
-        for my $note ( @all ) {
-            my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
-            $score->n( $duration, $note );
+        # Shuffle the phrases and add the notes to a bucket
+        for my $phrase ( @track_notes ) {
+            my @phrase = split /\s/, $phrase;
+            push @all, @phrase;
         }
-    };
 
-    push @phrases, $func;
+        # Create a function that adds our bucket of notes to the score
+        my $func = sub {
+            $channel++;
+
+            my $patch = $opts{ranp} ? random_patch() : 0;
+
+            MIDIUtil::set_chan_patch( $score, $channel, $patch);
+
+            for my $note ( @all ) {
+                my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
+                $score->n( $duration, $note );
+            }
+        };
+
+        push @phrases, $func;
+    }
 }
 
 $score->synch(@phrases);
