@@ -12,6 +12,7 @@ use Pod::Usage;
 use Lingua::EN::Ngram;
 use List::Util qw( shuffle );
 use List::Util::WeightedChoice qw( choose_weighted );
+use Music::Note;
 
 my %opts = (
     file   => undef,    # MIDI file to process
@@ -127,7 +128,15 @@ for my $t ( $opus->tracks ) {
         # Transliterate our letter code back to MIDI note numbers
         ( my $num = $p ) =~ tr/a-j/0-9/;
 
-        printf "\t%d\t%d\t%s\n", $j, $phrase->{$p}, $num;
+        # Convert MIDI numbers to named notes.
+        my $text = '( ';
+        for my $n ( split /\s+/, $num ) {
+            my $note = Music::Note->new( $n, 'midinum' );
+            $text .= $note->format('midi') . ' ';
+        }
+        $text .= ')';
+
+        printf "\t%d\t%d\t%s %s\n", $j, $phrase->{$p}, $num, $text;
 
         # If we are playing by weight, save the number of times the phrase is repeated
         if ( $opts{weight} ) {
