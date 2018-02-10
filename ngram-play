@@ -39,14 +39,14 @@ GetOptions( \%opts,
     'ranp',
     'shuf',
     'single',
-) or pod2usage(2);
+) or die 'Failed GetOptions';
 
 pod2usage(1)
     if $opts{help};
 pod2usage( -exitval => 0, -verbose => 2 )
     if $opts{man};
 
-pod2usage(2)
+die "'$opts{file}' does not exist: $!"
     unless -e $opts{file};
 
 $opts{dura} = [ split /(?:\s+|\s*,\s*)/, $opts{dura} ];
