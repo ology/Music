@@ -4,9 +4,17 @@
 
 bitstring-fitness - Pitch alteration and rhythmic variation
 
-=head1 DESCRIPTION
+=head1 SYNOPSIS
+
+ perl bitstring-fitness [--options]
+
+=head2 EXAMPLE
 
  perl bitstring-fitness --alteration=3 --rhythm --velocity --diatonic
+
+=head1 DESCRIPTION
+
+Mutate bitstrings representing pitch, duration, and velocity.
 
 =cut
 
@@ -15,10 +23,13 @@ use warnings;
 
 use Algorithm::Evolutionary::Individual::BitString;
 use Getopt::Long;
+use Pod::Usage;
 use List::Util qw( shuffle );
 use Music::AtonalUtil;
 use MIDI::Simple;
 
+my $HELP       = 0;
+my $MAN        = 0;
 my $BEATS      = 15;        # Maximum possible durations
 my $BITS       = 11;        # Possible pitches
 my $DEGREES    = 7;         # Constraining scale
@@ -27,9 +38,11 @@ my $PHRASES    = 2;         # Number of times to play the "melody"
 my $RHYTHM     = 0;         # Use rhythmic variations
 my $VELOCITY   = 0;         # Use velocity variation
 my $TEMPO      = 600_000;   # Miliseconds
-my $PATCH      = 108;       # The MID patch to use!
-my $DIATONIC   = 0;         # Use the diatonic notes, rather than chromatic
+my $PATCH      = 108;       # The MIDI patch to use
+my $DIATONIC   = 0;         # Use diatonic notes, rather than chromatic
 GetOptions (
+    'help|?'       => \$HELP,
+    'man'          => \$MAN,
     'beats=i'      => \$BEATS,
     'bits=i'       => \$BITS,
     'degrees=i'    => \$DEGREES,
@@ -42,19 +55,26 @@ GetOptions (
     'diatonic'     => \$DIATONIC,
 ) or die( "Error in command line arguments\n" );
 
+pod2usage(1)
+    if $HELP;
+pod2usage( -exitval => 0, -verbose => 2 )
+    if $MAN;
+
 # Evolve a pitch bitstring.
 my $ae_str = ae( type => 'pitch', bits => $BITS );
+
 # Turn the bitstring into a proper pitch set
 my $pitches = bits2pitches($ae_str);
 
 # Perform gymnastics with the pitches
 $pitches = [ @$pitches, @{ alteration($pitches) } ];
+
 # What have we now?
 print '(', join( ',', @$pitches ), ')', "\n";
 
 my $rhythms;
-if ($RHYTHM)
-{
+
+if ( $RHYTHM ) {
     # Evolve a rhythm bitstring.
     $ae_str = ae( type => 'rhythm', bits => $BEATS );
     # Turn the bitstring into a proper duration set
@@ -62,8 +82,7 @@ if ($RHYTHM)
 }
 
 my $velocities;
-if ($VELOCITY)
-{
+if ( $VELOCITY ) {
     $velocities = bits2velocities($pitches);
 }
 
