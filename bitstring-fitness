@@ -11,6 +11,7 @@ bitstring-fitness - Pitch alteration and rhythmic variation
 =head2 EXAMPLE
 
  perl bitstring-fitness --alteration=3 --rhythm --velocity --diatonic
+ perl bitstring-fitness --diatonic --rhythm --velocity --bits 32 --durations 'qn tqn'
 
 =head1 DESCRIPTION
 
