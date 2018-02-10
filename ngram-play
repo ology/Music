@@ -220,7 +220,7 @@ ngram-play - Play the most repeated phrases in a midi file
 
 =item B<help>
 
-Print a brief help message and exit.
+Print a help message and exit.
 
 =item B<man>
 
