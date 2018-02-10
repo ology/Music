@@ -118,10 +118,10 @@ sub process_midi {
             my $duration = $RHYTHM ? $rhythms->[$i] : 'en';
 
             # Add a velocity from the given velocities or default
-            my $velocity = $VELOCITY ? $velocities->[$i] : 96;
+            my $velocity = $VELOCITY ? $velocities->[$i] : 'V96';
 
             # Add the note!
-            $score->n( $duration, $name{$pitch}, $velocity );
+            $score->n( $duration, $name{$pitch} );
 
             # Increment the phrase counter
             $i++;
