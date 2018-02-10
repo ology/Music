@@ -5,9 +5,10 @@
 use strict;
 use warnings;
 
+use lib '.';
+use MIDIUtil;
 use Getopt::Long;
 use Pod::Usage;
-use MIDIUtil;
 use Lingua::EN::Ngram;
 use List::Util qw( shuffle );
 use List::Util::WeightedChoice qw( choose_weighted );
@@ -312,8 +313,8 @@ Play the most repeated phrases in a midi file
 
 =head1 EXAMPLES
 
-  $ perl -I. ngram-play --file ~/Music/twinkle_twinkle.mid --size 3 --max 10 --dura 'en qn'
-  $ perl -I. ngram-play --file ~/Music/twinkle_twinkle.mid --size 3 --max 10 --ranp --weight --loop 16
+  $ perl ngram-play --file ~/Music/twinkle_twinkle.mid --size 3 --max 10 --dura 'en qn'
+  $ perl ngram-play --file ~/Music/twinkle_twinkle.mid --size 3 --max 10 --ranp --weight --loop 16
 
   $ timidity ngram-play.mid  # Or use your favorite MIDI player
 
