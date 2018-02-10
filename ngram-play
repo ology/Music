@@ -134,8 +134,6 @@ if ( $opts{weighted} ) {
     for my $channel ( keys %notes ) {
         # Create a function that adds notes to the score
         my $func = sub {
-            $channel++;
-
             my $patch = $opts{ranp} ? $patches[ int rand @patches ] : 0;
 
             MIDIUtil::set_chan_patch( $score, $channel, $patch);
