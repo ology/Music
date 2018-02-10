@@ -128,13 +128,9 @@ for my $t ( $opus->tracks ) {
         # Transliterate our letter code back to MIDI note numbers
         ( my $num = $p ) =~ tr/a-j/0-9/;
 
+
         # Convert MIDI numbers to named notes.
-        my $text = '( ';
-        for my $n ( split /\s+/, $num ) {
-            my $note = Music::Note->new( $n, 'midinum' );
-            $text .= $note->format('midi') . ' ';
-        }
-        $text .= ')';
+        my $text = _convert($num);
 
         printf "\t%d\t%d\t%s %s\n", $j, $phrase->{$p}, $num, $text;
 
@@ -173,12 +169,7 @@ if ( $opts{weight} ) {
                 );
 
                 # Convert MIDI numbers to named notes.
-                my $text = '( ';
-                for my $n ( split /\s+/, $choice ) {
-                    my $note = Music::Note->new( $n, 'midinum' );
-                    $text .= $note->format('midi') . ' ';
-                }
-                $text .= ')';
+                my $text = _convert($choice);
 
                 print "\t$n\t$channel\t$choice $text\n";
 
@@ -210,12 +201,7 @@ else {
             $n++;
 
             # Convert MIDI numbers to named notes.
-            my $text = '( ';
-            for my $n ( split /\s+/, $phrase ) {
-                my $note = Music::Note->new( $n, 'midinum' );
-                $text .= $note->format('midi') . ' ';
-            }
-            $text .= ')';
+            my $text = _convert($phrase);
 
             print "\t$n\t$channel\t$phrase $text\n";
 
@@ -252,6 +238,22 @@ $score->write_score( $opts{out} );
 
 sub _random_patch {
     return $patches[ int rand @patches ];
+}
+
+# Convert MIDI numbers to named notes.
+sub _convert {
+    my $string = shift;
+
+    my $text = '( ';
+
+    for my $n ( split /\s+/, $string ) {
+        my $note = Music::Note->new( $n, 'midinum' );
+        $text .= $note->format('midi') . ' ';
+    }
+
+    $text .= ')';
+
+    return $text;
 }
 
 __END__
