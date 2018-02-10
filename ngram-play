@@ -163,6 +163,7 @@ if ( $opts{weight} ) {
 
                 print "\t$channel\t$n\t$choice\n";
 
+                # Add each chosen note to the score
                 for my $note ( split /\s+/, $choice ) {
                     my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
                     $score->n( $duration, $note );
