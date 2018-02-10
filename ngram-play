@@ -284,6 +284,12 @@ Boolean. Shuffle the phrases before playing them.
 
 Default: 0
 
+=item B<dump>
+
+Boolean.  Call the L<MIDI::Opus> C<dump> method and exit.
+
+Default: 0
+
 =back
 
 =head1 DESCRIPTION
