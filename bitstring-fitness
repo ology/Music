@@ -66,8 +66,10 @@ my $ae_str = ae( type => 'pitch', bits => $BITS );
 # Turn the bitstring into a proper pitch set
 my $pitches = bits2pitches($ae_str);
 
-# Perform gymnastics with the pitches
-$pitches = [ @$pitches, @{ alteration($pitches) } ];
+# Pass the pitches through alteration
+my $altered = alteration($pitches);
+
+$pitches = [ @$pitches, @$altered ];
 
 # What have we now?
 print '(', join( ',', @$pitches ), ')', "\n";
@@ -77,6 +79,7 @@ my $rhythms;
 if ( $RHYTHM ) {
     # Evolve a rhythm bitstring.
     $ae_str = ae( type => 'rhythm', bits => $BEATS );
+
     # Turn the bitstring into a proper duration set
     $rhythms = bits2rhythms( $ae_str, $pitches );
 }
