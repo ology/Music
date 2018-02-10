@@ -195,7 +195,9 @@ else {
             print "\t$n\t$channel\t$phrase\n";
 
             my @phrase = split /\s/, $phrase;
-            push @all, @phrase, 'r';
+            push @all, @phrase;
+            push @all, 'r'
+                if $opts{pause};
         }
 
         # Create a function that adds our bucket of notes to the score
