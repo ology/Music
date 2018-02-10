@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+# *** Please use the program ngram-play instead of this. ***
+
 # Play the top repeated note phrases of a MIDI file.
 
 use strict;
