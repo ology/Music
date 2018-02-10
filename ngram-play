@@ -172,7 +172,15 @@ if ( $opts{weight} ) {
                     [ values %{ $notes{$channel} } ]
                 );
 
-                print "\t$n\t$channel\t$choice\n";
+                # Convert MIDI numbers to named notes.
+                my $text = '( ';
+                for my $n ( split /\s+/, $choice ) {
+                    my $note = Music::Note->new( $n, 'midinum' );
+                    $text .= $note->format('midi') . ' ';
+                }
+                $text .= ')';
+
+                print "\t$n\t$channel\t$choice $text\n";
 
                 # Add each chosen note to the score
                 for my $note ( split /\s+/, $choice ) {
@@ -201,7 +209,15 @@ else {
         for my $phrase ( @track_notes ) {
             $n++;
 
-            print "\t$n\t$channel\t$phrase\n";
+            # Convert MIDI numbers to named notes.
+            my $text = '( ';
+            for my $n ( split /\s+/, $phrase ) {
+                my $note = Music::Note->new( $n, 'midinum' );
+                $text .= $note->format('midi') . ' ';
+            }
+            $text .= ')';
+
+            print "\t$n\t$channel\t$phrase $text\n";
 
             my @phrase = split /\s/, $phrase;
             push @all, @phrase;
