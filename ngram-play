@@ -79,7 +79,7 @@ print "Ngram analysis:\n\tNum\tReps\tPhrase\n";
 
 # Handle each track...
 for my $t ( $opus->tracks ) {
-    # Collect the note events for each track but channel 9 (percussion)
+    # Collect the note events for each track except channel 9 (percussion)
     my @events = grep { $_->[0] eq 'note_on' && $_->[2] != 9 && $_->[4] != 0 } $t->events;
 
     my $track_channel = $events[0][2];
