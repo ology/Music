@@ -49,8 +49,8 @@ pod2usage(1)
 pod2usage( -exitval => 0, -verbose => 2 )
     if $opts{man};
 
-die "'$opts{file}' does not exist: $!"
-    unless -e $opts{file};
+die "Invalid file: $!"
+    unless $opts{file} && -e $opts{file};
 
 $opts{dura} = [ split /(?:\s+|\s*,\s*)/, $opts{dura} ];
 
