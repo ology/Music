@@ -95,8 +95,8 @@ for my $t ( $opus->tracks ) {
 
     # Accumulate the notes
     for my $event ( @events ) {
-        ( my $num = $event->[3] ) =~ tr/0-9/a-j/;
-        $text .= "$num ";
+        ( my $str = $event->[3] ) =~ tr/0-9/a-j/;
+        $text .= "$str ";
     }
 
     # Parse the note text into ngrams
