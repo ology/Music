@@ -178,7 +178,9 @@ if ( $opts{weight} ) {
                     my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
                     $score->n( $duration, $note );
                 }
-                $score->r( $opts{pause} ) if $opts{pause};
+
+                $score->r( $opts{pause} )
+                    if $opts{pause};
             }
         };
 
