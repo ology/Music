@@ -125,7 +125,7 @@ for my $t ( $opus->tracks ) {
         # Transliterate our letter code back to MIDI note numbers
         ( my $num = $p ) =~ tr/a-j/0-9/;
 
-        printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $num;
+        printf "\t%d\t%d\t%s\n", $j, $phrase->{$p}, $num;
 
         # If we are playing by weight, save the number of times the phrase is repeated
         if ( $opts{weight} ) {
