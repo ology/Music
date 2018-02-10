@@ -40,6 +40,7 @@ my $VELOCITY   = 0;         # Use velocity variation
 my $TEMPO      = 600_000;   # Miliseconds
 my $PATCH      = 0;         # The MIDI patch to use
 my $DIATONIC   = 0;         # Use diatonic notes, rather than chromatic
+my $DURATIONS  = 'tsn sn ten dsn en tqn den qn thn dqn hn dhn wn';
 GetOptions (
     'help|?'       => \$HELP,
     'man'          => \$MAN,
@@ -59,6 +60,8 @@ pod2usage(1)
     if $HELP;
 pod2usage( -exitval => 0, -verbose => 2 )
     if $MAN;
+
+$DURATIONS = [ split /(?:\s+|\s*,\s*)/, $DURATIONS ];
 
 # Evolve a pitch bitstring.
 my $ae_str = ae( type => 'pitch', bits => $BITS );
@@ -261,13 +264,10 @@ sub bits2rhythms {
     my $bitstring = shift;
     my $pitches   = shift;
 
-    # List possible rhythmic durations
-    my @durations = qw( tsn sn ten dsn ddsn en tqn den dden qn thn dqn ddqn hn );
-
     my @bitrhythms;
     my $i = 0;
     for my $bit ( split //, $bitstring ) {
-        push @bitrhythms, $durations[ $i % @durations ] if $bit;
+        push @bitrhythms, $DURATIONS->[ $i % @$DURATIONS ] if $bit;
         $i++;
     }
 
