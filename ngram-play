@@ -13,18 +13,18 @@ use List::Util qw( shuffle );
 use List::Util::WeightedChoice qw( choose_weighted );
 
 my %opts = (
-    file     => undef,    # MIDI file to process
-    size     => 2,        # ngram size
-    max      => 20,       # -1 for all records
-    bpm      => 100,      # Beats per minute
-    dura     => 'qn tqn', # Note durations
-    out      => "$0.mid", # Output MIDI file
-    loop     => 4,        # Times to choose a weighted phrase
-    weighted => 0,        # Use weighted counts to play
-    ranp     => 0,        # Random patch instead of all piano
-    shuf     => 0,        # Shuffle phrases
-    single   => 0,        # Allow phrases seen only once
-    dump     => 0,        # Dump out MIDI info and exit
+    file   => undef,    # MIDI file to process
+    size   => 2,        # ngram size
+    max    => 20,       # -1 for all records
+    bpm    => 100,      # Beats per minute
+    dura   => 'qn tqn', # Note durations
+    out    => "$0.mid", # Output MIDI file
+    loop   => 4,        # Times to choose a weighted phrase
+    weight => 0,        # Use weighted counts to play
+    ranp   => 0,        # Random patch instead of all piano
+    shuf   => 0,        # Shuffle phrases
+    single => 0,        # Allow phrases seen only once
+    dump   => 0,        # Dump out MIDI info and exit
 );
 GetOptions( \%opts, 
     'help|?',
@@ -36,7 +36,7 @@ GetOptions( \%opts,
     'dura=s',
     'out=s',
     'loop=i',
-    'weighted',
+    'weight',
     'ranp',
     'shuf',
     'single',
@@ -123,7 +123,7 @@ for my $t ( $opus->tracks ) {
 
         printf "\t%d.\t%d\t%s\n", $j, $phrase->{$p}, $num;
 
-        if ( $opts{weighted} ) {
+        if ( $opts{weight} ) {
             $notes{$track_channel}{$num} = $phrase->{$p};
         }
         else {
@@ -140,7 +140,7 @@ my $score = MIDIUtil::setup_midi( bpm => $opts{bpm} );
 my @phrases;
 
 # Generate a function for the notes of each track
-if ( $opts{weighted} ) {
+if ( $opts{weight} ) {
     print "Weighted playback:\n\tChan\tLoop\tPhrase\n";
 
     for my $channel ( sort { $a <=> $b } keys %notes ) {
@@ -262,11 +262,11 @@ Default: ngram-play.mid
 
 =item B<loop>
 
-The number of times to choose a weighted phrase.  * Only works with the B<weighted> option.
+The number of times to choose a weighted phrase.  * Only works with the B<weight> option.
 
 Defaut: 4
 
-=item B<weighted>
+=item B<weight>
 
 Play phrases by their ngram repetition occurance.
 
