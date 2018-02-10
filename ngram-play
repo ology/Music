@@ -20,6 +20,7 @@ my %opts = (
     bpm    => 100,      # Beats per minute
     dura   => 'qn tqn', # Note durations
     out    => "$0.mid", # Output MIDI file
+    pause  => '',       # Insert a rest after each phrase
     loop   => 4,        # Times to choose a weighted phrase
     weight => 0,        # Use weighted counts to play
     ranp   => 0,        # Random patch instead of all piano
@@ -36,6 +37,7 @@ GetOptions( \%opts,
     'bpm=i',
     'dura=s',
     'out=s',
+    'pause=s',
     'loop=i',
     'weight',
     'ranp',
@@ -168,6 +170,7 @@ if ( $opts{weight} ) {
                     my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
                     $score->n( $duration, $note );
                 }
+                $score->r( $opts{pause} ) if $opts{pause};
             }
         };
 
@@ -274,6 +277,12 @@ Default: qn, tqn
 Output MIDI file.
 
 Default: ngram-play.mid
+
+=item B<pause>
+
+Insert a rest of this duration after each phrase.
+
+Default: ''
 
 =item B<loop>
 
