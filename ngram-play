@@ -150,7 +150,7 @@ if ( $opts{weight} ) {
     for my $channel ( sort { $a <=> $b } keys %notes ) {
         # Create a function that adds notes to the score
         my $func = sub {
-            my $patch = $opts{ranp} ? random_patch() : 0;
+            my $patch = $opts{ranp} ? _random_patch() : 0;
 
             MIDIUtil::set_chan_patch( $score, $channel, $patch );
 
@@ -196,7 +196,7 @@ else {
 
         # Create a function that adds our bucket of notes to the score
         my $func = sub {
-            my $patch = $opts{ranp} ? random_patch() : 0;
+            my $patch = $opts{ranp} ? _random_patch() : 0;
 
             MIDIUtil::set_chan_patch( $score, $channel, $patch);
 
@@ -214,7 +214,7 @@ $score->synch(@phrases);
 
 $score->write_score( $opts{out} );
 
-sub random_patch {
+sub _random_patch {
     return $patches[ int rand @patches ];
 }
 
