@@ -46,6 +46,9 @@ pod2usage(1)
 pod2usage( -exitval => 0, -verbose => 2 )
     if $opts{man};
 
+pod2usage(2)
+    unless -e $opts{file};
+
 $opts{dura} = [ split /(?:\s+|\s*,\s*)/, $opts{dura} ];
 
 # General MIDI patches that are audible and aren't horrible
