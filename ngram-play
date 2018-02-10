@@ -69,6 +69,8 @@ my %notes;
 # Counter for the tracks seen
 my $i = 0;
 
+print "Ngram analysis:\n\tNum\tReps\tPhrase\n";
+
 # Handle each track...
 for my $t ( $opus->tracks ) {
     # Collect the note events for each track but channel 9 (percussion)
