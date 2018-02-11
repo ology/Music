@@ -5,15 +5,8 @@
 use strict;
 use warnings;
 
-use lib '.';
-use MIDIUtil;  # This non-CPAN module of mine must be available.
-
+use MIDI::Ngram;
 use Getopt::Long;
-use Pod::Usage;
-use Lingua::EN::Ngram;
-use List::Util qw( shuffle );
-use List::Util::WeightedChoice qw( choose_weighted );
-use Music::Note;
 
 my %opts = (
     file   => undef,    # MIDI file to process
@@ -67,302 +60,31 @@ my @patches = qw(
     74 79
 );
 
-my $opus = MIDI::Opus->new( { from_file => $opts{file} } );
+my $mng = MIDI::Ngram->new(
+    file            => $opts{file},
+    size            => $opts{size},
+    max             => $opts{max},
+    bpm             => $opts{bpm},
+    durations       => $opts{dura},
+    out_file        => $opts{out},
+    pause           => $opts{pause},
+    randpatch       => $opts{randpatch},
+    loop            => $opts{loop},
+    weight          => $opts{weight},
+    randpatch       => $opts{ranp},
+    shuffle_phrases => $opts{shuf},
+    single          => $opts{single},
+    verbose         => 1,
+    patches         => \@patches,
+);
+
+$mng->process;
 
 if ( $opts{dump} ) {
-    $opus->dump( { dump_tracks => 1 } );
-    exit;
+      $mng->opus->dump( { dump_tracks => 1 } );
+      exit;
 }
 
-# Bucket of note phrases per channel
-my %notes;
+$mng->populate;
 
-# Counter for the tracks seen
-my $i = 0;
-
-print "Ngram analysis:\n\tNum\tReps\tPhrase\n";
-
-# Handle each track...
-for my $t ( $opus->tracks ) {
-    # Collect the note events for each track except channel 9 (percussion)
-    my @events = grep { $_->[0] eq 'note_on' && $_->[2] != 9 && $_->[4] != 0 } $t->events;
-
-    my $track_channel = $events[0][2];
-
-    # Skip if there are no events and no channel
-    next unless @events && defined $track_channel;
-
-    $i++;
-    print "$t $i. channel: $track_channel\n";
-
-    # Declare the notes to inspect
-    my $text = '';
-
-    # Accumulate the notes
-    for my $event ( @events ) {
-        # Transliterate MIDI note numbers to alpha-code
-        ( my $str = $event->[3] ) =~ tr/0-9/a-j/;
-        $text .= "$str ";
-    }
-
-    # Parse the note text into ngrams
-    my $ngram  = Lingua::EN::Ngram->new( text => $text );
-    my $phrase = $ngram->ngram( $opts{size} );
-
-    # Counter for the ngrams seen
-    my $j = 0;
-
-    # Display the ngrams in order of their repetition amount
-    for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} || $a cmp $b } keys %$phrase ) {
-        # Skip single occurance phrases if requested
-        next if !$opts{single} && $phrase->{$p} == 1;
-
-        # Don't allow phrases that are not the right size
-        my @items = grep { $_ } split /\s+/, $p;
-        next unless @items == $opts{size};
-
-        $j++;
-
-        # End if we are past the maximum
-        last if $opts{max} > 0 && $j > $opts{max};
-
-        # Transliterate our letter code back to MIDI note numbers
-        ( my $num = $p ) =~ tr/a-j/0-9/;
-
-        # Convert MIDI numbers to named notes.
-        my $text = _convert($num);
-
-        printf "\t%d\t%d\t%s %s\n", $j, $phrase->{$p}, $num, $text;
-
-        # If we are playing by weight, save the number of times the phrase is repeated
-        if ( $opts{weight} ) {
-            $notes{$track_channel}{$num} = $phrase->{$p};
-        }
-        # Otherwise, just save the phrase itself
-        else {
-            push @{ $notes{$track_channel} }, $num;
-        }
-    }
-}
-
-die "\n* Can't handle songs with more than 16 tracks.\n"
-    if keys(%notes) > 16;
-
-my $score = MIDIUtil::setup_midi( bpm => $opts{bpm} );
-
-my @phrases;
-
-if ( $opts{weight} ) {
-    print "Weighted playback:\n\tLoop\tChan\tPhrase\n";
-
-    for my $channel ( sort { $a <=> $b } keys %notes ) {
-        # Create a function that adds notes to the score
-        my $func = sub {
-            my $patch = $opts{ranp} ? _random_patch() : 0;
-
-            MIDIUtil::set_chan_patch( $score, $channel, $patch );
-
-            for my $n ( 1 .. $opts{loop} ) {
-                my $choice = choose_weighted(
-                    [ keys %{ $notes{$channel} } ],
-                    [ values %{ $notes{$channel} } ]
-                );
-
-                # Convert MIDI numbers to named notes.
-                my $text = _convert($choice);
-
-                print "\t$n\t$channel\t$choice $text\n";
-
-                # Add each chosen note to the score
-                for my $note ( split /\s+/, $choice ) {
-                    my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
-                    $score->n( $duration, $note );
-                }
-
-                $score->r( $opts{pause} )
-                    if $opts{pause};
-            }
-        };
-
-        push @phrases, $func;
-    }
-}
-else {
-    my $type = $opts{shuf} ? 'Shuffled' : 'Ordered';
-    print "$type playback:\n\tN\tChan\tPhrase\n";
-
-    my $n = 0;
-
-    for my $channel ( keys %notes ) {
-        my @all;
-
-        # Shuffle the phrases if requested
-        my @track_notes = $opts{shuf} ? shuffle @{ $notes{$channel} } : @{ $notes{$channel} };
-
-        # Add the notes to a bucket
-        for my $phrase ( @track_notes ) {
-            $n++;
-
-            # Convert MIDI numbers to named notes.
-            my $text = _convert($phrase);
-
-            print "\t$n\t$channel\t$phrase $text\n";
-
-            my @phrase = split /\s/, $phrase;
-            push @all, @phrase;
-            push @all, 'r'
-                if $opts{pause};
-        }
-
-        # Create a function that adds our bucket of notes to the score
-        my $func = sub {
-            my $patch = $opts{ranp} ? _random_patch() : 0;
-
-            MIDIUtil::set_chan_patch( $score, $channel, $patch);
-
-            for my $note ( @all ) {
-                if ( $note eq 'r' ) {
-                    $score->r( $opts{pause} );
-                }
-                else {
-                    my $duration = $opts{dura}->[ int rand @{ $opts{dura} } ];
-                    $score->n( $duration, $note );
-                }
-            }
-        };
-
-        push @phrases, $func;
-    }
-}
-
-$score->synch(@phrases);
-
-$score->write_score( $opts{out} );
-
-sub _random_patch {
-    return $patches[ int rand @patches ];
-}
-
-# Convert MIDI numbers to named notes.
-sub _convert {
-    my $string = shift;
-
-    my $text = '( ';
-
-    for my $n ( split /\s+/, $string ) {
-        my $note = Music::Note->new( $n, 'midinum' );
-        $text .= $note->format('midi') . ' ';
-    }
-
-    $text .= ')';
-
-    return $text;
-}
-
-__END__
-
-=head1 NAME
-
-ngram-play - Play the most repeated phrases in a midi file
-
-=head1 DESCRIPTION
-
-Play the most repeated phrases in a midi file
-
-=head1 SYNOPSIS
-
-  $ perl ngram-play [--options]
-
-=head2 EXAMPLES
-
-  $ perl ngram-play --file twinkle_twinkle.mid --size 3 --max 10 --dura 'en qn'
-  $ perl ngram-play --file twinkle_twinkle.mid --size 3 --max 10 --ranp --weight --loop 16
-  $ perl ngram-play --file Fantaisie-Impromptu.mid --size 4 --max 20 --dura qn --pause qn
-
-  $ timidity ngram-play.mid  # Or use your favorite MIDI player
-
-=head1 OPTIONS
-
-=over 4
-
-=item B<help>
-
-Print a help message and exit.
-
-=item B<man>
-
-Print the full manual page and exit.
-
-=item B<file>
-
-Required.  The MIDI file to process.
-
-=item B<size>
-
-Ngram phrase size
-
-Default: 2
-
-=item B<bpm>
-
-Beats per minute
-
-Default: 100
-
-=item B<max>
-
-The maximum number of phrases to play.
-
-Default: 20
-
-=item B<dura>
-
-The note durations to choose from (at random).
-
-Default: qn, tqn
-
-=item B<out>
-
-Output MIDI file.
-
-Default: ngram-play.mid
-
-=item B<pause>
-
-Insert a rest of this duration after each phrase.
-
-Default: ''
-
-=item B<loop>
-
-The number of times to choose a weighted phrase.  * Only works with the B<weight> option.
-
-Defaut: 4
-
-=item B<weight>
-
-Play phrases by their ngram repetition occurance.
-
-Default: 0
-
-=item B<ranp>
-
-Boolean. Choose a random patch (from the hardcoded patches) for each channel.
-
-Default: 0 (piano)
-
-=item B<shuf>
-
-Boolean. Shuffle the phrases before playing them.
-
-Default: 0
-
-=item B<dump>
-
-Boolean.  Call the L<MIDI::Opus> C<dump> method and exit.
-
-Default: 0
-
-=back
-
-=cut
+$mng->write;
