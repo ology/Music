@@ -41,11 +41,6 @@ GetOptions( \%opts,
     'dump',
 ) or die 'Failed GetOptions';
 
-pod2usage(1)
-    if $opts{help};
-pod2usage( -exitval => 0, -verbose => 2 )
-    if $opts{man};
-
 die "Invalid file: $!"
     unless $opts{file} && -e $opts{file};
 
