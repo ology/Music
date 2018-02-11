@@ -113,7 +113,7 @@ for my $t ( $opus->tracks ) {
     my $j = 0;
 
     # Display the ngrams in order of their repetition amount
-    for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} } keys %$phrase ) {
+    for my $p ( sort { $phrase->{$b} <=> $phrase->{$a} || $a cmp $b } keys %$phrase ) {
         # Skip single occurance phrases if requested
         next if !$opts{single} && $phrase->{$p} == 1;
 
