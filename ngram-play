@@ -71,7 +71,6 @@ my $mng = MIDI::Ngram->new(
     randpatch       => $opts{ranp},
     loop            => $opts{loop},
     weight          => $opts{weight},
-    randpatch       => $opts{ranp},
     shuffle_phrases => $opts{shuf},
     single          => $opts{single},
     verbose         => 1,
