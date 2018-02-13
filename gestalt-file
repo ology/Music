@@ -21,7 +21,7 @@ for my $t ( $opus->tracks ) {
         last
             if $channel;
     }
-    next if !$channel;
+    next unless $channel;
 
     my $score_r = MIDI::Score::events_r_to_score_r( \@events );
     $score_r = MIDI::Score::sort_score_r($score_r);
