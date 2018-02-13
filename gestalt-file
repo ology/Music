@@ -14,14 +14,14 @@ my $opus = MIDI::Opus->new( { from_file => $file } );
 for my $t ( $opus->tracks ) {
     my @events = $t->events;
 
-    my $track_channel;
+    my $channel;
     for my $e ( @events ) {
-        $track_channel = $e->[2]
+        $channel = $e->[2]
             if $e->[0] eq 'note_on';
     }
-    next if !$track_channel || $track_channel == 9;
+    next if !$channel || $channel == 9;
 
-    print "Channel:\n\t$track_channel\n";
+    print "Channel:\n\t$channel\n";
 
     my ( $score_r, undef ) = MIDI::Score::events_r_to_score_r( \@events );
 
@@ -36,14 +36,14 @@ for my $t ( $opus->tracks ) {
     $note    = Music::Note->new( $g->PitchMiddle, 'midinum' );
     my $mid  = $note->format('midi');
 
-    print "Pitch:\n";
-    print "\tRange: ", $low, ' to ', $high, "\n";
-    print "\tSpan: ", $mid, ' +/- ', $g->PitchRange, "\n";
+    print "Pitch:\n",
+        "\tRange: $low to $high\n",
+        "\tSpan: $mid +/- ", $g->PitchRange, "\n";
 
-    print "Velocity:\n";
-    print "\tRange: ", $g->VelocityLowest, ' to ', $g->VelocityHighest, "\n";
-    print "\tSpan: ", $g->VelocityMiddle, ' +/- ', $g->VelocityRange, "\n";
+    print "Velocity:\n",
+        "\tRange: ", $g->VelocityLowest, ' to ', $g->VelocityHighest, "\n",
+        "\tSpan: ", $g->VelocityMiddle, ' +/- ', $g->VelocityRange, "\n";
 
-    print "Duration:\n\t", $g->Duration, "\n";
-    print "\n";
+    print "Duration:\n\t", $g->Duration, "\n",
+        "\n";
 }
