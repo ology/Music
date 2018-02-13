@@ -18,6 +18,8 @@ for my $t ( $opus->tracks ) {
     for my $e ( @events ) {
         $channel = $e->[2]
             if $e->[0] eq 'note_on';
+        last
+            if $channel;
     }
     next if !$channel;
 
