@@ -21,8 +21,6 @@ for my $t ( $opus->tracks ) {
     }
     next if !$channel || $channel == 9;
 
-    print "Channel:\n\t$channel\n";
-
     my ( $score_r, undef ) = MIDI::Score::events_r_to_score_r( \@events );
 
     $score_r = MIDI::Score::sort_score_r($score_r);
@@ -36,6 +34,7 @@ for my $t ( $opus->tracks ) {
     $note    = Music::Note->new( $g->PitchMiddle, 'midinum' );
     my $mid  = $note->format('midi');
 
+    print "Channel:\n\t$channel\n";
     print "Pitch:\n",
         "\tRange: $low to $high\n",
         "\tSpan: $mid +/- ", $g->PitchRange, "\n";
