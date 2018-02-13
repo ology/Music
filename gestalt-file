@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Inspect the pitch and velocity bounderies for each channel
+# Inspect the pitch and velocity boundaries for each channel
 
 use MIDI;
 use Music::Gestalt;
