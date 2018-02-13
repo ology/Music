@@ -1,0 +1,49 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use MIDI;
+use Music::Gestalt;
+use Music::Note;
+
+my $file = shift || die "Usage: perl $0 /some/file.mid\n";
+
+my $opus = MIDI::Opus->new( { from_file => $file } );
+
+# Convert tracks to score
+for my $t ( $opus->tracks ) {
+    my @events = $t->events;
+
+    my $track_channel;
+    for my $e ( @events ) {
+        $track_channel = $e->[2]
+            if $e->[0] eq 'note_on';
+    }
+    next if !$track_channel || $track_channel == 9;
+
+    print "Channel:\n\t$track_channel\n";
+
+    my ( $score_r, undef ) = MIDI::Score::events_r_to_score_r( \@events );
+
+    $score_r = MIDI::Score::sort_score_r($score_r);
+
+    my $g = Music::Gestalt->new( score => $score_r );
+
+    my $note = Music::Note->new( $g->PitchLowest, 'midinum' );
+    my $low  = $note->format('midi');
+    $note    = Music::Note->new( $g->PitchHighest, 'midinum' );
+    my $high = $note->format('midi');
+    $note    = Music::Note->new( $g->PitchMiddle, 'midinum' );
+    my $mid  = $note->format('midi');
+
+    print "Pitch:\n";
+    print "\tRange: ", $low, ' to ', $high, "\n";
+    print "\tSpan: ", $mid, ' +/- ', $g->PitchRange, "\n";
+
+    print "Velocity:\n";
+    print "\tRange: ", $g->VelocityLowest, ' to ', $g->VelocityHighest, "\n";
+    print "\tSpan: ", $g->VelocityMiddle, ' +/- ', $g->VelocityRange, "\n";
+
+    print "Duration:\n\t", $g->Duration, "\n";
+    print "\n";
+}
