@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+# Inspect the pitch and velocity bounderies for each channel
+
 use MIDI;
 use Music::Gestalt;
 use Music::Note;
