@@ -4,6 +4,7 @@ use warnings;
 
 use MIDI::Simple;
 use Music::Chord::Note;
+use List::Util qw( shuffle );
 
 my $bars = shift || 4;
 
@@ -11,7 +12,7 @@ my $m = MIDI::Simple->new_score();
 
 $m->set_tempo(700_000);  # 1 qn => .5 seconds (500,000 microseconds)
 
-my @subs = ( \&hihat, \&kick, \&snare, \&chords );
+my @subs = ( \&hihat, \&kick, \&snare, \&chords, \&pattern );
 
 my $measure = 0;
 
@@ -46,12 +47,12 @@ sub snare {
 
 sub pattern {
     my $self = shift;
-    my @phrase = qw(E5 B4 D5 G4 E4 E4 B4 G4);
+    my @phrase = qw(Ds5 As4 D5 G4 Ds4 Ds4 As4 G4);
     $self->patch_change(0, 2);
     $self->noop('c0', 'fff', 'en');
-    $self->n($_) for @phrase[0 .. 4];
+    $self->n($_) for shuffle @phrase[0 .. 4];
     if ( $measure++ % 2 ) {
-      $self->n($_) for @phrase[5 .. 7];
+      $self->n($_) for shuffle @phrase[5 .. 7];
     }
 }
 
