@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use MIDI::Simple;
+use Data::Dumper;
+
+$Data::Dumper::Varname = 'Volume';
+print Dumper([
+    map { "$_ => $MIDI::Simple::Volume{$_}" }
+        sort { $MIDI::Simple::Volume{$a} <=> $MIDI::Simple::Volume{$b} }
+            keys %MIDI::Simple::Volume
+]);
+
+$Data::Dumper::Varname = 'Length';
+print Dumper([
+    map { "$_ => $MIDI::Simple::Length{$_}" }
+        sort { $MIDI::Simple::Length{$a} <=> $MIDI::Simple::Length{$b} }
+            keys %MIDI::Simple::Length
+]);
+
+$Data::Dumper::Varname = 'Note';
+print Dumper([
+    map { "$_ => $MIDI::Simple::Note{$_}" }
+        sort { $MIDI::Simple::Note{$a} <=> $MIDI::Simple::Note{$b} }
+            keys %MIDI::Simple::Note
+]);
