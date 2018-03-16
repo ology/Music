@@ -16,7 +16,7 @@ sub read_bach {
     open my $fh, "<:encoding(utf8)", $file
         or die "Can't read $file: $!";
 
-    my $progression;
+    my %progression;
     my %index;
 
     while ( my $row = $csv->getline($fh) ) {
@@ -38,13 +38,13 @@ sub read_bach {
         ( my $bass  = $row->[14] ) =~ s/\s*//g;
         ( my $chord = $row->[16] ) =~ s/\s*//g;
 
-        push @$progression, join( ',', $notes, $bass, $chord );
+        push @{ $progression{$id} }, join( ',', $notes, $bass, $chord );
     }
 
     $csv->eof or $csv->error_diag();
     close $fh;
 
-    return ( \%index, $progression );
+    return ( \%index, \%progression );
 }
 
 1;
