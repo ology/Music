@@ -13,7 +13,11 @@ use MIDI::Simple;
 use Music::Tempo;
 use List::Util qw( shuffle );
 
-my $file = shift || die "Usage: perl $0 file.csv\n";
+my $path = shift || die "Usage: perl $0 /path/to/files\n";
+
+use File::Find::Rule;
+my @files = File::Find::Rule->file()->name( '*.csv' )->in($path);
+for my $file ( @files ) {
 
 my $csv = Text::CSV->new ( { binary => 1 } )
     or die 'Cannot use CSV: ' . Text::CSV->error_diag ();
@@ -68,18 +72,17 @@ while ( my $row = $csv->getline($fh) ) {
     # Capture the chordal accompaniment
     my $chord = $row->[17];
     $chord =~ s/\s+//;
-    $chord =~ s/_M$//;
+    $chord =~ s/M$//;
     $chord =~ s/_//;
-    $chord =~ s/^(\w+)#M$/$1#/;
-    $chord =~ s/^(\w+)bM$/$1b/;
-    $chord =~ s/^([\w\#]+)M4$/$1add4/;
-    $chord =~ s/^([\w\#]+)d6$/$1dim/;
-    $chord =~ s/^([\w\#]+)m4$/$1m/;
-    $chord =~ s/^([\w\#]+)M6$/$1\6/;
     $chord =~ s/^([\w\#]+)d/$1dim/;
+    $chord =~ s/^([\w\#]+)M4$/$1add4/;
+    $chord =~ s/^([\w\#]+)m4$/$1m/;
+    $chord =~ s/^([\w\#]+)M6$/$1X6/;
+    $chord =~ s/X//;
+    $chord =~ s/^([\w\#]+)dim6$/$1dim/;
     my @tone = $cn->chord($chord);
     s/#/s/ for @tone;
-#    print "$i. $chord => @tone\n";
+    print "$i. $name - $chord => @tone\n";
     push @$chords, \@tone;
 
     # Capture the bass-line
@@ -93,6 +96,9 @@ while ( my $row = $csv->getline($fh) ) {
 $csv->eof or $csv->error_diag();
 close $fh;
 
+}
+
+__END__
 my @parts = (
     \&chordline,
     \&bassline,
