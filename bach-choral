@@ -104,7 +104,7 @@ $score->write_score("$0.mid");
 
 sub chordline {
     $score->Channel(1);
-    $score->patch_change( 1, 5 );
+    $score->patch_change( 1, 4 );
     $score->Octave(5);
     $score->n( 'wn', @$_ ) for @$chords;
 }
