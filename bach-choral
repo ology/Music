@@ -13,11 +13,7 @@ use MIDI::Simple;
 use Music::Tempo;
 use List::Util qw( shuffle );
 
-my $path = shift || die "Usage: perl $0 /path/to/files\n";
-
-use File::Find::Rule;
-my @files = File::Find::Rule->file()->name( '*.csv' )->in($path);
-for my $file ( @files ) {
+my $file = shift || die "Usage: perl $0 file.csv\n";
 
 my $csv = Text::CSV->new ( { binary => 1 } )
     or die 'Cannot use CSV: ' . Text::CSV->error_diag ();
@@ -95,8 +91,6 @@ while ( my $row = $csv->getline($fh) ) {
 
 $csv->eof or $csv->error_diag();
 close $fh;
-
-}
 
 my @parts = (
     \&chordline,
