@@ -82,7 +82,7 @@ while ( my $row = $csv->getline($fh) ) {
     $chord =~ s/^([\w\#]+)dim6$/$1dim/;
     my @tone = $cn->chord($chord);
     s/#/s/ for @tone;
-    print "$i. $name - $chord => @tone\n";
+#    print "$i. $name - $chord => @tone\n";
     push @$chords, \@tone;
 
     # Capture the bass-line
