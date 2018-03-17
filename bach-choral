@@ -1,0 +1,123 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Run bach-choral.R and divide-up the data file, before running this.
+# Then: perl % ~/Documents/bach-choral-000206b_.csv
+
+use lib '/Users/gene/sandbox/Music';
+use MIDIUtil;
+
+use Text::CSV;
+use Music::Chord::Note;
+use MIDI::Simple;
+use Music::Tempo;
+use List::Util qw( shuffle );
+
+my $file = shift || die "Usage: perl $0 file.csv\n";
+
+my $csv = Text::CSV->new ( { binary => 1 } )
+    or die 'Cannot use CSV: ' . Text::CSV->error_diag ();
+
+open my $fh, "<:encoding(utf8)", $file
+    or die "Can't read $file: $!";
+
+my $cn = Music::Chord::Note->new();
+
+my $score = MIDIUtil::setup_midi( patch => 5 );
+
+my ( $name, $melody, $chords, $bassline );
+
+my %note_index = (
+    3  => 'C',
+    4  => 'Cs',
+    5  => 'D',
+    6  => 'Ds',
+    7  => 'E',
+    8  => 'F',
+    9  => 'Fs',
+    10 => 'G',
+    11 => 'Gs',
+    12 => 'A',
+    13 => 'As',
+    14 => 'B',
+);
+
+my $i = 0;
+
+while ( my $row = $csv->getline($fh) ) {
+    $i++;
+
+    next if $i == 1;
+
+    $name = $row->[1];
+
+    # Capture the "melody"
+    my @notes;
+    for my $note ( 3 .. 14 ) {
+        push @notes, $note_index{$note}
+            if $row->[$note] eq 'YES';
+    }
+    my $duration =
+        @notes == 2 ? 'hn'  :
+        @notes == 3 ? 'thn' :
+        @notes == 4 ? 'qn'  : 'tqn';
+    for my $note (shuffle @notes) {
+        push @$melody, [ $duration, $note ];
+    }
+
+    # Capture the chordal accompanyment
+    my $chord = $row->[17];
+    $chord =~ s/\s+//;
+    $chord =~ s/_M$//;
+    $chord =~ s/_//;
+    $chord =~ s/^(\w+)#M$/$1#/;
+    $chord =~ s/^(\w+)bM$/$1b/;
+    $chord =~ s/^([\w\#]+)M4$/$1sus4/;
+    $chord =~ s/^([\w\#]+)d6$/$1d/;
+    $chord =~ s/^([\w\#]+)m4$/$1m/;
+    $chord =~ s/^([\w\#]+)M6$/$1\6/;
+    $chord =~ s/^([\w\#]+)d/$1dim/;
+    my @tone = $cn->chord($chord);
+    s/#/s/ for @tone;
+#    print "$i. $chord => @tone\n";
+    push @$chords, \@tone;
+
+    # Capture the bass-line
+    my $bassnote = $row->[15];
+    $bassnote =~ s/b/f/;
+    $bassnote =~ s/#/s/;
+#    print "\t$bassnote\n";
+    push @$bassline, $bassnote;
+}
+
+$csv->eof or $csv->error_diag();
+close $fh;
+
+my @parts = (
+    \&chordline,
+    \&bassline,
+    \&melody
+);
+$score->synch(@parts);
+#$score->write_score("$0-$name.mid");
+$score->write_score("$0.mid");
+
+sub chordline {
+    $score->Channel(1);
+    $score->patch_change( 1, 5 );
+    $score->Octave(5);
+    $score->n( 'wn', @$_ ) for @$chords;
+}
+sub bassline {
+    $score->Channel(2);
+    $score->patch_change( 2, 32 );
+    $score->Octave(3);
+    $score->n( 'wn', $_ ) for @$bassline;
+}
+sub melody {
+    $score->Channel(3);
+    $score->patch_change( 3, 73 );
+    $score->Octave(5);
+    $score->n( @$_ ) for @$melody;
+}
