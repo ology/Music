@@ -65,7 +65,7 @@ while ( my $row = $csv->getline($fh) ) {
         push @$melody, [ $duration, $note ];
     }
 
-    # Capture the chordal accompanyment
+    # Capture the chordal accompaniment
     my $chord = $row->[17];
     $chord =~ s/\s+//;
     $chord =~ s/_M$//;
