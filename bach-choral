@@ -5,7 +5,6 @@ use warnings;
 # Run bach-choral.R and divide-up the data file, before running this.
 # Then: perl % ~/Documents/bach-choral-000206b_.csv
 
-use lib '/Users/gene/sandbox/Music';
 use MIDIUtil;
 
 use Text::CSV;
