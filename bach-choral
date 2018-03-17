@@ -109,6 +109,7 @@ sub chordline {
     $score->n( 'wn', @$_ ) for @$chords;
 }
 sub bassline {
+    $score->Volume(127);
     $score->Channel(2);
     $score->patch_change( 2, 34 );
     $score->Octave(3);
