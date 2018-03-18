@@ -115,8 +115,9 @@ sub bassline {
     $score->n( 'wn', $_ ) for @$bassline;
 }
 sub melody {
+    $score->Volume(90);
     $score->Channel(3);
     $score->patch_change( 3, 73 );
-    $score->Octave(5);
+    $score->Octave(6);
     $score->n( @$_ ) for @$melody;
 }
