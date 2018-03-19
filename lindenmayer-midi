@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use MIDIUtil;
+use MIDIUtil; # Found in the same github directory...
 
 my $rule       = shift || 2,
 my $iterations = shift || 4;
