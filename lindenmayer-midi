@@ -8,7 +8,7 @@ my $rule       = shift || 2,
 my $iterations = shift || 4;
 my $string     = shift || 'F';
 my $distance   = shift || 'qn';
-my $theta      = shift || 2;
+my $theta      = shift || 1;
 
 my %rules = (
     # Branches: start=X
