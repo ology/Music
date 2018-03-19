@@ -84,8 +84,6 @@ my $score = MIDIUtil::setup_midi( patch => 0, bpm => 300 );
 
 my $note = 60;
 
-my @statestack;
-
 my %translate = (
     'f' => sub { $score->r($distance) },
     'F' => sub { $score->n( $distance, $note ) },
