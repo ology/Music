@@ -1,0 +1,64 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Turtle;
+use MIDIUtil;
+
+my $repeat   = shift || 6;
+my $start    = shift || 'X';
+my $distance = shift || 'qn';
+my $theta    = shift || 2;
+
+my %rule = (
+    # Branches: start=X, distance=20, theta=20
+#    X => 'YF[-X][+X]',
+#    Y => 'F',
+
+    # Koch curve: start=F, distance=10, theta=90
+    F => 'F+F-F-F+F',
+
+    # Fractal plant: start=X, distance=3, theta=25
+#    X => 'F[-X][X]F[-X]+FX',
+#    F => 'FF',
+
+    # Dragon curve: start=FX, distance=10, theta=90
+#    X => 'X+YF+',
+#    Y => '-FX-Y',
+
+    # Sierpiński arrowhead curve: start=F, distance=1, theta=60
+#    F => 'G-F-G',
+#    G => 'F+G+F',
+
+    # Sierpiński triangle: start=F-G-G, distance=4, theta=120
+#    F => 'F-G+F+G-F',
+#    G => 'GG',
+);
+
+my $score = MIDIUtil::setup_midi( patch => 0, bpm => 300 );
+
+my $note = 60;
+
+my $turtle = Data::Turtle->new;
+
+my @statestack;
+
+my %translate = (
+    'F' => sub { $score->n( $distance, $note ) },
+    'G' => sub { $score->n( $distance, $note ) },
+    '-' => sub { $note -= $theta },
+    '+' => sub { $note += $theta },
+    '[' => sub { push @statestack, [ $turtle->get_state ] },
+    ']' => sub { $turtle->set_state( @{ pop @statestack } ) },
+);
+
+for ( 1 .. $repeat ) {
+    $start =~ s/(.)/defined($rule{$1}) ? $rule{$1} : $1/eg;
+}
+warn "$start\n";
+
+for my $command ( split //, $start ) {
+    $translate{$command}->() if exists $translate{$command};
+}
+
+$score->write_score( $0 . '.mid' );
