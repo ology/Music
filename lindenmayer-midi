@@ -5,34 +5,80 @@ use warnings;
 use Data::Turtle;
 use MIDIUtil;
 
-my $repeat   = shift || 6;
-my $start    = shift || 'X';
-my $distance = shift || 'qn';
-my $theta    = shift || 2;
+my $rule       = shift || 2,
+my $iterations = shift || 4;
+my $string     = shift || 'F';
+my $distance   = shift || 'qn';
+my $theta      = shift || 2;
 
-my %rule = (
+my %rules = (
     # Branches: start=X, distance=20, theta=20
-#    X => 'YF[-X][+X]',
-#    Y => 'F',
+    1 => {
+        X => 'YF[-X][+X]',
+        Y => 'F',
+    },
 
     # Koch curve: start=F, distance=10, theta=90
-    F => 'F+F-F-F+F',
+    2 => {
+        F => 'F+F-F-F+F',
+    },
 
     # Fractal plant: start=X, distance=3, theta=25
-#    X => 'F[-X][X]F[-X]+FX',
-#    F => 'FF',
+    3 => {
+        X => 'F[-X][X]F[-X]+FX',
+        F => 'FF',
+    },
 
     # Dragon curve: start=FX, distance=10, theta=90
-#    X => 'X+YF+',
-#    Y => '-FX-Y',
+    4 => {
+        X => 'X+YF+',
+        Y => '-FX-Y',
+    },
 
     # Sierpiński arrowhead curve: start=F, distance=1, theta=60
-#    F => 'G-F-G',
-#    G => 'F+G+F',
+    5 => {
+        F => 'G-F-G',
+        G => 'F+G+F',
+    },
 
     # Sierpiński triangle: start=F-G-G, distance=4, theta=120
-#    F => 'F-G+F+G-F',
-#    G => 'GG',
+    6 => {
+        F => 'F-G+F+G-F',
+        G => 'GG',
+    },
+
+    # Koch snowflake: start=F++F++F, , distance=3, theta=60
+    7 => {
+        F => 'F-F++F-F',
+        X => 'FF',
+    },
+
+    # Sierpiński carpet: start=F, distance=4, theta=90
+    8 => {
+        F => 'F+F-F-F-G+F+F+F-F',
+        G => 'GGG',
+    },
+
+    # Koch island: start=F-F-F-F, distance=5, theta=90
+    9 => {
+        F => 'F-F+F+FF-F-F+F',
+    },
+
+    # Koch islands and lakes: start=F+F+F+F, distance=5, theta=90
+    10 => {
+        F => 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF',
+        f => 'ffffff',
+    },
+
+    # Grid: start=F-F-F-F, distance=5, theta=90
+    11 => {
+        F => 'FF-F-F-F-FF',
+    },
+
+    # Terndrils: start=F-F-F-F, distance=5, theta=90
+    12 => {
+        F => 'FF-F--F-F',
+    },
 );
 
 my $score = MIDIUtil::setup_midi( patch => 0, bpm => 300 );
@@ -52,12 +98,12 @@ my %translate = (
     ']' => sub { $turtle->set_state( @{ pop @statestack } ) },
 );
 
-for ( 1 .. $repeat ) {
-    $start =~ s/(.)/defined($rule{$1}) ? $rule{$1} : $1/eg;
+for ( 1 .. $iterations ) {
+    $string =~ s/(.)/defined($rules{$rule}{$1}) ? $rules{$rule}{$1} : $1/eg;
 }
-warn "$start\n";
+warn "$string\n";
 
-for my $command ( split //, $start ) {
+for my $command ( split //, $string ) {
     $translate{$command}->() if exists $translate{$command};
 }
 
