@@ -87,6 +87,7 @@ my $note = 60;
 my @statestack;
 
 my %translate = (
+    'f' => sub { $score->r($distance) },
     'F' => sub { $score->n( $distance, $note ) },
     'G' => sub { $score->n( $distance, $note ) },
     '-' => sub { $note -= $theta },
