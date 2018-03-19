@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use lib '/Users/gene/sandbox/Data-Turtle/lib';
 use Data::Turtle;
 use MIDIUtil;
 
@@ -12,70 +13,70 @@ my $distance   = shift || 'qn';
 my $theta      = shift || 2;
 
 my %rules = (
-    # Branches: start=X, distance=20, theta=20
+    # Branches: start=X
     1 => {
         X => 'YF[-X][+X]',
         Y => 'F',
     },
 
-    # Koch curve: start=F, distance=10, theta=90
+    # Koch curve: start=F
     2 => {
         F => 'F+F-F-F+F',
     },
 
-    # Fractal plant: start=X, distance=3, theta=25
+    # Fractal plant: start=X
     3 => {
         X => 'F[-X][X]F[-X]+FX',
         F => 'FF',
     },
 
-    # Dragon curve: start=FX, distance=10, theta=90
+    # Dragon curve: start=FX
     4 => {
         X => 'X+YF+',
         Y => '-FX-Y',
     },
 
-    # Sierpiński arrowhead curve: start=F, distance=1, theta=60
+    # Sierpiński arrowhead curve: start=F
     5 => {
         F => 'G-F-G',
         G => 'F+G+F',
     },
 
-    # Sierpiński triangle: start=F-G-G, distance=4, theta=120
+    # Sierpiński triangle: start=F-G-G
     6 => {
         F => 'F-G+F+G-F',
         G => 'GG',
     },
 
-    # Koch snowflake: start=F++F++F, , distance=3, theta=60
+    # Koch snowflake: start=F++F++F
     7 => {
         F => 'F-F++F-F',
         X => 'FF',
     },
 
-    # Sierpiński carpet: start=F, distance=4, theta=90
+    # Sierpiński carpet: start=F
     8 => {
         F => 'F+F-F-F-G+F+F+F-F',
         G => 'GGG',
     },
 
-    # Koch island: start=F-F-F-F, distance=5, theta=90
+    # Koch island: start=F-F-F-F
     9 => {
         F => 'F-F+F+FF-F-F+F',
     },
 
-    # Koch islands and lakes: start=F+F+F+F, distance=5, theta=90
+    # Koch islands and lakes: start=F+F+F+F
     10 => {
         F => 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF',
         f => 'ffffff',
     },
 
-    # Grid: start=F-F-F-F, distance=5, theta=90
+    # Grid: start=F-F-F-F
     11 => {
         F => 'FF-F-F-F-FF',
     },
 
-    # Terndrils: start=F-F-F-F, distance=5, theta=90
+    # Terndrils: start=F-F-F-F
     12 => {
         F => 'FF-F--F-F',
     },
