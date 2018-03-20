@@ -3,12 +3,15 @@ use strict;
 use warnings;
 
 use MIDIUtil; # Found in the same github directory...
+use Music::Note;
+use Music::Scales;
 
 my $rule       = shift || 2,
 my $iterations = shift || 4;
 my $string     = shift || 'F';
 my $distance   = shift || 'qn';
 my $theta      = shift || 1;
+my $chromatic  = shift || 0;
 
 my %rules = (
     # Branches: start=X
@@ -88,8 +91,8 @@ my %translate = (
     'f' => sub { $score->r($distance) },
     'F' => sub { $score->n( $distance, $note ) },
     'G' => sub { $score->n( $distance, $note ) },
-    '-' => sub { $note -= $theta },
-    '+' => sub { $note += $theta },
+    '-' => sub { $note = $chromatic ? $note + $theta : offset( $note, $theta ) },
+    '+' => sub { $note = $chromatic ? $note - $theta : offset( $note, - $theta ) },
 );
 
 for ( 1 .. $iterations ) {
@@ -102,3 +105,34 @@ for my $command ( split //, $string ) {
 }
 
 $score->write_score( $0 . '.mid' );
+
+sub offset {
+    my ( $notenum, $offset ) = @_;
+
+    my @scale = get_scale_notes('C');
+
+    my $note = Music::Note->new( $notenum, 'midinum' );
+
+    my $base = $note->format('isobase');
+
+    ( my $octave = $note->format('ISO') ) =~ s/^[A-G](\d)$/$1/;
+
+    my $new;
+
+    my $i = 0;
+
+    for my $item ( @scale ) {
+        if ( $scale[$i] eq $base ) {
+            if ( $i + $offset < 0 ) {
+                $octave--;
+            }
+            $new = $scale[ ( $i + $offset ) % @scale ] . $octave;
+            last;
+        }
+        $i++;
+    }
+
+    $note = Music::Note->new( $new, 'ISO' );
+
+    return $note->format('midinum');
+}
