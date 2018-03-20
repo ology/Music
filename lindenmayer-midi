@@ -11,7 +11,7 @@ my $iterations = shift || 4;
 my $string     = shift || 'F';
 my $distance   = shift || 'qn';
 my $theta      = shift || 1;
-my $chromatic  = shift || 0;
+my $chromatic  = shift // 1;
 
 my %rules = (
     # Branches: start=X
