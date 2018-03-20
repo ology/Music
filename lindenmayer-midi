@@ -9,9 +9,9 @@ use Music::Scales;
 my $rule       = shift || 2,
 my $iterations = shift || 4;
 my $string     = shift || 'F';
+my $chromatic  = shift // 1;
 my $distance   = shift || 'qn';
 my $theta      = shift || 1;
-my $chromatic  = shift // 1;
 
 my %rules = (
     # Branches: start=X
