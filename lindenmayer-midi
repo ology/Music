@@ -28,64 +28,53 @@ my %rules = (
         X => 'YF-X+X',
         Y => 'F',
     },
-
     2 => { # Koch curve
         axiom => 'F',
         F => 'F+F-F-F+F',
     },
-
     3 => { # Fractal plant
         axiom => 'X',
         X => 'F-XXF-X+FX',
         F => 'FF',
     },
-
     4 => { # Dragon curve
         axiom => 'FX',
         X => 'X+YF+',
         Y => '-FX-Y',
     },
-
     5 => { # Sierpiński arrowhead curve
         axiom => 'F',
         F => 'G-F-G',
         G => 'F+G+F',
     },
-
     6 => { # Sierpiński triangle
         axiom => 'F-G-G',
         F => 'F-G+F+G-F',
         G => 'GG',
     },
-
     7 => { # Koch snowflake
         axiom => 'F++F++F',
         F => 'F-F++F-F',
         X => 'FF',
     },
-
     8 => { # Sierpiński carpet
         axiom => 'F',
         F => 'F+F-F-F-G+F+F+F-F',
         G => 'GGG',
     },
-
     9 => { # Koch island
         axiom => 'F-F-F-F',
         F => 'F-F+F+FF-F-F+F',
     },
-
     10 => { # Koch islands and lakes
         axiom => 'F+F+F+F',
         F => 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF',
         f => 'ffffff',
     },
-
     11 => { # Grid
         axiom => 'F-F-F-F',
         F => 'FF-F-F-F-FF',
     },
-
     12 => { # Terndrils
         axiom => 'F-F-F-F',
         F => 'FF-F--F-F',
