@@ -23,82 +23,70 @@ my $patchf = 0;
 my $patchg = 13;
 
 my %rules = (
-    # Branches
-    1 => {
+    1 => { # Branches
         axiom => 'X',
         X => 'YF-X+X',
         Y => 'F',
     },
 
-    # Koch curve
-    2 => {
+    2 => { # Koch curve
         axiom => 'F',
         F => 'F+F-F-F+F',
     },
 
-    # Fractal plant
-    3 => {
+    3 => { # Fractal plant
         axiom => 'X',
         X => 'F-XXF-X+FX',
         F => 'FF',
     },
 
-    # Dragon curve
-    4 => {
+    4 => { # Dragon curve
         axiom => 'FX',
         X => 'X+YF+',
         Y => '-FX-Y',
     },
 
-    # Sierpiński arrowhead curve
-    5 => {
+    5 => { # Sierpiński arrowhead curve
         axiom => 'F',
         F => 'G-F-G',
         G => 'F+G+F',
     },
 
-    # Sierpiński triangle
-    6 => {
+    6 => { # Sierpiński triangle
         axiom => 'F-G-G',
         F => 'F-G+F+G-F',
         G => 'GG',
     },
 
-    # Koch snowflake
-    7 => {
+    7 => { # Koch snowflake
         axiom => 'F++F++F',
         F => 'F-F++F-F',
         X => 'FF',
     },
 
-    # Sierpiński carpet
-    8 => {
+    8 => { # Sierpiński carpet
         axiom => 'F',
         F => 'F+F-F-F-G+F+F+F-F',
         G => 'GGG',
     },
 
-    # Koch island
-    9 => {
+    9 => { # Koch island
         axiom => 'F-F-F-F',
         F => 'F-F+F+FF-F-F+F',
     },
 
-    # Koch islands and lakes
-    10 => {
+    10 => { # Koch islands and lakes
         axiom => 'F+F+F+F',
         F => 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF',
         f => 'ffffff',
     },
 
-    # Grid
-    11 => {
+    11 => { # Grid
         axiom => 'F-F-F-F',
         F => 'FF-F-F-F-FF',
     },
 
-    # Terndrils
-    12 => {
+    12 => { # Terndrils
         axiom => 'F-F-F-F',
         F => 'FF-F--F-F',
     },
