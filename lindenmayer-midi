@@ -15,6 +15,8 @@ my $duration   = shift || 'qn';
 my $theta      = shift || 1;
 my $scale      = shift || 'major';
 
+$duration = [ split /\s+/, $duration ];
+
 my %rules = (
     # Branches: start=X
     1 => {
@@ -96,14 +98,14 @@ my $note   = 60;
 my $format = 'midinum';
 
 my %translate = (
-    'f' => sub { $score->r($duration) },
+    'f' => sub { $score->r( random_duration( @$duration ) ) },
     'F' => sub {
         MIDIUtil::set_chan_patch( $score, 0, 0 );
-        $score->n( $duration, $note );
+        $score->n( random_duration( @$duration ), $note );
     },
     'G' => sub {
         MIDIUtil::set_chan_patch( $score, 0, 13 );
-        $score->n( $duration, $note );
+        $score->n( random_duration( @$duration ), $note );
     },
     '-' => sub {
         $note = $msn->get_offset(
@@ -131,3 +133,8 @@ for my $command ( split //, $string ) {
 }
 
 $score->write_score( $0 . '.mid' );
+
+sub random_duration {
+    my (@duration) = @_;
+    return $duration[ int rand @duration ];
+}
