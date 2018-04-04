@@ -106,14 +106,14 @@ my %translate = (
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
             note_format => $format,
-            offset      => $offset,
+            offset      => -$offset,
         )->format($format);
     },
     '+' => sub {
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
             note_format => $format,
-            offset      => -$offset,
+            offset      => $offset,
         )->format($format);
     },
 );
