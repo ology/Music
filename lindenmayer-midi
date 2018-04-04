@@ -12,7 +12,7 @@ my $rule       = shift || 2,
 my $iterations = shift || 4;
 my $string     = shift || 'F';
 my $duration   = shift || 'qn';
-my $theta      = shift || 1;
+my $offset     = shift || 1;
 my $scale      = shift || 'major';
 my $midi_note  = shift || 60;
 my $bpm        = shift || 300;
@@ -116,14 +116,14 @@ my %translate = (
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
             note_format => $format,
-            offset      => $theta,
+            offset      => $offset,
         )->format($format);
     },
     '+' => sub {
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
             note_format => $format,
-            offset      => -$theta,
+            offset      => -$offset,
         )->format($format);
     },
 );
