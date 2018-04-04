@@ -11,7 +11,7 @@ use Music::Scales;
 my $rule       = shift || 2,
 my $iterations = shift || 4;
 my $string     = shift || 'F';
-my $distance   = shift || 'qn';
+my $duration   = shift || 'qn';
 my $theta      = shift || 1;
 my $scale      = shift || 'major';
 
@@ -96,9 +96,9 @@ my $note   = 60;
 my $format = 'midinum';
 
 my %translate = (
-    'f' => sub { $score->r($distance) },
-    'F' => sub { $score->n( $distance, $note ) },
-    'G' => sub { $score->n( $distance, $note ) },
+    'f' => sub { $score->r($duration) },
+    'F' => sub { $score->n( $duration, $note ) },
+    'G' => sub { $score->n( $duration, $note ) },
     '-' => sub {
         $note = $msn->get_offset(
             note_name   => $note,
