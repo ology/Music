@@ -11,9 +11,9 @@ use Music::Scales;
 my $rule       = shift || 2,
 my $iterations = shift || 4;
 my $duration   = shift || 'qn';
+my $midi_note  = shift || 60;
 my $offset     = shift || 1;
 my $scale      = shift || 'major';
-my $midi_note  = shift || 60;
 my $bpm        = shift || 300;
 
 $duration = [ split /\s+/, $duration ];
