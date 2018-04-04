@@ -124,6 +124,7 @@ for ( 1 .. $iterations ) {
 warn "$string\n";
 
 for my $command ( split //, $string ) {
+    last if $midi_note < 0;
     $translate{$command}->() if exists $translate{$command};
 }
 
