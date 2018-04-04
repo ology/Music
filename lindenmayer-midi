@@ -13,6 +13,7 @@ my $iterations = shift || 4;
 my $string     = shift || 'F';
 my $distance   = shift || 'qn';
 my $theta      = shift || 1;
+my $scale      = shift || 'major';
 
 my %rules = (
     # Branches: start=X
@@ -90,7 +91,7 @@ my $note = 60;
 
 my $msn = Music::ScaleNote->new(
     scale_note => 'C',
-    scale_name => 'pminor',
+    scale_name => $scale,
 );
 
 my $format = 'midinum';
