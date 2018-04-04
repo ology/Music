@@ -25,89 +25,86 @@ my $patchg = 13;
 my %rules = (
     # Branches
     1 => {
+        axiom => 'X',
         X => 'YF-X+X',
         Y => 'F',
     },
 
     # Koch curve
     2 => {
+        axiom => 'F',
         F => 'F+F-F-F+F',
     },
 
     # Fractal plant
     3 => {
+        axiom => 'X',
         X => 'F-XXF-X+FX',
         F => 'FF',
     },
 
     # Dragon curve
     4 => {
+        axiom => 'FX',
         X => 'X+YF+',
         Y => '-FX-Y',
     },
 
     # Sierpiński arrowhead curve
     5 => {
+        axiom => 'F',
         F => 'G-F-G',
         G => 'F+G+F',
     },
 
     # Sierpiński triangle
     6 => {
+        axiom => 'F-G-G',
         F => 'F-G+F+G-F',
         G => 'GG',
     },
 
     # Koch snowflake
     7 => {
+        axiom => 'F++F++F',
         F => 'F-F++F-F',
         X => 'FF',
     },
 
     # Sierpiński carpet
     8 => {
+        axiom => 'F',
         F => 'F+F-F-F-G+F+F+F-F',
         G => 'GGG',
     },
 
     # Koch island
     9 => {
+        axiom => 'F-F-F-F',
         F => 'F-F+F+FF-F-F+F',
     },
 
     # Koch islands and lakes
     10 => {
+        axiom => 'F+F+F+F',
         F => 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF',
         f => 'ffffff',
     },
 
     # Grid
     11 => {
+        axiom => 'F-F-F-F',
         F => 'FF-F-F-F-FF',
     },
 
     # Terndrils
     12 => {
+        axiom => 'F-F-F-F',
         F => 'FF-F--F-F',
     },
 );
 
-my %axioms = (
-    1  => 'X',
-    2  => 'F',
-    3  => 'X',
-    4  => 'FX',
-    5  => 'F',
-    6  => 'F-G-G',
-    7  => 'F++F++F',
-    8  => 'F',
-    9  => 'F-F-F-F',
-    10 => 'F+F+F+F',
-    11 => 'F-F-F-F',
-    12 => 'F-F-F-F',
-);
-
-my $string = $axioms{$rule};
+my $string = $rules{$rule}{axiom};
 
 my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
