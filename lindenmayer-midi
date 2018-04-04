@@ -92,8 +92,7 @@ my $msn = Music::ScaleNote->new(
     scale_name => $scale,
 );
 
-my $note = 60;
-
+my $note   = 60;
 my $format = 'midinum';
 
 my %translate = (
