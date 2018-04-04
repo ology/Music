@@ -14,8 +14,14 @@ my $string     = shift || 'F';
 my $duration   = shift || 'qn';
 my $theta      = shift || 1;
 my $scale      = shift || 'major';
+my $midi_note  = shift || 60;
+my $bpm        = shift || 300;
 
 $duration = [ split /\s+/, $duration ];
+
+my $format = 'midinum';
+my $patchf = 0;
+my $patchg = 13;
 
 my %rules = (
     # Branches: start=X
@@ -87,36 +93,35 @@ my %rules = (
     },
 );
 
-my $score = MIDIUtil::setup_midi( patch => 0, bpm => 300 );
+my $score = MIDIUtil::setup_midi( bpm => $bpm );
+
+my $note = Music::Note->new( $midi_note, $format );
 
 my $msn = Music::ScaleNote->new(
-    scale_note => 'C',
+    scale_note => $note->format('isobase'),
     scale_name => $scale,
 );
-
-my $note   = 60;
-my $format = 'midinum';
 
 my %translate = (
     'f' => sub { $score->r( random_duration( @$duration ) ) },
     'F' => sub {
-        MIDIUtil::set_chan_patch( $score, 0, 0 );
-        $score->n( random_duration( @$duration ), $note );
+        MIDIUtil::set_chan_patch( $score, 0, $patchf );
+        $score->n( random_duration( @$duration ), $midi_note );
     },
     'G' => sub {
-        MIDIUtil::set_chan_patch( $score, 0, 13 );
-        $score->n( random_duration( @$duration ), $note );
+        MIDIUtil::set_chan_patch( $score, 0, $patchg );
+        $score->n( random_duration( @$duration ), $midi_note );
     },
     '-' => sub {
-        $note = $msn->get_offset(
-            note_name   => $note,
+        $midi_note = $msn->get_offset(
+            note_name   => $midi_note,
             note_format => $format,
             offset      => $theta,
         )->format($format);
     },
     '+' => sub {
-        $note = $msn->get_offset(
-            note_name   => $note,
+        $midi_note = $msn->get_offset(
+            note_name   => $midi_note,
             note_format => $format,
             offset      => -$theta,
         )->format($format);
