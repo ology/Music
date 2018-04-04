@@ -87,12 +87,12 @@ my %rules = (
 
 my $score = MIDIUtil::setup_midi( patch => 0, bpm => 300 );
 
-my $note = 60;
-
 my $msn = Music::ScaleNote->new(
     scale_note => 'C',
     scale_name => $scale,
 );
+
+my $note = 60;
 
 my $format = 'midinum';
 
