@@ -90,7 +90,7 @@ my $note = 60;
 
 my $msn = Music::ScaleNote->new(
     scale_note => 'C',
-    scale_name => 'major',
+    scale_name => 'pminor',
 );
 
 my $format = 'midinum';
