@@ -10,7 +10,6 @@ use Music::Scales;
 
 my $rule       = shift || 2,
 my $iterations = shift || 4;
-my $string     = shift || 'F';
 my $duration   = shift || 'qn';
 my $offset     = shift || 1;
 my $scale      = shift || 'major';
@@ -24,74 +23,91 @@ my $patchf = 0;
 my $patchg = 13;
 
 my %rules = (
-    # Branches: start=X
+    # Branches
     1 => {
         X => 'YF-X+X',
         Y => 'F',
     },
 
-    # Koch curve: start=F
+    # Koch curve
     2 => {
         F => 'F+F-F-F+F',
     },
 
-    # Fractal plant: start=X
+    # Fractal plant
     3 => {
         X => 'F-XXF-X+FX',
         F => 'FF',
     },
 
-    # Dragon curve: start=FX
+    # Dragon curve
     4 => {
         X => 'X+YF+',
         Y => '-FX-Y',
     },
 
-    # Sierpiński arrowhead curve: start=F
+    # Sierpiński arrowhead curve
     5 => {
         F => 'G-F-G',
         G => 'F+G+F',
     },
 
-    # Sierpiński triangle: start=F-G-G
+    # Sierpiński triangle
     6 => {
         F => 'F-G+F+G-F',
         G => 'GG',
     },
 
-    # Koch snowflake: start=F++F++F
+    # Koch snowflake
     7 => {
         F => 'F-F++F-F',
         X => 'FF',
     },
 
-    # Sierpiński carpet: start=F
+    # Sierpiński carpet
     8 => {
         F => 'F+F-F-F-G+F+F+F-F',
         G => 'GGG',
     },
 
-    # Koch island: start=F-F-F-F
+    # Koch island
     9 => {
         F => 'F-F+F+FF-F-F+F',
     },
 
-    # Koch islands and lakes: start=F+F+F+F
+    # Koch islands and lakes
     10 => {
         F => 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF',
         f => 'ffffff',
     },
 
-    # Grid: start=F-F-F-F
+    # Grid
     11 => {
         F => 'FF-F-F-F-FF',
     },
 
-    # Terndrils: start=F-F-F-F
+    # Terndrils
     12 => {
         F => 'FF-F--F-F',
     },
 );
+
+my %axioms = (
+    1  => 'X',
+    2  => 'F',
+    3  => 'X',
+    4  => 'FX',
+    5  => 'F',
+    6  => 'F-G-G',
+    7  => 'F++F++F',
+    8  => 'F',
+    9  => 'F-F-F-F',
+    10 => 'F+F+F+F',
+    11 => 'F-F-F-F',
+    12 => 'F-F-F-F',
+);
+
+my $string = $axioms{$rule};
 
 my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
