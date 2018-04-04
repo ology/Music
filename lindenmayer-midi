@@ -97,8 +97,14 @@ my $format = 'midinum';
 
 my %translate = (
     'f' => sub { $score->r($duration) },
-    'F' => sub { $score->n( $duration, $note ) },
-    'G' => sub { $score->n( $duration, $note ) },
+    'F' => sub {
+        MIDIUtil::set_chan_patch( $score, 0, 0 );
+        $score->n( $duration, $note );
+    },
+    'G' => sub {
+        MIDIUtil::set_chan_patch( $score, 0, 13 );
+        $score->n( $duration, $note );
+    },
     '-' => sub {
         $note = $msn->get_offset(
             note_name   => $note,
