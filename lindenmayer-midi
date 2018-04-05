@@ -90,6 +90,7 @@ my $note = Music::Note->new( $midi_note, $format );
 my $msn = Music::ScaleNote->new(
     scale_note => $note->format('isobase'),
     scale_name => $scale,
+#    verbose    => 1,
 );
 
 my %translate = (
