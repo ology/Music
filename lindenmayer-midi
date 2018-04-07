@@ -100,7 +100,7 @@ my %translate = (
         $score->n( random_duration( @$duration ), $midi_note );
     },
     'G' => sub {
-        MIDIUtil::set_chan_patch( $score, 0, $patchg );
+        MIDIUtil::set_chan_patch( $score, 1, $patchg );
         $score->n( random_duration( @$duration ), $midi_note );
     },
     '-' => sub {
