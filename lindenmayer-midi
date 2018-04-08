@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use MIDIUtil; # Found in the same github directory...
-use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
+#use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
 use Music::ScaleNote;
 use Music::Note;
 
