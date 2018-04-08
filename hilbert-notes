@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Math::Curve::Hilbert;
-use MIDIUtil;
+use MIDIUtil;  # Found in the same github directory
 
 my $max = shift || 64;
 my $bpm = shift || 120;
