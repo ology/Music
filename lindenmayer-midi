@@ -3,25 +3,28 @@ use strict;
 use warnings;
 
 use MIDIUtil; # Found in the same github directory...
-use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
+#use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
 use Music::ScaleNote;
 use Music::Note;
 use Music::Scales;
 
-my $rule       = shift || 2,
-my $iterations = shift || 4;
-my $duration   = shift || 'qn';
-my $midi_note  = shift || 60;
-my $offset     = shift || 1;
-my $scale      = shift || 'major';
-my $bpm        = shift || 300;
+my $rule       = shift || 2,        # The rule number in the list of rules below
+my $iterations = shift || 4;        # The number of iterations of the fractal curve
+my $duration   = shift || 'qn';     # The space separated list of durations from which to choose
+my $midi_note  = shift || 60;       # The Initial midinum format note. 60 = Middle C
+my $offset     = shift || 1;        # Distance to move in the scale for a new note value
+my $scale      = shift || 'major';  # The name of the scale to traverse
+my $bpm        = shift || 300;      # The beats per minute of the rendered MIDI
 
+# Split the durations into a list so that they can be randomly selected
 $duration = [ split /\s+/, $duration ];
 
+# Default variables
 my $format = 'midinum';
 my $patchf = 0;
 my $patchg = 13;
 
+# The master list of fractals by rule number, their axioms and production rules
 my %rules = (
     1 => { # Branches
         axiom => 'X',
@@ -81,28 +84,37 @@ my %rules = (
     },
 );
 
+# Get the axiom to use based on the given rule
 my $string = $rules{$rule}{axiom};
 
+# Prepare to create MIDI
 my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
+# Create a note object for the given start note value
 my $note = Music::Note->new( $midi_note, $format );
 
+# Create a scale-note object to use to traverse the given scale
 my $msn = Music::ScaleNote->new(
     scale_note => $note->format('isobase'),
     scale_name => $scale,
 #    verbose    => 1,
 );
 
+# The dispatch table of MIDI routines based on "turtle graphic" moves
 my %translate = (
+    # Add a rest to the score
     'f' => sub { $score->r( random_duration( @$duration ) ) },
+    # Add a note to the score
     'F' => sub {
         MIDIUtil::set_chan_patch( $score, 0, $patchf );
         $score->n( random_duration( @$duration ), $midi_note );
     },
+    # Add a note to the score
     'G' => sub {
         MIDIUtil::set_chan_patch( $score, 1, $patchg );
         $score->n( random_duration( @$duration ), $midi_note );
     },
+    # Decrement the scale-note
     '-' => sub {
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
@@ -110,6 +122,7 @@ my %translate = (
             offset      => -$offset,
         )->format($format);
     },
+    # Increment the scale-note
     '+' => sub {
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
@@ -119,18 +132,22 @@ my %translate = (
     },
 );
 
+# Apply the string re-writing production rules
 for ( 1 .. $iterations ) {
     $string =~ s/(.)/defined($rules{$rule}{$1}) ? $rules{$rule}{$1} : $1/eg;
 }
 warn "$string\n";
 
+# Execute the routines defined by the string elements
 for my $command ( split //, $string ) {
     last if $midi_note < 0 || $midi_note > 127;
     $translate{$command}->() if exists $translate{$command};
 }
 
+# Write the MIDI file
 $score->write_score( $0 . '.mid' );
 
+# Return a random duration.  * This makes things disjointed and strange. YMMV
 sub random_duration {
     my (@duration) = @_;
     return $duration[ int rand @duration ];
