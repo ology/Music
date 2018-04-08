@@ -3,11 +3,11 @@ use strict;
 use warnings;
 
 use MIDIUtil; # Found in the same github directory...
-#use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
+use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
 use Music::ScaleNote;
 use Music::Note;
 
-my $rule       = shift || 2,        # The rule number in the list of rules below
+my $rule       = shift || 2;        # The rule number in the list of rules below
 my $iterations = shift || 4;        # The number of iterations of the fractal curve
 my $duration   = shift || 'qn';     # The space separated list of durations from which to choose
 my $midi_note  = shift || 60;       # The Initial midinum format note. 60 = Middle C
