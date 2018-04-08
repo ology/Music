@@ -4,9 +4,13 @@ use warnings;
 
 use Math::Curve::Hilbert;
 use MIDIUtil;  # Found in the same github directory
+use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
+use Music::ScaleNote;
+use Music::Note;
 
-my $max = shift || 64;
-my $bpm = shift || 120;
+my $max   = shift || 64;
+my $bpm   = shift || 120;
+my $scale = shift || 'major';
 
 my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
@@ -17,14 +21,20 @@ my $hilbert = Math::Curve::Hilbert->new(
     step      => 4,
 );
 
-my $treb  = 60;
-my $bass  = 48;
-my $count = 0;
+my $treb = 60;
+my $bass = 48;
+ 
+my $format = 'midinum';
 
-my @c_notes = qw(  0 12 24 36 48 60 72 84  96 108 120 );
-my @e_notes = qw(  4 16 28 40 52 64 76 88 100 112 124 );
-my @f_notes = qw(  5 17 29 41 53 65 77 89 101 113 125 );
-my @b_notes = qw( 11 23 35 47 59 71 83 95 107 119 );
+my $note = Music::Note->new( $treb, $format );
+
+my $msn = Music::ScaleNote->new(
+    scale_note => $note->format('isobase'),
+    scale_name => $scale,
+#    verbose    => 1,
+);
+
+my $count = 0;
 
 # Start the Hilbert curve
 my ( $x1, $y1 ) = $hilbert->CoordinatesFromPoint( $count++ );
@@ -38,38 +48,34 @@ while ( ( $hilbert->CoordinatesFromPoint($count) )[0] ) {
 
     # Inc/Decrement the treble note
     if ( $x2 - $x1 > 0 ) {
-        if ( ( grep { $treb == $_ } @e_notes ) || ( grep { $treb == $_ } @b_notes ) ) {
-            $treb += 1;
-        }
-        else {
-            $treb += 2;
-        }
+        $treb = $msn->get_offset(
+            note_name   => $treb,
+            note_format => $format,
+            offset      => 1,
+        )->format($format);
     }
     elsif ( $x2 - $x1 < 0 ) {
-        if ( ( grep { $treb == $_ } @c_notes ) || ( grep { $treb == $_ } @f_notes ) ) {
-            $treb -= 1;
-        }
-        else {
-            $treb -= 2;
-        }
+        $treb = $msn->get_offset(
+            note_name   => $treb,
+            note_format => $format,
+            offset      => -1,
+        )->format($format);
     }
 
     # Inc/Decrement the bass note
     if ( $y2 - $y1 > 0 ) {
-        if ( ( grep { $bass == $_ } @e_notes ) || ( grep { $bass == $_ } @b_notes ) ) {
-            $bass += 1;
-        }
-        else {
-            $bass += 2;
-        }
+        $bass = $msn->get_offset(
+            note_name   => $bass,
+            note_format => $format,
+            offset      => 1,
+        )->format($format);
     }
     elsif ( $y2 - $y1 < 0 ) {
-        if ( ( grep { $bass == $_ } @c_notes ) || ( grep { $bass == $_ } @f_notes ) ) {
-            $bass -= 1;
-        }
-        else {
-            $bass -= 2;
-        }
+        $bass = $msn->get_offset(
+            note_name   => $bass,
+            note_format => $format,
+            offset      => -1,
+        )->format($format);
     }
 
     # Increment the line segment
