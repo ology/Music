@@ -14,13 +14,6 @@ my $scale = shift || 'major';
 
 my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
-my $hilbert = Math::Curve::Hilbert->new(
-    direction => 'up',
-    max       => 8,
-    clockwise => 1,
-    step      => 4,
-);
-
 my $treb = 60;
 my $bass = 48;
  
@@ -35,6 +28,13 @@ my $msn = Music::ScaleNote->new(
 );
 
 my $count = 0;
+
+my $hilbert = Math::Curve::Hilbert->new(
+    direction => 'up',
+    max       => 8,
+    clockwise => 1,
+    step      => 4,
+);
 
 # Start the Hilbert curve
 my ( $x1, $y1 ) = $hilbert->CoordinatesFromPoint( $count++ );
