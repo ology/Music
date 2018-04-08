@@ -17,9 +17,9 @@ my $score = MIDIUtil::setup_midi( bpm => $bpm );
 my $treb = 60;
 my $bass = 48;
 
-my $note = Music::Note->new( $treb, $format );
-
 my $format = 'midinum';
+
+my $note = Music::Note->new( $treb, $format );
 
 my $msn = Music::ScaleNote->new(
     scale_note  => $note->format('isobase'),
