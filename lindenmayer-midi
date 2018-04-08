@@ -11,7 +11,7 @@ my $rule       = shift || 2,        # The rule number in the list of rules below
 my $iterations = shift || 4;        # The number of iterations of the fractal curve
 my $duration   = shift || 'qn';     # The space separated list of durations from which to choose
 my $midi_note  = shift || 60;       # The Initial midinum format note. 60 = Middle C
-my $offset     = shift || 1;        # Distance to move in the scale for a new note value
+my $offset     = shift || 1;        # +/- Distance to move in the scale for a new note value
 my $scale      = shift || 'major';  # The name of the scale to traverse
 my $bpm        = shift || 300;      # The beats per minute of the rendered MIDI
 
