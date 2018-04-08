@@ -6,7 +6,6 @@ use MIDIUtil; # Found in the same github directory...
 #use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
 use Music::ScaleNote;
 use Music::Note;
-use Music::Scales;
 
 my $rule       = shift || 2,        # The rule number in the list of rules below
 my $iterations = shift || 4;        # The number of iterations of the fractal curve
