@@ -137,7 +137,7 @@ for ( 1 .. $iterations ) {
 }
 warn "$string\n";
 
-# Execute the routines defined by the string elements
+# Execute the dispatch routines defined by the string elements
 for my $command ( split //, $string ) {
     last if $midi_note < 0 || $midi_note > 127;
     $translate{$command}->() if exists $translate{$command};
