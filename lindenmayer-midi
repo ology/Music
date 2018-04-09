@@ -7,16 +7,18 @@ use MIDIUtil; # Found in the same github directory...
 use Music::ScaleNote;
 use Music::Note;
 
-my $rule       = shift || 2;        # The rule number in the list of rules below
-my $iterations = shift || 4;        # The number of iterations of the fractal curve
-my $duration   = shift || 'qn';     # The space separated list of durations from which to choose
-my $midi_note  = shift || 60;       # The Initial midinum format note. 60 = Middle C
+my $rule       = shift || 2;        # Rule number in the list of rules below
+my $iterations = shift || 4;        # Number of iterations of the fractal curve
+my $n_duration = shift || 'qn';     # Space separated list of note durations from which to choose
+my $r_duration = shift || 'qn';     # Space separated list of rest durations from which to choose
+my $midi_note  = shift || 60;       # Initial midinum format note. 60 = Middle C
 my $offset     = shift || 1;        # +/- Distance to move in the scale for a new note value
-my $scale      = shift || 'major';  # The name of the scale to traverse
-my $bpm        = shift || 300;      # The beats per minute of the rendered MIDI
+my $scale      = shift || 'major';  # Name of the scale to traverse
+my $bpm        = shift || 300;      # Beats per minute of the rendered MIDI
 
 # Split the durations into a list so that they can be randomly selected
-$duration = [ split /\s+/, $duration ];
+$n_duration = [ split /\s+/, $n_duration ];
+$r_duration = [ split /\s+/, $r_duration ];
 
 # Default variables
 my $format = 'midinum';
@@ -81,6 +83,15 @@ my %rules = (
         axiom => 'F-F-F-F',
         F => 'FF-F--F-F',
     },
+    13 => { # Custom
+        axiom => 'F+G-F+G',
+        F => 'FG+F--F+F',
+    },
+    14 => { # Branches with space
+        axiom => 'X',
+        X => 'YF-X+X',
+        Y => 'f',
+    },
 );
 
 # Get the axiom to use based on the given rule
@@ -102,16 +113,16 @@ my $msn = Music::ScaleNote->new(
 # The dispatch table of MIDI routines based on "turtle graphic" moves
 my %translate = (
     # Add a rest to the score
-    'f' => sub { $score->r( random_duration( @$duration ) ) },
+    'f' => sub { $score->r( random_duration( @$r_duration ) ) },
     # Add a note to the score
     'F' => sub {
         MIDIUtil::set_chan_patch( $score, 0, $patchf );
-        $score->n( random_duration( @$duration ), $midi_note );
+        $score->n( random_duration( @$n_duration ), $midi_note );
     },
     # Add a note to the score
     'G' => sub {
         MIDIUtil::set_chan_patch( $score, 1, $patchg );
-        $score->n( random_duration( @$duration ), $midi_note );
+        $score->n( random_duration( @$n_duration ), $midi_note );
     },
     # Decrement the scale-note
     '-' => sub {
