@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # Collect the possible fingering patterns
-my @positions = qx/ perl fretting --sfr 1 --nfi 3 --fin 'm a i' /;
+my @positions = qx/ perl fretting --sfr 1 --nfi 3 /;
 my @chords;
 for my $pos ( @positions ) {
     my @i = $pos =~ /[a-z](\d)/g;
