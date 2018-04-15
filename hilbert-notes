@@ -8,22 +8,31 @@ use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
 use Music::ScaleNote;
 use Music::Note;
 
-my $max   = shift || 64;
-my $bpm   = shift || 120;
-my $scale = shift || 'major';
+my $max     = shift || 64;
+my $bpm     = shift || 120;
+my $t_scale = shift || 'dorian';
+my $b_scale = shift || 'pminor';
 
 my $score = MIDIUtil::setup_midi( bpm => $bpm );
+
+my $format = 'midinum';
 
 my $treb = 60;
 my $bass = 48;
 
-my $format = 'midinum';
+my $t_note = Music::Note->new( $treb, $format );
+my $b_note = Music::Note->new( $bass, $format );
 
-my $note = Music::Note->new( $treb, $format );
+my $t_msn = Music::ScaleNote->new(
+    scale_note  => $t_note->format('isobase'),
+    scale_name  => $t_scale,
+    note_format => $format,
+#    verbose     => 1,
+);
 
-my $msn = Music::ScaleNote->new(
-    scale_note  => $note->format('isobase'),
-    scale_name  => $scale,
+my $b_msn = Music::ScaleNote->new(
+    scale_note  => $b_note->format('isobase'),
+    scale_name  => $b_scale,
     note_format => $format,
 #    verbose     => 1,
 );
@@ -49,13 +58,13 @@ while ( ( $hilbert->CoordinatesFromPoint($count) )[0] ) {
 
     # Inc/Decrement the treble note
     if ( $x2 - $x1 > 0 ) {
-        $treb = $msn->get_offset(
+        $treb = $t_msn->get_offset(
             note_name => $treb,
             offset    => 1,
         )->format($format);
     }
     elsif ( $x2 - $x1 < 0 ) {
-        $treb = $msn->get_offset(
+        $treb = $t_msn->get_offset(
             note_name => $treb,
             offset    => -1,
         )->format($format);
@@ -63,13 +72,13 @@ while ( ( $hilbert->CoordinatesFromPoint($count) )[0] ) {
 
     # Inc/Decrement the bass note
     if ( $y2 - $y1 > 0 ) {
-        $bass = $msn->get_offset(
+        $bass = $b_msn->get_offset(
             note_name => $bass,
             offset    => 1,
         )->format($format);
     }
     elsif ( $y2 - $y1 < 0 ) {
-        $bass = $msn->get_offset(
+        $bass = $b_msn->get_offset(
             note_name => $bass,
             offset    => -1,
         )->format($format);
