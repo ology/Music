@@ -6,6 +6,7 @@ use warnings;
 # This is a randomized re-orchestration of Terry Riley's venerable composition, "In C."
 ##
 
+use lib '.';
 use MIDIUtil;
 use List::Util qw( shuffle );
 
