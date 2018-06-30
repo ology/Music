@@ -67,16 +67,16 @@ sub transform {
     my $atu = Music::AtonalUtil->new;
     my $p;
     if ( $transform eq 'invert' ) {
-        $p = $atu->invert( $parameter, \@sample );
+        $p = $atu->invert( $parameter, \@phrase );
     }
     elsif ( $transform eq 'retrograde' ) {
-        $p = $atu->retrograde(@sample);
+        $p = $atu->retrograde(@phrase);
     }
     elsif ( $transform eq 'rotate' ) {
-        $p = $atu->rotate( $parameter, \@sample );
+        $p = $atu->rotate( $parameter, \@phrase );
     }
     elsif ( $transform eq 'transpose' ) {
-        $p = $atu->transpose( $parameter, \@sample );
+        $p = $atu->transpose( $parameter, \@phrase );
     }
 
     return @phrase, @$p;
