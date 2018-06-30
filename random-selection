@@ -30,11 +30,13 @@ my $previous = join '', @sample;
 my @constrain;
 for ( 1 ) {
     for my $i ( 1 .. $phrase ) {
-        my $selection = $population[ int rand @population ];
-        push @constrain, $selection;
+        push @constrain, $population[ int rand @population ];
     }
+
     my $current = join '', @constrain;
+
     my $d = distance( $previous, $current );
+
     if ( $d == $distance ) {
         # Update with the added constrained sample
         @sample = ( @sample, @constrain );
