@@ -62,8 +62,7 @@ sub transform {
     return @phrase, @$p;
 }
 
-# Convert integer pitch notation into MIDI note names
-sub int2name {
+sub int2name { # Convert integer pitch notation into MIDI note names
     my @notes = @_;
     my %name;
     my $int = -@notes;
