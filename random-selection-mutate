@@ -1,0 +1,78 @@
+#!usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '.';
+use MIDIUtil;
+use MIDI::Simple;
+use Music::AtonalUtil;
+
+my $transform = shift || ''; # Can be: invert, retrograde, rotate, transpose
+my $parameter = shift || 0;  # For: invert, rotate, transpose
+my $mutate    = shift || 0;  # Number of mutations to perform
+my $phrase    = shift || 4;  # Number of notes in a phrase
+
+my @notes = qw( C D E F G A B );
+
+my @population = 0 .. @notes - 1;
+
+my @sample;
+for my $i ( 1 .. $phrase ) {
+    push @sample, $population[ int rand @population ];
+}
+
+my @mutated = @sample;
+for my $i ( 0 .. $mutate - 1 ) {
+    my $position  = int rand @sample;
+    my $direction = int rand(2) ? 1 : -1;
+    my $new       = ( $sample[$position] + $direction ) % @notes;
+    splice @mutated, $position, 1, $new;
+}
+
+@sample = ( @sample, @mutated );
+
+@sample = transform( $transform, $parameter, @sample ) if $transform;
+
+# Process the MIDI...
+my %name = int2name(@notes);
+my @pitches = map { $name{$_} } @sample;
+print "@pitches\n";
+
+my $score = MIDIUtil::setup_midi( patch => 0 );
+
+$score->n( 'qn', $_ ) for @pitches;
+
+$score->write_score( $0 . '.mid' );
+
+sub transform {
+    my ( $transform, $parameter, @phrase ) = @_;
+
+    my $atu = Music::AtonalUtil->new;
+    my $p;
+    if ( $transform eq 'invert' || $transform eq 'rotate' || $transform eq 'transpose' ) {
+        $p = $atu->$transform( $parameter, \@phrase );
+    }
+    elsif ( $transform eq 'retrograde' ) {
+        $p = $atu->$transform(@phrase);
+    }
+    else {
+        die 'Unknown transformation';
+    }
+
+    return @phrase, @$p;
+}
+
+sub int2name {
+    my @notes = @_;
+    # Convert integer pitch notation into MIDI note names
+    my %name;
+    my $int = -@notes;
+    for my $octave ( 3, 4, 5, 6 ) {
+        for my $note (@notes) {
+            $name{$int} = $note . $octave;
+#warn "N:$int $name{$int} = $note . $octave\n";
+            $int++;
+        }
+    }
+    return %name;
+}
