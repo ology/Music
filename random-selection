@@ -10,8 +10,7 @@ use Text::Levenshtein qw(distance);
 my $transform = shift || ''; # Can be: invert, retrograde, rotate, transpose
 my $parameter = shift || 0;  # For: invert, rotate, transpose
 my $distance  = shift || 0;  # Edits needed to transform subsequent phrases
-
-my $phrase = 4;
+my $phrase    = shift || 4;  # Number of notes in a phrase
 
 my @notes = qw( C D E F G A B );
 
