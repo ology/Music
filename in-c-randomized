@@ -48,7 +48,13 @@ my @loops = (
 );
 
 # Limit the number of loops to be played to the given max
-my @pick = ( shuffle @loops )[ 0 .. $max - 1 ];
+my @pick;
+if ( $shuffle ) {
+    @pick = ( shuffle @loops )[ 0 .. $max - 1 ];
+}
+else {
+    @pick = @loops[ 0 .. $max - 1 ];
+}
 
 # Generate a phrase for each patch
 my @phrases;
@@ -62,7 +68,7 @@ for my $voice ( 1 .. $voices ) {
         MIDIUtil::set_chan_patch( $score, $channel++, random_patch() );
 
         # Call each of the chosen loops
-        $_->() for $shuffle ? shuffle @pick : @pick;
+        $_->() for @pick;
     };
 
     # Accumulate our phrase functions
