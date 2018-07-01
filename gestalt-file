@@ -38,6 +38,7 @@ for my $t ( $opus->tracks ) {
     my $mid  = $note->format('midi');
 
     print "Channel:\n\t$channel\n";
+
     print "Pitch:\n",
         "\tRange: $low to $high\n",
         "\tSpan: $mid +/- ", $g->PitchRange, "\n";
