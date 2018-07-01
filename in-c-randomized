@@ -64,6 +64,8 @@ for my $voice ( 1 .. $voices ) {
         # Avoid the drum channel
         $channel++ if $channel == 9;
 
+        print "Voice: $voice, Channel: $channel\n";
+
         # Increment the channel and patch
         MIDIUtil::set_chan_patch( $score, $channel++, random_patch() );
 
@@ -94,12 +96,14 @@ sub random_patch {
 # Available loops:
 
 sub loop1 {
+    print "loop1\n";
     for ( 1 .. rand4() ) {
         $score->n( 'qn', $minor ? 'Ds4' : 'E4' ) for 1 .. 3;
     }
 }
 
 sub loop2 {
+    print "loop2\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'F4' );
@@ -108,6 +112,7 @@ sub loop2 {
 }
 
 sub loop3 {
+    print "loop3\n";
     for ( 1 .. rand4() ) {
         $score->r('en');
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
@@ -117,6 +122,7 @@ sub loop3 {
 }
 
 sub loop4 {
+    print "loop4\n";
     for ( 1 .. rand4() ) {
         $score->r('en');
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
@@ -126,6 +132,7 @@ sub loop4 {
 }
 
 sub loop5 {
+    print "loop5\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'F4' );
@@ -135,6 +142,7 @@ sub loop5 {
 }
 
 sub loop6 {
+    print "loop6\n";
     for ( 1 .. rand4() ) {
         $score->n( 'wn', 'C5' );
         $score->n( 'wn', 'C5' );
@@ -142,6 +150,7 @@ sub loop6 {
 }
 
 sub loop7 {
+    print "loop7\n";
     for ( 1 .. rand4() ) {
         $score->r('qn') for 1 .. 3;
         $score->r('en');
@@ -153,6 +162,7 @@ sub loop7 {
 }
 
 sub loop8 {
+    print "loop8\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dwn', 'G4' );
         $score->n( 'wn', 'F4' );
@@ -161,6 +171,7 @@ sub loop8 {
 }
 
 sub loop9 {
+    print "loop9\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'G4' );
@@ -170,6 +181,7 @@ sub loop9 {
 }
 
 sub loop10 {
+    print "loop10\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'G4' );
@@ -177,6 +189,7 @@ sub loop10 {
 }
 
 sub loop11 {
+    print "loop11\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -188,6 +201,7 @@ sub loop11 {
 }
 
 sub loop12 {
+    print "loop12\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', 'F4' );
         $score->n( 'en', 'G4' );
@@ -197,6 +211,7 @@ sub loop12 {
 }
 
 sub loop13 {
+    print "loop13\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'den', 'G4' );
@@ -210,6 +225,7 @@ sub loop13 {
 }
 
 sub loop14 {
+    print "loop14\n";
     for ( 1 .. rand4() ) {
         $score->n( 'wn', 'C5' );
         $score->n( 'wn', $minor ? 'As4' : 'B4' );
@@ -219,6 +235,7 @@ sub loop14 {
 }
 
 sub loop15 {
+    print "loop15\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->r('den');
@@ -227,6 +244,7 @@ sub loop15 {
 }
 
 sub loop16 {
+    print "loop16\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
@@ -236,6 +254,7 @@ sub loop16 {
 }
 
 sub loop17 {
+    print "loop17\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'C5' );
@@ -247,6 +266,7 @@ sub loop17 {
 }
 
 sub loop18 {
+    print "loop18\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'sn', 'Fs4' );
@@ -258,6 +278,7 @@ sub loop18 {
 }
 
 sub loop19 {
+    print "loop19\n";
     for ( 1 .. rand4() ) {
         $score->r('dqn');
         $score->n( 'dqn', 'G5' );
@@ -265,6 +286,7 @@ sub loop19 {
 }
 
 sub loop20 {
+    print "loop20\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'sn', 'Fs4' );
@@ -280,12 +302,14 @@ sub loop20 {
 }
 
 sub loop21 {
+    print "loop21\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dhn', 'Fs4' );
     }
 }
 
 sub loop22 {
+    print "loop22\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dqn', $minor ? 'Ds4' : 'E4' ) for 1 .. 5;
         $score->n( 'dqn', 'Fs4' );
@@ -296,6 +320,7 @@ sub loop22 {
 }
 
 sub loop23 {
+    print "loop23\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'dqn', 'Fs4' ) for 1 .. 5;
@@ -306,6 +331,7 @@ sub loop23 {
 }
 
 sub loop24 {
+    print "loop24\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'Fs4' );
@@ -316,6 +342,7 @@ sub loop24 {
 }
 
 sub loop25 {
+    print "loop25\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'Fs4' );
@@ -326,6 +353,7 @@ sub loop25 {
 }
 
 sub loop26 {
+    print "loop26\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'Fs4' );
@@ -336,6 +364,7 @@ sub loop26 {
 }
 
 sub loop27 {
+    print "loop27\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'sn', 'Fs4' );
@@ -352,6 +381,7 @@ sub loop27 {
 }
 
 sub loop28 {
+    print "loop28\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'sn', 'Fs4' );
@@ -363,6 +393,7 @@ sub loop28 {
 }
 
 sub loop29 {
+    print "loop29\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dhn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'dhn', 'G4' );
@@ -371,12 +402,14 @@ sub loop29 {
 }
 
 sub loop30 {
+    print "loop30\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dwn', 'C5' );
     }
 }
 
 sub loop31 {
+    print "loop31\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', 'F4' );
@@ -388,6 +421,7 @@ sub loop31 {
 }
 
 sub loop32 {
+    print "loop32\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -401,6 +435,7 @@ sub loop32 {
 }
 
 sub loop33 {
+    print "loop33\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', 'F4' );
@@ -409,6 +444,7 @@ sub loop33 {
 }
 
 sub loop34 {
+    print "loop34\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', 'F4' );
@@ -416,6 +452,7 @@ sub loop34 {
 }
 
 sub loop35 {
+    print "loop35\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -450,6 +487,7 @@ sub loop35 {
 }
 
 sub loop36 {
+    print "loop36\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -461,6 +499,7 @@ sub loop36 {
 }
 
 sub loop37 {
+    print "loop37\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -468,6 +507,7 @@ sub loop37 {
 }
 
 sub loop38 {
+    print "loop38\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -476,6 +516,7 @@ sub loop38 {
 }
 
 sub loop39 {
+    print "loop39\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'G4' );
@@ -487,6 +528,7 @@ sub loop39 {
 }
 
 sub loop40 {
+    print "loop40\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'F4' );
@@ -494,6 +536,7 @@ sub loop40 {
 }
 
 sub loop41 {
+    print "loop41\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'G4' );
@@ -501,6 +544,7 @@ sub loop41 {
 }
 
 sub loop42 {
+    print "loop42\n";
     for ( 1 .. rand4() ) {
         $score->n( 'wn', 'C5' );
         $score->n( 'wn', $minor ? 'As4' : 'B4' );
@@ -510,6 +554,7 @@ sub loop42 {
 }
 
 sub loop43 {
+    print "loop43\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F5' );
         $score->n( 'sn', $minor ? 'Ds4' : 'E5' );
@@ -524,6 +569,7 @@ sub loop43 {
 }
 
 sub loop44 {
+    print "loop44\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', 'F5' );
         $score->n( 'en', $minor ? 'Ds4' : 'E5' );
@@ -534,6 +580,7 @@ sub loop44 {
 }
 
 sub loop45 {
+    print "loop45\n";
     for ( 1 .. rand4() ) {
         $score->n( 'qn', 'D5' );
         $score->n( 'qn', 'D5' );
@@ -542,6 +589,7 @@ sub loop45 {
 }
 
 sub loop46 {
+    print "loop46\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', 'D5' );
@@ -561,6 +609,7 @@ sub loop46 {
 }
 
 sub loop47 {
+    print "loop47\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'D5' );
         $score->n( 'sn', 'C5' );
@@ -569,6 +618,7 @@ sub loop47 {
 }
 
 sub loop48 {
+    print "loop48\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dwn', 'G4' );
         $score->n( 'wn', 'G4' );
@@ -578,6 +628,7 @@ sub loop48 {
 }
 
 sub loop49 {
+    print "loop49\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -589,6 +640,7 @@ sub loop49 {
 }
 
 sub loop50 {
+    print "loop50\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -596,6 +648,7 @@ sub loop50 {
 }
 
 sub loop51 {
+    print "loop51\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -604,6 +657,7 @@ sub loop51 {
 }
 
 sub loop52 {
+    print "loop52\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', $minor ? 'Gs4' : 'As4' );
@@ -611,6 +665,7 @@ sub loop52 {
 }
 
 sub loop53 {
+    print "loop53\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Gs4' : 'As4' );
         $score->n( 'sn', 'G4' );
