@@ -10,8 +10,8 @@ use Text::CSV;
 sub read_bach {
     my ( $file, $byid ) = @_;
 
-    my $csv = Text::CSV->new ( { binary => 1 } )
-        or die 'Cannot use CSV: ' . Text::CSV->error_diag ();
+    my $csv = Text::CSV->new( { binary => 1 } )
+        or die 'Cannot use CSV: ', Text::CSV->error_diag();
 
     open my $fh, "<:encoding(utf8)", $file
         or die "Can't read $file: $!";
