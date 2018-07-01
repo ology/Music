@@ -45,7 +45,7 @@ for my $t ( $opus->tracks ) {
 
     print "Velocity:\n",
         "\tRange: ", $g->VelocityLowest, ' to ', $g->VelocityHighest, "\n",
-        "\tSpan: ", $g->VelocityMiddle, ' +/- ', $g->VelocityRange, "\n";
+        "\tSpan: ", $g->VelocityMiddle, ' +/- ', $g->VelocityRange, "\n\n";
 
-    print "Duration: ", $g->Duration, "\n\n";
+#    print "Duration: ", $g->Duration, "\n\n";
 }
