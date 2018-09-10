@@ -63,7 +63,7 @@ for _ in range(notes - 2):
         r = mu.note.Rest()
         score.append(r)
 
-        draw = choice([i[0] + ' ' + i[1] for i in list(transition.keys())])
+        draw = choice([' '.join(i) for i in list(transition.keys())])
         key = tuple(draw.split())
 
 score.show()
