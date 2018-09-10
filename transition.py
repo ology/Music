@@ -51,7 +51,6 @@ score.append(n)
 for _ in range(notes - 2):
     if key in transition:
         draw = choice(list(transition[key].keys()), 1, list(transition[key].values()))
-        #print('draw:', draw)
 
         n = mu.note.Note(draw[0])
         score.append(n)
@@ -65,6 +64,7 @@ for _ in range(notes - 2):
 
         draw = choice([' '.join(i) for i in list(transition.keys())])
         key = tuple(draw.split())
+        #print('key:', key)
 
 score.show()
 score.show('midi')
