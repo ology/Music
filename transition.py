@@ -48,7 +48,7 @@ score.append(n)
 n = mu.note.Note(key[1])
 score.append(n)
 
-for _ in range(notes):
+for _ in range(notes - 2):
     if key in transition:
         draw = choice(list(transition[key].keys()), 1, list(transition[key].values()))
         #print('draw:', draw)
