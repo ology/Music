@@ -12,6 +12,7 @@ prev = None
 last = None
 total = 0
 
+# Gather the transitions
 for n in song.flat.notes:
     if type(n) == mu.note.Note:
         if prev:
@@ -32,12 +33,14 @@ for n in song.flat.notes:
 
 #print(transition)
 
+# Compute the probability for each transition
 for k,v in transition.items():
     for i,j in v.items():
         transition[k][i] = j / total
 
 #print(transition)
 
+# Create a score based on the transition probabilities
 score = mu.stream.Stream()
 
 key = list(transition.keys())[0]
@@ -48,6 +51,7 @@ score.append(n)
 n = mu.note.Note(key[1])
 score.append(n)
 
+# Append a note or a rest to the score
 for _ in range(notes - 2):
     if key in transition:
         draw = choice(list(transition[key].keys()), 1, list(transition[key].values()))
