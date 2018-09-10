@@ -51,6 +51,8 @@ score.append(n)
 n = mu.note.Note(key[1])
 score.append(n)
 
+keys = [' '.join(i) for i in list(transition.keys())]
+
 # Append a note or a rest to the score
 for _ in range(notes - 2):
     if key in transition:
@@ -64,7 +66,7 @@ for _ in range(notes - 2):
         r = mu.note.Rest()
         score.append(r)
 
-        draw = choice([' '.join(i) for i in list(transition.keys())])
+        draw = choice(keys)
         key = tuple(draw.split())
 
     #print('key:', key)
