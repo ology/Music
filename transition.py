@@ -56,14 +56,14 @@ for _ in range(notes - 2):
         score.append(n)
 
         key = (key[1], draw[0])
-        #print('key:', key)
     else:
         r = mu.note.Rest()
         score.append(r)
 
         draw = choice([' '.join(i) for i in list(transition.keys())])
         key = tuple(draw.split())
-        #print('key:', key)
+
+    #print('key:', key)
 
 score.show()
 score.show('midi')
