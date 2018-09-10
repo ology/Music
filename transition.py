@@ -58,7 +58,6 @@ for _ in range(notes - 2):
         key = (key[1], draw[0])
         #print('key:', key)
     else:
-        #print('rest')
         r = mu.note.Rest()
         score.append(r)
 
