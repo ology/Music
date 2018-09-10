@@ -2,7 +2,7 @@ from numpy.random import choice
 import music21 as mu
 
 #song = mu.converter.parse('/Users/gene/Music/MIDI/chopin-Fantaisie-Impromptu-op66.mid')
-song = mu.converter.parse('/Users/gene/Music/MIDI/rowrowbt.midi')
+song = mu.corpus.parse('bwv66.6')
 
 notes = 16 # Change me
 
@@ -64,3 +64,4 @@ for _ in range(notes):
         score.append(r)
 
 score.show()
+score.show('midi')
