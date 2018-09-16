@@ -7,9 +7,8 @@ use Bach;
 
 use Graph::Easy;
 
+# From https://archive.ics.uci.edu/ml/datasets/Bach+Choral+Harmony
 my $file = shift || '/Users/gene/Documents/data/jsbach_chorals_harmony/jsbach_chorals_harmony.data';
-
-my $size = 12;
 
 my (undef, $progression) = Bach::read_bach( $file, 0 );
 #use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper$progression); exit;
