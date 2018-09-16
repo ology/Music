@@ -10,7 +10,7 @@ use Graph::Easy;
 my $id = shift || '003907bv';
 
 # From https://archive.ics.uci.edu/ml/datasets/Bach+Choral+Harmony
-my $file = shift || '/Users/gene/Documents/data/jsbach_chorals_harmony/jsbach_chorals_harmony.data';
+my $file = shift || '/Users/gene/Documents/data/jsbach_chorals_harmony.data';
 
 # Read-in the chord progression of each song
 my (undef, $progression) = Bach::read_bach( $file, 0 );
