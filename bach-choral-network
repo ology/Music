@@ -5,6 +5,7 @@ use warnings;
 use lib '/Users/gene/sandbox/Music';
 use Bach;  # https://github.com/ology/Music/blob/master/Bach.pm
 
+use List::Util qw( any );
 use Graph::Easy;
 
 my $id = shift || '003907bv';
@@ -27,7 +28,7 @@ for my $song ( keys %$progression ) {
     for my $cluster ( @{ $progression->{$song} } ) {
         my ($notes, $bass, $chord) = split /,/, $cluster;
 
-        if ( $last && !grep { $last eq $_ } @{ $seen{$chord} } ) {
+        if ( $last && !any { $last eq $_ } @{ $seen{$chord} } ) {
             push @{ $seen{$chord} }, $last;
         }
 
