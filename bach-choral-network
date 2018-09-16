@@ -10,11 +10,12 @@ use Graph::Easy;
 # From https://archive.ics.uci.edu/ml/datasets/Bach+Choral+Harmony
 my $file = shift || '/Users/gene/Documents/data/jsbach_chorals_harmony/jsbach_chorals_harmony.data';
 
+# Read-in the chord progression of each song
 my (undef, $progression) = Bach::read_bach( $file, 0 );
 #use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper$progression); exit;
 
+# Find the bigrams of the chord progression
 my %seen;
-
 my $last = '';
 
 for my $song ( keys %$progression ) {
@@ -32,6 +33,7 @@ for my $song ( keys %$progression ) {
 }
 #use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper\%seen); exit;
 
+# Make a network graph of the chord progression
 my $graph = Graph::Easy->new();
 
 for my $i ( keys %seen ) {
