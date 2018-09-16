@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use lib '/Users/gene/sandbox/Music';
-use Bach;
+use Bach;  # https://github.com/ology/Music/blob/master/Bach.pm
 
 use Graph::Easy;
 
