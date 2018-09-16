@@ -21,7 +21,7 @@ my (undef, $progression) = Bach::read_bach( $file, 0 );
 my %seen;
 
 for my $song ( keys %$progression ) {
-    next unless $song eq $id;  # Comment out this line to get an enormous network of all song transitions
+    next unless $song eq $id;  # Comment this line to get an enormous network of all song transitions
 
     my $last = '';
 
