@@ -21,7 +21,7 @@ my %seen;
 my $last = '';
 
 for my $song ( keys %$progression ) {
-    next unless $song eq $id;
+    next unless $song eq $id;  # Comment out this line to get an enormous network of all song transitions
 
     for my $cluster ( @{ $progression->{$song} } ) {
         my ($notes, $bass, $chord) = split /,/, $cluster;
