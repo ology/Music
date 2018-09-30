@@ -15,7 +15,7 @@ my $file = shift || '/Users/gene/Documents/data/jsbach_chorals_harmony/jsbach_ch
 
 # Read-in the chord progression of each song
 my (undef, $progression) = Bach::read_bach( $file, 0 );
-#use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper$progression); exit;
+#use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper$progression->{'001707b_'}); exit;
 
 # Find the bigrams of the chord progression
 my %seen;
@@ -50,6 +50,8 @@ for my $i ( keys %seen ) {
 }
 
 print $graph->as_graphviz();
-# perl % > bach-choral-network.dot
-# dot -Tpng bach-choral-network.dot > bach-choral-network.png
-# open bach-choral-network.png
+
+__END__
+perl % > bach-choral-network.dot
+dot -Tpng bach-choral-network.dot > bach-choral-network.png
+open bach-choral-network.png
