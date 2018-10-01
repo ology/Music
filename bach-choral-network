@@ -29,7 +29,7 @@ for my $song ( keys %$progression ) {
         my ($notes, $bass, $chord) = split /,/, $cluster;
 
         if ( $last && !any { $last eq $_ } @{ $seen{$chord} } ) {
-            push @{ $seen{$chord} }, $last;
+            push @{ $seen{$last} }, $chord;
         }
 
         $last = $chord;
