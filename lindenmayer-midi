@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use MIDIUtil; # Found in the same github directory...
+use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
 use Music::ScaleNote;
 use Music::Note;
 
@@ -156,7 +157,7 @@ for my $command ( split //, $string ) {
 # Write the MIDI file
 $score->write_score( $0 . '.mid' );
 
-# Return a random duration.  * This makes things disjointed and strange. YMMV
+# Return a random duration.  * A set of durations makes things disjointed and strange. YMMV
 sub random_duration {
     my (@duration) = @_;
     return $duration[ int rand @duration ];
