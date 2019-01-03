@@ -9,8 +9,8 @@ use Music::Note;
 
 my $rule       = shift || 2;        # Rule number in the list of rules below
 my $iterations = shift || 4;        # Number of iterations of the fractal curve
-my $n_duration = shift || 'qn';     # Space separated list of note durations from which to choose
-my $r_duration = shift || 'qn';     # Space separated list of rest durations from which to choose
+my $n_duration = shift || 'qn';     # Space separated list of note durations from which to choose *
+my $r_duration = shift || 'qn';     # Space separated list of rest durations from which to choose *
 my $midi_note  = shift || 60;       # Initial midinum format note. 60 = Middle C
 my $offset     = shift || 1;        # +/- Distance to move in the scale for a new note value
 my $scale      = shift || 'major';  # Name of the scale to traverse
