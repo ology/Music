@@ -4,11 +4,10 @@ use warnings;
 
 use Imager;
 
-use Readonly;
-Readonly my $WHITE => 'white';
-Readonly my $BLUE  => 'blue';
-Readonly my $BLACK => 'black';
-Readonly my $SPACE => 20;
+my $WHITE = 'white';
+my $BLUE  = 'blue';
+my $BLACK = 'black';
+my $SPACE = 20;
 
 my $string_num = shift || 6;
 my $fret_num   = shift || 5;
