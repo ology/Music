@@ -10,8 +10,11 @@ Readonly my $BLUE  => 'blue';
 Readonly my $BLACK => 'black';
 Readonly my $SPACE => 20;
 
-my ( $string_num, $fret_num, $chord, $outfile ) = @ARGV == 4
-    ? @ARGV : ( 6, 5, 'x12340', $0 );
+my $string_num = shift || 6;
+my $fret_num   = shift || 5;
+my $chord      = shift || 'x12340';
+my $outfile    = shift || $0;
+
 my $type = 'png';
 
 my $i = Imager->new(
