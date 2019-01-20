@@ -6,8 +6,8 @@ use Algorithm::Combinatorics qw( variations );
 use List::Util qw( shuffle );
 use MIDIUtil;
  
-my $treb  = shift || '0 C5 E5 G5';
-my $bass  = shift || 'C4 F4 G4';
+my $treb  = shift || '0 C5 E5 G5'; # 0 = rest
+my $bass  = shift || 'C4 F4 G4'; # Notes only - no rests
 my $bpm   = shift || 120;
 my $trebp = shift || 69; # Treble patch
 my $bassp = shift || 42; # Bass patch
@@ -15,7 +15,7 @@ my $bassp = shift || 42; # Bass patch
 my @treb = split / /, $treb;
 my @bass = split / /, $bass;
 
-my $size = 0;
+my $size = 0; # Number of score events
 
 my $score = MIDIUtil::setup_midi( bpm => $bpm );
 
@@ -57,8 +57,6 @@ sub legato {
     MIDIUtil::set_chan_patch( $score, 1, $bassp );
     $score->Volume(60);
 
-    my @notes = grep { $_ ne '0' } @bass;
-
-    $score->n( 'wn', $notes[ int rand @notes ] )
+    $score->n( 'wn', $bass[ int rand @bass ] )
         for 1 .. $size / 4;
 }
