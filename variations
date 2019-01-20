@@ -9,8 +9,8 @@ use MIDIUtil;
 my $treb  = shift || '0 C5 E5 G5';
 my $bass  = shift || 'C4 F4 G4';
 my $bpm   = shift || 120;
-my $trebp = shift || 69;
-my $bassp = shift || 42;
+my $trebp = shift || 69; # Treble patch
+my $bassp = shift || 42; # Bass patch
 
 my @treb = split / /, $treb;
 my @bass = split / /, $bass;
