@@ -50,7 +50,7 @@ for my $fret (0 .. $fret_num - 1) {
 my $font = Imager::Font->new( file => $fontfile );
 
 my $string = $string_num;
-for my $note ( split //, reverse $chord ) {
+for my $note ( split //, $chord ) {
     if ( $note =~ /[xX.-]/ ) {
         print "X at 0,$string\n";
         $i->string(
