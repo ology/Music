@@ -12,5 +12,6 @@ for my $pos ( @positions ) {
 
 # Render diagrams for each fingering pattern
 for my $chord ( @chords ) {
+    print "* Chord: $chord\n";
     system( qw/ perl fretboard 6 5 /, $chord, $chord );
 }
