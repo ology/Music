@@ -13,6 +13,7 @@ my $string_num = shift || 6;
 my $fret_num   = shift || 5;
 my $chord      = shift || 'x12340';
 my $outfile    = shift || $0;
+my $fontfile   = shift || '/opt/X11/share/fonts/TTF/VeraMono.ttf';
 
 my $type = 'png';
 
@@ -46,9 +47,7 @@ for my $fret (0 .. $fret_num - 1) {
     );
 }
 
-my $font = Imager::Font->new(
-    file => '/opt/X11/share/fonts/TTF/VeraMono.ttf'
-);
+my $font = Imager::Font->new( file => $fontfile );
 
 my $string = $string_num;
 for my $note ( split //, reverse $chord ) {
