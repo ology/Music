@@ -50,6 +50,7 @@ for my $fret (0 .. $fret_num - 1) {
 my $font = Imager::Font->new( file => $fontfile );
 
 my $string = $string_num;
+
 for my $note ( split //, $chord ) {
     if ( $note =~ /[xX.-]/ ) {
         print "X at 0,$string\n";
@@ -57,7 +58,7 @@ for my $note ( split //, $chord ) {
             font  => $font,
             text  => 'X',
             color => $BLACK,
-            x     => $SPACE + ( $string - 1 ) * $SPACE - $SPACE / 4,
+            x     => $SPACE + ( $string_num - $string ) * $SPACE - $SPACE / 4,
             y     => $SPACE - 2,
             size  => $SPACE - 2,
             aa    => 1,
@@ -68,7 +69,7 @@ for my $note ( split //, $chord ) {
         $i->circle(
             color  => $BLACK,
             r      => $SPACE / 4,
-            x      => $SPACE + ( $string - 1 ) * $SPACE,
+            x      => $SPACE + ( $string_num - $string ) * $SPACE,
             y      => $SPACE / 2,
             filled => 0,
         );
@@ -78,7 +79,7 @@ for my $note ( split //, $chord ) {
         $i->circle(
             color => $BLACK,
             r     => $SPACE / 4,
-            x     => $SPACE + ( $string - 1 ) * $SPACE,
+            x     => $SPACE + ( $string_num - $string ) * $SPACE,
             y     => $SPACE + $SPACE / 2 + ( $note - 1 ) * $SPACE,
         );
     }
