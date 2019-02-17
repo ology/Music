@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # Collect the possible fingering patterns
-my @positions = qx/ perl fretting --sfr 1 --nfi 3 /;
+my @positions = qx/ perl fretting --sfret 1 --nfinger 3 /;
 my @chords;
 for my $pos ( @positions ) {
     my @i = $pos =~ /[a-z](\d)/g;
@@ -12,5 +12,5 @@ for my $pos ( @positions ) {
 
 # Render diagrams for each fingering pattern
 for my $chord ( @chords ) {
-    system( qw/ perl fretboard 4 5 /, $chord, $chord );
+    system( qw/ perl fretboard 6 5 /, $chord, $chord );
 }
