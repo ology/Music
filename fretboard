@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+# THIS PROGRAM IS NOW SUPERSEDED BY https://metacpan.org/release/Music-FretboardDiagram
+
 use Imager;
 
 my $WHITE = 'white';
