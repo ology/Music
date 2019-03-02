@@ -93,6 +93,11 @@ my %rules = (
         X => 'YF-X+X',
         Y => 'f',
     },
+    15 => { # Leaf
+        axiom => 'X',
+        X => 'F[+X][-X]FX',
+        F => 'FF',
+    },
 );
 
 # Get the axiom to use based on the given rule
