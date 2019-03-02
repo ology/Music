@@ -8,7 +8,7 @@ use warnings;
 use MIDI::Simple;
 use Music::Tempo;
 
-our $VERSION = '0.02';
+our $VERSION = '0.0100';
 
 =head1 NAME
 
@@ -17,13 +17,13 @@ MIDIUtil - MIDI Utilities
 =head1 SYNOPSIS
 
   use MIDIUtil;
-  my $score = MIDIUtil::setup_midi(%args);
+  my $score = MIDIUtil::setup_midi( bpm => 120, etc => '...', );
   # ...
-  MIDIUtil::set_chan_patch( $score, $channel, $patch );
+  MIDIUtil::set_chan_patch( $score, 0, 1 );
 
 =head1 DESCRIPTION
 
-This module is a collection of MIDI utilities.
+This module is a couple of MIDI utilities.
 
 =head1 FUNCTIONS
 
@@ -38,9 +38,8 @@ This module is a collection of MIDI utilities.
     octave  => 4,
   );
 
-Set basic MIDI parameters, play a hi-hat lead-in and return a MIDI score object.
-
-If the lead_in parameter is 0, then no hi-hat lead-in is played.
+Set basic MIDI parameters and return a MIDI score object.  If given a B<lead_in>,
+play a hi-hat for that many beats.  
 
 Named parameters and defaults:
 
