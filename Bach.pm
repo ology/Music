@@ -1,5 +1,7 @@
 package Bach;
 
+# This module has been superseded by https://metacpan.org/release/Music-BachChoralHarmony
+
 # https://archive.ics.uci.edu/ml/datasets/Bach+Choral+Harmony
 
 use strict;
