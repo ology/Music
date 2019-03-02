@@ -1,5 +1,7 @@
 package MIDIUtil;
 
+# This module has been superseded by https://metacpan.org/release/MIDI-Util
+
 # ABSTRACT: MIDI Utilities
 
 use strict;
