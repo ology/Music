@@ -3,7 +3,9 @@ use strict;
 use warnings;
 
 use Math::Curve::Hilbert;
-use MIDIUtil;  # Found in the same github directory
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
 use Music::ScaleNote;
 use Music::Note;
 
@@ -12,7 +14,7 @@ my $bpm     = shift || 120;
 my $t_scale = shift || 'dorian';
 my $b_scale = shift || 'pminor';
 
-my $score = MIDIUtil::setup_midi( bpm => $bpm );
+my $score = MIDI::Util::setup_midi( bpm => $bpm );
 
 my $format = 'midinum';
 

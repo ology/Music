@@ -8,7 +8,8 @@ use warnings;
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
-use MIDIUtil;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
 
 my $n = shift || 4; # Number of notes
 my $initial = shift // 0; # Initial graph node
@@ -61,7 +62,7 @@ $velocity->populate(
 my $notes = collect_notes( $n, $initial, $velocity, $duration, $treble, $bass );
 
 # Invoke MIDI
-my $score = MIDIUtil::setup_midi( patch => 42 );
+my $score = MIDI::Util::setup_midi( patch => 42 );
 
 # Add notes to the score
 $score->n( @$_ ) for @$notes;

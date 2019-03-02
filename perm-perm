@@ -2,7 +2,8 @@
 use strict;
 use warnings;
 
-use MIDIUtil;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
 use MIDI::Simple;
 use Math::Combinatorics;
 use List::Util qw( shuffle );
@@ -23,7 +24,7 @@ my @bass_combos      = shuffle permute(@bass_notes);
 my @bass_dura_combos = shuffle permute(@bass_dura);
 my @bass_volu_combos = shuffle permute(@bass_volu);
 
-my $score = MIDIUtil::setup_midi(
+my $score = MIDI::Util::setup_midi(
     lead_in => scalar(@treb_notes),
     patch   => 69,
 );

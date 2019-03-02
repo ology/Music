@@ -5,7 +5,8 @@ use warnings;
 # Run bach-choral.R and divide-up the data file, before running this.
 # Then: perl % ~/Documents/data/jsbach_chorals_harmony/bach-choral-000206b_.csv
 
-use MIDIUtil;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
 
 use Text::CSV;
 use Graph::Weighted;
@@ -30,7 +31,7 @@ my @notes = collect_notes( $g, $note_number );
 
 my ( $melody, $bassline, $chords ) = split_records( $full_score, @notes );
 
-my $score = MIDIUtil::setup_midi();
+my $score = MIDI::Util::setup_midi();
 
 my @parts = (
     \&melody,

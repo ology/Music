@@ -7,7 +7,8 @@ use warnings;
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
-use MIDIUtil;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
 use Storable;
 
 my $file    = shift || die "Usage: perl $0 proportional-frequencies.dat [0|1]";
@@ -22,7 +23,7 @@ my @phrases;
 my $data = retrieve($file);
 #use Data::Dumper::Concise;warn 'Data to process: ', Dumper$data;
 
-my $score = MIDIUtil::setup_midi( patch => $patch );
+my $score = MIDI::Util::setup_midi( patch => $patch );
 
 for my $track ( keys %$data ) {
     if ( $initial == 0 ) {
@@ -40,7 +41,7 @@ for my $track ( keys %$data ) {
 #use Data::Dumper::Concise;warn Dumper\@phrase;
 
     my $func = sub {
-        MIDIUtil::set_chan_patch( $score, $channel++, $patch );
+        MIDI::Util::set_chan_patch( $score, $channel++, $patch );
         $score->n( @$_ ) for @phrase;
     };
 

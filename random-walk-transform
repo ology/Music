@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use lib '/Users/gene/sandbox/Graph-Weighted/lib';
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;

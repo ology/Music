@@ -8,7 +8,8 @@ use warnings;
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
-use MIDIUtil;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
 use Storable;
 
 my $file    = shift || die "Usage: perl $0 proportional-frequencies.dat [0|1]";
@@ -32,7 +33,7 @@ $pitches->populate($data);
 my @phrase = collect_notes( $n, $initial, $pitches );
 #use Data::Dumper::Concise;warn Dumper\@phrase;
 
-my $score = MIDIUtil::setup_midi( patch => 42 );
+my $score = MIDI::Util::setup_midi( patch => 42 );
 $score->n( @$_ ) for @phrase;
 $score->n( 'wn', $initial );
 $score->write_score( "$0.mid" );

@@ -4,7 +4,8 @@ use warnings;
 
 use Algorithm::Combinatorics qw( variations );
 use List::Util qw( shuffle );
-use MIDIUtil;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
  
 my $treb  = shift || '0 C5 E5 G5'; # 0 = rest
 my $bass  = shift || 'C4 F4 G4'; # Notes only - no rests
@@ -17,7 +18,7 @@ my @bass = split / /, $bass;
 
 my $size = 0; # Number of score events
 
-my $score = MIDIUtil::setup_midi( bpm => $bpm );
+my $score = MIDI::Util::setup_midi( bpm => $bpm );
 
 $score->synch(
     \&variance,
@@ -28,7 +29,7 @@ $score->n( 'wn', $bass[0] );
 $score->write_score( "$0.mid" );
 
 sub variance {
-    MIDIUtil::set_chan_patch( $score, 0, $trebp );
+    MIDI::Util::set_chan_patch( $score, 0, $trebp );
 
     my $count = 1;
 
@@ -54,7 +55,7 @@ sub variance {
 }
 
 sub legato {
-    MIDIUtil::set_chan_patch( $score, 1, $bassp );
+    MIDI::Util::set_chan_patch( $score, 1, $bassp );
     $score->Volume(60);
 
     $score->n( 'wn', $bass[ int rand @bass ] )

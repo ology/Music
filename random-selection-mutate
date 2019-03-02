@@ -2,8 +2,8 @@
 use strict;
 use warnings;
 
-use lib '.';
-use MIDIUtil;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
 use MIDI::Simple;
 use Music::AtonalUtil;
 
@@ -38,7 +38,7 @@ my %name = int2name(@notes);
 my @pitches = map { $name{$_} } @sample;
 print "@pitches\n";
 
-my $score = MIDIUtil::setup_midi( patch => 0 );
+my $score = MIDI::Util::setup_midi( patch => 0 );
 
 $score->n( 'qn', $_ ) for @pitches;
 

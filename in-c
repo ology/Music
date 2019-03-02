@@ -6,7 +6,8 @@ use warnings;
 # This is a Perl orchestration of Terry Riley's venerable composition, "In C."
 ##
 
-use MIDIUtil;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
 
 my @patches = @ARGV ? @ARGV : qw( 0 8 42 69 );
 die "No more than 15 patches allowed\n"
@@ -14,7 +15,7 @@ die "No more than 15 patches allowed\n"
 
 my $channel = 0;
 
-my $score = MIDIUtil::setup_midi( bpm => 120 );
+my $score = MIDI::Util::setup_midi( bpm => 120 );
 
 my @phrases;
 push @phrases, \&loop
@@ -30,7 +31,7 @@ sub rand4 {
 
 sub loop {
     $channel++ if $channel == 9;
-    MIDIUtil::set_chan_patch( $score, $channel++, shift(@patches) );
+    MIDI::Util::set_chan_patch( $score, $channel++, shift(@patches) );
 
     # 1
     for ( 1 .. rand4() ) {

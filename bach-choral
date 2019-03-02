@@ -5,7 +5,8 @@ use warnings;
 # Run bach-choral.R and divide-up the data file, before running this.
 # Then: perl % ~/Documents/bach-choral-000206b_.csv
 
-use MIDIUtil;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
 
 use Text::CSV;
 use Music::Chord::Note;
@@ -23,7 +24,7 @@ open my $fh, "<:encoding(utf8)", $file
 
 my $cn = Music::Chord::Note->new();
 
-my $score = MIDIUtil::setup_midi( patch => 5 );
+my $score = MIDI::Util::setup_midi( patch => 5 );
 
 my ( $name, $melody, $chords, $bassline );
 
