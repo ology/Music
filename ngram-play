@@ -2,8 +2,6 @@
 
 # Play the top repeated note phrases of a MIDI file.
 
-# This program has been superseded by https://metacpan.org/release/MIDI-Ngram
-
 use strict;
 use warnings;
 
