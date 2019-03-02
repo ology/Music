@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+# This program has been superseded by https://metacpan.org/release/Music-Intervals
+
 use Getopt::Long;
 use Math::Combinatorics;
 use Math::Factor::XS qw( prime_factors );
