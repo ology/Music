@@ -14,7 +14,7 @@ my $bpm     = shift || 120;
 my $t_scale = shift || 'dorian';
 my $b_scale = shift || 'pminor';
 
-my $score = MIDI::Util::setup_midi( bpm => $bpm );
+my $score = MIDI::Util::setup_score( bpm => $bpm );
 
 my $format = 'midinum';
 

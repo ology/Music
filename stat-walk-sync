@@ -23,7 +23,7 @@ my @phrases;
 my $data = retrieve($file);
 #use Data::Dumper::Concise;warn 'Data to process: ', Dumper$data;
 
-my $score = MIDI::Util::setup_midi( patch => $patch );
+my $score = MIDI::Util::setup_score( patch => $patch );
 
 for my $track ( keys %$data ) {
     if ( $initial == 0 ) {

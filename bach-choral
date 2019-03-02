@@ -24,7 +24,7 @@ open my $fh, "<:encoding(utf8)", $file
 
 my $cn = Music::Chord::Note->new();
 
-my $score = MIDI::Util::setup_midi( patch => 5 );
+my $score = MIDI::Util::setup_score( patch => 5 );
 
 my ( $name, $melody, $chords, $bassline );
 

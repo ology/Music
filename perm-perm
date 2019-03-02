@@ -24,7 +24,7 @@ my @bass_combos      = shuffle permute(@bass_notes);
 my @bass_dura_combos = shuffle permute(@bass_dura);
 my @bass_volu_combos = shuffle permute(@bass_volu);
 
-my $score = MIDI::Util::setup_midi(
+my $score = MIDI::Util::setup_score(
     lead_in => scalar(@treb_notes),
     patch   => 69,
 );

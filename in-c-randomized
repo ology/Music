@@ -35,7 +35,7 @@ my @patches = qw(
 my $channel = 0;
 
 # Setup the MIDI score
-my $score = MIDI::Util::setup_midi( bpm => 120 );
+my $score = MIDI::Util::setup_score( bpm => 120 );
 
 # Declare the available loops
 my @loops = (

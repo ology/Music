@@ -104,7 +104,7 @@ my %rules = (
 my $string = $rules{$rule}{axiom};
 
 # Prepare to create MIDI
-my $score = MIDI::Util::setup_midi( bpm => $bpm );
+my $score = MIDI::Util::setup_score( bpm => $bpm );
 
 # Create a note object for the given start note value
 my $note = Music::Note->new( $midi_note, $format );

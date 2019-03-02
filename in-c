@@ -15,7 +15,7 @@ die "No more than 15 patches allowed\n"
 
 my $channel = 0;
 
-my $score = MIDI::Util::setup_midi( bpm => 120 );
+my $score = MIDI::Util::setup_score( bpm => 120 );
 
 my @phrases;
 push @phrases, \&loop
