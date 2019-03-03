@@ -5,6 +5,7 @@ use warnings;
 # Write-up:
 # http://techn.ology.net/musical-random-walks-over-weighted-graphs
 
+use lib '/Users/gene/sandbox/Graph-Weighted/lib';
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
