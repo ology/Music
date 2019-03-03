@@ -38,9 +38,9 @@ sub treble {
 
 sub bass {
     MIDI::Util::set_chan_patch( $score, 1, 32 );
-    for my $n ( 0 .. $max - 1 ) {
+    for my $n ( 0 .. ($max / 4) - 1 ) {
         $bass[$n] = $bnotes[ voss( scalar(@bnotes), $n, \@bseed ) ];
-        $score->n( 'qn', $bass[$n] );
+        $score->n( 'wn', $bass[$n] );
     }
 }
 
