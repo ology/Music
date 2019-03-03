@@ -7,19 +7,18 @@ use warnings;
 
 my $max   = shift || 16;
 my @notes = @ARGV ? @ARGV : qw( C5 Ds5 F5 G5 As5 C6 );
-my $top   = @notes;
 
 my @seed = (
-    int( rand $top ),
-    int( rand $top ),
-    int( rand $top ),
-    int( rand $top ),
+    int rand @notes,
+    int rand @notes,
+    int rand @notes,
+    int rand @notes,
 );
 
 my @result;
 
 for my $n ( 0 .. $max ) {
-    $result[$n] = $notes[ voss( $top, $n, \@seed ) ];
+    $result[$n] = $notes[ voss( scalar(@notes), $n, \@seed ) ];
 }
 use Data::Dumper;print Dumper\@result;
 
