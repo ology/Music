@@ -1,0 +1,47 @@
+#!/usr/bin/env perl
+#
+# "Musimathics" pg. 358 - Voss's Method
+#
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+
+my $max = shift || 16;
+
+my @tnotes = qw( C5 Ds5 F5 G5 As5 C6 );
+my @bnotes = qw( C3 F3 G3 C4 );
+
+my $score = MIDI::Util::setup_score();
+
+my ( @treble, @bass );
+
+my @tseed = map { int rand @tnotes } 1 .. 4;
+my @bseed = map { int rand @bnotes } 1 .. 4;
+
+for my $n ( 0 .. $max ) {
+    $treble[$n] = $tnotes[ voss( scalar(@tnotes), $n, \@tseed ) ];
+    $bass[$n]   = $bnotes[ voss( scalar(@bnotes), $n, \@bseed ) ];
+
+    $score->n( 'qn', $treble[$n], $bass[$n] );
+}
+use Data::Dumper;print Dumper\@treble;
+use Data::Dumper;print Dumper\@bass;
+
+$score->write_score("$0.mid");
+
+sub voss {
+    my ( $top, $i, $list ) = @_;
+
+    my $sum = 0;
+
+    for my $k ( 0 .. @$list - 1 ) {
+        if ( ( $i % ( 2 ** $k ) ) == 0 ) {
+            $list->[$k] = int( rand $top );
+        }
+        $sum += $list->[$k];
+    }
+
+    return $sum % $top;
+}
