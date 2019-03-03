@@ -1,0 +1,39 @@
+#!/usr/bin/env perl
+#
+# "Musimathics" pg. 358 - Voss's Method
+#
+use strict;
+use warnings;
+
+my $max   = shift || 16;
+my @notes = @ARGV ? @ARGV : qw( C5 Ds5 F5 G5 As5 C6 );
+my $top   = @notes;
+
+my @seed = (
+    int( rand $top ),
+    int( rand $top ),
+    int( rand $top ),
+    int( rand $top ),
+);
+
+my @result;
+
+for my $n ( 0 .. $max ) {
+    $result[$n] = $notes[ voss( $top, $n, \@seed ) ];
+}
+use Data::Dumper;print Dumper\@result;
+
+sub voss {
+    my ( $top, $i, $list ) = @_;
+
+    my $sum = 0;
+
+    for my $k ( 0 .. @$list - 1 ) {
+        if ( $i % (2 ** $k) == 0 ) {
+            $list->[$k] = int( rand $top );
+        }
+        $sum += $list->[$k];
+    }
+
+    return $sum % $top;
+}
