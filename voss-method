@@ -8,12 +8,7 @@ use warnings;
 my $max   = shift || 16;
 my @notes = @ARGV ? @ARGV : qw( C5 Ds5 F5 G5 As5 C6 );
 
-my @seed = (
-    int rand @notes,
-    int rand @notes,
-    int rand @notes,
-    int rand @notes,
-);
+my @seed = map { int rand @notes } 1 .. 4;
 
 my @result;
 
