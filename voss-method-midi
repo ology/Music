@@ -16,15 +16,13 @@ my @bnotes = qw( C3 F3 G3 C4 );
 
 my $score = MIDI::Util::setup_score();
 
-my @tseed = map { int rand @tnotes } 1 .. 4;
-my @bseed = map { int rand @bnotes } 1 .. 4;
-
 $score->synch( \&treble, \&bass );
 
 $score->write_score("$0.mid");
 
 sub treble {
     MIDI::Util::set_chan_patch( $score, 0, 0 );
+    my @tseed = map { int rand @tnotes } 1 .. 4;
     for my $n ( 0 .. $max - 1 ) {
         my $note = $tnotes[ voss( scalar(@tnotes), $n, \@tseed ) ];
         $score->n( 'qn', $note );
@@ -33,6 +31,7 @@ sub treble {
 
 sub bass {
     MIDI::Util::set_chan_patch( $score, 1, 32 );
+    my @bseed = map { int rand @bnotes } 1 .. 4;
     for my $n ( 0 .. ($max / 2) - 1 ) {
         my $note = $bnotes[ voss( scalar(@bnotes), $n, \@bseed ) ];
         $score->n( 'hn', $note );
