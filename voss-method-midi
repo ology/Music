@@ -7,6 +7,7 @@ use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
+use MIDI::Simple;
 
 my $max = shift || 16;
 
@@ -20,16 +21,28 @@ my ( @treble, @bass );
 my @tseed = map { int rand @tnotes } 1 .. 4;
 my @bseed = map { int rand @bnotes } 1 .. 4;
 
-for my $n ( 0 .. $max ) {
-    $treble[$n] = $tnotes[ voss( scalar(@tnotes), $n, \@tseed ) ];
-    $bass[$n]   = $bnotes[ voss( scalar(@bnotes), $n, \@bseed ) ];
+$score->synch( \&treble, \&bass );
 
-    $score->n( 'qn', $treble[$n], $bass[$n] );
-}
 use Data::Dumper;print Dumper\@treble;
 use Data::Dumper;print Dumper\@bass;
 
 $score->write_score("$0.mid");
+
+sub treble {
+    MIDI::Util::set_chan_patch( $score, 0, 0 );
+    for my $n ( 0 .. $max ) {
+        $treble[$n] = $tnotes[ voss( scalar(@tnotes), $n, \@tseed ) ];
+        $score->n( 'qn', $treble[$n] );
+    }
+}
+
+sub bass {
+    MIDI::Util::set_chan_patch( $score, 1, 32 );
+    for my $n ( 0 .. $max ) {
+        $bass[$n] = $bnotes[ voss( scalar(@bnotes), $n, \@bseed ) ];
+        $score->n( 'qn', $bass[$n] );
+    }
+}
 
 sub voss {
     my ( $top, $i, $list ) = @_;
