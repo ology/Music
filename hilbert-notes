@@ -38,14 +38,14 @@ my $b_msn = Music::ScaleNote->new(
 #    verbose     => 1,
 );
 
-my $count = 0;
-
 my $hilbert = Math::Curve::Hilbert->new(
     direction => 'up',
     max       => 8,
     clockwise => 1,
     step      => 4,
 );
+
+my $count = 0;
 
 # Start the Hilbert curve
 my ( $x1, $y1 ) = $hilbert->CoordinatesFromPoint( $count++ );
