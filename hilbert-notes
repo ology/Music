@@ -58,32 +58,30 @@ while ( ( $hilbert->CoordinatesFromPoint($count) )[0] ) {
     my ( $x2, $y2 ) = $hilbert->CoordinatesFromPoint( $count++ );
 
     # Inc/Decrement the treble note
+    my $offset = 0;
     if ( $x2 - $x1 > 0 ) {
-        $treb = $t_msn->get_offset(
-            note_name => $treb,
-            offset    => 1,
-        )->format($format);
+        $offset = 1;
     }
     elsif ( $x2 - $x1 < 0 ) {
-        $treb = $t_msn->get_offset(
-            note_name => $treb,
-            offset    => -1,
-        )->format($format);
+        $offset = -1;
     }
+    $treb = $t_msn->get_offset(
+        note_name => $treb,
+        offset    => $offset,
+    )->format($format);
 
     # Inc/Decrement the bass note
+    $offset = 0;
     if ( $y2 - $y1 > 0 ) {
-        $bass = $b_msn->get_offset(
-            note_name => $bass,
-            offset    => 1,
-        )->format($format);
+        $offset = 1;
     }
     elsif ( $y2 - $y1 < 0 ) {
-        $bass = $b_msn->get_offset(
-            note_name => $bass,
-            offset    => -1,
-        )->format($format);
+        $offset = -1;
     }
+    $bass = $b_msn->get_offset(
+        note_name => $bass,
+        offset    => $offset,
+    )->format($format);
 
     # Increment the line segment
     ( $x1, $y1 ) = ( $x2, $y2 );
