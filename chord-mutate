@@ -15,7 +15,6 @@ my @bass  = qw( C3 G3 As3 C4 );
 my $trebp = shift || 0; # Treble patch
 my $bassp = shift || 42; # Bass patch
 
-#my @duras = qw( en qn qn );
 my @duras = qw( en qn qn );
 
 my $initial = $chord[0];
