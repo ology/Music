@@ -15,6 +15,9 @@ my @bass  = qw( C3 G3 As3 C4 );
 my $trebp = shift || 0; # Treble patch
 my $bassp = shift || 42; # Bass patch
 
+#my @duras = qw( en qn qn );
+my @duras = qw( en qn qn );
+
 my $initial = $chord[0];
 
 my $score = MIDI::Util::setup_score();
@@ -38,10 +41,14 @@ $score->write_score("$0.mid");
 
 sub top {
     MIDI::Util::set_chan_patch( $score, 0, $trebp );
+
+    $score->r('hn');
+
     for my $n ( 1 .. $max ) {
-        $score->n( 'qn', @chord );
+        $score->n( $duras[ int rand @duras ], @chord );
         @chord = mutate( $msn, @chord );
     }
+
     $score->n( 'qn', @chord );
     $score->n( 'en', @chord );
 }
@@ -72,8 +79,11 @@ sub mutate {
 
 sub bottom {
     MIDI::Util::set_chan_patch( $score, 1, $bassp );
+    $score->Volume(90);
+
     for my $n ( 1 .. $max / 4 ) {
         $score->n( 'wn', $bass[ int rand @bass ] );
     }
+
     $score->n( 'wn', $bass[0] );
 }
