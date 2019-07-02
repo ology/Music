@@ -38,13 +38,11 @@ sub top {
 
     $score->r('hn');
 
-    for my $n ( 1 .. $max ) {
+    for my $n ( 1 .. $max + 2 ) {
         $score->n( $duras[ int rand @duras ], @chord );
         @chord = mutate( $msn, @chord );
     }
 
-    $score->n( 'qn', @chord );
-    $score->n( 'en', @chord );
     $score->n( 'hn', @chord );
 }
 
