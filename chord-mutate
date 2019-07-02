@@ -62,6 +62,7 @@ sub mutate {
             );
             $n = $note->format('ISO');
             $n =~ s/#/s/;
+            $n =~ s/b/f/;
         }
 
         push @mutated, $n;
