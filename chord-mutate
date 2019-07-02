@@ -1,0 +1,59 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
+use Music::ScaleNote;
+
+my $max = shift || 16;
+
+my @chord = qw( C4 Ds4 C5 );
+
+my $initial = $chord[0];
+
+my $score = MIDI::Util::setup_score();
+
+my $msn = Music::ScaleNote->new(
+    scale_note  => 'C',
+    scale_name  => 'pminor',
+    note_format => 'ISO',
+#    verbose     => 1,
+);
+
+for my $n ( 1 .. $max ) {
+    $score->n( 'qn', @chord );
+    @chord = mutate( $msn, @chord );
+}
+$score->n( 'qn', @chord );
+$score->n( 'en', @chord );
+$score->r('en');
+$score->n( 'wn', $initial );
+
+$score->write_score("$0.mid");
+
+sub mutate {
+    my ( $msn, @chord ) = @_;
+
+    my $roll1 = $chord[ int rand @chord ];
+    my $roll2 = $chord[ int rand @chord ];
+
+    my @mutated;
+
+    for my $n ( @chord ) {
+        if ( $n eq $roll1 || $n eq $roll2 ) {
+            my $note = $msn->get_offset(
+                note_name => $n,
+                offset    => int rand 2 ? 1 : -1,
+            );
+            $n = $note->format('ISO');
+            $n =~ s/#/s/;
+        }
+
+        push @mutated, $n;
+    }
+warn(__PACKAGE__,' ',__LINE__," MARK: @mutated",,"\n");
+
+    return @mutated;
+}
