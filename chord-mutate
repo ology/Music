@@ -10,6 +10,10 @@ use Music::ScaleNote;
 my $max = shift || 16;
 
 my @chord = qw( C4 Ds4 C5 );
+my @bass  = qw( C3 G3 As3 C4 );
+
+my $trebp = shift || 0; # Treble patch
+my $bassp = shift || 42; # Bass patch
 
 my $initial = $chord[0];
 
@@ -22,16 +26,25 @@ my $msn = Music::ScaleNote->new(
 #    verbose     => 1,
 );
 
-for my $n ( 1 .. $max ) {
-    $score->n( 'qn', @chord );
-    @chord = mutate( $msn, @chord );
-}
-$score->n( 'qn', @chord );
-$score->n( 'en', @chord );
+$score->synch(
+    \&top,
+    \&bottom,
+);
+
 $score->r('en');
 $score->n( 'wn', $initial );
 
 $score->write_score("$0.mid");
+
+sub top {
+    MIDI::Util::set_chan_patch( $score, 0, $trebp );
+    for my $n ( 1 .. $max ) {
+        $score->n( 'qn', @chord );
+        @chord = mutate( $msn, @chord );
+    }
+    $score->n( 'qn', @chord );
+    $score->n( 'en', @chord );
+}
 
 sub mutate {
     my ( $msn, @chord ) = @_;
@@ -53,7 +66,14 @@ sub mutate {
 
         push @mutated, $n;
     }
-warn(__PACKAGE__,' ',__LINE__," MARK: @mutated",,"\n");
 
     return @mutated;
+}
+
+sub bottom {
+    MIDI::Util::set_chan_patch( $score, 1, $bassp );
+    for my $n ( 1 .. $max / 4 ) {
+        $score->n( 'wn', $bass[ int rand @bass ] );
+    }
+    $score->n( 'wn', $bass[0] );
 }
