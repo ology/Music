@@ -45,6 +45,7 @@ sub top {
 
     $score->n( 'qn', @chord );
     $score->n( 'en', @chord );
+    $score->n( 'hn', @chord );
 }
 
 sub mutate {
