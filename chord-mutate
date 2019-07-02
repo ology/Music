@@ -17,8 +17,6 @@ my $bassp = shift || 42; # Bass patch
 
 my @duras = qw( en qn qn );
 
-my $initial = $chord[0];
-
 my $score = MIDI::Util::setup_score();
 
 my $msn = Music::ScaleNote->new(
@@ -32,9 +30,6 @@ $score->synch(
     \&top,
     \&bottom,
 );
-
-$score->r('en');
-$score->n( 'wn', $initial );
 
 $score->write_score("$0.mid");
 
