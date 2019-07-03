@@ -7,7 +7,6 @@ use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
-use MIDI::Simple;
 
 my $max = shift || 16;
 
