@@ -1,0 +1,35 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use Math::BaseConvert;
+use Math::Fibonacci 'series';
+
+my $limit  = shift || 16;
+my @scale  = @ARGV ? @ARGV : qw( C4 Ds4 F4 G4 As4 C5 );
+my $modulo = @scale;
+my $notes  = join '|', @scale;
+
+Math::BaseConvert::dig( \@scale );
+
+my @series = series($limit);
+
+my $score = MIDI::Util::setup_score( patch => 42 );
+
+for my $n ( @series ) {
+    my $x = cnv( $n, 10, $modulo );
+    my @phrase = $x =~ /($notes)/g;
+
+    my $m = $n % $modulo;
+    my $tens_place = $scale[$m];
+
+    printf "n=%d, x=%s (%d), m=%d, note=%s\n", $n, $x, scalar(@phrase), $m, $tens_place;
+
+    for my $i ( @phrase ) {
+        $score->n($i);
+    }
+}
+
+$score->write_score( $0 . '.mid' );
