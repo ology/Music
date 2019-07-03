@@ -4,6 +4,7 @@ use warnings;
 
 # To run this, first produce a freq file with note-transition-sync.
 
+use lib '/Users/gene/sandbox/Graph-Weighted/lib';
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Simple;
@@ -14,7 +15,7 @@ use Storable;
 my $file    = shift || die "Usage: perl $0 proportional-frequencies.dat [0|1]";
 my $n       = shift || 4; # Number of notes to play
 my $initial = shift // 1; # Initial graph node: 0=random, 1=lowest note
-my $patch   = shift || 42;
+my $patch   = shift // 42;
 
 my $channel = 0;
 
