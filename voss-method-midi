@@ -23,7 +23,7 @@ sub treble {
     MIDI::Util::set_chan_patch( $score, 0, 0 );
     my @tseed = map { int rand @tnotes } 1 .. 4;
     for my $n ( 0 .. $max - 1 ) {
-        my $note = $tnotes[ voss( scalar(@tnotes), $n, \@tseed ) ];
+        my $note = $tnotes[ voss( $n, \@tseed ) ];
         $score->n( 'qn', $note );
     }
 }
@@ -32,22 +32,22 @@ sub bass {
     MIDI::Util::set_chan_patch( $score, 1, 32 );
     my @bseed = map { int rand @bnotes } 1 .. 4;
     for my $n ( 0 .. ($max / 2) - 1 ) {
-        my $note = $bnotes[ voss( scalar(@bnotes), $n, \@bseed ) ];
+        my $note = $bnotes[ voss( $n, \@bseed ) ];
         $score->n( 'hn', $note );
     }
 }
 
 sub voss {
-    my ( $top, $i, $list ) = @_;
+    my ( $i, $list ) = @_;
 
     my $sum = 0;
 
     for my $k ( 0 .. @$list - 1 ) {
         if ( ( $i % ( 2 ** $k ) ) == 0 ) {
-            $list->[$k] = int( rand $top );
+            $list->[$k] = int rand 2;
         }
         $sum += $list->[$k];
     }
 
-    return $sum % $top;
+    return $sum;
 }
