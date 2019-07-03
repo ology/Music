@@ -13,21 +13,21 @@ my @seed = map { int rand @notes } 1 .. 4;
 my @result;
 
 for my $n ( 0 .. $max ) {
-    $result[$n] = $notes[ voss( scalar(@notes), $n, \@seed ) ];
+    $result[$n] = $notes[ voss( $n, \@seed ) ];
 }
 use Data::Dumper;print Dumper\@result;
 
 sub voss {
-    my ( $top, $i, $list ) = @_;
+    my ( $i, $list ) = @_;
 
     my $sum = 0;
 
     for my $k ( 0 .. @$list - 1 ) {
         if ( $i % (2 ** $k) == 0 ) {
-            $list->[$k] = int rand $top;
+            $list->[$k] = int rand 2;
         }
         $sum += $list->[$k];
     }
 
-    return $sum % $top;
+    return $sum;
 }
