@@ -35,7 +35,7 @@ my @sections = (
     [ $I, $Vsus4, $vi, $I_ ],
 );
 
-my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 24 );
+my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 20 );
 
 my @phrases;
 
