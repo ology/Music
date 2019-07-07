@@ -1,0 +1,72 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+
+my $dquater = 'dqn';
+my $half    = 'hn';
+my $whole   = 'wn';
+
+my $note1 = 'F4';
+
+my $I      = [qw/ C4 E4 G4 /];
+my $I_     = [qw/ E4 G4 C5 /];
+my $I5     = [qw/ C4 G4 /];
+my $Isus2  = [qw/ C4 D4 G4 /];  # No E
+my $Isus4  = [qw/ C4 F4 G4 /];  # No E
+my $Isus4_ = [qw/ E4 F4 G4 C5 /];
+my $Isus4n = [qw/ C4 F4 G4 /];  # No E
+my $IIM6   = [qw/ D4 Fs4 A4 B4 /];
+my $IV     = [qw/ C4 F4 A4 /];
+my $IVsus2 = [qw/ F4 G4 /];     # No C, No A
+my $IVsus4 = [qw/ F4 A4 As4 /]; # No C
+my $V      = [qw/ D4 G4 B4 /];
+my $Vsus4  = [qw/ D4 A4 B4 /];  # No III
+my $vi     = [qw/ E4 A4 C5 /];
+
+my @sections = (
+    [ $Isus4, $I, $Isus2, $I ],
+    [ $IV, $IVsus4, $IV, $IVsus2 ],
+    [ $I, $Isus4n, $I5, $IIM6 ],
+    [ $Isus4_, $I_, $Isus2, $I5 ],
+    [ $I, $V, $vi, $IV ],
+    [ $I, $Vsus4, $vi, $I_ ],
+);
+
+my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 24 );
+
+my @phrases;
+
+push @phrases, \&phrase1;
+
+$score->synch(@phrases);
+
+$score->write_score("$0.mid");
+
+sub phrase1 {
+    MIDI::Util::set_chan_patch( $score, 0, 0 );
+
+    $score->n( $half, $note1 );
+
+    for ( 1 .. 2 ) {
+        _phrase( $sections[0] );
+    }
+
+    _phrase( $sections[1] );
+
+    $score->n( $half, $note1 );
+
+    _phrase( $sections[2] );
+
+    _phrase( $sections[3] );
+}
+
+sub _phrase {
+    my ($section) = @_;
+    for my $chord ( @$section ) {
+        $score->n( $whole, @$chord );
+        $score->r($dquater);
+    }
+}
