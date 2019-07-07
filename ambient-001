@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# http://music.ology.net/excursions-into-ambient-ecosystems/
+
 use strict;
 use warnings;
 
