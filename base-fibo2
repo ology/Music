@@ -7,7 +7,7 @@ use MIDI::Util;
 use Math::BaseConvert;
 use Math::Fibonacci 'series';
 
-my $limit  = shift || 16;  # Number of Fibonacci numbers to use
+my $limit  = shift || 16;  # Number of Fibonaccis to use
 my @scale  = @ARGV ? @ARGV : qw( C4 Ds4 F4 G4 As4 C5 ); # Notes to choose from
 my $modulo = @scale;  # Size of the scale being used
 my $notes  = join '|', @scale;  # "OR regular expression" of alternating notes
