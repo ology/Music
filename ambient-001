@@ -22,7 +22,7 @@ my $Isus4  = [qw/ C4 F4 G4 /];  # No E
 my $Isus4_ = [qw/ E4 F4 G4 C5 /];
 my $Isus4n = [qw/ C4 F4 G4 /];  # No E
 my $IIM6   = [qw/ D4 Fs4 A4 B4 /];
-my $IV     = [qw/ C4 F4 A4 /];
+my $IV_    = [qw/ C4 F4 A4 /];
 my $IVsus2 = [qw/ F4 G4 /];     # No C, No A
 my $IVsus4 = [qw/ F4 A4 As4 /]; # No C
 my $V      = [qw/ D4 G4 B4 /];
@@ -31,10 +31,10 @@ my $vi     = [qw/ E4 A4 C5 /];
 
 my @sections = (
     [ $Isus4, $I, $Isus2, $I ],
-    [ $IV, $IVsus4, $IV, $IVsus2 ],
+    [ $IV_, $IVsus4, $IV_, $IVsus2 ],
     [ $I, $Isus4n, $I5, $IIM6 ],
     [ $Isus4_, $I_, $Isus2, $I5 ],
-    [ $I, $V, $vi, $IV ],
+    [ $I, $V, $vi, $IV_ ],
     [ $I, $Vsus4, $vi, $I_ ],
 );
 
