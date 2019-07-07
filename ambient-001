@@ -34,8 +34,8 @@ my @sections = (
     [ $IV_, $IVsus4, $IV_, $IVsus2 ],
     [ $I, $Isus4n, $I5, $IIM6 ],
     [ $Isus4_, $I_, $Isus2, $I5 ],
-    [ $I, $V, $vi, $IV_ ],
-    [ $I, $Vsus4, $vi, $I_ ],
+#    [ $I, $V, $vi, $IV_ ],
+#    [ $I, $Vsus4, $vi, $I_ ],
 );
 
 my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 20 );
