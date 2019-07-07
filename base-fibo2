@@ -7,28 +7,30 @@ use MIDI::Util;
 use Math::BaseConvert;
 use Math::Fibonacci 'series';
 
-my $limit  = shift || 16;
-my @scale  = @ARGV ? @ARGV : qw( C4 Ds4 F4 G4 As4 C5 );
-my $modulo = @scale;
-my $notes  = join '|', @scale;
+my $limit  = shift || 16;  # Number of notes to play
+my @scale  = @ARGV ? @ARGV : qw( C4 Ds4 F4 G4 As4 C5 ); # Notes to choose from
+my $modulo = @scale;  # Size of the scale being used
+my $notes  = join '|', @scale;  # "OR regular expression" of alternating notes
 
-Math::BaseConvert::dig( \@scale );
+Math::BaseConvert::dig( \@scale ); # Set the base digits to the scale
 
-my @series = series($limit);
+my @series = series($limit);  # Get the Fibonacci numbers
 
 my $score = MIDI::Util::setup_score( patch => 42 );
 
+# For each Fibonacci number...
 for my $n ( @series ) {
-    my $x = cnv( $n, 10, $modulo );
-    my @phrase = $x =~ /($notes)/g;
+    my $x = cnv( $n, 10, $modulo );  # Base-convert it to a note string
+    my @phrase = $x =~ /($notes)/g;  # Separate the note string into an array
 
+    # Output the progress:
     my $m = $n % $modulo;
     my $tens_place = $scale[$m];
-
     printf "n=%d, x=%s (%d), m=%d, note=%s\n", $n, $x, scalar(@phrase), $m, $tens_place;
+    #use Data::Dumper; warn Dumper \@phrase;
 
     for my $i ( @phrase ) {
-        $score->n($i);
+        $score->n($i);  # Add each note of the phrase to the MIDI score
     }
 }
 
