@@ -56,7 +56,7 @@ sub top {
         for ( @notes ) {
             $_ =~ s/\d//g;
         }
-        warn "$i. Chord: @notes = " . chordname(@notes), "\n";
+        warn "$i. Chord: @notes = ", chordname(@notes), "\n";
 
         # Update the bass notes with the bottom-most note of the chord
         push @bnotes, $notes[0] . 3;
