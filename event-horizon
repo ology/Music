@@ -84,7 +84,9 @@ sub mutate {
     my @mutated;
 
     # For each note of the chord...
-    for my $n ( @chord ) {
+    for my $n0 ( @chord ) {
+        my $n = $n0;
+
         # If it is one of the two changes...
         if ( $n eq $roll1 || $n eq $roll2 ) {
             ( my $octave = $n ) =~ s/^.+(-?\d+)$/$1/;
@@ -94,7 +96,7 @@ sub mutate {
             # Get a new note within the lower and upper bounds
             while ( !$note || $octave < $lowerb || $octave > $upperb ) {
                 $note = $msn->get_offset(
-                    note_name => $n,
+                    note_name => $n0,
                     offset    => $octave < $lowerb ? 1 : $octave > $upperb ? -1 : int rand 2 ? 1 : -1,
                 );
                 $n = $note->format('ISO');
