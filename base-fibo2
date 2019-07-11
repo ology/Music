@@ -27,7 +27,7 @@ for my $n ( @series ) {
     my @phrase = $x =~ /($notes)/g;  # Separate the note string into an array
 
     # Output the progress:
-    printf "n=%d => %s (%d)\n", $n, join( ' ', @phrase ), scalar(@phrase);
+    printf "%d => %s (%d)\n", $n, join( ' ', @phrase ), scalar(@phrase);
 
     for my $i ( @phrase ) {
         $score->n($i);  # Add each note of the phrase to the MIDI score
