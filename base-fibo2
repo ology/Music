@@ -27,9 +27,7 @@ for my $n ( @series ) {
     my @phrase = $x =~ /($notes)/g;  # Separate the note string into an array
 
     # Output the progress:
-    my $m = $n % $modulo;
-    printf "n=%d, x=%s (%d), m=%d\n", $n, $x, scalar(@phrase), $m;
-    #use Data::Dumper; warn Dumper \@phrase;
+    printf "n=%d => %s (%d)\n", $n, join( ' ', @phrase ), scalar(@phrase);
 
     for my $i ( @phrase ) {
         $score->n($i);  # Add each note of the phrase to the MIDI score
