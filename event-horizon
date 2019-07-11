@@ -22,6 +22,7 @@ my $dwhole = 'dwn';
 
 my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 20 );
 
+# Instantiate a scale-note manipulator
 my $msn = Music::ScaleNote->new(
     scale_note  => 'C',
     scale_name  => 'pmajor',
@@ -29,7 +30,7 @@ my $msn = Music::ScaleNote->new(
 #    verbose     => 1,
 );
 
-my $i = 0;
+my $i = 0; # Chord counter
 
 $score->synch(
     \&top,
@@ -46,19 +47,24 @@ sub top {
     for ( 1 .. $max ) {
         $i++;
 
+        # Return to the initial chord
 #        @chord = @tnotes unless $i % 4;
 
+        # Find the likely chord name
         my @notes = @chord;
         for ( @notes ) {
             $_ =~ s/\d//g;
         }
         warn "$i. Chord: @notes = " . chordname(@notes), "\n";
 
+        # Update the bass notes with the bottom-most note of the chord
         push @bnotes, $notes[0] . 3;
 
+        # Add the note and a rest to the score
         $score->n( $whole, @chord );
         $score->r($half);
 
+        # Mutate the chord!
         @chord = mutate( $msn, 4, 5, @chord );
     }
 }
@@ -66,28 +72,33 @@ sub top {
 sub mutate {
     my ( $msn, $lowerb, $upperb, @chord ) = @_;
 
+    # Get two of the chord notes to change
     my $roll1 = $chord[ int rand @chord ];
     my $roll2 = $chord[ int rand @chord ];
 
     my @mutated;
 
+    # For each note of the chord...
     for my $n ( @chord ) {
+        # If it is one of the two changes...
         if ( $n eq $roll1 || $n eq $roll2 ) {
             ( my $octave = $n ) =~ s/^.+(-?\d+)$/$1/;
 
             my $note;
 
+            # Get a new note within the lower and upper bounds
             while ( !$note || $octave < $lowerb || $octave > $upperb ) {
                 $note = $msn->get_offset(
                     note_name => $n,
                     offset    => $octave < $lowerb ? 1 : $octave > $upperb ? -1 : int rand 2 ? 1 : -1,
                 );
-
                 $n = $note->format('ISO');
 
+                # Get the octave to determine if we need to loop again
                 ( $octave = $n ) =~ s/^.+(-?\d+)$/$1/;
             }
 
+            # Convert the ISO note format to a MIDI-note-string
             $n =~ s/#/s/;
             $n =~ s/b/f/;
         }
@@ -102,6 +113,7 @@ sub bottom {
     MIDI::Util::set_chan_patch( $score, 1, $bassp );
 #    $score->Volume(90);
 
+    # Add each bass note to the score
     for my $note ( @bnotes ) {
         $score->n( $whole, $note );
         $score->r($half);
