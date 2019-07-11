@@ -11,7 +11,7 @@ use Music::Chord::Namer qw/ chordname /;
 my $max = shift || 4;
 
 my @tnotes = qw( C4 E4 G4 );
-my @bnotes = qw( C3 C3 G3 );
+my @bnotes;
 
 my $trebp = 0; # Treble patch
 my $bassp = 42; # Bass patch
@@ -33,7 +33,7 @@ my $i = 0;
 
 $score->synch(
     \&top,
-#    \&bottom,
+    \&bottom,
 );
 
 $score->write_score("$0.mid");
@@ -53,6 +53,8 @@ sub top {
             $_ =~ s/\d//g;
         }
         warn "$i. Chord: @notes = " . chordname(@notes), "\n";
+
+        push @bnotes, $notes[0] . 3;
 
         $score->n( $whole, @chord );
         $score->r($half);
@@ -100,8 +102,8 @@ sub bottom {
     MIDI::Util::set_chan_patch( $score, 1, $bassp );
 #    $score->Volume(90);
 
-    for my $n ( 1 .. $max ) {
-        $score->n( $whole, $bnotes[ int rand @bnotes ] );
+    for my $note ( @bnotes ) {
+        $score->n( $whole, $note );
         $score->r($half);
     }
 }
