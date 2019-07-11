@@ -11,6 +11,7 @@ use Music::Chord::Namer qw/ chordname /;
 my $max = shift || 4;
 
 my @tnotes = qw( C4 E4 G4 );
+my $bnote  = 'C3';
 my @bnotes;
 
 my $trebp = 0; # Treble patch
@@ -67,6 +68,10 @@ sub top {
         # Mutate the chord!
         @chord = mutate( $msn, 4, 5, @chord );
     }
+
+    # Add the initial chord to the end of the score
+    $score->n( $whole, @tnotes );
+    push @bnotes, $bnote;
 }
 
 sub mutate {
