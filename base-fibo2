@@ -28,8 +28,7 @@ for my $n ( @series ) {
 
     # Output the progress:
     my $m = $n % $modulo;
-    my $tens_place = $scale[$m];
-    printf "n=%d, x=%s (%d), m=%d, note=%s\n", $n, $x, scalar(@phrase), $m, $tens_place;
+    printf "n=%d, x=%s (%d), m=%d\n", $n, $x, scalar(@phrase), $m;
     #use Data::Dumper; warn Dumper \@phrase;
 
     for my $i ( @phrase ) {
