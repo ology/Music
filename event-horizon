@@ -17,7 +17,7 @@ my @tnotes = qw( C4 E4 G4 );
 my $bnote  = 'C3';
 my @bnotes;
 
-my $trebp = 0; # Treble patch
+my $trebp = 0;  # Treble patch
 my $bassp = 42; # Bass patch
 
 my $half  = 'hn';
