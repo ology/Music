@@ -29,7 +29,7 @@ my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 20 );
 my $msn = Music::ScaleNote->new(
     scale_note  => 'C',
     scale_name  => 'pmajor',
-    note_format => 'ISO',
+    note_format => 'midi',
 #    verbose     => 1,
 );
 
@@ -95,15 +95,11 @@ sub mutate {
                     note_name => $n0,
                     offset    => $octave < $lowerb ? 1 : $octave > $upperb ? -1 : int rand 2 ? 1 : -1,
                 );
-                $n = $note->format('ISO');
+                $n = $note->format('midi');
 
                 # Get the octave to determine if we need to loop again
                 ( $octave = $n ) =~ s/^.+(-?\d+)$/$1/;
             }
-
-            # Convert the ISO note format to a MIDI-note-string
-            $n =~ s/#/s/;
-            $n =~ s/b/f/;
         }
 
         push @mutated, $n;
