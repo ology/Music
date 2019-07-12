@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# This script has been superceded by the MIDI::Util module on CPAN.
+
 use strict;
 use warnings;
 
