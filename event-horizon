@@ -55,9 +55,7 @@ sub top {
 
         # Find the likely chord name
         my @notes = @chord;
-        for ( @notes ) {
-            $_ =~ s/\d//g;
-        }
+        $_ =~ s/\d//g for @notes;
         warn "$i. Chord: @notes = ", scalar( chordname(@notes) ), "\n";
 
         # Update the bass notes with the bottom-most note of the chord
