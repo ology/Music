@@ -33,8 +33,6 @@ my $msn = Music::ScaleNote->new(
 #    verbose     => 1,
 );
 
-my $i = 0; # Chord counter
-
 $score->synch(
     \&top,
     \&bottom,
@@ -47,9 +45,7 @@ sub top {
 
     my @chord = @tnotes;
 
-    for ( 1 .. $max ) {
-        $i++;
-
+    for my $i ( 1 .. $max ) {
         # Return to the initial chord
 #        @chord = @tnotes unless $i % 4;
 
