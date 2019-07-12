@@ -13,8 +13,8 @@ use Music::Chord::Namer qw/ chordname /;
 
 my $max = shift || 4;
 
-my @tnotes = qw( C4 E4 G4 );
-my $bnote  = 'C3';
+my @tnotes = qw( C4 E4 G4 ); # Initial and final chord
+my $bnote  = 'C3'; # Final bass note
 my @bnotes;
 
 my $trebp = 0;  # Treble patch
