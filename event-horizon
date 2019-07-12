@@ -20,8 +20,8 @@ my @bnotes;
 my $trebp = 0; # Treble patch
 my $bassp = 42; # Bass patch
 
-my $half   = 'hn';
-my $whole  = 'wn';
+my $half  = 'hn';
+my $whole = 'wn';
 
 my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 20 );
 
