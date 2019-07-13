@@ -34,14 +34,15 @@ $score->write_score( "$0.mid" );
 sub variance {
     MIDI::Util::set_chan_patch( $score, 0, $trebp );
 
-    my $count = 1;
+    my $count = 0;
 
     for my $n ( 1 .. @treb ) {
         my @items = variations( \@treb, $n );
 
         for my $i (@items) {
-            print "$count. @$i\n";
             $count++;
+
+            print "$count. @$i\n";
 
             for my $note ( @$i ) {
                 if ( $note eq '0' ) {
