@@ -16,6 +16,9 @@ my $bassp = shift || 42; # Bass patch
 my @treb = split / /, $treb;
 my @bass = split / /, $bass;
 
+my $quarter = 'qn';
+my $whole   = 'wn';
+
 my $size = 0; # Number of score events
 
 my $score = MIDI::Util::setup_score( bpm => $bpm );
@@ -25,7 +28,8 @@ $score->synch(
     \&legato,
 );
 
-$score->n( 'wn', $bass[0] );
+$score->n( $whole, $bass[0] );
+
 $score->write_score( "$0.mid" );
 
 sub variance {
@@ -42,10 +46,10 @@ sub variance {
 
             for my $note ( @$i ) {
                 if ( $note eq '0' ) {
-                    $score->r('qn');
+                    $score->r($quarter);
                 }
                 else {
-                    $score->n( 'qn', $note );
+                    $score->n( $quarter, $note );
                 }
 
                 $size++;
@@ -58,6 +62,6 @@ sub legato {
     MIDI::Util::set_chan_patch( $score, 1, $bassp );
     $score->Volume(60);
 
-    $score->n( 'wn', $bass[ int rand @bass ] )
+    $score->n( $whole, $bass[ int rand @bass ] )
         for 1 .. $size / 4;
 }
