@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use Algorithm::Combinatorics qw( variations );
-use List::Util qw( shuffle );
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
  
