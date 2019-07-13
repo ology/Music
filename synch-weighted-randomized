@@ -4,10 +4,13 @@ use warnings;
 
 use Getopt::Long;
 use Pod::Usage;
+use lib '/Users/gene/sandbox/Graph-Weighted/lib';
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
+use lib '/Users/gene/sandbox/Math-Partition-Rand/lib';
 use Math::Partition::Rand;
 use MIDI::Simple;
+use lib '/Users/gene/sandbox/MIDI-Simple-Drummer/lib';
 use MIDI::Simple::Drummer;
 use Music::Tempo;
 
