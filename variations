@@ -12,8 +12,8 @@ my $bpm   = shift || 120;
 my $trebp = shift || 69; # Treble patch
 my $bassp = shift || 42; # Bass patch
 
-my @treb = split / /, $treb;
-my @bass = split / /, $bass;
+my @treb = split /\s+/, $treb;
+my @bass = split /\s+/, $bass;
 
 my $quarter = 'qn';
 my $whole   = 'wn';
