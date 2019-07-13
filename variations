@@ -38,7 +38,7 @@ sub variance {
     my $count = 1;
 
     for my $n ( 1 .. @treb ) {
-        my @items = shuffle variations( \@treb, $n );
+        my @items = variations( \@treb, $n );
 
         for my $i (@items) {
             print "$count. @$i\n";
