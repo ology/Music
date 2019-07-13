@@ -22,7 +22,7 @@ my $score = MIDI::Util::setup_score();
 my $msn = Music::ScaleNote->new(
     scale_note  => 'C',
     scale_name  => 'pminor',
-    note_format => 'ISO',
+    note_format => 'midi',
 #    verbose     => 1,
 );
 
@@ -60,9 +60,7 @@ sub mutate {
                 note_name => $n,
                 offset    => int rand 2 ? 1 : -1,
             );
-            $n = $note->format('ISO');
-            $n =~ s/#/s/;
-            $n =~ s/b/f/;
+            $n = $note->format('midi');
         }
 
         push @mutated, $n;
