@@ -13,10 +13,10 @@ use Music::ScaleNote;
 use Music::Scales;
 
 my $max        = shift || 64;
-my $scale_note = shift || 'C'; # Bb, C#, etc.
+my $scale_note = shift || 'C'; # Bf, Cs, etc.
 my $scale_name = shift || 'pmajor';
 my $oct_range  = shift; # '3 4 5', etc. [ bass, baritone, tenor, ... ]
-my $init_chord = shift; # 'D# F A', etc.
+my $init_chord = shift; # 'Ds F A', etc.
 
 my $trebp = 0;  # Treble patch
 my $bassp = 42; # Bass patch
