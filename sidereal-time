@@ -55,10 +55,6 @@ my %note_map = map { $cn->scale($_) => $_ } @bscale;
 @bscale = map { $_ . $oct_range->[0] } @bscale;
 #warn(__PACKAGE__,' ',__LINE__," BScale: @bscale",,"\n");
 
-my @tscale = get_scale_notes( $scale_note, $scale_name );
-@tscale = map { my $degree = $_; map { $degree . $_ } @$oct_range[ 1 .. @$oct_range - 1 ] } @tscale;
-#warn(__PACKAGE__,' ',__LINE__," TScale: @tscale",,"\n");
-
 my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 20 );
 
 # Instantiate a scale-note manipulator
