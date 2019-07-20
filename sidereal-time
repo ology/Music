@@ -1,0 +1,152 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use Music::Chord::Note;
+use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
+use Music::ScaleNote;
+use Music::Scales;
+
+my $max        = shift || 64;
+my $scale_note = shift || 'C'; # Bb, C#, etc.
+my $scale_name = shift || 'pmajor';
+my $oct_range  = shift; # '3 4 5', etc. [ bass, baritone, tenor, ... ]
+my $init_chord = shift; # 'D# F A', etc.
+
+my $trebp = 0;  # Treble patch
+my $bassp = 42; # Bass patch
+
+my $half  = 'hn';
+my $whole = 'wn';
+
+my $note_format = 'midi';
+
+if ( $oct_range ) {
+    $oct_range = [ split /\s+/, $oct_range ];
+}
+else {
+    $oct_range = [ 3, 4, 5 ];
+}
+#warn(__PACKAGE__,' ',__LINE__," Oct: @$oct_range",,"\n");
+
+my $cn = Music::Chord::Note->new();
+if ( $init_chord ) {
+    $init_chord = [ split /\s+/, $init_chord ];
+}
+else {
+    my @init_chord = $cn->chord($scale_note);
+    $init_chord = [ @init_chord[ 0, 2 ] ];
+}
+$init_chord = [ map { $_ . $oct_range->[1] } @$init_chord ];
+#warn(__PACKAGE__,' ',__LINE__," Init: @$init_chord",,"\n");
+
+my @bscale = get_scale_notes( $scale_note, $scale_name );
+
+my %note_map = map { $cn->scale($_) => $_ } @bscale;
+#use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper\%note_map);
+@bscale = grep { $_ ne $note_map{11} } @bscale; # Remove the 11th degree
+#warn(__PACKAGE__,' ',__LINE__," BScale: @bscale",,"\n");
+
+@bscale = map { $_ . $oct_range->[0] } @bscale;
+#warn(__PACKAGE__,' ',__LINE__," BScale: @bscale",,"\n");
+
+my @tscale = get_scale_notes( $scale_note, $scale_name );
+@tscale = map { my $degree = $_; map { $degree . $_ } @$oct_range[ 1 .. @$oct_range - 1 ] } @tscale;
+#warn(__PACKAGE__,' ',__LINE__," TScale: @tscale",,"\n");
+
+my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 20 );
+
+# Instantiate a scale-note manipulator
+my $msn = Music::ScaleNote->new(
+    scale_note  => $scale_note,
+    scale_name  => $scale_name,
+    note_format => $note_format,
+#    verbose     => 1,
+);
+
+$score->synch(
+    \&top,
+    \&bottom,
+);
+
+$score->write_score("$0.mid");
+
+sub top {
+    MIDI::Util::set_chan_patch( $score, 0, $trebp );
+
+    my @chord = @$init_chord;
+
+    for ( 1 .. $max ) {
+        $score->n( $whole, @chord );
+        $score->r($half);
+
+        @chord = mutate( $msn, @$oct_range[ 1 .. @$oct_range - 1 ], @chord );
+    }
+
+    $score->n( $whole, @$init_chord );
+}
+
+sub mutate {
+    my ( $msn, $lowerb, $upperb, @chord ) = @_;
+
+    my @mutated;
+
+    # For each note of the chord...
+    for my $n0 ( @chord ) {
+        my $n = $n0;
+
+        ( my $octave = $n ) =~ s/^.+(-?\d+)$/$1/;
+
+        my $note;
+
+        # Get a new note within the lower and upper bounds
+        while ( !$note || $octave < $lowerb || $octave > $upperb ) {
+            $note = $msn->get_offset(
+                note_name => $n0,
+                offset    => $octave < $lowerb ? 1 : $octave > $upperb ? -1 : int rand 2 ? 1 : -1,
+            );
+            $n = $note->format($note_format);
+
+            # Get the octave to determine if we need to loop again
+            ( $octave = $n ) =~ s/^.+(-?\d+)$/$1/;
+        }
+
+        push @mutated, $n;
+    }
+
+    return @mutated;
+}
+
+sub bottom {
+    MIDI::Util::set_chan_patch( $score, 1, $bassp );
+#    $score->Volume(90);
+
+    my $note = $bscale[0];
+
+    my @bseed = map { int rand @bscale } 1 .. 4;
+
+    for my $n ( 1 .. $max ) {
+        $score->n( $whole, $note );
+        $score->r($half);
+        $note = $bscale[ voss( $n, \@bseed ) ];
+    }
+
+    $score->n( $whole, $bscale[0] );
+}
+
+sub voss {
+    my ( $i, $list ) = @_;
+
+    my $sum = 0;
+
+    for my $k ( 0 .. @$list - 1 ) {
+        if ( ( $i % ( 2 ** $k ) ) == 0 ) {
+            $list->[$k] = int rand 2;
+        }
+        $sum += $list->[$k];
+    }
+
+    return $sum;
+}
