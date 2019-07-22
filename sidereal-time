@@ -13,6 +13,7 @@ use Music::ScaleNote;
 use Music::Scales;
 
 my $max        = shift || 64;
+my $bpm        = shift || 20;
 my $scale_note = shift || 'C'; # Bf, Cs, etc.
 my $scale_name = shift || 'pmajor';
 my $oct_range  = shift; # '3 4 5', etc. [ bass, baritone, tenor, ... ]
@@ -55,7 +56,7 @@ my %note_map = map { $cn->scale($_) => $_ } @bscale;
 @bscale = map { $_ . $oct_range->[0] } @bscale;
 #warn(__PACKAGE__,' ',__LINE__," BScale: @bscale",,"\n");
 
-my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 20 );
+my $score = MIDI::Util::setup_score( lead_in => 0, bpm => $bpm );
 
 # Instantiate a scale-note manipulator
 my $msn = Music::ScaleNote->new(
