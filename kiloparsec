@@ -18,10 +18,10 @@ my $triplet = 'tqn';
 my $half    = 'hn';
 my $whole   = 'wn';
 
-my $scale_note           = 'C';
-my $alto_scale_name      = 'major';
-my $tenor_scale_name     = 'pentatonic';
-my $barritone_scale_name = 'pentatonic';
+my $scale_note           = 'A';
+my $alto_scale_name      = 'minor';
+my $tenor_scale_name     = 'pminor';
+my $barritone_scale_name = 'pminor';
 
 my $alto_patch      = 69;
 my $tenor_patch     = 0;
