@@ -19,7 +19,7 @@ my $tenor_scale_name    = 'pminor';
 my $baritone_scale_name = 'pminor';
 
 my $alto_patch     = 69;
-my $tenor_patch    = 0;
+my $tenor_patch    = 70;
 my $baritone_patch = 42;
 
 my @alto_scale     = map { $_ . 5 } get_scale_notes( $scale_note, $alto_scale_name );
@@ -35,7 +35,6 @@ my $tenor_genf    = powers( calls => $tenor_seed );
 my $baritone_genf = powers( calls => $baritone_seed );
 
 my $quarter = 'qn';
-my $triplet = 'tqn';
 my $half    = 'hn';
 my $whole   = 'wn';
 
@@ -52,26 +51,12 @@ $score->write_score("$0.mid");
 sub alto {
     MIDI::Util::set_chan_patch( $score, 0, $alto_patch );
 
-    my $i = 1;
-
     for my $n ( 0 .. $max - 1 ) {
         if ( $n % 4 == 0 ) {
-            if ( $i % 3 == 0 ) {
-                for ( 1 .. 3 ) {
-                    my $note = $alto_scale[ $alto_genf->($n) ];
-                    $score->n( $triplet, $note );
-                }
+            for ( 1 .. 4 ) {
+                my $note = $alto_scale[ $alto_genf->($n) ];
+                $score->n( $quarter, $note );
             }
-            else {
-                for ( 1 .. 4 ) {
-                    my $note = $alto_scale[ $alto_genf->($n) ];
-                    $score->n( $quarter, $note );
-                }
-            }
-
-            $i++;
-
-            $score->r($half);
         }
         else {
             $score->r($whole);
