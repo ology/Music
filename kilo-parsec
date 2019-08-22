@@ -114,8 +114,6 @@ sub tenor {
 sub barritone {
     MIDI::Util::set_chan_patch( $score, 2, $barritone_patch );
 
-    $score->Volume(100);
-
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
     for my $n ( 0 .. $max - 1 ) {
