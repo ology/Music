@@ -7,8 +7,6 @@ use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
-use lib '/Users/gene/sandbox/Music-Cadence/lib';
-use Music::Cadence;
 use Music::Scales;
 use Music::Voss qw/ powers /;
 
