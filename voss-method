@@ -12,7 +12,7 @@ my @seed = map { int rand @notes } 1 .. 4;
 
 my @result;
 
-for my $n ( 0 .. $max ) {
+for my $n ( 0 .. $max - 1 ) {
     $result[$n] = $notes[ voss( $n, \@seed ) ];
 }
 use Data::Dumper;print Dumper\@result;
