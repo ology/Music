@@ -15,6 +15,11 @@ use Music::Voss qw/ powers /;
 my $max = shift || 64;
 my $bpm = shift || 20;
 
+my $quarter = 'qn';
+my $triplet = 'tqn';
+my $half    = 'hn';
+my $whole   = 'wn';
+
 my $scale_note           = 'C';
 my $alto_scale_name      = 'major';
 my $tenor_scale_name     = 'pentatonic';
@@ -23,11 +28,6 @@ my $barritone_scale_name = 'pentatonic';
 my $alto_patch      = 69;
 my $tenor_patch     = 0;
 my $barritone_patch = 42;
-
-my $quarter = 'qn';
-my $triplet = 'tqn';
-my $half    = 'hn';
-my $whole   = 'wn';
 
 my @alto_scale      = map { $_ . 5 } get_scale_notes( $scale_note, $alto_scale_name );
 my @tenor_scale     = map { $_ . 4 } get_scale_notes( $scale_note, $tenor_scale_name );
