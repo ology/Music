@@ -118,8 +118,13 @@ sub barritone {
     MIDI::Util::set_chan_patch( $score, 2, $barritone_patch );
 
     for my $n ( 0 .. $max - 1 ) {
-        my $note = $barritone_scale[ $barritone_genf->($n) ];
-        $score->n( $whole, $note );
+        if ( $n < 8 ) {
+            $score->r($whole);
+        }
+        else {
+            my $note = $barritone_scale[ $barritone_genf->($n) ];
+            $score->n( $whole, $note );
+        }
     }
 
     $score->n( $whole, $barritone_scale[0] );
