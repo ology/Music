@@ -125,28 +125,35 @@ sub bottom {
 
     my $note = $bscale[0];
 
-    my @bseed = map { int rand @bscale } 1 .. 4;
+    my @bseed = map { rand_range( 0, 1 ) } 1 .. 4;
 
     for my $n ( 1 .. $max ) {
         $score->n( $whole, $note );
         $score->r($half);
-        $note = $bscale[ voss( $n, \@bseed ) ];
+        $note = $bscale[ sprintf( '%.0f', voss( $n, \@bseed ) ) ];
     }
 
     $score->n( $whole, $bscale[0] );
 }
 
 sub voss {
-    my ( $i, $list ) = @_;
+    my ( $n, $list ) = @_;
 
     my $sum = 0;
 
     for my $k ( 0 .. @$list - 1 ) {
-        if ( ( $i % ( 2 ** $k ) ) == 0 ) {
-            $list->[$k] = int rand 2;
+        if ( ( $n % ( 2 ** $k ) ) == 0 ) {
+            $list->[$k] = rand_range( -1, 1 );
         }
+
         $sum += $list->[$k];
     }
 
     return $sum;
+}
+
+sub rand_range {
+    my ( $lower, $upper ) = @_;
+    my $r = rand;
+    return $r * ( $upper - $lower ) + $lower;
 }
