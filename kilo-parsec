@@ -86,7 +86,7 @@ sub alto {
 }
 
 sub tenor {
-    MIDI::Util::set_chan_patch( $score, 0, $tenor_patch );
+    MIDI::Util::set_chan_patch( $score, 1, $tenor_patch );
 
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
@@ -112,7 +112,7 @@ sub tenor {
 }
 
 sub barritone {
-    MIDI::Util::set_chan_patch( $score, 1, $barritone_patch );
+    MIDI::Util::set_chan_patch( $score, 2, $barritone_patch );
 
     $score->Volume(100);
 
