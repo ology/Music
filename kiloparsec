@@ -43,9 +43,16 @@ sub alto {
     my $alto_seed  = [ map { sub { int rand 2 } } @alto_scale ];
     my $alto_genf  = powers( calls => $alto_seed );
 
+    my $i = 0;
+
     for my $n ( 0 .. $max - 1 ) {
         if ( $n % 4 == 0 ) {
             for ( 1 .. 4 ) {
+                my $note = $alto_scale[ $alto_genf->($n) ];
+                $score->n( $quarter, $note );
+            }
+
+            if ( $i % 3 == 0 ) {
                 my $note = $alto_scale[ $alto_genf->($n) ];
                 $score->n( $quarter, $note );
             }
@@ -53,6 +60,8 @@ sub alto {
         else {
             $score->r($whole);
         }
+
+        $i++;
     }
 
     $score->r($whole);
