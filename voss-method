@@ -18,16 +18,22 @@ for my $n ( 0 .. $max ) {
 use Data::Dumper;print Dumper\@result;
 
 sub voss {
-    my ( $i, $list ) = @_;
+    my ( $n, $list ) = @_;
 
     my $sum = 0;
 
     for my $k ( 0 .. @$list - 1 ) {
-        if ( $i % ( 2 ** $k ) == 0 ) {
-            $list->[$k] = int rand 2;
+        if ( ( $n % ( 2 ** $k ) ) == 0 ) {
+            $list->[$k] = rand_range( -1, 1 );
         }
+
         $sum += $list->[$k];
     }
 
     return $sum;
+}
+
+sub rand_range {
+    my ( $lower, $upper ) = @_;
+    return int( rand( $upper - $lower ) ) + $lower;
 }
