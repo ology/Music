@@ -91,15 +91,20 @@ sub tenor {
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
     for my $n ( 0 .. $max - 1 ) {
-        my $note = $tenor_scale[ voss( $n, \@seed ) ];
-        $score->n( $half, $note );
-
-        if ( $n % 3 == 0 ) {
-            $note = $tenor_scale[ voss( $n, \@seed ) ];
-            $score->n( $half, $note );
+        if ( $n < 8 ) {
+            $score->r($whole);
         }
         else {
-            $score->r($half);
+            my $note = $tenor_scale[ voss( $n, \@seed ) ];
+            $score->n( $half, $note );
+
+            if ( $n % 3 == 0 ) {
+                $note = $tenor_scale[ voss( $n, \@seed ) ];
+                $score->n( $half, $note );
+            }
+            else {
+                $score->r($half);
+            }
         }
     }
 
