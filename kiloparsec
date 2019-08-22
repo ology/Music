@@ -58,26 +58,26 @@ sub alto {
         if ( $n % 4 == 0 ) {
             if ( $i % 3 == 0 ) {
                 my $note = $alto_scale[ $alto_genf->($n) ];
-                $score->n( $quarter, $note );
+                $score->n( $triplet, $note );
 
                 $note = $alto_scale[ $alto_genf->($n) ];
-                $score->n( $quarter, $note );
+                $score->n( $triplet, $note );
 
                 $note = $alto_scale[ $alto_genf->($n) ];
-                $score->n( $quarter, $note );
-
-                $note = $alto_scale[ $alto_genf->($n) ];
-                $score->n( $quarter, $note );
+                $score->n( $triplet, $note );
             }
             else {
                 my $note = $alto_scale[ $alto_genf->($n) ];
-                $score->n( $triplet, $note );
+                $score->n( $quarter, $note );
 
                 $note = $alto_scale[ $alto_genf->($n) ];
-                $score->n( $triplet, $note );
+                $score->n( $quarter, $note );
 
                 $note = $alto_scale[ $alto_genf->($n) ];
-                $score->n( $triplet, $note );
+                $score->n( $quarter, $note );
+
+                $note = $alto_scale[ $alto_genf->($n) ];
+                $score->n( $quarter, $note );
             }
 
             $i++;
