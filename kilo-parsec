@@ -23,6 +23,7 @@ my $alto_patch      = 69;
 my $tenor_patch     = 0;
 my $barritone_patch = 42;
 
+my $quarter = 'qn';
 my $triplet = 'tqn';
 my $half    = 'hn';
 my $whole   = 'wn';
@@ -46,16 +47,35 @@ sub alto {
 
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
+    my $flip = 1;
+
     for my $n ( 0 .. $max - 1 ) {
         if ( $n % 4 == 0 ) {
-            my $note = $alto_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
-            $score->n( $triplet, $note );
+            if ( $flip % 3 == 0 ) {
+                my $note = $alto_scale[ voss( $n, \@seed ) ];
+                $score->n( $quarter, $note );
 
-            $note = $alto_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
-            $score->n( $triplet, $note );
+                $note = $alto_scale[ voss( $n, \@seed ) ];
+                $score->n( $quarter, $note );
 
-            $note = $alto_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
-            $score->n( $triplet, $note );
+                $note = $alto_scale[ voss( $n, \@seed ) ];
+                $score->n( $quarter, $note );
+
+                $note = $alto_scale[ voss( $n, \@seed ) ];
+                $score->n( $quarter, $note );
+            }
+            else {
+                my $note = $alto_scale[ voss( $n, \@seed ) ];
+                $score->n( $triplet, $note );
+
+                $note = $alto_scale[ voss( $n, \@seed ) ];
+                $score->n( $triplet, $note );
+
+                $note = $alto_scale[ voss( $n, \@seed ) ];
+                $score->n( $triplet, $note );
+            }
+
+            $flip++;
 
             $score->r($half);
         }
@@ -71,11 +91,11 @@ sub tenor {
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
     for my $n ( 0 .. $max - 1 ) {
-        my $note = $tenor_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
+        my $note = $tenor_scale[ voss( $n, \@seed ) ];
         $score->n( $half, $note );
-        if ( $n % 3 == 0 ) {
-            $note = $tenor_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
 
+        if ( $n % 3 == 0 ) {
+            $note = $tenor_scale[ voss( $n, \@seed ) ];
             $score->n( $half, $note );
         }
         else {
@@ -94,8 +114,7 @@ sub barritone {
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
     for my $n ( 0 .. $max - 1 ) {
-        my $note = $barritone_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
-
+        my $note = $barritone_scale[ voss( $n, \@seed ) ];
         $score->n( $whole, $note );
     }
 
@@ -115,7 +134,7 @@ sub voss {
         $sum += $list->[$k];
     }
 
-    return $sum;
+    return sprintf '%.0f', $sum;
 }
 
 sub rand_range {
