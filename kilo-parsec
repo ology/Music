@@ -1,0 +1,125 @@
+#!/usr/bin/env perl
+
+# 
+
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use lib '/Users/gene/sandbox/Music-Cadence/lib';
+use Music::Cadence;
+use Music::Scales;
+
+my $max = shift || 64;
+my $bpm = shift || 20;
+
+my $scale_note           = 'C';
+my $alto_scale_name      = 'major';
+my $tenor_scale_name     = 'pentatonic';
+my $barritone_scale_name = 'pentatonic';
+
+my $alto_patch      = 69;
+my $tenor_patch     = 0;
+my $barritone_patch = 42;
+
+my $triplet = 'tqn';
+my $half    = 'hn';
+my $whole   = 'wn';
+
+my @alto_scale      = map { $_ . 5 } get_scale_notes( $scale_note, $alto_scale_name );
+my @tenor_scale     = map { $_ . 4 } get_scale_notes( $scale_note, $tenor_scale_name );
+my @barritone_scale = map { $_ . 3 } get_scale_notes( $scale_note, $barritone_scale_name );
+
+my $score = MIDI::Util::setup_score( lead_in => 0, bpm => $bpm );
+
+$score->synch(
+    \&alto,
+    \&tenor,
+    \&barritone,
+);
+
+$score->write_score("$0.mid");
+
+sub alto {
+    MIDI::Util::set_chan_patch( $score, 0, $alto_patch );
+
+    my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
+
+    for my $n ( 0 .. $max - 1 ) {
+        if ( $n % 4 == 0 ) {
+            my $note = $alto_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
+            $score->n( $triplet, $note );
+
+            $note = $alto_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
+            $score->n( $triplet, $note );
+
+            $note = $alto_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
+            $score->n( $triplet, $note );
+
+            $score->r($half);
+        }
+        else {
+            $score->r($whole);
+        }
+    }
+}
+
+sub tenor {
+    MIDI::Util::set_chan_patch( $score, 0, $tenor_patch );
+
+    my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
+
+    for my $n ( 0 .. $max - 1 ) {
+        my $note = $tenor_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
+        $score->n( $half, $note );
+        if ( $n % 3 == 0 ) {
+            $note = $tenor_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
+
+            $score->n( $half, $note );
+        }
+        else {
+            $score->r($half);
+        }
+    }
+
+    $score->n( $whole, $tenor_scale[0] );
+}
+
+sub barritone {
+    MIDI::Util::set_chan_patch( $score, 1, $barritone_patch );
+
+    $score->Volume(100);
+
+    my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
+
+    for my $n ( 0 .. $max - 1 ) {
+        my $note = $barritone_scale[ sprintf( '%.0f', voss( $n, \@seed ) ) ];
+
+        $score->n( $whole, $note );
+    }
+
+    $score->n( $whole, $barritone_scale[0] );
+}
+
+sub voss {
+    my ( $n, $list ) = @_;
+
+    my $sum = 0;
+
+    for my $k ( 0 .. @$list - 1 ) {
+        if ( ( $n % ( 2 ** $k ) ) == 0 ) {
+            $list->[$k] = rand_range( -1, 1 );
+        }
+
+        $sum += $list->[$k];
+    }
+
+    return $sum;
+}
+
+sub rand_range {
+    my ( $lower, $upper ) = @_;
+    my $r = rand;
+    return $r * ( $upper - $lower ) + $lower;
+}
