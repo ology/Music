@@ -88,6 +88,8 @@ sub alto {
             $score->r($whole);
         }
     }
+
+    $score->r($whole);
 }
 
 sub tenor {
@@ -98,11 +100,16 @@ sub tenor {
             $score->r($whole);
         }
         else {
-            my $note = $tenor_scale[ $tenor_genf->($n) ];
-            $score->n( $half, $note );
+            if ( $n % 2 == 0 ) {
+                my $note = $tenor_scale[ $tenor_genf->($n) ];
+                $score->n( $half, $note );
+            }
+            else {
+                $score->r($half);
+            }
 
             if ( $n % 3 == 0 ) {
-                $note = $tenor_scale[ $tenor_genf->($n) ];
+                my $note = $tenor_scale[ $tenor_genf->($n) ];
                 $score->n( $half, $note );
             }
             else {
