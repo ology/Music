@@ -47,11 +47,11 @@ sub alto {
 
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
-    my $flip = 1;
+    my $i = 1;
 
     for my $n ( 0 .. $max - 1 ) {
         if ( $n % 4 == 0 ) {
-            if ( $flip % 3 == 0 ) {
+            if ( $i % 3 == 0 ) {
                 my $note = $alto_scale[ voss( $n, \@seed ) ];
                 $score->n( $quarter, $note );
 
@@ -75,7 +75,7 @@ sub alto {
                 $score->n( $triplet, $note );
             }
 
-            $flip++;
+            $i++;
 
             $score->r($half);
         }
