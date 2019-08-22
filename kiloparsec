@@ -11,7 +11,7 @@ use Music::Scales;
 use Music::Voss qw/ powers /;
 
 my $max = shift || 64;
-my $bpm = shift || 20;
+my $bpm = shift || 200;
 
 my $scale_note          = 'A';
 my $alto_scale_name     = 'minor';
