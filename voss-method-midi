@@ -10,7 +10,7 @@ use MIDI::Util;
 
 my $max = shift || 16;
 
-my @tnotes = qw( C5 Ds5 F5 G5 As5 C6 );
+my @tnotes = qw( C5 Ds5 F5 G5 As5 );
 my @bnotes = qw( C3 F3 G3 C4 );
 
 my $score = MIDI::Util::setup_score();
@@ -21,18 +21,22 @@ $score->write_score("$0.mid");
 
 sub treble {
     MIDI::Util::set_chan_patch( $score, 0, 0 );
-    my @tseed = map { int rand @tnotes } 1 .. 4;
+
+    my @tseed = map { rand_range( 0, 1 ) } 1 .. 4;
+
     for my $n ( 0 .. $max - 1 ) {
-        my $note = $tnotes[ voss( $n, \@tseed ) ];
+        my $note = $tnotes[ sprintf( '%.0f', voss( $n, \@tseed ) ) ];
         $score->n( 'qn', $note );
     }
 }
 
 sub bass {
     MIDI::Util::set_chan_patch( $score, 1, 32 );
-    my @bseed = map { int rand @bnotes } 1 .. 4;
+
+    my @bseed = map { rand_range( 0, 1 ) } 1 .. 4;
+
     for my $n ( 0 .. ( $max / 2 ) - 1 ) {
-        my $note = $bnotes[ voss( $n, \@bseed ) ];
+        my $note = $bnotes[ sprintf( '%.0f', voss( $n, \@bseed ) ) ];
         $score->n( 'hn', $note );
     }
 }
@@ -55,5 +59,6 @@ sub voss {
 
 sub rand_range {
     my ( $lower, $upper ) = @_;
-    return int( rand( $upper - $lower ) ) + $lower;
+    my $r = rand;
+    return $r * ( $upper - $lower ) + $lower;
 }
