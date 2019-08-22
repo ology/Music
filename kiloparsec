@@ -18,33 +18,33 @@ my $triplet = 'tqn';
 my $half    = 'hn';
 my $whole   = 'wn';
 
-my $scale_note           = 'A';
-my $alto_scale_name      = 'minor';
-my $tenor_scale_name     = 'pminor';
-my $barritone_scale_name = 'pminor';
+my $scale_note          = 'A';
+my $alto_scale_name     = 'minor';
+my $tenor_scale_name    = 'pminor';
+my $baritone_scale_name = 'pminor';
 
-my $alto_patch      = 69;
-my $tenor_patch     = 0;
-my $barritone_patch = 42;
+my $alto_patch     = 69;
+my $tenor_patch    = 0;
+my $baritone_patch = 42;
 
-my @alto_scale      = map { $_ . 5 } get_scale_notes( $scale_note, $alto_scale_name );
-my @tenor_scale     = map { $_ . 4 } get_scale_notes( $scale_note, $tenor_scale_name );
-my @barritone_scale = map { $_ . 3 } get_scale_notes( $scale_note, $barritone_scale_name );
+my @alto_scale     = map { $_ . 5 } get_scale_notes( $scale_note, $alto_scale_name );
+my @tenor_scale    = map { $_ . 4 } get_scale_notes( $scale_note, $tenor_scale_name );
+my @baritone_scale = map { $_ . 3 } get_scale_notes( $scale_note, $baritone_scale_name );
 
-my $alto_seed      = [ map { sub { int rand 2 } } @alto_scale ];
-my $tenor_seed     = [ map { sub { int rand 2 } } @tenor_scale ];
-my $barritone_seed = [ map { sub { int rand 2 } } @barritone_scale ];
+my $alto_seed     = [ map { sub { int rand 2 } } @alto_scale ];
+my $tenor_seed    = [ map { sub { int rand 2 } } @tenor_scale ];
+my $baritone_seed = [ map { sub { int rand 2 } } @baritone_scale ];
 
-my $alto_genf      = powers( calls => $alto_seed );
-my $tenor_genf     = powers( calls => $tenor_seed );
-my $barritone_genf = powers( calls => $barritone_seed );
+my $alto_genf     = powers( calls => $alto_seed );
+my $tenor_genf    = powers( calls => $tenor_seed );
+my $baritone_genf = powers( calls => $baritone_seed );
 
 my $score = MIDI::Util::setup_score( lead_in => 0, bpm => $bpm );
 
 $score->synch(
     \&alto,
     \&tenor,
-    \&barritone,
+    \&baritone,
 );
 
 $score->write_score("$0.mid");
@@ -110,18 +110,18 @@ sub tenor {
     $score->n( $whole, $tenor_scale[0] );
 }
 
-sub barritone {
-    MIDI::Util::set_chan_patch( $score, 2, $barritone_patch );
+sub baritone {
+    MIDI::Util::set_chan_patch( $score, 2, $baritone_patch );
 
     for my $n ( 0 .. $max - 1 ) {
         if ( $n < 8 ) {
             $score->r($whole);
         }
         else {
-            my $note = $barritone_scale[ $barritone_genf->($n) ];
+            my $note = $baritone_scale[ $baritone_genf->($n) ];
             $score->n( $whole, $note );
         }
     }
 
-    $score->n( $whole, $barritone_scale[0] );
+    $score->n( $whole, $baritone_scale[0] );
 }
