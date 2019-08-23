@@ -39,26 +39,26 @@ $score->write_score("$0.mid");
 sub alto {
     MIDI::Util::set_chan_patch( $score, 0, $alto_patch );
 
-    my @alto_scale = map { $_ . 5 } get_scale_notes( $scale_note, $alto_scale_name );
-    for ( @alto_scale ) {
+    my @scale = map { $_ . 5 } get_scale_notes( $scale_note, $alto_scale_name );
+    for ( @scale ) {
         s/#/s/;
         s/b/f/;
     }
 
-    my $alto_seed = [ map { sub { int rand 2 } } @alto_scale ];
-    my $alto_genf = powers( calls => $alto_seed );
+    my $seed = [ map { sub { int rand 2 } } @scale ];
+    my $genf = powers( calls => $seed );
 
     my $i = 0;
 
     for my $n ( 0 .. $max - 1 ) {
         if ( $n % 4 == 0 ) {
             for ( 1 .. 4 ) {
-                my $note = $alto_scale[ $alto_genf->($n) ];
+                my $note = $scale[ $genf->($n) ];
                 $score->n( $quarter, $note );
             }
 
             if ( $i % 3 == 0 ) {
-                my $note = $alto_scale[ $alto_genf->($n) ];
+                my $note = $scale[ $genf->($n) ];
                 $score->n( $quarter, $note );
             }
         }
@@ -75,14 +75,14 @@ sub alto {
 sub tenor {
     MIDI::Util::set_chan_patch( $score, 1, $tenor_patch );
 
-    my @tenor_scale = map { $_ . 4 } get_scale_notes( $scale_note, $tenor_scale_name );
-    for ( @tenor_scale ) {
+    my @scale = map { $_ . 4 } get_scale_notes( $scale_note, $tenor_scale_name );
+    for ( @scale ) {
         s/#/s/;
         s/b/f/;
     }
 
-    my $tenor_seed = [ map { sub { int rand 2 } } @tenor_scale ];
-    my $tenor_genf = powers( calls => $tenor_seed );
+    my $seed = [ map { sub { int rand 2 } } @scale ];
+    my $genf = powers( calls => $seed );
 
     for my $n ( 0 .. $max - 1 ) {
         if ( $n < 8 ) {
@@ -90,7 +90,7 @@ sub tenor {
         }
         else {
             if ( $n % 2 == 0 ) {
-                my $note = $tenor_scale[ $tenor_genf->($n) ];
+                my $note = $scale[ $genf->($n) ];
                 $score->n( $half, $note );
             }
             else {
@@ -98,7 +98,7 @@ sub tenor {
             }
 
             if ( $n % 3 == 0 ) {
-                my $note = $tenor_scale[ $tenor_genf->($n) ];
+                my $note = $scale[ $genf->($n) ];
                 $score->n( $half, $note );
             }
             else {
@@ -107,30 +107,30 @@ sub tenor {
         }
     }
 
-    $score->n( $whole, $tenor_scale[0] );
+    $score->n( $whole, $scale[0] );
 }
 
 sub baritone {
     MIDI::Util::set_chan_patch( $score, 2, $baritone_patch );
 
-    my @baritone_scale = map { $_ . 3 } get_scale_notes( $scale_note, $baritone_scale_name );
-    for ( @baritone_scale ) {
+    my @scale = map { $_ . 3 } get_scale_notes( $scale_note, $baritone_scale_name );
+    for ( @scale ) {
         s/#/s/;
         s/b/f/;
     }
 
-    my $baritone_seed = [ map { sub { int rand 2 } } @baritone_scale ];
-    my $baritone_genf = powers( calls => $baritone_seed );
+    my $seed = [ map { sub { int rand 2 } } @scale ];
+    my $genf = powers( calls => $seed );
 
     for my $n ( 0 .. $max - 1 ) {
         if ( $n < 8 ) {
             $score->r($whole);
         }
         else {
-            my $note = $baritone_scale[ $baritone_genf->($n) ];
+            my $note = $scale[ $genf->($n) ];
             $score->n( $whole, $note );
         }
     }
 
-    $score->n( $whole, $baritone_scale[0] );
+    $score->n( $whole, $scale[0] );
 }
