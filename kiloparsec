@@ -46,13 +46,11 @@ sub alto {
     for my $n ( 0 .. $max - 1 ) {
         if ( $n % 4 == 0 ) {
             for ( 1 .. 4 ) {
-                my $note = $scale->[ $genf->($n) ];
-                $score->n( $quarter, $note );
+                $score->n( $quarter, $scale->[ $genf->($n) ] );
             }
 
             if ( $i % 3 == 0 ) {
-                my $note = $scale->[ $genf->($n) ];
-                $score->n( $quarter, $note );
+                $score->n( $quarter, $scale->[ $genf->($n) ] );
             }
         }
         else {
@@ -76,16 +74,14 @@ sub tenor {
         }
         else {
             if ( $n % 2 == 0 ) {
-                my $note = $scale->[ $genf->($n) ];
-                $score->n( $half, $note );
+                $score->n( $half, $scale->[ $genf->($n) ] );
             }
             else {
                 $score->r($half);
             }
 
             if ( $n % 3 == 0 ) {
-                my $note = $scale->[ $genf->($n) ];
-                $score->n( $half, $note );
+                $score->n( $half, $scale->[ $genf->($n) ] );
             }
             else {
                 $score->r($half);
@@ -106,8 +102,7 @@ sub baritone {
             $score->r($whole);
         }
         else {
-            my $note = $scale->[ $genf->($n) ];
-            $score->n( $whole, $note );
+            $score->n( $whole, $scale->[ $genf->($n) ] );
         }
     }
 
