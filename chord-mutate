@@ -17,6 +17,9 @@ my $bassp = shift || 42; # Bass patch
 
 my @duras = qw( en qn qn );
 
+my $half  = 'hn';
+my $whole = 'wn';
+
 my $score = MIDI::Util::setup_score();
 
 my $msn = Music::ScaleNote->new(
@@ -43,7 +46,7 @@ sub top {
         @chord = mutate( $msn, @chord );
     }
 
-    $score->n( 'hn', @chord );
+    $score->n( $half, @chord );
 }
 
 sub mutate {
@@ -74,8 +77,8 @@ sub bottom {
     $score->Volume(90);
 
     for my $n ( 1 .. $max / 4 ) {
-        $score->n( 'wn', $bass[ int rand @bass ] );
+        $score->n( $whole, $bass[ int rand @bass ] );
     }
 
-    $score->n( 'wn', $bass[0] );
+    $score->n( $whole, $bass[0] );
 }
