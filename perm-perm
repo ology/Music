@@ -41,7 +41,7 @@ for my $i ( 0 .. @treb_combos - 1 ) {
             $treb_volu_combos[$i][$j],
             $treb_dura_combos[$i][$j],
             $treb_combos[$i][$j];
-        printf "      Bass: %s, %s, %s\n",
+        printf "\tBass: %s, %s, %s\n",
             $bass_volu_combos[$i][$j],
             $bass_dura_combos[$i][$j],
             $bass_combos[$i][$j];
