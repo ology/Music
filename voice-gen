@@ -50,9 +50,9 @@ for my $i ( 1 .. $max ) {
 }
 
 my $chords = $mc->cadence( type => 'deceptive' );
-$score->n( 'hn', @$_ ) for @$chords;
+$score->n( $half, @$_ ) for @$chords;
 
 $chords = $mc->cadence( type => 'plagal' );
-$score->n( 'hn', @$_ ) for @$chords;
+$score->n( $half, @$_ ) for @$chords;
 
 $score->write_score("$0.mid");
