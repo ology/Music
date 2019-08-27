@@ -13,11 +13,13 @@ use Music::VoiceGen;
 my $max   = shift || 16;
 my $note  = shift || 60;
 my $leads = shift || '2 7';
+my $ints  = shift || '-4 -3 -2 2 3 4';
 
 my $quarter = 'qn';
 my $half    = 'hn';
 
-my @leaders = split /\s+/, $leads;
+my @leaders   = split /\s+/, $leads;
+my @intervals = split /\s+/, $ints;
 
 my $mn = Music::Note->new( $note, 'midinum' );
 
@@ -25,7 +27,7 @@ my @pitches = get_scale_MIDI( $mn->format('isobase'), $mn->octave );
 
 my $voice = Music::VoiceGen->new(
     pitches   => \@pitches,
-    intervals => [qw/ -4 -3 -2 2 3 4 /],
+    intervals => \@intervals,
 );
 #use Data::Dumper; warn Dumper $voice->possibles; exit;
 
