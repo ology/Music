@@ -1,0 +1,58 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use lib '/Users/gene/sandbox/Music-Cadence/lib';
+use Music::Cadence;
+use Music::Note;
+use Music::Scales;
+use Music::VoiceGen;
+
+my $max   = shift || 16;
+my $note  = shift || 60;
+my $leads = shift || '2 7';
+
+my $quarter = 'qn';
+my $half    = 'hn';
+
+my @leaders = split /\s+/, $leads;
+
+my $mn = Music::Note->new( $note, 'midinum' );
+
+my @pitches = get_scale_MIDI( $mn->format('isobase'), $mn->octave );
+
+my $voice = Music::VoiceGen->new(
+    pitches   => \@pitches,
+    intervals => [qw/ -4 -3 -2 2 3 4 /],
+);
+#use Data::Dumper; warn Dumper $voice->possibles; exit;
+
+my $score = MIDI::Util::setup_score();
+
+my $mc = Music::Cadence->new(
+    key    => $mn->format('isobase'),
+    octave => $mn->octave,
+    format => 'midi',
+);
+
+for my $i ( 1 .. $max ) {
+    $score->n( $quarter, $voice->rand );
+
+    if ( $i % 4 == 0 ) {
+        my $chords = $mc->cadence(
+            type    => 'half',
+            leading => $leaders[ int rand @leaders ],
+        );
+        $score->n( $half, @$_ ) for @$chords;
+    }
+}
+
+my $chords = $mc->cadence( type => 'deceptive' );
+$score->n( 'hn', @$_ ) for @$chords;
+
+$chords = $mc->cadence( type => 'plagal' );
+$score->n( 'hn', @$_ ) for @$chords;
+
+$score->write_score("$0.mid");
