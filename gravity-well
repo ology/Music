@@ -78,7 +78,7 @@ sub top {
                 $j++;
             }
 
-            $i = truncate_start( $bottom_notes, $chords, $score, $half, $i );
+            ( $i, $bottom_notes ) = truncate_start( $bottom_notes, $chords, $score, $half, $i );
         }
     }
 
@@ -87,11 +87,11 @@ sub top {
         variation => int( rand 2 ) + 1,
     );
 
-    truncate_start( $bottom_notes, $chords, $score, $half );
+    ( $i, $bottom_notes ) = truncate_start( $bottom_notes, $chords, $score, $half );
 
     $chords = $mc->cadence( type => 'plagal' );
 
-    truncate_start( $bottom_notes, $chords, $score, $half );
+    ( $i, $bottom_notes ) = truncate_start( $bottom_notes, $chords, $score, $half );
 }
 
 sub bottom {
@@ -145,6 +145,6 @@ sub truncate_start {
 
     $i++;
 
-    return $i;
+    return $i, $notes;
 }
 
