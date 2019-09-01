@@ -11,7 +11,7 @@ use warnings;
         my $x = 2 ** $k;
         my $y = $n % $x;
         print "$n % 2 ** $k ($x) = $y\n";
-        print "\t*\n" if $n % $x == 0;
+        print "\t*\n" if $y == 0;
     }
  }
  __END__
