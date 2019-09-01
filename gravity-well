@@ -87,11 +87,11 @@ sub top {
         variation => int( rand 2 ) + 1,
     );
 
-    truncate_start( $bottom_notes, $chords, $score, $half, 0 );
+    truncate_start( $bottom_notes, $chords, $score, $half );
 
     $chords = $mc->cadence( type => 'plagal' );
 
-    truncate_start( $bottom_notes, $chords, $score, $half, 0 );
+    truncate_start( $bottom_notes, $chords, $score, $half );
 }
 
 sub bottom {
