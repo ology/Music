@@ -70,7 +70,9 @@ sub top {
             else {
                 $chords = $mc->cadence(
                     type => 'imperfect',
-                    $j % 2 == 0 ? ( variation => 2 ) : ( inversion => { 1 => 1, 2 => 1 } ),
+                    $j % 2 == 0
+                        ? ( variation => 2 )
+                        : ( inversion => { 1 => 1, 2 => 1 } ),
                 );
 
                 $j++;
