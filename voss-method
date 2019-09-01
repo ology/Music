@@ -22,7 +22,7 @@ use Math::Random::OO::Uniform;
 my $max   = shift || 16;
 my @notes = @ARGV ? @ARGV : qw( C5 Ds5 F5 G5 A5 );
 
-my $zero_to_one    = Math::Random::OO::Uniform->new( 0, 1 );
+my $zero_to_one    = Math::Random::OO::Uniform->new;
 my $neg_one_to_one = Math::Random::OO::Uniform->new( -1, 1 );
 
 my @seed = map { $zero_to_one->next } 1 .. 4;
