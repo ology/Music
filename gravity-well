@@ -54,8 +54,13 @@ sub top {
     my $j = 0; # Imperfect variation/inversion
 
     for my $n ( 1 .. $max ) {
-        $score->n( $eighth, $scale->[ $genf->($n) ] ) for 1 .. 2;
-        $score->n( $quarter, $scale->[ $genf->($n) ] );
+        if ( $i % 2 == 0 ) {
+            $score->n( $eighth, $scale->[ $genf->($n) ] ) for 1 .. 2;
+            $score->n( $quarter, $scale->[ $genf->($n) ] );
+        }
+        else {
+            $score->n( $quarter, $scale->[ $genf->($n) ] ) for 1 .. 2;
+        }
 
         # Add a cadence after every 4th iteration
         if ( $n % 4 == 0 ) {
