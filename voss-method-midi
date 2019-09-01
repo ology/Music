@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# "Musimathics" pg. 358 - Voss's Method
+# This program is loosely based on "Musimathics" pg. 358 - Voss's Method
 
 use strict;
 use warnings;
