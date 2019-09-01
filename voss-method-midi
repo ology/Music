@@ -15,7 +15,10 @@ my @bnotes = qw( C3 F3 G3 C4 );
 
 my $score = MIDI::Util::setup_score();
 
-$score->synch( \&treble, \&bass );
+$score->synch(
+    \&treble,
+    \&bass,
+);
 
 $score->write_score("$0.mid");
 
@@ -59,6 +62,5 @@ sub voss {
 
 sub rand_range {
     my ( $lower, $upper ) = @_;
-    my $r = rand;
-    return $r * ( $upper - $lower ) + $lower;
+    return rand() * ( $upper - $lower ) + $lower;
 }
