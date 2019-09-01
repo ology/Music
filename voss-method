@@ -14,7 +14,7 @@ use warnings;
         print "\t*\n" if $y == 0;
     }
  }
- __END__
+ exit;
 =cut
 
 use Data::Dumper;
