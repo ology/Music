@@ -21,7 +21,6 @@ my $max   = shift || 16;
 my @notes = @ARGV ? @ARGV : qw( C5 Ds5 F5 G5 A5 );
 
 my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
-#use Data::Dumper; warn Dumper \@seed; exit;
 
 my @result;
 
