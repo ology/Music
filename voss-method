@@ -5,6 +5,18 @@
 use strict;
 use warnings;
 
+=for curiosity
+ for my $n ( 0 .. 15 ) {
+    for my $k ( 0 .. 3 ) {
+        my $x = 2 ** $k;
+        my $y = $n % $x;
+        print "$n % 2 ** $k ($x) = $y\n";
+        print "\t*\n" if $n % $x == 0;
+    }
+ }
+ __END__
+=cut
+
 use Data::Dumper;
 
 my $max   = shift || 16;
