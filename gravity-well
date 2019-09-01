@@ -78,14 +78,7 @@ sub top {
                 $j++;
             }
 
-            push @$bottom_notes, $chords->[0][0], $chords->[1][0];
-
-            # Remove the first note of each chord
-            shift @$_ for @$chords;
-
-            $score->n( $half, @$_ ) for @$chords;
-
-            $i++;
+            $i = truncate_start( $bottom_notes, $chords, $score, $half, $i );
         }
     }
 
@@ -93,14 +86,12 @@ sub top {
         type      => 'deceptive',
         variation => int( rand 2 ) + 1,
     );
-    push @$bottom_notes, $chords->[0][0], $chords->[1][0];
-    shift @$_ for @$chords;
-    $score->n( $half, @$_ ) for @$chords;
+
+    truncate_start( $bottom_notes, $chords, $score, $half, 0 );
 
     $chords = $mc->cadence( type => 'plagal' );
-    push @$bottom_notes, $chords->[0][0], $chords->[1][0];
-    shift @$_ for @$chords;
-    $score->n( $half, @$_ ) for @$chords;
+
+    truncate_start( $bottom_notes, $chords, $score, $half, 0 );
 }
 
 sub bottom {
@@ -141,3 +132,19 @@ sub get_genf {
 
     return \@scale, $genf;
 }
+
+sub truncate_start {
+    my ( $notes, $chords, $score, $duration, $i ) = @_;
+
+    push @$notes, $chords->[0][0], $chords->[1][0];
+
+    # Remove the first note of each chord
+    shift @$_ for @$chords;
+
+    $score->n( $duration, @$_ ) for @$chords;
+
+    $i++;
+
+    return $i;
+}
+
