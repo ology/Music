@@ -93,14 +93,14 @@ sub top {
         type      => 'deceptive',
         variation => int( rand 2 ) + 1,
     );
-    $score->n( $half, @$_ ) for @$chords;
-
     push @$bottom_notes, $chords->[0][0], $chords->[1][0];
+    shift @$_ for @$chords;
+    $score->n( $half, @$_ ) for @$chords;
 
     $chords = $mc->cadence( type => 'plagal' );
-    $score->n( $half, @$_ ) for @$chords;
-
     push @$bottom_notes, $chords->[0][0], $chords->[1][0];
+    shift @$_ for @$chords;
+    $score->n( $half, @$_ ) for @$chords;
 }
 
 sub bottom {
