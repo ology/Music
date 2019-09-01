@@ -39,8 +39,6 @@ sub voss {
 
 sub rand_range {
     my ( $lower, $upper ) = @_;
-    my $r = rand;
-    my $n = $r * ( $upper - $lower ) + $lower;
-#warn(__PACKAGE__,' ',__LINE__," MARK: ",$n,"\n");
+    my $n = rand() * ( $upper - $lower ) + $lower;
     return $n;
 }
