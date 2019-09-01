@@ -158,9 +158,8 @@ sub truncate_start {
 
 sub drums {
     my $d = MIDI::Drummer::Tiny->new(
-        score     => $score,
-        bpm       => $bpm,
-        signature => '4/4',
+        score => $score,
+        bpm   => $bpm,
     );
 
     for my $n ( 1 .. $max * 3 ) {
