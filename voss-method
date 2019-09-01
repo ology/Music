@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use Math::Random::MT::Auto::Range;
+use Math::Random::OO::Uniform;
 
 =for curiosity
  for my $n ( 0 .. 15 ) {
@@ -22,19 +22,10 @@ use Math::Random::MT::Auto::Range;
 my $max   = shift || 16;
 my @notes = @ARGV ? @ARGV : qw( C5 Ds5 F5 G5 A5 );
 
-my $zero_to_one = Math::Random::MT::Auto::Range->new(
-    LO   => 0,
-    HI   => 1,
-    TYPE => 'DOUBLE',
-);
+my $zero_to_one    = Math::Random::OO::Uniform->new( 0, 1 );
+my $neg_one_to_one = Math::Random::OO::Uniform->new( -1, 1 );
 
-my $neg_one_to_one = Math::Random::MT::Auto::Range->new(
-    LO   => -1,
-    HI   => 1,
-    TYPE => 'DOUBLE',
-);
-
-my @seed = map { $zero_to_one->rrand } 1 .. 4;
+my @seed = map { $zero_to_one->next } 1 .. 4;
 
 my @result;
 
@@ -54,7 +45,7 @@ sub voss {
 
     for my $k ( 0 .. @$list - 1 ) {
         if ( $n % ( 2 ** $k ) == 0 ) {
-            $list->[$k] = $neg_one_to_one->rrand;
+            $list->[$k] = $neg_one_to_one->next;
         }
 
         $sum += $list->[$k];
