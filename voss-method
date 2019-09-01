@@ -5,6 +5,8 @@
 use strict;
 use warnings;
 
+use Math::Random::MT::Auto::Range;
+
 =for curiosity
  for my $n ( 0 .. 15 ) {
     for my $k ( 0 .. 3 ) {
@@ -20,7 +22,19 @@ use warnings;
 my $max   = shift || 16;
 my @notes = @ARGV ? @ARGV : qw( C5 Ds5 F5 G5 A5 );
 
-my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
+my $zero_to_one = Math::Random::MT::Auto::Range->new(
+    LO   => 0,
+    HI   => 1,
+    TYPE => 'DOUBLE',
+);
+
+my $neg_one_to_one = Math::Random::MT::Auto::Range->new(
+    LO   => -1,
+    HI   => 1,
+    TYPE => 'DOUBLE',
+);
+
+my @seed = map { $zero_to_one->rrand } 1 .. 4;
 
 my @result;
 
@@ -40,17 +54,11 @@ sub voss {
 
     for my $k ( 0 .. @$list - 1 ) {
         if ( $n % ( 2 ** $k ) == 0 ) {
-            $list->[$k] = rand_range( -1, 1 );
+            $list->[$k] = $neg_one_to_one->rrand;
         }
 
         $sum += $list->[$k];
     }
 
     return $sum;
-}
-
-sub rand_range {
-    my ( $lower, $upper ) = @_;
-    my $n = rand() * ( $upper - $lower ) + $lower;
-    return $n;
 }
