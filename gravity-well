@@ -50,8 +50,8 @@ sub top {
         format => 'midi',
     );
 
-    my $i = 0;
-    my $j = 0;
+    my $i = 0; # Cadence alternation
+    my $j = 0; # Imperfect variation/inversion
 
     for my $n ( 1 .. $max ) {
         $score->n( $eighth, $scale->[ $genf->($n) ] ) for 1 .. 2;
