@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
-#
+
 # "Musimathics" pg. 358 - Voss's Method
-#
+
 use strict;
 use warnings;
 
