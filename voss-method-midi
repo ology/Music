@@ -50,7 +50,7 @@ sub voss {
     my $sum = 0;
 
     for my $k ( 0 .. @$list - 1 ) {
-        if ( ( $n % ( 2 ** $k ) ) == 0 ) {
+        if ( $n % ( 2 ** $k ) == 0 ) {
             $list->[$k] = rand_range( -1, 1 );
         }
 
