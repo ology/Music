@@ -21,11 +21,11 @@ my $bottom_scale = 'pminor';
 my $top_patch    = 0;
 my $bottom_patch = 42;
 
+my $bottom_notes = [];
+
 my $quarter = 'qn';
 my $half    = 'hn';
 my $whole   = 'wn';
-
-my $bottom_notes = [];
 
 my $score = MIDI::Util::setup_score( lead_in => 0, bpm => $bpm );
 
