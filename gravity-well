@@ -51,6 +51,7 @@ sub top {
     );
 
     my $i = 0;
+    my $j = 0;
 
     for my $n ( 1 .. $max ) {
         $score->n( $eighth, $scale->[ $genf->($n) ] ) for 1 .. 2;
@@ -68,9 +69,11 @@ sub top {
             }
             else {
                 $chords = $mc->cadence(
-                    type      => 'imperfect',
-                    inversion => { 1 => 1, 2 => 1 },
+                    type => 'imperfect',
+                    $j % 2 == 0 ? ( variation => 2 ) : ( inversion => { 1 => 1, 2 => 1 } ),
                 );
+
+                $j++;
             }
 
             push @$bottom_notes, $chords->[0][0], $chords->[1][0];
