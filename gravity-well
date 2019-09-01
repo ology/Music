@@ -127,9 +127,9 @@ sub bottom {
 }
 
 sub get_genf {
-    my ( $note, $octave, $name ) = @_;
+    my ( $note, $octave, $type ) = @_;
 
-    my @scale = map { $_ . $octave } get_scale_notes( $note, $name );
+    my @scale = map { $_ . $octave } get_scale_notes( $note, $type );
     # Transform to MIDI accidentals
     for ( @scale ) {
         s/#/s/;
