@@ -17,13 +17,11 @@ use warnings;
  exit;
 =cut
 
-use Data::Dumper;
-
 my $max   = shift || 16;
 my @notes = @ARGV ? @ARGV : qw( C5 Ds5 F5 G5 A5 );
 
 my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
-#warn Dumper \@seed; exit;
+#use Data::Dumper; warn Dumper \@seed; exit;
 
 my @result;
 
@@ -31,12 +29,10 @@ for my $n ( 0 .. $max - 1 ) {
     my $x = voss( $n, \@seed );
     my $y = sprintf '%.0f', $x; # XXX This is questionable
 
-    warn "$x => $y\n";
-
     $result[$n] = $notes[$y];
-}
 
-print Dumper \@result;
+    warn "$x => $y => $result[$n]\n";
+}
 
 sub voss {
     my ( $n, $list ) = @_;
