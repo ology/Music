@@ -1,0 +1,135 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use lib '/Users/gene/sandbox/Music-Cadence/lib';
+use Music::Cadence;
+use Music::Scales;
+use Music::Voss qw/ powers /;
+
+my $max    = shift || 16;
+my $note   = shift || 'C';
+my $octave = shift || 4;
+my $bpm    = shift || 100;
+my $leads  = shift || '2 7';
+
+my $top_scale    = 'minor';
+my $bottom_scale = 'pminor';
+
+my $top_patch    = 0;
+my $bottom_patch = 42;
+
+my $quarter = 'qn';
+my $half    = 'hn';
+my $whole   = 'wn';
+
+my $bottom_notes = [];
+
+my $score = MIDI::Util::setup_score( lead_in => 0, bpm => $bpm );
+
+$score->synch(
+    \&top,
+    \&bottom,
+);
+
+$score->write_score("$0.mid");
+
+sub top {
+    MIDI::Util::set_chan_patch( $score, 0, $top_patch );
+
+    my ( $scale, $genf ) = get_genf( $note, 5, $top_scale );
+
+    my @leaders = split /\s+/, $leads;
+
+    my $mc = Music::Cadence->new(
+        key    => $note,
+        scale  => $top_scale,
+        octave => 4,
+        format => 'midi',
+    );
+
+    my $i = 0;
+
+    for my $n ( 1 .. $max ) {
+        $score->n( $quarter, $scale->[ $genf->($n) ] ) for 1 .. 2;
+
+        # Add a cadence after every 4th iteration
+        if ( $n % 4 == 0 ) {
+            my $chords;
+
+            if ( $i % 2 == 0 ) {
+                $chords = $mc->cadence(
+                    type    => 'half',
+                    leading => $leaders[ int rand @leaders ],
+                );
+            }
+            else {
+                $chords = $mc->cadence(
+                    type      => 'imperfect',
+                    inversion => { 1 => 1, 2 => 1 },
+                );
+            }
+#use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper$chords);
+
+            $score->n( $half, @$_ ) for @$chords;
+
+            push @$bottom_notes, $chords->[0][0], $chords->[1][0];
+
+            $i++;
+        }
+    }
+
+    my $chords = $mc->cadence(
+        type      => 'deceptive',
+        variation => int( rand 2 ) + 1,
+    );
+    $score->n( $half, @$_ ) for @$chords;
+
+    push @$bottom_notes, $chords->[0][0], $chords->[1][0];
+
+    $chords = $mc->cadence( type => 'plagal' );
+    $score->n( $half, @$_ ) for @$chords;
+
+    push @$bottom_notes, $chords->[0][0], $chords->[1][0];
+}
+
+sub bottom {
+    MIDI::Util::set_chan_patch( $score, 1, $bottom_patch );
+
+    s/4/3/ for @$bottom_notes;
+
+    my ( $scale, $genf ) = get_genf( $note, 3, $bottom_scale );
+
+    my $i = 0;
+
+    for my $n ( 1 .. $max ) {
+        $score->n( $half, $scale->[ $genf->($n) ] );
+
+        if ( $n % 4 == 0 ) {
+            $score->n( $half, $bottom_notes->[$i] );
+            $score->n( $half, $bottom_notes->[ ++$i ] );
+            $i++;
+        }
+    }
+
+    $score->n( $half, $bottom_notes->[$i] );
+    $score->n( $half, $bottom_notes->[ ++$i ] ) for 1 .. 3;
+}
+
+sub get_genf {
+    my ( $note, $octave, $name ) = @_;
+
+    my @scale = map { $_ . $octave } get_scale_notes( $note, $name );
+    # Transform to MIDI accidentals
+    for ( @scale ) {
+        s/#/s/;
+        s/b/f/;
+    }
+
+    my $seed = [ map { sub { int rand 2 } } @scale ];
+    my $genf = powers( calls => $seed );
+
+    return \@scale, $genf;
+}
