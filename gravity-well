@@ -73,9 +73,13 @@ sub top {
                 );
             }
 
-            $score->n( $half, @$_ ) for @$chords;
-
             push @$bottom_notes, $chords->[0][0], $chords->[1][0];
+
+            # Remove the first note of each chord
+            $chords->[0] = [ @{ $chords->[0] }[ 1 .. @{ $chords->[0] } - 1 ] ];
+            $chords->[1] = [ @{ $chords->[1] }[ 1 .. @{ $chords->[1] } - 1 ] ];
+
+            $score->n( $half, @$_ ) for @$chords;
 
             $i++;
         }
