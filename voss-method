@@ -1,25 +1,30 @@
 #!/usr/bin/env perl
-#
+
 # "Musimathics" pg. 358 - Voss's Method
-#
+
 use strict;
 use warnings;
+
+use Data::Dumper;
 
 my $max   = shift || 16;
 my @notes = @ARGV ? @ARGV : qw( C5 Ds5 F5 G5 A5 );
 
 my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
-#use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper\@seed);exit;
+#warn Dumper \@seed; exit;
 
 my @result;
 
 for my $n ( 0 .. $max - 1 ) {
     my $x = voss( $n, \@seed );
     my $voss = sprintf '%.0f', $x;
+
     warn "$x => $voss\n";
+
     $result[$n] = $notes[$voss];
 }
-use Data::Dumper;print Dumper\@result;
+
+print Dumper \@result;
 
 sub voss {
     my ( $n, $list ) = @_;
