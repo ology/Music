@@ -71,7 +71,6 @@ sub top {
                     inversion => { 1 => 1, 2 => 1 },
                 );
             }
-#use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper$chords);
 
             $score->n( $half, @$_ ) for @$chords;
 
