@@ -29,7 +29,7 @@ my @result;
 
 for my $n ( 0 .. $max - 1 ) {
     my $x = voss( $n, \@seed );
-    my $y = sprintf '%.0f', $x;
+    my $y = sprintf '%.0f', $x; # XXX This is questionable
 
     warn "$x => $y\n";
 
