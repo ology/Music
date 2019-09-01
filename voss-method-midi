@@ -38,7 +38,7 @@ sub bass {
 
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
-    for my $n ( 0 .. ( $max / 2 ) - 1 ) {
+    for my $n ( 0 .. $max / 2 - 1 ) {
         my $note = $bnotes[ sprintf '%.0f', voss( $n, \@seed ) ];
         $score->n( 'hn', $note );
     }
