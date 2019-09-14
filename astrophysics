@@ -44,22 +44,14 @@ sub top {
 
     for ( 0 .. 1 ) {
     for my $section (
-        $sections[0], # I
-        $sections[0],
-        $sections[1], # II
-        $sections[1],
-        $sections[0], # I
-        $sections[0],
-        $sections[2], # III
-        $sections[2],
-        $sections[3], # IV
-        $sections[3],
-        $sections[1], # II
-        $sections[1],
-        $sections[0], # I
-        $sections[0],
-        $sections[2], # III
-        $sections[2],
+        $sections[0], $sections[0], # I
+        $sections[1], $sections[1], # II
+        $sections[0], $sections[0], # I
+        $sections[2], $sections[2], # III
+        $sections[3], $sections[3], # IV
+        $sections[1], $sections[1], # II
+        $sections[0], $sections[0], # I
+        $sections[2], $sections[2], # III
     ) {
         for my $n ( @$section ) {
             $score->n( $half, $n );
