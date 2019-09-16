@@ -3,10 +3,11 @@ use strict;
 use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
 use lib '/Users/gene/sandbox/MIDI-Drummer-Tiny/lib';
-use MIDI::Drummer::Tiny;
 use lib '/Users/gene/sandbox/Music-Cadence/lib';
+use lib '/Users/gene/sandbox/Music-ToRoman/lib';
+use MIDI::Util;
+use MIDI::Drummer::Tiny;
 use Music::Cadence;
 use Music::Scales;
 use Music::Voss qw/ powers /;
