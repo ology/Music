@@ -107,7 +107,7 @@ sub bottom {
     }
 }
 
-# Bass data taken from the most common Bach corale basslines
+# Data taken from the most common Bach corale basslines
 __DATA__
 III III III III
 III ii i iv
