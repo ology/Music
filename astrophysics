@@ -35,10 +35,7 @@ sub top {
     my @sections = ();
 
     for my $i ( 0 .. 3 ) {
-        my @section = ();
-        for my $n ( 0 .. 3 ) {
-            push @section, $scale->[ $genf->($n) % @$scale ];
-        }
+        my @section = map { $scale->[ $genf->($_) % @$scale ] } 0 .. 3;
         push @sections, \@section;
     }
 
