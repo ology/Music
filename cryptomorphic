@@ -62,7 +62,7 @@ sub melody {
 #            $score->n( $motif->[$n], $notes[$n] );
         }
 
-#        $score->r('wn');
+        $score->r('wn');
     }
 }
 
