@@ -34,7 +34,7 @@ $score->write_score("$0.mid");
 sub beat {
     my $d = MIDI::Drummer::Tiny->new( bpm => $bpm, score => $score );
 
-    for my $i ( 1 .. $max * $size + ( 4 * $max ) ) {
+    for my $i ( 1 .. $max * $size + ( $mod * $max ) ) {
         $d->note( $d->quarter, $d->closed_hh );
     }
 }
@@ -62,7 +62,7 @@ sub melody {
 #            $score->n( $motif->[$n], $notes[$n] );
         }
 
-        $score->r('wn');
+#        $score->r('wn');
     }
 }
 
