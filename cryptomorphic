@@ -8,7 +8,7 @@ use MIDI::Drummer::Tiny; # https://metacpan.org/pod/MIDI::Drummer::Tiny
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/pod/MIDI::Util
 use lib '/Users/gene/sandbox/Music-Duration-Partition/lib';
-use Music::Duration::Partition;
+use Music::Duration::Partition; # https://metacpan.org/pod/Music::Duration::Partition
 use Music::Scales;
 use Music::VoiceGen;
 use Music::Voss qw/ powers /;
