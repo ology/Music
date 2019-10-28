@@ -2,13 +2,19 @@
 use strict;
 use warnings;
 
+use List::Util qw/ shuffle /;
 use lib '/Users/gene/sandbox/MIDI-Drummer-Tiny/lib';
 use MIDI::Drummer::Tiny;
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
+use lib '/Users/gene/sandbox/Music-Duration-Partition/lib';
+use Music::Duration::Partition;
+use Music::Scales;
+use Music::VoiceGen;
 
-my $max = shift || 4;
-my $bpm = shift || 90;
+my $max  = shift || 4;
+my $bpm  = shift || 90;
+my $size = shift || 4;
 
 my $top_patch    = 0;
 my $bottom_patch = 42;
@@ -22,11 +28,55 @@ my $vii = 'G3';
 my $score = MIDI::Util::setup_score( bpm => $bpm );
 
 $score->synch(
+#    \&top,
     \&bottom,
     \&beat,
 );
 
 $score->write_score("$0.mid");
+
+sub top {
+    MIDI::Util::set_chan_patch( $score, 0, $top_patch );
+
+    my $mdp = Music::Duration::Partition->new(
+        size => $size,
+        pool => [qw/ en sn /],
+    );
+
+    my $motif = $mdp->motif;
+
+    my @pitches   = get_scale_MIDI( 'A', 3, 'pminor' );
+    my @intervals = qw/ -4 -3 -2 2 3 4 /;
+
+    my $voice = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@intervals,
+    );
+
+    for my $x ( 1 .. $max ) {
+        my @notes = map { $voice->rand } 0 .. @$motif - 1;
+
+        for my $n ( 0 .. @notes - 1 ) {
+            $score->n( $motif->[$n], $notes[$n] );
+        }
+
+        $score->r('wn');
+
+        my @phrase = shuffle @$motif;
+
+        for my $n ( 0 .. @notes - 1 ) {
+            $score->n( $phrase[$n], $notes[$n] );
+        }
+
+        $score->r('wn');
+
+        for my $n ( 0 .. @notes - 1 ) {
+            $score->n( $motif->[$n], $notes[$n] );
+        }
+
+        $score->r('dhn');
+    }
+}
 
 sub beat {
     my $d = MIDI::Drummer::Tiny->new( bpm => $bpm, score => $score );
@@ -42,7 +92,7 @@ sub beat {
 }
 
 sub bottom {
-    MIDI::Util::set_chan_patch( $score, 0, $bottom_patch );
+    MIDI::Util::set_chan_patch( $score, 1, $bottom_patch );
 #    $score->Volume(30);
 
     for my $n ( 1 .. $max ) {
