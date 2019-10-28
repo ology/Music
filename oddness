@@ -29,7 +29,7 @@ my $vii = 'G3';
 my $score = MIDI::Util::setup_score( bpm => $bpm );
 
 $score->synch(
-#    \&top,
+    \&top,
     \&bottom,
     \&beat,
 );
@@ -57,7 +57,7 @@ sub top {
     for my $x ( 1 .. $max ) {
         my @notes = map { $voice->rand } 0 .. @$motif - 1;
 
-        for my $n ( 0 .. @notes - 1 ) {
+        for my $n ( 0 .. @$motif - 1 ) {
             $score->n( $motif->[$n], $notes[$n] );
         }
 
@@ -65,13 +65,13 @@ sub top {
 
         my @phrase = shuffle @$motif;
 
-        for my $n ( 0 .. @notes - 1 ) {
+        for my $n ( 0 .. @$motif - 1 ) {
             $score->n( $phrase[$n], $notes[$n] );
         }
 
         $score->r($wn);
 
-        for my $n ( 0 .. @notes - 1 ) {
+        for my $n ( 0 .. @$motif - 1 ) {
             $score->n( $motif->[$n], $notes[$n] );
         }
 
