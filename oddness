@@ -55,10 +55,11 @@ sub top {
     );
 
     for my $x ( 1 .. $max ) {
-        my @notes = map { $voice->rand } 0 .. @$motif - 1;
+        my @notes1 = map { $voice->rand } 0 .. @$motif - 1;
+        my @notes2 = map { $voice->rand } 0 .. @$motif - 1;
 
         for my $n ( 0 .. @$motif - 1 ) {
-            $score->n( $motif->[$n], $notes[$n] );
+            $score->n( $motif->[$n], $notes1[$n] );
         }
 
         $score->r($wn);
@@ -66,13 +67,13 @@ sub top {
         my @phrase = shuffle @$motif;
 
         for my $n ( 0 .. @$motif - 1 ) {
-            $score->n( $phrase[$n], $notes[$n] );
+            $score->n( $phrase[$n], $notes2[$n] );
         }
 
         $score->r($wn);
 
         for my $n ( 0 .. @$motif - 1 ) {
-            $score->n( $motif->[$n], $notes[$n] );
+            $score->n( $motif->[$n], $notes1[$n] );
         }
 
         $score->r('dhn');
