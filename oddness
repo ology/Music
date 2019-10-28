@@ -86,32 +86,32 @@ sub beat_one {
 
     $d->note( $d->quarter, $d->kick, $n == 1 ? $d->closed_hh : $d->crash1 );
 
-    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $cymbal, $d->kick );
     $d->note( $d->eighth, $d->kick );
 
-    $d->note( $d->quarter, $d->snare, $cymbal );
+    $d->note( $d->quarter, $cymbal, $d->snare );
 
-    $d->note( $d->quarter, $d->kick, $cymbal );
+    $d->note( $d->quarter, $cymbal, $d->kick );
 
     $d->note( $d->eighth, $cymbal );
     $d->note( $d->eighth, $d->kick );
 
-    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $cymbal, $d->kick );
     $d->note( $d->eighth, $d->kick );
 
     $d->note( $d->quarter, $cymbal );
 
-    $d->note( $d->quarter, $d->kick, $cymbal );
+    $d->note( $d->quarter, $cymbal, $d->kick );
 
-    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $cymbal, $d->kick );
     $d->note( $d->eighth, $d->kick );
 
-    $d->note( $d->quarter, $d->snare, $cymbal );
+    $d->note( $d->quarter, $cymbal, $d->snare );
 
-    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $cymbal, $d->kick );
     $d->note( $d->eighth, $d->kick );
 
-    $d->note( $d->quarter, $d->kick, $cymbal );
+    $d->note( $d->quarter, $cymbal, $d->kick );
 
     $d->note( $d->eighth, $cymbal );
     $d->note( $d->eighth, $d->kick );
@@ -119,100 +119,100 @@ sub beat_one {
     $d->note( $d->eighth, $cymbal );
     $d->note( $d->eighth, $d->kick );
 
-    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $cymbal, $d->kick );
     $d->note( $d->eighth, $d->snare );
 
     $d->note( $d->eighth, $cymbal );
     $d->note( $d->eighth, $d->kick );
 
-    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $cymbal, $d->kick );
     $d->note( $d->eighth, $d->kick );
 
     $d->note( $d->quarter, $cymbal );
 
-    $d->note( $d->quarter, $d->kick, $cymbal );
+    $d->note( $d->quarter, $cymbal, $d->kick );
 
-    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $cymbal, $d->kick );
     $d->note( $d->eighth, $d->kick );
 
-    $d->note( $d->quarter, $d->snare, $cymbal );
+    $d->note( $d->quarter, $cymbal, $d->snare );
 
     $d->note( $d->eighth, $cymbal );
     $d->note( $d->eighth, $d->kick );
 
-    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $cymbal, $d->kick );
     $d->note( $d->eighth, $d->kick );
 }
 
 sub beat_two {
     my ($d) = @_;
 
-    $d->note( $d->eighth, $d->kick, $d->crash1 );
+    $d->note( $d->eighth, $d->crash1, $d->kick );
     $d->note( $d->eighth, $d->closed_hh );
 
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
 
-    $d->note( $d->eighth, $d->snare, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->snare );
     $d->note( $d->eighth, $d->closed_hh );
 
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->closed_hh );
-    $d->note( $d->eighth, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->snare, $d->closed_hh );
-    $d->note( $d->eighth, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
     $d->note( $d->eighth, $d->closed_hh );
 
     $d->note( $d->eighth, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
 
-    $d->note( $d->eighth, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->snare, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
 
     $d->note( $d->eighth, $d->closed_hh );
     $d->note( $d->eighth, $d->closed_hh );
 
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
     $d->note( $d->eighth, $d->closed_hh );
 
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
 
-    $d->note( $d->eighth, $d->snare, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->snare );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
     $d->note( $d->eighth, $d->closed_hh );
 
     $d->note( $d->eighth, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
 
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
-    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+    $d->note( $d->eighth, $d->closed_hh, $d->snare );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+
+    $d->note( $d->eighth, $d->closed_hh, $d->snare );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
+    $d->note( $d->eighth, $d->closed_hh, $d->kick );
 }
