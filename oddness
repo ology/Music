@@ -1,0 +1,218 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Drummer-Tiny/lib';
+use MIDI::Drummer::Tiny;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+
+my $max = shift || 4;
+my $bpm = shift || 90;
+
+my $top_patch    = 0;
+my $bottom_patch = 42;
+
+my $en  = 'en';
+my $i   = 'A2';
+my $v   = 'E3';
+my $vi  = 'F3';
+my $vii = 'G3';
+
+my $score = MIDI::Util::setup_score( bpm => $bpm );
+
+$score->synch(
+    \&bottom,
+    \&beat,
+);
+
+$score->write_score("$0.mid");
+
+sub beat {
+    my $d = MIDI::Drummer::Tiny->new( bpm => $bpm, score => $score );
+
+    for my $n ( 1 .. $max ) {
+        if ( $n % 4 == 3 ) {
+            beat_two($d);
+        }
+        else {
+            beat_one( $d, $n );
+        }
+    }
+}
+
+sub bottom {
+    MIDI::Util::set_chan_patch( $score, 0, $bottom_patch );
+    $score->Volume(30);
+
+    for my $n ( 1 .. $max ) {
+        one();                 # 6
+        zero();                # 4
+        $score->n( $en, $vi ); # 1
+
+        one();
+        zero();
+        $score->n( $en, $vii );
+
+        one();
+        zero();
+        $score->n( $en, $vi );
+
+        one();
+        zero();
+        $score->n( $en, $vii );
+        $score->n( $en, $vi );
+        $score->n( $en, $v );
+    }
+}
+
+sub zero {
+    $score->n( $en, $i );
+    $score->n( $en, $v );
+    $score->n( $en, $v );
+    $score->n( $en, $i );
+}
+
+sub one {
+    zero();
+    $score->n( $en, $v );
+    $score->n( $en, $vi );
+}
+
+sub beat_one {
+    my ( $d, $n ) = @_;
+
+    my $cymbal = $n % 4 ? $d->closed_hh : $d->ride_bell;
+
+    $d->note( $d->quarter, $d->kick, $n == 1 ? $d->closed_hh : $d->crash1 );
+
+    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->quarter, $d->snare, $cymbal );
+
+    $d->note( $d->quarter, $d->kick, $cymbal );
+
+    $d->note( $d->eighth, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->quarter, $cymbal );
+
+    $d->note( $d->quarter, $d->kick, $cymbal );
+
+    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->quarter, $d->snare, $cymbal );
+
+    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->quarter, $d->kick, $cymbal );
+
+    $d->note( $d->eighth, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->eighth, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $d->snare );
+
+    $d->note( $d->eighth, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->quarter, $cymbal );
+
+    $d->note( $d->quarter, $d->kick, $cymbal );
+
+    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->quarter, $d->snare, $cymbal );
+
+    $d->note( $d->eighth, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+
+    $d->note( $d->eighth, $d->kick, $cymbal );
+    $d->note( $d->eighth, $d->kick );
+}
+
+sub beat_two {
+    my ($d) = @_;
+
+    $d->note( $d->eighth, $d->kick, $d->crash1 );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->snare, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->snare, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->snare, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->snare, $d->closed_hh );
+    $d->note( $d->eighth, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+    $d->note( $d->eighth, $d->kick, $d->closed_hh );
+}
