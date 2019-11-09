@@ -25,6 +25,8 @@ my $bottom_patch = 42;
 my $wn  = 'wn';
 my $en  = 'en';
 
+my $intervals = [qw/ -4 -3 -2 -1 1 2 3 4 /];
+
 my $score = MIDI::Util::setup_score( bpm => $bpm );
 
 $score->synch(
@@ -50,7 +52,7 @@ sub top1 {
 
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
-        intervals => [qw/ -4 -3 -2 -1 1 2 3 4 /],
+        intervals => $intervals,
     );
 
     my @notes1 = map { $voice->rand } 0 .. @$motif - 1;
@@ -98,7 +100,7 @@ sub top2 {
 
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
-        intervals => [qw/ -4 -3 -2 -1 1 2 3 4 /],
+        intervals => $intervals,
     );
 
     my @notes1 = map { $voice->rand } 0 .. @$motif - 1;
