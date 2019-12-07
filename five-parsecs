@@ -1,0 +1,158 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Drummer-Tiny/lib';
+use MIDI::Drummer::Tiny;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+
+my $max = shift || 8;
+my $bpm = shift || 100;
+
+my $cycle_patch = 0;
+my $bass_patch  = 42;
+my $bird_patch  = 73;
+
+my $sixth   = 'sn';
+my $eighth  = 'en';
+my $quarter = 'qn';
+my $half    = 'hn';
+my $dhalf   = 'dhn';
+my $whole   = 'wn';
+
+my $velo1 = 'm';
+my $velo2 = 'ff';
+my $velo3 = 'mf';
+
+my $beats = 0;
+
+my $score = MIDI::Util::setup_score( bpm => $bpm );
+
+my $d = MIDI::Drummer::Tiny->new(
+    score => $score,
+    bpm   => $bpm,
+    kick  => 'n36',
+    snare => 'n40',
+);
+
+$score->synch(
+    \&cycle,
+    \&bass,
+    \&bird,
+    \&hihat,
+    \&beat,
+);
+
+$score->write_score("$0.mid");
+
+sub cycle {
+    MIDI::Util::set_chan_patch( $score, 0, $cycle_patch );
+
+    for my $beat ( 1 .. 14 ) {
+        $score->n( $eighth, 'C5', $velo1 );
+        $score->n( $eighth, 'B4', $velo1 );
+        $score->n( $eighth, 'A4', $velo1 );
+        $score->n( $eighth, 'C4', $velo1 );
+        $score->n( $eighth, 'B4', $velo1 );
+        $score->n( $eighth, 'A4', $velo1 );
+        $score->n( $eighth, 'G4', $velo1 );
+
+        $score->n( $sixth, 'C5', $velo1 );
+        $score->r($sixth);
+        $score->n( $sixth, 'B4', $velo1 );
+        $score->r($sixth);
+        $score->n( $sixth, 'A4', $velo1 );
+        $score->r($sixth);
+        $score->n( $sixth, 'C4', $velo1 );
+        $score->r($sixth);
+        $score->n( $sixth, 'B4', $velo1 );
+        $score->r($sixth);
+        $score->n( $sixth, 'A4', $velo1 );
+        $score->r($sixth);
+        $score->n( $sixth, 'G4', $velo1 );
+        $score->r($sixth);
+    }
+}
+
+sub bass {
+    MIDI::Util::set_chan_patch( $score, 1, $bass_patch );
+
+    for my $beat ( 1 .. 10 ) {
+        $score->n( $dhalf, 'A2', $velo1 );
+        $score->n( $eighth, 'C3', $velo1 );
+        $score->r($eighth);
+        $score->n( $eighth, 'C3', $velo1 );
+        $score->r($eighth);
+
+        $score->n( $eighth, 'A2', $velo1 );
+        $score->r($eighth);
+        $score->n( $eighth, 'A2', $velo1 );
+        $score->r($eighth);
+        $score->n( $eighth, 'A2', $velo1 );
+        $score->r($eighth);
+        $score->n( $half, 'C3', $velo1 );
+    }
+}
+
+sub bird {
+    MIDI::Util::set_chan_patch( $score, 2, $bird_patch );
+
+    for my $beat ( 1 .. 19 ) {
+        $score->n( $eighth, 'C6', $velo3 );
+        $score->n( $eighth, 'D6', $velo3 );
+        $score->n( $sixth, 'E6', $velo3 );
+        $score->r($sixth);
+        $score->r($whole);
+    }
+}
+
+sub hihat {
+    MIDI::Util::set_chan_patch( $score, 9 );
+
+    for my $beat ( 1 .. 20 ) {
+        # Rest for fill
+        if ( $beat % 9 == 0 ) {
+            $score->r($whole);
+            $score->r($quarter);
+        }
+        else {
+            # Crash every 3rd time around
+            if ( $beat % 3 == 0 ) {
+                $d->note( $d->eighth, $d->crash2, $velo2 );
+            }
+            else {
+                $d->note( $d->eighth, $d->closed_hh, $velo2 );
+            }
+
+            $d->note( $d->eighth, $d->closed_hh, $velo2 ) for 1 .. 9;
+        }
+    }
+}
+
+sub beat {
+    MIDI::Util::set_chan_patch( $score, 9 );
+
+    for my $beat ( 1 .. 20 ) {
+        # Fill the 9th time around
+        if ( $beat % 9 == 0 ) {
+            $d->note( $d->eighth, $d->snare, $velo2 );
+            $d->note( $d->eighth, $d->snare, $velo2 );
+            $d->note( $d->eighth, $d->hi_tom, $velo2 );
+            $d->note( $d->eighth, $d->hi_tom, $velo2 );
+            $d->note( $d->eighth, $d->hi_mid_tom, $velo2 );
+            $d->note( $d->eighth, $d->hi_mid_tom, $velo2 );
+            $d->note( $d->eighth, $d->low_mid_tom, $velo2 );
+            $d->note( $d->eighth, $d->low_mid_tom, $velo2 );
+            $d->note( $d->eighth, $d->kick, $velo2 );
+            $d->note( $d->eighth, $d->kick, $velo2 );
+        }
+        else {
+            $d->note( $d->quarter, $d->kick, $velo2 );
+            $d->note( $d->quarter, $d->snare, $velo2 );
+            $d->note( $d->quarter, $d->snare, $velo2 );
+            $d->note( $d->quarter, $d->kick, $velo2 );
+            $d->note( $d->quarter, $d->snare, $velo2 );
+        }
+    }
+}
