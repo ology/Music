@@ -47,7 +47,7 @@ $score->write_score("$0.mid");
 sub cycle {
     MIDI::Util::set_chan_patch( $score, 0, $cycle_patch );
 
-    for my $beat ( 1 .. 14 ) {
+    for ( 1 .. 14 ) {
         $score->n( $eighth, 'C5', $velo1 );
         $score->n( $eighth, 'B4', $velo1 );
         $score->n( $eighth, 'A4', $velo1 );
@@ -76,7 +76,7 @@ sub cycle {
 sub bass {
     MIDI::Util::set_chan_patch( $score, 1, $bass_patch );
 
-    for my $beat ( 1 .. 10 ) {
+    for ( 1 .. 10 ) {
         $score->n( $dhalf, 'A2', $velo1 );
         $score->n( $eighth, 'C3', $velo1 );
         $score->r($eighth);
@@ -96,7 +96,7 @@ sub bass {
 sub bird {
     MIDI::Util::set_chan_patch( $score, 2, $bird_patch );
 
-    for my $beat ( 1 .. 19 ) {
+    for ( 1 .. 19 ) {
         $score->n( $eighth, 'C6', $velo3 );
         $score->n( $eighth, 'D6', $velo3 );
         $score->n( $sixth, 'E6', $velo3 );
