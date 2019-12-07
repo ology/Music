@@ -96,10 +96,17 @@ sub bass {
 sub bird {
     MIDI::Util::set_chan_patch( $score, 2, $bird_patch );
 
-    for ( 1 .. 19 ) {
+    for my $beat ( 1 .. 19 ) {
         $score->n( $eighth, 'C6', $velo3 );
         $score->n( $eighth, 'D6', $velo3 );
-        $score->n( $sixth, 'E6', $velo3 );
+
+        if ( $beat % 2 == 0 ) {
+            $score->n( $sixth, 'G6', $velo3 );
+        }
+        else {
+            $score->n( $sixth, 'E6', $velo3 );
+        }
+
         $score->r($sixth);
         $score->r($whole);
     }
