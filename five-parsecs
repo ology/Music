@@ -124,12 +124,14 @@ sub hihat {
             # Crash every 3rd time around
             if ( $beat % 3 == 0 ) {
                 $d->note( $d->eighth, $d->crash2, $velo2 );
+                $d->note( $d->eighth, $d->open_hh, $velo2 );
             }
             else {
                 $d->note( $d->eighth, $d->closed_hh, $velo2 );
+                $d->note( $d->eighth, $d->closed_hh, $velo2 );
             }
 
-            $d->note( $d->eighth, $d->closed_hh, $velo2 ) for 1 .. 9;
+            $d->note( $d->eighth, $d->closed_hh, $velo2 ) for 1 .. 8;
         }
     }
 }
