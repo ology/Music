@@ -7,7 +7,6 @@ use MIDI::Drummer::Tiny;
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 
-my $max = shift || 8;
 my $bpm = shift || 100;
 
 my $cycle_patch = 0;
