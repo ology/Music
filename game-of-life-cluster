@@ -15,6 +15,7 @@ my @source = qw/ C D E F G A B /;
 
 my $size = @source;
 
+# Create a LoL of source notes with incrementing octaves
 my $octave = $size;
 my $matrix;
 while ( $octave ) {
@@ -32,9 +33,11 @@ my $g = Game::Life->new($size);
  
 $g->place_points( 4, 4, $glider );
 
+# Incrementally move the glider to the top of the grid
 for ( 1 .. 17 ) {
     my $grid = $g->get_grid;
 
+    # Find the note cluster to add to the score
     my @notes;
     my $i = 0;
     for my $row ( @$grid ) {
@@ -50,6 +53,7 @@ for ( 1 .. 17 ) {
     }
     print "\n";
 
+    # Add the note cluster and a rest to the score
     $score->n( 'qn', @notes );
     $score->r('qn');
 
