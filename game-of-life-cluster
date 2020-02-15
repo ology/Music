@@ -37,6 +37,7 @@ $g->place_points( 4, 4, $glider );
 # Incrementally move the glider to the top-left of the grid
 for my $n ( 1 .. 17 ) {
     print "Iteration $n:\n";
+
     my $grid = $g->get_grid;
 
     # Find the note cluster to add to the score
@@ -53,6 +54,7 @@ for my $n ( 1 .. 17 ) {
         print map { $_ ? 'x' : '.' } @$row;
         print "\n";
     }
+
     print "@notes\n";
     print "\n";
 
