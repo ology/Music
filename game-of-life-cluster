@@ -34,7 +34,7 @@ my $g = Game::Life->new($size);
 # Place the glider at the bottom-right of the grid
 $g->place_points( 4, 4, $glider );
 
-# Incrementally move the glider to the top-left of the grid
+# Incrementally glide to the top-left of the grid
 for my $n ( 1 .. 17 ) {
     print "Iteration $n:\n";
 
