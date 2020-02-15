@@ -16,9 +16,9 @@ my @source = qw/ C D E F G A B /;
 my $size = @source;
 
 my $octave = $size;
-my $notes = [];
+my $matrix = [];
 while ( $octave ) {
-    push @$notes, [ map { $_ . $octave } @source ];
+    push @$matrix, [ map { $_ . $octave } @source ];
     $octave--;
 }
 
@@ -35,12 +35,12 @@ $g->place_points( 4, 4, $glider );
 for ( 1 .. 17 ) {
     my $grid = $g->get_grid();
 
-    my @cluster = ();
+    my @notes = ();
     my $i = 0;
     for my $row ( @$grid ) {
         my $j = 0;
         for my $element ( @$row ) {
-            push @cluster, $notes->[$i][$j] if $element;
+            push @notes, $matrix->[$i][$j] if $element;
             $j++;
         }
         $i++;
@@ -50,7 +50,7 @@ for ( 1 .. 17 ) {
     }
     print "\n";
 
-    $score->n( 'qn', @cluster );
+    $score->n( 'qn', @notes );
     $score->r('qn');
 
     $g->process();
