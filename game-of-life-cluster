@@ -45,8 +45,8 @@ for my $n ( 1 .. 17 ) {
     my $i = 0;
     for my $row ( @$grid ) {
         my $j = 0;
-        for my $element ( @$row ) {
-            push @notes, $matrix->[$i][$j] if $element;
+        for my $cell ( @$row ) {
+            push @notes, $matrix->[$i][$j] if $cell;
             $j++;
         }
         $i++;
