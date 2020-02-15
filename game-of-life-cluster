@@ -23,6 +23,11 @@ while ( $octave ) {
     $octave--;
 }
 
+my $blinker = [
+    [ 0, 0, 0 ],
+    [ 1, 1, 1 ],
+    [ 0, 0, 0 ]
+];
 my $glider = [
     [ 1, 1, 1 ],
     [ 1, 0, 0 ],
@@ -31,6 +36,8 @@ my $glider = [
 
 my $g = Game::Life->new($size);
  
+# Place the blinker on the grid
+#$g->place_points( 2, 2, $blinker );
 # Place the glider at the bottom-right of the grid
 $g->place_points( 4, 4, $glider );
 
