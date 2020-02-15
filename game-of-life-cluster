@@ -49,7 +49,7 @@ for ( 1 .. 17 ) {
         }
         $i++;
 
-        print map { $_ ? 'X' : '.' } @$row;
+        print map { $_ ? 'x' : '.' } @$row;
         print "\n";
     }
     print "\n";
