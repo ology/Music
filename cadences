@@ -1,0 +1,67 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/Music-Cadence/lib';
+use Music::Cadence;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+
+my $bpm = shift || 100;
+
+my $score = MIDI::Util::setup_score( bpm => $bpm );
+
+my $mc = Music::Cadence->new( octave => 4 );
+
+my @triads = (
+    [qw/ C4 E4 G4 /], # I
+    [qw/ D4 F4 A4 /],
+    [qw/ E4 G4 B4 /],
+    [qw/ F4 A4 C4 /], # IV
+    [qw/ G4 B4 D4 /], # V
+    [qw/ A4 C4 E4 /],
+    [qw/ B4 D4 F4 /],
+);
+
+my $whole = 'wn';
+
+A();
+A();
+
+$score->n( 'wn', @{ $triads[0] } );
+$score->n( 'wn', @{ $triads[0] } );
+
+$score->write_score("$0.mid");
+
+sub A {
+    for my $n ( 1, 2 ) {
+        my $chords = $mc->cadence(
+            type    => 'half',
+            leading => $n,
+        );
+        $score->n( 'wn', @$_ ) for @$chords;
+    }
+
+    $score->n( 'wn', @{ $triads[2] } );
+    $score->n( 'wn', @{ $triads[5] } );
+
+    for my $n ( 4, 2 ) {
+        my $chords = $mc->cadence(
+            type    => 'half',
+            leading => $n,
+        );
+        $score->n( 'wn', @$_ ) for @$chords;
+    }
+
+    $score->n( 'wn', @{ $triads[5] } );
+    $score->n( 'wn', @{ $triads[2] } );
+
+    my $chords = $mc->cadence(
+        type => 'imperfect',
+        inversion => { 2 => 1 },
+    );
+    $score->n( 'wn', @$_ ) for @$chords;
+
+    $score->n( 'wn', @{ $triads[2] } );
+    $score->n( 'wn', @{ $triads[1] } );
+}
