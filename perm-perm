@@ -9,6 +9,7 @@ use Math::Combinatorics;
 use List::Util qw( shuffle );
 
 my $max = shift || 16;  # Maximum notes to play
+my $bpm = shift || 120;
 
 my @treb_notes = qw( 0 Ds5 F5 As5 Bf5 );        # 0 = rest, Bf5, Cs5, Ds5, etc
 my @treb_dura  = qw( en en qn qn qn );          # sn, dsn, ddsn, tsn, etc
@@ -27,6 +28,7 @@ my @bass_volu_combos = shuffle permute(@bass_volu);
 my $score = MIDI::Util::setup_score(
     lead_in => 4,
     patch   => 69,
+    bpm     => $bpm,
 );
 
 my $n = 0;
