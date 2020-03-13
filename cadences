@@ -34,6 +34,12 @@ $score->n( $whole, @{ $triads[0] } );
 $score->write_score("$0.mid");
 
 sub A {
+    a1();
+    a2();
+    a3();
+}
+
+sub a1 {
     for my $n ( 1, 2 ) {
         my $chords = $mc->cadence(
             type    => 'half',
@@ -41,10 +47,11 @@ sub A {
         );
         $score->n( $whole, @$_ ) for @$chords;
     }
-
     $score->n( $whole, @{ $triads[2] } );
     $score->n( $whole, @{ $triads[5] } );
+}
 
+sub a2 {
     for my $n ( 4, 2 ) {
         my $chords = $mc->cadence(
             type    => 'half',
@@ -52,16 +59,16 @@ sub A {
         );
         $score->n( $whole, @$_ ) for @$chords;
     }
-
     $score->n( $whole, @{ $triads[5] } );
     $score->n( $whole, @{ $triads[2] } );
+}
 
+sub a3 {
     my $chords = $mc->cadence(
         type => 'imperfect',
         inversion => { 2 => 1 },
     );
     $score->n( $whole, @$_ ) for @$chords;
-
     $score->n( $whole, @{ $triads[2] } );
     $score->n( $whole, @{ $triads[1] } );
 }
