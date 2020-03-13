@@ -60,7 +60,7 @@ sub a1 {
 
 sub a2 {
     my $chords = $mc->cadence(
-        type => 'imperfect',
+        type      => 'imperfect',
         inversion => { 2 => 1 },
     );
     $score->n( $whole, @$_ ) for @$chords;
