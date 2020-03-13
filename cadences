@@ -36,8 +36,8 @@ $score->write_score("$0.mid");
 sub A {
     my $i = 0;
     a1( $i++, [1,2] );
-    a1( $i++, [4,2] );
-    a2($i);
+    a1( $i, [4,2] );
+    a2();
 }
 
 sub a1 {
