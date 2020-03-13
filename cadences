@@ -34,9 +34,8 @@ $score->n( $whole, @{ $triads[0] } );
 $score->write_score("$0.mid");
 
 sub A {
-    my $i = 0;
-    a1( $i++, [1,2] );
-    a1( $i, [4,2] );
+    a1( 0, [1,2] );
+    a1( 1, [4,2] );
     a2();
 }
 
