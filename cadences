@@ -34,36 +34,32 @@ $score->n( $whole, @{ $triads[0] } );
 $score->write_score("$0.mid");
 
 sub A {
-    a1();
-    a2();
-    a3();
+    my $i = 0;
+    a1( $i++, [1,2] );
+    a1( $i++, [4,2] );
+    a2($i);
 }
 
 sub a1 {
-    for my $n ( 1, 2 ) {
+    my ( $i, $degrees ) = @_;
+    for my $n ( @$degrees ) {
         my $chords = $mc->cadence(
             type    => 'half',
             leading => $n,
         );
         $score->n( $whole, @$_ ) for @$chords;
     }
-    $score->n( $whole, @{ $triads[2] } );
-    $score->n( $whole, @{ $triads[5] } );
+    if ( $i % 2 == 0 ) {
+        $score->n( $whole, @{ $triads[2] } );
+        $score->n( $whole, @{ $triads[5] } );
+    }
+    else {
+        $score->n( $whole, @{ $triads[5] } );
+        $score->n( $whole, @{ $triads[2] } );
+    }
 }
 
 sub a2 {
-    for my $n ( 4, 2 ) {
-        my $chords = $mc->cadence(
-            type    => 'half',
-            leading => $n,
-        );
-        $score->n( $whole, @$_ ) for @$chords;
-    }
-    $score->n( $whole, @{ $triads[5] } );
-    $score->n( $whole, @{ $triads[2] } );
-}
-
-sub a3 {
     my $chords = $mc->cadence(
         type => 'imperfect',
         inversion => { 2 => 1 },
