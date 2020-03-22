@@ -45,11 +45,11 @@ for my $n ( 1 .. 17 ) {
 
     my $grid = $g->get_grid;
 
-    # Find the note cluster to add to the score
     my @notes;
     my $i = 0;
     for my $row ( @$grid ) {
         my $j = 0;
+        # Find the note cluster to add to the score
         for my $cell ( @$row ) {
             push @notes, $matrix->[$i][$j] if $cell;
             $j++;
