@@ -13,10 +13,8 @@ my $score = MIDI::Util::setup_score( bpm => $bpm );
 
 my @source = qw/ C D E F G A B /;
 
-my $size = @source;
-
 # Create a LoL of source notes with incrementing octaves
-my $octave = $size;
+my $octave = scalar @source;
 my $matrix;
 while ( $octave ) {
     push @$matrix, [ map { $_ . $octave } @source ];
@@ -34,7 +32,7 @@ my $glider = [
     [ 0, 1, 0 ]
 ];
 
-my $g = Game::Life->new($size);
+my $g = Game::Life->new( scalar @source );
  
 # Place the blinker on the grid
 #$g->place_points( 2, 2, $blinker );
