@@ -59,7 +59,6 @@ for my $n ( 1 .. 17 ) {
         print map { $_ ? 'x ' : '. ' } @$row;
         print "\n";
     }
-
     print "@notes\n\n";
 
     # Add the note cluster and a rest to the score
