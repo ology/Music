@@ -58,7 +58,7 @@ for my $n ( 1 .. 17 ) {
         }
         $i++;
 
-        print map { $_ ? 'x' : '.' } @$row;
+        print map { $_ ? 'x ' : '. ' } @$row;
         print "\n";
     }
 
