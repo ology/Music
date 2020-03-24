@@ -16,7 +16,7 @@ my $bpm  = shift || 100; # Beats per minute
 
 my $file = 'make-noise.png';
 
-# Make a greyscale fractal image
+# Make a grayscale fractal image
 system('make-noise', '-out', $file, '-type', $type, '-len', $size, '-format', 'png') == 0
     or die "system failed: $?";
 
@@ -47,7 +47,7 @@ $score->write_score("$0.mid");
 # Scale a number from one range (grays) to another (midi)
 sub scale {
     my $m = shift;
-    my ($r_min, $r_max) = (0, 255); # Greyscale range
+    my ($r_min, $r_max) = (0, 255); # Grayscale range
     my ($t_min, $t_max) = (60, 83); # MIDI target range starting at middle C
     return (($m - $r_min) / ($r_max - $r_min)) * ($t_max - $t_min) + $t_min;
 }
