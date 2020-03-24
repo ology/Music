@@ -6,7 +6,6 @@ use strict;
 use warnings;
 
 use Imager;
-use Image::Size;
 use MIDI::Simple;
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
@@ -22,14 +21,12 @@ system('make-noise', '-out', $file, '-type', $type, '-len', $size, '-format', 'p
 my $img = Imager->new;
 $img->read(file => $file) or die $img->errstr;
 
-my ($w, $h) = imgsize($file);
-
 unlink $file;
 
 my $score = MIDI::Util::setup_score(bpm => 100);
 
-for my $y (0 .. $h - 1) {
-    for my $x (0 .. $w - 1) {
+for my $y (0 .. $size - 1) {
+    for my $x (0 .. $size - 1) {
         my $color = $img->getpixel(x => $x, y => $y);
         my ($red) = $color->rgba;
         my $n = sprintf '%.0f', normalize($red);
