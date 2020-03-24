@@ -2,6 +2,8 @@
 
 # Requires Math::Fractal::Noisemaker
 
+# Write up: http://techn.ology.net/hearing-an-image-one-pixel-at-a-time/
+
 use strict;
 use warnings;
 
