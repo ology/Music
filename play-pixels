@@ -16,10 +16,10 @@ my $type = shift || 'worley'; # Noisemaker type
 my $size = shift || 8; # Side width of Noisemaker image
 my $bpm  = shift || 100; # Beats per minute
 
-my $file = 'make-noise.png';
-
 # Get a MIDI score
 my $score = MIDI::Util::setup_score(bpm => $bpm, patch => 5);
+
+my $file = 'make-noise.png';
 
 # Make a grayscale fractal image
 system('make-noise', '-out', $file, '-type', $type, '-len', $size, '-format', 'png') == 0
