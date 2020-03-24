@@ -36,7 +36,7 @@ for my $y (0 .. $size - 1) {
     for my $x (0 .. $size - 1) {
         my $color = $img->getpixel(x => $x, y => $y);
         my ($red) = $color->rgba;
-        my $n = sprintf '%.0f', scale($red);
+        my $n = sprintf '%.0f', scale($red); # Round to the nearest whole number
         print "[$x,$y] $red -> $n\n";
         $score->n('qn', $n);
     }
