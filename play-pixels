@@ -8,7 +8,7 @@ use Imager;
 use Image::Size;
 use MIDI::Simple;
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
 my $type = shift || 'worley';
 my $size = shift || 8;
