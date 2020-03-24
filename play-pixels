@@ -51,3 +51,27 @@ sub normalize {
     my ($t_min, $t_max) = (60, 83); # MIDI target range starting at middle C
     return (($m - $r_min) / ($r_max - $r_min)) * ($t_max - $t_min) + $t_min;
 }
+
+__END__
+Noise Types:
+
+  * white           ## pseudo-random values
+  * wavelet         ## band-limited ortho
+  * gradient        ## persistent gradient noise
+  * simplex         ## continuous gradient noise
+  * simplex2        ## interpolated simplex
+  * square          ## diamond-square algorithm
+  * gel             ## self-displaced smooth
+  * sgel            ## self-displaced diamond-square
+  * dmandel         ## "deep" mandelbrot
+  * djulia          ## "deep" julia
+  * dla             ## diffusion-limited aggregation
+  * worley          ## voronoi cell noise
+  * wgel            ## self-displaced cell noise
+
+  ! multires        ## multi-resolution
+  ! ridged          ## ridged multifractal
+  ! block           ## unsmoothed multi-res
+  ! pgel            ## self-displaced multi-res
+  ! fur             ## inspired by "Perlin Worms"
+  ! tesla           ## worms/fur variant
