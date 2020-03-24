@@ -1,8 +1,9 @@
 #!/usr/bin/env perl
-use strict;
-use warnings;
 
 # Requires Math::Fractal::Noisemaker
+
+use strict;
+use warnings;
 
 use Imager;
 use Image::Size;
