@@ -29,7 +29,7 @@ $img->read(file => $file)
 unlink $file;
 
 # Get a MIDI score
-my $score = MIDI::Util::setup_score(bpm => $bpm);
+my $score = MIDI::Util::setup_score(bpm => $bpm, patch => 5);
 
 # Add a note to the score for each pixel color
 for my $y (0 .. $size - 1) {
