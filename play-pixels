@@ -1,0 +1,45 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Requires Math::Fractal::Noisemaker
+
+use Imager;
+use Image::Size;
+use MIDI::Simple;
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+
+my $type = shift || 'worley';
+my $size = shift || 8;
+
+my $file = 'make-noise.png';
+
+system('make-noise', '-out', $file, '-type', $type, '-len', $size, '-format', 'png') == 0
+    or die "system failed: $?";
+
+my $img = Imager->new;
+$img->read(file => $file) or die $img->errstr;
+
+my ($w, $h) = imgsize($file);
+
+my $score = MIDI::Util::setup_score(bpm => 100);
+
+for my $y (0 .. $h - 1) {
+    for my $x (0 .. $w - 1) {
+        my $color = $img->getpixel(x => $x, y => $y);
+        my ($red) = $color->rgba;
+        my $n = sprintf '%.0f', normalize($red);
+        print "[$x,$y] $red -> $n\n";
+        $score->n('qn', $n);
+    }
+}
+
+$score->write_score("$0.mid");
+
+sub normalize {
+    my $m = shift;
+    my ($r_min, $r_max) = (0, 255);
+    my ($t_min, $t_max) = (60, 71);
+    return (($m - $r_min) / ($r_max - $r_min)) * ($t_max - $t_min) + $t_min;
+}
