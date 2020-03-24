@@ -11,8 +11,8 @@ use MIDI::Simple;
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
-my $type = shift || 'worley';
-my $size = shift || 8;
+my $type = shift || 'worley'; # Noisemaker type
+my $size = shift || 8; # Side width of Noisemaker image
 
 my $file = 'make-noise.png';
 
@@ -23,6 +23,8 @@ my $img = Imager->new;
 $img->read(file => $file) or die $img->errstr;
 
 my ($w, $h) = imgsize($file);
+
+unlink $file;
 
 my $score = MIDI::Util::setup_score(bpm => 100);
 
