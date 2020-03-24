@@ -16,17 +16,22 @@ my $bpm  = shift || 100; # Beats per minute
 
 my $file = 'make-noise.png';
 
+# Make a grayscale fractal image
 system('make-noise', '-out', $file, '-type', $type, '-len', $size, '-format', 'png') == 0
     or die "system failed: $?";
 
+# Open the image
 my $img = Imager->new;
 $img->read(file => $file)
     or die "Can't read $file: ", $img->errstr;
 
+# Remove the image file
 unlink $file;
 
+# Get a MIDI score
 my $score = MIDI::Util::setup_score(bpm => $bpm);
 
+# Add a note to the score for each pixel color
 for my $y (0 .. $size - 1) {
     for my $x (0 .. $size - 1) {
         my $color = $img->getpixel(x => $x, y => $y);
@@ -39,6 +44,7 @@ for my $y (0 .. $size - 1) {
 
 $score->write_score("$0.mid");
 
+# Scale a number from one range (grays) to another (midi)
 sub normalize {
     my $m = shift; # Grayscale color to convert to MIDI
     my ($r_min, $r_max) = (0, 255); # Grayscale range
