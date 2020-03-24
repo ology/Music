@@ -12,6 +12,7 @@ use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
 my $type = shift || 'worley'; # Noisemaker type
 my $size = shift || 8; # Side width of Noisemaker image
+my $bpm  = shift || 100; # Beats per minute
 
 my $file = 'make-noise.png';
 
@@ -23,7 +24,7 @@ $img->read(file => $file) or die $img->errstr;
 
 unlink $file;
 
-my $score = MIDI::Util::setup_score(bpm => 100);
+my $score = MIDI::Util::setup_score(bpm => $bpm);
 
 for my $y (0 .. $size - 1) {
     for my $x (0 .. $size - 1) {
