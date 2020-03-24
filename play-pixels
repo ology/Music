@@ -36,7 +36,7 @@ for my $y (0 .. $size - 1) {
     for my $x (0 .. $size - 1) {
         my $color = $img->getpixel(x => $x, y => $y);
         my ($red) = $color->rgba;
-        my $n = sprintf '%.0f', normalize($red);
+        my $n = sprintf '%.0f', scale($red);
         print "[$x,$y] $red -> $n\n";
         $score->n('qn', $n);
     }
@@ -45,7 +45,7 @@ for my $y (0 .. $size - 1) {
 $score->write_score("$0.mid");
 
 # Scale a number from one range (grays) to another (midi)
-sub normalize {
+sub scale {
     my $m = shift;
     my ($r_min, $r_max) = (0, 255); # Grayscale range
     my ($t_min, $t_max) = (60, 83); # MIDI target range starting at middle C
