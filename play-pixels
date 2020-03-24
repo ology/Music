@@ -20,7 +20,8 @@ system('make-noise', '-out', $file, '-type', $type, '-len', $size, '-format', 'p
     or die "system failed: $?";
 
 my $img = Imager->new;
-$img->read(file => $file) or die "Can't read $file: ", $img->errstr;
+$img->read(file => $file)
+    or die "Can't read $file: ", $img->errstr;
 
 unlink $file;
 
