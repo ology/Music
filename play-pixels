@@ -38,8 +38,8 @@ for my $y (0 .. $h - 1) {
 $score->write_score("$0.mid");
 
 sub normalize {
-    my $m = shift;
-    my ($r_min, $r_max) = (0, 255);
-    my ($t_min, $t_max) = (60, 71);
+    my $m = shift; # Grayscale color to convert to MIDI
+    my ($r_min, $r_max) = (0, 255); # Grayscale range
+    my ($t_min, $t_max) = (60, 71); # MIDI middle C range
     return (($m - $r_min) / ($r_max - $r_min)) * ($t_max - $t_min) + $t_min;
 }
