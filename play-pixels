@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-# Requires Math::Fractal::Noisemaker
+# Requires https://metacpan.org/pod/Math::Fractal::Noisemaker
 use Imager;
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
