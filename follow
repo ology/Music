@@ -36,6 +36,8 @@ $score->synch(
     \&roll,
 );
 
+$score->n('wn', $scale[0]);
+
 $score->write_score("$0.mid");
 
 sub roll {
