@@ -4,9 +4,6 @@ use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
-use lib '/Users/gene/sandbox/Music-ToRoman/lib';
-use lib '/Users/gene/sandbox/Music-Cadence/lib';
-use Music::Cadence;
 use Music::Scales;
 
 my $group  = shift || 1; # Groups of 3 bars
@@ -41,15 +38,7 @@ $score->synch(
     \&roll,
 );
 
-my $mc = Music::Cadence->new(
-    key    => $note,
-    scale  => 'major',
-    octave => $octave,
-    format => 'midi',
-);
-my $chords = $mc->cadence(type => 'imperfect');
-$chords->[0] = [ @{ $chords->[0] }[1,2] ]; # Remove the first note of the first chord
-$score->n('wn', @$_) for @$chords;
+$score->n('wn', $scale[0]);
 
 $score->write_score("$0.mid");
 
