@@ -38,7 +38,7 @@ $score->synch(
     \&roll,
     \&roll,
     \&roll,
-#    \&roll,
+    \&roll,
 );
 
 my $mc = Music::Cadence->new(
