@@ -15,7 +15,7 @@ use Music::Scales;
 my $max        = shift || 64;
 my $bpm        = shift || 20;
 my $scale_note = shift || 'C'; # Bf, Cs, etc.
-my $scale_name = shift || 'pmajor';
+my $scale_name = shift || 'pentatonic';
 my $oct_range  = shift; # '3 4 5', etc. [ bass, baritone, tenor, ... ]
 my $init_chord = shift; # 'Ds F A', etc.
 
