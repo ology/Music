@@ -11,6 +11,7 @@ use Music::Scales;
 
 my $group   = shift || 1; # Groups of 3 bars
 my $patches = shift || '4,16,69,70'; # See note below for good ones
+my $bpm     = shift || 100; # Beats per minute
 my $name    = shift || 'pentatonic';
 my $note    = shift || 'C'; # Bf, Cs, etc.
 my $octave  = shift || 4;
@@ -34,7 +35,7 @@ die "Can't have more than 15 patches.\n"
 
 my @scale = get_scale_notes($note, $name);
 
-my $score = MIDI::Util::setup_score(bpm => 100, octave => $octave);
+my $score = MIDI::Util::setup_score(bpm => $bpm, octave => $octave);
 
 my $channel = 0;
 
