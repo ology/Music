@@ -18,7 +18,7 @@ my @scale = get_scale_notes($note, $name);
 
 $patches = [ split /,/, $patches ];
 
-# 3 bar phrases
+# 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
     [qw/ wn wr wr /],       # 0 ####.   .   .  <- Whole note
     [qw/ qr wn dhr wr /],   # 1 .####   .   .
