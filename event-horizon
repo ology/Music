@@ -28,7 +28,7 @@ my $score = MIDI::Util::setup_score( lead_in => 0, bpm => 20 );
 # Instantiate a scale-note manipulator
 my $msn = Music::ScaleNote->new(
     scale_note  => 'C',
-    scale_name  => 'pmajor',
+    scale_name  => 'pentatonic',
     note_format => 'midi',
 #    verbose     => 1,
 );
