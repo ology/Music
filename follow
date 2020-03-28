@@ -14,12 +14,6 @@ my $name    = shift || 'pentatonic';
 my $note    = shift || 'C'; # Bf, Cs, etc.
 my $octave  = shift || 4;
 
-my @scale = get_scale_notes($note, $name);
-
-$patches = [ split /,/, $patches ];
-die "Can't have more than 15 patches.\n"
-    if @$patches > 15;
-
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
     [qw/ wn wr wr /],       # 0 ####.   .   .  <- Whole note
@@ -32,6 +26,12 @@ my $possibles = [           #   |   |   |   |  <- 3 measures
     [qw/ wr dhr wn qr /],   # 7 .   .  #### .
     [qw/ wr wr wn /],       # 8 .   .   ####.
 ];
+
+my @scale = get_scale_notes($note, $name);
+
+$patches = [ split /,/, $patches ];
+die "Can't have more than 15 patches.\n"
+    if @$patches > 15;
 
 my $score = MIDI::Util::setup_score(bpm => 100, octave => $octave);
 
