@@ -50,7 +50,7 @@ sub roll {
             if ($trigger eq 'n') {
                 my $note = $scale[int rand @scale];
                 print "\t$note\n";
-                $score->n($duration, $scale[int rand @scale]);
+                $score->n($duration, $note);
             }
             else {
                 $duration =~ s/r/n/;
