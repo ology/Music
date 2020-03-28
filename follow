@@ -44,7 +44,7 @@ my $score = MIDI::Util::setup_score(bpm => $bpm, octave => $octave);
 my $channel = 0;
 
 # Roll as many times as there are patches
-$score->synch( map { \&roll } 0 .. @$patches - 1 );
+$score->synch( map { \&roll } 1 .. @$patches );
 
 # Write the tonic to the score
 $score->n('wn', $scale[0]);
