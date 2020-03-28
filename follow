@@ -27,11 +27,11 @@ my $possibles = [           #   |   |   |   |  <- 3 measures
     [qw/ wr wr wn /],       # 8 .   .   ####.
 ];
 
-my @scale = get_scale_notes($note, $name);
-
 $patches = [ split /,/, $patches ];
 die "Can't have more than 15 patches.\n"
     if @$patches > 15;
+
+my @scale = get_scale_notes($note, $name);
 
 my $score = MIDI::Util::setup_score(bpm => 100, octave => $octave);
 
