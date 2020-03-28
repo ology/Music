@@ -52,7 +52,10 @@ $score->n('wn', $scale[0]);
 $score->write_score("$0.mid");
 
 sub roll {
-    MIDI::Util::set_chan_patch($score, $channel++, $patches->[$channel - 1]);
+    my $patch = $patches->[$channel];
+    $channel++;
+    $channel++ if $channel == 9;
+    MIDI::Util::set_chan_patch($score, $channel, $patch);
 
     for my $i (0 .. $group - 1) {
         my $roll = int rand @$possibles;
