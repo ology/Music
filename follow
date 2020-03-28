@@ -17,6 +17,8 @@ my $octave  = shift || 4;
 my @scale = get_scale_notes($note, $name);
 
 $patches = [ split /,/, $patches ];
+die "Can't have more than 15 patches.\n"
+    if @$patches > 15;
 
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
