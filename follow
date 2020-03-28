@@ -18,7 +18,7 @@ my $octave = shift || 4;
 my @scale = get_scale_notes($note, $name);
 
 # 3 bar phrases
-my $possibles = [           #   |   |   |   |  <- Bars
+my $possibles = [           #   |   |   |   |  <- 3 bars
     [qw/ wn wr wr /],       # 0 ####           <- Whole note
     [qw/ qr wn dhr wr /],   # 1  ####       
     [qw/ hr wn hr wr /],    # 2   ####      
