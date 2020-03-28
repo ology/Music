@@ -4,12 +4,16 @@ use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
+use lib '/Users/gene/sandbox/Music-ToRoman/lib';
+use lib '/Users/gene/sandbox/Music-Cadence/lib';
+use Music::Cadence;
 use Music::Scales;
 
-my $group = shift || 1; # Groups of 3 bars
-my $patch = shift || 0;
-my $note  = shift || 'C'; # Bf, Cs, etc.
-my $name  = shift || 'pentatonic';
+my $group  = shift || 1; # Groups of 3 bars
+my $patch  = shift || 0;
+my $name   = shift || 'pentatonic';
+my $note   = shift || 'C'; # Bf, Cs, etc.
+my $octave = shift || 4;
 
 my @scale = get_scale_notes($note, $name);
 
@@ -26,7 +30,7 @@ my $possibles = [           #   |   |   |   |  <- Bars
     [qw/ wr wr wn /],       # 8         ####
 ];
 
-my $score = MIDI::Util::setup_score(bpm => 100);
+my $score = MIDI::Util::setup_score(bpm => 100, octave => $octave);
 
 my $channel = 0;
 
@@ -37,7 +41,14 @@ $score->synch(
     \&roll,
 );
 
-$score->n('wn', $scale[0]);
+my $mc = Music::Cadence->new(
+    key    => $note,
+    scale  => 'major',
+    octave => $octave,
+    format => 'midi',
+);
+my $chords = $mc->cadence(type => 'imperfect');
+$score->n('wn', @$_) for @$chords;
 
 $score->write_score("$0.mid");
 
@@ -51,9 +62,9 @@ sub roll {
         for my $duration (@{ $possibles->[$roll] }) {
             my $trigger = substr $duration, length($duration) - 1, 1;
             if ($trigger eq 'n') {
-                my $note = $scale[int rand @scale];
-                print "\t$note\n";
-                $score->n($duration, $note);
+                my $n = $scale[int rand @scale];
+                print "\t$n\n";
+                $score->n($duration, $n);
             }
             else {
                 $duration =~ s/r/n/;
