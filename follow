@@ -8,13 +8,15 @@ use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 use Music::Scales;
 
-my $group  = shift || 1; # Groups of 3 bars
-my $patch  = shift || 0;
-my $name   = shift || 'pentatonic';
-my $note   = shift || 'C'; # Bf, Cs, etc.
-my $octave = shift || 4;
+my $group   = shift || 1; # Groups of 3 bars
+my $patches = shift || '0,13,23,68'; # See note below for good ones
+my $name    = shift || 'pentatonic';
+my $note    = shift || 'C'; # Bf, Cs, etc.
+my $octave  = shift || 4;
 
 my @scale = get_scale_notes($note, $name);
+
+$patches = [ split /,/, $patches ];
 
 # 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
@@ -33,19 +35,14 @@ my $score = MIDI::Util::setup_score(bpm => 100, octave => $octave);
 
 my $channel = 0;
 
-$score->synch(
-    \&roll,
-    \&roll,
-    \&roll,
-    \&roll,
-);
+$score->synch( map { \&roll } 0 .. @$patches - 1 );
 
 $score->n('wn', $scale[0]);
 
 $score->write_score("$0.mid");
 
 sub roll {
-    MIDI::Util::set_chan_patch($score, $channel++, $patch);
+    MIDI::Util::set_chan_patch($score, $channel++, $patches->[$channel - 1]);
 
     for my $i (0 .. $group - 1) {
         my $roll = int rand @$possibles;
@@ -65,3 +62,13 @@ sub roll {
         }
     }
 }
+
+__END__
+# General MIDI patches that are audible and aren't horrible
+my @patches = qw(
+    0 1 2 4 5 7 8 9
+    13 16 21 24 25 26
+    32 34 35 40 42 60
+    68 69 70 71 72 73
+    74 79
+);
