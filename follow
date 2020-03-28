@@ -48,6 +48,7 @@ my $mc = Music::Cadence->new(
     format => 'midi',
 );
 my $chords = $mc->cadence(type => 'imperfect');
+$chords->[0] = [ @{ $chords->[0] }[1,2] ]; # Remove the first note of the first chord
 $score->n('wn', @$_) for @$chords;
 
 $score->write_score("$0.mid");
