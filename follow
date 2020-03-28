@@ -51,11 +51,12 @@ sub roll {
         my $roll = int rand @$possibles;
         print $channel, '. Adding roll #', $roll, "\n";
 
+        print "\t";
         for my $duration (@{ $possibles->[$roll] }) {
             my $trigger = substr $duration, length($duration) - 1, 1;
             if ($trigger eq 'n') {
                 my $n = $scale[int rand @scale];
-                print "\t$n\n";
+                print "$n ";
                 $score->n($duration, $n);
             }
             else {
@@ -63,6 +64,7 @@ sub roll {
                 $score->r($duration);
             }
         }
+        print "\n";
     }
 }
 
