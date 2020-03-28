@@ -2,7 +2,8 @@
 use strict;
 use warnings;
 
-# https://youtu.be/Fpp5ScH_8OY - 20BPM audio rendering
+# Examples: http://techn.ology.net/algorithmic-ambient-audio/
+#           https://youtu.be/Fpp5ScH_8OY - 20BPM audio rendering
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
