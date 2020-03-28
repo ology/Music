@@ -10,7 +10,7 @@ use MIDI::Util;
 use Music::Scales;
 
 my $group   = shift || 1; # Groups of 3 bars
-my $patches = shift || '4,16,69,70'; # See note below for good ones
+my $patches = shift || '4,16,69,70'; # See below for good ones
 my $bpm     = shift || 100; # Beats per minute
 my $name    = shift || 'pentatonic';
 my $note    = shift || 'C'; # Bf, Cs, etc.
