@@ -34,6 +34,7 @@ $score->synch(
     \&roll,
     \&roll,
     \&roll,
+    \&roll,
 );
 
 $score->n('wn', $scale[0]);
@@ -45,7 +46,7 @@ sub roll {
 
     for my $i (0 .. $group - 1) {
         my $roll = int rand @$possibles;
-        print '$channel. Adding roll #', $roll, "\n";
+        print $channel, '. Adding roll #', $roll, "\n";
 
         for my $duration (@{ $possibles->[$roll] }) {
             my $trigger = substr $duration, length($duration) - 1, 1;
