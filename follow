@@ -4,6 +4,7 @@ use warnings;
 
 # Examples: http://techn.ology.net/algorithmic-ambient-audio/
 #           https://youtu.be/Fpp5ScH_8OY - 20BPM audio rendering
+# perl follow 9 '4,16,69,70' 120 pminor A
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
