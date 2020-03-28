@@ -1,0 +1,61 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use Music::Scales;
+
+my $group = shift || 1; # Groups of 3 bars
+my $patch = shift || 0;
+my $note  = shift || 'C'; # Bf, Cs, etc.
+my $name  = shift || 'pentatonic';
+
+my @scale = get_scale_notes($note, $name);
+
+# 3 bar phrases
+my $possibles = [           #   |   |   |   |  <- Bars
+    [qw/ wn wr wr /],       # 0 ####           <- Whole note
+    [qw/ qr wn dhr wr /],   # 1  ####       
+    [qw/ hr wn hr wr /],    # 2   ####      
+    [qw/ dhr wn qr wr /],   # 3    ####     
+    [qw/ wr wn wr /],       # 4     ####    
+    [qw/ wr qr wn dhr /],   # 5      ####   
+    [qw/ wr hr wn hr /],    # 6       ####  
+    [qw/ wr dhr wn qr /],   # 7        #### 
+    [qw/ wr wr wn /],       # 8         ####
+];
+
+my $score = MIDI::Util::setup_score(bpm => 100);
+
+my $channel = 0;
+
+$score->synch(
+    \&roll,
+    \&roll,
+    \&roll,
+);
+
+$score->write_score("$0.mid");
+
+sub roll {
+    MIDI::Util::set_chan_patch($score, $channel++, $patch);
+
+    for my $i (0 .. $group - 1) {
+        my $roll = int rand @$possibles;
+        print '$channel. Adding roll #', $roll, "\n";
+
+        for my $duration (@{ $possibles->[$roll] }) {
+            my $trigger = substr $duration, length($duration) - 1, 1;
+            if ($trigger eq 'n') {
+                my $note = $scale[int rand @scale];
+                print "\t$note\n";
+                $score->n($duration, $scale[int rand @scale]);
+            }
+            else {
+                $duration =~ s/r/n/;
+                $score->r($duration);
+            }
+        }
+    }
+}
