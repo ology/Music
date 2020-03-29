@@ -58,7 +58,7 @@ sub roll {
     $channel++ if $channel == 9; # Skip the drum channel
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
 
-    for my $i (0 .. $group - 1) {
+    for my $i (1 .. $group) {
         my $roll = int rand @$possibles;
         print "$channel. Adding roll #", $roll, " for patch: $patch\n";
         print "\t";
@@ -84,7 +84,7 @@ sub bass {
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
     $score->Volume(120);
 
-    for my $i (0 .. $group - 1) {
+    for my $i (1 .. $group) {
         print "$channel. Adding bass with patch: $patch\n";
         print "\t";
         for my $duration (('hn') x 6) { # 3 measures of half-notes
@@ -99,7 +99,7 @@ sub bass {
 sub drums {
     MIDI::Util::set_chan_patch($score, 9, 0);
     $score->Volume(50);
-    for my $i (0 .. $group - 1) {
+    for my $i (1 .. $group) {
         for my $duration (('qn') x 12) { # 3 measures of quarter-notes
             $score->n($duration, 44);
         }
