@@ -103,7 +103,7 @@ sub drums {
     $score->Volume(50);
     for my $i (0 .. $group - 1) {
         for my $duration (('qn') x 12) { # 3 measures of quarter-notes
-            $score->n($duration, 'n44');
+            $score->n($duration, 44);
         }
     }
 }
