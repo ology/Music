@@ -27,7 +27,7 @@ for my $y (0 .. $h - 1) {
         push @chord, sprintf('%.0f', scale($red)),
                      sprintf('%.0f', scale($green)),
                      sprintf('%.0f', scale($blue));
-        print "[$x,$y] [$red,$green,$blue] -> @chord\n";
+        print "[$x,$y] $red,$green,$blue -> @chord\n";
         $score->n('qn', @chord);
     }
 }
