@@ -1,12 +1,13 @@
 #!/usr/bin/env perl
-use strict;
-use warnings;
 
 # Examples: https://youtu.be/NITwAFaw7B4
 # perl follow 9 '4,16,69,70' 120 pminor A
 
 # General MIDI patches that are audible and aren't horrible:
 # 0 1 2 4 5 7 8 9 13 16 21 24 25 26 32 34 35 40 42 60 68 69 70 71 72 73 74 79
+
+use strict;
+use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
