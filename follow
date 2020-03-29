@@ -23,7 +23,7 @@ my $name    = shift || 'pentatonic'; # Scale name
 my $note    = shift || 'C'; # Bf, Cs, etc.
 
 # Global parameters
-my $size   = 3; # The number of measures in a possible phrase
+my $size   = 3; # The number of measures in a phrase
 my $drums  = 9; # Drum channel
 my $max    = 14; # Maximum number of channels allowed
 my $octave = 4; # Octave number to append to notes
