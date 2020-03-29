@@ -12,15 +12,17 @@ use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 use Music::Scales;
 
+# User definable parameters
 my $group   = shift || 1; # Groups of 3 bars
 my $patches = shift || '4,16,69,70'; # See above for good ones
 my $bpm     = shift || 100; # Beats per minute
 my $name    = shift || 'pentatonic';
 my $note    = shift || 'C'; # Bf, Cs, etc.
 
-my $size = 3; # The number of measures in a possible phrase
-my $drums = 9; # Drum channel is 9
-my $max = 14; # Maximum number of channels allowed
+# Global parameters
+my $size   = 3; # The number of measures in a possible phrase
+my $drums  = 9; # Drum channel is 9
+my $max    = 14; # Maximum number of channels allowed
 my $octave = 4;
 
 # 9 possible 3 bar phrases
