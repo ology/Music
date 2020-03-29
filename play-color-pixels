@@ -30,7 +30,7 @@ for my $y (0 .. $h - 1) {
         push @chord, sprintf('%.0f', scale($red)),
                      sprintf('%.0f', scale($green)),
                      sprintf('%.0f', scale($blue));
-        printf "[%*d,%*d] %d,%d,%d -> %s\n",
+        printf "[%*d,%*d] %3d,%3d,%3d -> %s\n",
             $wfield, $x, $hfield, $y,
             $red, $green, $blue,
             join(' ', @chord);
