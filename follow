@@ -88,7 +88,7 @@ sub bass {
         my $roll = int rand @$possibles;
         print $channel, '. Adding roll #', $roll, " for patch: $patch\n";
         print "\t";
-        for my $duration (qw/ hn hn hn hn hn hn /) {
+        for my $duration (qw/ hn hn hn hn hn hn /) { # 3 measures of half-notes
             my $n = $scale[int rand @scale] . 3;
             print "$n ";
             $score->n($duration, $n);
