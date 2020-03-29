@@ -110,7 +110,7 @@ sub drums {
 
     for my $i (1 .. $group) {
         for my $duration (('qn') x ($size * 4)) { # Measures of quarter-notes
-            $score->n($duration, $hihat, 'p');
+            $score->n($duration, $hihat, 'mp');
         }
     }
 }
@@ -119,5 +119,5 @@ sub _add_note {
     my ($duration, $octave) = @_;
     my $n = $scale[int rand @scale] . $octave;
     print "$n ";
-    $score->n($duration, $n, 'mf');
+    $score->n($duration, $n, 'f');
 }
