@@ -47,7 +47,7 @@ $score->synch(
     \&bass,
 );
 
-# Write the tonic to the end of the score
+# Write the tonic to the end of the bass track
 $score->n('wn', $scale[0]);
 
 $score->write_score("$0.mid");
