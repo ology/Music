@@ -86,8 +86,7 @@ sub bass {
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
 
     for my $i (0 .. $group - 1) {
-        my $roll = int rand @$possibles;
-        print $channel, '. Adding roll #', $roll, " for patch: $patch\n";
+        print "$channel. Adding bass with patch: $patch\n";
         print "\t";
         for my $duration (qw/ hn hn hn hn hn hn /) { # 3 measures of half-notes
             my $n = $scale[int rand @scale] . 3;
