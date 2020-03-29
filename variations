@@ -1,4 +1,10 @@
 #!/usr/bin/env perl
+
+# Examples:
+# perl variations
+# perl variations '0 C5 E5 G5' 'C3 F3 G3' 200 69 42 p
+# perl variations '0 C5 E5 G5' 'C3 F3 G3' 200 69 42 c 1
+
 use strict;
 use warnings;
 
