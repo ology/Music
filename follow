@@ -24,8 +24,8 @@ my $size   = 3; # The number of measures in a possible phrase
 my $drums  = 9; # Drum channel is 9
 my $max    = 14; # Maximum number of channels allowed
 my $octave = 4; # Octave number to append to notes
-my $bass   = 35; # Fretless bass
-my $hihat  = 44; # Closed hi-hat
+my $bass   = 35; # Fretless bass patch
+my $hihat  = 44; # Closed hi-hat patch
 
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
