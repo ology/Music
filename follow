@@ -18,6 +18,8 @@ my $bpm     = shift || 100; # Beats per minute
 my $name    = shift || 'pentatonic';
 my $note    = shift || 'C'; # Bf, Cs, etc.
 
+my $drums = 9;
+
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
     [qw/ wn wr wr /],       # 0 ####.   .   .  <- Whole note
@@ -54,8 +56,8 @@ $score->write_score("$0.mid");
 
 sub roll {
     # Choose a patch based on the incrementing channel value
-    my $patch = $patches->[ $channel > 9 ? $channel - 1 : $channel ];
-    $channel++ if $channel == 9; # Skip the drum channel
+    my $patch = $patches->[ $channel > $drums ? $channel - 1 : $channel ];
+    $channel++ if $channel == $drums; # Skip the drum channel
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
 
     for my $i (1 .. $group) {
@@ -80,7 +82,7 @@ sub roll {
 
 sub bass {
     my $patch = 35; # Fretless bass
-    $channel++ if $channel == 9; # Skip the drum channel
+    $channel++ if $channel == $drums; # Skip the drum channel
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
 
     for my $i (1 .. $group) {
@@ -97,7 +99,7 @@ sub bass {
 
 sub drums {
     my $patch = 44; # Closed hi-hat
-    MIDI::Util::set_chan_patch($score, 9, $patch);
+    MIDI::Util::set_chan_patch($score, $drums, $patch);
     $score->Volume(50);
     for my $i (1 .. $group) {
         for my $duration (('qn') x 12) { # 3 measures of quarter-notes
