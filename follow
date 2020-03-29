@@ -24,7 +24,7 @@ my $note    = shift || 'C'; # Bf, Cs, etc.
 
 # Global parameters
 my $size   = 3; # The number of measures in a possible phrase
-my $drums  = 9; # Drum channel is 9
+my $drums  = 9; # Drum channel
 my $max    = 14; # Maximum number of channels allowed
 my $octave = 4; # Octave number to append to notes
 my $bass   = 35; # Fretless bass patch
