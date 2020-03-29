@@ -44,7 +44,7 @@ die "Can't have more than $max patches.\n"
 
 my @scale = get_scale_notes($note, $name);
 
-my $score = MIDI::Util::setup_score(bpm => $bpm, octave => $octave);
+my $score = MIDI::Util::setup_score(bpm => $bpm);
 
 my $channel = 0;
 
@@ -72,7 +72,7 @@ sub roll {
         for my $duration (@{ $possibles->[$roll] }) {
             my $trigger = substr $duration, length($duration) - 1, 1;
             if ($trigger eq 'n') {
-                my $n = $scale[int rand @scale];
+                my $n = $scale[int rand @scale] . $octave;
                 print "$n ";
                 $score->n($duration, $n);
             }
