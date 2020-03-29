@@ -41,9 +41,8 @@ my $score = MIDI::Util::setup_score(bpm => $bpm, octave => 4);
 
 my $channel = 0;
 
-# Roll as many times as there are patches
 $score->synch(
-    (map { \&roll } 1 .. @$patches),
+    (map { \&roll } 1 .. @$patches), # Roll as many times as there are patches
     \&drums,
     \&bass,
 );
