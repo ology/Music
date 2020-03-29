@@ -82,7 +82,6 @@ sub bass {
     my $patch = 35; # Fretless bass
     $channel++ if $channel == 9; # Skip the drum channel
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
-    $score->Volume(120);
 
     for my $i (1 .. $group) {
         print "$channel. Adding bass with patch: $patch\n";
@@ -104,4 +103,5 @@ sub drums {
             $score->n($duration, 44);
         }
     }
+    $score->Volume(120); # Reset volume
 }
