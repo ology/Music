@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Algorithm::Combinatorics qw( variations combinations );
+use List::Util qw( shuffle );
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
  
@@ -12,6 +13,7 @@ my $bpm   = shift || 120;
 my $trebp = shift || 69; # Treble patch
 my $bassp = shift || 42; # Bass patch
 my $flag  = shift || 'v'; # variations or combinations
+my $shuf  = shift || 0;
 
 my @treb = split /\s+/, $treb;
 my @bass = split /\s+/, $bass;
@@ -48,6 +50,9 @@ sub variance {
 
         for my $i (@items) {
             $count++;
+
+            @$i = shuffle @$i
+                if $shuf;
 
             print "$count. @$i\n";
 
