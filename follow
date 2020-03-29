@@ -2,8 +2,7 @@
 use strict;
 use warnings;
 
-# Examples: http://techn.ology.net/algorithmic-ambient-audio/
-#           https://youtu.be/Fpp5ScH_8OY - 20BPM audio rendering
+# Examples: https://youtu.be/NITwAFaw7B4
 # perl follow 9 '4,16,69,70' 120 pminor A
 
 # General MIDI patches that are audible and aren't horrible:
