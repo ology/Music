@@ -102,11 +102,13 @@ sub drums {
     my $patch = 44; # Closed hi-hat
     MIDI::Util::set_chan_patch($score, $drums, $patch);
     $score->Volume(50);
+
     for my $i (1 .. $group) {
         for my $duration (('qn') x ($size * 4)) { # Measures of quarter-notes
             $score->n($duration, $patch);
         }
     }
+
     $score->Volume(120); # Reset volume
 }
 
