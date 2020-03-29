@@ -44,7 +44,10 @@ my $score = MIDI::Util::setup_score(bpm => $bpm, octave => $octave);
 my $channel = 0;
 
 # Roll as many times as there are patches
-$score->synch( map { \&roll } 1 .. @$patches );
+$score->synch(
+    (map { \&roll } 1 .. @$patches),
+    \&bass,
+);
 
 # Write the tonic to the end of the score
 $score->n('wn', $scale[0]);
@@ -71,6 +74,24 @@ sub roll {
                 (my $dura = $duration) =~ s/r/n/;
                 $score->r($dura);
             }
+        }
+        print "\n";
+    }
+}
+
+sub bass {
+    my $patch = 35;
+    $channel++ if $channel == 9; # Skip the drum channel
+    MIDI::Util::set_chan_patch($score, $channel++, $patch);
+
+    for my $i (0 .. $group - 1) {
+        my $roll = int rand @$possibles;
+        print $channel, '. Adding roll #', $roll, " for patch: $patch\n";
+        print "\t";
+        for my $duration (qw/ hn hn hn hn hn hn /) {
+            my $n = $scale[int rand @scale] . 3;
+            print "$n ";
+            $score->n($duration, $n);
         }
         print "\n";
     }
