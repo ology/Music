@@ -12,7 +12,7 @@ use strict;
 use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util; # https://metacpan.org/pod/MIDI::Util
 use Music::Scales;
 
 # User definable parameters
