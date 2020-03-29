@@ -18,6 +18,9 @@ $img->read(file => $file)
 my $info = image_info($file);
 my($w, $h) = dim($info);
 
+my $wfield = length($w);
+my $hfield = length($h);
+
 # Add a chord to the score for each RGB pixel color
 for my $y (0 .. $h - 1) {
     for my $x (0 .. $w - 1) {
@@ -27,7 +30,10 @@ for my $y (0 .. $h - 1) {
         push @chord, sprintf('%.0f', scale($red)),
                      sprintf('%.0f', scale($green)),
                      sprintf('%.0f', scale($blue));
-        print "[$x,$y] $red $green $blue -> @chord\n";
+        printf "[%*d,%*d] %d,%d,%d -> %s\n",
+            $wfield, $x, $hfield, $y,
+            $red, $green, $blue,
+            join(' ', @chord);
         $score->n('qn', @chord);
     }
 }
