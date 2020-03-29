@@ -107,20 +107,17 @@ sub bass {
 
 sub drums {
     MIDI::Util::set_chan_patch($score, $drums, $hihat);
-    $score->Volume(50);
 
     for my $i (1 .. $group) {
         for my $duration (('qn') x ($size * 4)) { # Measures of quarter-notes
-            $score->n($duration, $hihat);
+            $score->n($duration, $hihat, 'p');
         }
     }
-
-    $score->Volume(120); # Reset volume
 }
 
 sub _add_note {
     my ($duration, $octave) = @_;
     my $n = $scale[int rand @scale] . $octave;
     print "$n ";
-    $score->n($duration, $n);
+    $score->n($duration, $n, 'mf');
 }
