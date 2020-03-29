@@ -72,9 +72,7 @@ sub roll {
         for my $duration (@{ $possibles->[$roll] }) {
             my $trigger = substr $duration, length($duration) - 1, 1;
             if ($trigger eq 'n') {
-                my $n = $scale[int rand @scale] . $octave;
-                print "$n ";
-                $score->n($duration, $n);
+                _add_note($duration, $octave);
             }
             else {
                 (my $dura = $duration) =~ s/r/n/;
@@ -94,9 +92,7 @@ sub bass {
         print "$channel. Adding bass with patch: $patch\n";
         print "\t";
         for my $duration (('hn') x ($size * 2)) { # 3 measures of half-notes
-            my $n = $scale[int rand @scale] . ($octave - 1);
-            print "$n ";
-            $score->n($duration, $n);
+            _add_note($duration, $octave - 1);
         }
         print "\n";
     }
@@ -112,4 +108,11 @@ sub drums {
         }
     }
     $score->Volume(120); # Reset volume
+}
+
+sub _add_note {
+    my ($duration, $octave) = @_;
+    my $n = $scale[int rand @scale] . $octave;
+    print "$n ";
+    $score->n($duration, $n);
 }
