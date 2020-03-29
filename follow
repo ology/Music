@@ -68,8 +68,8 @@ sub roll {
                 $score->n($duration, $n);
             }
             else {
-                $duration =~ s/r/n/;
-                $score->r($duration);
+                (my $dura = $duration) =~ s/r/n/;
+                $score->r($dura);
             }
         }
         print "\n";
