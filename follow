@@ -23,7 +23,7 @@ my $note    = shift || 'C'; # Bf, Cs, etc.
 my $size   = 3; # The number of measures in a possible phrase
 my $drums  = 9; # Drum channel is 9
 my $max    = 14; # Maximum number of channels allowed
-my $octave = 4;
+my $octave = 4; # Octave number to append to notes
 
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
