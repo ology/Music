@@ -30,16 +30,16 @@ my $bass   = 35; # Fretless bass patch
 my $hihat  = 44; # Pedal hi-hat patch
 
 # 9 possible 3 bar phrases
-my $possibles = [           #   |   |   |   |  <- 3 measures
-    [qw/ wn wr wr /],       # 0 ####.   .   .  <- Whole note
-    [qw/ qr wn dhr wr /],   # 1 .####   .   .
-    [qw/ hr wn hr wr /],    # 2 . ####  .   .
-    [qw/ dhr wn qr wr /],   # 3 .  #### .   .
-    [qw/ wr wn wr /],       # 4 .   ####.   .
-    [qw/ wr qr wn dhr /],   # 5 .   .####   .
-    [qw/ wr hr wn hr /],    # 6 .   . ####  .
-    [qw/ wr dhr wn qr /],   # 7 .   .  #### .
-    [qw/ wr wr wn /],       # 8 .   .   ####.
+my $possibles = [         #   |   |   |   |  <- 3 measures
+    [qw/ wn wr wr /],     # 0 ####.   .   .  <- Whole note
+    [qw/ qr wn dhr wr /], # 1 .####   .   .
+    [qw/ hr wn hr wr /],  # 2 . ####  .   .
+    [qw/ dhr wn qr wr /], # 3 .  #### .   .
+    [qw/ wr wn wr /],     # 4 .   ####.   .
+    [qw/ wr qr wn dhr /], # 5 .   .####   .
+    [qw/ wr hr wn hr /],  # 6 .   . ####  .
+    [qw/ wr dhr wn qr /], # 7 .   .  #### .
+    [qw/ wr wr wn /],     # 8 .   .   ####.
 ];
 
 # Convert the CSV patches to an arrayref
