@@ -19,6 +19,7 @@ my $name    = shift || 'pentatonic';
 my $note    = shift || 'C'; # Bf, Cs, etc.
 
 my $drums = 9; # Drum channel is 9
+my $max = 14; # Maximum number of channels allowed
 
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
@@ -34,8 +35,8 @@ my $possibles = [           #   |   |   |   |  <- 3 measures
 ];
 
 $patches = [ split /,/, $patches ];
-die "Can't have more than 14 patches.\n"
-    if @$patches > 14;
+die "Can't have more than $max patches.\n"
+    if @$patches > $max;
 
 my @scale = get_scale_notes($note, $name);
 
