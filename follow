@@ -78,7 +78,7 @@ sub roll {
 }
 
 sub bass {
-    my $patch = 35;
+    my $patch = 35; # Fretless bass
     $channel++ if $channel == 9; # Skip the drum channel
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
     $score->Volume(120);
