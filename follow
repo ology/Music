@@ -84,6 +84,7 @@ sub bass {
     my $patch = 35;
     $channel++ if $channel == 9; # Skip the drum channel
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
+    $score->Volume(100);
 
     for my $i (0 .. $group - 1) {
         print "$channel. Adding bass with patch: $patch\n";
