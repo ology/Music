@@ -24,6 +24,8 @@ my $size   = 3; # The number of measures in a possible phrase
 my $drums  = 9; # Drum channel is 9
 my $max    = 14; # Maximum number of channels allowed
 my $octave = 4; # Octave number to append to notes
+my $bass   = 35; # Fretless bass
+my $hihat  = 44; # Closed hi-hat
 
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
@@ -84,12 +86,11 @@ sub roll {
 }
 
 sub bass {
-    my $patch = 35; # Fretless bass
     $channel++ if $channel == $drums; # Skip the drum channel
-    MIDI::Util::set_chan_patch($score, $channel++, $patch);
+    MIDI::Util::set_chan_patch($score, $channel++, $bass);
 
     for my $i (1 .. $group) {
-        print "$channel.$i. Adding bass with patch: $patch\n";
+        print "$channel.$i. Adding bass with patch: $bass\n";
         print "\t";
         for my $duration (('hn') x ($size * 2)) { # Measures of half-notes
             _add_note($duration, $octave - 1);
@@ -99,13 +100,12 @@ sub bass {
 }
 
 sub drums {
-    my $patch = 44; # Closed hi-hat
-    MIDI::Util::set_chan_patch($score, $drums, $patch);
+    MIDI::Util::set_chan_patch($score, $drums, $hihat);
     $score->Volume(50);
 
     for my $i (1 .. $group) {
         for my $duration (('qn') x ($size * 4)) { # Measures of quarter-notes
-            $score->n($duration, $patch);
+            $score->n($duration, $hihat);
         }
     }
 
