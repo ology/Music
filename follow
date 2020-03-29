@@ -96,11 +96,12 @@ sub bass {
 }
 
 sub drums {
-    MIDI::Util::set_chan_patch($score, 9, 0);
+    my $patch = 44;
+    MIDI::Util::set_chan_patch($score, 9, $patch);
     $score->Volume(50);
     for my $i (1 .. $group) {
         for my $duration (('qn') x 12) { # 3 measures of quarter-notes
-            $score->n($duration, 44);
+            $score->n($duration, $patch);
         }
     }
     $score->Volume(120); # Reset volume
