@@ -17,7 +17,6 @@ my $patches = shift || '4,16,69,70'; # See above for good ones
 my $bpm     = shift || 100; # Beats per minute
 my $name    = shift || 'pentatonic';
 my $note    = shift || 'C'; # Bf, Cs, etc.
-my $octave  = shift || 4;
 
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
@@ -38,7 +37,7 @@ die "Can't have more than 14 patches.\n"
 
 my @scale = get_scale_notes($note, $name);
 
-my $score = MIDI::Util::setup_score(bpm => $bpm, octave => $octave);
+my $score = MIDI::Util::setup_score(bpm => $bpm, octave => 4);
 
 my $channel = 0;
 
