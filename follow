@@ -67,7 +67,7 @@ sub roll {
 
     for my $i (1 .. $group) {
         my $roll = int rand @$possibles;
-        print "$channel. Adding roll #", $roll, " for patch: $patch\n";
+        print "$channel.$i. Adding roll #", $roll, " for patch: $patch\n";
         print "\t";
         for my $duration (@{ $possibles->[$roll] }) {
             my $trigger = substr $duration, length($duration) - 1, 1;
@@ -89,7 +89,7 @@ sub bass {
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
 
     for my $i (1 .. $group) {
-        print "$channel. Adding bass with patch: $patch\n";
+        print "$channel.$i. Adding bass with patch: $patch\n";
         print "\t";
         for my $duration (('hn') x ($size * 2)) { # 3 measures of half-notes
             _add_note($duration, $octave - 1);
