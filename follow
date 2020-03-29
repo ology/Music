@@ -47,6 +47,7 @@ my $channel = 0;
 $score->synch(
     (map { \&roll } 1 .. @$patches),
     \&bass,
+    \&drums,
 );
 
 # Write the tonic to the end of the score
@@ -94,5 +95,15 @@ sub bass {
             $score->n($duration, $n);
         }
         print "\n";
+    }
+}
+
+sub drums {
+    MIDI::Util::set_chan_patch($score, 9, 0);
+    $score->Volume(50);
+    for my $i (0 .. $group - 1) {
+        for my $duration (('qn') x 12) { # 3 measures of quarter-notes
+            $score->n($duration, 'n44');
+        }
     }
 }
