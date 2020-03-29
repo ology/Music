@@ -91,7 +91,7 @@ sub bass {
     for my $i (1 .. $group) {
         print "$channel.$i. Adding bass with patch: $patch\n";
         print "\t";
-        for my $duration (('hn') x ($size * 2)) { # 3 measures of half-notes
+        for my $duration (('hn') x ($size * 2)) { # Measures of half-notes
             _add_note($duration, $octave - 1);
         }
         print "\n";
@@ -103,7 +103,7 @@ sub drums {
     MIDI::Util::set_chan_patch($score, $drums, $patch);
     $score->Volume(50);
     for my $i (1 .. $group) {
-        for my $duration (('qn') x ($size * 4)) { # 3 measures of quarter-notes
+        for my $duration (('qn') x ($size * 4)) { # Measures of quarter-notes
             $score->n($duration, $patch);
         }
     }
