@@ -41,7 +41,7 @@ my $possibles = [           #   |   |   |   |  <- 3 measures
 ];
 
 $patches = [ split /,/, $patches ];
-die "Can't have more than $max patches.\n"
+die "Can't have more than $max patches"
     if @$patches > $max;
 
 my @scale = get_scale_notes($note, $name);
