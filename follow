@@ -46,8 +46,8 @@ my $channel = 0;
 # Roll as many times as there are patches
 $score->synch(
     (map { \&roll } 1 .. @$patches),
-    \&bass,
     \&drums,
+    \&bass,
 );
 
 # Write the tonic to the end of the score
