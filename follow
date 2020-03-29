@@ -96,7 +96,7 @@ sub bass {
 }
 
 sub drums {
-    my $patch = 44;
+    my $patch = 44; # Closed hi-hat
     MIDI::Util::set_chan_patch($score, 9, $patch);
     $score->Volume(50);
     for my $i (1 .. $group) {
