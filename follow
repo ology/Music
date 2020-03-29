@@ -42,6 +42,7 @@ my $possibles = [           #   |   |   |   |  <- 3 measures
     [qw/ wr wr wn /],       # 8 .   .   ####.
 ];
 
+# Convert the CSV patches to an arrayref
 $patches = [ split /,/, $patches ];
 die "Can't have more than $max patches"
     if @$patches > $max;
