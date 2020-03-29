@@ -53,9 +53,8 @@ $score->write_score("$0.mid");
 
 sub roll {
     my $patch = $patches->[ $channel > 9 ? $channel - 1 : $channel ];
-    $channel++;
     $channel++ if $channel == 9; # Skip the drum channel
-    MIDI::Util::set_chan_patch($score, $channel, $patch);
+    MIDI::Util::set_chan_patch($score, $channel++, $patch);
 
     for my $i (0 .. $group - 1) {
         my $roll = int rand @$possibles;
