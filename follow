@@ -20,6 +20,7 @@ my $note    = shift || 'C'; # Bf, Cs, etc.
 
 my $drums = 9; # Drum channel is 9
 my $max = 14; # Maximum number of channels allowed
+my $octave = 4;
 
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
@@ -40,7 +41,7 @@ die "Can't have more than $max patches.\n"
 
 my @scale = get_scale_notes($note, $name);
 
-my $score = MIDI::Util::setup_score(bpm => $bpm, octave => 4);
+my $score = MIDI::Util::setup_score(bpm => $bpm, octave => $octave);
 
 my $channel = 0;
 
@@ -90,7 +91,7 @@ sub bass {
         print "$channel. Adding bass with patch: $patch\n";
         print "\t";
         for my $duration (('hn') x 6) { # 3 measures of half-notes
-            my $n = $scale[int rand @scale] . 3;
+            my $n = $scale[int rand @scale] . ($octave - 1);
             print "$n ";
             $score->n($duration, $n);
         }
