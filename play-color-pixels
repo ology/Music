@@ -20,10 +20,15 @@ my($w, $h) = dim($info);
 
 my $wfield = length($w);
 my $hfield = length($h);
+my $ifield = length($w * $h);
+
+my $i = 0;
 
 # Add a chord to the score for each RGB pixel color
 for my $y (0 .. $h - 1) {
     for my $x (0 .. $w - 1) {
+        $i++;
+
         my $color = $img->getpixel(x => $x, y => $y);
 
         my ($red, $green, $blue) = $color->rgba;
@@ -33,7 +38,8 @@ for my $y (0 .. $h - 1) {
                      sprintf('%.0f', scale($green)),
                      sprintf('%.0f', scale($blue));
 
-        printf "[%*d,%*d] %3d,%3d,%3d -> %s\n",
+        printf "%*d. [%*d,%*d] %3d,%3d,%3d -> %s\n",
+            $ifield, $i,
             $wfield, $x, $hfield, $y,
             $red, $green, $blue,
             join(' ', @chord);
