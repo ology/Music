@@ -25,15 +25,19 @@ my $hfield = length($h);
 for my $y (0 .. $h - 1) {
     for my $x (0 .. $w - 1) {
         my $color = $img->getpixel(x => $x, y => $y);
+
         my ($red, $green, $blue) = $color->rgba;
+
         my @chord;
         push @chord, sprintf('%.0f', scale($red)),
                      sprintf('%.0f', scale($green)),
                      sprintf('%.0f', scale($blue));
+
         printf "[%*d,%*d] %3d,%3d,%3d -> %s\n",
             $wfield, $x, $hfield, $y,
             $red, $green, $blue,
             join(' ', @chord);
+
         $score->n('qn', @chord);
     }
 }
