@@ -9,11 +9,11 @@ use MIDI::Util;
  
 my $treb  = shift || '0 C5 E5 G5'; # 0 = rest
 my $bass  = shift || 'C3 F3 G3'; # Notes only - no rests
-my $bpm   = shift || 120;
+my $bpm   = shift || 120; # Beats per minute
 my $trebp = shift || 69; # Treble patch
 my $bassp = shift || 42; # Bass patch
 my $flag  = shift || 'v'; # variations, combinations or permutations
-my $shuf  = shift || 0;
+my $shuf  = shift || 0; # To shuffle or not to shuffle?
 
 my @treb = split /\s+/, $treb;
 my @bass = split /\s+/, $bass;
