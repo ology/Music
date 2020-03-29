@@ -18,6 +18,7 @@ my $bpm     = shift || 100; # Beats per minute
 my $name    = shift || 'pentatonic';
 my $note    = shift || 'C'; # Bf, Cs, etc.
 
+my $size = 3; # The number of measures in a possible phrase
 my $drums = 9; # Drum channel is 9
 my $max = 14; # Maximum number of channels allowed
 my $octave = 4;
@@ -90,7 +91,7 @@ sub bass {
     for my $i (1 .. $group) {
         print "$channel. Adding bass with patch: $patch\n";
         print "\t";
-        for my $duration (('hn') x 6) { # 3 measures of half-notes
+        for my $duration (('hn') x ($size * 2)) { # 3 measures of half-notes
             my $n = $scale[int rand @scale] . ($octave - 1);
             print "$n ";
             $score->n($duration, $n);
@@ -104,7 +105,7 @@ sub drums {
     MIDI::Util::set_chan_patch($score, $drums, $patch);
     $score->Volume(50);
     for my $i (1 .. $group) {
-        for my $duration (('qn') x 12) { # 3 measures of quarter-notes
+        for my $duration (('qn') x ($size * 4)) { # 3 measures of quarter-notes
             $score->n($duration, $patch);
         }
     }
