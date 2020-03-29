@@ -53,6 +53,7 @@ $score->n('wn', $scale[0]);
 $score->write_score("$0.mid");
 
 sub roll {
+    # Choose a patch based on the incrementing channel value
     my $patch = $patches->[ $channel > 9 ? $channel - 1 : $channel ];
     $channel++ if $channel == 9; # Skip the drum channel
     MIDI::Util::set_chan_patch($score, $channel++, $patch);
