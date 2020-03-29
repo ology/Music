@@ -18,7 +18,7 @@ my $bpm     = shift || 100; # Beats per minute
 my $name    = shift || 'pentatonic';
 my $note    = shift || 'C'; # Bf, Cs, etc.
 
-my $drums = 9;
+my $drums = 9; # Drum channel is 9
 
 # 9 possible 3 bar phrases
 my $possibles = [           #   |   |   |   |  <- 3 measures
