@@ -5,9 +5,9 @@ use warnings;
 use Image::Size;
 use Imager;
 use lib $ENV{HOME} . '/sandbox/Math-Utils-ScaleNumber/lib';
-use Math::Utils::ScaleNumber 'to_range';
+use Math::Utils::ScaleNumber 'to_range'; # https://github.com/ology/Math-Utils-ScaleNumber
 use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
 my $file = shift || die "Usage: perl $0 /some/image/file.{gif,jpg,png,etc}\n";
 
