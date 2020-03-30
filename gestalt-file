@@ -29,8 +29,8 @@ for my $t ( $opus->tracks ) {
 
     $i++;
 
-    for my $c ( sort { $a <=> $b } keys %seen ) {
-        my $score_r = MIDI::Score::events_r_to_score_r( $seen{$c} );
+    for my $channel ( sort { $a <=> $b } keys %seen ) {
+        my $score_r = MIDI::Score::events_r_to_score_r( $seen{$channel} );
         $score_r = MIDI::Score::sort_score_r($score_r);
 
         my $g = Music::Gestalt->new( score => $score_r );
@@ -43,8 +43,8 @@ for my $t ( $opus->tracks ) {
         my $mid  = $note->format('midi');
 
         print "Track:\t\t$i\n";
-        print "Events:\t\t", scalar( @{ $seen{$c} } ), "\n";
-        print "Channel:\t$c\n";
+        print "Events:\t\t", scalar( @{ $seen{$channel} } ), "\n";
+        print "Channel:\t$channel\n";
         print "Pitch:",
             "\t\tRange: $low to $high\n",
             "\t\tSpan: $mid +/- ", $g->PitchRange, "\n";
