@@ -32,6 +32,8 @@ for my $t ( $opus->tracks ) {
         my $score_r = MIDI::Score::events_r_to_score_r( $seen{$channel} );
         $score_r = MIDI::Score::sort_score_r($score_r);
 
+        my $ticks = MIDI::Score::score_r_time($score_r);
+
         my $g = Music::Gestalt->new( score => $score_r );
 
         my $note = Music::Note->new( $g->PitchLowest, 'midinum' );
@@ -44,6 +46,7 @@ for my $t ( $opus->tracks ) {
         print "Track:\t\t$i\n",
             "Channel:\t$channel\n",
             "Events:\t\t", scalar( @{ $seen{$channel} } ), "\n",
+            "Ticks:\t\t$ticks\n",
             "Pitch:\t\tRange: $low to $high\n",
             "\t\tSpan: $mid ± ", $g->PitchRange, "\n",
             "Velocity:\tRange: ", $g->VelocityLowest, ' to ', $g->VelocityHighest, "\n",
