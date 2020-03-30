@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Image::Info qw/image_info dim/;
+use Image::Size;
 use Imager;
 use lib $ENV{HOME} . '/sandbox/Math';
 use ScaleNumber 'to_range';
@@ -17,8 +17,7 @@ my $img = Imager->new;
 $img->read(file => $file)
     or die "Can't read $file: ", $img->errstr;
 
-my $info = image_info($file);
-my($w, $h) = dim($info);
+my($w, $h) = imgsize($file);
 
 my $wfield = length($w);
 my $hfield = length($h);
