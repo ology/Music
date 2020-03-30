@@ -41,13 +41,13 @@ for my $t ( $opus->tracks ) {
         $note    = Music::Note->new( $g->PitchMiddle, 'midinum' );
         my $mid  = $note->format('midi');
 
-        print "Track:\t\t$i\n";
-        print "Channel:\t$channel\n";
-        print "Events:\t\t", scalar( @{ $seen{$channel} } ), "\n";
-        print "Pitch:",
+        print "Track:\t\t$i\n",
+            "Channel:\t$channel\n",
+            "Events:\t\t", scalar( @{ $seen{$channel} } ), "\n",
+            "Pitch:",
             "\t\tRange: $low to $high\n",
-            "\t\tSpan: $mid ± ", $g->PitchRange, "\n";
-        print "Velocity:",
+            "\t\tSpan: $mid ± ", $g->PitchRange, "\n",
+            "Velocity:",
             "\tRange: ", $g->VelocityLowest, ' to ', $g->VelocityHighest, "\n",
             "\t\tSpan: ", $g->VelocityMiddle, ' ± ', $g->VelocityRange, "\n\n";
     }
