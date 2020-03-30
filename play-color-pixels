@@ -5,7 +5,7 @@ use warnings;
 use Image::Size;
 use Imager;
 use lib $ENV{HOME} . '/sandbox/Math';
-use ScaleNumber 'to_range';
+use ScaleNumber 'to_range'; # https://github.com/ology/Math/blob/master/ScaleNumber.pm
 use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 
