@@ -16,6 +16,8 @@ my $i = 0;
 
 # Convert tracks to score
 for my $t ( $opus->tracks ) {
+    $i++;
+
     my @events = $t->events;
 
     my %seen;
@@ -26,8 +28,6 @@ for my $t ( $opus->tracks ) {
         }
     }
     next unless keys %seen;
-
-    $i++;
 
     for my $channel ( sort { $a <=> $b } keys %seen ) {
         my $score_r = MIDI::Score::events_r_to_score_r( $seen{$channel} );
