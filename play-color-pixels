@@ -19,9 +19,9 @@ $img->read(file => $file)
 
 my($w, $h) = imgsize($file);
 
-my $wfield = length($w);
-my $hfield = length($h);
-my $ifield = length($w * $h);
+my $w_field = length($w);
+my $h_field = length($h);
+my $i_field = length($w * $h);
 
 my @color_range = (0, 255);
 my @midi_range  = (60, 83);
@@ -43,8 +43,8 @@ for my $y (0 .. $h - 1) {
                      sprintf('%.0f', to_range($blue, @color_range, @midi_range));
 
         printf "%*d. [%*d,%*d] %3d,%3d,%3d -> %s\n",
-            $ifield, $i,
-            $wfield, $x, $hfield, $y,
+            $i_field, $i,
+            $w_field, $x, $h_field, $y,
             $red, $green, $blue,
             join(' ', @chord);
 
