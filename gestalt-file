@@ -21,7 +21,6 @@ for my $t ( $opus->tracks ) {
     my @events = $t->events;
 
     my %seen;
-
     for my $e ( @events ) {
         if ($e->[0] eq 'note_on') {
             push @{ $seen{ $e->[2] } }, $e;
