@@ -10,8 +10,9 @@ use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
 my $file = shift || die "Usage: perl $0 /some/image/file.{gif,jpg,png,etc}\n";
+my $bpm  = shift || 100;
 
-my $score = MIDI::Util::setup_score(bpm => 100, patch => 4);
+my $score = MIDI::Util::setup_score(bpm => $bpm, patch => 4);
 
 my $img = Imager->new;
 $img->read(file => $file)
