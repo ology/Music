@@ -12,13 +12,13 @@ my $file = shift || die "Usage: perl $0 /some/file.mid\n";
 
 my $opus = MIDI::Opus->new( { from_file => $file } );
 
-my %seen;
-
 my $i = 0;
 
 # Convert tracks to score
 for my $t ( $opus->tracks ) {
     my @events = $t->events;
+
+    my %seen;
 
     my $channel;
     for my $e ( @events ) {
@@ -45,6 +45,7 @@ for my $t ( $opus->tracks ) {
         my $mid  = $note->format('midi');
 
         print "Track:\t\t$i\n";
+        print "Events:\t\t", scalar( @{ $seen{$c} } ), "\n";
         print "Channel:\t$c\n";
         print "Pitch:",
             "\t\tRange: $low to $high\n",
