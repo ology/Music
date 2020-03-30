@@ -4,6 +4,8 @@ use warnings;
 
 use Image::Info qw/image_info dim/;
 use Imager;
+use lib $ENV{HOME} . '/sandbox/Math';
+use ScaleNumber 'to_range';
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 
@@ -22,6 +24,9 @@ my $wfield = length($w);
 my $hfield = length($h);
 my $ifield = length($w * $h);
 
+my @color_range = (0, 255);
+my @midi_range  = (60, 83);
+
 my $i = 0;
 
 # Add a chord to the score for each RGB pixel color
@@ -34,9 +39,9 @@ for my $y (0 .. $h - 1) {
         my ($red, $green, $blue) = $color->rgba;
 
         my @chord;
-        push @chord, sprintf('%.0f', scale($red)),
-                     sprintf('%.0f', scale($green)),
-                     sprintf('%.0f', scale($blue));
+        push @chord, sprintf('%.0f', to_range($red, @color_range, @midi_range)),
+                     sprintf('%.0f', to_range($green, @color_range, @midi_range)),
+                     sprintf('%.0f', to_range($blue, @color_range, @midi_range));
 
         printf "%*d. [%*d,%*d] %3d,%3d,%3d -> %s\n",
             $ifield, $i,
@@ -49,35 +54,3 @@ for my $y (0 .. $h - 1) {
 }
 
 $score->write_score("$0.mid");
-
-# Scale a number from one range (grays) to another (midi)
-sub scale {
-    my $m = shift;
-    my ($r_min, $r_max) = (0, 255); # Grayscale range
-    my ($t_min, $t_max) = (60, 83); # MIDI target range starting at middle C
-    return (($m - $r_min) / ($r_max - $r_min)) * ($t_max - $t_min) + $t_min;
-}
-
-__END__
-Noise Types:
-
-  * white           ## pseudo-random values
-  * wavelet         ## band-limited ortho
-  * gradient        ## persistent gradient noise
-  * simplex         ## continuous gradient noise
-  * simplex2        ## interpolated simplex
-  * square          ## diamond-square algorithm
-  * gel             ## self-displaced smooth
-  * sgel            ## self-displaced diamond-square
-  * dmandel         ## "deep" mandelbrot
-  * djulia          ## "deep" julia
-  * dla             ## diffusion-limited aggregation
-  * worley          ## voronoi cell noise
-  * wgel            ## self-displaced cell noise
-
-  ! multires        ## multi-resolution
-  ! ridged          ## ridged multifractal
-  ! block           ## unsmoothed multi-res
-  ! pgel            ## self-displaced multi-res
-  ! fur             ## inspired by "Perlin Worms"
-  ! tesla           ## worms/fur variant
