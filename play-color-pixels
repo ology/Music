@@ -9,7 +9,7 @@ use ScaleNumber 'to_range';
 use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 
-my $file = shift || die "Usage: perl $0 /some/image/file.{gif,jpg,png}\n";
+my $file = shift || die "Usage: perl $0 /some/image/file.{gif,jpg,png,etc}\n";
 
 my $score = MIDI::Util::setup_score(bpm => 100, patch => 4);
 
