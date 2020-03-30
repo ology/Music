@@ -37,10 +37,8 @@ for my $y (0 .. $h - 1) {
 
         my ($red, $green, $blue) = $color->rgba;
 
-        my @chord;
-        push @chord, sprintf('%.0f', to_range($red, @color_range, @midi_range)),
-                     sprintf('%.0f', to_range($green, @color_range, @midi_range)),
-                     sprintf('%.0f', to_range($blue, @color_range, @midi_range));
+        my @chord = map { sprintf '%.0f', to_range($_, @color_range, @midi_range) }
+            $red, $green, $blue;
 
         printf "%*d. [%*d,%*d] %3d,%3d,%3d -> %s\n",
             $i_field, $i,
