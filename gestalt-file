@@ -47,9 +47,9 @@ for my $t ( $opus->tracks ) {
         print "Channel:\t$channel\n";
         print "Pitch:",
             "\t\tRange: $low to $high\n",
-            "\t\tSpan: $mid +/- ", $g->PitchRange, "\n";
+            "\t\tSpan: $mid ± ", $g->PitchRange, "\n";
         print "Velocity:",
             "\tRange: ", $g->VelocityLowest, ' to ', $g->VelocityHighest, "\n",
-            "\t\tSpan: ", $g->VelocityMiddle, ' +/- ', $g->VelocityRange, "\n\n";
+            "\t\tSpan: ", $g->VelocityMiddle, ' ± ', $g->VelocityRange, "\n\n";
     }
 }
