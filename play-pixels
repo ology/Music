@@ -33,7 +33,7 @@ $img->read(file => $file)
 # Remove the image file
 unlink $file;
 
-my $s_field = length($size);
+my $s_field = length $size;
 my $i_field = length($size * $size);
 
 my $i = 0;

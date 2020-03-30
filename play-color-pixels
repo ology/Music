@@ -19,8 +19,8 @@ $img->read(file => $file)
 
 my($w, $h) = imgsize($file);
 
-my $w_field = length($w);
-my $h_field = length($h);
+my $w_field = length $w;
+my $h_field = length $h;
 my $i_field = length($w * $h);
 
 my @color_range = (0, 255);
