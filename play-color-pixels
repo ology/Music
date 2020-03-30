@@ -6,7 +6,7 @@ use Image::Info qw/image_info dim/;
 use Imager;
 use lib $ENV{HOME} . '/sandbox/Math';
 use ScaleNumber 'to_range';
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 
 my $file = shift || die "Usage: perl $0 /some/image/file.{gif,jpg,png}\n";
