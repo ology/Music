@@ -12,36 +12,45 @@ my $file = shift || die "Usage: perl $0 /some/file.mid\n";
 
 my $opus = MIDI::Opus->new( { from_file => $file } );
 
+my %seen;
+
+my $i = 0;
+
 # Convert tracks to score
 for my $t ( $opus->tracks ) {
     my @events = $t->events;
 
     my $channel;
     for my $e ( @events ) {
-        $channel = $e->[2]
-            if $e->[0] eq 'note_on';
-        last
-            if $channel;
+        if ($e->[0] eq 'note_on') {
+            $channel = $e->[2];
+            push @{ $seen{$channel} }, $e;
+        }
     }
-    next unless $channel;
+    next unless keys %seen;
 
-    my $score_r = MIDI::Score::events_r_to_score_r( \@events );
-    $score_r = MIDI::Score::sort_score_r($score_r);
+    $i++;
 
-    my $g = Music::Gestalt->new( score => $score_r );
+    for my $c ( sort { $a <=> $b } keys %seen ) {
+        my $score_r = MIDI::Score::events_r_to_score_r( $seen{$c} );
+        $score_r = MIDI::Score::sort_score_r($score_r);
 
-    my $note = Music::Note->new( $g->PitchLowest, 'midinum' );
-    my $low  = $note->format('midi');
-    $note    = Music::Note->new( $g->PitchHighest, 'midinum' );
-    my $high = $note->format('midi');
-    $note    = Music::Note->new( $g->PitchMiddle, 'midinum' );
-    my $mid  = $note->format('midi');
+        my $g = Music::Gestalt->new( score => $score_r );
 
-    print "Channel:\t$channel\n";
-    print "Pitch:",
-        "\t\tRange: $low to $high\n",
-        "\t\tSpan: $mid +/- ", $g->PitchRange, "\n";
-    print "Velocity:",
-        "\tRange: ", $g->VelocityLowest, ' to ', $g->VelocityHighest, "\n",
-        "\t\tSpan: ", $g->VelocityMiddle, ' +/- ', $g->VelocityRange, "\n\n";
+        my $note = Music::Note->new( $g->PitchLowest, 'midinum' );
+        my $low  = $note->format('midi');
+        $note    = Music::Note->new( $g->PitchHighest, 'midinum' );
+        my $high = $note->format('midi');
+        $note    = Music::Note->new( $g->PitchMiddle, 'midinum' );
+        my $mid  = $note->format('midi');
+
+        print "Track:\t\t$i\n";
+        print "Channel:\t$c\n";
+        print "Pitch:",
+            "\t\tRange: $low to $high\n",
+            "\t\tSpan: $mid +/- ", $g->PitchRange, "\n";
+        print "Velocity:",
+            "\tRange: ", $g->VelocityLowest, ' to ', $g->VelocityHighest, "\n",
+            "\t\tSpan: ", $g->VelocityMiddle, ' +/- ', $g->VelocityRange, "\n\n";
+    }
 }
