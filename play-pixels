@@ -9,7 +9,7 @@ use warnings;
 use Imager;
 use lib $ENV{HOME} . '/sandbox/Math';
 use ScaleNumber 'to_range';
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
 my $type = shift || 'worley'; # Noisemaker type
