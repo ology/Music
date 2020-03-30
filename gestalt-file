@@ -20,11 +20,9 @@ for my $t ( $opus->tracks ) {
 
     my %seen;
 
-    my $channel;
     for my $e ( @events ) {
         if ($e->[0] eq 'note_on') {
-            $channel = $e->[2];
-            push @{ $seen{$channel} }, $e;
+            push @{ $seen{ $e->[2] } }, $e;
         }
     }
     next unless keys %seen;
