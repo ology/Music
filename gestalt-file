@@ -43,8 +43,8 @@ for my $t ( $opus->tracks ) {
         my $mid  = $note->format('midi');
 
         print "Track:\t\t$i\n";
-        print "Events:\t\t", scalar( @{ $seen{$channel} } ), "\n";
         print "Channel:\t$channel\n";
+        print "Events:\t\t", scalar( @{ $seen{$channel} } ), "\n";
         print "Pitch:",
             "\t\tRange: $low to $high\n",
             "\t\tSpan: $mid ± ", $g->PitchRange, "\n";
