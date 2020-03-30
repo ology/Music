@@ -33,8 +33,8 @@ $img->read(file => $file)
 # Remove the image file
 unlink $file;
 
-my $sfield = length($size);
-my $ifield = length($size * $size);
+my $s_field = length($size);
+my $i_field = length($size * $size);
 
 my $i = 0;
 
@@ -50,8 +50,8 @@ for my $y (0 .. $size - 1) {
         my $n = sprintf '%.0f', to_range($red, 0, 255, 60, 83);
 
         printf "%*d. [%*d,%*d] %3d -> %d\n",
-            $ifield, $i,
-            $sfield, $x, $sfield, $y,
+            $i_field, $i,
+            $s_field, $x, $s_field, $y,
             $red,
             $n;
 
