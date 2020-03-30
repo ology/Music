@@ -7,6 +7,8 @@ use warnings;
 
 # Requires https://metacpan.org/pod/Math::Fractal::Noisemaker
 use Imager;
+use lib $ENV{HOME} . '/sandbox/Math';
+use ScaleNumber 'to_range';
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
@@ -31,26 +33,33 @@ $img->read(file => $file)
 # Remove the image file
 unlink $file;
 
+my $sfield = length($size);
+my $ifield = length($size * $size);
+
+my $i = 0;
+
 # Add a note to the score for each pixel color
 for my $y (0 .. $size - 1) {
     for my $x (0 .. $size - 1) {
+        $i++;
+
         my $color = $img->getpixel(x => $x, y => $y);
         my ($red) = $color->rgba;
-        my $n = sprintf '%.0f', scale($red); # Round to the nearest whole number
-        print "[$x,$y] $red -> $n\n";
+
+        # Scale from grays range to MIDI note range
+        my $n = sprintf '%.0f', to_range($red, 0, 255, 60, 83);
+
+        printf "%*d. [%*d,%*d] %3d -> %d\n",
+            $ifield, $i,
+            $sfield, $x, $sfield, $y,
+            $red,
+            $n;
+
         $score->n('qn', $n);
     }
 }
 
 $score->write_score("$0.mid");
-
-# Scale a number from one range (grays) to another (midi)
-sub scale {
-    my $m = shift;
-    my ($r_min, $r_max) = (0, 255); # Grayscale range
-    my ($t_min, $t_max) = (60, 83); # MIDI target range starting at middle C
-    return (($m - $r_min) / ($r_max - $r_min)) * ($t_max - $t_min) + $t_min;
-}
 
 __END__
 Noise Types:
