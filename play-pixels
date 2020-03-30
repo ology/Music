@@ -52,8 +52,7 @@ for my $y (0 .. $size - 1) {
         printf "%*d. [%*d,%*d] %3d -> %d\n",
             $i_field, $i,
             $s_field, $x, $s_field, $y,
-            $red,
-            $n;
+            $red, $n;
 
         $score->n('qn', $n);
     }
