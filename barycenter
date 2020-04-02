@@ -7,10 +7,10 @@ use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 use lib $ENV{HOME} . '/sandbox/Music-Interval-Barycentric/lib';
 use Music::Interval::Barycentric; # https://metacpan.org/release/Music-Interval-Barycentric
 
-my $max   = shift || 48; # We need at least 48 chords
 my $bpm   = shift || 200;
 my $patch = shift || 0;
 
+my $max = 48; # Number of chords
 my $threshold = 5; # Allowed top - evenness_index
 my $top = 8; # Integer above the highest evenness_index
 my $base = 59; # Base of middle C MIDI values
