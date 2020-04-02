@@ -95,7 +95,7 @@ sub fitness {
     $chromosome = get_chromosome($ga, $chromosome);
 
     return 0
-        if @$chromosome > scalar uniq(@$chromosome); # Duplicates not allowed
+        if @$chromosome > uniq(@$chromosome); # Duplicates not allowed
 
     # Chords with adjacent half-steps are not allowed
     for my $i (@$chromosome) {
