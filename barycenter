@@ -40,32 +40,46 @@ $ga->evolve(100);
 
 my @fittest = $ga->getFittest($max);
 
-for my $fit (@fittest[0 .. 7]) {
-    legato($ga, $fit);
-}
-for my $fit (@fittest[8 .. 15]) {
-    staccato($ga, $fit);
-}
-for my $fit (@fittest[16 .. 23]) {
-    leading($ga, $fit);
-}
-for my $fit (@fittest[24 .. 31]) {
-    legato($ga, $fit);
-}
-for my $fit (@fittest[32 .. 39]) {
-    staccato($ga, $fit);
-}
-for my $fit (@fittest[40 .. 47]) {
-    legato($ga, $fit);
-}
-
-$score->n('qn', 65, 69, 72); # IV
-$score->r('qn');
-$score->n('qn', 67, 71, 74); # V
-$score->r('qn');
-$score->n('wn', 60, 64, 67); # I
+$score->synch(
+    \&fit,
+    \&drums,
+);
 
 $score->write_score("$0.mid");
+
+sub fit {
+    for my $fit (@fittest[0 .. 7]) {
+        legato($ga, $fit);
+    }
+    for my $fit (@fittest[8 .. 15]) {
+        staccato($ga, $fit);
+    }
+    for my $fit (@fittest[16 .. 23]) {
+        leading($ga, $fit);
+    }
+    for my $fit (@fittest[24 .. 31]) {
+        legato($ga, $fit);
+    }
+    for my $fit (@fittest[32 .. 39]) {
+        staccato($ga, $fit);
+    }
+    for my $fit (@fittest[40 .. 47]) {
+        legato($ga, $fit);
+    }
+
+    $score->n('qn', 65, 69, 72); # IV
+    $score->r('qn');
+    $score->n('qn', 67, 71, 74); # V
+    $score->r('qn');
+    $score->n('wn', 60, 64, 67); # I
+}
+
+sub drums {
+    MIDI::Util::set_chan_patch($score, 9, 44);
+    for my $duration (('qn') x $max) { # Measures of quarter-notes
+        $score->n($duration, 44, 'mp');
+    }
+}
 
 sub legato {
     my ($ga, $fit) = @_;
