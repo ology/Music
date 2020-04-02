@@ -1,0 +1,121 @@
+#!/usr/bin/env perl
+
+use AI::Genetic::Pro;
+use List::MoreUtils qw(uniq);
+use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use lib $ENV{HOME} . '/sandbox/Music-Interval-Barycentric/lib';
+use Music::Interval::Barycentric;
+
+my $max   = shift || 48;
+my $bpm   = shift || 200;
+my $patch = shift || 0;
+
+my $threshold = 5; # Allowed top - evenness_index
+my $top = 8; # Integer above the highest evenness_index
+my $base = 59; # Base of middle C MIDI values
+
+my $notes = [ ([0 .. 11]) x 3 ]; # vectors of chromatc scales
+
+my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
+
+my $ga = AI::Genetic::Pro->new(        
+    -fitness         => \&fitness,     # fitness function
+    -terminate       => \&terminate,   # terminate function
+    -type            => 'listvector',  # type of chromosome
+    -population      => 100,           # population
+    -crossover       => 0.9,           # probab. of crossover
+    -mutation        => 0.5,           # probab. of mutation
+    -parents         => 2,             # number  of parents
+    -selection       => ['Roulette'],  # selection strategy
+    -strategy        => ['PMX'],       # crossover strategy
+    -cache           => 1,             # cache results
+    -history         => 1,             # remember best results
+    -preserve        => 1,             # remember the bests
+    -variable_length => 0,             # turn variable length OFF
+);
+
+$ga->init($notes);
+$ga->evolve(100);
+
+my @fittest = $ga->getFittest($max);
+
+for my $fit (@fittest[0 .. 7]) {
+    legato($ga, $fit);
+}
+for my $fit (@fittest[8 .. 15]) {
+    staccato($ga, $fit);
+}
+for my $fit (@fittest[16 .. 23]) {
+    leading($ga, $fit);
+}
+for my $fit (@fittest[24 .. 31]) {
+    legato($ga, $fit);
+}
+for my $fit (@fittest[32 .. 39]) {
+    staccato($ga, $fit);
+}
+for my $fit (@fittest[40 .. 47]) {
+    legato($ga, $fit);
+}
+
+$score->n('qn', 65, 69, 72); # IV
+$score->r('qn');
+$score->n('qn', 67, 71, 74); # V
+$score->r('qn');
+$score->n('wn', 60, 64, 67); # I
+
+$score->write_score("$0.mid");
+
+sub legato {
+    my ($ga, $fit) = @_;
+    $score->n('qn', map { $base + $_ } @{ get_chromosome($ga, $fit) });
+    $score->r('qn');
+}
+
+sub staccato {
+    my ($ga, $fit) = @_;
+    for my $note (@{ get_chromosome($ga, $fit) }) {
+        $score->n('sn', $base + $note);
+        $score->r('sn');
+    }
+}
+
+sub leading {
+    my ($ga, $fit) = @_;
+    my $chromosome = get_chromosome($ga, $fit);
+    $score->n('qn', $base + $chromosome->[0]);
+    $score->n('qn', map { $base + $_ } @{ $chromosome }[1,2]);
+}
+
+# "The higher the value, the [greater] the chance of an individual passing its genes on in future generations through mating (crossover)."
+sub fitness {
+    my ($ga, $chromosome) = @_;
+
+    $chromosome = get_chromosome($ga, $chromosome);
+
+    return 0
+        if @$chromosome > scalar uniq(@$chromosome); # Duplicates not allowed
+
+    # Chords with adjacent half-steps are not allowed
+    for my $i (@$chromosome) {
+        for my $j (@$chromosome) {
+            next if $i == $j;
+            return 0
+                if ($j == $i + 1) || ($j == $i - 1);
+        }
+    }
+
+    return $top - evenness_index($chromosome); # "Even" chords are deemed fittest
+}
+
+sub terminate {
+    my ($ga) = @_;
+    return $ga->as_value($ga->getFittest) > $threshold ? 1 : 0;
+}
+
+sub get_chromosome {
+    my ($ga, $chromosome) = @_;
+    $chromosome ||= $ga->getFittest;
+    return [ split /_+/, $ga->as_string($chromosome) ];
+}
