@@ -47,6 +47,8 @@ $score->synch(
 
 $score->write_score("$0.mid");
 
+my $count = 0;
+
 sub fit {
     for my $fit (@fittest[0 .. 7]) {
         legato($ga, $fit);
@@ -76,7 +78,7 @@ sub fit {
 
 sub drums {
     MIDI::Util::set_chan_patch($score, 9, 44);
-    for my $duration (('qn') x $max) { # Measures of quarter-notes
+    for my $duration (('qn') x $count) { # Measures of quarter-notes
         $score->n($duration, 44, 'mp');
     }
 }
@@ -85,6 +87,7 @@ sub legato {
     my ($ga, $fit) = @_;
     $score->n('qn', map { $base + $_ } @{ get_chromosome($ga, $fit) });
     $score->r('qn');
+    $count += 2;
 }
 
 sub staccato {
@@ -92,6 +95,7 @@ sub staccato {
     for my $note (@{ get_chromosome($ga, $fit) }) {
         $score->n('sn', $base + $note);
         $score->r('sn');
+        $count += 0.5;
     }
 }
 
@@ -100,6 +104,7 @@ sub leading {
     my $chromosome = get_chromosome($ga, $fit);
     $score->n('qn', $base + $chromosome->[0]);
     $score->n('qn', map { $base + $_ } @{ $chromosome }[1,2]);
+    $count += 2;
 }
 
 # "The higher the value, the [greater] the chance of an individual passing its genes on in future generations through mating (crossover)."
