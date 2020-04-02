@@ -3,9 +3,9 @@
 use AI::Genetic::Pro;
 use List::MoreUtils qw(uniq);
 use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 use lib $ENV{HOME} . '/sandbox/Music-Interval-Barycentric/lib';
-use Music::Interval::Barycentric;
+use Music::Interval::Barycentric; # https://metacpan.org/release/Music-Interval-Barycentric
 
 my $max   = shift || 48;
 my $bpm   = shift || 200;
