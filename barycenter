@@ -129,6 +129,7 @@ sub fitness {
     return $top - evenness_index($chromosome); # "Even" chords are deemed fittest
 }
 
+# Stop evolving if above the threshold
 sub terminate {
     my ($ga) = @_;
     return $ga->as_value($ga->getFittest) > $threshold ? 1 : 0;
