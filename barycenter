@@ -131,7 +131,7 @@ sub fitness {
 # Stop evolving if above the threshold
 sub terminate {
     my ($ga) = @_;
-    return $ga->as_value($ga->getFittest) > $threshold ? 1 : 0;
+    return $ga->as_value($ga->getFittest) >= $threshold ? 1 : 0;
 }
 
 sub get_chromosome {
