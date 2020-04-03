@@ -79,7 +79,7 @@ sub fit {
 sub drums {
     MIDI::Util::set_chan_patch($score, 9, 44);
     for my $duration (('qn') x $count) { # Measures of quarter-notes
-        $score->n($duration, 44, 'mp');
+        $score->n($duration, 44, 'm');
     }
 }
 
