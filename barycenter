@@ -38,7 +38,8 @@ my $ga = AI::Genetic::Pro->new(
 $ga->init($notes);
 $ga->evolve(100);
 
-my @fittest = $ga->getFittest($max);
+# Play the most fit last in order
+my @fittest = reverse $ga->getFittest($max);
 
 $score->synch(
     \&fit,
