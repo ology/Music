@@ -15,31 +15,11 @@ my $threshold = 5; # Allowed top - evenness_index
 my $top = 8; # Integer above the highest evenness_index
 my $base = 59; # Base of middle C MIDI values
 
-my $notes = [ ([0 .. 11]) x 3 ]; # vectors of chromatc scales
-
 my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
 
-my $ga = AI::Genetic::Pro->new(        
-    -fitness         => \&fitness,     # fitness function
-    -terminate       => \&terminate,   # terminate function
-    -type            => 'listvector',  # type of chromosome
-    -population      => 100,           # population
-    -crossover       => 0.9,           # probab. of crossover
-    -mutation        => 0.5,           # probab. of mutation
-    -parents         => 2,             # number  of parents
-    -selection       => ['Roulette'],  # selection strategy
-    -strategy        => ['PMX'],       # crossover strategy
-    -cache           => 1,             # cache results
-    -history         => 1,             # remember best results
-    -preserve        => 1,             # remember the bests
-    -variable_length => 0,             # turn variable length OFF
-);
+my @fittest = evo($max);
 
-$ga->init($notes);
-$ga->evolve(100);
-
-# Play the most fit last in order
-my @fittest = reverse $ga->getFittest($max);
+my $count = 0;
 
 $score->synch(
     \&fit,
@@ -48,26 +28,24 @@ $score->synch(
 
 $score->write_score("$0.mid");
 
-my $count = 0;
-
 sub fit {
     for my $fit (@fittest[0 .. 7]) {
-        legato($ga, $fit);
+        legato($fit);
     }
     for my $fit (@fittest[8 .. 15]) {
-        staccato($ga, $fit);
+        staccato($fit);
     }
     for my $fit (@fittest[16 .. 23]) {
-        leading($ga, $fit);
+        leading($fit);
     }
     for my $fit (@fittest[24 .. 31]) {
-        legato($ga, $fit);
+        legato($fit);
     }
     for my $fit (@fittest[32 .. 39]) {
-        staccato($ga, $fit);
+        staccato($fit);
     }
     for my $fit (@fittest[40 .. 47]) {
-        legato($ga, $fit);
+        legato($fit);
     }
 
     # Resolution
@@ -93,15 +71,15 @@ sub drums {
 }
 
 sub legato {
-    my ($ga, $fit) = @_;
-    $score->n('qn', map { $base + $_ } @{ get_chromosome($ga, $fit) });
+    my ($fit) = @_;
+    $score->n('qn', map { $base + $_ } @$fit);
     $score->r('qn');
     $count += 2;
 }
 
 sub staccato {
-    my ($ga, $fit) = @_;
-    for my $note (@{ get_chromosome($ga, $fit) }) {
+    my ($fit) = @_;
+    for my $note (@$fit) {
         $score->n('sn', $base + $note);
         $score->r('sn');
         $count += 0.5;
@@ -109,11 +87,42 @@ sub staccato {
 }
 
 sub leading {
-    my ($ga, $fit) = @_;
-    my $chromosome = get_chromosome($ga, $fit);
-    $score->n('qn', $base + $chromosome->[0]);
-    $score->n('qn', map { $base + $_ } @{ $chromosome }[1,2]);
+    my ($fit) = @_;
+    $score->n('qn', $base + $fit->[0]);
+    $score->n('qn', map { $base + $_ } @{ $fit }[1,2]);
     $count += 2;
+}
+
+sub evo {
+    my $max = shift;
+
+    my $notes = [ ([0 .. 11]) x 3 ]; # vectors of chromatc scales
+
+    my $ga = AI::Genetic::Pro->new(        
+        -fitness         => \&fitness,     # fitness function
+        -terminate       => \&terminate,   # terminate function
+        -type            => 'listvector',  # type of chromosome
+        -population      => 100,           # population
+        -crossover       => 0.9,           # probab. of crossover
+        -mutation        => 0.5,           # probab. of mutation
+        -parents         => 2,             # number  of parents
+        -selection       => ['Roulette'],  # selection strategy
+        -strategy        => ['PMX'],       # crossover strategy
+        -cache           => 1,             # cache results
+        -history         => 1,             # remember best results
+        -preserve        => 1,             # remember the bests
+        -variable_length => 0,             # turn variable length OFF
+    );
+
+    $ga->init($notes);
+    $ga->evolve(100);
+
+    my @genes;
+    for my $chromosome (reverse $ga->getFittest($max)) {
+        push @genes, get_chromosome($ga, $chromosome);
+    }
+
+    return @genes;
 }
 
 # "The higher the value, the [greater] the chance of an individual passing its genes on in future generations through mating (crossover)."
