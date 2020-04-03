@@ -120,7 +120,6 @@ sub fitness {
     # Chords with adjacent half-steps are not allowed
     for my $i (@$chromosome) {
         for my $j (@$chromosome) {
-            next if $i == $j;
             return 0
                 if ($j == $i + 1) || ($j == $i - 1);
         }
