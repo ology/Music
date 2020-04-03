@@ -69,6 +69,7 @@ sub fit {
         legato($ga, $fit);
     }
 
+    # Resolution
     $score->n('qn', 65, 69, 72); # IV
     $score->r('qn');
     $score->n('qn', 67, 71, 74); # V
