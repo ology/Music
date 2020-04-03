@@ -83,6 +83,11 @@ sub drums {
     for my $duration (('qn') x $count) { # Measures of quarter-notes
         $score->n($duration, 44, 'm');
     }
+    $score->n('qn', 38, 'm');
+    $score->n('qn', 35, 'm');
+    $score->n('qn', 38, 'm');
+    $score->n('qn', 35, 'm');
+    $score->n('wn', 49, 'm');
 }
 
 sub legato {
