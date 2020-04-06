@@ -14,6 +14,7 @@ my $max = 48; # Number of chords
 my $threshold = 5; # Allowed top - evenness_index
 my $top = 8; # Integer above the highest evenness_index
 my $base = 59; # Base of middle C MIDI values
+my $iter = 1; # Number of evolve iterations - XXX this appears to be broken?
 
 my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
 
@@ -115,7 +116,7 @@ sub evo {
     );
 
     $ga->init($notes);
-    $ga->evolve(100);
+    $ga->evolve($iter);
 
     my @genes;
     for my $chromosome (reverse $ga->getFittest($max)) {
@@ -148,6 +149,7 @@ sub fitness {
 # Stop evolving if above the threshold
 sub terminate {
     my ($ga) = @_;
+warn(__PACKAGE__,' ',__LINE__," MARK: ",,"\n");
     return $ga->as_value($ga->getFittest) >= $threshold ? 1 : 0;
 }
 
