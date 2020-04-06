@@ -149,7 +149,6 @@ sub fitness {
 # Stop evolving if above the threshold
 sub terminate {
     my ($ga) = @_;
-warn(__PACKAGE__,' ',__LINE__," MARK: ",,"\n");
     return $ga->as_value($ga->getFittest) >= $threshold ? 1 : 0;
 }
 
