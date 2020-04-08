@@ -1,7 +1,9 @@
 #!/usr/bin/env perl
+use strict;
+use warnings;
 
-use AI::Genetic::Pro;
-use List::MoreUtils qw(uniq);
+use AI::Genetic;
+use List::Util qw/ uniq /;
 use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 use lib $ENV{HOME} . '/sandbox/Music-Interval-Barycentric/lib';
@@ -10,15 +12,15 @@ use Music::Interval::Barycentric; # https://metacpan.org/release/Music-Interval-
 my $bpm   = shift || 200;
 my $patch = shift || 0;
 
-my $max = 48; # Number of chords
-my $threshold = 5; # Allowed top - evenness_index
-my $top = 8; # Integer above the highest evenness_index
+my $max = 48; # Number of results
+my $top = 8; # Highest value of chromosome
 my $base = 59; # Base of middle C MIDI values
-my $iter = 1; # Number of evolve iterations - XXX this appears to be broken?
-
-my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
+my $population = 100;
+my $iterations = 2;
 
 my @fittest = evo($max);
+
+my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
 
 my $count = 0;
 
@@ -97,40 +99,29 @@ sub leading {
 sub evo {
     my $max = shift;
 
-    my $notes = [ ([0 .. 11]) x 3 ]; # vectors of chromatc scales
-
-    my $ga = AI::Genetic::Pro->new(        
-        -fitness         => \&fitness,     # fitness function
-        -terminate       => \&terminate,   # terminate function
-        -type            => 'listvector',  # type of chromosome
-        -population      => 100,           # population
-        -crossover       => 0.9,           # probab. of crossover
-        -mutation        => 0.5,           # probab. of mutation
-        -parents         => 2,             # number  of parents
-        -selection       => ['Roulette'],  # selection strategy
-        -strategy        => ['PMX'],       # crossover strategy
-        -cache           => 1,             # cache results
-        -history         => 1,             # remember best results
-        -preserve        => 1,             # remember the bests
-        -variable_length => 0,             # turn variable length OFF
+    my $ga = AI::Genetic->new(
+        -fitness    => \&fitness,
+        -type       => 'listvector',
+        -population => $population,
+        -crossover  => 0.95,
+        -mutation   => 0.01,
     );
 
-    $ga->init($notes);
-    $ga->evolve($iter);
+    my $items = [ ([ 0 .. 11 ]) x 3 ]; # Chromatic triad
+    
+    $ga->init($items);
+    $ga->evolve('rouletteTwoPoint', $iterations);
 
     my @genes;
-    for my $chromosome (reverse $ga->getFittest($max)) {
-        push @genes, get_chromosome($ga, $chromosome);
+    for my $fit ($ga->getFittest($max)) {
+        push @genes, $fit->{GENES};
     }
 
     return @genes;
 }
-
-# "The higher the value, the [greater] the chance of an individual passing its genes on in future generations through mating (crossover)."
-sub fitness {
-    my ($ga, $chromosome) = @_;
-
-    $chromosome = get_chromosome($ga, $chromosome);
+ 
+ sub fitness {
+    my $chromosome = shift;
 
     return 0
         if @$chromosome > uniq(@$chromosome); # Duplicates not allowed
@@ -143,17 +134,5 @@ sub fitness {
         }
     }
 
-    return $top - evenness_index($chromosome); # "Even" chords are deemed fittest
-}
-
-# Stop evolving if above the threshold
-sub terminate {
-    my ($ga) = @_;
-    return $ga->as_value($ga->getFittest) >= $threshold ? 1 : 0;
-}
-
-sub get_chromosome {
-    my ($ga, $chromosome) = @_;
-    $chromosome ||= $ga->getFittest;
-    return [ split /_+/, $ga->as_string($chromosome) ];
+    return $top - evenness_index($chromosome);
 }
