@@ -17,7 +17,7 @@ my $iterations = 2;
 
 my $max = 48; # Number of results
 my $top = 8; # Highest value of chromosome
-my $base = 59; # Base of middle C MIDI values
+my $base = 60; # Base of middle C MIDI values
 
 my @fittest = evo($max);
 
