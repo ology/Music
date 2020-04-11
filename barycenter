@@ -8,6 +8,8 @@ use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 use lib $ENV{HOME} . '/sandbox/Music-Interval-Barycentric/lib';
 use Music::Interval::Barycentric; # https://metacpan.org/release/Music-Interval-Barycentric
+use Music::Chord::Namer 'chordname';
+use Music::Note;
 
 my $bpm   = shift || 200;
 my $patch = shift || 0;
@@ -20,6 +22,15 @@ my $top = 8; # Highest value of chromosome
 my $base = 60; # Base of middle C MIDI values
 
 my @fittest = evo($max);
+
+for my $fit (@fittest) {
+    my @named;
+    for my $n (sort { $a <=> $b } @$fit) {
+        my $note = Music::Note->new($n + $base, 'midinum');
+        push @named, $note->format('isobase');
+    }
+    printf "[%d,%d,%d] => (%s,%s,%s) => %s\n", @$fit, @named, scalar chordname(@named);
+}
 
 my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
 
