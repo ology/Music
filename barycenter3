@@ -1,0 +1,162 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use AI::Genetic;
+use List::Util qw/ uniq /;
+use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
+use MIDI::Util; # https://metacpan.org/release/MIDI-Util
+use lib $ENV{HOME} . '/sandbox/Music-ToRoman/lib';
+use lib $ENV{HOME} . '/sandbox/Music-Cadence/lib';
+use Music::Cadence; # https://metacpan.org/release/Music-Cadence
+use Music::Chord::Namer 'chordname';
+use lib '/Users/gene/sandbox/Music-Duration-Partition/lib';
+use Music::Duration::Partition; # https://metacpan.org/release/Music--Duration-Partition
+use lib $ENV{HOME} . '/sandbox/Music-Interval-Barycentric/lib';
+use Music::Interval::Barycentric; # https://metacpan.org/release/Music-Interval-Barycentric
+use Music::Note;
+
+my $bpm   = shift || 120;
+my $patch = shift || 5;
+
+my $population = 50;
+my $iterations = 2;
+
+my $reps = 31; # Starting at 0...
+my $max = 48; # Number of evolved results
+my $top = 8; # Highest value of chromosome
+my $base = 60; # Base of middle C MIDI values
+my $size = 4; # Phrase duration size in quarter notes
+
+my $sizes = {
+    hn => 2,
+    qn => 1,
+    en => 0.5,
+};
+
+my @fittest = evo($max);
+
+my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
+
+my $mc = Music::Cadence->new(octave => 5);
+
+my $mdp = Music::Duration::Partition->new(
+    size => $size,
+    pool => [qw/ hn qn en /],
+    #verbose=>1,
+);
+my $motif = $mdp->motif;
+
+my $count = 0;
+
+$score->synch(
+    \&fit,
+    \&drums,
+);
+
+$score->write_score("$0.mid");
+
+sub fit {
+    for my $n ( 0 .. $reps) {
+        legato($motif->[$n % @$motif], $fittest[$n % @fittest]);
+    }
+
+    # Resolution
+#    add_cadence(1 + int rand 7);
+    $score->n('wn', 60, 64, 67); # I
+}
+
+sub legato {
+    my ($dura, $fit) = @_;
+    $score->n($dura, map { $base + $_ } @$fit);
+    $count += $sizes->{$dura};
+}
+
+sub add_cadence {
+    my $n = shift || 1;
+    my $chords = $mc->cadence(
+        type    => 'half',
+        leading => $n,
+    );
+    $score->n('hn', @$_) for @$chords;
+    $count += 4;
+}
+
+sub drums {
+    MIDI::Util::set_chan_patch($score, 9, 44);
+
+    for my $duration (('qn') x $count) { # Measures of quarter-notes
+        $score->n($duration, 44, 'm'); # hi-hat
+    }
+
+    # Resolution
+    $score->n('wn', 49, 'm'); # crash
+}
+
+sub evo {
+    my $max = shift;
+
+    my $ga = AI::Genetic->new(
+        -fitness    => \&fitness,
+        -type       => 'listvector',
+        -population => $population,
+        -crossover  => 0.95,
+        -mutation   => 0.01,
+    );
+
+    my $items = [ ([ 0 .. 11 ]) x 3 ]; # Chromatic triad
+    
+    $ga->init($items);
+    $ga->evolve('rouletteTwoPoint', $iterations);
+
+    my %seen;
+    my @genes;
+    for my $fit ($ga->getFittest($max)) {
+        my @sorted = sort { $a <=> $b } @{ $fit->{GENES} };
+        next if $seen{"@sorted"}++;
+        push @genes, \@sorted;
+    }
+
+    my $i = 0;
+    for my $fit (@genes) {
+        $i++;
+        my @named;
+        for my $n (@$fit) {
+            my $note = Music::Note->new($n + $base, 'midinum');
+            push @named, $note->format('isobase');
+        }
+        printf "%d. [%d,%d,%d] => (%s,%s,%s) => %s\n", $i, @$fit, @named, scalar chordname(@named);
+    }
+
+    return @genes;
+}
+ 
+ sub fitness {
+    my $chromosome = shift;
+
+    # Chords with duplicate notes not allowed
+    return 0
+        if @$chromosome > uniq(@$chromosome);
+
+    # Chords with adjacent half-steps are not allowed
+#    for my $i (@$chromosome) {
+#        for my $j (@$chromosome) {
+#            return 0
+#                if ($j == $i + 1) || ($j == $i - 1);
+#        }
+#    }
+
+    # Chords with sharps or flats not allowed
+    for my $i (@$chromosome) {
+        my $note = Music::Note->new($i + $base, 'midinum');
+        return 0
+            if $note->format('isobase') =~ /#|b/;
+    }
+
+    my $e = evenness_index($chromosome);
+
+#    return 0
+#        if $e >= 5;
+
+    return $top - $e;
+}
