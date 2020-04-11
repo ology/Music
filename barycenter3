@@ -57,7 +57,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub fit {
-    for my $n ( 0 .. $reps) {
+    for my $n (0 .. $reps) {
         legato($motif->[$n % @$motif], $fittest[$n % @fittest]);
     }
 
