@@ -22,7 +22,7 @@ my $patch = shift || 5;
 my $population = 50;
 my $iterations = 2;
 
-my $reps = 31; # Starting at 0...
+my $reps = 15; # Starting at 0...
 my $max = 48; # Number of evolved results
 my $top = 8; # Highest value of chromosome
 my $base = 60; # Base of middle C MIDI values
@@ -62,7 +62,7 @@ sub fit {
     }
 
     # Resolution
-#    add_cadence(1 + int rand 7);
+    add_cadence(1 + int rand 7);
     $score->n('wn', 60, 64, 67); # I
 }
 
