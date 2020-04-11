@@ -10,7 +10,7 @@ use lib $ENV{HOME} . '/sandbox/Music-ToRoman/lib';
 use lib $ENV{HOME} . '/sandbox/Music-Cadence/lib';
 use Music::Cadence; # https://metacpan.org/release/Music-Cadence
 use Music::Chord::Namer 'chordname';
-use lib '/Users/gene/sandbox/Music-Duration-Partition/lib';
+use lib $ENV{HOME} . '/sandbox/Music-Duration-Partition/lib';
 use Music::Duration::Partition; # https://metacpan.org/release/Music-Duration-Partition
 use lib $ENV{HOME} . '/sandbox/Music-Interval-Barycentric/lib';
 use Music::Interval::Barycentric; # https://metacpan.org/release/Music-Interval-Barycentric
