@@ -61,30 +61,31 @@ sub fit {
     for my $n (0 .. $reps) {
         legato($motif->[$n % @$motif], $fittest[$n % @fittest]);
     }
-    add_cadence(1 + int rand 7);
-    add_rest('hn');
+    add_cadence('wn', 1 + int rand 7);
+#    add_rest('hn');
 
     $motif = $mdp->motif;
     for my $n (0 .. $reps) {
         legato($motif->[$n % @$motif], $fittest[$n % @fittest]);
     }
-#    add_cadence(1 + int rand 7);
-    add_rest('wn');
+    add_cadence('wn', 1 + int rand 7);
+#    add_rest('hn');
 
     $motif = $mdp->motif;
     for my $n (0 .. $reps) {
         legato($motif->[$n % @$motif], $fittest[$n % @fittest]);
     }
-    add_cadence(1 + int rand 7);
-    add_rest('hn');
+    add_cadence('wn', 1 + int rand 7);
+#    add_rest('hn');
 
     $motif = $mdp->motif;
     for my $n (0 .. $reps) {
         legato($motif->[$n % @$motif], $fittest[$n % @fittest]);
     }
+#    add_rest('hn');
 
     # Resolution
-#    add_cadence(1 + int rand 7);
+    add_cadence('wn', 1 + int rand 7);
     $score->n('wn', 60, 64, 67); # I
 }
 
@@ -95,13 +96,14 @@ sub legato {
 }
 
 sub add_cadence {
+    my $dura = shift || 'hn';
     my $n = shift || 1;
     my $chords = $mc->cadence(
         type    => 'half',
         leading => $n,
     );
-    $score->n('hn', @$_) for @$chords;
-    $count += 4;
+    $score->n($dura, @$_) for @$chords;
+    $count += $sizes->{$dura} * 2;'hn'
 }
 
 sub add_rest {
