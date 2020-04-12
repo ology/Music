@@ -29,6 +29,7 @@ my $base = 60; # Base of middle C MIDI values
 my $size = 4; # Phrase duration size in quarter notes
 
 my $sizes = {
+    wn => 4,
     hn => 2,
     qn => 1,
     en => 0.5,
