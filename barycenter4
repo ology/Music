@@ -24,7 +24,7 @@ my $population = 50;
 my $iterations = 2;
 
 my $reps = 7; # Loop repetitions
-my $max = 48; # Number of evolved results
+my $max = 50; # Number of evolved results
 my $top = 8; # Highest value of chromosome
 my $base = 60; # Base of middle C MIDI values
 my $size = 4; # Phrase duration size in quarter notes
