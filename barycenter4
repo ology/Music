@@ -30,6 +30,7 @@ my $size = 4; # Phrase duration size in quarter notes
 
 my $t_octave = 5; # Treble octave
 my $b_octave = 2; # Bass octave
+my $b_patch  = 35; #42
 
 my $sizes = { %MIDI::Simple::Length };
 
@@ -121,7 +122,7 @@ sub add_rest {
 }
 
 sub bass {
-    MIDI::Util::set_chan_patch($score, 1, 35); #42
+    MIDI::Util::set_chan_patch($score, 1, $b_patch);
 
     my @scale = get_scale_MIDI('C', $b_octave, 'pentatonic');
 
