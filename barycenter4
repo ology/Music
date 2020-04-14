@@ -17,7 +17,7 @@ use Music::Note;
 use Music::Scales;
 
 my $bpm   = shift || 120;
-my $patch = shift || 4;
+my $patch = shift || 4; # Treble patch
 
 my $population = 50;
 my $iterations = 2;
