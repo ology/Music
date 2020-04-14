@@ -66,6 +66,8 @@ sub fit {
     # Resolution
     $score->n('wn', 60, 64, 67); # I
 
+    add_rest('wn');
+
     phrase(undef, $reps, \@fittest);
 
     phrase($mdp, $reps, \@fittest);
@@ -119,7 +121,7 @@ sub add_rest {
 sub bass {
     MIDI::Util::set_chan_patch($score, 1, 35); #42
 
-    my @scale = get_scale_MIDI('C', 3, 'pentatonic');
+    my @scale = get_scale_MIDI('C', 2, 'pentatonic');
 
     $score->n('wn', $scale[0]);
 
@@ -158,7 +160,7 @@ sub bass {
     # Resolution
     $score->n('wn', $scale[0]);
 
-    for my $n (0 .. $reps * 2) {
+    for my $n (0 .. $reps) {
         $score->n('en', $scale[0]);
         $score->n('en', $scale[0]);
         $score->r('dhn');
