@@ -38,7 +38,7 @@ my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
 
 my $mc = Music::Cadence->new(octave => $t_octave);
 
-my $count = 0;
+my $count = 0; # Count the treble durations in fit()
 
 $score->synch(
     \&fit,
