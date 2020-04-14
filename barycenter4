@@ -68,7 +68,7 @@ sub fit {
 
     add_rest('wn');
 
-    phrase(undef, $reps, \@fittest);
+    phrase(undef, $reps, \@fittest, 'wn');
 
     phrase($mdp, $reps, \@fittest);
 
@@ -82,14 +82,14 @@ sub fit {
 }
 
 sub phrase {
-    my ($mdp, $reps, $fittest) = @_;
+    my ($mdp, $reps, $fittest, $dura) = @_;
     my $motif = $mdp ? $mdp->motif : '';
     for my $n (0 .. $reps) {
         if ($mdp) {
             legato($motif->[$n % @$motif], $fittest->[$n % @$fittest]);
         }
         else {
-            legato('wn', $fittest->[$n % @$fittest]);
+            legato($dura, $fittest->[$n % @$fittest]);
         }
     }
     add_cadence('wn', 1 + int rand 7);
