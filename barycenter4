@@ -28,13 +28,16 @@ my $top  = 8; # Highest value of chromosome
 my $base = 60; # Base of middle C MIDI values
 my $size = 4; # Phrase duration size in quarter notes
 
+my $t_octave = 5;
+my $b_octave = 2;
+
 my $sizes = { %MIDI::Simple::Length };
 
 my @fittest = evo($max);
 
 my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
 
-my $mc = Music::Cadence->new(octave => 5);
+my $mc = Music::Cadence->new(octave => $t_octave);
 
 my $count = 0;
 
@@ -120,7 +123,7 @@ sub add_rest {
 sub bass {
     MIDI::Util::set_chan_patch($score, 1, 35); #42
 
-    my @scale = get_scale_MIDI('C', 2, 'pentatonic');
+    my @scale = get_scale_MIDI('C', $b_octave, 'pentatonic');
 
     $score->n('wn', $scale[0]);
 
