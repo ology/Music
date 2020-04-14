@@ -30,6 +30,9 @@ my $t_octave = 5; # Treble octave
 my $b_octave = 2; # Bass octave
 my $b_patch  = 35; #42
 
+my $whole = 'wn';
+my $half  = 'hn';
+
 my $sizes = { %MIDI::Simple::Length };
 
 my @fittest = evo($max);
@@ -49,7 +52,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub fit {
-    legato('wn', $fittest[0]);
+    legato($whole, $fittest[0]);
 
     my $mdp = Music::Duration::Partition->new(
         size => $size,
@@ -65,13 +68,11 @@ sub fit {
     phrase($mdp, $reps, \@fittest);
 
     # Resolution
-    $score->n('wn', 60, 64, 67); # I
+    $score->n($whole, 60, 64, 67); # I
 
-    add_rest('wn');
+    add_rest($whole);
 
-    phrase(undef, $reps, \@fittest, 'wn');
-
-    phrase($mdp, $reps, \@fittest);
+    phrase(undef, $reps, \@fittest, $whole);
 
     phrase($mdp, $reps, \@fittest);
 
@@ -79,7 +80,9 @@ sub fit {
 
     phrase($mdp, $reps, \@fittest);
 
-    $score->n('wn', 60, 64, 67); # I
+    phrase($mdp, $reps, \@fittest);
+
+    $score->n($whole, 60, 64, 67); # I
 }
 
 sub phrase {
@@ -93,7 +96,7 @@ sub phrase {
             legato($dura, $fittest->[$n % @$fittest]);
         }
     }
-    add_cadence('wn', 1 + int rand 7);
+    add_cadence($whole, 1 + int rand 7);
 }
 
 sub legato {
@@ -103,14 +106,14 @@ sub legato {
 }
 
 sub add_cadence {
-    my $dura = shift || 'hn';
+    my $dura = shift || $half;
     my $n = shift || 1;
     my $chords = $mc->cadence(
         type    => 'half',
         leading => $n,
     );
     $score->n($dura, @$_) for @$chords;
-    $count += $sizes->{$dura} * 2;'hn'
+    $count += $sizes->{$dura} * 2;
 }
 
 sub add_rest {
@@ -124,14 +127,14 @@ sub bass {
 
     my @scale = get_scale_MIDI('C', $b_octave, 'pentatonic');
 
-    $score->n('wn', $scale[0]);
+    $score->n($whole, $scale[0]);
 
     # Play and save a random note
     my @notes;
     for my $n (0 .. $reps) {
         my $note = $scale[int rand @scale];
         push @notes, $note;
-        $score->n('hn', $note);
+        $score->n($half, $note);
     }
 
     my $mdp = Music::Duration::Partition->new(
@@ -149,7 +152,7 @@ sub bass {
     my $last;
     for my $n (0 .. $reps) {
         my $note = $scale[int rand @scale];
-        $score->n('hn', $n % 2 ? $note : $last);
+        $score->n($half, $n % 2 ? $note : $last);
         $last = $note;
     }
 
@@ -159,7 +162,7 @@ sub bass {
     }
 
     # Resolution
-    $score->n('wn', $scale[0]);
+    $score->n($whole, $scale[0]);
 
     for my $n (0 .. $reps) {
         $score->n('en', $scale[0]);
@@ -169,7 +172,7 @@ sub bass {
 
     # Play a random note
     for my $n (0 .. $reps) {
-        $score->n('hn', $scale[int rand @scale]);
+        $score->n($half, $scale[int rand @scale]);
     }
 
     # Play a random note for each motif
@@ -180,7 +183,7 @@ sub bass {
     # Play a random note twice in a row
     for my $n (0 .. $reps) {
         my $note = $scale[int rand @scale];
-        $score->n('hn', $n % 2 ? $note : $last);
+        $score->n($half, $n % 2 ? $note : $last);
         $last = $note;
     }
 
@@ -189,7 +192,7 @@ sub bass {
         $score->n($motif->[$n % @$motif], $notes[$n]);
     }
 
-    $score->n('wn', $scale[0]);
+    $score->n($whole, $scale[0]);
 }
 
 sub drums {
@@ -200,7 +203,7 @@ sub drums {
     }
 
     # Resolution
-    $score->n('wn', 49); # crash
+    $score->n($whole, 49); # crash
 }
 
 sub evo {
