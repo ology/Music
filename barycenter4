@@ -54,8 +54,8 @@ sub fit {
         size => $size,
         pool => [qw/ hn qn en /],
     );
-    my $motif = $mdp->motif;
 
+    my $motif = $mdp->motif;
     for my $n (0 .. $reps) {
         legato($motif->[$n % @$motif], $fittest[$n % @fittest]);
     }
