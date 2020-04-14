@@ -264,14 +264,6 @@ sub evo {
     return 0
         if @$chromosome > uniq(@$chromosome);
 
-    # Chords with adjacent half-steps are not allowed
-#    for my $i (@$chromosome) {
-#        for my $j (@$chromosome) {
-#            return 0
-#                if ($j == $i + 1) || ($j == $i - 1);
-#        }
-#    }
-
     # Chords with sharps or flats not allowed
     for my $i (@$chromosome) {
         my $note = Music::Note->new($i + $base, 'midinum');
@@ -280,9 +272,6 @@ sub evo {
     }
 
     my $e = evenness_index($chromosome);
-
-#    return 0
-#        if $e >= 5;
 
     return $top - $e;
 }
