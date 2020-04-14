@@ -251,7 +251,8 @@ sub evo {
             my $note = Music::Note->new($n + $base, 'midinum');
             push @named, $note->format('isobase');
         }
-        printf "%d. [%d,%d,%d] => (%s,%s,%s) => %s\n", $i, @$fit, @named, scalar chordname(@named);
+        printf "%d. [%d,%d,%d] => (%s,%s,%s) => %s\n",
+            $i, @$fit, @named, scalar chordname(@named);
     }
 
     return @genes;
