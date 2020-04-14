@@ -2,16 +2,17 @@
 use strict;
 use warnings;
 
+# Use local libraries
 use lib map { "$ENV{HOME}/sandbox/" . $_ } qw(
     MIDI-Util/lib Music-ToRoman/lib Music-Cadence/lib Music-Duration-Partition/lib Music-Interval-Barycentric/lib
 );
 use AI::Genetic;
 use List::Util qw/ uniq /;
-use MIDI::Util; # https://metacpan.org/release/MIDI-Util
-use Music::Cadence; # https://metacpan.org/release/Music-Cadence
+use MIDI::Util;
+use Music::Cadence;
 use Music::Chord::Namer 'chordname';
-use Music::Duration::Partition; # https://metacpan.org/release/Music-Duration-Partition
-use Music::Interval::Barycentric; # https://metacpan.org/release/Music-Interval-Barycentric
+use Music::Duration::Partition;
+use Music::Interval::Barycentric;
 use Music::Note;
 use Music::Scales;
 
