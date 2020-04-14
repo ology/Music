@@ -245,7 +245,7 @@ sub evo {
     return @genes;
 }
  
- sub fitness {
+sub fitness {
     my $chromosome = shift;
 
     # Chords with duplicate notes not allowed
