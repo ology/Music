@@ -174,7 +174,7 @@ sub bass {
     }
 
     # Play a random note for each motif
-    for my $n (0 .. 15) {
+    for my $n (0 .. $reps * 2 + 1) {
         $score->n($motif->[$n % @$motif], $scale[int rand @scale]);
     }
 
