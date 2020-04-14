@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # Use local libraries
-use lib map { "$ENV{HOME}/sandbox/" . $_ . '/lib' } qw(
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(
     MIDI-Util Music-ToRoman Music-Cadence Music-Duration-Partition Music-Interval-Barycentric
 );
 use AI::Genetic;
