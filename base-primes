@@ -8,6 +8,8 @@ use Math::BaseConvert;
 use Math::Prime::XS qw(primes);
 use Music::Scales;
 
+my $patch = shift || 42;
+my $bpm   = shift || 300;
 my $limit = shift || 500;  # Max number of primes
 my @scale = @ARGV; # C4 Ds4 F4 G4 As4 C5 <- Example notes to choose from
 
@@ -24,7 +26,7 @@ my $notes = join '|', @scale;  # "OR regular expression" of scale notes
 
 Math::BaseConvert::dig(\@scale); # Set the base digits to the scale notes
 
-my $score = MIDI::Util::setup_score(patch => 42, bpm => 300);
+my $score = MIDI::Util::setup_score(patch => $patch, bpm => $bpm);
 
 # For each prime number...
 for my $n (primes($limit)) {
