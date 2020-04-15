@@ -52,12 +52,12 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub fit {
-    legato($whole, $fittest[0]);
-
     my $mdp = Music::Duration::Partition->new(
         size => $size,
         pool => [qw/ hn qn en /],
     );
+
+    legato($whole, $fittest[0]);
 
     phrase($mdp, $reps, \@fittest);
 
