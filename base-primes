@@ -1,0 +1,35 @@
+#!/usr/bin/env perl
+
+# https://www.youtube.com/watch?v=azyCk4jWhLg <- Audio rendering
+
+use strict;
+use warnings;
+
+use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
+use MIDI::Util;
+use Math::BaseConvert;
+use Math::Prime::XS qw(primes);
+
+my $limit  = shift || 500;  # Max number of primes
+my @scale  = @ARGV ? @ARGV : qw( C4 Ds4 F4 G4 As4 C5 ); # Notes to choose from
+my $modulo = @scale;  # Size of the scale being used
+my $notes  = join '|', @scale;  # "OR regular expression" of alternating notes
+
+Math::BaseConvert::dig(\@scale); # Set the base digits to the scale notes
+
+my @series = primes($limit);  # Get the prime numbers
+
+my $score = MIDI::Util::setup_score(patch => 42, bpm => 300);
+
+# For each prime number...
+for my $n (@series) {
+    my $x = cnv($n, 10, $modulo);  # Base-convert it to a note string
+    my @phrase = $x =~ /($notes)/g;  # Separate the note string into an array
+
+    # Output the progress:
+    printf "%d => %s (%d)\n", $n, join(' ', @phrase), scalar(@phrase);
+
+    $score->n('qn', $_) for @phrase;
+}
+
+$score->write_score("$0.mid");
