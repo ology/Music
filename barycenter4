@@ -72,7 +72,7 @@ sub fit {
 
     add_rest($whole);
 
-    phrase(undef, $reps, \@fittest, $whole);
+    phrase(undef, $reps, \@fittest);
 
     phrase($mdp, $reps, \@fittest);
 
@@ -88,6 +88,7 @@ sub fit {
 
 sub phrase {
     my ($mdp, $reps, $fittest, $dura) = @_;
+    $dura ||= $whole;
     my $motif = $mdp ? $mdp->motif : '';
     for my $n (0 .. $reps) {
         if ($mdp) {
