@@ -6,9 +6,20 @@ use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 use Math::BaseConvert;
 use Math::Prime::XS qw(primes);
+use Music::Scales;
 
 my $limit = shift || 500;  # Max number of primes
-my @scale = @ARGV ? @ARGV : qw( C4 Ds4 F4 G4 As4 C5 ); # Notes to choose from
+my @scale = @ARGV; # qw( C4 Ds4 F4 G4 As4 C5 ); <- Notes to choose from
+
+if (!@scale) {
+    @scale = get_scale_notes('C', 'major');
+    @scale = map { $_ . 4 } @scale;
+    for (@scale) {
+        s/#/s/;
+        s/b/f/;
+    }
+}
+
 my $size  = @scale;  # Size of the scale being used
 my $notes = join '|', @scale;  # "OR regular expression" of alternating notes
 
