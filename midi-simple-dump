@@ -1,30 +1,16 @@
 #!/usr/bin/env perl
-
-# This script has been superceded by the MIDI::Util module on CPAN.
-
 use strict;
 use warnings;
 
-use MIDI::Simple;
+use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
+use MIDI::Util;
 use Data::Dumper;
 
 $Data::Dumper::Varname = 'Volume';
-print Dumper([
-    map { "$_ => $MIDI::Simple::Volume{$_}" }
-        sort { $MIDI::Simple::Volume{$a} <=> $MIDI::Simple::Volume{$b} }
-            keys %MIDI::Simple::Volume
-]);
+print Dumper( MIDI::Util::dump('volume') );
 
 $Data::Dumper::Varname = 'Length';
-print Dumper([
-    map { "$_ => $MIDI::Simple::Length{$_}" }
-        sort { $MIDI::Simple::Length{$a} <=> $MIDI::Simple::Length{$b} }
-            keys %MIDI::Simple::Length
-]);
+print Dumper( MIDI::Util::dump('length') );
 
 $Data::Dumper::Varname = 'Note';
-print Dumper([
-    map { "$_ => $MIDI::Simple::Note{$_}" }
-        sort { $MIDI::Simple::Note{$a} <=> $MIDI::Simple::Note{$b} }
-            keys %MIDI::Simple::Note
-]);
+print Dumper( MIDI::Util::dump('note') );
