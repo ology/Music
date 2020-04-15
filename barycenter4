@@ -68,7 +68,7 @@ sub fit {
     phrase($mdp, $reps, \@fittest);
 
     # Resolution
-    $score->n($whole, 60, 64, 67); # I
+    legato($whole, [0, 4, 7]);
 
     add_rest($whole);
 
@@ -82,7 +82,8 @@ sub fit {
 
     phrase($mdp, $reps, \@fittest);
 
-    $score->n($whole, 60, 64, 67); # I
+    # Resolution
+    legato($whole, [0, 4, 7]);
 }
 
 sub phrase {
