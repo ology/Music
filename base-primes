@@ -9,7 +9,7 @@ use Math::Prime::XS qw(primes);
 use Music::Scales;
 
 my $limit = shift || 500;  # Max number of primes
-my @scale = @ARGV; # qw( C4 Ds4 F4 G4 As4 C5 ); <- Notes to choose from
+my @scale = @ARGV; # C4 Ds4 F4 G4 As4 C5 <- Example notes to choose from
 
 if (!@scale) {
     @scale = get_scale_notes('C', 'major');
