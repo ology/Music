@@ -7,9 +7,8 @@ use warnings;
 
 # Requires https://metacpan.org/pod/Math::Fractal::Noisemaker
 use Imager;
-use lib $ENV{HOME} . '/sandbox/Math-Utils-ScaleNumber/lib';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( Math-Utils-ScaleNumber MIDI-Util );
 use Math::Utils::ScaleNumber 'to_range'; # https://github.com/ology/Math-Utils-ScaleNumber
-use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
 my $type = shift || 'worley'; # Noisemaker type
