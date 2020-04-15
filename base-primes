@@ -7,10 +7,10 @@ use MIDI::Util;
 use Math::BaseConvert;
 use Math::Prime::XS qw(primes);
 
-my $limit  = shift || 500;  # Max number of primes
-my @scale  = @ARGV ? @ARGV : qw( C4 Ds4 F4 G4 As4 C5 ); # Notes to choose from
-my $modulo = @scale;  # Size of the scale being used
-my $notes  = join '|', @scale;  # "OR regular expression" of alternating notes
+my $limit = shift || 500;  # Max number of primes
+my @scale = @ARGV ? @ARGV : qw( C4 Ds4 F4 G4 As4 C5 ); # Notes to choose from
+my $size  = @scale;  # Size of the scale being used
+my $notes = join '|', @scale;  # "OR regular expression" of alternating notes
 
 Math::BaseConvert::dig(\@scale); # Set the base digits to the scale notes
 
@@ -20,7 +20,7 @@ my $score = MIDI::Util::setup_score(patch => 42, bpm => 300);
 
 # For each prime number...
 for my $n (@series) {
-    my $x = cnv($n, 10, $modulo);  # Base-convert the decimal to a note string
+    my $x = cnv($n, 10, $size);  # Base-convert the decimal to a note string
     my @phrase = $x =~ /($notes)/g;  # Separate the note string into an array
 
     # Output the progress:
