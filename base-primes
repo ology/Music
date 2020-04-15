@@ -20,7 +20,7 @@ if (!@scale) {
     }
 }
 
-my $notes = join '|', @scale;  # "OR regular expression" of alternating notes
+my $notes = join '|', @scale;  # "OR regular expression" of scale notes
 
 Math::BaseConvert::dig(\@scale); # Set the base digits to the scale notes
 
