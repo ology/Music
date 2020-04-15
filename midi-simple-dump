@@ -14,3 +14,19 @@ print Dumper( MIDI::Util::dump('length') );
 
 $Data::Dumper::Varname = 'Note';
 print Dumper( MIDI::Util::dump('note') );
+
+__END__
+volume
+length
+note
+note2number
+number2note
+patch2number
+number2patch
+notenum2percussion
+percussion2notenum
+all_events
+midi_events
+meta_events
+text_events
+nontext_meta_events
