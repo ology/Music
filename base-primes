@@ -20,7 +20,7 @@ my $score = MIDI::Util::setup_score(patch => 42, bpm => 300);
 
 # For each prime number...
 for my $n (@series) {
-    my $x = cnv($n, 10, $modulo);  # Base-convert it to a note string
+    my $x = cnv($n, 10, $modulo);  # Base-convert the decimal to a note string
     my @phrase = $x =~ /($notes)/g;  # Separate the note string into an array
 
     # Output the progress:
