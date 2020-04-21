@@ -7,8 +7,8 @@ use warnings;
 
 # Requires https://metacpan.org/pod/Math::Fractal::Noisemaker
 use Imager;
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( Math-Utils-ScaleNumber MIDI-Util );
-use Math::Utils::ScaleNumber 'to_range'; # https://github.com/ology/Math-Utils-ScaleNumber
+use Math::Utils ':utility';
+use lib "$ENV{HOME}/sandbox/MIDI-Util/lib";
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
 my $type = shift || 'worley'; # Noisemaker type
@@ -46,7 +46,7 @@ for my $y (0 .. $size - 1) {
         my ($red) = $color->rgba;
 
         # Scale from grays range to MIDI note range
-        my $n = sprintf '%.0f', to_range($red, 0, 255, 60, 83);
+        my $n = sprintf '%.0f', uniform_scaling([0, 255], [60, 83], $red);
 
         printf "%*d. [%*d,%*d] %3d -> %d\n",
             $i_field, $i,

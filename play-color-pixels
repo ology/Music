@@ -7,8 +7,8 @@ use warnings;
 
 use Image::Size;
 use Imager;
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( Math-Utils-ScaleNumber MIDI-Util );
-use Math::Utils::ScaleNumber 'to_range'; # https://github.com/ology/Math-Utils-ScaleNumber
+use Math::Utils ':utility';
+use lib "$ENV{HOME}/sandbox/MIDI-Util/lib";
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 
 my $file = shift || die "Usage: perl $0 /some/image/file.{jpg,png,etc}\n";
@@ -26,8 +26,8 @@ my $w_field = length $w;
 my $h_field = length $h;
 my $i_field = length($w * $h);
 
-my @color_range = (0, 255);
-my @midi_range  = (60, 83);
+my $color_range = [0, 255];
+my $midi_range  = [60, 83];
 
 my $i = 0;
 
@@ -40,7 +40,7 @@ for my $y (0 .. $h - 1) {
 
         my ($red, $green, $blue) = $color->rgba;
 
-        my @chord = map { sprintf '%.0f', to_range($_, @color_range, @midi_range) }
+        my @chord = map { sprintf '%.0f', uniform_scaling($color_range, $midi_range, $_) }
             $red, $green, $blue;
 
         printf "%*d. [%*d,%*d] %3d,%3d,%3d -> %s\n",
