@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# Play the prime numbers as base converted note strings
+
 use strict;
 use warnings;
 
