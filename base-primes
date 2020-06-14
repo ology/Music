@@ -13,6 +13,8 @@ my $bpm   = shift || 300;
 my $limit = shift || 500;  # Max number of primes
 my @scale = @ARGV; # C4 Ds4 F4 G4 As4 C5 <- Example notes to choose from
 
+my $as_chords = 1; # Boolean
+
 if (!@scale) {
     @scale = get_scale_notes('C', 'major');
     @scale = map { $_ . 4 } @scale;
@@ -28,6 +30,9 @@ Math::BaseConvert::dig(\@scale); # Set the base digits to the scale notes
 
 my $score = MIDI::Util::setup_score(patch => $patch, bpm => $bpm);
 
+my $note_count = 0;
+my $phrase_count = 0;
+
 # For each prime number...
 for my $n (primes($limit)) {
     my $x = cnv($n, 10, scalar(@scale));  # Base-convert the decimal to a note string
@@ -36,7 +41,18 @@ for my $n (primes($limit)) {
     # Output the progress:
     printf "%d => %s (%d)\n", $n, join(' ', @phrase), scalar(@phrase);
 
-    $score->n('qn', $_) for @phrase;
+    if ($as_chords) {
+        $score->n('qn', @phrase);
+        $phrase_count++;
+    }
+    else {
+        $score->n('qn', $_) for @phrase;
+    }
+
+    $note_count += @phrase;
 }
 
 $score->write_score("$0.mid");
+
+print "Total notes: $note_count\n";
+print "Total phrases: $phrase_count\n";
