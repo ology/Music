@@ -9,7 +9,7 @@ use Math::Prime::XS qw(primes);
 use Music::Scales;
 
 my $patch = shift || 42;
-my $bpm   = shift || 300;
+my $bpm   = shift || 100;
 my $limit = shift || 500;  # Max number of primes
 my @scale = @ARGV; # C4 Ds4 F4 G4 As4 C5 <- Example notes to choose from
 
@@ -51,6 +51,8 @@ for my $n (primes($limit)) {
 
     $note_count += @phrase;
 }
+
+$score->n('wn', $scale[0]);
 
 $score->write_score("$0.mid");
 
