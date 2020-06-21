@@ -46,12 +46,12 @@ for my $n (primes($limit)) {
 
     if ($as_chords) {
         $score->n('qn', @phrase);
-        $phrase_count++;
     }
     else {
         $score->n('qn', $_) for @phrase;
     }
 
+    $phrase_count++;
     $note_count += @phrase;
 }
 
