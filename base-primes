@@ -5,6 +5,7 @@
 use strict;
 use warnings;
 
+use List::Util qw(uniq);
 use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 use Math::BaseConvert;
@@ -45,7 +46,7 @@ for my $n (primes($limit)) {
     printf "%d => %s (%d)\n", $n, join(' ', @phrase), scalar(@phrase);
 
     if ($as_chords) {
-        $score->n('qn', @phrase);
+        $score->n('qn', uniq(@phrase));
     }
     else {
         $score->n('qn', $_) for @phrase;
