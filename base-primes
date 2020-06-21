@@ -12,7 +12,7 @@ use Math::BaseConvert;
 use Math::Prime::XS qw(primes);
 use Music::Scales;
 
-my $patch = shift || 42;
+my $patch = shift || 5;
 my $bpm   = shift || 100;
 my $limit = shift || 500;  # Max number of primes
 my @scale = @ARGV; # C4 Ds4 F4 G4 As4 C5 <- Example notes to choose from
@@ -20,7 +20,7 @@ my @scale = @ARGV; # C4 Ds4 F4 G4 As4 C5 <- Example notes to choose from
 my $as_chords = 1; # Boolean
 
 if (!@scale) {
-    @scale = get_scale_notes('C', 'major');
+    @scale = get_scale_notes('A', 'pminor');
     @scale = map { $_ . 4 } @scale;
     for (@scale) {
         s/#/s/;
