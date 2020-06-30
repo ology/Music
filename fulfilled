@@ -1,0 +1,215 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Use local libraries
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition );
+
+use Data::Dumper::Compact 'ddc';
+use MIDI::Drummer::Tiny;
+use MIDI::Util;
+use Music::Duration::Partition;
+use Music::Scales;
+
+my $max   = shift || 8;   # Loop boundary
+my $bpm   = shift || 100; # Beats per minute
+my $note  = shift || 'A';
+my $scale = shift || 'pminor';
+
+my $bottom_patch = 32;
+
+# Instantiate a drummer!
+my $d = MIDI::Drummer::Tiny->new(
+    file => "$0.mid",
+    bpm  => $bpm,
+);
+
+# Play the pulse and beat parts simultaneously
+$d->score->synch(
+    \&pulse,
+    \&beat,
+    \&bass,
+);
+
+# Write the MIDI file to disk
+$d->write;
+
+# Steady pedal hi-hat
+sub pulse {
+    for my $n (1 .. $max) {
+        $d->note($d->quarter, $d->pedal_hh) for 1 .. $max;
+    }
+}
+
+# Backbeat and fills
+sub beat {
+    # Instantiate a new phrase maker
+    my $mdp = Music::Duration::Partition->new(
+        size    => 4,
+        pool    => [qw(qn en sn)],
+        weights => [5, 10, 5],
+    );
+
+    for my $n (1 .. $max) {
+        # Play the backbeat with a crash on 1
+        $d->note(
+            $d->quarter,
+            $n != 1 && $_ == 1 ? _or_cymbal($d->crash1) : '',
+            $_ % 2 ? $d->kick : $d->snare
+        ) for 1 .. $max / 2;
+
+        # Generate a new rhythmic phrase
+        my $motif = $mdp->motif;
+        warn "Drum fill $n: ", ddc($motif);
+
+        my @patches;
+
+        # Play the fill motif
+        for my $i (0 .. $#$motif) {
+            if ($n % 6 == 1) {
+                @patches = fill_1($i);
+            }
+            elsif ($n % 6 == 2) {
+                @patches = fill_4($i);
+            }
+            elsif ($n % 6 == 3) {
+                @patches = fill_2($i);
+            }
+            elsif ($n % 6 == 4) {
+                @patches = fill_5($i);
+            }
+            elsif ($n % 6 == 5) {
+                @patches = fill_3($i);
+            }
+            elsif ($n % 6 == 0) {
+                @patches = fill_6($i);
+            }
+
+            # Add the motif-patch note to the score
+            $d->note($motif->[$i], @patches);
+        }
+    }
+
+    # End with a kick-crash!
+    $d->note($d->whole, $d->crash1, $d->kick);
+}
+
+sub bass {
+    MIDI::Util::set_chan_patch($d->score, 0, $bottom_patch);
+
+    # Generate a new rhythmic phrase
+    my $mdp = Music::Duration::Partition->new(
+        size    => 4,
+        pool    => [qw(hn qn en)],
+        weights => [4, 10, 6],
+    );
+    my $motif = $mdp->motif;
+    warn 'Bass figure: ', ddc($motif);
+
+    my @pitches = get_scale_MIDI($note, 1, $scale);
+
+    for my $n (1 .. $max) {
+        for my $i (0 .. $#$motif) {
+            $d->note($motif->[$i], $pitches[int rand @pitches]);
+        }
+
+        $d->note($d->half, $pitches[int rand @pitches]);
+        $d->note($d->half, $pitches[int rand @pitches]);
+    }
+
+    $d->note($d->whole, $pitches[0]);
+}
+
+# Descend / ascend the kit
+sub fill_1 {
+    my ($i) = @_;
+    my @patches;
+    @patches = $d->snare         if $i == 0 || $i == 1;
+    @patches = $d->hi_tom        if $i == 2 || $i == 12 || $i == 14;
+    @patches = $d->hi_mid_tom    if $i == 3 || $i == 11 || $i == 15;
+    @patches = $d->low_mid_tom   if $i == 4 || $i == 10;
+    @patches = $d->low_tom       if $i == 5 || $i == 9;
+    @patches = $d->hi_floor_tom  if $i == 6 || $i == 8;
+    @patches = $d->low_floor_tom if $i == 7;
+    return @patches;
+}
+
+# Descend the kit but alternate with the snare
+sub fill_2 {
+    my ($i) = @_;
+    my @patches;
+    @patches = $d->snare         if $i % 2 == 0;
+    @patches = $d->hi_tom        if $i == 1 || $i == 12;
+    @patches = $d->hi_mid_tom    if $i == 3 || $i == 13;
+    @patches = $d->low_mid_tom   if $i == 5 || $i == 14;
+    @patches = $d->low_tom       if $i == 7 || $i == 15;
+    @patches = $d->hi_floor_tom  if $i == 9;
+    @patches = $d->low_floor_tom if $i == 11;
+    return @patches;
+}
+
+# Descend the kit in twos
+sub fill_3 {
+    my ($i) = @_;
+    my @patches;
+    @patches = $d->snare         if $i == 0 || $i == 1;
+    @patches = $d->hi_tom        if $i == 2 || $i == 3;
+    @patches = $d->hi_mid_tom    if $i == 4 || $i == 5;
+    @patches = $d->low_mid_tom   if $i == 6 || $i == 7;
+    @patches = $d->low_tom       if $i == 8 || $i == 9;
+    @patches = $d->hi_floor_tom  if $i == 10 || $i == 11;
+    @patches = $d->low_floor_tom if $i == 12 || $i == 13;
+    @patches = $d->hi_floor_tom  if $i == 14 || $i == 15;
+    return @patches;
+}
+
+# Descend / ascend the kit and possibly strike a cymbal
+sub fill_4 {
+    my ($i) = @_;
+    my @patches;
+    @patches = $d->snare                     if $i == 0 || $i == 1;
+    @patches = _or_cymbal($d->hi_tom)        if $i == 2 || $i == 12 || $i == 14;
+    @patches = _or_cymbal($d->hi_mid_tom)    if $i == 3 || $i == 11 || $i == 15;
+    @patches = _or_cymbal($d->low_mid_tom)   if $i == 4 || $i == 10;
+    @patches = _or_cymbal($d->low_tom)       if $i == 5 || $i == 9;
+    @patches = _or_cymbal($d->hi_floor_tom)  if $i == 6 || $i == 8;
+    @patches = _or_cymbal($d->low_floor_tom) if $i == 7;
+    return @patches;
+}
+
+# Descend the kit alternating with the snare but possibly strike a cymbal
+sub fill_5 {
+    my ($i) = @_;
+    my @patches;
+    @patches = $d->snare                     if $i % 2 == 0;
+    @patches = _or_cymbal($d->hi_tom)        if $i == 1 || $i == 12;
+    @patches = _or_cymbal($d->hi_mid_tom)    if $i == 3 || $i == 13;
+    @patches = _or_cymbal($d->low_mid_tom)   if $i == 5 || $i == 14;
+    @patches = _or_cymbal($d->low_tom)       if $i == 7 || $i == 15;
+    @patches = _or_cymbal($d->hi_floor_tom)  if $i == 9;
+    @patches = _or_cymbal($d->low_floor_tom) if $i == 11;
+    return @patches;
+}
+
+# Descend the kit in twos but possibly strike a cymbal
+sub fill_6 {
+    my ($i) = @_;
+    my @patches;
+    @patches = $d->snare                     if $i == 0 || $i == 1;
+    @patches = _or_cymbal($d->hi_tom)        if $i == 2 || $i == 3;
+    @patches = _or_cymbal($d->hi_mid_tom)    if $i == 4 || $i == 5;
+    @patches = _or_cymbal($d->low_mid_tom)   if $i == 6 || $i == 7;
+    @patches = _or_cymbal($d->low_tom)       if $i == 8 || $i == 9;
+    @patches = _or_cymbal($d->hi_floor_tom)  if $i == 10 || $i == 11;
+    @patches = _or_cymbal($d->low_floor_tom) if $i == 12 || $i == 13;
+    @patches = _or_cymbal($d->hi_floor_tom)  if $i == 14 || $i == 15;
+    return @patches;
+}
+
+sub _or_cymbal {
+    my ($patch) = @_;
+    my @cymbals = qw(crash2 splash china);
+    my $cymbal = $cymbals[int rand @cymbals];
+    # Return a cymbal 3/10 times
+    return int(rand 10) < 3 ? ($d->kick, $d->$cymbal) : $patch;
+}
