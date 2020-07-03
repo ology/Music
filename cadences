@@ -5,6 +5,7 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence);
 use Music::Cadence; # https://metacpan.org/release/Music-Cadence
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
+use Music::Chord::Note;
 
 my $bpm = shift || 100;
 
@@ -12,14 +13,15 @@ my $score = MIDI::Util::setup_score( bpm => $bpm );
 
 my $mc = Music::Cadence->new( octave => 4 );
 
-my @triads = (
-    [qw/ C4 E4 G4 /], # I
-    [qw/ D4 F4 A4 /],
-    [qw/ E4 G4 B4 /],
-    [qw/ F4 A4 C4 /], # IV
-    [qw/ G4 B4 D4 /], # V
-    [qw/ A4 C4 E4 /],
-    [qw/ B4 D4 F4 /],
+my $cn = Music::Chord::Note->new;
+my @chords = (
+    $cn->chord('C'),
+    $cn->chord('Dm'),
+    $cn->chord('Em'),
+    $cn->chord('F'),
+    $cn->chord('G'),
+    $cn->chord('Am'),
+    $cn->chord('Bdim'),
 );
 
 my $whole = 'wn';
@@ -27,8 +29,8 @@ my $whole = 'wn';
 A();
 A();
 
-$score->n( $whole, @{ $triads[0] } );
-$score->n( $whole, @{ $triads[0] } );
+$score->n( $whole, @{ $chords[0] } );
+$score->n( $whole, @{ $chords[0] } );
 
 $score->write_score("$0.mid");
 
@@ -41,28 +43,28 @@ sub A {
 sub a1 {
     my ( $i, $degrees ) = @_;
     for my $n ( @$degrees ) {
-        my $chords = $mc->cadence(
+        my $cadence = $mc->cadence(
             type    => 'half',
             leading => $n,
         );
-        $score->n( $whole, @$_ ) for @$chords;
+        $score->n( $whole, @$_ ) for @$cadence;
     }
     if ( $i % 2 == 0 ) {
-        $score->n( $whole, @{ $triads[2] } );
-        $score->n( $whole, @{ $triads[5] } );
+        $score->n( $whole, @{ $chords[2] } );
+        $score->n( $whole, @{ $chords[5] } );
     }
     else {
-        $score->n( $whole, @{ $triads[5] } );
-        $score->n( $whole, @{ $triads[2] } );
+        $score->n( $whole, @{ $chords[5] } );
+        $score->n( $whole, @{ $chords[2] } );
     }
 }
 
 sub a2 {
-    my $chords = $mc->cadence(
+    my $cadence = $mc->cadence(
         type      => 'imperfect',
         inversion => { 2 => 1 },
     );
-    $score->n( $whole, @$_ ) for @$chords;
-    $score->n( $whole, @{ $triads[2] } );
-    $score->n( $whole, @{ $triads[1] } );
+    $score->n( $whole, @$_ ) for @$cadence;
+    $score->n( $whole, @{ $chords[2] } );
+    $score->n( $whole, @{ $chords[1] } );
 }
