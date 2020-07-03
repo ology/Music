@@ -10,11 +10,10 @@ my $max = shift || 16;
 
 my @chord = qw( C4 Ds4 C5 );
 my @bass  = qw( C3 G3 As3 C4 );
+my @duras = qw( en qn qn );
 
 my $trebp = shift || 0; # Treble patch
 my $bassp = shift || 42; # Bass patch
-
-my @duras = qw( en qn qn );
 
 my $half  = 'hn';
 my $whole = 'wn';
