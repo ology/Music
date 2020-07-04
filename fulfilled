@@ -57,24 +57,12 @@ sub beat {
         my @patches;
 
         for my $i (0 .. $#$motif) {
-            if ($n % 6 == 1) {
-                @patches = fill_1($i);
-            }
-            elsif ($n % 6 == 2) {
-                @patches = fill_4($i);
-            }
-            elsif ($n % 6 == 3) {
-                @patches = fill_2($i);
-            }
-            elsif ($n % 6 == 4) {
-                @patches = fill_5($i);
-            }
-            elsif ($n % 6 == 5) {
-                @patches = fill_3($i);
-            }
-            elsif ($n % 6 == 0) {
-                @patches = fill_6($i);
-            }
+            if ($n % 6 == 1) { @patches = fill_1($i); }
+            elsif ($n % 6 == 2) { @patches = fill_4($i); }
+            elsif ($n % 6 == 3) { @patches = fill_2($i); }
+            elsif ($n % 6 == 4) { @patches = fill_5($i); }
+            elsif ($n % 6 == 5) { @patches = fill_3($i); }
+            elsif ($n % 6 == 0) { @patches = fill_6($i); }
 
             $d->note($motif->[$i], @patches);
         }
