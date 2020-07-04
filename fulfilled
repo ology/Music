@@ -11,8 +11,8 @@ use MIDI::Util;
 use Music::Duration::Partition;
 use Music::Scales;
 
-my $max   = shift || 8;   # Loop boundary
-my $bpm   = shift || 100; # Beats per minute
+my $max   = shift || 8;
+my $bpm   = shift || 100;
 my $note  = shift || 'A';
 my $scale = shift || 'pminor';
 
