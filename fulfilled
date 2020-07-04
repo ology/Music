@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # Use local libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition );
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition);
 
 use Data::Dumper::Compact 'ddc';
 use MIDI::Drummer::Tiny;
@@ -18,32 +18,26 @@ my $scale = shift || 'pminor';
 
 my $bottom_patch = 32;
 
-# Instantiate a drummer!
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
     bpm  => $bpm,
 );
 
-# Play the pulse and beat parts simultaneously
 $d->score->synch(
     \&pulse,
     \&beat,
     \&bass,
 );
 
-# Write the MIDI file to disk
 $d->write;
 
-# Steady pedal hi-hat
 sub pulse {
     for my $n (1 .. $max) {
         $d->note($d->quarter, $d->pedal_hh) for 1 .. $max;
     }
 }
 
-# Backbeat and fills
 sub beat {
-    # Instantiate a new phrase maker
     my $mdp = Music::Duration::Partition->new(
         size    => 4,
         pool    => [qw(qn en sn)],
@@ -51,20 +45,17 @@ sub beat {
     );
 
     for my $n (1 .. $max) {
-        # Play the backbeat with a crash on 1
         $d->note(
             $d->quarter,
             $n != 1 && $_ == 1 ? _or_cymbal($d->crash1) : '',
             $_ % 2 ? $d->kick : $d->snare
         ) for 1 .. $max / 2;
 
-        # Generate a new rhythmic phrase
         my $motif = $mdp->motif;
         warn "Drum fill $n: ", ddc($motif);
 
         my @patches;
 
-        # Play the fill motif
         for my $i (0 .. $#$motif) {
             if ($n % 6 == 1) {
                 @patches = fill_1($i);
@@ -85,19 +76,16 @@ sub beat {
                 @patches = fill_6($i);
             }
 
-            # Add the motif-patch note to the score
             $d->note($motif->[$i], @patches);
         }
     }
 
-    # End with a kick-crash!
     $d->note($d->whole, $d->crash1, $d->kick);
 }
 
 sub bass {
     MIDI::Util::set_chan_patch($d->score, 0, $bottom_patch);
 
-    # Generate a new rhythmic phrase
     my $mdp = Music::Duration::Partition->new(
         size    => 4,
         pool    => [qw(hn qn en)],
