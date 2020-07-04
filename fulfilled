@@ -83,12 +83,11 @@ sub bass {
     my $motif = $mdp->motif;
     warn 'Bass figure: ', ddc($motif);
 
-    my @pitches   = get_scale_MIDI($note, 1, $scale);
-    my @intervals = qw/ -4 -3 -2 2 3 4 /;
+    my @pitches = get_scale_MIDI($note, 1, $scale);
 
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
-        intervals => \@intervals,
+        intervals => [qw/ -4 -3 -2 2 3 4 /],
     );
 
     for my $n (1 .. $max) {
