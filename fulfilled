@@ -116,7 +116,7 @@ sub fill_1 {
     return @patches;
 }
 
-# Descend the kit but alternate with the snare
+# Descend /ascend the kit but alternate with the snare
 sub fill_2 {
     my ($i) = @_;
     my @patches;
@@ -159,7 +159,7 @@ sub fill_4 {
     return @patches;
 }
 
-# Descend the kit alternating with the snare but possibly strike a cymbal
+# Descend /ascend the kit alternating with the snare but possibly strike a cymbal
 sub fill_5 {
     my ($i) = @_;
     my @patches;
