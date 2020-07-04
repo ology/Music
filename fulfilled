@@ -10,6 +10,7 @@ use MIDI::Drummer::Tiny;
 use MIDI::Util;
 use Music::Duration::Partition;
 use Music::Scales;
+use Music::VoiceGen;
 
 my $max   = shift || 8;
 my $bpm   = shift || 100;
@@ -82,15 +83,21 @@ sub bass {
     my $motif = $mdp->motif;
     warn 'Bass figure: ', ddc($motif);
 
-    my @pitches = get_scale_MIDI($note, 1, $scale);
+    my @pitches   = get_scale_MIDI($note, 1, $scale);
+    my @intervals = qw/ -4 -3 -2 2 3 4 /;
+
+    my $voice = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@intervals,
+    );
 
     for my $n (1 .. $max) {
         for my $i (0 .. $#$motif) {
-            $d->note($motif->[$i], $pitches[int rand @pitches]);
+            $d->note($motif->[$i], $voice->rand);
         }
 
-        $d->note($d->half, $pitches[int rand @pitches]);
-        $d->note($d->half, $pitches[int rand @pitches]);
+        $d->note($d->half, $voice->rand);
+        $d->note($d->half, $voice->rand);
     }
 
     $d->note($d->whole, $pitches[0]);
