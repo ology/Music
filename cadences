@@ -14,8 +14,6 @@ my $bpm  = shift || 100;
 my $note = shift || 'C';
 my $name = shift || M;
 
-my $score = MIDI::Util::setup_score( bpm => $bpm );
-
 my $mc = Music::Cadence->new(
     key    => $note,
     scale  => $name,
@@ -42,6 +40,8 @@ for my $chord (@chords) { # Convert from ISO to MIDI format
 }
 
 my $whole = 'wn';
+
+my $score = MIDI::Util::setup_score( bpm => $bpm );
 
 A();
 A();
