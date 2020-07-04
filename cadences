@@ -11,8 +11,8 @@ use Music::Scales;
 use constant M => 'major';
 
 my $bpm  = shift || 100;
-my $note = shift || 'C';
-my $name = shift || M;
+my $note = shift || 'C'; # Bb, C\#, etc.
+my $name = shift || M; # major or minor
 
 my $mc = Music::Cadence->new(
     key    => $note,
