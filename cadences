@@ -6,23 +6,40 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence);
 use Music::Cadence; # https://metacpan.org/release/Music-Cadence
 use MIDI::Util; # https://metacpan.org/release/MIDI-Util
 use Music::Chord::Note;
+use Music::Scales;
 
-my $bpm = shift || 100;
+use constant M => 'major';
+
+my $bpm  = shift || 100;
+my $note = shift || 'C';
+my $name = shift || M;
 
 my $score = MIDI::Util::setup_score( bpm => $bpm );
 
-my $mc = Music::Cadence->new( octave => 4 );
+my $mc = Music::Cadence->new(
+    key    => $note,
+    scale  => $name,
+    octave => 4,
+);
+
+my @scale = get_scale_notes($note, $name);
 
 my $cn = Music::Chord::Note->new;
 my @chords = (
-    $cn->chord('C'),
-    $cn->chord('Dm'),
-    $cn->chord('Em'),
-    $cn->chord('F'),
-    $cn->chord('G'),
-    $cn->chord('Am'),
-    $cn->chord('Bdim'),
+    [$cn->chord($scale[0] . ($name eq M ? '' : 'm'))],
+    [$cn->chord($scale[1] . ($name eq M ? 'm' : 'dim'))],
+    [$cn->chord($scale[2] . ($name eq M ? 'm' : ''))],
+    [$cn->chord($scale[3] . ($name eq M ? '' : 'm'))],
+    [$cn->chord($scale[4] . ($name eq M ? '' : 'm'))],
+    [$cn->chord($scale[5] . ($name eq M ? 'm' : ''))],
+    [$cn->chord($scale[6] . ($name eq M ? 'dim' : ''))],
 );
+for my $chord (@chords) { # Convert from ISO to MIDI format
+    for my $n (@$chord) {
+        $n =~ s/b/f/;
+        $n =~ s/#/s/;
+    }
+}
 
 my $whole = 'wn';
 
