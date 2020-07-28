@@ -7,7 +7,6 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Util Music-ToRoman Music-Ca
 use AI::Genetic;
 use List::Util qw/ uniq /;
 use MIDI::Util;
-use Music::Cadence;
 use Music::Chord::Namer 'chordname';
 use Music::Duration::Partition;
 use Music::Interval::Barycentric;
@@ -38,8 +37,6 @@ my $sizes = { %MIDI::Simple::Length };
 my @fittest = evo($max);
 
 my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
-
-my $mc = Music::Cadence->new(octave => $t_octave);
 
 my $count = 0; # Count the treble durations in fit()
 
@@ -98,24 +95,12 @@ sub phrase {
             legato($dura, $fittest->[$n % @$fittest]);
         }
     }
-    add_cadence($whole, 1 + int rand 7);
 }
 
 sub legato {
     my ($dura, $fit) = @_;
     $score->n($dura, map { $base + $_ } @$fit);
     $count += $sizes->{$dura};
-}
-
-sub add_cadence {
-    my $dura = shift || $half;
-    my $n = shift || 1;
-    my $chords = $mc->cadence(
-        type    => 'half',
-        leading => $n,
-    );
-    $score->n($dura, @$_) for @$chords;
-    $count += $sizes->{$dura} * 2;
 }
 
 sub add_rest {
