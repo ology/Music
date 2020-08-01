@@ -55,6 +55,7 @@ my %edges;
 
 for my $i ( keys %seen ) {
     next unless $count{$i} > $thresh;
+
     my $from = Graph::Easy::Node->new( name => $i );
 
     for my $j ( @{ $seen{$i} } ) {
