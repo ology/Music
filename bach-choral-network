@@ -7,7 +7,8 @@ use Music::BachChoralHarmony;
 use List::Util qw( any );
 use Graph::Easy;
 
-my $id = shift || '003907bv';
+my $thresh = shift || 1;
+my $name = shift || '003907bv';
 
 # From https://archive.ics.uci.edu/ml/datasets/Bach+Choral+Harmony
 my $data_file = shift || $ENV{HOME} . '/sandbox/Music-BachChoralHarmony/share/jsbach_chorals_harmony.data';
@@ -20,18 +21,22 @@ my $bach = Music::BachChoralHarmony->new(
 );
 my $progression = $bach->parse;
 
-# Find the bigrams of the chord progression
+# Gather the bigrams of the chord progression
 my %seen;
+# Count the chords
+my %count;
 
 for my $song ( keys %$progression ) {
-    next unless $song eq $id;  # Comment this line to get an enormous network of all song transitions
+    next unless $song eq $name;  # Comment this line to get an enormous network of all song transitions
 
     my $last = '';
 
     for my $cluster ( @{ $progression->{$song}{events} } ) {
-        my $notes = $cluster->{notes};
-        my $bass  = $cluster->{bass};
+#        my $notes = $cluster->{notes};
+#        my $bass  = $cluster->{bass};
         my $chord = $cluster->{chord};
+
+        $count{$chord}++;
 
         if ( $last && !any { $last eq $_ } @{ $seen{$chord} } ) {
             push @{ $seen{$last} }, $chord;
@@ -48,6 +53,7 @@ my $graph = Graph::Easy->new();
 my %edges;
 
 for my $i ( keys %seen ) {
+    next unless $count{$i} > $thresh;
     my $from = Graph::Easy::Node->new( name => $i );
 
     for my $j ( @{ $seen{$i} } ) {
