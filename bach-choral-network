@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-BachChoralHarmony);
 use Music::BachChoralHarmony;
 use List::Util qw( any );
 use Graph::Easy;
@@ -9,10 +10,14 @@ use Graph::Easy;
 my $id = shift || '003907bv';
 
 # From https://archive.ics.uci.edu/ml/datasets/Bach+Choral+Harmony
-my $file = shift || '/Users/gene/Documents/data/jsbach_chorals_harmony/jsbach_chorals_harmony.data';
+my $data_file = shift || $ENV{HOME} . '/sandbox/Music-BachChoralHarmony/share/jsbach_chorals_harmony.data';
+my $key_title = shift || $ENV{HOME} . '/sandbox/Music-BachChoralHarmony/share/jsbach_BWV_keys_titles.txt';
 
 # Read-in the chord progression of each song
-my $bach = Music::BachChoralHarmony->new;
+my $bach = Music::BachChoralHarmony->new(
+    data_file => $data_file,
+    key_title => $key_title,
+);
 my $progression = $bach->parse;
 
 # Find the bigrams of the chord progression
@@ -40,12 +45,18 @@ for my $song ( keys %$progression ) {
 # Make a network graph of the chord progression
 my $graph = Graph::Easy->new();
 
+my %nodes;
+my %edges;
+
 for my $i ( keys %seen ) {
     my $from = Graph::Easy::Node->new( name => $i );
+#        unless $nodes{$i}++;
 
     for my $j ( @{ $seen{$i} } ) {
         my $to = Graph::Easy::Node->new( name => $j );
-        $graph->add_edge( $from, $to );
+#            unless $nodes{$j}++;
+        $graph->add_edge( $from, $to )
+            unless $edges{"$i $j"}++;
     }
 }
 
