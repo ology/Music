@@ -27,7 +27,7 @@ my %seen;
 my %count;
 
 for my $song ( keys %$progression ) {
-    next unless $song eq $name;  # Comment this line to get an enormous network of all song transitions
+#    next unless $song eq $name;  # Comment this line to get an enormous network of all song transitions
 
     my $last = '';
 
@@ -46,6 +46,7 @@ for my $song ( keys %$progression ) {
     }
 }
 #use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper\%seen); exit;
+#use Data::Dumper;warn(__PACKAGE__,' ',__LINE__," MARK: ",Dumper\%count); exit;
 
 # Make a network graph of the chord progression
 my $graph = Graph::Easy->new();
