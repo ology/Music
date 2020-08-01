@@ -45,16 +45,13 @@ for my $song ( keys %$progression ) {
 # Make a network graph of the chord progression
 my $graph = Graph::Easy->new();
 
-my %nodes;
 my %edges;
 
 for my $i ( keys %seen ) {
     my $from = Graph::Easy::Node->new( name => $i );
-#        unless $nodes{$i}++;
 
     for my $j ( @{ $seen{$i} } ) {
         my $to = Graph::Easy::Node->new( name => $j );
-#            unless $nodes{$j}++;
         $graph->add_edge( $from, $to )
             unless $edges{"$i $j"}++;
     }
