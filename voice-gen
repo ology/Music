@@ -12,11 +12,11 @@ use Music::VoiceGen;
 
 my $max   = shift || 16;
 my $note  = shift || 60;
-my $leads = shift || '2 7';
-my $ints  = shift || '-4 -3 -2 2 3 4';
+my $leads = shift || '2,7';
+my $ints  = shift || '-4,-3,-2,2,3,4';
 
-my @leaders   = split /\s+/, $leads;
-my @intervals = split /\s+/, $ints;
+my @leaders   = split /,/, $leads;
+my @intervals = split /,/, $ints;
 
 my $quarter = 'qn';
 my $half    = 'hn';
