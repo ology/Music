@@ -40,7 +40,7 @@ sub bass {
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
         pool => [qw/ hn qn /],
-        weights => [4, 2],
+        weights => [2, 1],
     );
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
