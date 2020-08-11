@@ -84,10 +84,24 @@ sub _bass {
 sub top {
     MIDI::Util::set_chan_patch($d->score, 0, 4);
 
-    _top();
+    my @pitches = (
+        get_scale_MIDI($note, $octave + 1, $tscale),
+        get_scale_MIDI($note, $octave + 2, $tscale)
+    );
+    _top(@pitches);
+
+    for my $n (1 .. $d->bars / 2) {
+        $d->rest($d->quarter);
+        $d->note($d->quarter, $pitches[0]);
+        $d->rest($d->dotted_quarter);
+        $d->note($d->quarter, $pitches[0]);
+        $d->rest($d->eighth);
+    }
 }
 
 sub _top {
+    my (@pitches) = @_;
+
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
         pool => [qw/ dqn qn en /],
@@ -95,10 +109,6 @@ sub _top {
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
 
-    my @pitches = (
-        get_scale_MIDI($note, $octave + 1, $tscale),
-        get_scale_MIDI($note, $octave + 2, $tscale)
-    );
     my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
