@@ -112,7 +112,7 @@ sub top {
 
     for my $n (1 .. $d->bars * 2) {
         for my $i (0 .. $#$motif1) {
-            $d->note($motif1->[$i], $n % 2 ? $notes1[$i] : $notes2[$i]);
+            $d->note($motif1->[$i], $n % 6 == 0 ? $notes4[$i] : $n % 2 ? $notes1[$i] : $notes2[$i]);
         }
 
         for my $i (0 .. $#$motif2) {
