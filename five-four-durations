@@ -9,11 +9,13 @@ use Music::Scales;
 use Music::VoiceGen;
 use Music::Duration::Partition;
 
+my $bpm    = shift || 105;
 my $note   = shift || 'A';
 my $octave = shift || 1;
-my $scale  = shift || 'pminor';
-my $bpm    = shift || 105;
-my $beats  = shift || 5;
+my $bscale = shift || 'pminor';
+my $tscale = shift || 'minor';
+
+my $beats = 5;
 
 my $d = MIDI::Drummer::Tiny->new(
     file      => "$0.mid",
@@ -42,7 +44,7 @@ sub bass {
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
 
-    my @pitches = get_scale_MIDI($note, $octave, $scale);
+    my @pitches = get_scale_MIDI($note, $octave, $bscale);
     my @intervals = qw(-3 -2 -1 1 2 3);
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
@@ -83,8 +85,8 @@ sub top {
     my $motif2 = $mdp->motif;
 
     my @pitches = (
-        get_scale_MIDI($note, $octave + 1, 'minor'),
-        get_scale_MIDI($note, $octave + 2, 'minor')
+        get_scale_MIDI($note, $octave + 1, $tscale),
+        get_scale_MIDI($note, $octave + 2, $tscale)
     );
     my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
     my $voice = Music::VoiceGen->new(
@@ -92,7 +94,10 @@ sub top {
         intervals => \@intervals,
     );
 
-    my @pitches2 = get_scale_MIDI($note, $octave + 3, 'minor');
+    my @pitches2 = (
+        get_scale_MIDI($note, $octave + 2, $tscale),
+        get_scale_MIDI($note, $octave + 3, $tscale),
+    );
     @intervals = qw(-2 -1 1 2);
     my $voice2 = Music::VoiceGen->new(
         pitches   => \@pitches2,
