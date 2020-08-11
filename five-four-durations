@@ -12,11 +12,11 @@ use Music::Duration::Partition;
 
 my $bpm    = shift || 105;
 my $note   = shift || 'A';
-my $octave = shift || 1;
 my $bscale = shift || 'pminor';
 my $tscale = shift || 'minor';
 
-my $beats = 5;
+my $octave = 1;
+my $beats  = 5;
 
 my $d = MIDI::Drummer::Tiny->new(
     file      => "$0.mid",
