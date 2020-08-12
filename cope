@@ -29,5 +29,5 @@ while (my $v = $iter->next) {
 my $i = 0;
 for my $chord (sort { $tensions{$a}->{tension} <=> $tensions{$b}->{tension} || $a cmp $b } keys %tensions) {
     $i++;
-    printf "%*d. %-9s => %-17s => %s\n", length(keys %tensions), $i, "[$chord]", $tensions{$chord}->{chord}, $tensions{$chord}->{tension};
+    printf "%*d. %-11s => %-20s => %s\n", length(keys %tensions), $i, "[$chord]", $tensions{$chord}->{chord}, $tensions{$chord}->{tension};
 }
