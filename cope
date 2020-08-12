@@ -26,8 +26,10 @@ while (my $v = $iter->next) {
     $tensions{ join(' ', @$v) } = { chord => $c, tension => $t };
 }
 
+my $w = length(keys %tensions);
 my $i = 0;
 for my $chord (sort { $tensions{$a}->{tension} <=> $tensions{$b}->{tension} || $a cmp $b } keys %tensions) {
     $i++;
-    printf "%*d. %-11s => %-20s => %s\n", length(keys %tensions), $i, "[$chord]", $tensions{$chord}->{chord}, $tensions{$chord}->{tension};
+    printf "%*d. %-13s => %-23s => %s\n",
+        $w, $i, "[$chord]", $tensions{$chord}->{chord}, $tensions{$chord}->{tension};
 }
