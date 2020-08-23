@@ -6,14 +6,8 @@ use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util;
 use Data::Dumper;
 
-$Data::Dumper::Varname = 'Volume';
-print Dumper( MIDI::Util::dump('volume') );
-
 $Data::Dumper::Varname = 'Length';
-print Dumper( MIDI::Util::dump('length') );
-
-$Data::Dumper::Varname = 'Note';
-print Dumper( MIDI::Util::dump('note') );
+print Dumper MIDI::Util::dump('length');
 
 __END__
 volume
