@@ -49,6 +49,7 @@ for my $n (0 .. $#$pmotif) {
     }
 }
 
+# Prepare the MIDI
 my $score = MIDI::Util::setup_score(
     lead_in   => 0,
     signature => '5/4',
@@ -56,6 +57,7 @@ my $score = MIDI::Util::setup_score(
     volume    => 98,
 );
 
+# Add each part to the score in parallel
 $score->synch(
     \&piano1,
     \&piano2,
@@ -65,6 +67,7 @@ $score->synch(
     \&clarinet2,
 );
 
+# Output the score as a MIDI file
 $score->write_score("$0.mid");
 
 sub piano1 {
