@@ -16,8 +16,8 @@ my $bpm    = shift || 180;
 my $note   = shift || 'B';
 my $scale  = shift || 'major';
 
+# Create a voice generator
 my $octave = 2;
-
 my @pitches = (
     get_scale_MIDI($note, $octave, $scale),
     get_scale_MIDI($note, $octave + 1, $scale),
@@ -29,9 +29,12 @@ my $voice = Music::VoiceGen->new(
     intervals => \@intervals,
 );
 
-my $pmotif = [('en') x 10];
+# Clarinet track buckets.
 my $cmotif = [shuffle qw(dhn en en en en)];
 my @cnotes;
+
+# Generate notes for the piano tracks
+my $pmotif = [('en') x 10];
 my @pnotes;
 my @transp;
 for my $n (0 .. $#$pmotif) {
