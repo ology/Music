@@ -51,6 +51,9 @@ for my $n (0 .. $#$pmotif) {
 
 # Prepare the MIDI
 my $volume = 98;
+my $pan = 10;
+my $pan_left = 32;
+my $pan_right = 86;
 my $score = MIDI::Util::setup_score(
     lead_in   => 0,
     signature => '5/4',
@@ -74,7 +77,7 @@ $score->write_score("$0.mid");
 # Play the pre-computed piano notes
 sub piano1 {
     MIDI::Util::set_chan_patch($score, 0, 0);
-    $score->control_change(0, 10, 32); # Pan
+    $score->control_change(0, $pan, $pan_left);
     print 'Piano 1.1: ', ddc(\@pnotes);
     print 'Piano 1.2: ', ddc(\@transp);
     for my $i (1 .. $bars) {
@@ -92,7 +95,7 @@ sub piano1 {
 # Play a random cyclic permutation of the transposed piano
 sub piano2 {
     MIDI::Util::set_chan_patch($score, 1, 0);
-    $score->control_change(1, 10, 86); # Pan
+    $score->control_change(1, $pan, $pan_right);
     my @rotated = cyclic_permutation(@transp);
     shift @rotated; # Don't use the same permutation as piano 1
     my $rotated = $rotated[ int rand @rotated ];
@@ -112,7 +115,7 @@ sub piano2 {
 # Alternate bars between 2 sets of notes
 sub violin1 {
     MIDI::Util::set_chan_patch($score, 2, 40);
-    $score->control_change(2, 10, 32); # Pan
+    $score->control_change(2, $pan, $pan_left);
     $score->Volume(70); # XXX The violin patch is too loud!
     my $vmotif = [shuffle qw(dhn hn)];
     print 'Violin 1 durations: ', ddc($vmotif);
@@ -152,7 +155,7 @@ sub violin1 {
 # Alternate bars with rests or notes
 sub violin2 {
     MIDI::Util::set_chan_patch($score, 3, 40);
-    $score->control_change(3, 10, 86); # Pan
+    $score->control_change(3, $pan, $pan_right);
     $score->Volume(70); # XXX The violin patch is too loud!
     my $vmotif = [shuffle qw(dhn hn)];
     print 'Violin 2 durations: ', ddc($vmotif);
@@ -187,7 +190,7 @@ sub violin2 {
 # Populate and play the clarinet notes
 sub clarinet1 {
     MIDI::Util::set_chan_patch($score, 4, 71);
-    $score->control_change(4, 10, 32); # Pan
+    $score->control_change(4, $pan, $pan_left);
     for my $n (0 .. $#$cmotif) {
         my $note = note_or_rest($n, $cmotif, \@cnotes);
         push @cnotes, $note;
@@ -213,7 +216,7 @@ sub clarinet1 {
 # Get and play new clarinet notes for the non-rest motif positions
 sub clarinet2 {
     MIDI::Util::set_chan_patch($score, 5, 71);
-    $score->control_change(5, 10, 86); # Pan
+    $score->control_change(5, $pan, $pan_right);
     my @cnotes2;
     for my $n (@cnotes) {
         my $note = $n eq 'r' ? 'r' : $voice->rand;
