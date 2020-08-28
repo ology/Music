@@ -84,12 +84,7 @@ sub piano1 {
     print 'Piano 1.2: ', ddc(\@transp);
     for my $i (1 .. $bars) {
         for my $n (0 .. $#$pmotif) {
-            if ($pnotes[$n] eq 'r') {
-                $score->r($pmotif->[$n]);
-            }
-            else {
-                $score->n($pmotif->[$n], $pnotes[$n], $transp[$n]);
-            }
+            play_note_or_rest($pmotif->[$n], [$pnotes[$n], $transp[$n]]);
         }
     }
 }
@@ -104,12 +99,7 @@ sub piano2 {
     print 'Piano 2: ', ddc($rotated);
     for my $i (1 .. $bars) {
         for my $n (0 .. $#$pmotif) {
-            if ($rotated->[$n] eq 'r') {
-                $score->r($pmotif->[$n]);
-            }
-            else {
-                $score->n($pmotif->[$n], $rotated->[$n]);
-            }
+            play_note_or_rest($pmotif->[$n], [$rotated->[$n]]);
         }
     }
 }
@@ -134,20 +124,10 @@ sub violin1 {
     for my $i (1 .. $bars) {
         for my $n (0 .. $#$vmotif) {
             if ($i % 2) {
-                if ($vnotes1[$n] eq 'r') {
-                    $score->r($vmotif->[$n]);
-                }
-                else {
-                    $score->n($vmotif->[$n], $vnotes1[$n]);
-                }
+                play_note_or_rest($vmotif->[$n], [$vnotes1[$n]]);
             }
             else {
-                if ($vnotes2[$n] eq 'r') {
-                    $score->r($vmotif->[$n]);
-                }
-                else {
-                    $score->n($vmotif->[$n], $vnotes2[$n]);
-                }
+                play_note_or_rest($vmotif->[$n], [$vnotes2[$n]]);
             }
         }
     }
@@ -177,12 +157,7 @@ sub violin2 {
                 $score->r($vmotif->[$n]);
             }
             else {
-                if ($vnotes[$n] eq 'r') {
-                    $score->r($vmotif->[$n]);
-                }
-                else {
-                    $score->n($vmotif->[$n], $vnotes[$n]);
-                }
+                play_note_or_rest($vmotif->[$n], [$vnotes[$n]]);
             }
         }
     }
@@ -205,12 +180,7 @@ sub clarinet1 {
     }
     for my $i (1 .. $bars - 23) {
         for my $n (0 .. $#$cmotif) {
-            if ($cnotes[$n] eq 'r') {
-                $score->r($cmotif->[$n]);
-            }
-            else {
-                $score->n($cmotif->[$n], $cnotes[$n]);
-            }
+            play_note_or_rest($cmotif->[$n], [$cnotes[$n]]);
         }
     }
 }
@@ -232,12 +202,7 @@ sub clarinet2 {
     }
     for my $i (1 .. $bars - 23) {
         for my $n (0 .. $#$cmotif) {
-            if ($cnotes2[$n] eq 'r') {
-                $score->r($cmotif->[$n]);
-            }
-            else {
-                $score->n($cmotif->[$n], $cnotes2[$n]);
-            }
+            play_note_or_rest($cmotif->[$n], [$cnotes2[$n]]);
         }
     }
 }
@@ -258,4 +223,15 @@ sub note_or_rest {
         $note = int(rand 10) <= 3 ? 'r' : $voice->rand;
     }
     return $note;
+}
+
+# Either play a note or a rest!
+sub play_note_or_rest {
+    my ($motif, $notes) = @_;
+    if ($notes->[0] eq 'r') {
+        $score->r($motif);
+    }
+    else {
+        $score->n($motif, @$notes);
+    }
 }
