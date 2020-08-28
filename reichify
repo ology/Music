@@ -147,6 +147,7 @@ sub violin1 {
     $score->Volume($volume);
 }
 
+# Alternate bars with rests or notes
 sub violin2 {
     MIDI::Util::set_chan_patch($score, 3, 40);
     $score->control_change(3, 10, 86); # Pan
@@ -181,6 +182,7 @@ sub violin2 {
     $score->Volume($volume);
 }
 
+# Populate and play the clarinet notes
 sub clarinet1 {
     MIDI::Util::set_chan_patch($score, 4, 71);
     $score->control_change(4, 10, 32); # Pan
@@ -206,6 +208,7 @@ sub clarinet1 {
     }
 }
 
+# Get and play new clarinet notes for the non-rest motif positions
 sub clarinet2 {
     MIDI::Util::set_chan_patch($score, 5, 71);
     $score->control_change(5, 10, 86); # Pan
@@ -232,6 +235,7 @@ sub clarinet2 {
     }
 }
 
+# Either return a note or a rest!
 sub note_or_rest {
     my ($n, $motif, $notes) = @_;
     if (
