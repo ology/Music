@@ -150,15 +150,15 @@ sub violin1 {
 sub violin2 {
     MIDI::Util::set_chan_patch($score, 3, 40);
     $score->control_change(3, 10, 86); # Pan
-    $score->Volume(70);
+    $score->Volume(70); # XXX The violin patch is too loud!
     my $vmotif = [shuffle qw(dhn hn)];
     print 'Violin 2 durations: ', ddc($vmotif);
-    my @vnotes1;
+    my @vnotes;
     for my $n (0 .. $#$vmotif) {
-        my $note = note_or_rest($n, $vmotif, \@vnotes1);
-        push @vnotes1, $note;
+        my $note = note_or_rest($n, $vmotif, \@vnotes);
+        push @vnotes, $note;
     }
-    print 'Violin 2: ', ddc(\@vnotes1);
+    print 'Violin 2: ', ddc(\@vnotes);
     for (1 .. 7) {
         $score->r('dhn');
         $score->r('hn');
@@ -169,11 +169,11 @@ sub violin2 {
                 $score->r($vmotif->[$n]);
             }
             else {
-                if ($vnotes1[$n] eq 'r') {
+                if ($vnotes[$n] eq 'r') {
                     $score->r($vmotif->[$n]);
                 }
                 else {
-                    $score->n($vmotif->[$n], $vnotes1[$n]);
+                    $score->n($vmotif->[$n], $vnotes[$n]);
                 }
             }
         }
