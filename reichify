@@ -29,7 +29,7 @@ my $voice = Music::VoiceGen->new(
     intervals => \@intervals,
 );
 
-# Clarinet track buckets.
+# Clarinet track globals
 my $cmotif = [shuffle qw(dhn en en en en)];
 my @cnotes;
 
