@@ -23,10 +23,9 @@ my @pitches = (
     get_scale_MIDI($note, $octave + 1, $scale),
     get_scale_MIDI($note, $octave + 2, $scale),
 );
-my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
 my $voice = Music::VoiceGen->new(
     pitches   => \@pitches,
-    intervals => \@intervals,
+    intervals => [qw(-4 -3 -2 -1 1 2 3 4)],
 );
 
 # Clarinet track globals
