@@ -1,0 +1,240 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact 'ddc';
+use List::Util qw(shuffle);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Praxis-Variation MIDI-Util Music-Interval-Barycentric);
+use MIDI::Praxis::Variation qw(transposition);
+use MIDI::Util;
+use Music::Interval::Barycentric;
+use Music::Scales;
+use Music::VoiceGen;
+
+my $bars   = shift || 32;
+my $bpm    = shift || 180;
+my $note   = shift || 'B';
+my $scale  = shift || 'major';
+my $octave = 2;
+
+my $pmotif = [('en') x 10];
+my $cmotif = [shuffle qw(dhn en en en en)];
+my @cnotes;
+
+my @pitches = (
+    get_scale_MIDI($note, $octave, $scale),
+    get_scale_MIDI($note, $octave + 1, $scale),
+    get_scale_MIDI($note, $octave + 2, $scale),
+);
+my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
+my $voice = Music::VoiceGen->new(
+    pitches   => \@pitches,
+    intervals => \@intervals,
+);
+
+my @pnotes;
+my @transp;
+for my $n (0 .. $#$pmotif) {
+    my $note = note_or_rest($n, $pmotif, \@pnotes);
+    push @pnotes, $note;
+    if ($note eq 'r') {
+        push @transp, 'r';
+    }
+    else {
+        my @transposed = transposition(-12, $note);
+        push @transp, $transposed[0];
+    }
+}
+print 'Piano 1: ', ddc(\@pnotes); print 'Piano 1: ', ddc(\@transp);
+
+my $score = MIDI::Util::setup_score(
+    lead_in   => 0,
+    signature => '5/4',
+    bpm       => 180,
+    volume    => 98,
+);
+
+$score->synch(
+    \&piano1,
+    \&piano2,
+    \&violin1,
+    \&violin2,
+    \&clarinet1,
+    \&clarinet2,
+);
+
+$score->write_score("$0.mid");
+
+sub piano1 {
+    MIDI::Util::set_chan_patch($score, 0, 0);
+    $score->control_change(0, 10, 32); # Pan
+    for my $i (1 .. $bars) {
+        for my $n (0 .. $#$pmotif) {
+            if ($pnotes[$n] eq 'r') {
+                $score->r($pmotif->[$n]);
+            }
+            else {
+                $score->n($pmotif->[$n], $pnotes[$n], $transp[$n]);
+            }
+        }
+    }
+}
+
+sub piano2 {
+    MIDI::Util::set_chan_patch($score, 1, 0);
+    $score->control_change(1, 10, 86); # Pan
+    my @rotated = cyclic_permutation(@transp);
+    shift @rotated;
+    my $rotated = $rotated[ int rand @rotated ];
+    print 'Piano 2: ', ddc($rotated);
+    for my $i (1 .. $bars) {
+        for my $n (0 .. $#$pmotif) {
+            if ($rotated->[$n] eq 'r') {
+                $score->r($pmotif->[$n]);
+            }
+            else {
+                $score->n($pmotif->[$n], $rotated->[$n]);
+            }
+        }
+    }
+}
+
+sub violin1 {
+    MIDI::Util::set_chan_patch($score, 2, 40);
+    $score->control_change(2, 10, 32); # Pan
+    $score->Volume(70);
+    my $vmotif = [shuffle qw(dhn hn)];
+    print 'Violin 1 durations: ', ddc($vmotif);
+    my @vnotes1;
+    my @vnotes2;
+    for my $n (0 .. $#$vmotif) {
+        my $note = note_or_rest($n, $vmotif, \@vnotes1);
+        push @vnotes1, $note;
+        $note = note_or_rest($n, $vmotif, \@vnotes2);
+        push @vnotes2, $note;
+    }
+    print 'Violin 1: ', ddc(\@vnotes1); print 'Violin 1: ', ddc(\@vnotes2);
+    for my $i (1 .. $bars) {
+        for my $n (0 .. $#$vmotif) {
+            if ($i % 2) {
+                if ($vnotes1[$n] eq 'r') {
+                    $score->r($vmotif->[$n]);
+                }
+                else {
+                    $score->n($vmotif->[$n], $vnotes1[$n]);
+                }
+            }
+            else {
+                if ($vnotes2[$n] eq 'r') {
+                    $score->r($vmotif->[$n]);
+                }
+                else {
+                    $score->n($vmotif->[$n], $vnotes2[$n]);
+                }
+            }
+        }
+    }
+    $score->Volume(98);
+}
+
+sub violin2 {
+    MIDI::Util::set_chan_patch($score, 3, 40);
+    $score->control_change(3, 10, 86); # Pan
+    $score->Volume(70);
+    my $vmotif = [shuffle qw(dhn hn)];
+    print 'Violin 2 durations: ', ddc($vmotif);
+    my @vnotes1;
+    for my $n (0 .. $#$vmotif) {
+        my $note = note_or_rest($n, $vmotif, \@vnotes1);
+        push @vnotes1, $note;
+    }
+    print 'Violin 2: ', ddc(\@vnotes1);
+    for (1 .. 7) {
+        $score->r('dhn');
+        $score->r('hn');
+    }
+    for my $i (1 .. $bars - 7) {
+        for my $n (0 .. $#$vmotif) {
+            if ($i % 2) {
+                $score->r($vmotif->[$n]);
+            }
+            else {
+                if ($vnotes1[$n] eq 'r') {
+                    $score->r($vmotif->[$n]);
+                }
+                else {
+                    $score->n($vmotif->[$n], $vnotes1[$n]);
+                }
+            }
+        }
+    }
+    $score->Volume(98);
+}
+
+sub clarinet1 {
+    MIDI::Util::set_chan_patch($score, 4, 71);
+    $score->control_change(4, 10, 32); # Pan
+    for my $n (0 .. $#$cmotif) {
+        my $note = note_or_rest($n, $cmotif, \@cnotes);
+        push @cnotes, $note;
+    }
+    print 'Clarinet 1 durations: ', ddc($cmotif);
+    print 'Clarinet 1: ', ddc(\@cnotes);
+    for (1 .. 23) {
+        $score->r('dhn');
+        $score->r('hn');
+    }
+    for my $i (1 .. $bars - 23) {
+        for my $n (0 .. $#$cmotif) {
+            if ($cnotes[$n] eq 'r') {
+                $score->r($cmotif->[$n]);
+            }
+            else {
+                $score->n($cmotif->[$n], $cnotes[$n]);
+            }
+        }
+    }
+}
+
+sub clarinet2 {
+    MIDI::Util::set_chan_patch($score, 5, 71);
+    $score->control_change(5, 10, 86); # Pan
+    my @cnotes2;
+    for my $n (@cnotes) {
+        my $note = $n eq 'r' ? 'r' : $voice->rand;
+        push @cnotes2, $note;
+    }
+    print 'Clarinet 2 durations: ', ddc($cmotif);
+    print 'Clarinet 2: ', ddc(\@cnotes2);
+    for (1 .. 23) {
+        $score->r('dhn');
+        $score->r('hn');
+    }
+    for my $i (1 .. $bars - 23) {
+        for my $n (0 .. $#$cmotif) {
+            if ($cnotes2[$n] eq 'r') {
+                $score->r($cmotif->[$n]);
+            }
+            else {
+                $score->n($cmotif->[$n], $cnotes2[$n]);
+            }
+        }
+    }
+}
+
+sub note_or_rest {
+    my ($n, $motif, $notes) = @_;
+    if (
+        # We're at the end of the motif and the first note is a rest
+        ($n == $#$motif && $notes->[0] eq 'r')
+        ||
+        # The previous note is a rest
+        (defined $notes->[$n - 1] && $notes->[$n - 1] eq 'r')
+    ) {
+        $note = $voice->rand;
+    }
+    else {
+        $note = int(rand 10) <= 3 ? 'r' : $voice->rand;
+    }
+    return $note;
+}
