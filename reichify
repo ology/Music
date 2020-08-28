@@ -74,6 +74,8 @@ $score->synch(
 # Output the score as a MIDI file
 $score->write_score("$0.mid");
 
+########################################
+
 # Play the pre-computed piano notes
 sub piano1 {
     MIDI::Util::set_chan_patch($score, 0, 0);
