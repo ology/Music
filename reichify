@@ -51,7 +51,7 @@ for my $n (0 .. $#$pmotif) {
 
 # Prepare the MIDI
 my $volume = 98;
-my $pan = 10;
+my $pan = 10; # MIDI control change
 my $pan_left = 32;
 my $pan_right = 86;
 my $score = MIDI::Util::setup_score(
