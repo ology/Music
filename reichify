@@ -227,7 +227,6 @@ sub note_or_rest {
 # Either play a note or a rest!
 sub play_note_or_rest {
     my ($motif, $notes) = @_;
-warn(__PACKAGE__,' ',__LINE__," MARK: ",ddc($notes));
     if ($notes->[0] eq 'r') {
         $score->r($motif);
     }
