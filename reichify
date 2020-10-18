@@ -56,7 +56,7 @@ my $pan_right = 86;
 my $score = MIDI::Util::setup_score(
     lead_in   => 0,
     signature => '5/4',
-    bpm       => 180,
+    bpm       => $bpm,
     volume    => $volume,
 );
 
