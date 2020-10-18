@@ -2,13 +2,13 @@
 use strict;
 use warnings;
 
-use Data::Dumper::Compact 'ddc';
+use Data::Dumper::Compact qw(ddc);
 use List::Util qw(shuffle);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Praxis-Variation MIDI-Util Music-Interval-Barycentric);
 use MIDI::Praxis::Variation qw(transposition);
 use MIDI::Util;
-use Music::Interval::Barycentric;
-use Music::Scales;
+use Music::Interval::Barycentric qw(cyclic_permutation);
+use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen;
 
 my $bars   = shift || 32;
@@ -227,6 +227,7 @@ sub note_or_rest {
 # Either play a note or a rest!
 sub play_note_or_rest {
     my ($motif, $notes) = @_;
+warn(__PACKAGE__,' ',__LINE__," MARK: ",ddc($notes));
     if ($notes->[0] eq 'r') {
         $score->r($motif);
     }
