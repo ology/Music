@@ -94,7 +94,7 @@ sub top {
     );
     my @notes = map { [ map { $voice->rand } $motifs[$_]->@* ] } 0 .. 3;
 
-    for my $n (1 .. $d->bars * 4) {
+    for my $n (1 .. $d->bars * 2) {
         my $motif = $motifs[ int rand @motifs ];
         my $notes = $notes[ int rand @notes ];
         for my $i (0 .. $#$motif) {
@@ -105,6 +105,7 @@ sub top {
                 $d->rest($motif->[$i]);
             }
         }
+        $d->rest($d->whole);
     }
 
     $d->note($d->whole, $pitches[0]);
