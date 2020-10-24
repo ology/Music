@@ -82,11 +82,7 @@ sub top {
         size => $beats,
         pool => [qw/ dqn qn en /],
     );
-    my $motif1 = $mdp->motif;
-    my $motif2 = $mdp->motif;
-    my $motif3 = $mdp->motif;
-    my $motif4 = $mdp->motif;
-    my @motifs = ($motif1, $motif2, $motif3, $motif4);
+    my @motifs = map { $mdp->motif } 1 .. 4;
 
     my @pitches = (
         get_scale_MIDI($note, $octave + 1, $tscale),
@@ -96,17 +92,22 @@ sub top {
         pitches   => \@pitches,
         intervals => [qw(-4 -3 -2 -1 1 2 3 4)],
     );
-    my $notes1 = [ map { $voice->rand } @$motif1 ];
-    my $notes2 = [ map { $voice->rand } @$motif2 ];
-    my $notes3 = [ map { $voice->rand } @$motif3 ];
-    my $notes4 = [ map { $voice->rand } @$motif4 ];
+    my $notes1 = [ map { $voice->rand } $motifs[0]->@* ];
+    my $notes2 = [ map { $voice->rand } $motifs[1]->@* ];
+    my $notes3 = [ map { $voice->rand } $motifs[2]->@* ];
+    my $notes4 = [ map { $voice->rand } $motifs[3]->@* ];
     my @notes = ($notes1, $notes2, $notes3, $notes4);
 
     for my $n (1 .. $d->bars * 4) {
         my $motif = $motifs[ int rand @motifs ];
         my $notes = $notes[ int rand @notes ];
         for my $i (0 .. $#$motif) {
-            $d->note($motif->[$i], $notes->[$i]);
+            if (defined $notes->[$i]) {
+                $d->note($motif->[$i], $notes->[$i]);
+            }
+            else {
+                $d->rest($motif->[$i]);
+            }
         }
     }
 
