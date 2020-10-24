@@ -6,9 +6,9 @@ use Data::Dumper::Compact 'ddc';
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition);
 use MIDI::Drummer::Tiny;
 use MIDI::Util;
+use Music::Duration::Partition;
 use Music::Scales;
 use Music::VoiceGen;
-use Music::Duration::Partition;
 
 my $beats  = shift || 4;
 my $bars   = shift || 4;
