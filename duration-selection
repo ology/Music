@@ -92,11 +92,7 @@ sub top {
         pitches   => \@pitches,
         intervals => [qw(-4 -3 -2 -1 1 2 3 4)],
     );
-    my $notes1 = [ map { $voice->rand } $motifs[0]->@* ];
-    my $notes2 = [ map { $voice->rand } $motifs[1]->@* ];
-    my $notes3 = [ map { $voice->rand } $motifs[2]->@* ];
-    my $notes4 = [ map { $voice->rand } $motifs[3]->@* ];
-    my @notes = ($notes1, $notes2, $notes3, $notes4);
+    my @notes = map { [ map { $voice->rand } $motifs[$_]->@* ] } 0 .. 3;
 
     for my $n (1 .. $d->bars * 4) {
         my $motif = $motifs[ int rand @motifs ];
