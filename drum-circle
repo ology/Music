@@ -21,7 +21,7 @@ my @DRUMS = (
     $d->cabasa, $d->maracas, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block,
 );
 
-my %seen; # Bucket of drums selected
+my %seen; # Bucket of drums that have been selected
 
 my @phrases;
 
