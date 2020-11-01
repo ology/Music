@@ -21,6 +21,8 @@ my @DRUMS = (
     $d->cabasa, $d->claves, $d->hi_wood_block, $d->low_wood_block
 );
 
+my %seen; # Bucket of drums selected
+
 my @phrases;
 
 my $mdp = Music::Duration::Partition->new(
@@ -38,7 +40,10 @@ $d->write;
 
 sub phrase {
     my ($p) = @_;
-    my $drum = $DRUMS[int rand @DRUMS]; # TODO Make this more intelligent
+    my $drum = $DRUMS[int rand @DRUMS];
+    while ($seen{$drum}++) {
+        $drum = $DRUMS[int rand @DRUMS];
+    }
     my $motif = $mdp->motif;
     my $phrase = sub {
         for my $n (1 .. $d->bars + 4) {
