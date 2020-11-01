@@ -25,7 +25,7 @@ my @phrases;
 
 my $mdp = Music::Duration::Partition->new(
     size => 4,
-    pool => [qw(qn den en)],
+    pool => [qw(qn den en sn)],
 );
 
 for my $phrase (1 .. $max) {
