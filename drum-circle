@@ -1,0 +1,55 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition);
+use MIDI::Drummer::Tiny;
+use Music::Duration::Partition;
+
+my $max = shift || 5;
+
+my $d = MIDI::Drummer::Tiny->new(
+    file   => "$0.mid",
+    bpm    => 90,
+    volume => 120,
+    bars   => $max * 4,
+);
+
+my @DRUMS = (
+    $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom,
+    $d->hi_bongo, $d->low_bongo, $d->mute_hi_conga, $d->open_hi_conga, $d->low_conga,
+    $d->cabasa, $d->claves, $d->hi_wood_block, $d->low_wood_block
+);
+
+my @phrases;
+
+my $mdp = Music::Duration::Partition->new(
+    size => 4,
+    pool => [qw(qn den en)],
+);
+
+for my $phrase (1 .. $max) {
+    push @phrases, phrase($phrase);
+}
+
+$d->score->synch(@phrases);
+
+$d->write;
+
+sub phrase {
+    my ($p) = @_;
+    my $drum = $DRUMS[int rand @DRUMS]; # TODO Make this more intelligent
+    my $motif = $mdp->motif;
+    my $phrase = sub {
+        for my $n (1 .. $d->bars + 4) {
+            if ($n < ($p * 4)) {
+                $d->rest($d->whole);
+                next;
+            }
+            for my $i (@$motif) {
+                $d->note($i, $drum);
+            }
+        }
+    };
+    return $phrase;
+}
