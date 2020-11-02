@@ -40,11 +40,14 @@ $d->write;
 
 sub phrase {
     my ($p) = @_;
+
     my $drum = $DRUMS[int rand @DRUMS];
     while ($seen{$drum}++) {
         $drum = $DRUMS[int rand @DRUMS];
     }
+
     my $motif = $mdp->motif;
+
     my $phrase = sub {
         for my $n (1 .. $d->bars + 4) {
             if ($n < ($p * 4)) {
@@ -56,5 +59,6 @@ sub phrase {
             }
         }
     };
+
     return $phrase;
 }
