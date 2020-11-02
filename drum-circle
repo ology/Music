@@ -30,9 +30,8 @@ my $mdp = Music::Duration::Partition->new(
     pool => [qw(qn den en sn)],
 );
 
-for my $phrase (1 .. $max) {
-    push @phrases, phrase($phrase);
-}
+push @phrases, phrase($_)
+    for 1 .. $max;
 
 $d->score->synch(@phrases);
 
