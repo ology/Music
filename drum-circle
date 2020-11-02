@@ -6,8 +6,10 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-
 use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
 
+# The number of drummers
 my $max = shift || 4;
 
+# Setup a drum score
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => 90,
@@ -15,6 +17,7 @@ my $d = MIDI::Drummer::Tiny->new(
     bars   => $max * 4,
 );
 
+# List the available percussion instruments
 my @DRUMS = (
     $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom,
     $d->hi_bongo, $d->low_bongo, $d->mute_hi_conga, $d->open_hi_conga, $d->low_conga,
@@ -25,36 +28,44 @@ my %seen; # Bucket of drums that have been selected
 
 my @phrases; # List of code-ref MIDI phrases
 
+# Instantiate a phrase generator
 my $mdp = Music::Duration::Partition->new(
     size => 4,
     pool => [qw(qn den en sn)],
 );
 
+# Build the phrases played by each drummer
 push @phrases, phrase($_)
     for 1 .. $max;
 
-$d->score->synch(@phrases);
+$d->score->synch(@phrases); # Play the phrases simultaneously
 
-$d->write;
+$d->write; # Write the score to a MIDI file
 
 sub phrase {
-    my ($p) = @_;
+    my ($p) = @_; # Phrase number
 
+    # Get an unseen drum to use
     my $drum = $DRUMS[int rand @DRUMS];
     while ($seen{$drum}++) {
         $drum = $DRUMS[int rand @DRUMS];
     }
 
+    # Create a rhythmic phrase
     my $motif = $mdp->motif;
 
+    # Either rest or play the motif
     my $phrase = sub {
         for my $n (1 .. $d->bars + 4) {
+            # If we are not up yet, then rest
             if ($n < ($p * 4)) {
                 $d->rest($d->whole);
                 next;
             }
+            # Otherwise play the rhythmic phrase!
             for my $i (@$motif) {
-                my $velocity = 'v' . (112 + int(rand 16)); # ff-fff
+                # Get a fluctuating velocity between ff and fff
+                my $velocity = 'v' . (112 + int(rand 16));
                 $d->note($i, $drum, $velocity);
             }
         }
