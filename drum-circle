@@ -23,6 +23,9 @@ my @DRUMS = (
     $d->cabasa, $d->maracas, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block,
 );
 
+die "Can't have more drummers than drums!"
+    if $max > @DRUMS;
+
 my %seen; # Bucket of drums that have been selected
 
 my @phrases; # List of code-ref MIDI phrases
