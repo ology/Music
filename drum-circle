@@ -54,7 +54,8 @@ sub phrase {
                 next;
             }
             for my $i (@$motif) {
-                $d->note($i, $drum);
+                my $velocity = 'v' . (112 + int(rand 16)); # ff-fff
+                $d->note($i, $drum, $velocity);
             }
         }
     };
