@@ -23,7 +23,7 @@ my @DRUMS = (
 
 my %seen; # Bucket of drums that have been selected
 
-my @phrases; # Code-ref MIDI phrases
+my @phrases; # List of code-ref MIDI phrases
 
 my $mdp = Music::Duration::Partition->new(
     size => 4,
