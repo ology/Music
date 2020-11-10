@@ -19,7 +19,7 @@ my $note   = shift || 'A';
 my $bscale = shift || 'pminor';
 my $tscale = shift || 'minor';
 my $bpatch = shift || 35;
-my $tpatch = shift || 0;
+my $tpatch = shift || 4;
 
 # Start off in the bass register
 my $octave = 1;
