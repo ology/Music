@@ -131,23 +131,22 @@ sub top {
 }
 
 sub drums {
-    $d->count_in;
-#    my $x = $d->bars * 4;
-#    if ($beats == 3) {
-#        $d->metronome34($x);
-#    }
-#    elsif ($beats == 4) {
-#        $d->metronome44($x);
-#    }
-#    elsif ($beats == 5) {
-#        $d->metronome54($x);
-#    }
-#    elsif ($beats == 7) {
-#        $d->metronome74($x);
-#    }
-#    else {
-#        die 'Invalid beats';
-#    }
+#    $d->count_in;
+    if ($beats == 3) {
+        $d->metronome34;
+    }
+    elsif ($beats == 4) {
+        $d->metronome44;
+    }
+    elsif ($beats == 5) {
+        $d->metronome54;
+    }
+    elsif ($beats == 7) {
+        $d->metronome74;
+    }
+    else {
+        die 'Invalid beats';
+    }
 
     $d->note($d->whole, $d->crash1, $d->kick);
 }
