@@ -82,7 +82,7 @@ sub top {
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
         pool => [qw(hn qn en)],
-#        weights => [2, 1],
+        weights => [1, 2, 3],
     );
 
     my @phrases = (
