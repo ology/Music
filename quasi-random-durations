@@ -28,7 +28,6 @@ my $d = MIDI::Drummer::Tiny->new(
     bpm       => $bpm,
     signature => $beats . '/4',
     bars      => $bars,
-#    kit       => 25,
 );
 
 $d->score->synch(
