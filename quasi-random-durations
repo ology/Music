@@ -131,7 +131,6 @@ sub top {
 }
 
 sub drums {
-#    $d->count_in;
     if ($beats == 3) {
         $d->metronome34;
     }
@@ -145,7 +144,8 @@ sub drums {
         $d->metronome74;
     }
     else {
-        die 'Invalid beats';
+        warn "Invalid beats\n";
+        $d->count_in;
     }
 
     $d->note($d->whole, $d->crash1, $d->kick);
