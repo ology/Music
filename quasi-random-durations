@@ -46,10 +46,7 @@ sub bass {
 #        weights => [2, 1],
     );
 
-    my @phrases = (
-      { motif => $mdp->motif },
-      { motif => $mdp->motif },
-    );
+    my @phrases = map { { motif => $mdp->motif } } 1 .. 2;
 
     my @pitches = (
         get_scale_MIDI($note, $octave, $bscale),
@@ -85,12 +82,7 @@ sub top {
         weights => [1, 2, 3],
     );
 
-    my @phrases = (
-      { motif => $mdp->motif },
-      { motif => $mdp->motif },
-      { motif => $mdp->motif },
-      { motif => $mdp->motif },
-    );
+    my @phrases = map { { motif => $mdp->motif } } 1 .. 4;
 
     my @pitches = (
         get_scale_MIDI($note, $octave + 2, $bscale),
