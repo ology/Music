@@ -65,7 +65,7 @@ sub bass {
     for my $n (1 .. $d->bars) {
         my $phrase = $phrases[int rand @phrases];
         my $voices = ($phrase->{voices}->@*)[int rand $phrase->{voices}->@*];
-        for my $n (0 .. $phrase->{motif}->@* - 1) {
+        for my $n (0 .. $phrase->{motif}->$#*) {
             $d->note($phrase->{motif}[$n], $voices->[$n]);
         }
     }
