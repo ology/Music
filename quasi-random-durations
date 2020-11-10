@@ -77,7 +77,7 @@ sub bottom {
     }
 
     # Add the bass notes to the score
-    for my $n (1 .. $d->bars) {
+    for my $i (1 .. $d->bars) {
         # Select a random phrase
         my $phrase = $phrases[int rand @phrases];
         # Select a random voice mapping
@@ -117,7 +117,7 @@ sub top {
         push $phrase->{voices}->@*, [ map { $voice->rand } $phrase->{motif}->@* ];
     }
 
-    for my $n (1 .. $d->bars) {
+    for my $i (1 .. $d->bars) {
         my $phrase = $phrases[int rand @phrases];
         my $voices = ($phrase->{voices}->@*)[int rand $phrase->{voices}->@*];
         for my $n (0 .. $phrase->{motif}->$#*) {
