@@ -34,14 +34,14 @@ my $d = MIDI::Drummer::Tiny->new(
 # Play the parts simultaneously
 $d->score->synch(
     \&drums,
-    \&bass,
+    \&bottom,
     \&top,
 );
 
 # Write the scrore to a MIDI file
 $d->write;
 
-sub bass {
+sub bottom {
     MIDI::Util::set_chan_patch($d->score, 0, $bpatch);
 
     # Create a rhythmic phrase generator
