@@ -9,7 +9,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music
 use MIDI::Drummer::Tiny;
 use MIDI::Util;
 use Music::Duration::Partition;
-use Music::Scales;
+use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen;
 
 my $beats  = shift || 4;
