@@ -144,7 +144,7 @@ sub drums {
         $d->metronome74;
     }
     else {
-        warn "Invalid beats\n";
+        warn "Unknown beat number\n";
         $d->count_in;
     }
 
