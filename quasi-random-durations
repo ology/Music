@@ -24,6 +24,7 @@ my $tpatch = shift || 0;
 # Start off in the bass register
 my $octave = 1;
 
+# Someone find the drummer!
 my $d = MIDI::Drummer::Tiny->new(
     file      => "$0.mid",
     bpm       => $bpm,
