@@ -52,12 +52,14 @@ sub bass {
 
     my @pitches = (
         get_scale_MIDI($note, $octave, $bscale),
-#        get_scale_MIDI($note, $octave + 1, $bscale),
+        get_scale_MIDI($note, $octave + 1, $bscale),
     );
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
         intervals => [qw(-4 -3 -2 -1 1 2 3 4)],
     );
+
+    $voice->context($pitches[0]);
 
     for my $phrase (@phrases) {
         push $phrase->{voices}->@*, [ map { $voice->rand } $phrase->{motif}->@* ];
