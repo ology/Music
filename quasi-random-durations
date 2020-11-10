@@ -39,7 +39,7 @@ $d->score->synch(
 $d->write;
 
 sub bass {
-    MIDI::Util::set_chan_patch($d->score, 1, $bpatch);
+    MIDI::Util::set_chan_patch($d->score, 0, $bpatch);
 
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
@@ -77,7 +77,7 @@ sub bass {
 }
 
 sub top {
-    MIDI::Util::set_chan_patch($d->score, 0, $tpatch);
+    MIDI::Util::set_chan_patch($d->score, 1, $tpatch);
 
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
