@@ -121,7 +121,9 @@ sub top {
         my $phrase = $phrases[int rand @phrases];
         my $voices = ($phrase->{voices}->@*)[int rand $phrase->{voices}->@*];
         for my $n (0 .. $phrase->{motif}->$#*) {
-            $d->note($phrase->{motif}[$n], $voices->[$n]);
+            # Get a fluctuating velocity between f and fff
+            my $vol = 'v' . (96 + int(rand 32));
+            $d->note($phrase->{motif}[$n], $voices->[$n], $vol);
         }
     }
 
