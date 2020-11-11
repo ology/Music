@@ -14,6 +14,7 @@ my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
     bpm  => 90,
     bars => $max * 4,
+    reverb => 15,
 );
 
 # List the available percussion instruments
