@@ -2,7 +2,9 @@
 use strict;
 use warnings;
 
+# Use my local libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition);
+
 use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
 
