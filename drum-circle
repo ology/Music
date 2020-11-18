@@ -80,5 +80,4 @@ sub phrase {
 }
 
 __END__
-# In vim:
-:!perl % 11; timidity -c ~/timidity.cfg %.mid
+$ perl drum-circle 11; timidity -c ~/timidity.cfg %.mid
