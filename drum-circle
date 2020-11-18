@@ -2,6 +2,9 @@
 use strict;
 use warnings;
 
+# Ex:
+# $ perl drum-circle 11; timidity -c ~/timidity.cfg drum-circle.mid
+
 # Use my local libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition);
 
@@ -78,6 +81,3 @@ sub phrase {
 
     return $phrase;
 }
-
-__END__
-$ perl drum-circle 11; timidity -c ~/timidity.cfg %.mid
