@@ -126,7 +126,7 @@ sub top {
     for my $i (1 .. int($count / $beats)) {
         my $phrase = $phrases[int rand @phrases];
         my $voices = ($phrase->{voices}->@*)[int rand $phrase->{voices}->@*];
-        if ($i % 2) {
+        if ($i % 2 == 0) {
             for my $n (0 .. $phrase->{motif}->$#*) {
                 # Get a fluctuating velocity between f and fff
                 my $vol = 'v' . (96 + int(rand 32));
