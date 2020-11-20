@@ -99,7 +99,7 @@ sub bottom {
 sub top {
     MIDI::Util::set_chan_patch($d->score, 1, $tpatch);
 
-    my $beats = 4;
+    my $beats = 7;
 
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
