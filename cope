@@ -8,7 +8,7 @@ use Music::Chord::Namer qw(chordname);
 use Music::Note;
 use Music::Tension::Cope;
 
-my $size = shift || 3;
+my $size = shift || 2;
 
 my @notes = qw(C C# D D# E F F# G G# A A# B);
 
