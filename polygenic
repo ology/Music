@@ -72,7 +72,7 @@ sub bottom {
     );
 
     # Start the pitch generation at the bottom of the register
-    $voice->context($pitches[0]);
+    $voice->context($pitches[12]);
 
     # Create two voice mappings for each phrase
     for my $phrase (@phrases) {
