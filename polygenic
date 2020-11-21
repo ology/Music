@@ -71,7 +71,7 @@ sub bottom {
         intervals => [qw(-4 -3 -2 -1 1 2 3 4)],
     );
 
-    # Start the pitch generation at the bottom of the register
+    # Start the pitch generation in the middle of the register
     $voice->context($pitches[12]);
 
     # Create two voice mappings for each phrase
