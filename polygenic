@@ -113,8 +113,8 @@ sub top {
     my @phrases = map { { motif => $mdp->motif } } 1 .. 4;
 
     my @pitches = (
-        get_scale_MIDI($note, $octave + 2, $bscale),
-        get_scale_MIDI($note, $octave + 3, $bscale),
+        get_scale_MIDI($note, $octave + 2, $tscale),
+        get_scale_MIDI($note, $octave + 3, $tscale),
     );
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
