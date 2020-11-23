@@ -55,8 +55,8 @@ sub bottom {
         pool => [qw(hn dqn qn en)],
     );
 
-    # Create 2 phrases
-    my @phrases = map { { motif => $mdp->motif } } 1 .. 2;
+    # Create 3 phrases
+    my @phrases = map { { motif => $mdp->motif } } 1 .. 3;
 
     # Create 2 bass octaves
     my @pitches = (
