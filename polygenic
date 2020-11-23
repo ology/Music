@@ -47,7 +47,7 @@ $d->write;
 sub bottom {
     MIDI::Util::set_chan_patch($d->score, 0, $bpatch);
 
-    my $beats = 3;
+    my $beats = 5;
 
     # Create a rhythmic phrase generator
     my $mdp = Music::Duration::Partition->new(
