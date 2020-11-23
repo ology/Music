@@ -81,7 +81,7 @@ sub bottom {
     print 'Bottom: ', ddc(\@phrases);
 
     # Add the bass notes to the score
-    for my $i (1 .. sprintf('%.0f', $count / $beats) + 1) {
+    for my $i (1 .. sprintf('%.0f', $count / $beats)) {
         # Select a random phrase
         my $phrase = $phrases[int rand @phrases];
         # Select a random voice mapping
