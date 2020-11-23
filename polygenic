@@ -52,8 +52,7 @@ sub bottom {
     # Create a rhythmic phrase generator
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
-        pool => [qw(hn dqn qn)],
-        weights => [2, 1, 1],
+        pool => [qw(hn dqn qn en)],
     );
 
     # Create 2 phrases
@@ -104,11 +103,11 @@ sub top {
 
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
-        pool => [qw(hn qn en)],
-        weights => [1, 2, 3],
-#        pool => [qw(hn qn en ten)], # Solo mode
-#        weights => [3, 4, 5, 3],
-#        groups => [0, 0, 0, 3],
+#        pool => [qw(hn qn en)],
+#        weights => [1, 2, 3],
+        pool => [qw(hn qn en ten)], # Solo mode
+        weights => [3, 4, 5, 3],
+        groups => [0, 0, 0, 3],
     );
 
     my @phrases = map { { motif => $mdp->motif } } 1 .. 4;
