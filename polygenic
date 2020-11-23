@@ -106,7 +106,7 @@ sub top {
         pool => [qw(hn qn en)],
         weights => [1, 2, 3],
 #        pool => [qw(hn qn en ten)], # Solo mode
-#        weights => [3, 4, 5, 3],
+#        weights => [1, 2, 3, 1],
 #        groups => [0, 0, 0, 3],
     );
 
