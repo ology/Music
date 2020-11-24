@@ -150,7 +150,6 @@ sub chords {
     my @transp = transposition(12, @bass);
 
     for my $i (0 .. $#transp) {
-        my $note = Music::Note->new($i, 'midinum')->format('isobase');
         $d->note('wn', $transp[$i], $transp[$i] + 7);
     }
 }
