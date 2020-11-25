@@ -33,6 +33,7 @@ for my $chord (@chords) { # Convert from ISO to MIDI format
     }
 }
 
+my $half  = 'hn';
 my $whole = 'wn';
 
 my $mc = Music::Cadence->new(
@@ -61,6 +62,11 @@ sub a1 {
     my ( $i, $degrees ) = @_;
     for my $n ( @$degrees ) {
         my $cadence = $mc->cadence(
+            type      => 'deceptive',
+            variation => ($n % 2 ? 1 : 2),
+        );
+        $score->n( $half, @$_ ) for @$cadence;
+        $cadence = $mc->cadence(
             type    => 'half',
             leading => $n,
         );
