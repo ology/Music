@@ -16,14 +16,14 @@ use Music::VoiceGen;
 
 my $bars   = shift || 16;
 my $bpm    = shift || 105;
-my $note   = shift || 'C';
-my $bscale = shift || 'pentatonic';
-my $tscale = shift || 'major';
+my $note   = shift || 'A';
+my $bscale = shift || 'pminor';
+my $tscale = shift || 'minor';
 my $bpatch = shift || 35;
 my $tpatch = shift || 69;
 
 # Start off in the bass register
-my $octave = 2;
+my $octave = 1;
 
 # Someone find the drummer!
 my $d = MIDI::Drummer::Tiny->new(
@@ -156,6 +156,7 @@ sub chords {
 
 sub drums {
     $count = $d->bars * $d->beats;
-    $d->metronome44;
+    $d->count_in;
+#    $d->metronome44;
     $d->note($d->whole, $d->crash1, $d->kick);
 }
