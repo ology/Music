@@ -160,8 +160,8 @@ sub chords {
 
     my @transp = transposition(12, @bass);
 
-    for my $i (0 .. $#transp) {
-        $d->note($d->whole, $transp[$i], $transp[$i] + 7);
+    for my $i (@transp) {
+        $d->note($d->whole, $i, $i + 7);
     }
 }
 
