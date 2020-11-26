@@ -108,8 +108,6 @@ sub top {
 
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
-#        pool => [qw(hn qn en)],
-#        weights => [3, 2, 1],
         pool => [qw(hn qn en ten)], # Solo mode
         weights => [2, 3, 3, 1],
         groups => [0, 0, 0, 3],
@@ -132,6 +130,7 @@ sub top {
     }
     print 'Top: ', ddc(\@phrases);
 
+    my $x = 0;
     for my $i (1 .. int($count / $beats)) {
         if ($i % 2) {
             my $phrase = $phrases[int rand @phrases];
@@ -142,7 +141,14 @@ sub top {
             }
         }
         else {
-            $d->note($d->whole, $voice->rand);
+            if ($x % 2 == 0) {
+                $d->note($d->whole, $voice->rand);
+            }
+            else {
+                $d->note($d->half, $voice->rand);
+                $d->note($d->half, $voice->rand);
+            }
+            $x++;
         }
     }
 
