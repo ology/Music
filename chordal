@@ -133,11 +133,16 @@ sub top {
     print 'Top: ', ddc(\@phrases);
 
     for my $i (1 .. int($count / $beats)) {
-        my $phrase = $phrases[int rand @phrases];
-        my $voices = ($phrase->{voices}->@*)[int rand $phrase->{voices}->@*];
-        for my $n (0 .. $phrase->{motif}->$#*) {
-            my $vol = 'v' . (96 + int(rand 32)); # f-fff
-            $d->note($phrase->{motif}[$n], $voices->[$n], $vol);
+        if ($i % 2) {
+            my $phrase = $phrases[int rand @phrases];
+            my $voices = ($phrase->{voices}->@*)[int rand $phrase->{voices}->@*];
+            for my $n (0 .. $phrase->{motif}->$#*) {
+                my $vol = 'v' . (96 + int(rand 32)); # f-fff
+                $d->note($phrase->{motif}[$n], $voices->[$n], $vol);
+            }
+        }
+        else {
+            $d->note($d->whole, $voice->rand);
         }
     }
 
