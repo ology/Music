@@ -4,10 +4,10 @@ use warnings;
 
 use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util;
-use Data::Dumper;
+use Data::Dumper::Compact 'ddc';
 
 $Data::Dumper::Varname = 'Length';
-print Dumper MIDI::Util::dump('length');
+print ddc(MIDI::Util::dump('length'));
 
 __END__
 volume
