@@ -1,0 +1,161 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Use local libraries
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Util Music-ToRoman Music-Duration-Partition Music-Interval-Barycentric );
+
+use AI::Genetic;
+use List::Util qw(uniq);
+use MIDI::Util;
+use Music::Chord::Namer qw(chordname);
+use Music::Duration::Partition;
+use Music::Note;
+use Music::Scales qw(get_scale_MIDI);
+use Music::Tension::Cope;
+
+my $bpm   = shift || 120;
+my $patch = shift || 4; # Treble patch
+
+my $population = 50;
+my $iterations = 2;
+
+my $reps = 7; # Loop repetitions
+my $max  = 50; # Number of evolved results
+my $top  = 1; # Highest value of chromosome
+my $base = 60; # Base of middle C MIDI values
+my $size = 4; # Phrase duration size in quarter notes
+
+my $t_octave = 5; # Treble octave
+my $b_octave = 2; # Bass octave
+my $b_patch  = 35; #42
+
+my $whole = 'wn';
+my $half  = 'hn';
+
+my $sizes = { %MIDI::Simple::Length };
+
+my @fittest = evo($max);
+
+my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
+
+my $count = 0; # Count the treble durations in fit()
+
+$score->synch(
+    \&fit,
+    \&bass,
+    \&drums,
+);
+
+$score->write_score("$0.mid");
+
+sub fit {
+    for my $i (0 .. $reps * @fittest) {
+        legato($whole, $fittest[$i % @fittest]);
+    }
+
+    # Resolution
+    legato($whole, [0, 4, 7]);
+}
+
+sub legato {
+    my ($dura, $fit) = @_;
+    $score->n($dura, map { $base + $_ } @$fit);
+    $count += $sizes->{$dura};
+}
+
+sub bass {
+    MIDI::Util::set_chan_patch($score, 1, $b_patch);
+
+    my @scale = get_scale_MIDI('C', $b_octave, 'pentatonic');
+
+    my $mdp = Music::Duration::Partition->new(
+        size => $size,
+        pool => [qw(hn dhn qn)],
+    );
+    my $motif = $mdp->motif;
+
+    my $bass_count = 0;
+    my $n = 0;
+
+    # Play a random note for each motif
+    while ($bass_count < $count) {
+        my $m = $motif->[$n % @$motif];
+        $score->n($m, $scale[int rand @scale]);
+        $bass_count += $sizes->{$m};
+        $n++;
+    }
+
+    $score->n($whole, $scale[0]);
+}
+
+sub drums {
+    MIDI::Util::set_chan_patch($score, 9, 0);
+
+    for my $duration (('qn') x $count) {
+        $score->n($duration, 44); # hi-hat
+    }
+
+    # Resolution
+    $score->n($whole, 49); # crash
+}
+
+sub evo {
+    my $max = shift;
+
+    my $ga = AI::Genetic->new(
+        -fitness    => \&fitness,
+        -type       => 'listvector',
+        -population => $population,
+        -crossover  => 0.95,
+        -mutation   => 0.01,
+    );
+
+    my $items = [ ([ 0 .. 11 ]) x 3 ]; # Chromatic triad
+    
+    $ga->init($items);
+    $ga->evolve('rouletteTwoPoint', $iterations);
+
+    my %seen;
+    my @genes;
+    for my $fit ($ga->getFittest($max)) {
+        my @sorted = sort { $a <=> $b } @{ $fit->{GENES} };
+        next if $seen{"@sorted"}++;
+        push @genes, \@sorted;
+    }
+
+    my $i = 0;
+    for my $fit (@genes) {
+        $i++;
+        my @named;
+        for my $n (@$fit) {
+            my $note = Music::Note->new($n + $base, 'midinum');
+            push @named, $note->format('isobase');
+        }
+        printf "%d. [%d,%d,%d] => (%s,%s,%s) => %s\n",
+            $i, @$fit, @named, scalar chordname(@named);
+    }
+
+    return @genes;
+}
+ 
+sub fitness {
+    my $chromosome = shift;
+
+    # Chords with duplicate notes not allowed
+    return 0
+        if @$chromosome > uniq(@$chromosome);
+
+    # Chords with sharps or flats not allowed
+    for my $i (@$chromosome) {
+        my $note = Music::Note->new($i + $base, 'midinum');
+        return 0
+            if $note->format('isobase') =~ /#|b/;
+    }
+
+    my $tension = Music::Tension::Cope->new;
+
+    my $t = $tension->vertical($chromosome);
+
+    return $top - $t;
+}
