@@ -38,7 +38,7 @@ my @fittest = evo($max);
 
 my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
 
-my $count = 0; # Count the treble durations in fit()
+my $count = 0; # Count the durations in fit()
 
 $score->synch(
     \&fit,
@@ -49,52 +49,12 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub fit {
-    my $mdp = Music::Duration::Partition->new(
-        size => $size,
-        pool => [qw/ hn qn en /],
-    );
-
-    legato($whole, $fittest[0]);
-
-    phrase($mdp, $reps, \@fittest);
-
-    phrase($mdp, $reps, \@fittest);
-
-    phrase($mdp, $reps, \@fittest);
-
-    phrase($mdp, $reps, \@fittest);
-
-    # Resolution
-    legato($whole, [0, 4, 7]);
-
-    add_rest($whole);
-
-    phrase(undef, $reps, \@fittest);
-
-    phrase($mdp, $reps, \@fittest);
-
-    phrase($mdp, $reps, \@fittest);
-
-    phrase($mdp, $reps, \@fittest);
-
-    phrase($mdp, $reps, \@fittest);
-
-    # Resolution
-    legato($whole, [0, 4, 7]);
-}
-
-sub phrase {
-    my ($mdp, $reps, $fittest, $dura) = @_;
-    $dura ||= $whole;
-    my $motif = $mdp ? $mdp->motif : '';
-    for my $n (0 .. $reps) {
-        if ($mdp) {
-            legato($motif->[$n % @$motif], $fittest->[$n % @$fittest]);
-        }
-        else {
-            legato($dura, $fittest->[$n % @$fittest]);
-        }
+    for my $i (0 .. $reps * @fittest) {
+        legato($whole, $fittest[$i % @fittest]);
     }
+
+    # Resolution
+    legato($whole, [0, 4, 7]);
 }
 
 sub legato {
@@ -103,80 +63,26 @@ sub legato {
     $count += $sizes->{$dura};
 }
 
-sub add_rest {
-    my $dura = shift;
-    $score->r($dura);
-    $count += $sizes->{$dura};
-}
-
 sub bass {
     MIDI::Util::set_chan_patch($score, 1, $b_patch);
 
     my @scale = get_scale_MIDI('C', $b_octave, 'pentatonic');
 
-    $score->n($whole, $scale[0]);
-
-    # Play and save a random note
-    my @notes;
-    for my $n (0 .. $reps) {
-        my $note = $scale[int rand @scale];
-        push @notes, $note;
-        $score->n($half, $note);
-    }
-
     my $mdp = Music::Duration::Partition->new(
         size => $size,
-        pool => [qw/ hn qn /],
+        pool => [qw/ hn dhn qn /],
     );
     my $motif = $mdp->motif;
 
-    # Play a random note for each motif
-    for my $n (0 .. $reps * 2 + 1) {
-        $score->n($motif->[$n % @$motif], $scale[int rand @scale]);
-    }
-
-    # Play a random note twice in a row
-    my $last;
-    for my $n (0 .. $reps) {
-        my $note = $scale[int rand @scale];
-        $score->n($half, $n % 2 ? $note : $last);
-        $last = $note;
-    }
-
-    # Play the notes from the first loop for each motif
-    for my $n (0 .. $reps) {
-        $score->n($motif->[$n % @$motif], $notes[$n]);
-    }
-
-    # Resolution
-    $score->n($whole, $scale[0]);
-
-    for my $n (0 .. $reps) {
-        $score->n('en', $scale[0]);
-        $score->n('en', $scale[0]);
-        $score->r('dhn');
-    }
-
-    # Play a random note
-    for my $n (0 .. $reps) {
-        $score->n($half, $scale[int rand @scale]);
-    }
+    my $bass_count = 0;
+    my $n = 0;
 
     # Play a random note for each motif
-    for my $n (0 .. $reps * 2 + 1) {
-        $score->n($motif->[$n % @$motif], $scale[int rand @scale]);
-    }
-
-    # Play a random note twice in a row
-    for my $n (0 .. $reps) {
-        my $note = $scale[int rand @scale];
-        $score->n($half, $n % 2 ? $note : $last);
-        $last = $note;
-    }
-
-    # Play the notes from the first loop for each motif
-    for my $n (0 .. $reps) {
-        $score->n($motif->[$n % @$motif], $notes[$n]);
+    while ($bass_count < $count) {
+        my $m = $motif->[$n % @$motif];
+        $score->n($m, $scale[int rand @scale]);
+        $bass_count += $sizes->{$m};
+        $n++;
     }
 
     $score->n($whole, $scale[0]);
