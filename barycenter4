@@ -11,7 +11,7 @@ use Music::Chord::Namer 'chordname';
 use Music::Duration::Partition;
 use Music::Interval::Barycentric;
 use Music::Note;
-use Music::Scales;
+use Music::Scales qw(get_scale_MIDI);
 
 my $bpm   = shift || 120;
 my $patch = shift || 4; # Treble patch
