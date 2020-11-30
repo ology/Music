@@ -5,9 +5,11 @@
 use strict;
 use warnings;
 
+# Prefer my local library
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
+
 use MIDI::Util;
-use Music::Scales;
+use Music::Scales qw/ get_scale_notes /;
 use Music::Voss qw/ powers /;
 
 my $max = shift || 64;
