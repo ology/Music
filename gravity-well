@@ -2,10 +2,9 @@
 use strict;
 use warnings;
 
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use lib '/Users/gene/sandbox/MIDI-Drummer-Tiny/lib';
-use lib '/Users/gene/sandbox/Music-Cadence/lib';
-use lib '/Users/gene/sandbox/Music-ToRoman/lib';
+# Prefer my local libraries
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Cadence Music-ToRoman);
+
 use MIDI::Util;
 use MIDI::Drummer::Tiny;
 use Music::Cadence;
