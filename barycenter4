@@ -91,7 +91,7 @@ sub bass {
 sub drums {
     MIDI::Util::set_chan_patch($score, 9, 0);
 
-    for my $duration (('qn') x ($count + 4)) {
+    for my $duration (('qn') x $count) {
         $score->n($duration, 44); # hi-hat
     }
 
