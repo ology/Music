@@ -14,7 +14,7 @@ use Music::Duration::Partition;
 
 # The number of drummers
 my $max = shift || 4;
-# The number of beats to play after all drummers have entered
+# The number of bars to play after all drummers have entered
 my $extend = shift || 4;
 
 # Setup a drum score
