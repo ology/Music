@@ -14,6 +14,8 @@ use Music::Duration::Partition;
 
 # The number of drummers
 my $max = shift || 4;
+# The number of beats to play after all drummers have entered
+my $extend = shift || 4;
 
 # Setup a drum score
 my $d = MIDI::Drummer::Tiny->new(
@@ -25,7 +27,7 @@ my $d = MIDI::Drummer::Tiny->new(
 
 # List the available percussion instruments
 my @DRUMS = (
-    $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom,
+#    $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom,
     $d->hi_bongo, $d->low_bongo, $d->mute_hi_conga, $d->open_hi_conga, $d->low_conga,
     $d->cabasa, $d->maracas, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block,
 );
@@ -65,7 +67,7 @@ sub phrase {
 
     # Either rest or play the motif
     my $phrase = sub {
-        for my $n (1 .. $d->bars + 4) {
+        for my $n (1 .. $d->bars + $extend) {
             # If we are not up yet, then rest
             if ($n < ($p * 4)) {
                 $d->rest($d->whole);
