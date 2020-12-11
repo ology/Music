@@ -1,0 +1,93 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact 'ddc';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Chord-Progression Music-Duration-Partition);
+use MIDI::Drummer::Tiny;
+use MIDI::Praxis::Variation qw(transposition);
+use MIDI::Util;
+use Music::Chord::Progression;
+use Music::Duration::Partition;
+use Music::Scales qw(get_scale_notes get_scale_MIDI);
+
+my $bars   = shift || 16;
+my $bpm    = shift || 105;
+my $note   = shift || 'A';
+my $bscale = shift || 'pminor';
+my $tscale = shift || 'minor';
+my $bpatch = shift || 35;
+my $tpatch = shift || 69;
+
+my $octave = 4;
+
+my $d = MIDI::Drummer::Tiny->new(
+    file      => "$0.mid",
+    bpm       => $bpm,
+    bars      => $bars,
+    signature => '4/4',
+);
+
+my @bass; # List of initial bottom notes
+
+$d->score->synch(
+    \&drums,
+    \&progression,
+    \&bottom,
+#    \&top,
+);
+
+$d->write;
+
+sub drums {
+    $d->count_in($bars * 2);
+    $d->note($d->whole, $d->crash1, $d->kick);
+}
+
+sub progression {
+    MIDI::Util::set_chan_patch($d->score, 2, 0);
+
+    my @pitches = get_scale_notes($note, $bscale);
+    my @notes = map { $pitches[int rand @pitches] } 1 .. 4;
+
+    for my $note (@notes) {
+        my $prog = Music::Chord::Progression->new(
+            scale_note => $note,
+            scale_name => $tscale,
+            chords     => ['m','','m','m','',''],
+#            substitute => 1,
+        );
+        my $notes = $prog->generate;
+
+        for my $chord (@$notes) {
+            $chord = [ MIDI::Util::midi_format(@$chord) ];
+            $d->score->n('wn', @$chord);
+            push @bass, $chord->[0];
+        }
+        print $note, ': ', ddc($notes);
+    }
+}
+
+sub bottom {
+    MIDI::Util::set_chan_patch($d->score, 0, $bpatch);
+
+    my @transp = transposition(-12, @bass);
+
+    my $mdp = Music::Duration::Partition->new(
+        size => 4,
+        pool => [qw(dhn hn qn)],
+    );
+
+    my @phrases = map { $mdp->motif } 1 .. 4;
+
+    for my $note (@transp) {
+        my $phrase = $phrases[int rand @phrases];
+        for my $p (@$phrase) {
+            $d->score->n($p, $note);
+        }
+    }
+}
+
+sub top {
+    MIDI::Util::set_chan_patch($d->score, 1, $tpatch);
+}
