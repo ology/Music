@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use v5.20.0;
+use v5.24.0;
 
 use Data::Dumper::Compact 'ddc';
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Duration-Partition);
