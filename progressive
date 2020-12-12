@@ -32,7 +32,7 @@ my @bass; # List of initial bottom notes
 my @notes; # List of chord named notes with octave
 
 $d->score->synch(
-    \&drums,
+#    \&drums,
     \&progression,
     \&bottom,
     \&top,
@@ -56,7 +56,7 @@ sub progression {
             scale_note => $note,
             scale_name => $tscale,
             chords     => ['m','','m','m','',''],
-#            substitute => 1,
+            substitute => 1,
 #            verbose    => 1,
         );
         my $notes = $prog->generate;
