@@ -51,9 +51,9 @@ sub progression {
     my @pitches = get_scale_notes($note, $bscale);
     @notes = map { $pitches[int rand @pitches] } 1 .. 4;
 
-    for my $note (@notes) {
+    for my $x (@notes) {
         my $prog = Music::Chord::Progression->new(
-            scale_note => $note,
+            scale_note => $x,
             scale_name => $tscale,
             chords     => ['m','','m','m','',''],
             substitute => 1,
@@ -66,7 +66,7 @@ sub progression {
             $d->score->n('wn', @$chord);
             push @bass, $chord->[0];
         }
-        print $note, ': ', ddc($notes);
+        print $x, ': ', ddc($notes);
     }
 }
 
@@ -82,14 +82,14 @@ sub bottom {
 
     my @phrases = map { $mdp->motif } 1 .. 4;
 
-    for my $note (@transp) {
+    for my $x (@transp) {
         my $phrase = $phrases[int rand @phrases];
         for my $n (0 .. $#$phrase) {
             if ($n % 2 == 0) {
-                $d->score->n($phrase->[$n], $note);
+                $d->score->n($phrase->[$n], $x);
             }
             else {
-                $d->score->n($phrase->[$n], $note + 7);
+                $d->score->n($phrase->[$n], $x + 7);
             }
         }
     }
@@ -105,8 +105,8 @@ sub top {
 
     my @phrases = map { $mdp->motif } 1 .. 4;
 
-    for my $note (@notes) {
-        my @pitches = get_scale_notes($note, $tscale);
+    for my $x (@notes) {
+        my @pitches = get_scale_notes($x, $tscale);
         @pitches = MIDI::Util::midi_format(@pitches);
         for my $i (1 .. 8) { # NOTE 8 is the default Music::Chord::Progression max
             my $phrase = $phrases[int rand @phrases];
