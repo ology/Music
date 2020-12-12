@@ -108,7 +108,7 @@ sub top {
     for my $note (@notes) {
         my @pitches = get_scale_notes($note, $tscale);
         @pitches = MIDI::Util::midi_format(@pitches);
-        for my $i (1 .. 8) {
+        for my $i (1 .. 8) { # NOTE 8 is the default Music::Chord::Progression max
             my $phrase = $phrases[int rand @phrases];
             for my $n (0 .. $#$phrase) {
                 $d->score->n($phrase->[$n], $pitches[int rand @pitches] . 5);
