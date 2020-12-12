@@ -56,7 +56,7 @@ sub progression {
             scale_note => $x,
             scale_name => $tscale,
             chords     => ['m','','m','m','',''], # Use a minor progression
-            substitute => 1,
+#            substitute => 1,
 #            verbose    => 1,
         );
         my $notes = $prog->generate;
