@@ -20,10 +20,9 @@ my $bpatch = shift || 35;
 my $tpatch = shift || 69;
 
 my $d = MIDI::Drummer::Tiny->new(
-    file      => "$0.mid",
-    bpm       => $bpm,
-    bars      => $bars,
-    signature => '4/4',
+    file => "$0.mid",
+    bpm  => $bpm,
+    bars => $bars,
 );
 
 my @bass; # List of initial bottom notes
