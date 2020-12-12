@@ -83,8 +83,13 @@ sub bottom {
 
     for my $note (@transp) {
         my $phrase = $phrases[int rand @phrases];
-        for my $p (@$phrase) {
-            $d->score->n($p, $note);
+        for my $n (0 .. $#$phrase) {
+            if ($n % 2 == 0) {
+                $d->score->n($phrase->[$n], $note);
+            }
+            else {
+                $d->score->n($phrase->[$n], $note + 7);
+            }
         }
     }
 }
