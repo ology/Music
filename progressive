@@ -49,11 +49,19 @@ sub progression {
     my @pitches = get_scale_notes($note, $bscale);
     @notes = map { $pitches[int rand @pitches] } 1 .. 4;
 
+    my $chords;
+    if ($tscale eq 'major') {
+        $chords = ['','m','m','','','m'];
+    }
+    else {
+        $chords = ['m','','m','m','',''];
+    }
+
     for my $x (@notes) {
         my $prog = Music::Chord::Progression->new(
             scale_note => $x,
             scale_name => $tscale,
-            chords     => ['m','','m','m','',''], # Use a minor progression
+            chords     => $chords,
 #            substitute => 1,
 #            verbose    => 1,
         );
