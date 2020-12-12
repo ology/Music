@@ -19,8 +19,6 @@ my $tscale = shift || 'minor';
 my $bpatch = shift || 35;
 my $tpatch = shift || 69;
 
-my $octave = 4;
-
 my $d = MIDI::Drummer::Tiny->new(
     file      => "$0.mid",
     bpm       => $bpm,
