@@ -55,7 +55,7 @@ sub progression {
         my $prog = Music::Chord::Progression->new(
             scale_note => $x,
             scale_name => $tscale,
-            chords     => ['m','','m','m','',''],
+            chords     => ['m','','m','m','',''], # Use a minor progression
             substitute => 1,
 #            verbose    => 1,
         );
