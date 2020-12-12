@@ -29,12 +29,13 @@ my $d = MIDI::Drummer::Tiny->new(
 );
 
 my @bass; # List of initial bottom notes
+my @notes; # List of chord named notes with octave
 
 $d->score->synch(
     \&drums,
     \&progression,
     \&bottom,
-#    \&top,
+    \&top,
 );
 
 $d->write;
@@ -48,7 +49,7 @@ sub progression {
     MIDI::Util::set_chan_patch($d->score, 2, 0);
 
     my @pitches = get_scale_notes($note, $bscale);
-    my @notes = map { $pitches[int rand @pitches] } 1 .. 4;
+    @notes = map { $pitches[int rand @pitches] } 1 .. 4;
 
     for my $note (@notes) {
         my $prog = Music::Chord::Progression->new(
@@ -96,4 +97,22 @@ sub bottom {
 
 sub top {
     MIDI::Util::set_chan_patch($d->score, 1, $tpatch);
+
+    my $mdp = Music::Duration::Partition->new(
+        size => 4,
+        pool => [qw(hn qn)],
+    );
+
+    my @phrases = map { $mdp->motif } 1 .. 4;
+
+    for my $note (@notes) {
+        my @pitches = get_scale_notes($note, $tscale);
+        @pitches = MIDI::Util::midi_format(@pitches);
+        for my $i (1 .. 8) {
+            my $phrase = $phrases[int rand @phrases];
+            for my $n (0 .. $#$phrase) {
+                $d->score->n($phrase->[$n], $pitches[int rand @pitches] . 5);
+            }
+        }
+    }
 }
