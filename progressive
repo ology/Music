@@ -106,7 +106,8 @@ sub top {
 
     my $mdp = Music::Duration::Partition->new(
         size => 4,
-        pool => [qw(dhn hn qn)],
+#        pool => [qw(dhn hn qn)], # "plaintive"
+        pool => [qw(hn qn dqn en)],
     );
 
     my @phrases = map { $mdp->motif } 1 .. 4;
