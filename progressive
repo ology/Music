@@ -13,9 +13,9 @@ use Music::Scales qw(get_scale_notes get_scale_MIDI);
 
 my $bars   = shift || 16;
 my $bpm    = shift || 105;
-my $note   = shift || 'A';
-my $bscale = shift || 'pminor';
-my $tscale = shift || 'minor';
+my $note   = shift || 'C';
+my $bscale = shift || 'pentatonic';
+my $tscale = shift || 'major';
 my $bpatch = shift || 35;
 my $tpatch = shift || 69;
 
