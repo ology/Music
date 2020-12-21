@@ -26,8 +26,6 @@ $score->synch(
     \&melody,
 );
 
-#$score->n('wn', $pitches[0]);
-
 $score->write_score("$0.mid");
 
 sub melody {
