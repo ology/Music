@@ -13,7 +13,7 @@ use Music::Scales qw(get_scale_MIDI);
 use Music::ToRoman;
 use Music::VoiceGen;
 
-my $max_phrase = shift || 24;
+my $max_phrase = shift || 28;
 my $num_notes  = shift || 4;
 my $scale_note = shift || 'C';
 my $scale_name = shift || 'major';
