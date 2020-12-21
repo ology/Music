@@ -15,6 +15,7 @@ use Music::ToRoman;
 use Music::VoiceGen;
 
 my $max_phrase = shift || 32;
+my $phrase_num = shift || 4;
 my $num_notes  = shift || 4;
 my $scale_note = shift || 'C';
 my $scale_name = shift || 'major';
@@ -112,7 +113,7 @@ sub progression {
         pitches   => \@pitches,
         intervals => \@intervals,
     );
-    my @notes = map { Music::Note->new($voice->rand, 'midinum')->format('isobase') } 1 .. 4;
+    my @notes = map { Music::Note->new($voice->rand, 'midinum')->format('isobase') } 1 .. $phrase_num;
 
     for my $n (@notes) {
         my $roman = $mtr->parse($n);
