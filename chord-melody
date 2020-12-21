@@ -21,10 +21,13 @@ my $scale_note = shift || 'C';
 my $scale_name = shift || 'major';
 my $m_scale    = shift || 'pentatonic';
 
+my @bass_notes;
+
 my $score = MIDI::Util::setup_score();
 
 $score->synch(
     \&progression,
+    \&bottom,
     \&melody,
 );
 
@@ -141,6 +144,7 @@ sub progression {
         for my $chord (@$notes) {
             $chord = [ MIDI::Util::midi_format(@$chord) ];
             $score->n('wn', @$chord);
+            push @bass_notes, $chord->[0];
         }
         print "$n ($roman): ", ddc($notes);
     }
@@ -155,4 +159,22 @@ sub progression {
     $score->n('wn', @$_) for @$notes;
     $notes = $mc->cadence(type => 'plagal');
     $score->n('wn', @$_) for @$notes;
+}
+
+sub bottom {
+    MIDI::Util::set_chan_patch($score, 2, 35);
+
+    for my $n (0 .. $#bass_notes) {
+        $bass_notes[$n] =~ s/[45]/3/; # Make everything one octave
+        my $note = $bass_notes[$n];
+        if ($n % 2 == 1) {
+            $note = Music::Note->new($note, 'ISO')->format('midinum');
+            $score->n('hn', $note);
+            $score->n('hn', $note);
+        }
+        else {
+            $score->n('wn', $note);
+        }
+    }
+    print 'Bottom: ', ddc(\@bass_notes);
 }
