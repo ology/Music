@@ -152,4 +152,6 @@ sub progression {
     );
     my $notes = $mc->cadence;
     $score->n('wn', @$_) for @$notes;
+    $notes = $mc->cadence(type => 'plagal');
+    $score->n('wn', @$_) for @$notes;
 }
