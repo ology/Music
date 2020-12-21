@@ -153,7 +153,6 @@ sub progression {
         key    => $scale_note,
         octave => $octave,
         format => 'midi',
-#        type   => 'imperfect',
     );
     my $notes = $mc->cadence(type => 'plagal');
     push @bass_notes, $notes->[0][0], $notes->[1][0];
