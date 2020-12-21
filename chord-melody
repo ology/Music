@@ -18,7 +18,7 @@ my $max_phrase = shift || 32;
 my $num_notes  = shift || 4;
 my $scale_note = shift || 'C';
 my $scale_name = shift || 'major';
-my $bscale     = shift || 'pentatonic';
+my $m_scale    = shift || 'pentatonic';
 
 my $score = MIDI::Util::setup_score();
 
@@ -34,17 +34,17 @@ sub melody {
 
     my $mdi = Music::MelodicDevice::Inversion->new(
         scale_note => $scale_note,
-        scale_name => $bscale,
+        scale_name => $m_scale,
 #        verbose => 1,
     );
 
     my $mdo = Music::MelodicDevice::Ornamentation->new(
         scale_note => $scale_note,
-        scale_name => $bscale,
+        scale_name => $m_scale,
 #        verbose => 1,
     );
 
-    my @pitches = get_scale_MIDI($scale_note, 5, $bscale);
+    my @pitches = get_scale_MIDI($scale_note, 5, $m_scale);
     my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
