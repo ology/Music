@@ -3,8 +3,9 @@ use strict;
 use warnings;
 
 use Data::Dumper::Compact qw(ddc);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Chord-Progression Music-MelodicDevice-Inversion Music-MelodicDevice-Ornamentation Music-ToRoman);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-Chord-Progression Music-MelodicDevice-Inversion Music-MelodicDevice-Ornamentation Music-ToRoman);
 use MIDI::Util;
+use Music::Cadence;
 use Music::Chord::Progression;
 use Music::MelodicDevice::Inversion;
 use Music::MelodicDevice::Ornamentation;
@@ -96,6 +97,8 @@ sub melody {
 sub progression {
     MIDI::Util::set_chan_patch($score, 1, 0);
 
+    my $octave = 4;
+
     my $mtr = Music::ToRoman->new(
         scale_note => $scale_note,
         scale_name => $scale_name,
@@ -103,7 +106,7 @@ sub progression {
 #        verbose    => 1,
     );
 
-    my @pitches = get_scale_MIDI($scale_note, 4, $scale_name);
+    my @pitches = get_scale_MIDI($scale_note, $octave, $scale_name);
     my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
@@ -140,4 +143,13 @@ sub progression {
         }
         print "$n ($roman): ", ddc($notes);
     }
+
+    my $mc = Music::Cadence->new(
+        key    => $scale_note,
+        octave => $octave,
+        format => 'midi',
+#        type   => 'imperfect',
+    );
+    my $notes = $mc->cadence;
+    $score->n('wn', @$_) for @$notes;
 }
