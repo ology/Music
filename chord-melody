@@ -168,7 +168,6 @@ sub bottom {
         $bass_notes[$n] =~ s/[45]/3/; # Make everything one octave
         my $note = $bass_notes[$n];
         if ($n % 2 == 1) {
-            $note = Music::Note->new($note, 'ISO')->format('midinum');
             $score->n('hn', $note);
             $score->n('hn', $note);
         }
