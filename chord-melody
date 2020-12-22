@@ -3,10 +3,11 @@ use strict;
 use warnings;
 
 use Data::Dumper::Compact qw(ddc);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-Chord-Progression Music-MelodicDevice-Inversion Music-MelodicDevice-Ornamentation Music-ToRoman);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-Chord-Progression Music-Duration-Partition Music-MelodicDevice-Inversion Music-MelodicDevice-Ornamentation Music-ToRoman);
 use MIDI::Util;
 use Music::Cadence;
 use Music::Chord::Progression;
+use Music::Duration::Partition;
 use Music::MelodicDevice::Inversion;
 use Music::MelodicDevice::Ornamentation;
 use Music::Note;
@@ -55,6 +56,12 @@ sub melody {
         intervals => \@intervals,
     );
 
+    my $mdp = Music::Duration::Partition->new(
+        size => 4,
+        pool => [qw(hn dqn qn en)],
+    );
+    my @motifs = map { $mdp->motif } 1 .. 2;
+
     my @notes;
 
     for my $i (1 .. $max_phrase) {
@@ -88,11 +95,16 @@ sub melody {
         }
         else {
             @notes = map { Music::Note->new($voice->rand, 'midinum')->format('ISO') } 1 .. $num_notes;
-            @spec = map { [ 'qn', $_ ] } @notes;
+            @spec = ();
+            my $motif = $motifs[int rand @motifs];
+            for my $n (0 .. $#$motif) {
+                my $note = $notes[$n] || $voice->rand;
+                push @spec, [ $motif->[$n], $note ];
+            }
         }
 
         @spec = map { [ MIDI::Util::midi_format(@$_) ] } @spec;
-#        print 'Spec: ', ddc(\@spec);
+        print 'Spec: ', ddc(\@spec);
 
         $score->n(@$_) for @spec;
     }
