@@ -60,7 +60,7 @@ sub melody {
         size => 4,
         pool => [qw(hn dqn qn en)],
     );
-    my @motifs = map { $mdp->motif } 1 .. 2;
+    my @motifs = map { $mdp->motif } 1 .. 3;
 
     my @notes;
 
