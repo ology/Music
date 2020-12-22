@@ -104,7 +104,7 @@ sub melody {
         }
 
         @spec = map { [ MIDI::Util::midi_format(@$_) ] } @spec;
-        print 'Spec: ', ddc(\@spec);
+#        print 'Spec: ', ddc(\@spec);
 
         $score->n(@$_) for @spec;
     }
