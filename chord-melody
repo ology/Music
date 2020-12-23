@@ -15,12 +15,14 @@ use Music::Scales qw(get_scale_MIDI);
 use Music::ToRoman;
 use Music::VoiceGen;
 
-my $max_phrase = shift || 32;
+my $max_chords = shift || 8;
 my $phrase_num = shift || 4;
 my $num_notes  = shift || 4;
 my $scale_note = shift || 'C';
 my $scale_name = shift || 'major';
 my $m_scale    = shift || 'pentatonic';
+
+my $max_phrase = $max_chords * $phrase_num;
 
 my @bass_notes;
 
@@ -144,6 +146,7 @@ sub progression {
         }
 
         my $prog = Music::Chord::Progression->new(
+            max        => $max_chords,
             scale_note => $n,
             scale_name => $name,
             chord_map  => $chords,
