@@ -18,10 +18,11 @@ use Music::VoiceGen;
 my $scale_note = shift || 'C';
 my $scale_name = shift || 'major';
 my $m_scale    = shift || 'pentatonic';
-my $max_phrase = shift || 32;
-my $max_chords = shift || 8;
-my $phrase_num = shift || 4;
-my $num_notes  = shift || 8;
+
+my $max_phrase = 32;
+my $max_chords = 8;
+my $phrase_num = 4;
+my $num_notes  = 8;
 
 my @bass_notes;
 
