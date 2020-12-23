@@ -15,13 +15,13 @@ use Music::Scales qw(get_scale_MIDI);
 use Music::ToRoman;
 use Music::VoiceGen;
 
+my $scale_note = shift || 'C';
+my $scale_name = shift || 'major';
+my $m_scale    = shift || 'pentatonic';
 my $max_phrase = shift || 32;
 my $max_chords = shift || 8;
 my $phrase_num = shift || 4;
 my $num_notes  = shift || 8;
-my $scale_note = shift || 'C';
-my $scale_name = shift || 'major';
-my $m_scale    = shift || 'pentatonic';
 
 my @bass_notes;
 
