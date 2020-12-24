@@ -19,10 +19,10 @@ my $scale_note = shift || 'C';
 my $scale_name = shift || 'major';
 my $m_scale    = shift || 'pentatonic';
 
-my $max_phrase = 32;
-my $max_chords = 8;
-my $phrase_num = 4;
-my $num_notes  = 8;
+my $max_phrase = 32; # Number of melody quarter notes
+my $num_notes  = 8;  # Number of notes for the melody
+my $max_chords = 8;  # Number of progression chords
+my $phrase_num = 4;  # Number of progression phrases
 
 my @bass_notes;
 
