@@ -101,7 +101,8 @@ sub melody {
             my $motif = $motifs[int rand @motifs];
             for my $n (0 .. $#$motif) {
                 my $note = $notes[$n] || $voice->rand;
-                push @spec, [ $motif->[$n], $note ];
+                my $vol = 'v' . (96 + int(rand 32)); # f-fff
+                push @spec, [ $motif->[$n], $note, $vol ];
             }
         }
 
