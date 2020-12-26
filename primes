@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Math::Prime::XS qw(primes);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util;
+use Music::Scales qw(get_scale_MIDI);
+
+my $limit = shift || die "Usage: perl $0 limit\n";
+
+my $score = MIDI::Util::setup_score(bpm => 300);
+
+my @scale = get_scale_MIDI('C', 5, 'chromatic');
+
+for my $p (primes($limit)) {
+    my $mod = $p % @scale;
+    my $note = $scale[$mod];
+    $score->n('qn', $note);
+}
+
+$score->write_score("$0.mid");
