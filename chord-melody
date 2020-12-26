@@ -47,7 +47,7 @@ sub melody {
 
     my $mdo = Music::MelodicDevice::Ornamentation->new(
         scale_note => $scale_note,
-        scale_name => $m_scale,
+        scale_name => $scale_name,
 #        verbose => 1,
     );
 
@@ -111,6 +111,8 @@ sub melody {
 
         $score->n(@$_) for @spec;
     }
+
+    $score->n('wn', $pitches[0] - 12);
 }
 
 sub progression {
