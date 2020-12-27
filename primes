@@ -14,10 +14,13 @@ my $score = MIDI::Util::setup_score(bpm => 300);
 
 my @scale = get_scale_MIDI('C', 5, $name);
 
+my $i = 0;
+
 for my $p (primes($limit)) {
+    $i++;
     my $mod = $p % @scale;
     my $note = $scale[$mod];
-    print "P: $p, Mod: $mod, Note: $note\n";
+    print "$i. P: $p, Mod: $mod, Note: $note\n";
     $score->n('qn', $note);
 }
 
