@@ -16,6 +16,7 @@ my @scale = get_scale_MIDI('C', 5, 'chromatic');
 for my $p (primes($limit)) {
     my $mod = $p % @scale;
     my $note = $scale[$mod];
+    print "P: $p, Mod: $mod, Note: $note\n";
     $score->n('qn', $note);
 }
 
