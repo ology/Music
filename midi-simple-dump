@@ -3,11 +3,11 @@ use strict;
 use warnings;
 
 use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(midi_dump);
 use Data::Dumper::Compact 'ddc';
 
 $Data::Dumper::Varname = 'Length';
-print ddc(MIDI::Util::dump('length'));
+print ddc(midi_dump('length'));
 
 __END__
 volume
