@@ -30,10 +30,10 @@ my $score = setup_score();
 my $mcn = Music::Chord::Note->new;
 
 for my $c (@chord_scale) {
-  my @chord = $mcn->chord_with_octave($c, 4);
-  @chord = midi_format(@chord);
-  print ddc(\@chord);
-  $score->n('wn', @chord);
+    my @chord = $mcn->chord_with_octave($c, 4);
+    @chord = midi_format(@chord);
+    print ddc(\@chord);
+    $score->n('wn', @chord);
 }
 
 my @chord = $mcn->chord_with_octave($chord_scale[0], 4);
