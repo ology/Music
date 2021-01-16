@@ -12,7 +12,7 @@ use Music::Scales qw(get_scale_notes);
 use Music::ToRoman;
 
 my $note = shift || 'C';
-my $mode = shift || 'major';
+my $mode = shift || 'ionian';
 
 my $mtr = Music::ToRoman->new(
     scale_note => $note,
