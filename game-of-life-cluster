@@ -3,13 +3,13 @@ use strict;
 use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util; # https://metacpan.org/release/MIDI-Util
+use MIDI::Util qw(setup_score); # https://metacpan.org/release/MIDI-Util
 
 use Game::Life;
 
 my $bpm = shift || 100;
 
-my $score = MIDI::Util::setup_score( bpm => $bpm );
+my $score = setup_score( bpm => $bpm );
 
 my @source = qw/ C D E F G A B /;
 
