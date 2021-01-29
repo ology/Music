@@ -8,16 +8,16 @@ use Data::Dumper::Compact 'ddc';
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Duration-Partition);
 use MIDI::Drummer::Tiny;
 use MIDI::Praxis::Variation qw(diminution);
-use MIDI::Util;
+use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen;
 
 my $bars   = shift || 16;
 my $bpm    = shift || 105;
-my $note   = shift || 'A';
+my $note   = shift || 'D';
 my $bscale = shift || 'pminor';
-my $tscale = shift || 'minor';
+my $tscale = shift || 'dorian';
 my $bpatch = shift || 35;
 my $tpatch = shift || 4;
 
@@ -45,7 +45,7 @@ $d->score->synch(
 $d->write;
 
 sub bottom {
-    MIDI::Util::set_chan_patch($d->score, 0, $bpatch);
+    set_chan_patch($d->score, 0, $bpatch);
 
     my $beats = 5;
 
@@ -97,17 +97,17 @@ sub bottom {
 }
 
 sub top {
-    MIDI::Util::set_chan_patch($d->score, 1, $tpatch);
+    set_chan_patch($d->score, 1, $tpatch);
 
     my $beats = 4;
 
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
-        pool => [qw(hn qn en)],
-        weights => [1, 2, 3],
-#        pool => [qw(hn qn en ten)], # Solo mode
-#        weights => [2, 3, 4, 1],
-#        groups => [0, 0, 0, 3],
+#        pool => [qw(hn qn en)],
+#        weights => [1, 2, 3],
+        pool => [qw(hn qn en ten)], # Solo mode
+        weights => [2, 3, 4, 1],
+        groups => [0, 0, 0, 3],
     );
 
     my @phrases = map { { motif => $mdp->motif } } 1 .. 4;
