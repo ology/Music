@@ -6,25 +6,24 @@ use warnings;
 # Then: perl % ~/Documents/bach-choral-000206b_.csv
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score);
 
 use Text::CSV;
 use Music::Chord::Note;
-use MIDI::Simple;
 use Music::Tempo;
 use List::Util qw( shuffle );
 
 my $file = shift || die "Usage: perl $0 file.csv\n";
 
-my $csv = Text::CSV->new ( { binary => 1 } )
+my $csv = Text::CSV->new({ binary => 1 })
     or die 'Cannot use CSV: ' . Text::CSV->error_diag ();
 
 open my $fh, "<:encoding(utf8)", $file
     or die "Can't read $file: $!";
 
-my $cn = Music::Chord::Note->new();
+my $cn = Music::Chord::Note->new;
 
-my $score = MIDI::Util::setup_score( patch => 5 );
+my $score = setup_score( patch => 5 );
 
 my ( $name, $melody, $chords, $bassline );
 
