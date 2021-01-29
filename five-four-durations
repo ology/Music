@@ -5,7 +5,7 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Duration-Partition);
 use MIDI::Drummer::Tiny;
 use MIDI::Praxis::Variation 'diminution';
-use MIDI::Util;
+use MIDI::Util qw(set_chan_patch);
 use Music::Scales;
 use Music::VoiceGen;
 use Music::Duration::Partition;
@@ -35,7 +35,7 @@ $d->score->synch(
 $d->write;
 
 sub bass {
-    MIDI::Util::set_chan_patch($d->score, 1, 35);
+    set_chan_patch($d->score, 1, 35);
 
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
@@ -76,7 +76,7 @@ sub bass {
 }
 
 sub top {
-    MIDI::Util::set_chan_patch($d->score, 0, 4);
+    set_chan_patch($d->score, 0, 4);
 
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
