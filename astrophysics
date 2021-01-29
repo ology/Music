@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Scales;
 use Music::Voss qw/ powers /;
 
@@ -18,7 +18,7 @@ my $quarter = 'qn';
 my $half    = 'hn';
 my $whole   = 'wn';
 
-my $score = MIDI::Util::setup_score( lead_in => 0, bpm => $bpm );
+my $score = setup_score( lead_in => 0, bpm => $bpm );
 
 $score->synch(
     \&top,
@@ -28,7 +28,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub top {
-    MIDI::Util::set_chan_patch( $score, 0, $top_patch );
+    set_chan_patch( $score, 0, $top_patch );
 
     my ( $scale, $genf ) = get_genf( 'A', 5, 'minor' );
 
@@ -74,7 +74,7 @@ sub get_genf {
 }
 
 sub bottom {
-    MIDI::Util::set_chan_patch( $score, 1, $bottom_patch );
+    set_chan_patch( $score, 1, $bottom_patch );
 
     my %equiv = (
         i   => 'A',
