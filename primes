@@ -4,13 +4,13 @@ use warnings;
 
 use Math::Prime::XS qw(primes);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
-use MIDI::Util;
+use MIDI::Util qw(setup_score);
 use Music::Scales qw(get_scale_MIDI);
 
 my $limit = shift || die "Usage: perl $0 limit scale\n";
 my $name = shift || 'chromatic';
 
-my $score = MIDI::Util::setup_score(bpm => 300);
+my $score = setup_score(bpm => 300);
 
 my @scale = get_scale_MIDI('C', 5, $name);
 
