@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score);
 use Math::BaseConvert;
 use Math::Fibonacci 'series';
 
@@ -19,7 +19,7 @@ Math::BaseConvert::dig( \@scale ); # Set the base digits to the scale notes
 
 my @series = series($limit);  # Get the Fibonacci numbers
 
-my $score = MIDI::Util::setup_score( patch => 42 );
+my $score = setup_score( patch => 42 );
 
 # For each Fibonacci number...
 for my $n ( @series ) {
