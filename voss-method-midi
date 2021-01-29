@@ -6,14 +6,14 @@ use strict;
 use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score set_chan_patch);
 
 my $max = shift || 16;
 
 my @tnotes = qw( C5 Ds5 F5 G5 As5 );
 my @bnotes = qw( C3 F3 G3 C4 );
 
-my $score = MIDI::Util::setup_score();
+my $score = setup_score();
 
 $score->synch(
     \&treble,
@@ -23,7 +23,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub treble {
-    MIDI::Util::set_chan_patch( $score, 0, 0 );
+    set_chan_patch( $score, 0, 0 );
 
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
@@ -34,7 +34,7 @@ sub treble {
 }
 
 sub bass {
-    MIDI::Util::set_chan_patch( $score, 1, 32 );
+    set_chan_patch( $score, 1, 32 );
 
     my @seed = map { rand_range( 0, 1 ) } 1 .. 4;
 
