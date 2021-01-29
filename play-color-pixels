@@ -9,12 +9,12 @@ use Image::Size;
 use Imager;
 use Math::Utils ':utility';
 use lib "$ENV{HOME}/sandbox/MIDI-Util/lib";
-use MIDI::Util; # https://metacpan.org/release/MIDI-Util
+use MIDI::Util qw(setup_score); # https://metacpan.org/release/MIDI-Util
 
 my $file = shift || die "Usage: perl $0 /some/image/file.{jpg,png,etc}\n";
 my $bpm  = shift || 100;
 
-my $score = MIDI::Util::setup_score(bpm => $bpm, patch => 4);
+my $score = setup_score(bpm => $bpm, patch => 4);
 
 my $img = Imager->new;
 $img->read(file => $file)
