@@ -7,7 +7,7 @@ use warnings;
 ##
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score set_chan_patch);
 use List::Util qw( shuffle );
 
 # Major (0) or minor (1)?
@@ -35,7 +35,7 @@ my @patches = qw(
 my $channel = 0;
 
 # Setup the MIDI score
-my $score = MIDI::Util::setup_score( bpm => 120 );
+my $score = setup_score( bpm => 120 );
 
 # Declare the available loops
 my @loops = (
@@ -67,7 +67,7 @@ for my $voice ( 1 .. $voices ) {
         print "Voice: $voice, Channel: $channel\n";
 
         # Increment the channel and patch
-        MIDI::Util::set_chan_patch( $score, $channel++, random_patch() );
+        set_chan_patch( $score, $channel++, random_patch() );
 
         # Call each of the chosen loops
         $_->() for @pick;
