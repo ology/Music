@@ -2,10 +2,9 @@
 use strict;
 use warnings;
 
-use lib '/Users/gene/sandbox/MIDI-Drummer-Tiny/lib';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util);
 use MIDI::Drummer::Tiny;
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score set_chan_patch);
 
 my $bpm = shift || 100;
 
@@ -24,7 +23,7 @@ my $velo1 = 'm';
 my $velo2 = 'ff';
 my $velo3 = 'mf';
 
-my $score = MIDI::Util::setup_score( bpm => $bpm );
+my $score = setup_score( bpm => $bpm );
 
 my $d = MIDI::Drummer::Tiny->new(
     score => $score,
@@ -44,7 +43,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub cycle {
-    MIDI::Util::set_chan_patch( $score, 0, $cycle_patch );
+    set_chan_patch( $score, 0, $cycle_patch );
 
     for ( 1 .. 14 ) {
         $score->n( $eighth, 'C5', $velo1 );
@@ -73,7 +72,7 @@ sub cycle {
 }
 
 sub bass {
-    MIDI::Util::set_chan_patch( $score, 1, $bass_patch );
+    set_chan_patch( $score, 1, $bass_patch );
 
     for ( 1 .. 10 ) {
         $score->n( $dhalf, 'A2', $velo1 );
@@ -93,7 +92,7 @@ sub bass {
 }
 
 sub bird {
-    MIDI::Util::set_chan_patch( $score, 2, $bird_patch );
+    set_chan_patch( $score, 2, $bird_patch );
 
     for my $beat ( 1 .. 19 ) {
         $score->n( $eighth, 'C6', $velo3 );
@@ -112,7 +111,7 @@ sub bird {
 }
 
 sub hihat {
-    MIDI::Util::set_chan_patch( $score, 9 );
+    set_chan_patch( $score, 9 );
 
     for my $beat ( 1 .. 20 ) {
         # Rest for fill
@@ -137,7 +136,7 @@ sub hihat {
 }
 
 sub beat {
-    MIDI::Util::set_chan_patch( $score, 9 );
+    set_chan_patch( $score, 9 );
 
     for my $beat ( 1 .. 20 ) {
         # Fill the 9th time around
