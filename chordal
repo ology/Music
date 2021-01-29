@@ -8,7 +8,7 @@ use Data::Dumper::Compact 'ddc';
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Duration-Partition);
 use MIDI::Drummer::Tiny;
 use MIDI::Praxis::Variation qw(transposition);
-use MIDI::Util;
+use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
 use Music::Note;
 use Music::Scales qw(get_scale_MIDI);
@@ -49,7 +49,7 @@ $d->score->synch(
 $d->write;
 
 sub bottom {
-    MIDI::Util::set_chan_patch($d->score, 0, $bpatch);
+    set_chan_patch($d->score, 0, $bpatch);
 
     my $beats = 4;
 
@@ -102,7 +102,7 @@ sub bottom {
 }
 
 sub top {
-    MIDI::Util::set_chan_patch($d->score, 1, $tpatch);
+    set_chan_patch($d->score, 1, $tpatch);
 
     my $beats = 4;
 
@@ -156,7 +156,7 @@ sub top {
 }
 
 sub chords {
-    MIDI::Util::set_chan_patch($d->score, 2, 0);
+    set_chan_patch($d->score, 2, 0);
 
     my @transp = transposition(12, @bass);
 
