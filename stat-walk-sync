@@ -4,12 +4,10 @@ use warnings;
 
 # To run this, first produce a freq file with note-transition-sync.
 
-use lib '/Users/gene/sandbox/Graph-Weighted/lib';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Graph-Weighted MIDI-Util);
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
-use MIDI::Simple;
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score set_chan_patch);
 use Storable;
 
 my $file    = shift || die "Usage: perl $0 proportional-frequencies.dat [0|1]";
@@ -24,7 +22,7 @@ my @phrases;
 my $data = retrieve($file);
 #use Data::Dumper::Concise;warn 'Data to process: ', Dumper$data;
 
-my $score = MIDI::Util::setup_score( patch => $patch );
+my $score = setup_score( patch => $patch );
 
 for my $track ( keys %$data ) {
     if ( $initial == 0 ) {
@@ -42,7 +40,7 @@ for my $track ( keys %$data ) {
 #use Data::Dumper::Concise;warn Dumper\@phrase;
 
     my $func = sub {
-        MIDI::Util::set_chan_patch( $score, $channel++, $patch );
+        set_chan_patch( $score, $channel++, $patch );
         $score->n( @$_ ) for @phrase;
     };
 
