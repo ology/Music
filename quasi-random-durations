@@ -7,7 +7,7 @@ use v5.20.0;
 use Data::Dumper::Compact 'ddc';
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition);
 use MIDI::Drummer::Tiny;
-use MIDI::Util;
+use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen;
@@ -43,7 +43,7 @@ $d->score->synch(
 $d->write;
 
 sub bottom {
-    MIDI::Util::set_chan_patch($d->score, 0, $bpatch);
+    set_chan_patch($d->score, 0, $bpatch);
 
     # Create a rhythmic phrase generator
     my $mdp = Music::Duration::Partition->new(
@@ -93,7 +93,7 @@ sub bottom {
 }
 
 sub top {
-    MIDI::Util::set_chan_patch($d->score, 1, $tpatch);
+    set_chan_patch($d->score, 1, $tpatch);
 
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
