@@ -12,7 +12,7 @@ use strict;
 use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util; # https://metacpan.org/pod/MIDI::Util
+use MIDI::Util qw(setup_score set_chan_patch); # https://metacpan.org/pod/MIDI::Util
 use Music::Scales;
 
 # User definable parameters
@@ -50,7 +50,7 @@ die "Can't have more than $max patches"
 
 my @scale = get_scale_notes($note, $name);
 
-my $score = MIDI::Util::setup_score(bpm => $bpm);
+my $score = setup_score(bpm => $bpm);
 
 my $channel = 0;
 
@@ -72,7 +72,7 @@ sub roll {
         unless $patch =~ /^\d+$/;
     $channel++
         if $channel == $drums; # Skip the drum channel
-    MIDI::Util::set_chan_patch($score, $channel++, $patch);
+    set_chan_patch($score, $channel++, $patch);
 
     for my $i (1 .. $group) {
         my $roll = int rand @$possibles;
@@ -95,7 +95,7 @@ sub roll {
 sub bass {
     $channel++
         if $channel == $drums; # Skip the drum channel
-    MIDI::Util::set_chan_patch($score, $channel++, $bass);
+    set_chan_patch($score, $channel++, $bass);
 
     for my $i (1 .. $group) {
         print "$channel.$i. Adding bass with patch: $bass\n";
@@ -108,7 +108,7 @@ sub bass {
 }
 
 sub drums {
-    MIDI::Util::set_chan_patch($score, $drums, $hihat);
+    set_chan_patch($score, $drums, $hihat);
 
     for my $i (1 .. $group) {
         for my $duration (('qn') x ($size * 4)) { # Measures of quarter-notes
