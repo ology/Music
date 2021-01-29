@@ -2,17 +2,14 @@
 use strict;
 use warnings;
 
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-Duration-Partition Music-Interval-Barycentric Music-ToRoman);
+
 use AI::Genetic;
 use List::Util qw/ uniq /;
-use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
-use MIDI::Util; # https://metacpan.org/release/MIDI-Util
-use lib $ENV{HOME} . '/sandbox/Music-ToRoman/lib';
-use lib $ENV{HOME} . '/sandbox/Music-Cadence/lib';
+use MIDI::Util qw(setup_score set_chan_patch); # https://metacpan.org/release/MIDI-Util
 use Music::Cadence; # https://metacpan.org/release/Music-Cadence
 use Music::Chord::Namer 'chordname';
-use lib $ENV{HOME} . '/sandbox/Music-Duration-Partition/lib';
 use Music::Duration::Partition; # https://metacpan.org/release/Music-Duration-Partition
-use lib $ENV{HOME} . '/sandbox/Music-Interval-Barycentric/lib';
 use Music::Interval::Barycentric; # https://metacpan.org/release/Music-Interval-Barycentric
 use Music::Note;
 use Music::Scales;
@@ -38,7 +35,7 @@ my $sizes = {
 
 my @fittest = evo($max);
 
-my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
+my $score = setup_score(bpm => $bpm, patch => $patch);
 
 my $mc = Music::Cadence->new(octave => 5);
 
@@ -115,7 +112,7 @@ sub add_rest {
 }
 
 sub bass {
-    MIDI::Util::set_chan_patch($score, 1, 42);
+    set_chan_patch($score, 1, 42);
 
     my @scale = get_scale_MIDI('C', 3, 'pentatonic');
 
@@ -128,7 +125,7 @@ sub bass {
 }
 
 sub drums {
-    MIDI::Util::set_chan_patch($score, 9, 44);
+    set_chan_patch($score, 9, 44);
 
     for my $duration (('qn') x $count) { # Measures of quarter-notes
         $score->n($duration, 44); # hi-hat
