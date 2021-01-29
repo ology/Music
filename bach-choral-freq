@@ -6,7 +6,7 @@ use warnings;
 # Then: perl % ~/Documents/data/jsbach_chorals_harmony/bach-choral-000206b_.csv
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score);
 
 use Text::CSV;
 use Graph::Weighted;
@@ -31,7 +31,7 @@ my @notes = collect_notes( $g, $note_number );
 
 my ( $melody, $bassline, $chords ) = split_records( $full_score, @notes );
 
-my $score = MIDI::Util::setup_score();
+my $score = setup_score();
 
 my @parts = (
     \&melody,
