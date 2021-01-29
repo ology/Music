@@ -7,7 +7,7 @@ use warnings;
 
 use List::Util qw(uniq);
 use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score);
 use Math::BaseConvert;
 use Math::Prime::XS qw(primes);
 use Music::Scales;
@@ -32,7 +32,7 @@ my $notes = join '|', @scale;  # "OR regular expression" of scale notes
 
 Math::BaseConvert::dig(\@scale); # Set the base digits to the scale notes
 
-my $score = MIDI::Util::setup_score(patch => $patch, bpm => $bpm);
+my $score = setup_score(patch => $patch, bpm => $bpm);
 
 my $note_count = 0;
 my $phrase_count = 0;
