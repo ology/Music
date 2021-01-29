@@ -5,10 +5,9 @@
 use strict;
 use warnings;
 
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-ScaleNote);
+use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Chord::Note;
-use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
 use Music::ScaleNote;
 use Music::Scales;
 
@@ -56,7 +55,7 @@ my %note_map = map { $cn->scale($_) => $_ } @bscale;
 @bscale = map { $_ . $oct_range->[0] } @bscale;
 #warn(__PACKAGE__,' ',__LINE__," BScale: @bscale",,"\n");
 
-my $score = MIDI::Util::setup_score( lead_in => 0, bpm => $bpm );
+my $score = setup_score( lead_in => 0, bpm => $bpm );
 
 # Instantiate a scale-note manipulator
 my $msn = Music::ScaleNote->new(
@@ -74,7 +73,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub top {
-    MIDI::Util::set_chan_patch( $score, 0, $trebp );
+    set_chan_patch( $score, 0, $trebp );
 
     my @chord = @$init_chord;
 
@@ -120,7 +119,7 @@ sub mutate {
 }
 
 sub bottom {
-    MIDI::Util::set_chan_patch( $score, 1, $bassp );
+    set_chan_patch( $score, 1, $bassp );
 #    $score->Volume(90);
 
     my $note = $bscale[0];
