@@ -4,9 +4,8 @@ use warnings;
 
 use AI::Genetic;
 use List::Util qw/ uniq /;
-use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
-use MIDI::Util; # https://metacpan.org/release/MIDI-Util
-use lib $ENV{HOME} . '/sandbox/Music-Interval-Barycentric/lib';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Interval-Barycentric);
+use MIDI::Util qw(setup_score set_chan_patch); # https://metacpan.org/release/MIDI-Util
 use Music::Interval::Barycentric; # https://metacpan.org/release/Music-Interval-Barycentric
 use Music::Chord::Namer 'chordname';
 use Music::Note;
@@ -32,7 +31,7 @@ for my $fit (@fittest) {
     printf "[%d,%d,%d] => (%s,%s,%s) => %s\n", @$fit, @named, scalar chordname(@named);
 }
 
-my $score = MIDI::Util::setup_score(bpm => $bpm, patch => $patch);
+my $score = setup_score(bpm => $bpm, patch => $patch);
 
 my $count = 0;
 
@@ -72,7 +71,7 @@ sub fit {
 }
 
 sub drums {
-    MIDI::Util::set_chan_patch($score, 9, 44);
+    set_chan_patch($score, 9, 44);
 
     for my $duration (('qn') x $count) { # Measures of quarter-notes
         $score->n($duration, 44, 'm'); # hi-hat
