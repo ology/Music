@@ -7,7 +7,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music
 
 use Data::Dumper::Compact 'ddc';
 use MIDI::Drummer::Tiny;
-use MIDI::Util;
+use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
 use Music::Scales;
 use Music::VoiceGen;
@@ -73,7 +73,7 @@ sub beat {
 }
 
 sub bass {
-    MIDI::Util::set_chan_patch($d->score, 0, $bottom_patch);
+    set_chan_patch($d->score, 0, $bottom_patch);
 
     my $mdp = Music::Duration::Partition->new(
         size    => 4,
