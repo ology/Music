@@ -2,9 +2,8 @@
 use strict;
 use warnings;
 
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
-use lib '/Users/gene/sandbox/Music-Cadence/lib';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToRoman);
+use MIDI::Util qw(setup_score);
 use Music::Cadence;
 use Music::Note;
 use Music::Scales;
@@ -31,7 +30,7 @@ my $voice = Music::VoiceGen->new(
 );
 #use Data::Dumper; warn Dumper $voice->possibles; exit;
 
-my $score = MIDI::Util::setup_score();
+my $score = setup_score();
 
 my $mc = Music::Cadence->new(
     key    => $mn->format('isobase'),
