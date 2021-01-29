@@ -5,12 +5,10 @@ use warnings;
 # Write-up:
 # http://techn.ology.net/musical-random-walks-over-weighted-graphs
 
-use lib '/Users/gene/sandbox/Graph-Weighted/lib';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Graph-Weighted MIDI-Util);
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
-use MIDI::Simple;
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score);
 
 my $n = shift || 4; # Number of notes
 my $initial = shift // 0; # Initial graph node
@@ -63,7 +61,7 @@ $velocity->populate(
 my $notes = collect_notes( $n, $initial, $velocity, $duration, $treble, $bass );
 
 # Invoke MIDI
-my $score = MIDI::Util::setup_score( patch => 42 );
+my $score = setup_score( patch => 42 );
 
 # Add notes to the score
 $score->n( @$_ ) for @$notes;
