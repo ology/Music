@@ -2,9 +2,9 @@
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToRoman);
 use Music::Cadence; # https://metacpan.org/release/Music-Cadence
-use MIDI::Util; # https://metacpan.org/release/MIDI-Util
+use MIDI::Util qw(setup_score); # https://metacpan.org/release/MIDI-Util
 use Music::Chord::Note;
 use Music::Scales;
 
@@ -42,7 +42,7 @@ my $mc = Music::Cadence->new(
     octave => 4,
 );
 
-my $score = MIDI::Util::setup_score( bpm => $bpm );
+my $score = setup_score( bpm => $bpm );
 
 A();
 A();
