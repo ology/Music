@@ -3,8 +3,7 @@ use strict;
 use warnings;
 
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
-use MIDI::Simple;
+use MIDI::Util qw(setup_score);
 use Music::AtonalUtil;
 
 my $transform = shift || ''; # Can be: invert, retrograde, rotate, transpose
@@ -38,7 +37,7 @@ my %name = int2name(@notes);
 my @pitches = map { $name{$_} } @sample;
 print "@pitches\n";
 
-my $score = MIDI::Util::setup_score( patch => 0 );
+my $score = setup_score( patch => 0 );
 
 $score->n( 'qn', $_ ) for @pitches;
 
