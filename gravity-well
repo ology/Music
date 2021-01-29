@@ -5,7 +5,7 @@ use warnings;
 # Prefer my local libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Cadence Music-ToRoman);
 
-use MIDI::Util;
+use MIDI::Util qw(setup_score set_chan_patch);
 use MIDI::Drummer::Tiny;
 use Music::Cadence;
 use Music::Scales;
@@ -29,7 +29,7 @@ my $quarter = 'qn';
 my $half    = 'hn';
 my $whole   = 'wn';
 
-my $score = MIDI::Util::setup_score( lead_in => 0, bpm => $bpm );
+my $score = setup_score( lead_in => 0, bpm => $bpm );
 
 $score->synch(
     \&top,
@@ -40,7 +40,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub top {
-    MIDI::Util::set_chan_patch( $score, 0, $top_patch );
+    set_chan_patch( $score, 0, $top_patch );
 
     my ( $scale, $genf ) = get_genf( $note, 5, $top_scale );
 
@@ -103,7 +103,7 @@ sub top {
 }
 
 sub bottom {
-    MIDI::Util::set_chan_patch( $score, 1, $bottom_patch );
+    set_chan_patch( $score, 1, $bottom_patch );
 
     s/4/3/ for @$bottom_notes;
 
