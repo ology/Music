@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-ScaleNote);
-use MIDI::Util;
+use MIDI::Util qw(setup_score set_chan_patch);
 use Music::ScaleNote;
 
 my $max = shift || 16;
@@ -18,7 +18,7 @@ my $bassp = shift || 35; # Bass patch
 my $half  = 'hn';
 my $whole = 'wn';
 
-my $score = MIDI::Util::setup_score();
+my $score = setup_score();
 
 my $msn = Music::ScaleNote->new(
     scale_note  => 'C',
@@ -35,7 +35,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub top {
-    MIDI::Util::set_chan_patch( $score, 0, $trebp );
+    set_chan_patch( $score, 0, $trebp );
 
 #    $score->r('hn');
 
@@ -71,7 +71,7 @@ sub mutate {
 }
 
 sub bottom {
-    MIDI::Util::set_chan_patch( $score, 1, $bassp );
+    set_chan_patch( $score, 1, $bassp );
 
     for my $n ( 1 .. $max / 4 ) {
         $score->n( $whole, $bass[ int rand @bass ] );
