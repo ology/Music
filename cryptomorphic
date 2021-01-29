@@ -7,7 +7,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music
 
 use List::Util qw/ shuffle /;
 use MIDI::Drummer::Tiny; # https://metacpan.org/pod/MIDI::Drummer::Tiny
-use MIDI::Util; # https://metacpan.org/pod/MIDI::Util
+use MIDI::Util qw(setup_score set_chan_patch); # https://metacpan.org/pod/MIDI::Util
 use Music::Duration::Partition; # https://metacpan.org/pod/Music::Duration::Partition
 use Music::Scales;
 use Music::VoiceGen;
@@ -21,7 +21,7 @@ my $mod  = shift || 2; # Default: alternate
 my $top_patch    = 0;
 my $bottom_patch = 42;
 
-my $score = MIDI::Util::setup_score( bpm => $bpm );
+my $score = setup_score( bpm => $bpm );
 
 $score->synch(
     \&melody,
@@ -40,7 +40,7 @@ sub beat {
 }
 
 sub melody {
-    MIDI::Util::set_chan_patch( $score, 0, $top_patch );
+    set_chan_patch( $score, 0, $top_patch );
 
     my $mdp = Music::Duration::Partition->new(
         size => $size,
@@ -67,7 +67,7 @@ sub melody {
 }
 
 sub bass {
-    MIDI::Util::set_chan_patch( $score, 1, $bottom_patch );
+    set_chan_patch( $score, 1, $bottom_patch );
 
     my $mdp = Music::Duration::Partition->new(
         size => $size,
