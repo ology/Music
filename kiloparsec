@@ -8,7 +8,7 @@ use warnings;
 # Prefer my local library
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
 
-use MIDI::Util;
+use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Scales qw/ get_scale_notes /;
 use Music::Voss qw/ powers /;
 
@@ -28,7 +28,7 @@ my $quarter = 'qn';
 my $half    = 'hn';
 my $whole   = 'wn';
 
-my $score = MIDI::Util::setup_score( lead_in => 0, bpm => $bpm );
+my $score = setup_score( lead_in => 0, bpm => $bpm );
 
 $score->synch(
     \&alto,
@@ -39,7 +39,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub alto {
-    MIDI::Util::set_chan_patch( $score, 0, $alto_patch );
+    set_chan_patch( $score, 0, $alto_patch );
 
     my ( $scale, $genf ) = get_genf( $scale_note, 5, $alto_scale_name );
 
@@ -66,7 +66,7 @@ sub alto {
 }
 
 sub tenor {
-    MIDI::Util::set_chan_patch( $score, 1, $tenor_patch );
+    set_chan_patch( $score, 1, $tenor_patch );
 
     my ( $scale, $genf ) = get_genf( $scale_note, 4, $tenor_scale_name );
 
@@ -95,7 +95,7 @@ sub tenor {
 }
 
 sub baritone {
-    MIDI::Util::set_chan_patch( $score, 2, $baritone_patch );
+    set_chan_patch( $score, 2, $baritone_patch );
 
     my ( $scale, $genf ) = get_genf( $scale_note, 3, $baritone_scale_name );
 
