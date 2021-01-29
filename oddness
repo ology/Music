@@ -2,12 +2,11 @@
 use strict;
 use warnings;
 
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition);
+
 use List::Util qw/ shuffle /;
-use lib '/Users/gene/sandbox/MIDI-Drummer-Tiny/lib';
 use MIDI::Drummer::Tiny;
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
-use lib '/Users/gene/sandbox/Music-Duration-Partition/lib';
+use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Duration::Partition;
 use Music::Scales;
 use Music::VoiceGen;
@@ -26,7 +25,7 @@ my $v   = 'E3';
 my $vi  = 'F3';
 my $vii = 'G3';
 
-my $score = MIDI::Util::setup_score( bpm => $bpm );
+my $score = setup_score( bpm => $bpm );
 
 $score->synch(
     \&top,
@@ -37,7 +36,7 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub top {
-    MIDI::Util::set_chan_patch( $score, 0, $top_patch );
+    set_chan_patch( $score, 0, $top_patch );
 
     my $mdp = Music::Duration::Partition->new(
         size => $size,
@@ -94,7 +93,7 @@ sub beat {
 }
 
 sub bottom {
-    MIDI::Util::set_chan_patch( $score, 1, $bottom_patch );
+    set_chan_patch( $score, 1, $bottom_patch );
 #    $score->Volume(30);
 
     for my $n ( 1 .. $max ) {
