@@ -13,6 +13,7 @@ use Music::ToRoman;
 
 my $note = shift || 'C';
 my $mode = shift || 'ionian'; # dorian, mixolydian, etc.
+my $octave = shift || 4;
 
 # Get a chord map of major/minor designations
 my $mtr = Music::ToRoman->new(
@@ -32,14 +33,14 @@ my $mcn = Music::Chord::Note->new;
 
 # Add each chord to the score
 for my $c (@chord_scale) {
-    my @chord = $mcn->chord_with_octave($c, 4);
+    my @chord = $mcn->chord_with_octave($c, $octave);
     @chord = midi_format(@chord);
     print ddc(\@chord);
     $score->n('wn', @chord);
 }
 
 # Add a resolving chord to the score
-my @chord = $mcn->chord_with_octave($chord_scale[0], 4);
+my @chord = $mcn->chord_with_octave($chord_scale[0], $octave);
 @chord = midi_format(@chord);
 print ddc(\@chord);
 $score->n('wn', @chord);
