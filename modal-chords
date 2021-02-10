@@ -12,7 +12,7 @@ use Music::Scales qw(get_scale_notes);
 use Music::ToRoman;
 
 my $note = shift || 'C';
-my $mode = shift || 'ionian'; # dorian, mixolydian, etc.
+my $mode = shift || 'ionian'; # ionian, dorian, phrygian, lydian, mixolydian, aeolian, locrian
 my $octave = shift || 4;
 
 # Get a chord map of major/minor designations
