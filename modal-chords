@@ -19,7 +19,7 @@ my $mtr = Music::ToRoman->new(
     scale_note => $note,
     scale_name => $mode,
 );
-my @chords = map { m/^[A-Z]+$/ ? '' : 'm' } $mtr->get_scale_mode;
+my @chords = map { m/vii/ ? 'dim' : m/^[A-Z]+$/ ? '' : 'm' } $mtr->get_scale_mode;
 
 my @scale = get_scale_notes($note, $mode);
 
