@@ -6,7 +6,7 @@ use warnings;
 # This is a randomized re-orchestration of Terry Riley's venerable composition, "In C."
 ##
 
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score set_chan_patch);
 use List::Util qw( shuffle );
 
