@@ -39,7 +39,7 @@ my $score = setup_score( bpm => 120 );
 
 # Declare the available loops
 my @loops = (
-    \&loop1,  \&loop2,  \&loop3,  \&loop4,  \&loop5,  \&loop6,  \&loop7,  \&loop8,  \&loop9, \&loop10,
+    \&loop1,  \&loop2,  \&loop3,  \&loop4,  \&loop5,  \&loop6,  \&loop7,  \&loop8,  \&loop9,  \&loop10,
     \&loop11, \&loop12, \&loop13, \&loop14, \&loop15, \&loop16, \&loop17, \&loop18, \&loop19, \&loop20,
     \&loop21, \&loop22, \&loop23, \&loop24, \&loop25, \&loop26, \&loop27, \&loop28, \&loop29, \&loop30,
     \&loop31, \&loop32, \&loop33, \&loop34, \&loop35, \&loop36, \&loop37, \&loop38, \&loop39, \&loop40,
