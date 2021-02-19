@@ -38,7 +38,7 @@ my $channel = 0;
 my $score = setup_score( bpm => 120 );
 
 # Declare the available loops
-my @loops = map { my $n = 'loop' . $_; \&$n } 1 .. 53;
+my @loops = map { my $sub = 'loop' . $_; \&$sub } 1 .. 53;
 
 # Limit the number of loops to be played to the given max
 my @pick;
