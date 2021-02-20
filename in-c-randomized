@@ -82,9 +82,7 @@ sub random_patch {
 
 sub loop {
     my ($code) = @_;
-    for ( 1 .. rand4() ) {
-        $code->();
-    }
+    $code->() for 1 .. rand4();
 }
 
 # Available loops:
