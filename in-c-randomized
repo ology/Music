@@ -83,16 +83,14 @@ sub random_patch {
 # Available loops:
 
 sub loop1 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'qn', $minor ? 'Ds4' : 'E4' ) for 1 .. 3;
     }
 }
 
 sub loop2 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'F4' );
@@ -101,8 +99,7 @@ sub loop2 {
 }
 
 sub loop3 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->r('en');
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
@@ -112,8 +109,7 @@ sub loop3 {
 }
 
 sub loop4 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->r('en');
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
@@ -123,8 +119,7 @@ sub loop4 {
 }
 
 sub loop5 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'F4' );
@@ -134,8 +129,7 @@ sub loop5 {
 }
 
 sub loop6 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'wn', 'C5' );
         $score->n( 'wn', 'C5' );
@@ -143,8 +137,7 @@ sub loop6 {
 }
 
 sub loop7 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->r('qn') for 1 .. 3;
         $score->r('en');
@@ -156,8 +149,7 @@ sub loop7 {
 }
 
 sub loop8 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dwn', 'G4' );
         $score->n( 'wn', 'F4' );
@@ -166,8 +158,7 @@ sub loop8 {
 }
 
 sub loop9 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'G4' );
@@ -177,8 +168,7 @@ sub loop9 {
 }
 
 sub loop10 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'G4' );
@@ -186,8 +176,7 @@ sub loop10 {
 }
 
 sub loop11 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -199,8 +188,7 @@ sub loop11 {
 }
 
 sub loop12 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', 'F4' );
         $score->n( 'en', 'G4' );
@@ -210,8 +198,7 @@ sub loop12 {
 }
 
 sub loop13 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'den', 'G4' );
@@ -225,8 +212,7 @@ sub loop13 {
 }
 
 sub loop14 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'wn', 'C5' );
         $score->n( 'wn', $minor ? 'As4' : 'B4' );
@@ -236,8 +222,7 @@ sub loop14 {
 }
 
 sub loop15 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->r('den');
@@ -246,8 +231,7 @@ sub loop15 {
 }
 
 sub loop16 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
@@ -257,8 +241,7 @@ sub loop16 {
 }
 
 sub loop17 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'C5' );
@@ -270,8 +253,7 @@ sub loop17 {
 }
 
 sub loop18 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'sn', 'Fs4' );
@@ -283,8 +265,7 @@ sub loop18 {
 }
 
 sub loop19 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->r('dqn');
         $score->n( 'dqn', 'G5' );
@@ -292,8 +273,7 @@ sub loop19 {
 }
 
 sub loop20 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'sn', 'Fs4' );
@@ -309,16 +289,14 @@ sub loop20 {
 }
 
 sub loop21 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dhn', 'Fs4' );
     }
 }
 
 sub loop22 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dqn', $minor ? 'Ds4' : 'E4' ) for 1 .. 5;
         $score->n( 'dqn', 'Fs4' );
@@ -329,8 +307,7 @@ sub loop22 {
 }
 
 sub loop23 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'dqn', 'Fs4' ) for 1 .. 5;
@@ -341,8 +318,7 @@ sub loop23 {
 }
 
 sub loop24 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'Fs4' );
@@ -353,8 +329,7 @@ sub loop24 {
 }
 
 sub loop25 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'Fs4' );
@@ -365,8 +340,7 @@ sub loop25 {
 }
 
 sub loop26 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', $minor ? 'Ds4' : 'E4' );
         $score->n( 'en', 'Fs4' );
@@ -377,8 +351,7 @@ sub loop26 {
 }
 
 sub loop27 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'sn', 'Fs4' );
@@ -395,8 +368,7 @@ sub loop27 {
 }
 
 sub loop28 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'sn', 'Fs4' );
@@ -408,8 +380,7 @@ sub loop28 {
 }
 
 sub loop29 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dhn', $minor ? 'Ds4' : 'E4' );
         $score->n( 'dhn', 'G4' );
@@ -418,16 +389,14 @@ sub loop29 {
 }
 
 sub loop30 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dwn', 'C5' );
     }
 }
 
 sub loop31 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', 'F4' );
@@ -439,8 +408,7 @@ sub loop31 {
 }
 
 sub loop32 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -454,8 +422,7 @@ sub loop32 {
 }
 
 sub loop33 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', 'F4' );
@@ -464,8 +431,7 @@ sub loop33 {
 }
 
 sub loop34 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', 'F4' );
@@ -473,8 +439,7 @@ sub loop34 {
 }
 
 sub loop35 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -509,8 +474,7 @@ sub loop35 {
 }
 
 sub loop36 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -522,8 +486,7 @@ sub loop36 {
 }
 
 sub loop37 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -531,8 +494,7 @@ sub loop37 {
 }
 
 sub loop38 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -541,8 +503,7 @@ sub loop38 {
 }
 
 sub loop39 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'G4' );
@@ -554,8 +515,7 @@ sub loop39 {
 }
 
 sub loop40 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'F4' );
@@ -563,8 +523,7 @@ sub loop40 {
 }
 
 sub loop41 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'As4' : 'B4' );
         $score->n( 'sn', 'G4' );
@@ -572,8 +531,7 @@ sub loop41 {
 }
 
 sub loop42 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'wn', 'C5' );
         $score->n( 'wn', $minor ? 'As4' : 'B4' );
@@ -583,8 +541,7 @@ sub loop42 {
 }
 
 sub loop43 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F5' );
         $score->n( 'sn', $minor ? 'Ds4' : 'E5' );
@@ -599,8 +556,7 @@ sub loop43 {
 }
 
 sub loop44 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'en', 'F5' );
         $score->n( 'en', $minor ? 'Ds4' : 'E5' );
@@ -611,8 +567,7 @@ sub loop44 {
 }
 
 sub loop45 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'qn', 'D5' );
         $score->n( 'qn', 'D5' );
@@ -621,8 +576,7 @@ sub loop45 {
 }
 
 sub loop46 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', 'D5' );
@@ -642,8 +596,7 @@ sub loop46 {
 }
 
 sub loop47 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'D5' );
         $score->n( 'sn', 'C5' );
@@ -652,8 +605,7 @@ sub loop47 {
 }
 
 sub loop48 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'dwn', 'G4' );
         $score->n( 'wn', 'G4' );
@@ -663,8 +615,7 @@ sub loop48 {
 }
 
 sub loop49 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -676,8 +627,7 @@ sub loop49 {
 }
 
 sub loop50 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -685,8 +635,7 @@ sub loop50 {
 }
 
 sub loop51 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'F4' );
         $score->n( 'sn', 'G4' );
@@ -695,8 +644,7 @@ sub loop51 {
 }
 
 sub loop52 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', 'G4' );
         $score->n( 'sn', $minor ? 'Gs4' : 'As4' );
@@ -704,8 +652,7 @@ sub loop52 {
 }
 
 sub loop53 {
-    my $me = (caller(0))[3];
-    print "\t$me\n";
+    print "\t", (caller(0))[3], "\n";
     for ( 1 .. rand4() ) {
         $score->n( 'sn', $minor ? 'Gs4' : 'As4' );
         $score->n( 'sn', 'G4' );
