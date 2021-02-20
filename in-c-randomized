@@ -22,14 +22,8 @@ my $shuffle = shift // 0;
 # Set the number of voices
 my $voices = shift || 4;
 
-# General MIDI patches that are audible and aren't horrible
-my @patches = qw(
-    0 1 2 4 5 7 8 9
-    13 16 21 24 25 26
-    32 34 35 40 42 60
-    68 69 70 71 72 73
-    74 79
-);
+# General MIDI patches that are tones
+my @patches = 0 .. 95;
 
 # Initialize the MIDI channel
 my $channel = 0;
