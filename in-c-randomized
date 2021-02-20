@@ -41,13 +41,7 @@ my $score = setup_score( bpm => 120 );
 my @loops = map { my $sub = 'loop' . $_; \&$sub } 1 .. 53;
 
 # Limit the number of loops to be played to the given max
-my @pick;
-if ( $shuffle ) {
-    @pick = ( shuffle @loops )[ 0 .. $max - 1 ];
-}
-else {
-    @pick = @loops[ 0 .. $max - 1 ];
-}
+my @pick = $shuffle ? (shuffle @loops)[0 .. $max - 1] : @loops[0 .. $max - 1];
 
 # Generate a phrase for each patch
 my @phrases;
