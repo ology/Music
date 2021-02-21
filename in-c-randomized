@@ -32,6 +32,8 @@ my @patches =
 #    (0 .. 95)
 ;
 
+die 'More voices than available patches' if $voices > @patches;
+
 # Initialize the MIDI channel
 my $channel = 0;
 
