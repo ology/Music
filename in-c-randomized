@@ -81,6 +81,7 @@ sub random_patch {
     return $patches[ int rand @patches ];
 }
 
+# The master looping routine
 sub loop {
     my ($code) = @_;
     my $n = rand4();
