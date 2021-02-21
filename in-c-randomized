@@ -71,7 +71,7 @@ $score->synch(@phrases);
 # Write the score to a MIDI file
 $score->write_score("$0.mid");
 
-# Return a number between 1 and 4
+# Return an integer between 1 and 4
 sub rand4 {
     return 1 + int rand 4;
 }
