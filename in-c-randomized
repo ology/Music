@@ -83,7 +83,9 @@ sub random_patch {
 
 sub loop {
     my ($code) = @_;
-    $code->() for 1 .. rand4();
+    my $i = rand4();
+    print "\t\t$i times\n";
+    $code->() for 1 .. $i;
 }
 
 # Available loops:
