@@ -4,7 +4,7 @@ use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToRoman);
 use Music::Cadence; # https://metacpan.org/release/Music-Cadence
-use MIDI::Util qw(setup_score); # https://metacpan.org/release/MIDI-Util
+use MIDI::Util qw(midi_format setup_score); # https://metacpan.org/release/MIDI-Util
 use Music::Chord::Note;
 use Music::Scales;
 
@@ -26,12 +26,7 @@ my @chords = (
     [$cn->chord($scale[5] . ($name eq M ? 'm' : ''))],
     [$cn->chord($scale[6] . ($name eq M ? 'dim' : ''))],
 );
-for my $chord (@chords) { # Convert from ISO to MIDI format
-    for my $n (@$chord) {
-        $n =~ s/b/f/;
-        $n =~ s/#/s/;
-    }
-}
+@chords = map { [ midi_format(@$_) ] } @chords;
 
 my $half  = 'hn';
 my $whole = 'wn';
@@ -65,11 +60,13 @@ sub a1 {
             type      => 'deceptive',
             variation => ($n % 2 ? 1 : 2),
         );
+        @$cadence = map { [ midi_format(@$_) ] } @$cadence;
         $score->n( $half, @$_ ) for @$cadence;
         $cadence = $mc->cadence(
             type    => 'half',
             leading => $n,
         );
+        @$cadence = map { [ midi_format(@$_) ] } @$cadence;
         $score->n( $whole, @$_ ) for @$cadence;
     }
     if ( $i % 2 == 0 ) {
@@ -87,6 +84,7 @@ sub a2 {
         type      => 'imperfect',
         inversion => { 2 => 1 },
     );
+    @$cadence = map { [ midi_format(@$_) ] } @$cadence;
     $score->n( $whole, @$_ ) for @$cadence;
     $score->n( $whole, @{ $chords[2] } );
     $score->n( $whole, @{ $chords[1] } );
