@@ -112,6 +112,8 @@ sub bottom {
             }
         }
     }
+
+    $d->score->n('wn', $transp[0]);
 }
 
 sub top {
