@@ -17,7 +17,20 @@ my $note   = shift || 'C';
 my $bscale = shift || 'pentatonic';
 my $tscale = shift || 'major';
 my $bpatch = shift || 35;
-my $tpatch = shift || 69;
+
+# General MIDI patches that are tones
+my @patches =
+    # soft:
+    qw(4 5 12 16 20 21 32 33 35 39 40 42 44 46 49 50 51 52 53 58 65 68 69 70 72 73 74 75 76 77 85 89 90 91 93 94 95)
+    # hard:
+#    qw(0 7 8 13 17 18 25 27 28 29 31 41 48 54 56 59 66 67 71 83 84)
+    # all:
+#    (0 .. 95)
+;
+
+my $rand_patch = sub { $patches[int rand @patches] };
+
+my $tpatch = $rand_patch->();
 
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
@@ -44,7 +57,7 @@ sub drums {
 }
 
 sub progression {
-    set_chan_patch($d->score, 2, 0);
+    set_chan_patch($d->score, 2, $rand_patch->());
 
     my @pitches = get_scale_notes($note, $bscale);
     @notes = map { $pitches[int rand @pitches] } 1 .. 4;
