@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 use Math::BaseConvert;
 use Math::Fibonacci 'series';
@@ -30,7 +30,7 @@ for my $n ( @series ) {
     printf "%d => %s (%d)\n", $n, join( ' ', @phrase ), scalar(@phrase);
 
     for my $i ( @phrase ) {
-        $score->n($i);  # Add each note of the phrase to the MIDI score
+        $score->n('qn', $i);  # Add each note of the phrase to the MIDI score
     }
 }
 
