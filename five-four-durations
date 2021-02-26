@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Duration-Partition);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Duration Music-Duration-Partition);
 use MIDI::Drummer::Tiny;
 use MIDI::Praxis::Variation 'diminution';
 use MIDI::Util qw(set_chan_patch);
