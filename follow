@@ -5,9 +5,6 @@
 # perl follow 9 120 '4,16,69,70' pminor A
 # perl follow 9 100 '4,16,69' dorian D
 
-# General MIDI patches that are audible and aren't horrible:
-# 0 1 2 4 5 7 8 9 13 16 21 24 25 26 32 34 35 40 42 60 68 69 70 71 72 73 74 79
-
 use strict;
 use warnings;
 
@@ -18,7 +15,7 @@ use Music::Scales;
 # User definable parameters
 my $group   = shift || 1; # Groups of 3 bars
 my $bpm     = shift || 100; # Beats per minute
-my $patches = shift || '4,16,69,70'; # See above for good ones
+my $patches = shift || '89,90,91,93,95'; # 4,16,69,70
 my $name    = shift || 'pentatonic'; # Scale name
 my $note    = shift || 'C'; # Bf, Cs, etc.
 
