@@ -105,7 +105,7 @@ sub bass {
 }
 
 sub drums {
-    set_chan_patch($score, $drums, $hihat);
+    set_chan_patch($score, $drums, 0);
 
     for my $i (1 .. $group) {
         for my $duration (('qn') x ($size * 4)) { # Measures of quarter-notes
