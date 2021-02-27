@@ -20,12 +20,12 @@ my $name    = shift || 'pentatonic'; # Scale name
 my $note    = shift || 'C'; # Bf, Cs, etc.
 
 # Global parameters
-my $size   = 3;  # The number of measures in a phrase
-my $drums  = 9;  # Drum channel
-my $max    = 14; # Maximum number of channels allowed
 my $octave = 4;  # Octave number to append to notes
 my $bass   = 35; # Fretless bass patch
 my $hihat  = 44; # Pedal hi-hat patch
+my $size   = 3;  # The number of measures in a phrase
+my $drums  = 9;  # Drum channel
+my $max    = 14; # Maximum number of channels allowed
 
 # 9 possible 3 bar phrases
 my $possibles = [         #   |   |   |   |  <- 3 measures
