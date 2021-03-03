@@ -15,9 +15,10 @@ use Music::Scales qw(get_scale_notes get_scale_MIDI);
 my $bars   = shift || 16;
 my $bpm    = shift || 105;
 my $note   = shift || 'C';
-my $tscale = shift || 'major';
-my $bscale = shift || 'pentatonic';
+my $tscale = shift || 'major'; # or minor, etc
 my $bpatch = shift || 35;
+
+my $bscale = $tscale eq 'major' ? 'pentatonic' : 'pminor';
 
 # General MIDI patches that are tones
 my @patches =
