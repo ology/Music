@@ -65,7 +65,17 @@ sub progression {
     set_chan_patch($d->score, 2, $ppatch);
 
     my @pitches = get_scale_notes($note, $bscale); # Use the bass scale to generate the progression
-    @notes = map { $pitches[int rand @pitches] } 1 .. 4;
+
+    # Get a list of notes that don't repeat
+    my $last = '';
+    for my $n (1 .. 4) {
+        my $note = $pitches[int rand @pitches];
+        while ($last eq $note) {
+            $note = $pitches[int rand @pitches];
+        }
+        push @notes, $note;
+        $last = $note;
+    }
 
     my $chords;
     if ($tscale eq 'major') {
