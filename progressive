@@ -3,10 +3,11 @@ use strict;
 use warnings;
 
 use Data::Dumper::Compact qw(ddc);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Chord-Progression Music-Duration Music-Duration-Partition);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Cadence Music-Chord-Progression Music-Duration Music-Duration-Partition Music-ToRoman);
 use MIDI::Drummer::Tiny;
 use MIDI::Praxis::Variation qw(transposition);
 use MIDI::Util qw(set_chan_patch midi_format);
+use Music::Cadence;
 use Music::Chord::Progression;
 use Music::Duration::Partition;
 use Music::Scales qw(get_scale_notes get_scale_MIDI);
@@ -14,7 +15,6 @@ use Music::Scales qw(get_scale_notes get_scale_MIDI);
 my $bars   = shift || 16;
 my $bpm    = shift || 105;
 my $note   = shift || 'C';
-my $bscale = shift || 'pentatonic';
 my $tscale = shift || 'major';
 my $bpatch = shift || 35;
 
@@ -60,7 +60,7 @@ sub drums {
 sub progression {
     set_chan_patch($d->score, 2, $ppatch);
 
-    my @pitches = get_scale_notes($note, $bscale);
+    my @pitches = get_scale_notes($note, $tscale);
     @notes = map { $pitches[int rand @pitches] } 1 .. 4;
 
     my $chords;
@@ -88,6 +88,17 @@ sub progression {
         }
         print $x, ': ', ddc($notes);
     }
+    my $mc = Music::Cadence->new(
+        key    => $note,
+        scale  => $tscale,
+        octave => 4,
+    );
+    my $cadence = $mc->cadence;
+    @$cadence = map { [ midi_format(@$_) ] } @$cadence;
+    $d->score->n('wn', @$_) for @$cadence;
+    $cadence = $mc->cadence(type => 'plagal');
+    @$cadence = map { [ midi_format(@$_) ] } @$cadence;
+    $d->score->n('wn', @$_) for @$cadence;
 }
 
 sub bottom {
@@ -114,6 +125,9 @@ sub bottom {
         }
     }
 
+    $d->score->n('wn', $transp[0]);
+    $d->score->n('wn', $transp[0]);
+    $d->score->n('wn', $transp[0]);
     $d->score->n('wn', $transp[0]);
 }
 
