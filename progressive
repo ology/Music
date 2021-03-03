@@ -11,6 +11,7 @@ use Music::Cadence;
 use Music::Chord::Progression;
 use Music::Duration::Partition;
 use Music::Scales qw(get_scale_notes get_scale_MIDI);
+use Music::VoiceGen;
 
 my $bars   = shift || 16;
 my $bpm    = shift || 105;
@@ -144,13 +145,22 @@ sub top {
 
     my @phrases = map { $mdp->motif } 1 .. 4;
 
+    my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
+
     for my $x (@notes) {
-        my @pitches = get_scale_notes($x, $tscale);
-        @pitches = midi_format(@pitches);
+        my @pitches = (
+            get_scale_MIDI($x, 4, $tscale),
+            get_scale_MIDI($x, 5, $tscale),
+        );
+        my $voice = Music::VoiceGen->new(
+            pitches   => \@pitches,
+            intervals => \@intervals,
+        );
+
         for my $i (1 .. 8) { # NOTE 8 is the default Music::Chord::Progression max
             my $phrase = $phrases[int rand @phrases];
             for my $n (0 .. $#$phrase) {
-                $d->score->n($phrase->[$n], $pitches[int rand @pitches] . 5);
+                $d->score->n($phrase->[$n], $voice->rand);
             }
         }
     }
