@@ -35,6 +35,7 @@ my $rand_patch = sub { $patches[int rand @patches] };
 
 my $tpatch = $rand_patch->();
 my $ppatch = $rand_patch->();
+print "Patches: Top=$tpatch, Progression=$ppatch, Bottom=$bpatch\n";
 
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
