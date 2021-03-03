@@ -16,6 +16,7 @@ my $bars   = shift || 16;
 my $bpm    = shift || 105;
 my $note   = shift || 'C';
 my $tscale = shift || 'major';
+my $bscale = shift || 'pentatonic';
 my $bpatch = shift || 35;
 
 # General MIDI patches that are tones
@@ -60,7 +61,7 @@ sub drums {
 sub progression {
     set_chan_patch($d->score, 2, $ppatch);
 
-    my @pitches = get_scale_notes($note, $tscale);
+    my @pitches = get_scale_notes($note, $bscale); # Use the bass scale to generate the progression
     @notes = map { $pitches[int rand @pitches] } 1 .. 4;
 
     my $chords;
