@@ -6,6 +6,7 @@ use warnings;
 # These pitches are then fed into contrapuntal transformations
 # and the results are appended to this "melody."
 
+use Data::Dumper::Compact qw(ddc);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 use AI::Genetic::Pro;
@@ -38,7 +39,7 @@ $ga->evolve(1000);
 my $pitches = $ga->as_array($ga->getFittest);
 my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
 $pitches = [ @$pitches, @$alt ];
-use Data::Dumper::Concise;warn Dumper$pitches;
+print ddc($pitches);
 warn $ga->as_value($ga->getFittest), "\n";
 
 process_midi($pitches);
