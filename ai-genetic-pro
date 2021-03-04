@@ -62,28 +62,6 @@ sub terminate {
     return;
 }
 
-sub set_score {
-    my %conf = (
-        tempo    => 600_000,
-        volume   => 100,
-        velocity => 96,
-        unit     => 'qn',
-        channel  => 1,
-        patch    => 1,
-    );
-
-    my $score = MIDI::Simple->new_score();
-
-    $score->set_tempo($conf{tempo});
-    $score->noop('V' . $conf{volume}, 'c' . $conf{channel});
-    $score->patch_change($conf{channel}, $conf{patch});
-
-    $score->Cookies(unit => $conf{unit});
-    $score->Cookies(velocity => $conf{velocity});
-
-    return $score;
-}
-
 sub process_midi
 {
     my ( $pitches ) = @_;
