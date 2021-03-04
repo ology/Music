@@ -67,8 +67,7 @@ sub terminate {
     return;
 }
 
-sub process_midi
-{
+sub process_midi {
     my ($pitches) = @_;
     my $score = setup_score();
     for my $p (@$pitches) {
