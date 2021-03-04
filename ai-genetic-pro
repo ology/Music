@@ -13,7 +13,7 @@ use AI::Genetic::Pro ();
 use Music::AtonalUtil ();
 use Music::Scales qw(get_scale_MIDI);
 
-my @notes = get_scale_MIDI('C', 4, 'major');
+my @notes = get_scale_MIDI('C', 4, 'major'); # 60, 62...
 
 my $ga = AI::Genetic::Pro->new(        
     -fitness         => \&fitness,        # fitness function
