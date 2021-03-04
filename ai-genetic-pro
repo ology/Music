@@ -44,6 +44,7 @@ process_midi($pitches);
 
 sub calc {
     my ($ar) = @_;
+#warn(__PACKAGE__,' ',__LINE__," MARK: @$ar\n");
     my $calc = 0;
     # Adjacent elements must be within ...
     for my $n ( 0 .. @$ar - 2 ) {
