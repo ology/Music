@@ -40,7 +40,6 @@ my $pitches = $ga->as_array($ga->getFittest);
 my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
 $pitches = [ @$pitches, @$alt ];
 print ddc($pitches);
-warn $ga->as_value($ga->getFittest), "\n";
 
 process_midi($pitches);
 
