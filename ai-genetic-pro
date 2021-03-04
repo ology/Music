@@ -9,11 +9,11 @@ use warnings;
 use Data::Dumper::Compact qw(ddc);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
-use AI::Genetic::Pro;
-use Music::AtonalUtil;
+use AI::Genetic::Pro ();
+use Music::AtonalUtil ();
+use Music::Scales qw(get_scale_MIDI);
 
-#my @notes = 60 .. 71; # chromatic
-my @notes = qw( 60 62 64 65 67 69 71 ); # diatonic in C
+my @notes = get_scale_MIDI('C', 4, 'major');
 
 my $ga = AI::Genetic::Pro->new(        
     -fitness         => \&fitness,        # fitness function
