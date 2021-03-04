@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util qw(setup_score);
 use AI::Genetic::Pro;
 use MIDI::Simple;
 use Music::AtonalUtil;
@@ -85,7 +87,7 @@ sub set_score {
 sub process_midi
 {
     my ( $pitches ) = @_;
-    my $score = set_score();
+    my $score = setup_score();
     for my $p ( @$pitches )
     {
         $score->n( { $score->Cookies }->{unit}, $p, { $score->Cookies }->{velocity} );
