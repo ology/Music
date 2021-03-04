@@ -71,7 +71,7 @@ sub process_midi {
     my ($pitches) = @_;
     my $score = setup_score();
     for my $p (@$pitches) {
-        $score->n({ $score->Cookies }->{unit}, $p, { $score->Cookies }->{velocity});
+        $score->n('qn', $p);
     }
     $score->write_score($0 . '.mid');
 }
