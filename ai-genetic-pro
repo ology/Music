@@ -9,19 +9,19 @@ use Music::AtonalUtil;
 my @notes = qw( 60 62 64 65 67 69 71 ); # diatonic in C
 
 my $ga = AI::Genetic::Pro->new(        
-        -fitness         => \&fitness,        # fitness function
-        -terminate       => \&terminate,      # terminate function
-        -type            => 'combination',    # type of chromosomes
-        -population      => 100,              # population
-        -crossover       => 0.9,              # probab. of crossover
-        -mutation        => 0.05,             # probab. of mutation
-        -parents         => 2,                # number  of parents
-        -selection       => [ 'Roulette' ],   # selection strategy
-        -strategy        => [ 'PMX' ],        # crossover strategy
-        -cache           => 1,                # cache results
-        -history         => 1,                # remember best results
-        -preserve        => 1,                # remember the bests
-        -variable_length => 0,                # turn variable length OFF
+    -fitness         => \&fitness,        # fitness function
+    -terminate       => \&terminate,      # terminate function
+    -type            => 'combination',    # type of chromosomes
+    -population      => 100,              # population
+    -crossover       => 0.9,              # probab. of crossover
+    -mutation        => 0.05,             # probab. of mutation
+    -parents         => 2,                # number  of parents
+    -selection       => [ 'Roulette' ],   # selection strategy
+    -strategy        => [ 'PMX' ],        # crossover strategy
+    -cache           => 1,                # cache results
+    -history         => 1,                # remember best results
+    -preserve        => 1,                # remember the bests
+    -variable_length => 0,                # turn variable length OFF
 );
 
 $ga->init( \@notes );
@@ -68,12 +68,12 @@ sub terminate {
 
 sub set_score {
     my %conf = (
-        tempo     => 600_000,
-        volume    => 100,
-        velocity  => 96,
-        unit      => 'qn',
-        channel   => 1,
-        patch     => 1,
+        tempo    => 600_000,
+        volume   => 100,
+        velocity => 96,
+        unit     => 'qn',
+        channel  => 1,
+        patch    => 1,
     );
 
     my $score = MIDI::Simple->new_score();
