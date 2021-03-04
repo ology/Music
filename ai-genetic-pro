@@ -22,8 +22,8 @@ my $ga = AI::Genetic::Pro->new(
     -crossover       => 0.9,              # probab. of crossover
     -mutation        => 0.05,             # probab. of mutation
     -parents         => 2,                # number  of parents
-    -selection       => [ 'Roulette' ],   # selection strategy
-    -strategy        => [ 'PMX' ],        # crossover strategy
+    -selection       => ['Roulette'],     # selection strategy
+    -strategy        => ['PMX'],          # crossover strategy
     -cache           => 1,                # cache results
     -history         => 1,                # remember best results
     -preserve        => 1,                # remember the bests
@@ -69,13 +69,12 @@ sub terminate {
 
 sub process_midi
 {
-    my ( $pitches ) = @_;
+    my ($pitches) = @_;
     my $score = setup_score();
-    for my $p ( @$pitches )
-    {
-        $score->n( { $score->Cookies }->{unit}, $p, { $score->Cookies }->{velocity} );
+    for my $p (@$pitches) {
+        $score->n({ $score->Cookies }->{unit}, $p, { $score->Cookies }->{velocity});
     }
-    $score->write_score( $0 . '.mid' );
+    $score->write_score($0 . '.mid');
 }
 
 sub alteration {
@@ -85,15 +84,15 @@ sub alteration {
 
     # Post mutation, phrase alterations
     my $funct = {
-        invert     => sub { my $x = shift; $atu->invert( $x, $pitches ) },
-        retrograde => sub { $atu->retrograde( @$pitches ) },
-        rotate     => sub { my $x = shift; $atu->rotate( $x, $pitches ) },
-        transpose  => sub { my $x = shift; $atu->transpose( $x, $pitches ) },
+        invert     => sub { my $x = shift; $atu->invert($x, $pitches) },
+        retrograde => sub { $atu->retrograde(@$pitches) },
+        rotate     => sub { my $x = shift; $atu->rotate($x, $pitches) },
+        transpose  => sub { my $x = shift; $atu->transpose($x, $pitches) },
     };
 
     # Choose a random function and execute it with the given alteration factor
-    my $x = int( rand 3 ) + 2;
-    my $alteration = ( keys %$funct )[ rand keys %$funct ];
+    my $x = int(rand 3) + 2;
+    my $alteration = (keys %$funct)[ rand keys %$funct ];
     print "Alteration: $alteration by $x\n";
     my $altered = $funct->{$alteration}->($x);
 
