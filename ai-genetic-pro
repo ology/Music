@@ -4,7 +4,7 @@ use warnings;
 
 # Evolve a set of pitches where adjacents must be between 2 and 5 half-steps.
 # These pitches are then fed into contrapuntal transformations
-# and the resultdts are appened to this "melody."
+# and the results are appended to this "melody."
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
