@@ -5,7 +5,6 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 use AI::Genetic::Pro;
-use MIDI::Simple;
 use Music::AtonalUtil;
 
 #my @notes = 60 .. 71; # chromatic
