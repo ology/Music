@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 
 use AI::Genetic::Pro;
-use Music::PitchNum;
 use MIDI::Simple;
 use Music::AtonalUtil;
 
@@ -31,12 +30,7 @@ $ga->evolve(1000);
 # Perform gymnastics with the pitches
 my $pitches = $ga->as_array($ga->getFittest);
 my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
-$pitches = [ map { Music::PitchNum->pitchname($_) } @$pitches, @$alt ];
-for ( @$pitches, @$alt )
-{
-    $_ =~ s/^([A-Z])(\d)$/$1$2/;
-    $_ =~ s/^(\w)\#(\d)$/$1s$2/;
-}
+$pitches = [ @$pitches, @$alt ];
 use Data::Dumper::Concise;warn Dumper$pitches;
 warn $ga->as_value($ga->getFittest), "\n";
 
