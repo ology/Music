@@ -37,8 +37,8 @@ $ga->evolve(1000);
 
 # Perform gymnastics with the pitches
 my $pitches = $ga->as_array($ga->getFittest);
-my $alt = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
-$pitches = [ @$pitches, @$alt ];
+my $altered = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
+$pitches = [ @$pitches, @$altered ];
 print ddc($pitches);
 
 process_midi($pitches);
@@ -56,8 +56,10 @@ sub calc {
     return $calc;
 }
 
+my $i = 0;
 sub fitness {
     my ($ga, $chromosome) = @_;
+warn(__PACKAGE__,' ',__LINE__," MARK: fitness() ",$i++,"\n");
     return calc(scalar $ga->as_array($chromosome));
 }
 
