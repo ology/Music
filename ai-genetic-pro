@@ -14,6 +14,7 @@ use Music::AtonalUtil ();
 use Music::Scales qw(get_scale_MIDI);
 
 my @notes = get_scale_MIDI('C', 4, 'major'); # 60, 62...
+my $base = 60;
 
 my $ga = AI::Genetic::Pro->new(        
     -fitness         => \&fitness,        # fitness function
@@ -37,7 +38,7 @@ $ga->evolve(1000);
 
 # Perform gymnastics with the pitches
 my $pitches = $ga->as_array($ga->getFittest);
-my $altered = [ map { $_ + 60 } @{ alteration( [ map { $_ - 60 } @$pitches ] ) } ];
+my $altered = [ map { $_ + $base } @{ alteration( [ map { $_ - $base } @$pitches ] ) } ];
 $pitches = [ @$pitches, @$altered ];
 print ddc($pitches);
 
