@@ -57,10 +57,10 @@ sub calc {
     return $calc;
 }
 
-my $i = 0;
+#my $i = 0;
 sub fitness {
     my ($ga, $chromosome) = @_;
-warn(__PACKAGE__,' ',__LINE__," MARK: fitness() ",$i++,"\n");
+#    warn(__PACKAGE__,' ',__LINE__," MARK: fitness() ",$i++,"\n");
     return calc(scalar $ga->as_array($chromosome));
 }
 
