@@ -103,7 +103,7 @@ sub progression {
         print $x, ': ', ddc($notes);
     }
     my $mc = Music::Cadence->new(
-        key    => $note,
+        key    => $notes[-1],
         scale  => $tscale,
         octave => 4,
     );
