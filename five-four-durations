@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use Data::Dumper::Compact qw(ddc);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Duration Music-Duration-Partition);
 use MIDI::Drummer::Tiny;
 use MIDI::Praxis::Variation 'diminution';
@@ -44,6 +45,8 @@ sub bass {
     );
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
+    print 'Bottom motif #1: ', ddc($motif1);
+    print 'Bottom motif #2: ', ddc($motif2);
 
     my @pitches = get_scale_MIDI($note, $octave, $bscale);
     my @intervals = qw(-3 -2 -1 1 2 3);
@@ -54,6 +57,8 @@ sub bass {
 
     my @notes1 = map { $voice->rand } @$motif1;
     my @notes2 = map { $voice->rand } @$motif2;
+    print 'Bottom pitches #1: ', ddc(\@notes1);
+    print 'Bottom pitches #2: ', ddc(\@notes2);
 
     for my $n (1 .. $d->bars * 2) {
         for my $i (0 .. $#$motif1) {
@@ -84,6 +89,8 @@ sub top {
     );
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
+    print 'Top motif #1: ', ddc($motif1);
+    print 'Top motif #2: ', ddc($motif2);
 
     my @pitches = (
         get_scale_MIDI($note, $octave + 1, $tscale),
@@ -109,6 +116,10 @@ sub top {
     my @notes2 = map { $voice->rand } @$motif1;
     my @notes3 = map { $voice->rand } @$motif2;
     my @notes4 = map { $voice2->rand } @$motif2;
+    print 'Top pitches #1: ', ddc(\@notes1);
+    print 'Top pitches #2: ', ddc(\@notes2);
+    print 'Top pitches #3: ', ddc(\@notes3);
+    print 'Top pitches #4: ', ddc(\@notes4);
 
     for my $n (1 .. $d->bars * 2) {
         for my $i (0 .. $#$motif1) {
