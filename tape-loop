@@ -13,7 +13,7 @@ my $max = shift || 8; # How many phrase loops to render
 
 my @notes = qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/;
 
-my $ticks = 384; # A whole note
+my $ticks = 384; # 96 x 4 = a whole note
 
 my $factor = 5; # Number of whole note durations in a loop
 
