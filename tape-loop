@@ -25,7 +25,7 @@ my @phrases;
 
 for my $note (@notes) {
     push @phrases, sub {
-        set_chan_patch($score, $channel++, 73); #76
+        set_chan_patch($score, $channel++, 73);
         phrase($score, $note, $ticks, $factor);
     };
 }
