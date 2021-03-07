@@ -37,8 +37,9 @@ $score->write_score("$0.mid");
 sub phrase {
     my ($note) = @_;
 
-    my $head = int rand($ticks * $factor - $ticks);
-    my $tail = $head + $ticks;
+    my $width = $ticks * $factor;
+    my $head = int rand($width - $ticks);
+    my $tail = $width - ($head + $ticks);
     my $extra = int rand($ticks);
     printf "Head=%d, Ticks=%d, Tail=%d, Extra=%d, Total=%d\n",
         $head, $ticks, $tail, $extra, $head + $ticks + $tail + $extra;
