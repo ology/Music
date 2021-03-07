@@ -41,8 +41,8 @@ sub phrase {
     my $width = $ticks * $factor + $extra;
     my $head = int rand($width - $ticks);
     my $tail = $width - ($head + $ticks);
-    printf "Head=%d, Ticks=%d, Tail=%d, Extra=%d, Total=%d\n",
-        $head, $ticks, $tail, $extra, $width;
+    printf "Head=%d, Ticks=%d, Tail=%d, Total=%d\n",
+        $head, $ticks, $tail, $width;
 
     for my $i (1 .. $max) {
         $score->r('d' . $head);
