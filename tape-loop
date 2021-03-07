@@ -45,8 +45,8 @@ sub phrase {
         $head, $ticks, $tail, $width;
 
     for my $i (1 .. $max) {
-        $score->r('d' . $head);
+        $score->r('d' . $head) if $head;
         $score->n('d' . $ticks, $note);
-        $score->r('d' . $tail);
+        $score->r('d' . $tail) if $tail;
     }
 }
