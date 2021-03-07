@@ -48,6 +48,5 @@ sub phrase {
         $score->r('d' . $head);
         $score->n('d' . $ticks, $note);
         $score->r('d' . $tail);
-        $score->r('d' . $extra);
     }
 }
