@@ -1,0 +1,47 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Attempt at recreating the tape-loop effect of Brain Eno's "Music for Airports" (1978).
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util qw(setup_score set_chan_patch);
+
+my $max = shift || 8;
+
+my @notes = qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/;
+
+my $ticks = 384; # A whole note
+
+my $factor = 6; # Number of whole note durations in a loop
+
+my $channel = 0;
+
+my $score = setup_score(bpm => 100);
+
+my @phrases;
+
+for my $note (@notes) {
+    push @phrases, sub {
+        set_chan_patch($score, $channel++, 73); #76
+        phrase($note);
+    };
+}
+
+$score->synch(@phrases);
+
+$score->write_score("$0.mid");
+
+sub phrase {
+    my ($note) = @_;
+
+    my $head = int rand($ticks * $factor - $ticks);
+    my $tail = $head + $ticks;
+    print "Head=$head, Ticks=$ticks, Tail=$tail\n";
+
+    for my $i (1 .. $max) {
+        $score->r('d' . $head);
+        $score->n('d' . $ticks, $note);
+        $score->r('d' . $tail);
+    }
+}
