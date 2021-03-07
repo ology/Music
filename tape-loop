@@ -39,11 +39,13 @@ sub phrase {
 
     my $head = int rand($ticks * $factor - $ticks);
     my $tail = $head + $ticks;
-    print "Head=$head, Ticks=$ticks, Tail=$tail\n";
+    my $extra = int rand($ticks);
+    print "Head=$head, Ticks=$ticks, Tail=$tail, Extra=$extra\n";
 
     for my $i (1 .. $max) {
         $score->r('d' . $head);
         $score->n('d' . $ticks, $note);
         $score->r('d' . $tail);
+        $score->r('d' . $extra);
     }
 }
