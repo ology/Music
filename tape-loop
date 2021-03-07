@@ -15,7 +15,7 @@ my @notes = qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/;
 
 my $ticks = 384; # A whole note
 
-my $factor = 3; # Number of whole note durations in a loop
+my $factor = 5; # Number of whole note durations in a loop
 
 my $channel = 0;
 
