@@ -19,7 +19,7 @@ my $factor = 6; # Number of whole note durations in a loop
 
 my $channel = 0;
 
-my $score = setup_score(bpm => 100);
+my $score = setup_score(lead_in => 0, bpm => 100);
 
 my @phrases;
 
