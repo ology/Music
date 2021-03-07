@@ -40,7 +40,8 @@ sub phrase {
     my $head = int rand($ticks * $factor - $ticks);
     my $tail = $head + $ticks;
     my $extra = int rand($ticks);
-    print "Head=$head, Ticks=$ticks, Tail=$tail, Extra=$extra\n";
+    printf "Head=%d, Ticks=%d, Tail=%d, Extra=%d, Total=%d\n",
+        $head, $ticks, $tail, $extra, $head + $ticks + $tail + $extra;
 
     for my $i (1 .. $max) {
         $score->r('d' . $head);
