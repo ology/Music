@@ -26,7 +26,7 @@ my @phrases;
 for my $note (@notes) {
     push @phrases, sub {
         set_chan_patch($score, $channel++, 73);
-        phrase($score, $note, $ticks, $factor);
+        phrase($score, $note, $ticks, $factor, $max);
     };
 }
 
@@ -35,7 +35,7 @@ $score->synch(@phrases);
 $score->write_score("$0.mid");
 
 sub phrase {
-    my ($score, $note, $ticks, $factor) = @_;
+    my ($score, $note, $ticks, $factor, $max) = @_;
 
     my $extra = int rand($ticks * 2);
     my $width = $ticks * $factor + $extra;
