@@ -23,6 +23,7 @@ my $bpm = 60;
 my $ticks = 96; # Magical number for a quarter-note in MIDI-Perl
 my $whole = $ticks * 4; # A whole note
 my $channel = 0; # This should start at 0
+my $drums = 9;
 
 my $score = setup_score(lead_in => 0, bpm => $bpm);
 
@@ -32,7 +33,7 @@ my @phrases;
 for my $note (@notes) {
     push @phrases, sub {
         set_chan_patch($score, $channel++, $patch);
-        $channel++ if $channel == 9; # Skip the drums
+        $channel++ if $channel == $drums; # Skip the drums
 
         # Compute the intervals
         my $extra = int rand($whole * 2);
