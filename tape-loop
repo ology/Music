@@ -15,7 +15,7 @@ my @notes = qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/;
 
 my $ticks = 96 * 4; # = a whole note
 
-my $factor = 5; # Number of whole note durations in a loop
+my $factor = 4; # Number of whole note durations in a loop
 
 my $channel = 0;
 
@@ -37,7 +37,7 @@ $score->write_score("$0.mid");
 sub phrase {
     my ($score, $note, $ticks, $factor) = @_;
 
-    my $extra = int rand($ticks);
+    my $extra = int rand($ticks * 2);
     my $width = $ticks * $factor + $extra;
     my $head = int rand($width - $ticks);
     my $tail = $width - ($head + $ticks);
