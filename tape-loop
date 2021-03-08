@@ -32,8 +32,8 @@ for my $note (@notes) {
         my $width = $ticks * $factor + $extra;
         my $head = int rand($width - $ticks);
         my $tail = $width - ($head + $ticks);
-        printf "Note: %3s, Head=%d, Ticks=%d, Tail=%d, Total=%d\n",
-            $note, $head, $ticks, $tail, $width;
+        printf "%d. Note: %3s, Head=%d, Ticks=%d, Tail=%d, Total=%d\n",
+            $channel, $note, $head, $ticks, $tail, $width;
 
         # Play a loop
         for my $i (1 .. $max) {
