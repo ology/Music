@@ -32,6 +32,7 @@ my @phrases;
 for my $note (@notes) {
     push @phrases, sub {
         set_chan_patch($score, $channel++, $patch);
+        $channel++ if $channel == 9; # Skip the drums
 
         # Compute the intervals
         my $extra = int rand($whole * 2);
