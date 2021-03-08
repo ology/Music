@@ -26,27 +26,24 @@ my @phrases;
 for my $note (@notes) {
     push @phrases, sub {
         set_chan_patch($score, $channel++, 73);
-        phrase($score, $note, $ticks, $factor, $max);
+
+        # Compute the intervals
+        my $extra = int rand($ticks * 2);
+        my $width = $ticks * $factor + $extra;
+        my $head = int rand($width - $ticks);
+        my $tail = $width - ($head + $ticks);
+        printf "Note: %3s, Head=%d, Ticks=%d, Tail=%d, Total=%d\n",
+            $note, $head, $ticks, $tail, $width;
+
+        # Play a loop
+        for my $i (1 .. $max) {
+            $score->r('d' . $head) if $head;
+            $score->n('d' . $ticks, $note);
+            $score->r('d' . $tail) if $tail;
+        }
     };
 }
 
 $score->synch(@phrases);
 
 $score->write_score("$0.mid");
-
-sub phrase {
-    my ($score, $note, $ticks, $factor, $max) = @_;
-
-    my $extra = int rand($ticks * 2);
-    my $width = $ticks * $factor + $extra;
-    my $head = int rand($width - $ticks);
-    my $tail = $width - ($head + $ticks);
-    printf "Note: %3s, Head=%d, Ticks=%d, Tail=%d, Total=%d\n",
-        $note, $head, $ticks, $tail, $width;
-
-    for my $i (1 .. $max) {
-        $score->r('d' . $head) if $head;
-        $score->n('d' . $ticks, $note);
-        $score->r('d' . $tail) if $tail;
-    }
-}
