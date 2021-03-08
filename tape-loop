@@ -8,16 +8,21 @@ use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score set_chan_patch);
+use List::Util qw(max);
 
 my $max = shift || 8; # How many phrase loops to render
 
 my @notes = qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/; # s=sharp. Key of Ab
 
-my $ticks = 96 * 4; # = a whole note
+my $ticks = 96; # Magical number for a quarter-note in MIDI-Perl
+
+my $whole = $ticks * 4; # A whole note
 
 my $factor = 4; # Number of whole note durations in a loop
 
 my $channel = 0;
+
+my @widths;
 
 my $score = setup_score(lead_in => 0, bpm => 60);
 
@@ -28,17 +33,19 @@ for my $note (@notes) {
         set_chan_patch($score, $channel++, 73);
 
         # Compute the intervals
-        my $extra = int rand($ticks * 2);
-        my $width = $ticks * $factor + $extra;
-        my $head = int rand($width - $ticks);
-        my $tail = $width - ($head + $ticks);
+        my $extra = int rand($whole * 2);
+        my $width = $whole * $factor + $extra;
+        my $head = int rand($width - $whole);
+        my $tail = $width - ($head + $whole);
         printf "%d. Note: %3s, Head=%d, Ticks=%d, Tail=%d, Total=%d\n",
-            $channel, $note, $head, $ticks, $tail, $width;
+            $channel, $note, $head, $whole, $tail, $width;
+
+        push @widths, $width * $max;
 
         # Play a loop
         for my $i (1 .. $max) {
             $score->r('d' . $head) if $head;
-            $score->n('d' . $ticks, $note);
+            $score->n('d' . $whole, $note);
             $score->r('d' . $tail) if $tail;
         }
     };
@@ -47,3 +54,5 @@ for my $note (@notes) {
 $score->synch(@phrases);
 
 $score->write_score("$0.mid");
+
+printf "Minutes ≈ %.2f\n", max(@widths) / $ticks / 60;
