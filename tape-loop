@@ -12,9 +12,9 @@ use List::Util qw(max);
 
 my $max = shift || 8; # How many phrase loops to render
 
-my $patch = 73; # Flute
+my $patch = shift || 73; # 49=Strings, 73=Flute, 95=Synth, etc.
 
-my @notes = qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/; # s=sharp. Key of Ab
+my @notes = @ARGV ? @ARGV : qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/; # s=sharp. Key of Ab
 
 my $factor = 4; # Number of whole note durations in a loop
 
