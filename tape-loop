@@ -11,7 +11,7 @@ use MIDI::Util qw(setup_score set_chan_patch);
 
 my $max = shift || 8; # How many phrase loops to render
 
-my @notes = qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/; # s=sharp
+my @notes = qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/; # s=sharp. Key of Ab
 
 my $ticks = 96 * 4; # = a whole note
 
