@@ -4,6 +4,10 @@ use warnings;
 
 ###
 # Attempt at recreating the tape-loop effect of Brain Eno's "Music for Airports" (1978).
+#
+# Example:
+# perl tape-loop 32 95 A3 C3 E4 F4 G4 A4 C4
+#
 ###
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
