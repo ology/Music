@@ -18,7 +18,7 @@ my @notes = qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/; # s=sharp. Key of Ab
 
 my $factor = 4; # Number of whole note durations in a loop
 
-# NOTE Changing bpm or ticks will make the minute calculation meaningless
+# NOTE Changing bpm or ticks will make minute calculation meaningless
 my $bpm = 60;
 my $ticks = 96; # Magical number for a quarter-note in MIDI-Perl
 my $whole = $ticks * 4; # A whole note
