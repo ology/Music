@@ -20,11 +20,13 @@ my $whole = $ticks * 4; # A whole note
 
 my $factor = 4; # Number of whole note durations in a loop
 
+my $bpm = 60; # NOTE Changing this will make the minute calculation meaningless
+
 my $channel = 0;
 
 my @widths;
 
-my $score = setup_score(lead_in => 0, bpm => 60);
+my $score = setup_score(lead_in => 0, bpm => $bpm);
 
 my @phrases;
 
@@ -55,4 +57,4 @@ $score->synch(@phrases);
 
 $score->write_score("$0.mid");
 
-printf "Minutes ≈ %.2f\n", max(@widths) / $ticks / 60;
+printf "Minutes ≈ %.2f\n", max(@widths) / $ticks / $bpm;
