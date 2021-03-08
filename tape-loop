@@ -22,7 +22,7 @@ my $factor = 4; # Number of whole note durations in a loop
 
 my $bpm = 60; # NOTE Changing this will make the minute calculation meaningless
 
-my $channel = 0;
+my $channel = 0; # This should start at 0
 
 my @widths;
 
