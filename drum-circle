@@ -11,6 +11,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration 
 
 use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
+use Data::Dumper::Compact qw(ddc);
 
 # The number of drummers
 my $max = shift || 4;
@@ -64,6 +65,7 @@ sub phrase {
 
     # Create a rhythmic phrase
     my $motif = $mdp->motif;
+    printf "%*d. Drum: %s, Motif: %s", length($max), $p, $drum, ddc($motif);
 
     # Either rest or play the motif
     my $phrase = sub {
