@@ -42,7 +42,7 @@ my %seen; # Bucket of drums that have been selected
 
 my @phrases; # List of code-ref MIDI phrases
 
-# Instantiate a phrase generator
+# Make a phrase generator
 my $mdp = Music::Duration::Partition->new(
     size => 4,
     pool => [qw(qn den en sn)],
