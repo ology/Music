@@ -10,6 +10,8 @@ use warnings;
 # Example:
 # perl primes-layered ???; timidity primes.mid
 #
+# * This tiny program uses global variables. Run if that frightens you.
+#
 ###
 
 use Math::Prime::XS qw(primes);
