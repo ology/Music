@@ -22,7 +22,7 @@ my $scale = shift || 'major';
 my $bpm = shift || 100;
 my $tpatch = shift || 4;
 my $bpatch = shift || 95;
-my $toctave = shift || 4;
+my $toctave = shift || 5;
 my $boctave = shift || 3;
 
 my @primes = primes($limit);
