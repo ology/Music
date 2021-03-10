@@ -48,14 +48,7 @@ sub top {
         get_scale_MIDI('C', $toctave + 1, $scale),
     );
 
-    my $i = 0;
-    for my $p (@primes) {
-        $i++;
-        my $mod = $p % @scale;
-        my $note = $scale[$mod];
-        print "$i. P: $p, Mod: $mod, Note: $note\n";
-        $score->n('en', $note);
-    }
+    prime_loop(\@scale);
 }
 
 sub bottom {
@@ -65,12 +58,30 @@ sub bottom {
 
     my @scale = get_scale_MIDI('C', $boctave, $scale);
 
+    prime_loop(\@scale, 'bottom');
+}
+
+sub prime_loop {
+    my ($scale, $flag) = @_;
+
     my $i = 0;
-    for my $p (@primes[0 .. @primes / 8]) {
+
+    my @loop;
+    my $duration;
+    if ($flag) {
+        @loop = @primes[0 .. @primes / 8];
+        $duration = 'wn';
+    }
+    else {
+        @loop = @primes;
+        $duration = 'en';
+    }
+
+    for my $p (@loop) {
         $i++;
-        my $mod = $p % @scale;
-        my $note = $scale[$mod];
+        my $mod = $p % @$scale;
+        my $note = $scale->[$mod];
         print "$i. P: $p, Mod: $mod, Note: $note\n";
-        $score->n('wn', $note);
+        $score->n($duration, $note);
     }
 }
