@@ -64,8 +64,6 @@ sub bottom {
 sub prime_loop {
     my ($scale, $flag) = @_;
 
-    my $i = 0;
-
     my @loop;
     my $duration;
     if ($flag) {
@@ -76,6 +74,8 @@ sub prime_loop {
         @loop = @primes;
         $duration = 'en';
     }
+
+    my $i = 0;
 
     for my $p (@loop) {
         $i++;
