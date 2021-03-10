@@ -1,0 +1,76 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+###
+#
+# Play the prime numbers modulo the number of notes of the given scale
+# in 2 parts: Fast (top) and Long (bottom)
+#
+# Example:
+# perl primes-layered ???; timidity primes.mid
+#
+###
+
+use Math::Prime::XS qw(primes);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util qw(setup_score set_chan_patch);
+use Music::Scales qw(get_scale_MIDI);
+
+my $limit = shift || 1024;
+my $scale = shift || 'major';
+my $bpm = shift || 100;
+my $tpatch = shift || 4;
+my $bpatch = shift || 95;
+my $toctave = shift || 4;
+my $boctave = shift || 3;
+
+my @primes = primes($limit);
+
+my $score = setup_score(bpm => $bpm);
+
+my @phrases = (
+    \&top,
+    \&bottom,
+);
+
+$score->synch(@phrases);
+
+$score->write_score("$0.mid");
+
+sub top {
+    print "top()\n";
+
+    set_chan_patch($score, 0, $tpatch);
+
+    my @scale = (
+        get_scale_MIDI('C', $toctave, $scale),
+        get_scale_MIDI('C', $toctave + 1, $scale),
+    );
+
+    my $i = 0;
+    for my $p (@primes) {
+        $i++;
+        my $mod = $p % @scale;
+        my $note = $scale[$mod];
+        print "$i. P: $p, Mod: $mod, Note: $note\n";
+        $score->n('en', $note);
+    }
+}
+
+sub bottom {
+    print "bottom()\n";
+
+    set_chan_patch($score, 1, $bpatch);
+
+    my @scale = get_scale_MIDI('C', $boctave, $scale);
+
+    my $i = 0;
+    for my $p (@primes[0 .. @primes / 8]) {
+        $i++;
+        my $mod = $p % @scale;
+        my $note = $scale[$mod];
+        print "$i. P: $p, Mod: $mod, Note: $note\n";
+        $score->n('wn', $note);
+    }
+}
