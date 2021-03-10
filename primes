@@ -11,10 +11,11 @@ my $limit = shift || die "Usage: perl $0 limit scale\n";
 my $name = shift || 'chromatic';
 my $bpm = shift || 300;
 my $patch = shift || 0;
+my $octave = shift || 4;
 
 my $score = setup_score(bpm => $bpm, patch => $patch);
 
-my @scale = get_scale_MIDI('C', 5, $name);
+my @scale = get_scale_MIDI('C', $octave, $name);
 
 my $i = 0;
 
