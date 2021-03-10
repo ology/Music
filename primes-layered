@@ -81,9 +81,12 @@ sub prime_loop {
 
     for my $p (@loop) {
         $i++;
+
         my $mod = $p % @$scale;
         my $note = $scale->[$mod];
+
         print "$i. P: $p, Mod: $mod, Note: $note\n";
+
         $score->n($duration, $note);
     }
 }
