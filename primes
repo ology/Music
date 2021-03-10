@@ -2,6 +2,15 @@
 use strict;
 use warnings;
 
+###
+#
+# Play the prime numbers modulo the number of notes of the given scale.
+#
+# Example:
+# perl primes 1000 major 30 95 3; timidity primes.mid
+#
+###
+
 use Math::Prime::XS qw(primes);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
