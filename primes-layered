@@ -20,8 +20,8 @@ use Music::Scales qw(get_scale_MIDI);
 my $limit = shift || 1024;
 my $scale = shift || 'major';
 my $bpm = shift || 100;
-my $tpatch = shift || 4;
-my $bpatch = shift || 95;
+my $tpatch = shift // 4;
+my $bpatch = shift // 95;
 my $toctave = shift || 5;
 my $boctave = shift || 3;
 
