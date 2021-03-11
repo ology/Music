@@ -86,6 +86,8 @@ sub top {
     my $mdp = Music::Duration::Partition->new(
         size => $beats,
         pool => [qw/ dqn qn en /],
+#        pool => [qw/ qn den en sn /],
+#        groups => [0, 0, 2, 2],
     );
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
