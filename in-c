@@ -6,7 +6,7 @@ use warnings;
 # This is a Perl orchestration of Terry Riley's venerable composition, "In C."
 ##
 
-use lib '/Users/gene/sandbox/MIDI-Util/lib';
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score set_chan_patch);
 
 my @patches = @ARGV ? @ARGV : qw( 0 8 42 69 );
