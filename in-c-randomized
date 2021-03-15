@@ -54,10 +54,12 @@ for my $voice (1 .. $voices) {
         # Avoid the drum channel
         $channel++ if $channel == 9;
 
-        print "Voice: $voice, Channel: $channel\n";
+        my $patch = random_patch();
+
+        print "Patch: $patch, Voice: $voice, Channel: $channel\n";
 
         # Increment the channel and patch
-        set_chan_patch($score, $channel++, random_patch());
+        set_chan_patch($score, $channel++, $patch);
 
         # Call each of the chosen loops
         $_->() for @pick;
