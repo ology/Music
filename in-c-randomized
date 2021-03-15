@@ -32,6 +32,9 @@ my @patches =
 #    (0 .. 95)
 ;
 
+my $total_loops = 53;
+
+die 'More loops requested than are available' if $max > $total_loops;
 die 'More voices than available patches' if $voices > @patches;
 
 # Initialize the MIDI channel
@@ -41,7 +44,7 @@ my $channel = 0;
 my $score = setup_score(bpm => 120);
 
 # Declare the available loops
-my @loops = map { my $sub = 'loop' . $_; \&$sub } 1 .. 53;
+my @loops = map { my $sub = 'loop' . $_; \&$sub } 1 .. $total_loops;
 
 # Limit the number of loops to be played to the given max
 my @pick = $shuffle ? (shuffle @loops)[0 .. $max - 1] : @loops[0 .. $max - 1];
