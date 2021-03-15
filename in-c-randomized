@@ -46,7 +46,7 @@ my @loops = map { my $sub = 'loop' . $_; \&$sub } 1 .. 53;
 # Limit the number of loops to be played to the given max
 my @pick = $shuffle ? (shuffle @loops)[0 .. $max - 1] : @loops[0 .. $max - 1];
 
-# Generate a phrase for each patch
+# Generate a phrase for each voice
 my @phrases;
 for my $voice (1 .. $voices) {
     # Make a procedure to play the chosen loops
