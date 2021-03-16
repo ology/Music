@@ -160,8 +160,11 @@ sub dyads {
 
     my @transp = transposition(12, @bass);
 
-    for my $i (@transp) {
-        $d->note($d->whole, $i, $i + 7);
+    my @notes = map { [ $_, $_ + 7 ] } @transp;
+    print 'Dyads: ', ddc(\@notes);
+
+    for my $i (@notes) {
+        $d->note($d->whole, @$i);
     }
 }
 
