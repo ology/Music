@@ -42,7 +42,7 @@ $d->score->synch(
     \&drums,
     \&bottom,
     \&top,
-    \&chords,
+    \&dyads,
 );
 
 # Write the score to a MIDI file
@@ -155,7 +155,7 @@ sub top {
     $d->note($d->whole, $pitches[0]);
 }
 
-sub chords {
+sub dyads {
     set_chan_patch($d->score, 2, 0);
 
     my @transp = transposition(12, @bass);
