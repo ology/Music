@@ -8,7 +8,7 @@ use warnings;
 # Examples:
 # perl tape-loop
 # perl tape-loop 16
-# perl tape-loop 32 95 A3 C3 E4 F4 G4 A4 C4
+# perl tape-loop 32 95 C3 G3 C4 D4 E4 G4 A4
 #
 ###
 
