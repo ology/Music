@@ -34,7 +34,6 @@ sub hihat {
         );
         my $motif = $mdp->motif;
         print 'Hihat: ', ddc($motif);
-
         for my $n (1 .. $d->bars - 1) {
             for my $duration (@$motif) {
                 $d->note($duration, $d->closed_hh);
