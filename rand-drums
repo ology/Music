@@ -12,7 +12,7 @@ my $bpm = shift || 120;
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $bpm,
-    volume => 100,
+    volume => 127,
     bars   => 4,
 );
 
