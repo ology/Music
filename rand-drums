@@ -2,8 +2,10 @@
 use strict;
 use warnings;
 
-use Data::Dumper::Compact 'ddc';
+# Use local libs:
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration Music-Duration-Partition);
+
+use Data::Dumper::Compact qw(ddc);
 use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
 
