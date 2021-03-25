@@ -95,6 +95,7 @@ sub fill {
         size    => 4,
         pool    => [qw(qn en sn)],
         weights => [5, 10, 5],
+        groups  => [0, 0, 2],
     );
     my $motif = $mdp->motif;
     warn 'Fill: ', ddc($motif);
