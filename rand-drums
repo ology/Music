@@ -16,6 +16,7 @@ my $d = MIDI::Drummer::Tiny->new(
     bars   => 4,
 );
 
+# Declare the available fills
 my @fills = map { my $sub = 'fill_' . $_; \&$sub } 1 .. 6;
 
 $d->score->synch(
