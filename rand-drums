@@ -11,6 +11,8 @@ use Music::Duration::Partition;
 
 my $bpm = shift || 120; # Beats per minute
 
+my $size = 4; # Motif duration in quarter-notes
+
 # Instantiate a new drummer
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
@@ -37,7 +39,7 @@ sub hihat {
     for my $n (1 .. $d->bars) {
         # Instantiate a new rhythmic phrase generator
         my $mdp = Music::Duration::Partition->new(
-            size => 4,
+            size => $size,
             pool => [qw(qn en)],
         );
         # Get a random rhythmic phrase
@@ -57,7 +59,7 @@ sub hihat {
 sub kick {
     for my $n (1 .. $d->bars) {
         my $mdp = Music::Duration::Partition->new(
-            size => 4,
+            size => $size,
             pool => [qw(hn dqn qn en)],
         );
         my $motif = $mdp->motif;
@@ -76,7 +78,7 @@ sub snare {
         my $roll = int rand 2; # "roll" as in dice
         print "Snare: $roll\n";
         for my $n (1 .. $d->bars - 1) {
-            for my $n (1 .. 4) {
+            for my $n (1 .. $size) {
                 # Either play on 2 & 4 or just 3
                 if ($roll) {
                     if ($n % 2 == 0) {
@@ -103,7 +105,7 @@ sub snare {
 
 sub fill {
     my $mdp = Music::Duration::Partition->new(
-        size    => 4,
+        size    => $size,
         pool    => [qw(qn en sn)],
         weights => [5, 10, 5],
         groups  => [0, 0, 2],
