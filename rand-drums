@@ -52,7 +52,6 @@ sub kick {
         );
         my $motif = $mdp->motif;
         print 'Kick: ', ddc($motif);
-
         for my $n (1 .. $d->bars - 1) {
             for my $duration (@$motif) {
                 $d->note($duration, $d->kick);
