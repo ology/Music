@@ -16,14 +16,7 @@ my $d = MIDI::Drummer::Tiny->new(
     bars   => 4,
 );
 
-my @fills = (
-    \&fill_1,
-    \&fill_2,
-    \&fill_3,
-    \&fill_4,
-    \&fill_5,
-    \&fill_6,
-);
+my @fills = map { my $sub = 'fill_' . $_; \&$sub } 1 .. 6;
 
 $d->score->synch(
     \&hihat,
