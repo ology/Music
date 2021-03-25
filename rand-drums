@@ -99,9 +99,7 @@ sub fill {
     );
     my $motif = $mdp->motif;
     warn 'Fill: ', ddc($motif);
-
     my $fill = @fills[ int rand @fills ];
-
     for my $i (0 .. $#$motif) {
         my $patch = $fill->($i);
         $d->note($motif->[$i], $patch);
