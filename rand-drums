@@ -57,7 +57,7 @@ sub _part {
                 $d->note($duration, $note);
             }
         }
-        # Rest for a bar
+        # Rest while we fill
         $d->rest('wn');
 }
 
