@@ -35,15 +35,13 @@ $d->score->synch(
 $d->write;
 
 sub hihat {
-    for my $n (1 .. $d->bars) {
-        _part('Hihat', $d->closed_hh, [qw(qn en)]);
-    }
+    _part('Hihat', $d->closed_hh, [qw(qn en)])
+        for 1 .. $d->bars;
 }
 
 sub kick {
-    for my $n (1 .. $d->bars) {
-        _part('Kick', $d->kick, [qw(hn dqn qn en)]);
-    }
+    _part('Kick', $d->kick, [qw(hn dqn qn en)])
+        for 1 .. $d->bars;
 }
 
 sub _part {
