@@ -35,42 +35,32 @@ $d->score->synch(
 $d->write;
 
 sub hihat {
-    # For the given number of bars...
     for my $n (1 .. $d->bars) {
-        # Instantiate a new rhythmic phrase generator
-        my $mdp = Music::Duration::Partition->new(
-            size => $size,
-            pool => [qw(qn en)],
-        );
-        # Get a random rhythmic phrase
-        my $motif = $mdp->motif;
-        print 'Hihat: ', ddc($motif);
-        # Play the phrase for the number of bars less one
-        for my $n (1 .. $d->bars - 1) {
-            for my $duration (@$motif) {
-                $d->note($duration, $d->closed_hh);
-            }
-        }
-        # Rest for a bar
-        $d->rest('wn');
+        _part('Hihat', $d->closed_hh, [qw(qn en)]);
     }
 }
 
 sub kick {
     for my $n (1 .. $d->bars) {
-        my $mdp = Music::Duration::Partition->new(
-            size => $size,
-            pool => [qw(hn dqn qn en)],
-        );
+        _part('Kick', $d->kick, [qw(hn dqn qn en)]);
+    }
+}
+
+sub _part {
+        my ($name, $note, $pool) = @_;
+        # Instantiate a new rhythmic phrase generator
+        my $mdp = Music::Duration::Partition->new(size => $size, pool => $pool);
+        # Get a random rhythmic phrase
         my $motif = $mdp->motif;
-        print 'Kick: ', ddc($motif);
+        print "$name: ", ddc($motif);
+        # Play the phrase for the number of bars less one
         for my $n (1 .. $d->bars - 1) {
             for my $duration (@$motif) {
-                $d->note($duration, $d->kick);
+                $d->note($duration, $note);
             }
         }
+        # Rest for a bar
         $d->rest('wn');
-    }
 }
 
 sub snare {
