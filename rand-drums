@@ -138,11 +138,11 @@ sub fill_2 {
 sub fill_3 {
     my ($i) = @_;
     my $patch;
-    $patch = $d->snare         if $i == 0 || $i == 1;
-    $patch = $d->hi_tom        if $i == 2 || $i == 3;
-    $patch = $d->hi_mid_tom    if $i == 4 || $i == 5;
-    $patch = $d->low_mid_tom   if $i == 6 || $i == 7;
-    $patch = $d->low_tom       if $i == 8 || $i == 9;
+    $patch = $d->snare         if $i == 0  || $i == 1;
+    $patch = $d->hi_tom        if $i == 2  || $i == 3;
+    $patch = $d->hi_mid_tom    if $i == 4  || $i == 5;
+    $patch = $d->low_mid_tom   if $i == 6  || $i == 7;
+    $patch = $d->low_tom       if $i == 8  || $i == 9;
     $patch = $d->hi_floor_tom  if $i == 10 || $i == 11;
     $patch = $d->low_floor_tom if $i == 12 || $i == 13;
     return $patch;
@@ -180,11 +180,11 @@ sub fill_5 {
 sub fill_6 {
     my ($i) = @_;
     my $patch;
-    $patch = $d->snare                     if $i == 0 || $i == 1;
-    $patch = _or_cymbal($d->hi_tom)        if $i == 2 || $i == 3;
-    $patch = _or_cymbal($d->hi_mid_tom)    if $i == 4 || $i == 5;
-    $patch = _or_cymbal($d->low_mid_tom)   if $i == 6 || $i == 7;
-    $patch = _or_cymbal($d->low_tom)       if $i == 8 || $i == 9;
+    $patch = $d->snare                     if $i == 0  || $i == 1;
+    $patch = _or_cymbal($d->hi_tom)        if $i == 2  || $i == 3;
+    $patch = _or_cymbal($d->hi_mid_tom)    if $i == 4  || $i == 5;
+    $patch = _or_cymbal($d->low_mid_tom)   if $i == 6  || $i == 7;
+    $patch = _or_cymbal($d->low_tom)       if $i == 8  || $i == 9;
     $patch = _or_cymbal($d->hi_floor_tom)  if $i == 10 || $i == 11;
     $patch = _or_cymbal($d->low_floor_tom) if $i == 12 || $i == 13;
     return $patch;
