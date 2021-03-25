@@ -2,15 +2,16 @@
 use strict;
 use warnings;
 
-# Use local libs:
+# Use local libs
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration Music-Duration-Partition);
 
 use Data::Dumper::Compact qw(ddc);
 use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
 
-my $bpm = shift || 120;
+my $bpm = shift || 120; # Beats per minute
 
+# Instantiate a new drummer
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $bpm,
@@ -21,27 +22,34 @@ my $d = MIDI::Drummer::Tiny->new(
 # Declare the available fills
 my @fills = map { my $sub = 'fill_' . $_; \&$sub } 1 .. 6;
 
+# Play the parts simultaneously
 $d->score->synch(
     \&hihat,
     \&kick,
     \&snare,
 );
 
+# Write the MIDI to a file
 $d->write;
 
 sub hihat {
+    # For the given number of bars...
     for my $n (1 .. $d->bars) {
+        # Instantiate a new rhythmic phrase generator
         my $mdp = Music::Duration::Partition->new(
             size => 4,
             pool => [qw(qn en)],
         );
+        # Get a random rhythmic phrase
         my $motif = $mdp->motif;
         print 'Hihat: ', ddc($motif);
+        # Play the phrase for the number of bars less one
         for my $n (1 .. $d->bars - 1) {
             for my $duration (@$motif) {
                 $d->note($duration, $d->closed_hh);
             }
         }
+        # Rest for a bar
         $d->rest('wn');
     }
 }
@@ -69,6 +77,7 @@ sub snare {
         print "Snare: $roll\n";
         for my $n (1 .. $d->bars - 1) {
             for my $n (1 .. 4) {
+                # Either play on 2 & 4 or just 3
                 if ($roll) {
                     if ($n % 2 == 0) {
                         $d->note('qn', $d->snare);
@@ -87,6 +96,7 @@ sub snare {
                 }
             }
         }
+        # Fill for a bar!
         fill();
     }
 }
