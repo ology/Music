@@ -8,8 +8,9 @@ use Collision::2D qw(hash2circle dynamic_collision);
 use MIDI::Util qw(setup_score);
 
 my $max = shift || 32;
+my $bpm = shift || 200;
 
-my $score = setup_score(lead_in => 0, bpm => 200, patch => 14);
+my $score = setup_score(lead_in => 0, bpm => $bpm, patch => 14);
 
 my @chimes = (
     { chime => hash2circle({ x => 0,  y => 4,  radius => 1 }), note => 'C5' }, # N
