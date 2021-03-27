@@ -7,7 +7,7 @@ use warnings;
 use Collision::2D qw(hash2circle dynamic_collision);
 use MIDI::Util qw(setup_score);
 
-my $max = shift || 32;  # Number of notes or rests to add to the score
+my $max = shift || 32;  # Number of times to detect collisions
 my $bpm = shift || 100; # "Wind speed"
 
 my $score = setup_score(lead_in => 0, bpm => $bpm, patch => 14);
