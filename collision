@@ -1,0 +1,47 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Attempt to simulate a wind-chime
+
+use Collision::2D qw(hash2circle dynamic_collision);
+use MIDI::Util qw(setup_score);
+
+my $max = shift || 32;
+
+my $score = setup_score(lead_in => 0, bpm => 200, patch => 14);
+
+my @notes = qw(C5 F5 G5 C6);
+
+my @chimes = (
+    hash2circle({ x => 0,  y => 4,  radius => 1 }), # N
+    hash2circle({ x => 4,  y => 0,  radius => 1 }), # E
+    hash2circle({ x => 0,  y => -4, radius => 1 }), # S
+    hash2circle({ x => -4, y => 0,  radius => 1 }), # W
+);
+
+for my $i (1 .. $max) {
+    my ($xv, $yv) = (randv(), randv());
+    print "$i. xv=$xv, yv=$yv\n";
+
+    my $clapper = hash2circle({ x => 0, y => 0, radius => 2, xv => $xv, yv => $yv });
+
+    for my $j (0 .. $#chimes) {
+        my $collision = dynamic_collision($clapper, $chimes[$j]);
+        if ($collision) {
+            printf "\tCollision with chime: %d, Note: %s\n", $j + 1, $notes[$j];
+            $score->n('qn', $notes[$j]);
+        }
+        else {
+            $score->r('qn');
+        }
+    }
+}
+
+$score->write_score("$0.mid");
+
+sub randv {
+    my $x = rand 2;
+    my $sign = int rand 2 ? 1 : -1;
+    return $x * $sign;
+}
