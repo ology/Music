@@ -23,7 +23,7 @@ my $duration = 'sn';
 
 for my $i (1 .. $max) {
     my ($xv, $yv) = (randv(), randv());
-    print "$i. xv=$xv, yv=$yv\n";
+    printf "%d. xv = %.2f, yv = %.2f\n", $i, $xv, $yv;
 
     my $j = 0;
 
