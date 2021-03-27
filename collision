@@ -11,25 +11,27 @@ my $max = shift || 32;
 
 my $score = setup_score(lead_in => 0, bpm => 200, patch => 14);
 
-my @notes = qw(C5 F5 G5 C6);
-
 my @chimes = (
-    hash2circle({ x => 0,  y => 4,  radius => 1 }), # N
-    hash2circle({ x => 4,  y => 0,  radius => 1 }), # E
-    hash2circle({ x => 0,  y => -4, radius => 1 }), # S
-    hash2circle({ x => -4, y => 0,  radius => 1 }), # W
+    { chime => hash2circle({ x => 0,  y => 4,  radius => 1 }), note => 'C5' }, # N
+    { chime => hash2circle({ x => 4,  y => 0,  radius => 1 }), note => 'F5' }, # E
+    { chime => hash2circle({ x => 0,  y => -4, radius => 1 }), note => 'G5' }, # S
+    { chime => hash2circle({ x => -4, y => 0,  radius => 1 }), note => 'C6' }, # W
 );
 
 for my $i (1 .. $max) {
     my ($xv, $yv) = (randv(), randv());
     print "$i. xv=$xv, yv=$yv\n";
 
-    for my $j (0 .. $#chimes) {
+    my $j = 0;
+
+    for my $c (@chimes) {
         my $clapper = hash2circle({ x => 0, y => 0, radius => 2, xv => $xv, yv => $yv });
-        my $collision = dynamic_collision($clapper, $chimes[$j]);
+
+        my $collision = dynamic_collision($clapper, $c->{chime});
+
         if ($collision) {
-            printf "\tCollision with chime: %d, Note: %s\n", $j + 1, $notes[$j];
-            $score->n('qn', $notes[$j]);
+            printf "\tCollision with chime: %d, Note: %s\n", ++$j, $c->{note};
+            $score->n('qn', $c->{note});
         }
         else {
             $score->r('qn');
