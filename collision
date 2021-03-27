@@ -25,12 +25,14 @@ for my $i (1 .. $max) {
     my $j = 0;
 
     for my $c (@chimes) {
+        $j++;
+
         my $clapper = hash2circle({ x => 0, y => 0, radius => 2, xv => $xv, yv => $yv });
 
         my $collision = dynamic_collision($clapper, $c->{chime});
 
         if ($collision) {
-            printf "\tCollision with chime: %d, Note: %s\n", ++$j, $c->{note};
+            printf "\tCollision with chime: %d, Note: %s\n", $j, $c->{note};
             $score->n('qn', $c->{note});
         }
         else {
