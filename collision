@@ -24,9 +24,8 @@ for my $i (1 .. $max) {
     my ($xv, $yv) = (randv(), randv());
     print "$i. xv=$xv, yv=$yv\n";
 
-    my $clapper = hash2circle({ x => 0, y => 0, radius => 2, xv => $xv, yv => $yv });
-
     for my $j (0 .. $#chimes) {
+        my $clapper = hash2circle({ x => 0, y => 0, radius => 2, xv => $xv, yv => $yv });
         my $collision = dynamic_collision($clapper, $chimes[$j]);
         if ($collision) {
             printf "\tCollision with chime: %d, Note: %s\n", $j + 1, $notes[$j];
