@@ -25,9 +25,9 @@ for my $i (1 .. $max) {
     my ($xv, $yv) = (randv(), randv());
     printf "%d. xv = %.2f, yv = %.2f\n", $i, $xv, $yv;
 
-    for my $c (@chimes) {
-        my $clapper = hash2circle({ x => 0, y => 0, radius => 2, xv => $xv, yv => $yv });
+    my $clapper = hash2circle({ x => 0, y => 0, radius => 2, xv => $xv, yv => $yv });
 
+    for my $c (@chimes) {
         my $collision = dynamic_collision($clapper, $c->{chime});
 
         if ($collision) {
