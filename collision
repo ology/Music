@@ -23,7 +23,7 @@ my $duration = 'sn';
 
 for my $i (1 .. $max) {
     my ($xv, $yv) = (randv(), randv());
-    printf "%d. xv = %.2f, yv = %.2f\n", $i, $xv, $yv;
+    printf "%d. xv = %5.2f, yv = %5.2f\n", $i, $xv, $yv;
 
     my $clapper = hash2circle({ x => 0, y => 0, radius => 2, xv => $xv, yv => $yv });
 
