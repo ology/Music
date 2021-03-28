@@ -15,8 +15,8 @@ my $score = setup_score(lead_in => 0, bpm => $bpm, patch => 14);
 my @chimes = (
     { chime => hash2circle({ x => 0,  y => 4,  radius => 1 }), note => 'C5' }, # N
     { chime => hash2circle({ x => 4,  y => 0,  radius => 1 }), note => 'F5' }, # E
-    { chime => hash2circle({ x => 0,  y => -4, radius => 1 }), note => 'G5' }, # S
-    { chime => hash2circle({ x => -4, y => 0,  radius => 1 }), note => 'C6' }, # W
+    { chime => hash2circle({ x => -4, y => 0,  radius => 1 }), note => 'G5' }, # W
+    { chime => hash2circle({ x => 0,  y => -4, radius => 1 }), note => 'C6' }, # S
 );
 
 my $duration = 'sn';
