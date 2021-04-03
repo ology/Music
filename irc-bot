@@ -78,7 +78,7 @@ $irc->on(irc_privmsg => sub {
       }
       # COMMAND: source
       elsif ($msg eq 'source') {
-        $irc->write(@to_chan, ':My guts are at https://github.com/ology/Miscellaneous/blob/master/irc-bot');
+        $irc->write(@to_chan, ':My guts are at https://github.com/ology/Music/blob/master/irc-bot');
       }
       # COMMAND: motif
       elsif ($msg =~ /^motif\s+([\d.]+)\s*([a-z ]*)$/) {
