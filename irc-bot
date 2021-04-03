@@ -1,0 +1,183 @@
+#!/usr/bin/env perl
+
+# IRC musical computation bot
+#
+# Writeup: https://ology.github.io/2021/03/30/irc-music-bot/
+
+# Sample config (irc-bot.yml):
+#
+# nick: 'yourbot'
+# user: 'Your Name Bot'
+# channel: '#yourchan'
+# server: 'chat.host.net:6667'
+
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+use Mojo::IRC;
+use YAML::XS qw(LoadFile);
+use Music::Scales qw(get_scale_notes);
+use Music::Chord::Namer qw(chordname);
+use Music::Chord::Note;
+use Music::Note::Frequency;
+#use App::MusicTools; # <- Needed for `vov`
+
+# Use local author libraries
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Duration-Partition Music-Intervals);
+
+use Music::Duration::Partition;
+use Music::Intervals;
+
+use constant OPTIONS => { max_width => 120 };
+
+my $conf = LoadFile("$0.yml");
+
+my @to_chan = (privmsg => $conf->{channel});
+
+my $irc = Mojo::IRC->new(
+  nick => $conf->{nick},
+  user => $conf->{user},
+  server => $conf->{server},
+  tls => {},
+);
+
+$irc->on(irc_join => sub {
+  my($self, $message) = @_;
+  print "SUCCESS: $message->{params}[0] joined\n";
+});
+
+$irc->on(message => sub {
+  my($self, $message) = @_;
+});
+
+$irc->on(irc_privmsg => sub {
+  my($self, $message) = @_;
+  if ($message && $message->{params} && $message->{params}[1] =~ /^(\w+)[:,]\s*(.*)$/) {
+    my $nick = $1;
+    my $msg = $2;
+    if ($nick eq $conf->{nick}) {
+      print "$message->{prefix} said: $message->{params}[1]\n";
+      my %enharmonic = (
+        'C#' => 'Db',
+        'D#' => 'Eb',
+        'E#' => 'F',
+        'F#' => 'Gb',
+        'G#' => 'Ab',
+        'A#' => 'Bb',
+        'B#' => 'C',
+      );
+      # COMMAND: leave
+      if ($msg eq 'leave') {
+        $irc->write(QUIT => 'oof');
+        exit;
+      }
+      # COMMAND: help
+      elsif ($msg eq 'help') {
+        $irc->write(@to_chan, ':Address me with one of: [source|motif 3|vov I bII V/IV|chord C Eb G Bb|notes Cm7|freq 440 4|interval C E G] for example');
+      }
+      # COMMAND: source
+      elsif ($msg eq 'source') {
+        $irc->write(@to_chan, ':My guts are at https://github.com/ology/Miscellaneous/blob/master/irc-bot');
+      }
+      # COMMAND: motif
+      elsif ($msg =~ /^motif\s+([\d.]+)\s*([a-z ]*)$/) {
+        my $size = $1;
+        my $pool = $2 ? [split / /, $2] : [qw(hn dqn qn den en sn)];
+        my $mdp = Music::Duration::Partition->new(size => $size, pool => $pool);
+        my $motif = $mdp->motif;
+        my @scale = get_scale_notes('C');
+        my $phrase = [ map { $scale[int rand @scale] . '.' . $_ } @$motif ];
+        $irc->write(@to_chan, ':' . "$size beats: " . ddc($phrase, OPTIONS));
+      }
+      # COMMAND: vov
+      elsif ($msg =~ /^vov\s+([\w \/]+)$/) {
+        my @args = split /\s+/, $1;
+        my @parts;
+        for my $arg (@args) {
+          my $vov = qx{ vov $arg };
+          chomp $vov;
+          $vov = uc $vov;
+          $vov =~ s/([A-G])IS/$enharmonic{ $1 . '#' }/g
+            if $arg =~ /b/;
+          $vov =~ s/IS/#/g;
+          push @parts, $vov;
+        }
+        my $flattened = join '|', @parts;
+        $irc->write(@to_chan, ":$flattened");
+      }
+      # COMMAND: chord
+      elsif ($msg =~ /^chord\s+(.+)$/) {
+        my $arg = $1;
+        my @notes = split /\s+/, $arg;
+        my $chord = chordname(@notes);
+        $chord =~ s/([A-G]#)(.*)$/$enharmonic{$1}$2/g
+          if $arg =~ /b/;
+        $irc->write(@to_chan, ":Chord: $chord");
+      }
+      # COMMAND: notes
+      elsif ($msg =~ /^notes\s+(.+)$/) {
+        my $arg = $1;
+        my $cn = Music::Chord::Note->new;
+        my @notes = $cn->chord($arg);
+        # A flat request has any sharp notes replaced
+        if ($arg =~ /b/) {
+          for (@notes) {
+            s/^([A-G]#)$/$enharmonic{$1}/;
+          }
+        }
+        # A request that is not sharp, has A# & D# replaced
+        elsif ($arg !~ /#/) {
+          for (@notes) {
+            s/^([AD]#)$/$enharmonic{$1}/;
+          }
+        }
+        $irc->write(@to_chan, ":Notes: @notes");
+      }
+      # COMMAND: freq
+      elsif ($msg =~ /^freq\s+([\w.]+)\s*(\d+)?$/) {
+        my $freq = $1;
+        my $num = $2 || 4;
+        if ($freq =~ /[A-G]/) {
+          my $note = Music::Note::Frequency->new($freq);
+          $freq = $note->frequency;
+        }
+        my $freqs = [ map { sprintf '%.2f', $_ * $freq } 1 .. $num ];
+        $irc->write(@to_chan, ":Harmonics: " . ddc($freqs, OPTIONS));
+      }
+      # COMMAND: interval
+      elsif ($msg =~ /^interval\s+(.+)$/) {
+        my @notes = split / /, $1;
+        my $mi = Music::Intervals->new(
+          notes    => \@notes,
+          justin   => 1,
+          interval => 1,
+        );
+        $mi->process;
+        # Gymnastics :\
+        my $v = (values %{ $mi->natural_intervals })[0];
+        my $flat = ddc($v, OPTIONS);
+        $flat =~ s/\n//g;
+        $flat =~ s/\s+/ /g;
+        $flat =~ s/^{\s*//;
+        $flat =~ s/,}$//;
+        $flat =~ s/} }$/}/;
+        $flat =~ s/ =>/:/g;
+        $irc->write(@to_chan, ":Intervals: $flat");
+      }
+      # Fallthough
+      else {
+        (my $you = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
+        $irc->write(@to_chan, qq|:You said, "$msg" $you|);
+      }
+    }
+  }
+});
+
+$irc->connect(sub {
+  my($irc, $err) = @_;
+  return warn $err if $err;
+  $irc->write(join => $conf->{channel});
+});
+
+Mojo::IOLoop->start;
