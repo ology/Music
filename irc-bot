@@ -29,11 +29,11 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Duration-Partition Music-In
 use Music::Duration::Partition;
 use Music::Intervals;
 
-use constant OPTIONS => { max_width => 120 };
+use constant OPTIONS => { max_width => 120 }; # For ddc()
 
 my $conf = LoadFile("$0.yml");
 
-my @to_chan = (privmsg => $conf->{channel});
+my @to_chan = (privmsg => $conf->{channel}); # Convenience variable
 
 my $irc = Mojo::IRC->new(
   nick => $conf->{nick},
