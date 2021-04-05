@@ -35,7 +35,7 @@ use constant OPTIONS => { max_width => 120 }; # For ddc()
 
 my $conf = LoadFile("$0.yml");
 
-my @to_chan = (privmsg => $conf->{channel}); # Convenience variable
+my @to = (privmsg => $conf->{channel}); # Convenience variable
 
 my $irc = Mojo::IRC->new(
   nick => $conf->{nick},
@@ -76,14 +76,14 @@ $irc->on(irc_privmsg => sub {
       }
       # COMMAND: help
       elsif ($msg eq 'help') {
-        $irc->write(@to_chan, ':'
+        $irc->write(@to, ':'
           . "$conf->{nick}: "
           . 'source|motif 3|vov I bII V/IV|chord C Eb G Bb|notes Cm7|freq 440 4|interval C E|key 7b 5#|scale A minor|hit 19700101'
         );
       }
       # COMMAND: source
       elsif ($msg eq 'source') {
-        $irc->write(@to_chan, ':My guts are at https://github.com/ology/Music/blob/master/irc-bot');
+        $irc->write(@to, ':My guts are at https://github.com/ology/Music/blob/master/irc-bot');
       }
       # COMMAND: motif
       elsif ($msg =~ /^motif\s+([\d.]+)\s*([a-z ]*)$/) {
@@ -93,7 +93,7 @@ $irc->on(irc_privmsg => sub {
         my $motif = $mdp->motif;
         my @scale = get_scale_notes('C');
         my $phrase = [ map { $scale[int rand @scale] . '.' . $_ } @$motif ];
-        $irc->write(@to_chan, ':' . "$size beats: " . ddc($phrase, OPTIONS));
+        $irc->write(@to, ':' . "$size beats: " . ddc($phrase, OPTIONS));
       }
       # COMMAND: vov
       elsif ($msg =~ /^vov\s+([\w \/]+)$/) {
@@ -109,7 +109,7 @@ $irc->on(irc_privmsg => sub {
           push @parts, $vov;
         }
         my $flattened = join '|', @parts;
-        $irc->write(@to_chan, ":$flattened");
+        $irc->write(@to, ":$flattened");
       }
       # COMMAND: chord
       elsif ($msg =~ /^chord\s+(.+)$/) {
@@ -118,7 +118,7 @@ $irc->on(irc_privmsg => sub {
         my $chord = chordname(@notes);
         $chord =~ s/([A-G]#)(.*)$/$enharmonic{$1}$2/g
           if $arg =~ /b/;
-        $irc->write(@to_chan, ":Chord: $chord");
+        $irc->write(@to, ":Chord: $chord");
       }
       # COMMAND: notes
       elsif ($msg =~ /^notes\s+(.+)$/) {
@@ -137,7 +137,7 @@ $irc->on(irc_privmsg => sub {
             s/^([AD]#)$/$enharmonic{$1}/;
           }
         }
-        $irc->write(@to_chan, ":Notes: @notes");
+        $irc->write(@to, ":Notes: @notes");
       }
       # COMMAND: freq
       elsif ($msg =~ /^freq\s+([\w#.]+)\s*(\d+)?$/) {
@@ -148,7 +148,7 @@ $irc->on(irc_privmsg => sub {
           $freq = $note->frequency;
         }
         my $freqs = [ map { sprintf '%.2f', $_ * $freq } 1 .. $num ];
-        $irc->write(@to_chan, ":Harmonics: " . ddc($freqs, OPTIONS));
+        $irc->write(@to, ":Harmonics: " . ddc($freqs, OPTIONS));
       }
       # COMMAND: interval
       elsif ($msg =~ /^interval\s+(.+)$/) {
@@ -168,7 +168,7 @@ $irc->on(irc_privmsg => sub {
         $flat =~ s/,}$//;
         $flat =~ s/} }$/}/;
         $flat =~ s/ =>/:/g;
-        $irc->write(@to_chan, ":Intervals: $flat");
+        $irc->write(@to, ":Intervals: $flat");
       }
       # COMMAND: key
       elsif ($msg =~ /^key\s+(.+)$/) {
@@ -199,14 +199,14 @@ $irc->on(irc_privmsg => sub {
           'F#' => '6b 6#', 'Gb' => '6b 6#',
           'B'  => '7b 5#', 'Cb' => '7b 5#',
         );
-        $irc->write(@to_chan, ":Key: $key{$arg}");
+        $irc->write(@to, ":Key: $key{$arg}");
       }
       # COMMAND: scale
       elsif ($msg =~ /^scale\s+([A-G][b#]?)\s*(\w+)?$/) {
         my $note = $1;
         my $name = $2 || 'major';
         my @scale = get_scale_notes($note, $name);
-        $irc->write(@to_chan, ':Notes: ' . ddc(\@scale));
+        $irc->write(@to, ':Notes: ' . ddc(\@scale));
       }
       # COMMAND: hit
       elsif ($msg =~ /^hit\s+(\d{8})$/) {
@@ -251,12 +251,12 @@ $irc->on(irc_privmsg => sub {
             last;
         }
 
-        $irc->write(@to_chan, ":#1 on $date: $records[0][4]");
+        $irc->write(@to, ":#1 on $date: $records[0][4]");
       }
       # Fallthough
       else {
         (my $you = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
-        $irc->write(@to_chan, qq|:You said, "$msg" $you|);
+        $irc->write(@to, qq|:You said, "$msg" $you|);
       }
     }
   }
