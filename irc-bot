@@ -35,8 +35,6 @@ use constant OPTIONS => { max_width => 120 }; # For ddc()
 
 my $conf = LoadFile("$0.yml");
 
-my @to = (privmsg => $conf->{channel}); # Convenience variable
-
 my $irc = Mojo::IRC->new(
   nick => $conf->{nick},
   user => $conf->{user},
@@ -60,6 +58,7 @@ $irc->on(irc_privmsg => sub {
     my $msg = $2;
     if ($nick eq $conf->{nick}) {
       print "$message->{prefix} said: $message->{params}[1]\n";
+      my @to = (privmsg => $conf->{channel}); # Convenience variable
       my %enharmonic = (
         'C#' => 'Db',
         'D#' => 'Eb',
