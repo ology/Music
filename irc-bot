@@ -74,7 +74,7 @@ $irc->on(irc_privmsg => sub {
       }
       # COMMAND: help
       elsif ($msg eq 'help') {
-        $irc->write(@to_chan, ':Address me with one of: [source|motif 3|vov I bII V/IV|chord C Eb G Bb|notes Cm7|freq 440 4|interval C E|key 7b 5#] for example');
+        $irc->write(@to_chan, ':Address me with one of: [source|motif 3|vov I bII V/IV|chord C Eb G Bb|notes Cm7|freq 440 4|interval C E|key 7b 5#|scale A minor] for example');
       }
       # COMMAND: source
       elsif ($msg eq 'source') {
@@ -183,6 +183,13 @@ $irc->on(irc_privmsg => sub {
           '7b 5#' => 'B/Cb',  '5# 7b' => 'B/Cb',
         );
         $irc->write(@to_chan, ":Key: $key{$arg}");
+      }
+      # COMMAND: scale
+      elsif ($msg =~ /^scale\s+([A-G][b#]?)\s*(\w+)?$/) {
+        my $note = $1;
+        my $name = $2 || 'major';
+        my @scale = get_scale_notes($note, $name);
+        $irc->write(@to_chan, ':Notes: ' . ddc(\@scale));
       }
       # Fallthough
       else {
