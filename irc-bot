@@ -205,7 +205,7 @@ $irc->on(irc_privmsg => sub {
         my @scale = get_scale_notes($note, $name);
         $irc->write(@to_chan, ':Notes: ' . ddc(\@scale));
       }
-      # COMMAND: scale
+      # COMMAND: hit
       elsif ($msg =~ /^hit\s+(\d+)$/) {
         my $date = $1;
         my $url = 'http://www.umdmusic.com/default.asp?Lang=English&Chart=D&ChDate=' . $date . '&ChMode=N';
