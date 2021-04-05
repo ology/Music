@@ -78,7 +78,8 @@ $irc->on(irc_privmsg => sub {
       elsif ($msg eq 'help') {
         $irc->write(@to_chan, ':'
           . $conf->{nick}
-          . ': source|motif 3|vov I bII V/IV|chord C Eb G Bb|notes Cm7|freq 440 4|interval C E|key 7b 5#|scale A minor|hit 19700101'
+          . ': '
+          . 'source|motif 3|vov I bII V/IV|chord C Eb G Bb|notes Cm7|freq 440 4|interval C E|key 7b 5#|scale A minor|hit 19700101'
         );
       }
       # COMMAND: source
