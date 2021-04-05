@@ -215,8 +215,8 @@ $irc->on(irc_privmsg => sub {
             
         my $dom = Mojo::DOM->new($tx->res->body);
         my @data = $dom->find('table > tr > td:last-child > table > tr')
-                        ->map('all_text')
-                        ->each;
+                       ->map('all_text')
+                       ->each;
             
         my $n = quotemeta('\\n');
         my $r = quotemeta('\\r');
