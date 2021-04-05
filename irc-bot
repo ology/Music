@@ -168,6 +168,7 @@ $irc->on(irc_privmsg => sub {
       # COMMAND: key
       elsif ($msg =~ /^key\s+(.+)$/) {
         my $arg = $1;
+        # No fancy computation here...
         my %key = (
           '1b'    => 'F',
           '1#'    => 'G',
