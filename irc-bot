@@ -74,7 +74,7 @@ $irc->on(irc_privmsg => sub {
       }
       # COMMAND: help
       elsif ($msg eq 'help') {
-        $irc->write(@to_chan, ':Address me with one of: [source|motif 3|vov I bII V/IV|chord C Eb G Bb|notes Cm7|freq 440 4|interval C E G] for example');
+        $irc->write(@to_chan, ':Address me with one of: [source|motif 3|vov I bII V/IV|chord C Eb G Bb|notes Cm7|freq 440 4|interval C E|key 7b 5#] for example');
       }
       # COMMAND: source
       elsif ($msg eq 'source') {
@@ -164,6 +164,25 @@ $irc->on(irc_privmsg => sub {
         $flat =~ s/} }$/}/;
         $flat =~ s/ =>/:/g;
         $irc->write(@to_chan, ":Intervals: $flat");
+      }
+      # COMMAND: key
+      elsif ($msg =~ /^key\s+(.+)$/) {
+        my $arg = $1;
+        my %key = (
+          '1b'    => 'F',
+          '1#'    => 'G',
+          '2b'    => 'Bb',
+          '2#'    => 'D',
+          '3b'    => 'Eb',
+          '3#'    => 'A',
+          '4b'    => 'Ab',
+          '4#'    => 'E',
+          '4b'    => 'Ab',
+          '5b 7#' => 'C#/Db', '7# 5b' => 'C#/Db',
+          '6b 6#' => 'F#/Gb', '6# 6b' => 'F#/Gb',
+          '7b 5#' => 'B/Cb',  '5# 7b' => 'B/Cb',
+        );
+        $irc->write(@to_chan, ":Key: $key{$arg}");
       }
       # Fallthough
       else {
