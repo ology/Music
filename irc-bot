@@ -104,7 +104,7 @@ $irc->on(irc_privmsg => sub {
         $bpm = shift @notes if $notes[0] =~ /^\d+$/;
         my $patch = 0;
         $patch = shift @notes if $notes[0] =~ /^\d+$/;
-        my $repeat = 0;
+        my $repeat = 4;
         $repeat = shift @notes if $notes[0] =~ /^\d+$/;
         my $score = setup_score(bpm => $bpm, patch => $patch);
         for my $i (1 .. $repeat) {
