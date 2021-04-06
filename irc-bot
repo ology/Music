@@ -19,6 +19,7 @@ use Mojo::IRC;
 use Mojo::DOM;
 use Mojo::UserAgent;
 use YAML::XS qw(LoadFile);
+use Syntax::Keyword::Try;
 use Music::Scales qw(get_scale_notes);
 use Music::Chord::Namer qw(chordname);
 use Music::Chord::Note;
@@ -26,10 +27,11 @@ use Music::Note::Frequency;
 #use App::MusicTools; # <- Needed for `vov`
 
 # Use local author libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Duration-Partition Music-Intervals);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partition Music-Intervals);
 
 use Music::Duration::Partition;
 use Music::Intervals;
+use MIDI::Util qw(setup_score);
 
 use constant OPTIONS => { max_width => 120 }; # For ddc()
 
@@ -93,6 +95,41 @@ $irc->on(irc_privmsg => sub {
         my @scale = get_scale_notes('C');
         my $phrase = [ map { $scale[int rand @scale] . '.' . $_ } @$motif ];
         $irc->write(@to, ':' . "$size beats: " . ddc($phrase, OPTIONS));
+      }
+      # COMMAND: play
+      elsif ($msg =~ /^play\s+(.+)$/) {
+        my $phrase = $1;
+        my @notes = split /\s+/, $phrase;
+        my $bpm = 100;
+        $bpm = shift @notes if $notes[0] =~ /^\d+$/;
+        my $patch = 0;
+        $patch = shift @notes if $notes[0] =~ /^\d+$/;
+        my $score = setup_score(bpm => $bpm, patch => $patch);
+        for my $i (1 .. 4) {
+          for my $note (@notes) {
+            my ($pitch, $duration) = split /\./, $note;
+            $score->n($duration, $pitch);
+          }
+        }
+        my $name = sprintf '%s-%d', $0, time();
+        my $mid_file = "/tmp/$name.mid";
+        my $mp3_file = "/tmp/$name.mp3";
+        $score->write_score($mid_file);
+        my $cmd = "timidity $mid_file -Ow -o - | ffmpeg -i - -acodec libmp3lame -ab 64k $mp3_file";
+        try {
+          system($cmd) == 0
+            or die "system($cmd) failed: $?";
+          $cmd = "scp $mp3_file $conf->{scp_host}:$conf->{scp_dir}";
+          system($cmd) == 0
+            or die "system($cmd) failed: $?";
+          my $url = sprintf 'http://%s/tunes/%s.mp3', $conf->{web_host}, $name;
+          $irc->write(@to, ":URL: $url");
+        }
+        catch ($e) {
+          $irc->write(@to, ":Something went wrong $nick: $e");
+        }
+        unlink $mid_file;
+        unlink $mp3_file;
       }
       # COMMAND: vov
       elsif ($msg =~ /^vov\s+([\w \/]+)$/) {
