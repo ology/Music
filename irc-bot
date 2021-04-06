@@ -110,7 +110,12 @@ $irc->on(irc_privmsg => sub {
         for my $i (1 .. $repeat) {
           for my $note (@notes) {
             my ($pitch, $duration) = split /\./, $note;
-            $score->n($duration, $pitch);
+            if ($pitch eq 'r') {
+              $score->r($duration);
+            }
+            else {
+              $score->n($duration, $pitch);
+            }
           }
         }
         my $name = sprintf '%s-%d', $0, time();
