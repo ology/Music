@@ -92,7 +92,7 @@ $irc->on(irc_privmsg => sub {
         my $pool = $2 ? [split / /, $2] : [qw(hn dqn qn den en sn)];
         my $mdp = Music::Duration::Partition->new(size => $size, pool => $pool);
         my $motif = $mdp->motif;
-        my @scale = get_scale_notes('C');
+        my @scale = map { $_ . 4 } get_scale_notes('C');
         my $phrase = [ map { $scale[int rand @scale] . '.' . $_ } @$motif ];
         $phrase = ddc($phrase, OPTIONS);
         $phrase =~ s/'//g;
