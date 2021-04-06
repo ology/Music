@@ -94,7 +94,10 @@ $irc->on(irc_privmsg => sub {
         my $motif = $mdp->motif;
         my @scale = get_scale_notes('C');
         my $phrase = [ map { $scale[int rand @scale] . '.' . $_ } @$motif ];
-        $irc->write(@to, ':' . "$size beats: " . ddc($phrase, OPTIONS));
+        $phrase = ddc($phrase, OPTIONS);
+        $phrase =~ s/'//g;
+        $phrase =~ s/,//g;
+        $irc->write(@to, ':' . "$size beats: $phrase");
       }
       # COMMAND: play
       elsif ($msg =~ /^play\s+(.+)$/) {
