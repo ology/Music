@@ -130,7 +130,7 @@ $irc->on(irc_privmsg => sub {
           $irc->write(@to, ":URL: $url");
         }
         catch ($e) {
-          $irc->write(@to, ":Something went wrong $nick: $e");
+          $irc->write(@to, ":Something went wrong: $e");
         }
         unlink $mid_file;
         unlink $mp3_file;
