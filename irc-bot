@@ -114,7 +114,7 @@ $irc->on(irc_privmsg => sub {
               $score->r($duration);
             }
             else {
-              $pitch = midi_format($pitch);
+              $pitch = (midi_format($pitch))[0];
               $score->n($duration, $pitch);
             }
           }
