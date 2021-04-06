@@ -31,7 +31,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partitio
 
 use Music::Duration::Partition;
 use Music::Intervals;
-use MIDI::Util qw(setup_score);
+use MIDI::Util qw(setup_score midi_format);
 
 use constant OPTIONS => { max_width => 120 }; # For ddc()
 
@@ -114,6 +114,7 @@ $irc->on(irc_privmsg => sub {
               $score->r($duration);
             }
             else {
+              $pitch = midi_format($pitch);
               $score->n($duration, $pitch);
             }
           }
