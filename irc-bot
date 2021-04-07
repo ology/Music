@@ -34,6 +34,11 @@ use Music::Intervals;
 use MIDI::Util qw(setup_score midi_format);
 
 use constant OPTIONS => { max_width => 120 }; # For ddc()
+use constant MIN_BPM => 20;
+use constant DEFAULT_BPM => 100;
+use constant DEFAULT_PATCH => 0;
+use constant DEFAULT_REPEATS => 4;
+use constant MAX_REPEATS => 8;
 
 my $conf = LoadFile("$0.yml");
 
@@ -101,11 +106,11 @@ $irc->on(irc_privmsg => sub {
         my $phrase = $1;
         my @notes = split /\s+/, $phrase;
         @notes = midi_format(@notes);
-        my $bpm = 100;
+        my $bpm = DEFAULT_BPM;
         $bpm = shift @notes if $notes[0] =~ /^\d+$/;
-        my $patch = 0;
+        my $patch = DEFAULT_PATCH;
         $patch = shift @notes if $notes[0] =~ /^\d+$/;
-        my $repeat = 4;
+        my $repeat = DEFAULT_REPEATS;
         $repeat = shift @notes if $notes[0] =~ /^\d+$/;
         my $score = setup_score(bpm => $bpm, patch => $patch);
         for my $i (1 .. $repeat) {
@@ -124,8 +129,8 @@ $irc->on(irc_privmsg => sub {
         my $mp3_file = "/tmp/$name.mp3";
         $score->write_score($mid_file);
         try {
-          die 'Not enough BPM' if $bpm < 20;
-          die 'Too many repeats' if $repeat > 8;
+          die 'Not enough BPM' if $bpm < MIN_BPM;
+          die 'Too many repeats' if $repeat > MAX_REPEATS;
           my $cmd = "timidity $mid_file -Ow -o - | ffmpeg -i - -acodec libmp3lame -ab 64k $mp3_file";
           system($cmd) == 0
             or die "system($cmd) failed: $?";
