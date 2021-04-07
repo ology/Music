@@ -116,7 +116,7 @@ $irc->on(irc_privmsg => sub {
         for my $i (1 .. $repeat) {
           for my $note (@notes) {
             my ($pitch, $duration) = split /\./, $note;
-            if ($pitch eq 'r') {
+            if ($pitch eq 'r' || $pitch eq 'R') {
               $score->r($duration);
             }
             else {
