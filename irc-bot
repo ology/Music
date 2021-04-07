@@ -60,12 +60,16 @@ $irc->on(message => sub {
 
 $irc->on(irc_privmsg => sub {
   my($self, $message) = @_;
+
   if ($message && $message->{params} && $message->{params}[1] =~ /^(\w+)[:,]\s*(.*)$/) {
     my $nick = $1;
     my $msg = $2;
+
     if ($nick eq $conf->{nick}) {
       print "$message->{prefix} said: $message->{params}[1]\n";
+
       my @to = (privmsg => $conf->{channel}); # Convenience variable
+
       my %enharmonic = (
         'C#' => 'Db',
         'D#' => 'Eb',
@@ -75,6 +79,7 @@ $irc->on(irc_privmsg => sub {
         'A#' => 'Bb',
         'B#' => 'C',
       );
+
       # COMMAND: leave
       if ($msg eq 'leave') {
         $irc->write(QUIT => 'oof');
@@ -237,7 +242,7 @@ $irc->on(irc_privmsg => sub {
           '5b 7#' => 'C#/Db', '7# 5b' => 'C#/Db',
           '6b 6#' => 'F#/Gb', '6# 6b' => 'F#/Gb',
           '7b 5#' => 'B/Cb',  '5# 7b' => 'B/Cb',
-
+          # inverted:
           'F'  => '1b',
           'G'  => '1#',
           'Bb' => '2b',
@@ -263,27 +268,21 @@ $irc->on(irc_privmsg => sub {
       elsif ($msg =~ /^hit\s+(\d{8})$/) {
         my $date = $1;
         my $url = 'http://www.umdmusic.com/default.asp?Lang=English&Chart=D&ChDate=' . $date . '&ChMode=N';
-
         my $ua  = Mojo::UserAgent->new;
         my $tx = $ua->get($url);
-            
         my $dom = Mojo::DOM->new($tx->res->body);
         my @data = $dom->find('table > tr > td:last-child > table > tr')
                        ->map('all_text')
                        ->each;
-            
         my $n = quotemeta('\\n');
         my $r = quotemeta('\\r');
         my $t = quotemeta('\\t');
-
         my @lines;
         for my $d (@data) {
             $d =~ s/$n//g;
             $d =~ s/$r//g;
             $d =~ s/$t//g;
-
             my @row = split /[\n\r\t]+/, $d;
-            
             my @partial;
             for my $r (@row) {
                 $r =~ s/\s+/ /g;
@@ -294,14 +293,12 @@ $irc->on(irc_privmsg => sub {
             }
             push @lines, \@partial;
         }
-
         my @records;
         for my $line (@lines) {
             next unless $line->[0] =~ /^\d+$/;
             push @records, $line;
             last;
         }
-
         $irc->write(@to, ":#1 on $date: $records[0][4]");
       }
       # Fallthough
@@ -309,6 +306,7 @@ $irc->on(irc_privmsg => sub {
         (my $you = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
         $irc->write(@to, qq|:You said, "$msg" $you|);
       }
+
     }
   }
 });
