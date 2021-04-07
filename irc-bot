@@ -99,14 +99,14 @@ $irc->on(irc_privmsg => sub {
         if ($arg =~ /^\d+$/) {
           my $instrument = '?';
           $instrument = $MIDI::number2patch{$arg} if exists $MIDI::number2patch{$arg};
-          $irc->write(@to, ':' . "Instrument: $instrument");
+          $irc->write(@to, ":Instrument: $instrument");
         }
         else {
           $arg = lc $arg;
           my @instruments = grep { lc($_) =~ /$arg/ } sort keys %MIDI::patch2number;
           my @patches = map { $_ . ' [' . $MIDI::patch2number{$_} . ']' } @instruments;
           my $result = join ', ', @patches;
-          $irc->write(@to, ':' . "Patch: $result");
+          $irc->write(@to, ":Patch: $result");
         }
       }
       # COMMAND: motif
@@ -120,7 +120,7 @@ $irc->on(irc_privmsg => sub {
         $phrase = ddc($phrase, OPTIONS);
         $phrase =~ s/'//g;
         $phrase =~ s/,//g;
-        $irc->write(@to, ':' . "$size beats: $phrase");
+        $irc->write(@to, ":$size beats: $phrase");
       }
       # COMMAND: play
       elsif ($msg =~ /^play\s+(.+)$/) {
