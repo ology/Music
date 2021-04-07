@@ -100,6 +100,7 @@ $irc->on(irc_privmsg => sub {
       elsif ($msg =~ /^play\s+(.+)$/) {
         my $phrase = $1;
         my @notes = split /\s+/, $phrase;
+        @notes = midi_format(@notes);
         my $bpm = 100;
         $bpm = shift @notes if $notes[0] =~ /^\d+$/;
         my $patch = 0;
@@ -114,7 +115,6 @@ $irc->on(irc_privmsg => sub {
               $score->r($duration);
             }
             else {
-              $pitch = (midi_format($pitch))[0];
               $score->n($duration, $pitch);
             }
           }
