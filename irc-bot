@@ -123,10 +123,10 @@ $irc->on(irc_privmsg => sub {
         my $mid_file = "/tmp/$name.mid";
         my $mp3_file = "/tmp/$name.mp3";
         $score->write_score($mid_file);
-        my $cmd = "timidity $mid_file -Ow -o - | ffmpeg -i - -acodec libmp3lame -ab 64k $mp3_file";
         try {
           die 'Not enough BPM' if $bpm < 20;
           die 'Too many repeats' if $repeat > 8;
+          my $cmd = "timidity $mid_file -Ow -o - | ffmpeg -i - -acodec libmp3lame -ab 64k $mp3_file";
           system($cmd) == 0
             or die "system($cmd) failed: $?";
           $cmd = "scp $mp3_file $conf->{scp_host}:$conf->{scp_dir}"; # Requires a passwordless key
