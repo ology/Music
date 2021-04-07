@@ -304,6 +304,39 @@ $irc->on(irc_privmsg => sub {
         }
         $irc->write(@to, ":#1 on $date: $records[0][4]");
       }
+      # COMMAND: range
+      elsif ($msg =~ /^range\s+(\w+)$/) {
+        # https://i.pinimg.com/originals/b1/30/19/b13019ed1cb830575979cdbb1c44d0e8.jpg
+        my $instrument = $1;
+        my %range = (
+          violin => 'G3 - G7',
+          viola => 'C3 - C7',
+          cello => 'C2 - C6',
+          bass => 'C1 - C5',
+          trumpet => 'E3 - C6',
+          trombone => 'E2 - F5',
+          french_horn => 'B1 - F5',
+          tuba => 'D1 - F4',
+          piccolo => 'D5 - B7',
+          flute => 'C4 - D7',
+          oboe => 'B3 - A6',
+          clarinet => 'D3 - A6',
+          alto_sax => 'D3 - A5',
+          tenor_sax => 'A2 - F5',
+          baritone_sax => 'D2 - A4',
+          bassoon => 'B1 - D5',
+          harp => 'C2 - F7',
+          harpsichord => 'F1 - F6',
+          piano => 'A0 - B7',
+          xylophone => 'G4 - C7',
+          glockenspiel => 'G3 - C6',
+          vibraphone => 'F3 - F6',
+          timpani => 'D2 - C4',
+          marimba => 'C2 - C7',
+          guitar => 'E2 - E6',
+        );
+        $irc->write(@to, ":$instrument range: $range{$instrument}");
+      }
       # Fallthough
       else {
         (my $you = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
