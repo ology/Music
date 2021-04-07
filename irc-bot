@@ -33,7 +33,7 @@ use Music::Duration::Partition;
 use Music::Intervals;
 use MIDI::Util qw(setup_score midi_format);
 
-use constant OPTIONS => { max_width => 120 }; # For ddc()
+use constant OPTIONS => { max_width => 256 }; # For ddc()
 use constant MIN_BPM => 20;
 use constant DEFAULT_BPM => 100;
 use constant DEFAULT_PATCH => 0;
@@ -284,31 +284,7 @@ $irc->on(irc_privmsg => sub {
       elsif ($msg =~ /^hit\s+(\d{8})$/) {
         my $date = $1;
         my $url = 'http://www.umdmusic.com/default.asp?Lang=English&Chart=D&ChDate=' . $date . '&ChMode=N';
-        my $ua  = Mojo::UserAgent->new;
-        my $tx = $ua->get($url);
-        my $dom = Mojo::DOM->new($tx->res->body);
-        my @data = $dom->find('table > tr > td:last-child > table > tr')
-                       ->map('all_text')
-                       ->each;
-        my $n = quotemeta('\\n');
-        my $r = quotemeta('\\r');
-        my $t = quotemeta('\\t');
-        my @lines;
-        for my $d (@data) {
-            $d =~ s/$n//g;
-            $d =~ s/$r//g;
-            $d =~ s/$t//g;
-            my @row = split /[\n\r\t]+/, $d;
-            my @partial;
-            for my $r (@row) {
-                $r =~ s/\s+/ /g;
-                $r =~ s/^\s+//;
-                $r =~ s/\s+$//;
-                next if $r =~ /^\s*$/;
-                push @partial, $r;
-            }
-            push @lines, \@partial;
-        }
+        my @lines = get_lines($url, 'table > tr > td:last-child > table > tr');
         my @records;
         for my $line (@lines) {
             next unless $line->[0] =~ /^\d+$/;
@@ -316,6 +292,19 @@ $irc->on(irc_privmsg => sub {
             last;
         }
         $irc->write(@to, ":#1 on $date: $records[0][4]");
+      }
+      # COMMAND: bwv
+      elsif ($msg =~ /^bwv\s+(\w+)$/) {
+        my $num = sprintf '%03s', $1;
+        my $url = 'https://imslp.org/wiki/List_of_works_by_Johann_Sebastian_Bach';
+        my @lines = get_lines($url, 'table.wikitable tr');
+        my %bwv;
+        for my $line (@lines) {
+            my $bwv = shift @$line;
+            $bwv{$bwv} = $line;
+        }
+        my $bwv = ddc($bwv{$num}, OPTIONS);
+        $irc->write(@to, ":BWV $num: $bwv");
       }
       # COMMAND: range
       elsif ($msg =~ /^range\s+(\w+)$/) {
@@ -367,3 +356,33 @@ $irc->connect(sub {
 });
 
 Mojo::IOLoop->start;
+
+sub get_lines {
+  my ($url, $selector) = @_;
+  my $ua  = Mojo::UserAgent->new;
+  my $tx = $ua->get($url);
+  my $dom = Mojo::DOM->new($tx->res->body);
+  my @data = $dom->find($selector)
+                 ->map('all_text')
+                 ->each;
+  my $n = quotemeta('\\n');
+  my $r = quotemeta('\\r');
+  my $t = quotemeta('\\t');
+  my @lines;
+  for my $d (@data) {
+    $d =~ s/$n//g;
+    $d =~ s/$r//g;
+    $d =~ s/$t//g;
+    my @row = split /[\n\r\t]+/, $d;
+    my @partial;
+    for my $r (@row) {
+      $r =~ s/\s+/ /g;
+      $r =~ s/^\s+//;
+      $r =~ s/\s+$//;
+      next if $r =~ /^\s*$/;
+      push @partial, $r;
+    }
+    push @lines, \@partial;
+  }
+  return @lines;
+}
