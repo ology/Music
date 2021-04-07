@@ -262,7 +262,10 @@ $irc->on(irc_privmsg => sub {
         my $note = $1;
         my $name = $2 || 'major';
         my @scale = get_scale_notes($note, $name);
-        $irc->write(@to, ':Notes: ' . ddc(\@scale));
+        my $notes = ddc(\@scale, OPTIONS);
+        $notes =~ s/'//g;
+        $notes =~ s/,//g;
+        $irc->write(@to, ":Notes: $notes");
       }
       # COMMAND: hit
       elsif ($msg =~ /^hit\s+(\d{8})$/) {
