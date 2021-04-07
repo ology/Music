@@ -93,6 +93,22 @@ $irc->on(irc_privmsg => sub {
       elsif ($msg eq 'source') {
         $irc->write(@to, ':My guts are at https://github.com/ology/Music/blob/master/irc-bot');
       }
+      # COMMAND: patch
+      elsif ($msg =~ /^patch\s+(\w+)$/) {
+        my $arg = $1;
+        if ($arg =~ /^\d+$/) {
+          my $instrument = '?';
+          $instrument = $MIDI::number2patch{$arg} if exists $MIDI::number2patch{$arg};
+          $irc->write(@to, ':' . "Instrument: $instrument");
+        }
+        else {
+          $arg = lc $arg;
+          my @instruments = grep { lc($_) =~ /$arg/ } sort keys %MIDI::patch2number;
+          my @patches = map { $_ . ' [' . $MIDI::patch2number{$_} . ']' } @instruments;
+          my $result = join ', ', @patches;
+          $irc->write(@to, ':' . "Patch: $result");
+        }
+      }
       # COMMAND: motif
       elsif ($msg =~ /^motif\s+([\d.]+)\s*([a-z ]*)$/) {
         my $size = $1;
