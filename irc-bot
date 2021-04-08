@@ -306,7 +306,7 @@ $irc->on(irc_privmsg => sub {
             my $bwv = shift @$line;
             $bwv{$bwv} = $line;
         }
-        my $bwv = join ', ', @{ $bwv{$num} };
+        my $bwv = exists $bwv{$num} ? join ', ', @{ $bwv{$num} } : '?';
         $irc->write(@to, ":BWV $num: $bwv");
       }
       # COMMAND: bwv-url
