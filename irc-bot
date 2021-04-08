@@ -329,7 +329,6 @@ $irc->on(irc_privmsg => sub {
       }
       # COMMAND: range
       elsif ($msg =~ /^range\s+(\w+)$/) {
-        # https://i.pinimg.com/originals/b1/30/19/b13019ed1cb830575979cdbb1c44d0e8.jpg
         my $instrument = $1;
         my %range = (
           violin       => 'G3 - G7',
