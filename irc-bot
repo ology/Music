@@ -20,6 +20,7 @@ use Mojo::DOM;
 use Mojo::UserAgent;
 use YAML::XS qw(LoadFile);
 use Syntax::Keyword::Try;
+use Encoding::FixLatin qw(fix_latin);
 use Music::Scales qw(get_scale_notes);
 use Music::Chord::Namer qw(chordname);
 use Music::Chord::Note;
@@ -303,7 +304,8 @@ $irc->on(irc_privmsg => sub {
             my $bwv = shift @$line;
             $bwv{$bwv} = $line;
         }
-        my $bwv = ddc($bwv{$num}, OPTIONS);
+        $bwv{$num}[1] = fix_latin($bwv{$num}[1]);
+        my $bwv = join ', ', @{ $bwv{$num} };
         $irc->write(@to, ":BWV $num: $bwv");
       }
       # COMMAND: range
