@@ -295,7 +295,8 @@ $irc->on(irc_privmsg => sub {
             push @records, $line;
             last;
         }
-        $irc->write(@to, ":#1 on $date: $records[0][4]");
+        my $hit = $records[0][4] ? $records[0][4] : '?';
+        $irc->write(@to, ":#1 on $date: $hit");
       }
       # COMMAND: bwv
       elsif ($msg =~ /^bwv\s+(.+)$/) {
