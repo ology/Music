@@ -230,7 +230,7 @@ $irc->on(irc_privmsg => sub {
       elsif ($msg =~ /^interval\s+(.+)$/) {
         my @notes = split /\s+/, $1;
         try {
-          die 'Give 3 notes to process' unless @notes == 3; 
+          die 'Give 3 notes to process' unless @notes == 3;
           my $mi = Music::Intervals->new(
             notes    => \@notes,
             justin   => 1,
