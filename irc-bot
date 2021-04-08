@@ -331,7 +331,7 @@ $irc->on(irc_privmsg => sub {
         my @data = $dom->find('a[href$="(Bach,_Johann_Sebastian)"]')->each;
         my %bwv;
         for my $link (@data) {
-          (my $bwv = $link->attr('href')) =~ s/^.+?_BWV_(.+?)_.+$/$1/;
+          (my $bwv = $link->attr('href')) =~ s/^.+?_BWV_(.+?)_\(.+$/$1/;
           $bwv{$bwv} = $link->attr('href') unless $bwv =~ /\//;
         }
         my $bwv = exists $bwv{$num} ? "$imslp$bwv{$num}" : '?';
