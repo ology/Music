@@ -81,6 +81,8 @@ $irc->on(irc_privmsg => sub {
         'B#' => 'C',
       );
 
+      my $imslp = 'https://imslp.org';
+
       # COMMAND: leave
       if ($msg eq 'leave') {
         $irc->write(QUIT => 'oof');
@@ -297,7 +299,7 @@ $irc->on(irc_privmsg => sub {
       # COMMAND: bwv
       elsif ($msg =~ /^bwv\s+(.+)$/) {
         my $num = sprintf '%03s', $1;
-        my $url = 'https://imslp.org/wiki/List_of_works_by_Johann_Sebastian_Bach';
+        my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
         my @lines = get_lines($url, 'table.wikitable tr');
         my %bwv;
         for my $line (@lines) {
@@ -310,7 +312,7 @@ $irc->on(irc_privmsg => sub {
       # COMMAND: bwv-url
       elsif ($msg =~ /^bwv-url\s+(.+)$/) {
         my $num = $1;
-        my $url = 'https://imslp.org/wiki/List_of_works_by_Johann_Sebastian_Bach';
+        my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
         my $ua  = Mojo::UserAgent->new;
         my $tx = $ua->get($url);
         my $dom = Mojo::DOM->new($tx->res->body);
@@ -318,10 +320,9 @@ $irc->on(irc_privmsg => sub {
         my %bwv;
         for my $link (@data) {
           (my $bwv = $link->attr('href')) =~ s/^.+?_BWV_(.+?)_.+$/$1/;
-#          print $bwv, ' - https://imslp.org' . $url->attr('href'), "\n";
           $bwv{$bwv} = $link->attr('href') unless $bwv =~ /\//;
         }
-        $irc->write(@to, ":BWV $num: https://imslp.org$bwv{$num}");
+        $irc->write(@to, ":BWV $num: $imslp$bwv{$num}");
       }
       # COMMAND: range
       elsif ($msg =~ /^range\s+(\w+)$/) {
