@@ -398,8 +398,8 @@ sub get_lines {
       $r =~ s/^\s+//;
       $r =~ s/\s+$//;
       next if $r =~ /^\s*$/;
-      $r =~ s/—/-/g;
-      push @partial, fix_latin($r);
+      $r = fix_latin($r);
+      push @partial, $r;
     }
     push @lines, \@partial;
   }
