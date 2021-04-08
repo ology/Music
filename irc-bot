@@ -200,7 +200,8 @@ $irc->on(irc_privmsg => sub {
       elsif ($msg =~ /^notes\s+(.+)$/) {
         my $arg = $1;
         my $cn = Music::Chord::Note->new;
-        my @notes = $cn->chord($arg);
+        my @notes = ();
+        eval { @notes = $cn->chord($arg) };
         # A flat request has any sharp notes replaced
         if ($arg =~ /b/) {
           for (@notes) {
