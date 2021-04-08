@@ -307,6 +307,22 @@ $irc->on(irc_privmsg => sub {
         my $bwv = join ', ', @{ $bwv{$num} };
         $irc->write(@to, ":BWV $num: $bwv");
       }
+      # COMMAND: bwv-url
+      elsif ($msg =~ /^bwv-url\s+(.+)$/) {
+        my $num = $1;
+        my $url = 'https://imslp.org/wiki/List_of_works_by_Johann_Sebastian_Bach';
+        my $ua  = Mojo::UserAgent->new;
+        my $tx = $ua->get($url);
+        my $dom = Mojo::DOM->new($tx->res->body);
+        my @data = $dom->find('a[href$="(Bach,_Johann_Sebastian)"]')->each;
+        my %bwv;
+        for my $link (@data) {
+          (my $bwv = $link->attr('href')) =~ s/^.+?_BWV_(.+?)_.+$/$1/;
+#          print $bwv, ' - https://imslp.org' . $url->attr('href'), "\n";
+          $bwv{$bwv} = $link->attr('href') unless $bwv =~ /\//;
+        }
+        $irc->write(@to, ":BWV $num: https://imslp.org$bwv{$num}");
+      }
       # COMMAND: range
       elsif ($msg =~ /^range\s+(\w+)$/) {
         # https://i.pinimg.com/originals/b1/30/19/b13019ed1cb830575979cdbb1c44d0e8.jpg
