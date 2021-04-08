@@ -21,6 +21,7 @@ use Mojo::UserAgent;
 use YAML::XS qw(LoadFile);
 use Syntax::Keyword::Try;
 use Encoding::FixLatin qw(fix_latin);
+use Text::Unidecode qw(unidecode);
 use Music::Scales qw(get_scale_notes);
 use Music::Chord::Namer qw(chordname);
 use Music::Chord::Note;
@@ -312,6 +313,7 @@ $irc->on(irc_privmsg => sub {
       # COMMAND: bwv-url
       elsif ($msg =~ /^bwv-url\s+(.+)$/) {
         my $num = $1;
+        $num = unidecode($num);
         my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
         my $ua  = Mojo::UserAgent->new;
         my $tx = $ua->get($url);
