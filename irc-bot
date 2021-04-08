@@ -307,21 +307,8 @@ $irc->on(irc_privmsg => sub {
         my $hit = $records[0][4] ? $records[0][4] : '?';
         $irc->write(@to, ":#1 on $date: $hit");
       }
-      # COMMAND: bwv
-      elsif ($msg =~ /^bwv\s+(.+)$/) {
-        my $num = sprintf '%03s', $1;
-        my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
-        my @lines = get_lines($url, 'table.wikitable tr');
-        my %bwv;
-        for my $line (@lines) {
-            my $bwv = shift @$line;
-            $bwv{$bwv} = $line;
-        }
-        my $bwv = exists $bwv{$num} ? join ', ', @{ $bwv{$num} } : '?';
-        $irc->write(@to, ":$bwv");
-      }
-      # COMMAND: bwv-url
-      elsif ($msg =~ /^bwv-url\s+(.+)$/) {
+      # COMMAND: bwv url
+      elsif ($msg =~ /^bwv url\s+(.+)$/) {
         my $num = $1;
         $num = unidecode($num);
         my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
@@ -335,6 +322,19 @@ $irc->on(irc_privmsg => sub {
           $bwv{$bwv} = $link->attr('href') unless $bwv =~ /\//;
         }
         my $bwv = exists $bwv{$num} ? "$imslp$bwv{$num}" : '?';
+        $irc->write(@to, ":$bwv");
+      }
+      # COMMAND: bwv
+      elsif ($msg =~ /^bwv\s+(.+)$/) {
+        my $num = sprintf '%03s', $1;
+        my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
+        my @lines = get_lines($url, 'table.wikitable tr');
+        my %bwv;
+        for my $line (@lines) {
+            my $bwv = shift @$line;
+            $bwv{$bwv} = $line;
+        }
+        my $bwv = exists $bwv{$num} ? join ', ', @{ $bwv{$num} } : '?';
         $irc->write(@to, ":$bwv");
       }
       # COMMAND: range
