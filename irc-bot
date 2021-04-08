@@ -228,23 +228,29 @@ $irc->on(irc_privmsg => sub {
       }
       # COMMAND: interval
       elsif ($msg =~ /^interval\s+(.+)$/) {
-        my @notes = split / /, $1;
-        my $mi = Music::Intervals->new(
-          notes    => \@notes,
-          justin   => 1,
-          interval => 1,
-        );
-        $mi->process;
-        # Gymnastics :\
-        my $v = (values %{ $mi->natural_intervals })[0];
-        my $flat = ddc($v, OPTIONS);
-        $flat =~ s/\n//g;
-        $flat =~ s/\s+/ /g;
-        $flat =~ s/^{\s*//;
-        $flat =~ s/,}$//;
-        $flat =~ s/} }$/}/;
-        $flat =~ s/ =>/:/g;
-        $irc->write(@to, ":Intervals: $flat");
+        my @notes = split /\s+/, $1;
+        try {
+          die 'Give 3 notes to process' unless @notes == 3;
+          my $mi = Music::Intervals->new(
+            notes    => \@notes,
+            justin   => 1,
+            interval => 1,
+          );
+          $mi->process;
+          # Gymnastics :\
+          my $v = (values %{ $mi->natural_intervals })[0];
+          my $flat = ddc($v, OPTIONS);
+          $flat =~ s/\n//g;
+          $flat =~ s/\s+/ /g;
+          $flat =~ s/^{\s*//;
+          $flat =~ s/,}$//;
+          $flat =~ s/} }$/}/;
+          $flat =~ s/ =>/:/g;
+          $irc->write(@to, ":Intervals: $flat");
+        }
+        catch ($e) {
+          $irc->write(@to, ":Something went wrong: $e");
+        }
       }
       # COMMAND: key
       elsif ($msg =~ /^key\s+(.+)$/) {
