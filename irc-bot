@@ -275,7 +275,8 @@ $irc->on(irc_privmsg => sub {
           'F#' => '6b 6#', 'Gb' => '6b 6#',
           'B'  => '7b 5#', 'Cb' => '7b 5#',
         );
-        $irc->write(@to, ":Key: $key{$arg}");
+        my $key = exists $key{$arg} ? $key{$arg} : '?';
+        $irc->write(@to, ":Key: $key");
       }
       # COMMAND: scale
       elsif ($msg =~ /^scale\s+([A-G][b#]?)\s*(\w+)?$/) {
