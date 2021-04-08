@@ -304,7 +304,6 @@ $irc->on(irc_privmsg => sub {
             my $bwv = shift @$line;
             $bwv{$bwv} = $line;
         }
-        $bwv{$num}[1] = fix_latin($bwv{$num}[1]);
         my $bwv = join ', ', @{ $bwv{$num} };
         $irc->write(@to, ":BWV $num: $bwv");
       }
@@ -382,7 +381,7 @@ sub get_lines {
       $r =~ s/^\s+//;
       $r =~ s/\s+$//;
       next if $r =~ /^\s*$/;
-      push @partial, $r;
+      push @partial, fix_latin($r);
     }
     push @lines, \@partial;
   }
