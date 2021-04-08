@@ -318,7 +318,7 @@ $irc->on(irc_privmsg => sub {
             $bwv{$bwv} = $line;
         }
         my $bwv = exists $bwv{$num} ? join ', ', @{ $bwv{$num} } : '?';
-        $irc->write(@to, ":BWV $num: $bwv");
+        $irc->write(@to, ":$bwv");
       }
       # COMMAND: bwv-url
       elsif ($msg =~ /^bwv-url\s+(.+)$/) {
@@ -335,7 +335,7 @@ $irc->on(irc_privmsg => sub {
           $bwv{$bwv} = $link->attr('href') unless $bwv =~ /\//;
         }
         my $bwv = exists $bwv{$num} ? "$imslp$bwv{$num}" : '?';
-        $irc->write(@to, ":BWV $num: $bwv");
+        $irc->write(@to, ":$bwv");
       }
       # COMMAND: range
       elsif ($msg =~ /^range\s+(\w+)$/) {
