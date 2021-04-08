@@ -357,7 +357,8 @@ $irc->on(irc_privmsg => sub {
           marimba      => 'C2 - C7',
           guitar       => 'E2 - E6',
         );
-        $irc->write(@to, ":$instrument range: $range{$instrument}");
+        my $range = exists $range{$instrument} ? $range{$instrument} : '?';
+        $irc->write(@to, ":$instrument range: $range");
       }
       # Fallthough
       else {
