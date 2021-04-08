@@ -92,7 +92,7 @@ $irc->on(irc_privmsg => sub {
       }
       # COMMAND: source
       elsif ($msg eq 'source') {
-        $irc->write(@to, ':My guts are at https://github.com/ology/Music/blob/master/irc-bot');
+        $irc->write(@to, ':https://github.com/ology/Music/blob/master/irc-bot');
       }
       # COMMAND: patch
       elsif ($msg =~ /^patch\s+(\w+)$/) {
