@@ -191,7 +191,8 @@ $irc->on(irc_privmsg => sub {
       elsif ($msg =~ /^chord\s+(.+)$/) {
         my $arg = $1;
         my @notes = split /\s+/, $arg;
-        my $chord = chordname(@notes);
+        my $chord = '?';
+        eval { $chord = chordname(@notes) };
         $chord =~ s/([A-G]#)(.*)$/$enharmonic{$1}$2/g
           if $arg =~ /b/;
         $irc->write(@to, ":Chord: $chord");
