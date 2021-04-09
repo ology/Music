@@ -25,6 +25,7 @@ use Text::Unidecode qw(unidecode);
 use Music::Scales qw(get_scale_notes);
 use Music::Chord::Namer qw(chordname);
 use Music::Chord::Note;
+use Music::Note;
 use Music::Note::Frequency;
 #use App::MusicTools; # <- Needed for `vov`
 
@@ -96,6 +97,21 @@ $irc->on(irc_privmsg => sub {
       # COMMAND: source
       elsif ($msg eq 'source') {
         $irc->write(@to, ':https://github.com/ology/Music/blob/master/irc-bot');
+      }
+      # COMMAND: convert
+      elsif ($msg =~ /^convert\s+(.+)$/) {
+        my $note = $1;
+        my ($from_format, $to_format);
+        if ($note =~ /^\d+$/) {
+          $from_format = 'midinum';
+          $to_format = 'ISO';
+        }
+        else {
+          $from_format = 'ISO';
+          $to_format = 'midinum';
+        }
+        $note = Music::Note->new($note, $from_format);
+        $irc->write(@to, ":$to_format note: " . $note->format($to_format));
       }
       # COMMAND: patch
       elsif ($msg =~ /^patch\s+(\w+)$/) {
