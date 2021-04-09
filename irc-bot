@@ -34,6 +34,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partitio
 
 use Music::Duration::Partition;
 use Music::Intervals;
+use Music::Intervals::Numeric;
 use MIDI::Util qw(setup_score midi_format);
 
 use constant OPTIONS => { max_width => 256 }; # For ddc()
@@ -246,17 +247,29 @@ $irc->on(irc_privmsg => sub {
       }
       # COMMAND: interval
       elsif ($msg =~ /^interval\s+(.+)$/) {
-        my @notes = split /\s+/, $1;
+        my $arg = $1;
+        my @notes = split /\s+/, $arg;
         try {
           die "Give 3 notes to process\n" unless @notes == 3;
-          my $mi = Music::Intervals->new(
-            notes    => \@notes,
-            justin   => 1,
-            interval => 1,
-          );
-          $mi->process;
+          my ($mi, $v);
+          if ($arg =~ /[A-Za-z]/) {
+            $mi = Music::Intervals->new(
+              notes    => \@notes,
+              justin   => 1,
+              interval => 1,
+            );
+            $mi->process;
+            $v = (values %{ $mi->natural_intervals })[0];
+          }
+          else {
+            $mi = Music::Intervals::Numeric->new(
+              notes    => \@notes,
+              interval => 1,
+            );
+            $mi->process;
+            $v = (values %{ $mi->intervals })[0];
+          }
           # Gymnastics :\
-          my $v = (values %{ $mi->natural_intervals })[0];
           my $flat = ddc($v, OPTIONS);
           $flat =~ s/\n//g;
           $flat =~ s/\s+/ /g;
