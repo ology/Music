@@ -218,7 +218,7 @@ $irc->on(irc_privmsg => sub {
         $irc->write(@to, ":Notes: @notes");
       }
       # COMMAND: freq
-      elsif ($msg =~ /^freq\s+([\w#.]+)\s*(\d+)?$/) {
+      elsif ($msg =~ /^freq\s+(.+?)\s*(\d+)?$/) {
         my $freq = $1;
         my $num = $2 || 4;
         if ($freq =~ /[A-G]/) {
