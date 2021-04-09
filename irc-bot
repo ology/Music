@@ -220,7 +220,7 @@ $irc->on(irc_privmsg => sub {
       # COMMAND: freq
       elsif ($msg =~ /^freq\s+(.+?)\s+(\d+)$/) {
         my $freq = $1;
-        my $num = $2 || 4;
+        my $num = $2;
         if ($freq =~ /[A-G]/) {
           my $note = Music::Note::Frequency->new($freq);
           $freq = $note->frequency;
