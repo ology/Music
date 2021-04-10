@@ -154,56 +154,7 @@ $irc->on(irc_privmsg => sub {
         my $score = setup_score(bpm => $bpm);
         my $cn = Music::Chord::Note->new;
         for my $i (1 .. $repeat) {
-          my @chord;
-          for my $n (@phrase) {
-            # Patch change
-            if ($n =~ /^\^(\d+)$/) {
-              set_chan_patch($score, 0, $1);
-            }
-            # Volume change
-            elsif ($n =~ /^~(\d+)$/) {
-              $score->Volume($1);
-            }
-            # Pan change
-            elsif ($n =~ /^!(\d+)$/) {
-              $score->control_change(0, 10, $1);
-            }
-            # Named chord
-            elsif ($n =~ /^=(.+)$/) {
-              my ($chord, $octave, $duration) = split /\./, $1;
-              $octave //= 4;
-              $duration ||= 'wn';
-              my @notes = $cn->chord_with_octave($chord, $octave);
-              @notes = midi_format(@notes);
-              $score->n($duration, @notes);
-            }
-            # Chord start
-            elsif ($n =~ /^\(\s*([A-G][b#]?\d+)/) {
-              push @chord, $1;
-            }
-            # Chord end
-            elsif ($n =~ /^([A-G][b#]?\d+)\s*\)\.([a-z]n)$/) {
-              push @chord, $1;
-              @chord = midi_format(@chord);
-              $score->n($2, @chord);
-              @chord = ();
-            }
-            # Mid-chord
-            elsif (@chord && $n =~ /^([A-G][b#]?\d+)$/) {
-              push @chord, $1;
-            }
-            # Single note/rest
-            else {
-              my ($pitch, $duration) = split /\./, $n;
-              if ($pitch eq 'r' || $pitch eq 'R') {
-                $score->r($duration);
-              }
-              else {
-                $pitch = (midi_format($pitch))[0];
-                $score->n($duration, $pitch);
-              }
-            }
-          }
+          parse_phrase($score, $cn, \@phrase);
         }
         my $name = sprintf '%s-%d', $0, time();
         my $mid_file = "/tmp/$name.mid";
@@ -484,4 +435,58 @@ sub get_lines {
     push @lines, \@partial;
   }
   return @lines;
+}
+
+sub parse_phrase {
+  my ($score, $cn, $phrase) = @_;
+  my @chord;
+  for my $n (@$phrase) {
+    # Patch change
+    if ($n =~ /^\^(\d+)$/) {
+      set_chan_patch($score, 0, $1);
+    }
+    # Volume change
+    elsif ($n =~ /^~(\d+)$/) {
+      $score->Volume($1);
+    }
+    # Pan change
+    elsif ($n =~ /^!(\d+)$/) {
+      $score->control_change(0, 10, $1);
+    }
+    # Named chord
+    elsif ($n =~ /^=(.+)$/) {
+      my ($chord, $octave, $duration) = split /\./, $1;
+      $octave //= 4;
+      $duration ||= 'wn';
+      my @notes = $cn->chord_with_octave($chord, $octave);
+      @notes = midi_format(@notes);
+      $score->n($duration, @notes);
+    }
+    # Chord start
+    elsif ($n =~ /^\(\s*([A-G][b#]?\d+)/) {
+      push @chord, $1;
+    }
+    # Chord end
+    elsif ($n =~ /^([A-G][b#]?\d+)\s*\)\.([a-z]n)$/) {
+      push @chord, $1;
+      @chord = midi_format(@chord);
+      $score->n($2, @chord);
+      @chord = ();
+    }
+    # Mid-chord
+    elsif (@chord && $n =~ /^([A-G][b#]?\d+)$/) {
+      push @chord, $1;
+    }
+    # Single note/rest
+    else {
+      my ($pitch, $duration) = split /\./, $n;
+      if ($pitch eq 'r' || $pitch eq 'R') {
+        $score->r($duration);
+      }
+      else {
+        $pitch = (midi_format($pitch))[0];
+        $score->n($duration, $pitch);
+      }
+    }
+  }
 }
