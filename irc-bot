@@ -146,22 +146,22 @@ $irc->on(irc_privmsg => sub {
       # COMMAND: play
       elsif ($msg =~ /^play\s+(.+)$/) {
         my $phrase = $1;
-        my @notes = split /\s+/, $phrase;
-        @notes = midi_format(@notes);
+        my @phrase = split /\s+/, $phrase;
+        @phrase = midi_format(@phrase);
         my $bpm = DEFAULT_BPM;
-        $bpm = shift @notes if $notes[0] =~ /^\d+$/;
+        $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
         my $repeat = DEFAULT_REPEATS;
-        $repeat = shift @notes if $notes[0] =~ /^\d+$/;
+        $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
         my $patch;
         my $score = setup_score(bpm => $bpm);
         for my $i (1 .. $repeat) {
-          for my $note (@notes) {
-            if ($note =~ /^\^(\d+)$/) {
+          for my $n (@phrase) {
+            if ($n =~ /^\^(\d+)$/) {
               $patch = $1;
               set_chan_patch($score, 0, $patch);
               next;
             }
-            my ($pitch, $duration) = split /\./, $note;
+            my ($pitch, $duration) = split /\./, $n;
             if ($pitch eq 'r' || $pitch eq 'R') {
               $score->r($duration);
             }
