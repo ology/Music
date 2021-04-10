@@ -166,6 +166,10 @@ $irc->on(irc_privmsg => sub {
             elsif ($n =~ /^~(\d+)$/) {
               $score->Volume($1);
             }
+            # Pan change
+            elsif ($n =~ /^!(\d+)$/) {
+              $score->control_change(0, 10, $1);
+            }
             # Named chord
             elsif ($n =~ /^=(.+)$/) {
               my ($chord, $octave, $duration) = split /\./, $1;
