@@ -147,13 +147,13 @@ $irc->on(irc_privmsg => sub {
       elsif ($msg =~ /^play\s+(.+)$/) {
         my $phrase = $1;
         my @phrase = split /\s+/, $phrase;
-        @phrase = midi_format(@phrase);
         my $bpm = DEFAULT_BPM;
         $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
         my $repeat = DEFAULT_REPEATS;
         $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
         my $patch;
         my $score = setup_score(bpm => $bpm);
+        my $cn = Music::Chord::Note->new;
         for my $i (1 .. $repeat) {
           my @chord;
           for my $n (@phrase) {
@@ -163,18 +163,28 @@ $irc->on(irc_privmsg => sub {
               set_chan_patch($score, 0, $patch);
               next;
             }
+            # Named chord
+            elsif ($n =~ /^=(.+)$/) {
+              my ($chord, $octave, $duration) = split /\./, $1;
+              $octave //= 4;
+              $duration ||= 'wn';
+              my @notes = $cn->chord_with_octave($chord, $octave);
+              @notes = midi_format(@notes);
+              $score->n($duration, @notes);
+            }
             # Chord start
-            elsif ($n =~ /^\(\s*([A-G][fs]?\d+)/) {
+            elsif ($n =~ /^\(\s*([A-G][b#]?\d+)/) {
               push @chord, $1;
             }
             # Chord end
-            elsif ($n =~ /^([A-G][fs]?\d+)\s*\)\.([a-z]n)$/) {
+            elsif ($n =~ /^([A-G][b#]?\d+)\s*\)\.([a-z]n)$/) {
               push @chord, $1;
+              @chord = midi_format(@chord);
               $score->n($2, @chord);
               @chord = ();
             }
             # Mid-chord
-            elsif (@chord && $n =~ /^([A-G][fs]?\d+)$/) {
+            elsif (@chord && $n =~ /^([A-G][b#]?\d+)$/) {
               push @chord, $1;
             }
             # Single note/rest
@@ -184,6 +194,7 @@ $irc->on(irc_privmsg => sub {
                 $score->r($duration);
               }
               else {
+                $pitch = (midi_format($pitch))[0];
                 $score->n($duration, $pitch);
               }
             }
