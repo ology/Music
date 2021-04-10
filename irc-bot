@@ -155,18 +155,37 @@ $irc->on(irc_privmsg => sub {
         my $patch;
         my $score = setup_score(bpm => $bpm);
         for my $i (1 .. $repeat) {
+          my @chord;
           for my $n (@phrase) {
+            # Patch change
             if ($n =~ /^\^(\d+)$/) {
               $patch = $1;
               set_chan_patch($score, 0, $patch);
               next;
             }
-            my ($pitch, $duration) = split /\./, $n;
-            if ($pitch eq 'r' || $pitch eq 'R') {
-              $score->r($duration);
+            # Chord start
+            elsif ($n =~ /^\(\s*([A-G][b#]?\d+)/) {
+              push @chord, $1;
             }
+            # Chord end
+            elsif ($n =~ /^([A-G][b#]?\d+)\s*\)\.([a-z]n)$/) {
+              push @chord, $1;
+              $score->n($2, @chord);
+              @chord = ();
+            }
+            # Mid-chord
+            elsif (@chord && $n =~ /^([A-G][b#]?\d+)$/) {
+              push @chord, $1;
+            }
+            # Single note/rest
             else {
-              $score->n($duration, $pitch);
+              my ($pitch, $duration) = split /\./, $n;
+              if ($pitch eq 'r' || $pitch eq 'R') {
+                $score->r($duration);
+              }
+              else {
+                $score->n($duration, $pitch);
+              }
             }
           }
         }
