@@ -161,7 +161,10 @@ $irc->on(irc_privmsg => sub {
             if ($n =~ /^\^(\d+)$/) {
               $patch = $1;
               set_chan_patch($score, 0, $patch);
-              next;
+            }
+            # Volume change
+            elsif ($n =~ /^~(\d+)$/) {
+              $score->Volume($1);
             }
             # Named chord
             elsif ($n =~ /^=(.+)$/) {
