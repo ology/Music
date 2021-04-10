@@ -30,12 +30,13 @@ use Music::Note::Frequency;
 #use App::MusicTools; # <- Needed for `vov`
 
 # Use local author libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals);
 
 use Music::Duration;
 use Music::Duration::Partition;
 use Music::Intervals;
 use Music::Intervals::Numeric;
+use MIDI::Drummer::Tiny;
 use MIDI::Util qw(setup_score set_chan_patch midi_format);
 
 use constant OPTIONS => { max_width => 256 }; # For ddc()
@@ -160,6 +161,38 @@ $irc->on(irc_privmsg => sub {
         my $mid_file = "/tmp/$name.mid";
         my $mp3_file = "/tmp/$name.mp3";
         $score->write_score($mid_file);
+        try {
+          die 'Not enough BPM' if $bpm < MIN_BPM;
+          die 'Too many repeats' if $repeat > MAX_REPEATS;
+          my $url = mid2mp3($conf, $name, $mid_file, $mp3_file);
+          $irc->write(@to, ":URL: $url");
+        }
+        catch ($e) {
+          $irc->write(@to, ":Something went wrong: $e");
+        }
+        unlink $mid_file;
+        unlink $mp3_file;
+      }
+      # COMMAND: perc
+      elsif ($msg =~ /^perc\s+(.+)$/) {
+        my $phrase = $1;
+        my @phrase = split /\s+/, $phrase;
+        my $bpm = DEFAULT_BPM;
+        $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
+        my $repeat = DEFAULT_REPEATS;
+        $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
+        my $name = sprintf '%s-%d', $0, time();
+        my $mid_file = "/tmp/$name.mid";
+        my $mp3_file = "/tmp/$name.mp3";
+        my $d = MIDI::Drummer::Tiny->new(
+            file   => $mid_file,
+            bpm    => $bpm,
+            reverb => 0,
+        );
+        for my $i (1 .. $repeat) {
+          parse_drums($d, \@phrase);
+        }
+        $d->write;
         try {
           die 'Not enough BPM' if $bpm < MIN_BPM;
           die 'Too many repeats' if $repeat > MAX_REPEATS;
@@ -480,6 +513,42 @@ sub parse_phrase {
       else {
         $pitch = (midi_format($pitch))[0];
         $score->n($duration, $pitch);
+      }
+    }
+  }
+}
+
+sub parse_drums {
+  my ($d, $phrase) = @_;
+  my @voices;
+  for my $n (@$phrase) {
+    # Volume change
+    if ($n =~ /^~(\d+)$/) {
+      $d->score->Volume($1);
+    }
+    # Voices start
+    elsif ($n =~ /^\(\s*(\w+)/) {
+      push @voices, $1;
+    }
+    # Voices end
+    elsif ($n =~ /^(\w+)\s*\)\.([a-z]n)$/) {
+      push @voices, $1;
+      @voices = map { $d->$_ } @voices;
+      $d->note($2, @voices);
+      @voices = ();
+    }
+    # Mid-voices
+    elsif (@voices && $n =~ /^(\w+)$/) {
+      push @voices, $1;
+    }
+    # Single strike/rest
+    else {
+      my ($strike, $duration) = split /\./, $n;
+      if ($strike eq 'r' || $strike eq 'R') {
+        $d->rest($duration);
+      }
+      else {
+        $d->note($duration, $d->$strike);
       }
     }
   }
