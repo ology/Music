@@ -288,7 +288,7 @@ $irc->on(irc_privmsg => sub {
       # COMMAND: key
       elsif ($msg =~ /^key\s+(.+)$/) {
         my $arg = $1;
-        # No fancy computation here...
+        # No fancy computation here
         my %key = (
           '1b'    => 'F',
           '1#'    => 'G',
@@ -371,6 +371,7 @@ $irc->on(irc_privmsg => sub {
       # COMMAND: range
       elsif ($msg =~ /^range\s+(\w+)$/) {
         my $instrument = $1;
+        # No fancy computation here either
         my %range = (
           violin       => 'G3 - G7',
           viola        => 'C3 - C7',
