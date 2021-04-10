@@ -36,13 +36,13 @@ use Music::Duration;
 use Music::Duration::Partition;
 use Music::Intervals;
 use Music::Intervals::Numeric;
-use MIDI::Util qw(setup_score midi_format);
+use MIDI::Util qw(setup_score set_chan_patch midi_format);
 
 use constant OPTIONS => { max_width => 256 }; # For ddc()
 use constant MIN_BPM => 20;
 use constant DEFAULT_BPM => 100;
 use constant DEFAULT_PATCH => 0;
-use constant DEFAULT_REPEATS => 4;
+use constant DEFAULT_REPEATS => 2;
 use constant MAX_REPEATS => 8;
 
 my $conf = LoadFile("$0.yml");
@@ -151,13 +151,17 @@ $irc->on(irc_privmsg => sub {
         @notes = midi_format(@notes);
         my $bpm = DEFAULT_BPM;
         $bpm = shift @notes if $notes[0] =~ /^\d+$/;
-        my $patch = DEFAULT_PATCH;
-        $patch = shift @notes if $notes[0] =~ /^\d+$/;
         my $repeat = DEFAULT_REPEATS;
         $repeat = shift @notes if $notes[0] =~ /^\d+$/;
-        my $score = setup_score(bpm => $bpm, patch => $patch);
+        my $patch;
+        my $score = setup_score(bpm => $bpm);
         for my $i (1 .. $repeat) {
           for my $note (@notes) {
+            if ($note =~ /^\^(\d+)$/) {
+              $patch = $1;
+              set_chan_patch($score, 0, $patch);
+              next;
+            }
             my ($pitch, $duration) = split /\./, $note;
             if ($pitch eq 'r' || $pitch eq 'R') {
               $score->r($duration);
