@@ -163,13 +163,7 @@ $irc->on(irc_privmsg => sub {
         try {
           die 'Not enough BPM' if $bpm < MIN_BPM;
           die 'Too many repeats' if $repeat > MAX_REPEATS;
-          my $cmd = "timidity $mid_file -Ow -o - | ffmpeg -i - -acodec libmp3lame -ab 64k $mp3_file";
-          system($cmd) == 0
-            or die "system($cmd) failed: $?";
-          $cmd = "scp $mp3_file $conf->{scp_host}:$conf->{scp_dir}"; # Requires a passwordless key
-          system($cmd) == 0
-            or die "system($cmd) failed: $?";
-          my $url = sprintf 'http://%s/tunes/%s.mp3', $conf->{web_host}, $name;
+          my $url = mid2mp3($conf, $name, $mid_file, $mp3_file);
           $irc->write(@to, ":URL: $url");
         }
         catch ($e) {
@@ -489,4 +483,16 @@ sub parse_phrase {
       }
     }
   }
+}
+
+sub mid2mp3 {
+  my ($conf, $name, $mid_file, $mp3_file) = @_;
+  my $cmd = "timidity $mid_file -Ow -o - | ffmpeg -i - -acodec libmp3lame -ab 64k $mp3_file";
+  system($cmd) == 0
+    or die "system($cmd) failed: $?";
+  $cmd = "scp $mp3_file $conf->{scp_host}:$conf->{scp_dir}"; # Requires a passwordless key
+  system($cmd) == 0
+    or die "system($cmd) failed: $?";
+  my $url = sprintf 'http://%s/tunes/%s.mp3', $conf->{web_host}, $name;
+  return $url;
 }
