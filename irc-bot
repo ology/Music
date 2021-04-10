@@ -258,7 +258,6 @@ $irc->on(irc_privmsg => sub {
               justin   => 1,
               interval => 1,
             );
-            $mi->process;
             $v = (values %{ $mi->natural_intervals })[0];
           }
           else {
@@ -266,7 +265,6 @@ $irc->on(irc_privmsg => sub {
               notes    => \@notes,
               interval => 1,
             );
-            $mi->process;
             $v = (values %{ $mi->intervals })[0];
           }
           # Gymnastics :\
