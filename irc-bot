@@ -164,17 +164,17 @@ $irc->on(irc_privmsg => sub {
               next;
             }
             # Chord start
-            elsif ($n =~ /^\(\s*([A-G][b#]?\d+)/) {
+            elsif ($n =~ /^\(\s*([A-G][fs]?\d+)/) {
               push @chord, $1;
             }
             # Chord end
-            elsif ($n =~ /^([A-G][b#]?\d+)\s*\)\.([a-z]n)$/) {
+            elsif ($n =~ /^([A-G][fs]?\d+)\s*\)\.([a-z]n)$/) {
               push @chord, $1;
               $score->n($2, @chord);
               @chord = ();
             }
             # Mid-chord
-            elsif (@chord && $n =~ /^([A-G][b#]?\d+)$/) {
+            elsif (@chord && $n =~ /^([A-G][fs]?\d+)$/) {
               push @chord, $1;
             }
             # Single note/rest
