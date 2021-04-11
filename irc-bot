@@ -72,7 +72,7 @@ $irc->on(irc_privmsg => sub {
 
 $irc->on(irc_public => sub {
   my($self, $message) = @_;
-  if ($message && $message->{params} && $message->{params}[1] =~ /^(\w+)[:,]\s*(.*)$/) {
+  if ($message->{params}[1] =~ /^(\w+)[:,]\s*(.*)$/) {
     my $nick = $1;
     my $msg = $2;
     if ($nick eq $conf->{nick}) {
