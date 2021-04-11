@@ -520,6 +520,23 @@ sub parse_phrase {
 
 sub parse_drums {
   my ($d, $phrase) = @_;
+  my %abbrevs = (
+    oh => 'open_hh',
+    ch => 'closed_hh',
+    ph => 'pedal_hh',
+    c1 => 'crash1',
+    c2 => 'crash2',
+    r1 => 'ride1',
+    r2 => 'ride2',
+    rb => 'ride_bell',
+    sn => 'snare',
+    es => 'electric_snare',
+    ht => 'hi_tom',
+    mt => 'hi_mid_tom',
+    ft => 'hi_floor_tom',
+    bd => 'kick',
+    eb => 'electric_bass',
+  );
   my @voices;
   for my $n (@$phrase) {
     # Volume change
@@ -533,6 +550,7 @@ sub parse_drums {
     # Voices end
     elsif ($n =~ /^(\w+)\s*\)\.([a-z]n)$/) {
       push @voices, $1;
+      @voices = map { exists $abbrevs{$_} ? $abbrevs{$_} : $_ } @voices;
       @voices = map { $d->$_ } @voices;
       $d->note($2, @voices);
       @voices = ();
@@ -548,6 +566,7 @@ sub parse_drums {
         $d->rest($duration);
       }
       else {
+        $strike = $abbrevs{$strike} if exists $abbrevs{$strike};
         $d->note($duration, $d->$strike);
       }
     }
