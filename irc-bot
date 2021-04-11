@@ -72,11 +72,9 @@ $irc->on(irc_privmsg => sub {
 
 $irc->on(irc_public => sub {
   my($self, $message) = @_;
-
   if ($message && $message->{params} && $message->{params}[1] =~ /^(\w+)[:,]\s*(.*)$/) {
     my $nick = $1;
     my $msg = $2;
-
     if ($nick eq $conf->{nick}) {
       print "$message->{prefix} said: $message->{params}[1]\n";
       (my $who = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
@@ -96,7 +94,6 @@ Mojo::IOLoop->start;
 
 sub process_msg {
   my ($to, $who, $msg) = @_;
-
   my %enharmonic = (
     'C#' => 'Db',
     'D#' => 'Eb',
