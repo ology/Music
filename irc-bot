@@ -97,348 +97,348 @@ Mojo::IOLoop->start;
 sub process_msg {
   my ($to, $who, $msg) = @_;
 
-      my %enharmonic = (
-        'C#' => 'Db',
-        'D#' => 'Eb',
-        'E#' => 'F',
-        'F#' => 'Gb',
-        'G#' => 'Ab',
-        'A#' => 'Bb',
-        'B#' => 'C',
-      );
-      my $imslp = 'https://imslp.org';
-      # COMMAND: leave
-      if ($msg eq 'leave') {
-        $irc->write(QUIT => 'oof');
-        exit;
+  my %enharmonic = (
+    'C#' => 'Db',
+    'D#' => 'Eb',
+    'E#' => 'F',
+    'F#' => 'Gb',
+    'G#' => 'Ab',
+    'A#' => 'Bb',
+    'B#' => 'C',
+  );
+  my $imslp = 'https://imslp.org';
+  # COMMAND: leave
+  if ($msg eq 'leave') {
+    $irc->write(QUIT => 'oof');
+    exit;
+  }
+  # COMMAND: help
+  elsif ($msg eq 'help') {
+    $irc->write(@$to, ':https://ology.github.io/2021/03/30/irc-music-bot/');
+  }
+  # COMMAND: source
+  elsif ($msg eq 'source') {
+    $irc->write(@$to, ':https://github.com/ology/Music/blob/master/irc-bot');
+  }
+  # COMMAND: convert
+  elsif ($msg =~ /^convert\s+(.+)$/) {
+    my $note = $1;
+    my ($from_format, $to_format);
+    if ($note =~ /^\d+$/) {
+      $from_format = 'midinum';
+      $to_format = 'ISO';
+    }
+    else {
+      $from_format = 'ISO';
+      $to_format = 'midinum';
+    }
+    $note = Music::Note->new($note, $from_format);
+    $irc->write(@$to, ":$to_format note: " . $note->format($to_format));
+  }
+  # COMMAND: patch
+  elsif ($msg =~ /^patch\s+(\w+)$/) {
+    my $arg = $1;
+    if ($arg =~ /^\d+$/) {
+      my $instrument = '?';
+      $instrument = $MIDI::number2patch{$arg} if exists $MIDI::number2patch{$arg};
+      $irc->write(@$to, ":Instrument: $instrument");
+    }
+    else {
+      $arg = lc $arg;
+      my @instruments = grep { lc($_) =~ /$arg/ } sort keys %MIDI::patch2number;
+      my @patches = map { $_ . ' [' . $MIDI::patch2number{$_} . ']' } @instruments;
+      my $result = join ', ', @patches;
+      $irc->write(@$to, ":Patch: $result");
+    }
+  }
+  # COMMAND: motif
+  elsif ($msg =~ /^motif\s+([\d.]+)\s*([a-z ]*)$/) {
+    my $size = $1;
+    my $pool = $2 ? [split / /, $2] : [qw(hn dqn qn den en sn)];
+    my $mdp = Music::Duration::Partition->new(size => $size, pool => $pool);
+    my $motif = $mdp->motif;
+    my @scale = map { $_ . 4 } get_scale_notes('C');
+    my $phrase = [ map { $scale[int rand @scale] . '.' . $_ } @$motif ];
+    $phrase = ddc($phrase, OPTIONS);
+    $phrase =~ s/'//g;
+    $phrase =~ s/,//g;
+    $irc->write(@$to, ":$size beats: $phrase");
+  }
+  # COMMAND: play
+  elsif ($msg =~ /^play\s+(.+)$/) {
+    my $phrase = $1;
+    my @phrase = split /\s+/, $phrase;
+    my $bpm = DEFAULT_BPM;
+    $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
+    my $repeat = DEFAULT_REPEATS;
+    $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
+    my $score = setup_score(bpm => $bpm);
+    my $cn = Music::Chord::Note->new;
+    for my $i (1 .. $repeat) {
+      parse_phrase($score, $cn, \@phrase);
+    }
+    my $name = sprintf '%s-%d', $0, time();
+    my $mid_file = "/tmp/$name.mid";
+    my $mp3_file = "/tmp/$name.mp3";
+    $score->write_score($mid_file);
+    try {
+      die 'Not enough BPM' if $bpm < MIN_BPM;
+      die 'Too many repeats' if $repeat > MAX_REPEATS;
+      my $url = mid2mp3($conf, $name, $mid_file, $mp3_file);
+      $irc->write(@$to, ":URL: $url");
+    }
+    catch ($e) {
+      $irc->write(@$to, ":Something went wrong: $e");
+    }
+    unlink $mid_file;
+    unlink $mp3_file;
+  }
+  # COMMAND: perc
+  elsif ($msg =~ /^perc\s+(.+)$/) {
+    my $phrase = $1;
+    my @phrase = split /\s+/, $phrase;
+    my $bpm = DEFAULT_BPM;
+    $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
+    my $repeat = DEFAULT_REPEATS;
+    $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
+    my $name = sprintf '%s-%d', $0, time();
+    my $mid_file = "/tmp/$name.mid";
+    my $mp3_file = "/tmp/$name.mp3";
+    my $d = MIDI::Drummer::Tiny->new(
+        file   => $mid_file,
+        bpm    => $bpm,
+        reverb => 15,
+    );
+    for my $i (1 .. $repeat) {
+      parse_drums($d, \@phrase);
+    }
+    $d->write;
+    try {
+      die 'Not enough BPM' if $bpm < MIN_BPM;
+      die 'Too many repeats' if $repeat > MAX_REPEATS;
+      my $url = mid2mp3($conf, $name, $mid_file, $mp3_file);
+      $irc->write(@$to, ":URL: $url");
+    }
+    catch ($e) {
+      $irc->write(@$to, ":Something went wrong: $e");
+    }
+    unlink $mid_file;
+    unlink $mp3_file;
+  }
+  # COMMAND: vov
+  elsif ($msg =~ /^vov\s+([\w \/]+)$/) {
+    my @args = split /\s+/, $1;
+    my @parts;
+    for my $arg (@args) {
+      my $vov = qx{ vov $arg };
+      chomp $vov;
+      $vov = uc $vov;
+      $vov =~ s/([A-G])IS/$enharmonic{ $1 . '#' }/g
+        if $arg =~ /b/;
+      $vov =~ s/IS/#/g;
+      push @parts, $vov;
+    }
+    my $flattened = join '|', @parts;
+    $irc->write(@$to, ":$flattened");
+  }
+  # COMMAND: chord
+  elsif ($msg =~ /^chord\s+(.+)$/) {
+    my $arg = $1;
+    my @notes = split /\s+/, $arg;
+    my $chord = '?';
+    eval { $chord = chordname(@notes) };
+    $chord =~ s/([A-G]#)(.*)$/$enharmonic{$1}$2/g
+      if $arg =~ /b/;
+    $irc->write(@$to, ":Chord: $chord");
+  }
+  # COMMAND: notes
+  elsif ($msg =~ /^notes\s+(.+)$/) {
+    my $arg = $1;
+    my $cn = Music::Chord::Note->new;
+    my @notes = ();
+    eval { @notes = $cn->chord($arg) };
+    # A flat request has any sharp notes replaced
+    if ($arg =~ /b/) {
+      for (@notes) {
+        s/^([A-G]#)$/$enharmonic{$1}/;
       }
-      # COMMAND: help
-      elsif ($msg eq 'help') {
-        $irc->write(@$to, ':https://ology.github.io/2021/03/30/irc-music-bot/');
+    }
+    # A request that is not sharp, has A# & D# replaced
+    elsif ($arg !~ /#/) {
+      for (@notes) {
+        s/^([AD]#)$/$enharmonic{$1}/;
       }
-      # COMMAND: source
-      elsif ($msg eq 'source') {
-        $irc->write(@$to, ':https://github.com/ology/Music/blob/master/irc-bot');
-      }
-      # COMMAND: convert
-      elsif ($msg =~ /^convert\s+(.+)$/) {
-        my $note = $1;
-        my ($from_format, $to_format);
-        if ($note =~ /^\d+$/) {
-          $from_format = 'midinum';
-          $to_format = 'ISO';
-        }
-        else {
-          $from_format = 'ISO';
-          $to_format = 'midinum';
-        }
-        $note = Music::Note->new($note, $from_format);
-        $irc->write(@$to, ":$to_format note: " . $note->format($to_format));
-      }
-      # COMMAND: patch
-      elsif ($msg =~ /^patch\s+(\w+)$/) {
-        my $arg = $1;
-        if ($arg =~ /^\d+$/) {
-          my $instrument = '?';
-          $instrument = $MIDI::number2patch{$arg} if exists $MIDI::number2patch{$arg};
-          $irc->write(@$to, ":Instrument: $instrument");
-        }
-        else {
-          $arg = lc $arg;
-          my @instruments = grep { lc($_) =~ /$arg/ } sort keys %MIDI::patch2number;
-          my @patches = map { $_ . ' [' . $MIDI::patch2number{$_} . ']' } @instruments;
-          my $result = join ', ', @patches;
-          $irc->write(@$to, ":Patch: $result");
-        }
-      }
-      # COMMAND: motif
-      elsif ($msg =~ /^motif\s+([\d.]+)\s*([a-z ]*)$/) {
-        my $size = $1;
-        my $pool = $2 ? [split / /, $2] : [qw(hn dqn qn den en sn)];
-        my $mdp = Music::Duration::Partition->new(size => $size, pool => $pool);
-        my $motif = $mdp->motif;
-        my @scale = map { $_ . 4 } get_scale_notes('C');
-        my $phrase = [ map { $scale[int rand @scale] . '.' . $_ } @$motif ];
-        $phrase = ddc($phrase, OPTIONS);
-        $phrase =~ s/'//g;
-        $phrase =~ s/,//g;
-        $irc->write(@$to, ":$size beats: $phrase");
-      }
-      # COMMAND: play
-      elsif ($msg =~ /^play\s+(.+)$/) {
-        my $phrase = $1;
-        my @phrase = split /\s+/, $phrase;
-        my $bpm = DEFAULT_BPM;
-        $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
-        my $repeat = DEFAULT_REPEATS;
-        $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
-        my $score = setup_score(bpm => $bpm);
-        my $cn = Music::Chord::Note->new;
-        for my $i (1 .. $repeat) {
-          parse_phrase($score, $cn, \@phrase);
-        }
-        my $name = sprintf '%s-%d', $0, time();
-        my $mid_file = "/tmp/$name.mid";
-        my $mp3_file = "/tmp/$name.mp3";
-        $score->write_score($mid_file);
-        try {
-          die 'Not enough BPM' if $bpm < MIN_BPM;
-          die 'Too many repeats' if $repeat > MAX_REPEATS;
-          my $url = mid2mp3($conf, $name, $mid_file, $mp3_file);
-          $irc->write(@$to, ":URL: $url");
-        }
-        catch ($e) {
-          $irc->write(@$to, ":Something went wrong: $e");
-        }
-        unlink $mid_file;
-        unlink $mp3_file;
-      }
-      # COMMAND: perc
-      elsif ($msg =~ /^perc\s+(.+)$/) {
-        my $phrase = $1;
-        my @phrase = split /\s+/, $phrase;
-        my $bpm = DEFAULT_BPM;
-        $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
-        my $repeat = DEFAULT_REPEATS;
-        $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
-        my $name = sprintf '%s-%d', $0, time();
-        my $mid_file = "/tmp/$name.mid";
-        my $mp3_file = "/tmp/$name.mp3";
-        my $d = MIDI::Drummer::Tiny->new(
-            file   => $mid_file,
-            bpm    => $bpm,
-            reverb => 15,
+    }
+    $irc->write(@$to, ":Notes: @notes");
+  }
+  # COMMAND: freq
+  elsif ($msg =~ /^freq\s+(.+?)\s+(\d+)$/) {
+    my $freq = $1;
+    my $num = $2;
+    if ($freq =~ /[A-G]/) {
+      my $note = Music::Note::Frequency->new($freq);
+      $freq = $note->frequency;
+    }
+    my $freqs = [ map { sprintf '%.2f', $_ * $freq } 1 .. $num ];
+    $irc->write(@$to, ":Harmonics: " . ddc($freqs, OPTIONS));
+  }
+  # COMMAND: interval
+  elsif ($msg =~ /^interval\s+(.+)$/) {
+    my $arg = $1;
+    my @notes = split /\s+/, $arg;
+    try {
+      die "Give 3 notes to process\n" unless @notes == 3;
+      my ($mi, $v);
+      if ($arg =~ /[A-Za-z]/) {
+        $mi = Music::Intervals->new(
+          notes    => \@notes,
+          justin   => 1,
+          interval => 1,
         );
-        for my $i (1 .. $repeat) {
-          parse_drums($d, \@phrase);
-        }
-        $d->write;
-        try {
-          die 'Not enough BPM' if $bpm < MIN_BPM;
-          die 'Too many repeats' if $repeat > MAX_REPEATS;
-          my $url = mid2mp3($conf, $name, $mid_file, $mp3_file);
-          $irc->write(@$to, ":URL: $url");
-        }
-        catch ($e) {
-          $irc->write(@$to, ":Something went wrong: $e");
-        }
-        unlink $mid_file;
-        unlink $mp3_file;
+        $v = (values %{ $mi->natural_intervals })[0];
       }
-      # COMMAND: vov
-      elsif ($msg =~ /^vov\s+([\w \/]+)$/) {
-        my @args = split /\s+/, $1;
-        my @parts;
-        for my $arg (@args) {
-          my $vov = qx{ vov $arg };
-          chomp $vov;
-          $vov = uc $vov;
-          $vov =~ s/([A-G])IS/$enharmonic{ $1 . '#' }/g
-            if $arg =~ /b/;
-          $vov =~ s/IS/#/g;
-          push @parts, $vov;
-        }
-        my $flattened = join '|', @parts;
-        $irc->write(@$to, ":$flattened");
-      }
-      # COMMAND: chord
-      elsif ($msg =~ /^chord\s+(.+)$/) {
-        my $arg = $1;
-        my @notes = split /\s+/, $arg;
-        my $chord = '?';
-        eval { $chord = chordname(@notes) };
-        $chord =~ s/([A-G]#)(.*)$/$enharmonic{$1}$2/g
-          if $arg =~ /b/;
-        $irc->write(@$to, ":Chord: $chord");
-      }
-      # COMMAND: notes
-      elsif ($msg =~ /^notes\s+(.+)$/) {
-        my $arg = $1;
-        my $cn = Music::Chord::Note->new;
-        my @notes = ();
-        eval { @notes = $cn->chord($arg) };
-        # A flat request has any sharp notes replaced
-        if ($arg =~ /b/) {
-          for (@notes) {
-            s/^([A-G]#)$/$enharmonic{$1}/;
-          }
-        }
-        # A request that is not sharp, has A# & D# replaced
-        elsif ($arg !~ /#/) {
-          for (@notes) {
-            s/^([AD]#)$/$enharmonic{$1}/;
-          }
-        }
-        $irc->write(@$to, ":Notes: @notes");
-      }
-      # COMMAND: freq
-      elsif ($msg =~ /^freq\s+(.+?)\s+(\d+)$/) {
-        my $freq = $1;
-        my $num = $2;
-        if ($freq =~ /[A-G]/) {
-          my $note = Music::Note::Frequency->new($freq);
-          $freq = $note->frequency;
-        }
-        my $freqs = [ map { sprintf '%.2f', $_ * $freq } 1 .. $num ];
-        $irc->write(@$to, ":Harmonics: " . ddc($freqs, OPTIONS));
-      }
-      # COMMAND: interval
-      elsif ($msg =~ /^interval\s+(.+)$/) {
-        my $arg = $1;
-        my @notes = split /\s+/, $arg;
-        try {
-          die "Give 3 notes to process\n" unless @notes == 3;
-          my ($mi, $v);
-          if ($arg =~ /[A-Za-z]/) {
-            $mi = Music::Intervals->new(
-              notes    => \@notes,
-              justin   => 1,
-              interval => 1,
-            );
-            $v = (values %{ $mi->natural_intervals })[0];
-          }
-          else {
-            $mi = Music::Intervals::Numeric->new(
-              notes    => \@notes,
-              interval => 1,
-            );
-            $v = (values %{ $mi->intervals })[0];
-          }
-          # Gymnastics :\
-          my $flat = ddc($v, OPTIONS);
-          $flat =~ s/\n//g;
-          $flat =~ s/\s+/ /g;
-          $flat =~ s/^{\s*//;
-          $flat =~ s/,}$//;
-          $flat =~ s/} }$/}/;
-          $flat =~ s/ =>/:/g;
-          $irc->write(@$to, ":Intervals: $flat");
-        }
-        catch ($e) {
-          $irc->write(@$to, ":Something went wrong: $e");
-        }
-      }
-      # COMMAND: key
-      elsif ($msg =~ /^key\s+(.+)$/) {
-        my $arg = $1;
-        # No fancy computation here
-        my %key = (
-          '1b'    => 'F',
-          '1#'    => 'G',
-          '2b'    => 'Bb',
-          '2#'    => 'D',
-          '3b'    => 'Eb',
-          '3#'    => 'A',
-          '4b'    => 'Ab',
-          '4#'    => 'E',
-          '5b 7#' => 'C#/Db', '7# 5b' => 'C#/Db',
-          '6b 6#' => 'F#/Gb', '6# 6b' => 'F#/Gb',
-          '7b 5#' => 'B/Cb',  '5# 7b' => 'B/Cb',
-          # inverted:
-          'F'  => '1b',
-          'G'  => '1#',
-          'Bb' => '2b',
-          'D'  => '2#',
-          'Eb' => '3b',
-          'A'  => '3#',
-          'Ab' => '4b',
-          'E'  => '4#',
-          'C#' => '5b 7#', 'Db' => '5b 7#',
-          'F#' => '6b 6#', 'Gb' => '6b 6#',
-          'B'  => '7b 5#', 'Cb' => '7b 5#',
-        );
-        my $key = exists $key{$arg} ? $key{$arg} : '?';
-        $irc->write(@$to, ":Key: $key");
-      }
-      # COMMAND: scale
-      elsif ($msg =~ /^scale\s+([A-G][b#]?)\s*(.+)?$/) {
-        my $note = $1;
-        my $name = $2 || 'major';
-        my @scale = get_scale_notes($note, $name);
-        $irc->write(@$to, ":Notes: @scale");
-      }
-      # COMMAND: hit
-      elsif ($msg =~ /^hit\s+(\d{8})$/) {
-        my $date = $1;
-        my $url = 'http://www.umdmusic.com/default.asp?Lang=English&Chart=D&ChDate=' . $date . '&ChMode=N';
-        my @lines = get_lines($url, 'table > tr > td:last-child > table > tr');
-        my @records;
-        for my $line (@lines) {
-            next unless $line->[0] =~ /^\d+$/;
-            push @records, $line;
-            last;
-        }
-        my $hit = $records[0][4] ? $records[0][4] : '?';
-        $irc->write(@$to, ":#1 on $date: $hit");
-      }
-      # COMMAND: bwv url
-      elsif ($msg =~ /^bwv url\s+(.+)$/) {
-        my $num = $1;
-        $num = unidecode($num);
-        my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
-        my $ua  = Mojo::UserAgent->new;
-        my $tx = $ua->get($url);
-        my $dom = Mojo::DOM->new($tx->res->body);
-        my @data = $dom->find('a[href$="(Bach,_Johann_Sebastian)"]')->each;
-        my %bwv;
-        for my $link (@data) {
-          (my $bwv = $link->attr('href')) =~ s/^.+?_BWV_(.+?)_\(.+$/$1/;
-          $bwv{$bwv} = $link->attr('href') unless $bwv =~ /\//;
-        }
-        my $bwv = exists $bwv{$num} ? "$imslp$bwv{$num}" : '?';
-        $irc->write(@$to, ":$bwv");
-      }
-      # COMMAND: bwv
-      elsif ($msg =~ /^bwv\s+(.+)$/) {
-        my $num = sprintf '%03s', $1;
-        my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
-        my @lines = get_lines($url, 'table.wikitable tr');
-        my %bwv;
-        for my $line (@lines) {
-            my $bwv = shift @$line;
-            $bwv{$bwv} = $line;
-        }
-        my $bwv = exists $bwv{$num} ? join ', ', @{ $bwv{$num} } : '?';
-        $irc->write(@$to, ":$bwv");
-      }
-      # COMMAND: range
-      elsif ($msg =~ /^range\s+(\w+)$/) {
-        my $instrument = $1;
-        # No fancy computation here either
-        my %range = (
-          violin       => 'G3 - G7',
-          viola        => 'C3 - C7',
-          cello        => 'C2 - C6',
-          bass         => 'C1 - C5',
-          trumpet      => 'E3 - C6',
-          trombone     => 'E2 - F5',
-          french_horn  => 'B1 - F5',
-          tuba         => 'D1 - F4',
-          piccolo      => 'D5 - B7',
-          flute        => 'C4 - D7',
-          oboe         => 'B3 - A6',
-          clarinet     => 'D3 - A6',
-          alto_sax     => 'D3 - A5',
-          tenor_sax    => 'A2 - F5',
-          baritone_sax => 'D2 - A4',
-          bassoon      => 'B1 - D5',
-          harp         => 'C2 - F7',
-          harpsichord  => 'F1 - F6',
-          piano        => 'A0 - B7',
-          xylophone    => 'G4 - C7',
-          glockenspiel => 'G3 - C6',
-          vibraphone   => 'F3 - F6',
-          timpani      => 'D2 - C4',
-          marimba      => 'C2 - C7',
-          guitar       => 'E2 - E6',
-        );
-        my $range = exists $range{$instrument} ? $range{$instrument} : '?';
-        $irc->write(@$to, ":$instrument range: $range");
-      }
-      # Fallthough
       else {
-        $irc->write(@$to, qq|:You said, "$msg" $who|);
+        $mi = Music::Intervals::Numeric->new(
+          notes    => \@notes,
+          interval => 1,
+        );
+        $v = (values %{ $mi->intervals })[0];
       }
+      # Gymnastics :\
+      my $flat = ddc($v, OPTIONS);
+      $flat =~ s/\n//g;
+      $flat =~ s/\s+/ /g;
+      $flat =~ s/^{\s*//;
+      $flat =~ s/,}$//;
+      $flat =~ s/} }$/}/;
+      $flat =~ s/ =>/:/g;
+      $irc->write(@$to, ":Intervals: $flat");
+    }
+    catch ($e) {
+      $irc->write(@$to, ":Something went wrong: $e");
+    }
+  }
+  # COMMAND: key
+  elsif ($msg =~ /^key\s+(.+)$/) {
+    my $arg = $1;
+    # No fancy computation here
+    my %key = (
+      '1b'    => 'F',
+      '1#'    => 'G',
+      '2b'    => 'Bb',
+      '2#'    => 'D',
+      '3b'    => 'Eb',
+      '3#'    => 'A',
+      '4b'    => 'Ab',
+      '4#'    => 'E',
+      '5b 7#' => 'C#/Db', '7# 5b' => 'C#/Db',
+      '6b 6#' => 'F#/Gb', '6# 6b' => 'F#/Gb',
+      '7b 5#' => 'B/Cb',  '5# 7b' => 'B/Cb',
+      # inverted:
+      'F'  => '1b',
+      'G'  => '1#',
+      'Bb' => '2b',
+      'D'  => '2#',
+      'Eb' => '3b',
+      'A'  => '3#',
+      'Ab' => '4b',
+      'E'  => '4#',
+      'C#' => '5b 7#', 'Db' => '5b 7#',
+      'F#' => '6b 6#', 'Gb' => '6b 6#',
+      'B'  => '7b 5#', 'Cb' => '7b 5#',
+    );
+    my $key = exists $key{$arg} ? $key{$arg} : '?';
+    $irc->write(@$to, ":Key: $key");
+  }
+  # COMMAND: scale
+  elsif ($msg =~ /^scale\s+([A-G][b#]?)\s*(.+)?$/) {
+    my $note = $1;
+    my $name = $2 || 'major';
+    my @scale = get_scale_notes($note, $name);
+    $irc->write(@$to, ":Notes: @scale");
+  }
+  # COMMAND: hit
+  elsif ($msg =~ /^hit\s+(\d{8})$/) {
+    my $date = $1;
+    my $url = 'http://www.umdmusic.com/default.asp?Lang=English&Chart=D&ChDate=' . $date . '&ChMode=N';
+    my @lines = get_lines($url, 'table > tr > td:last-child > table > tr');
+    my @records;
+    for my $line (@lines) {
+        next unless $line->[0] =~ /^\d+$/;
+        push @records, $line;
+        last;
+    }
+    my $hit = $records[0][4] ? $records[0][4] : '?';
+    $irc->write(@$to, ":#1 on $date: $hit");
+  }
+  # COMMAND: bwv url
+  elsif ($msg =~ /^bwv url\s+(.+)$/) {
+    my $num = $1;
+    $num = unidecode($num);
+    my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
+    my $ua  = Mojo::UserAgent->new;
+    my $tx = $ua->get($url);
+    my $dom = Mojo::DOM->new($tx->res->body);
+    my @data = $dom->find('a[href$="(Bach,_Johann_Sebastian)"]')->each;
+    my %bwv;
+    for my $link (@data) {
+      (my $bwv = $link->attr('href')) =~ s/^.+?_BWV_(.+?)_\(.+$/$1/;
+      $bwv{$bwv} = $link->attr('href') unless $bwv =~ /\//;
+    }
+    my $bwv = exists $bwv{$num} ? "$imslp$bwv{$num}" : '?';
+    $irc->write(@$to, ":$bwv");
+  }
+  # COMMAND: bwv
+  elsif ($msg =~ /^bwv\s+(.+)$/) {
+    my $num = sprintf '%03s', $1;
+    my $url = $imslp . '/wiki/List_of_works_by_Johann_Sebastian_Bach';
+    my @lines = get_lines($url, 'table.wikitable tr');
+    my %bwv;
+    for my $line (@lines) {
+        my $bwv = shift @$line;
+        $bwv{$bwv} = $line;
+    }
+    my $bwv = exists $bwv{$num} ? join ', ', @{ $bwv{$num} } : '?';
+    $irc->write(@$to, ":$bwv");
+  }
+  # COMMAND: range
+  elsif ($msg =~ /^range\s+(\w+)$/) {
+    my $instrument = $1;
+    # No fancy computation here either
+    my %range = (
+      violin       => 'G3 - G7',
+      viola        => 'C3 - C7',
+      cello        => 'C2 - C6',
+      bass         => 'C1 - C5',
+      trumpet      => 'E3 - C6',
+      trombone     => 'E2 - F5',
+      french_horn  => 'B1 - F5',
+      tuba         => 'D1 - F4',
+      piccolo      => 'D5 - B7',
+      flute        => 'C4 - D7',
+      oboe         => 'B3 - A6',
+      clarinet     => 'D3 - A6',
+      alto_sax     => 'D3 - A5',
+      tenor_sax    => 'A2 - F5',
+      baritone_sax => 'D2 - A4',
+      bassoon      => 'B1 - D5',
+      harp         => 'C2 - F7',
+      harpsichord  => 'F1 - F6',
+      piano        => 'A0 - B7',
+      xylophone    => 'G4 - C7',
+      glockenspiel => 'G3 - C6',
+      vibraphone   => 'F3 - F6',
+      timpani      => 'D2 - C4',
+      marimba      => 'C2 - C7',
+      guitar       => 'E2 - E6',
+    );
+    my $range = exists $range{$instrument} ? $range{$instrument} : '?';
+    $irc->write(@$to, ":$instrument range: $range");
+  }
+  # Fallthough
+  else {
+    $irc->write(@$to, qq|:You said, "$msg" $who|);
+  }
 }
 
 sub get_lines {
