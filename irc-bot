@@ -19,6 +19,7 @@ use Mojo::IRC;
 use Mojo::DOM;
 use Mojo::UserAgent;
 use YAML::XS qw(LoadFile);
+use Parse::IRC ();
 use Syntax::Keyword::Try;
 use Encoding::FixLatin qw(fix_latin);
 use Text::Unidecode qw(unidecode);
@@ -54,16 +55,18 @@ my $irc = Mojo::IRC->new(
   tls => {},
 );
 
+$irc->parser(Parse::IRC->new(ctcp => 1, public => 1));
+
 $irc->on(irc_join => sub {
   my($self, $message) = @_;
   print "SUCCESS: $message->{params}[0] joined\n";
 });
 
-$irc->on(message => sub {
+$irc->on(irc_privmsg => sub {
   my($self, $message) = @_;
 });
 
-$irc->on(irc_privmsg => sub {
+$irc->on(irc_public => sub {
   my($self, $message) = @_;
 
   if ($message && $message->{params} && $message->{params}[1] =~ /^(\w+)[:,]\s*(.*)$/) {
