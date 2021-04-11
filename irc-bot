@@ -72,6 +72,7 @@ $irc->on(irc_privmsg => sub {
 
 $irc->on(irc_public => sub {
   my($self, $message) = @_;
+  # Only act if addressed
   if ($message->{params}[1] =~ /^(\w+)[:,]\s*(.*)$/) {
     my $nick = $1;
     my $msg = $2;
