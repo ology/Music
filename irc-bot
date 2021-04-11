@@ -67,7 +67,7 @@ $irc->on(irc_privmsg => sub {
   print "$message->{prefix} said: $message->{params}[1]\n";
   (my $who = $message->{prefix}) =~ s/^(\w+)!.*$/$1/;
   my @to = (privmsg => $who);
-  $irc->write(@to, ':Hello! Private messaging is not implemented yet...');
+  $irc->write(@to, ":Hello $who! Private messaging is not implemented yet...");
 });
 
 $irc->on(irc_public => sub {
