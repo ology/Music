@@ -263,6 +263,7 @@ sub process_msg {
         s/^([AD]#)$/$enharmonic{$1}/;
       }
     }
+    push @notes, '?' unless @notes;
     $irc->write(@$to, ":Notes: @notes");
   }
   # COMMAND: freq
