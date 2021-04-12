@@ -273,8 +273,8 @@ sub process_msg {
       my $note = Music::Note::Frequency->new($freq);
       $freq = $note->frequency;
     }
-    my $freqs = [ map { sprintf '%.2f', $_ * $freq } 1 .. $num ];
-    $irc->write(@$to, ":Harmonics: " . ddc($freqs, OPTIONS));
+    my $freqs = join ', ', map { sprintf '%.2f', $_ * $freq } 1 .. $num;
+    $irc->write(@$to, ":Harmonics: $freqs");
   }
   # COMMAND: interval
   elsif ($msg =~ /^interval\s+(.+)$/) {
