@@ -37,6 +37,7 @@ use Music::Duration;
 use Music::Duration::Partition;
 use Music::Intervals;
 use Music::Intervals::Numeric;
+use Music::Intervals::Ratios;
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(setup_score set_chan_patch midi_format);
 
@@ -311,6 +312,23 @@ sub process_msg {
     catch ($e) {
       $irc->write(@$to, ":Something went wrong: $e");
     }
+  }
+  # COMMAND: ratio
+  elsif ($msg =~ /^ratio\s+(.+)$/) {
+    my $arg = $1;
+    my $res;
+    if ($arg =~ /[A-Za-z]/) {
+      my $ratio = $Music::Intervals::Ratios::ratio->{$arg};
+      $res = "$ratio->{ratio} => $ratio->{name}";
+    }
+    else {
+      my $ratios = { map {
+        $Music::Intervals::Ratios::ratio->{$_}{ratio} => "$_ => $Music::Intervals::Ratios::ratio->{$_}{name}"
+      } keys %$Music::Intervals::Ratios::ratio };
+      $res = $ratios->{$arg};
+    }
+    $res = '?' unless $res;
+    $irc->write(@$to, ":Ratio: $res");
   }
   # COMMAND: key
   elsif ($msg =~ /^key\s+(.+)$/) {
