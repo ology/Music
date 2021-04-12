@@ -376,13 +376,13 @@ sub process_msg {
     my $date = $1;
     my $url = 'http://www.umdmusic.com/default.asp?Lang=English&Chart=D&ChDate=' . $date . '&ChMode=N';
     my @lines = get_lines($url, 'table > tr > td:last-child > table > tr');
-    my @records;
+    my $record;
     for my $line (@lines) {
         next unless $line->[0] =~ /^\d+$/;
-        push @records, $line;
+        $record = $line;
         last;
     }
-    my $hit = $records[0][4] ? $records[0][4] : '?';
+    my $hit = $record->[4] ? $record->[4] : '?';
     $irc->write(@$to, ":#1 on $date: $hit");
   }
   # COMMAND: bwv url
