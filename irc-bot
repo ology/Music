@@ -415,6 +415,11 @@ sub process_msg {
     my $bwv = exists $bwv{$num} ? join ', ', @{ $bwv{$num} } : '?';
     $irc->write(@$to, ":$bwv");
   }
+  # COMMAND: fret
+  elsif ($msg =~ /^fret\s+(\w+)\s+(\d+)$/) {
+    my $url = $conf->{fretboard} . $1 . '/' . $2;
+    $irc->write(@$to, ":URL: $url");
+  }
   # COMMAND: range
   elsif ($msg =~ /^range\s+(\w+)$/) {
     my $instrument = $1;
