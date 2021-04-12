@@ -307,7 +307,7 @@ sub process_msg {
       $flat =~ s/,}$//;
       $flat =~ s/} }$/}/;
       $flat =~ s/ =>/:/g;
-      $irc->write(@$to, ":Intervals: $flat");
+      $irc->write(@$to, ":Interval: $flat");
     }
     catch ($e) {
       $irc->write(@$to, ":Something went wrong: $e");
