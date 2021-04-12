@@ -322,9 +322,11 @@ sub process_msg {
       $res = "$ratio->{ratio} => $ratio->{name}" if $ratio;
     }
     else {
-      my $ratios = { map {
-        $Music::Intervals::Ratios::ratio->{$_}{ratio} => "$_ => $Music::Intervals::Ratios::ratio->{$_}{name}"
-      } keys %$Music::Intervals::Ratios::ratio };
+      my $ratios = {
+        map {
+          $Music::Intervals::Ratios::ratio->{$_}{ratio} => "$_ => $Music::Intervals::Ratios::ratio->{$_}{name}"
+        } keys %$Music::Intervals::Ratios::ratio
+      };
       $res = $ratios->{$arg};
     }
     $res = '?' unless $res;
