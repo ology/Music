@@ -121,14 +121,10 @@ sub process_msg {
   # COMMAND: convert
   elsif ($msg =~ /^convert\s+(.+)$/) {
     my $note = $1;
-    my ($from_format, $to_format);
+    my ($from_format, $to_format) = ('ISO', 'midinum');
     if ($note =~ /^\d+$/) {
       $from_format = 'midinum';
       $to_format = 'ISO';
-    }
-    else {
-      $from_format = 'ISO';
-      $to_format = 'midinum';
     }
     $note = Music::Note->new($note, $from_format);
     $irc->write(@$to, ":$to_format note: " . $note->format($to_format));
