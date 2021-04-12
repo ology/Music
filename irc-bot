@@ -319,7 +319,7 @@ sub process_msg {
     my $res;
     if ($arg =~ /[A-Za-z]/) {
       my $ratio = $Music::Intervals::Ratios::ratio->{$arg};
-      $res = "$ratio->{ratio} => $ratio->{name}";
+      $res = "$ratio->{ratio} => $ratio->{name}" if $ratio;
     }
     else {
       my $ratios = { map {
