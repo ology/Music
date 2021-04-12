@@ -280,7 +280,7 @@ sub process_msg {
     my $arg = $1;
     my @notes = split /\s+/, $arg;
     try {
-      die "Give 3 notes to process\n" unless @notes == 3;
+      die "Give 2 or 3 notes to process\n" unless @notes == 2 || @notes == 3;
       my ($mi, $v);
       if ($arg =~ /[A-Za-z]/) {
         $mi = Music::Intervals->new(
