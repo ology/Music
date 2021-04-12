@@ -285,6 +285,7 @@ sub process_msg {
       if ($arg =~ /[A-Za-z]/) {
         $mi = Music::Intervals->new(
           notes    => \@notes,
+          size     => @notes,
           justin   => 1,
           interval => 1,
         );
