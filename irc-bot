@@ -419,7 +419,7 @@ sub process_msg {
   }
   # COMMAND: fret
   elsif ($msg =~ /^fret\s+(\w+)\s+(\d+)$/) {
-    my $url = $conf->{fretboard} . $1 . '/' . $2;
+    my $url = sprintf '%s/%s/%d', $conf->{fretboard}, $1, $2;
     $irc->write(@$to, ":URL: $url");
   }
   # COMMAND: range
@@ -612,6 +612,6 @@ sub mid2mp3 {
   $cmd = "scp $mp3_file $conf->{scp_host}:$conf->{scp_dir}"; # Requires a passwordless key
   system($cmd) == 0
     or die "system($cmd) failed: $?";
-  my $url = sprintf 'http://%s/tunes/%s.mp3', $conf->{web_host}, $name;
+  my $url = sprintf '%s/tunes/%s.mp3', $conf->{web_host}, $name;
   return $url;
 }
