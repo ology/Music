@@ -29,6 +29,7 @@ use Music::Chord::Note;
 use Music::Note;
 use Music::Note::Frequency;
 #use App::MusicTools; # <- Needed for `vov`
+use MP3::Tag;
 
 # Use local author libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals);
@@ -178,7 +179,7 @@ sub process_msg {
     try {
       die 'Not enough BPM' if $bpm < MIN_BPM;
       die 'Too many repeats' if $repeat > MAX_REPEATS;
-      my $url = mid2mp3($conf, $name, $mid_file, $mp3_file);
+      my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
       $irc->write(@$to, ":URL: $url");
     }
     catch ($e) {
@@ -210,7 +211,7 @@ sub process_msg {
     try {
       die 'Not enough BPM' if $bpm < MIN_BPM;
       die 'Too many repeats' if $repeat > MAX_REPEATS;
-      my $url = mid2mp3($conf, $name, $mid_file, $mp3_file);
+      my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
       $irc->write(@$to, ":URL: $url");
     }
     catch ($e) {
@@ -602,10 +603,12 @@ sub parse_drums {
 }
 
 sub mid2mp3 {
-  my ($conf, $name, $mid_file, $mp3_file) = @_;
+  my ($conf, $name, $mid_file, $mp3_file, $phrase) = @_;
   my $cmd = "timidity $mid_file -Ow -o - | ffmpeg -i - -acodec libmp3lame -ab 64k $mp3_file";
   system($cmd) == 0
     or die "system($cmd) failed: $?";
+  my $mp3 = MP3::Tag->new($mp3_file);
+  eval { $mp3->update_tags({ comment => $phrase }) };
   $cmd = "scp $mp3_file $conf->{scp_host}:$conf->{scp_dir}"; # Requires a passwordless key
   system($cmd) == 0
     or die "system($cmd) failed: $?";
