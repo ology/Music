@@ -51,7 +51,7 @@ use constant MIN_BPM => 60;
 use constant DEFAULT_BPM => 100;
 use constant DEFAULT_REPEATS => 2;
 use constant MAX_REPEATS => 8;
-use constant MAX_PHRASE => 1 * 4 * 4; # 4 whole-notes
+use constant MAX_PHRASE => 4 * 4; # 4 whole-notes
 
 my $conf = LoadFile("$0.yml");
 
