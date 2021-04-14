@@ -177,11 +177,11 @@ sub process_msg {
     for my $i (1 .. $repeat) {
       $size += parse_phrase($score, $cn, \@phrase);
     }
-    $score->write_score($mid_file);
     try {
       die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
       die "Not enough BPM\n" if $bpm < MIN_BPM;
       die "Too many repeats\n" if $repeat > MAX_REPEATS;
+      $score->write_score($mid_file);
       my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
       $irc->write(@$to, ":URL: $url");
     }
@@ -211,11 +211,11 @@ sub process_msg {
     for my $i (1 .. $repeat) {
       $size += parse_drums($d, \@phrase);
     }
-    $d->write;
     try {
       die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
       die "Not enough BPM\n" if $bpm < MIN_BPM;
       die "Too many repeats\n" if $repeat > MAX_REPEATS;
+      $d->write;
       my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
       $irc->write(@$to, ":URL: $url");
     }
