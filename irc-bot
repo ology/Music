@@ -168,15 +168,15 @@ sub process_msg {
     $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
     my $repeat = DEFAULT_REPEATS;
     $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
+    my $name = sprintf '%s-%s-%d', $who, $0, time();
+    my $mid_file = "/tmp/$name.mid";
+    my $mp3_file = "/tmp/$name.mp3";
     my $score = setup_score(bpm => $bpm);
     my $cn = Music::Chord::Note->new;
     my $size = 0;
     for my $i (1 .. $repeat) {
       $size += parse_phrase($score, $cn, \@phrase);
     }
-    my $name = sprintf '%s-%s-%d', $who, $0, time();
-    my $mid_file = "/tmp/$name.mid";
-    my $mp3_file = "/tmp/$name.mp3";
     $score->write_score($mid_file);
     try {
       die 'Phrase too large' if $size / $repeat > MAX_PHRASE;
