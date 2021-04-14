@@ -520,7 +520,7 @@ sub parse_phrase {
       my ($chord, $octave, $duration) = split /\./, $1;
       $octave //= 4;
       $duration ||= 'wn';
-      $size += $duration =~ /^d(\d+)$/ ? $1 : $MIDI::Simple::Length{$duration};
+      $size += dura_size($duration);
       my @notes = $cn->chord_with_octave($chord, $octave);
       @notes = midi_format(@notes);
       $score->n($duration, @notes);
@@ -547,7 +547,7 @@ sub parse_phrase {
         $score->r($duration);
       }
       else {
-        $size += $duration =~ /^d(\d+)$/ ? $1 : $MIDI::Simple::Length{$duration};
+        $size += dura_size($duration);
         $pitch = (midi_format($pitch))[0];
         $score->n($duration, $pitch);
       }
@@ -590,7 +590,7 @@ sub parse_drums {
     elsif ($n =~ /^(\w+)\s*\)\.([a-z]n)$/) {
       push @voices, $1;
       my $duration = $2;
-      $size += $duration =~ /^d(\d+)$/ ? $1 : $MIDI::Simple::Length{$duration};
+      $size += dura_size($duration);
       @voices = map { exists $abbrevs{$_} ? $abbrevs{$_} : $_ } @voices;
       @voices = map { $d->$_ } @voices;
       $d->note($duration, @voices);
@@ -607,7 +607,7 @@ sub parse_drums {
         $d->rest($duration);
       }
       else {
-        $size += $duration =~ /^d(\d+)$/ ? $1 : $MIDI::Simple::Length{$duration};
+        $size += dura_size($duration);
         $strike = $abbrevs{$strike} if exists $abbrevs{$strike};
         $d->note($duration, $d->$strike);
       }
@@ -628,4 +628,16 @@ sub mid2mp3 {
     or die "system($cmd) failed: $?\n";
   my $url = sprintf '%s/tunes/%s.mp3', $conf->{web_host}, $name;
   return $url;
+}
+
+sub dura_size {
+  my ($duration) = @_;
+  my $size = 0;
+  if ($duration =~ /^d(\d+)$/) {
+    $size = sprintf '%0.f', $1 / 96;
+  }
+  else {
+    $size = $MIDI::Simple::Length{$duration};
+  }
+  return $size;
 }
