@@ -47,6 +47,7 @@ use constant MIN_BPM => 60;
 use constant DEFAULT_BPM => 100;
 use constant DEFAULT_REPEATS => 2;
 use constant MAX_REPEATS => 8;
+use constant MAX_PHRASE => 1 * 4 * 4; # 4 whole-notes
 
 my $conf = LoadFile("$0.yml");
 
@@ -169,14 +170,16 @@ sub process_msg {
     $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
     my $score = setup_score(bpm => $bpm);
     my $cn = Music::Chord::Note->new;
+    my $size = 0;
     for my $i (1 .. $repeat) {
-      parse_phrase($score, $cn, \@phrase);
+      $size += parse_phrase($score, $cn, \@phrase);
     }
     my $name = sprintf '%s-%s-%d', $who, $0, time();
     my $mid_file = "/tmp/$name.mid";
     my $mp3_file = "/tmp/$name.mp3";
     $score->write_score($mid_file);
     try {
+      die 'Phrase too large' if $size / $repeat > MAX_PHRASE;
       die 'Not enough BPM' if $bpm < MIN_BPM;
       die 'Too many repeats' if $repeat > MAX_REPEATS;
       my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
@@ -204,11 +207,13 @@ sub process_msg {
         bpm    => $bpm,
         reverb => 15,
     );
+    my $size = 0;
     for my $i (1 .. $repeat) {
-      parse_drums($d, \@phrase);
+      $size += parse_drums($d, \@phrase);
     }
     $d->write;
     try {
+      die 'Phrase too large' if $size / $repeat > MAX_PHRASE;
       die 'Not enough BPM' if $bpm < MIN_BPM;
       die 'Too many repeats' if $repeat > MAX_REPEATS;
       my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
@@ -495,6 +500,7 @@ sub get_lines {
 
 sub parse_phrase {
   my ($score, $cn, $phrase) = @_;
+  my $size = 0;
   my @chord;
   for my $n (@$phrase) {
     # Patch change
@@ -514,6 +520,7 @@ sub parse_phrase {
       my ($chord, $octave, $duration) = split /\./, $1;
       $octave //= 4;
       $duration ||= 'wn';
+      $size += $duration =~ /^d(\d+)$/ ? $1 : $MIDI::Simple::Length{$duration};
       my @notes = $cn->chord_with_octave($chord, $octave);
       @notes = midi_format(@notes);
       $score->n($duration, @notes);
@@ -540,11 +547,13 @@ sub parse_phrase {
         $score->r($duration);
       }
       else {
+        $size += $duration =~ /^d(\d+)$/ ? $1 : $MIDI::Simple::Length{$duration};
         $pitch = (midi_format($pitch))[0];
         $score->n($duration, $pitch);
       }
     }
   }
+  return $size;
 }
 
 sub parse_drums {
@@ -566,6 +575,7 @@ sub parse_drums {
     bd => 'kick',
     eb => 'electric_bass',
   );
+  my $size = 0;
   my @voices;
   for my $n (@$phrase) {
     # Volume change
@@ -579,9 +589,11 @@ sub parse_drums {
     # Voices end
     elsif ($n =~ /^(\w+)\s*\)\.([a-z]n)$/) {
       push @voices, $1;
+      my $duration = $2;
+      $size += $duration =~ /^d(\d+)$/ ? $1 : $MIDI::Simple::Length{$duration};
       @voices = map { exists $abbrevs{$_} ? $abbrevs{$_} : $_ } @voices;
       @voices = map { $d->$_ } @voices;
-      $d->note($2, @voices);
+      $d->note($duration, @voices);
       @voices = ();
     }
     # Mid-voices
@@ -595,11 +607,13 @@ sub parse_drums {
         $d->rest($duration);
       }
       else {
+        $size += $duration =~ /^d(\d+)$/ ? $1 : $MIDI::Simple::Length{$duration};
         $strike = $abbrevs{$strike} if exists $abbrevs{$strike};
         $d->note($duration, $d->$strike);
       }
     }
   }
+  return $size;
 }
 
 sub mid2mp3 {
