@@ -179,9 +179,9 @@ sub process_msg {
     }
     $score->write_score($mid_file);
     try {
-      die 'Phrase too large' if $size / $repeat > MAX_PHRASE;
-      die 'Not enough BPM' if $bpm < MIN_BPM;
-      die 'Too many repeats' if $repeat > MAX_REPEATS;
+      die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
+      die "Not enough BPM\n" if $bpm < MIN_BPM;
+      die "Too many repeats\n" if $repeat > MAX_REPEATS;
       my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
       $irc->write(@$to, ":URL: $url");
     }
@@ -213,9 +213,9 @@ sub process_msg {
     }
     $d->write;
     try {
-      die 'Phrase too large' if $size / $repeat > MAX_PHRASE;
-      die 'Not enough BPM' if $bpm < MIN_BPM;
-      die 'Too many repeats' if $repeat > MAX_REPEATS;
+      die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
+      die "Not enough BPM\n" if $bpm < MIN_BPM;
+      die "Too many repeats\n" if $repeat > MAX_REPEATS;
       my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
       $irc->write(@$to, ":URL: $url");
     }
@@ -620,12 +620,12 @@ sub mid2mp3 {
   my ($conf, $name, $mid_file, $mp3_file, $phrase) = @_;
   my $cmd = "timidity $mid_file -Ow -o - | ffmpeg -i - -acodec libmp3lame -ab 64k $mp3_file";
   system($cmd) == 0
-    or die "system($cmd) failed: $?";
+    or die "system($cmd) failed: $?\n";
   my $mp3 = MP3::Tag->new($mp3_file);
   eval { $mp3->update_tags({ comment => $phrase }) };
   $cmd = "scp $mp3_file $conf->{scp_host}:$conf->{scp_dir}"; # Requires a passwordless key
   system($cmd) == 0
-    or die "system($cmd) failed: $?";
+    or die "system($cmd) failed: $?\n";
   my $url = sprintf '%s/tunes/%s.mp3', $conf->{web_host}, $name;
   return $url;
 }
