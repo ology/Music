@@ -10,6 +10,10 @@
 # user: 'Your Name Bot'
 # channel: '#yourchan'
 # server: 'chat.host.net:6667'
+# scp_host: 'foo'
+# scp_dir: 'web/docroot/tunes/'
+# web_host: 'http://foo.host.net'
+# fretboard: 'http://foo.host.net'
 
 use strict;
 use warnings;
