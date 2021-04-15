@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Musical computation IRC bot
+# Musical processing IRC bot
 
 # Sample config (irc-bot.yml):
 #
