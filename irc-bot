@@ -34,13 +34,14 @@ use Music::Note::Frequency;
 use MP3::Tag;
 
 # Use local author libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals);
 
 use Music::Duration;
 use Music::Duration::Partition;
 use Music::Intervals;
 use Music::Intervals::Numeric;
 use Music::Intervals::Ratios;
+use MIDI::Chord::Guitar;
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(setup_score set_chan_patch midi_format dura_size);
 
@@ -428,6 +429,25 @@ sub process_msg {
   elsif ($msg =~ /^fret\s+(\w+)\s+(\d+)$/) {
     my $url = sprintf '%s/%s/%d', $conf->{fretboard}, $1, $2;
     $irc->write(@$to, ":URL: $url");
+  }
+  # COMMAND: fingering
+  elsif ($msg =~ /^fingering\s+([A-G][b#]?\d+)\s*(.+)?$/) {
+    my $note = $1;
+    my $chord = $2;
+    $chord //= '';
+    my $mcg = MIDI::Chord::Guitar->new(
+      voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv" # <- Not needed if module installed
+    );
+    my $fingerings;
+    my $result;
+    eval { $fingerings = $mcg->fingering($note, $chord) };
+    if ($@) {
+      $result = '?';
+    }
+    else {
+      $result = join ', ', @$fingerings;
+    }
+    $irc->write(@$to, ":Fingerings: $result");
   }
   # COMMAND: range
   elsif ($msg =~ /^range\s+(\w+)$/) {
