@@ -433,8 +433,7 @@ sub process_msg {
   # COMMAND: fingering
   elsif ($msg =~ /^fingering\s+([A-G][b#]?\d+)\s*(.+)?$/) {
     my $note = $1;
-    my $chord = $2;
-    $chord //= '';
+    my $chord = $2 // '';
     my $mcg = MIDI::Chord::Guitar->new(
       voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv" # <- Not needed if module installed
     );
