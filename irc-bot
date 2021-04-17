@@ -10,8 +10,8 @@
 # server: 'chat.host.net:6667'
 # scp_host: 'foo'
 # scp_dir: 'web/docroot/tunes/'
-# web_host: 'http://foo.host.net'
-# fretboard: 'http://foo.host.net'
+# web_host: 'http://foo.host.net/tunes'
+# fretboard: 'http://foo.host.net/frets'
 
 use strict;
 use warnings;
@@ -648,6 +648,6 @@ sub mid2mp3 {
   $cmd = "scp $mp3_file $conf->{scp_host}:$conf->{scp_dir}"; # Requires a passwordless key
   system($cmd) == 0
     or die "system($cmd) failed: $?\n";
-  my $url = sprintf '%s/tunes/%s.mp3', $conf->{web_host}, $name;
+  my $url = sprintf '%s/%s.mp3', $conf->{web_host}, $name;
   return $url;
 }
