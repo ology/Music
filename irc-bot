@@ -177,10 +177,10 @@ sub process_msg {
     my $score = setup_score(bpm => $bpm);
     my $cn = Music::Chord::Note->new;
     my $size = 0;
-    for my $i (1 .. $repeat) {
-      $size += parse_phrase($score, $cn, \@phrase);
-    }
     try {
+      for my $i (1 .. $repeat) {
+        $size += parse_phrase($score, $cn, \@phrase);
+      }
       die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
       die "Not enough BPM\n" if $bpm < MIN_BPM;
       die "Too many repeats\n" if $repeat > MAX_REPEATS;
@@ -211,10 +211,10 @@ sub process_msg {
         reverb => 15,
     );
     my $size = 0;
-    for my $i (1 .. $repeat) {
-      $size += parse_drums($d, \@phrase);
-    }
     try {
+      for my $i (1 .. $repeat) {
+        $size += parse_drums($d, \@phrase);
+      }
       die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
       die "Not enough BPM\n" if $bpm < MIN_BPM;
       die "Too many repeats\n" if $repeat > MAX_REPEATS;
