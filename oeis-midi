@@ -1,0 +1,43 @@
+#!/usr/bin/env perl
+
+###
+#
+# Play an OEIS sequence modulo the number of notes of the given scale.
+#
+# Example:
+# perl oeis-midi 40 64 major 30 95 3; timidity oeis-midi.mid
+#
+###
+
+use strict;
+use warnings;
+
+# Use local libraries
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+
+use MIDI::Util qw(setup_score);
+use Music::Scales qw(get_scale_MIDI);
+use OEIS qw(oeis);
+
+my $oeis   = shift || die "Usage: perl $0 oeis [N scale bpm patch octave]\n";
+my $limit  = shift || 16;
+my $scale  = shift || 'major';
+my $bpm    = shift || 300;
+my $patch  = shift || 0;
+my $octave = shift || 4;
+
+my $score = setup_score(bpm => $bpm, patch => $patch);
+
+my @scale = get_scale_MIDI('C', $octave, $scale);
+
+my $i = 0;
+
+for my $n (oeis($oeis, $limit)) {
+    $i++;
+    my $mod = $n % @scale;
+    my $note = $scale[$mod];
+    print "$i. n: $n, mod ", scalar(@scale), ": $mod, note: $note\n";
+    $score->n('qn', $note);
+}
+
+$score->write_score("$0.mid");
