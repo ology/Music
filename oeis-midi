@@ -5,7 +5,7 @@
 # Play an OEIS sequence modulo the number of notes of the given scale.
 #
 # Example:
-# perl oeis-midi 40 64 major 30 95 3; timidity oeis-midi.mid
+# perl oeis-midi 40 128 major 30 95 3; timidity oeis-midi.mid
 #
 ###
 
@@ -20,7 +20,7 @@ use Music::Scales qw(get_scale_MIDI);
 use OEIS qw(oeis);
 
 my $oeis   = shift || die "Usage: perl $0 oeis [N scale bpm patch octave]\n";
-my $limit  = shift || 16;
+my $limit  = shift || 64;
 my $scale  = shift || 'major';
 my $bpm    = shift || 300;
 my $patch  = shift || 0;
