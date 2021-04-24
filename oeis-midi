@@ -1,12 +1,12 @@
 #!/usr/bin/env perl
 
 ###
-#
 # Play an OEIS sequence modulo the number of notes of the given scale.
 #
 # Example:
 # perl oeis-midi 40 128 major 30 95 3; timidity oeis-midi.mid
 #
+# 40=primes 45=Fibonacci
 ###
 
 use strict;
