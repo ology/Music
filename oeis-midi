@@ -19,7 +19,7 @@ use MIDI::Util qw(setup_score);
 use Music::Scales qw(get_scale_MIDI);
 use OEIS qw(oeis);
 
-my $oeis   = shift || die "Usage: perl $0 oeis [N scale bpm patch octave]\n";
+my $oeis   = shift || die "Usage: perl $0 oeis-number [how-many scale bpm patch octave]\n";
 my $limit  = shift || 64;
 my $scale  = shift || 'major';
 my $bpm    = shift || 300;
