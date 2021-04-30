@@ -4,6 +4,7 @@ use warnings;
 
 # To run this, first produce a freq file with note-transition-sync.
 
+use Data::Dumper::Compact qw(ddc);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Graph-Weighted MIDI-Util);
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
@@ -20,7 +21,7 @@ my $channel = 0;
 my @phrases;
 
 my $data = retrieve($file);
-#use Data::Dumper::Concise;warn 'Data to process: ', Dumper$data;
+#warn 'Data to process: ', ddc($data);
 
 my $score = setup_score( patch => $patch );
 
@@ -37,7 +38,7 @@ for my $track ( keys %$data ) {
     $pitches->populate( $data->{$track} );
 
     my @phrase = collect_notes( $n, $initial, $pitches );
-#use Data::Dumper::Concise;warn Dumper\@phrase;
+#warn ddc(\@phrase);
 
     my $func = sub {
         set_chan_patch( $score, $channel++, $patch );
