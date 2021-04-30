@@ -4,7 +4,7 @@ use warnings;
 
 # Run this, to produce a freq file, then run stat-walk-sync with it.
 
-use Data::Dumper;
+use Data::Dumper::Compact qw(ddc);
 use MIDI;
 use Statistics::Frequency;
 use Storable;
@@ -38,7 +38,7 @@ for my $key ( keys %events ) {
         $previous = $next;
     }
 }
-#warn 'Note transitions: ', Dumper $transitions;
+#warn 'Note transitions: ', ddc($transitions);
 
 # Frequency bucket
 my $frequencies = {};
@@ -56,6 +56,6 @@ for my $track ( keys %$transitions ) {
         $stat->clear_data;
     }
 }
-warn 'Transition frequencies: ', Dumper $frequencies;
+warn 'Transition frequencies: ', ddc($frequencies);
 
 store $frequencies, "$0.dat";
