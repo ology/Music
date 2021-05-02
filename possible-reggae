@@ -1,0 +1,77 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util);
+use MIDI::Drummer::Tiny;
+use MIDI::Chord::Guitar;
+use MIDI::Util qw(set_chan_patch);
+
+my $d = MIDI::Drummer::Tiny->new(
+    file => $0 . '.mid',
+    bpm  => 120,
+    bars => 8,
+);
+
+$d->score->synch(
+    \&drums,
+    \&rhythm,
+);
+
+$d->write;
+
+sub drums {
+    $d->count_in(1);
+
+    for my $i (1 .. 4) {
+        my $j = 0;
+
+        for my $n (1 .. $d->bars * 4) {
+            if ($n % 2 == 0) {
+                $d->note($d->triplet_eighth, $d->closed_hh);
+                $d->rest($d->triplet_eighth);
+                $d->note($d->triplet_eighth, $d->closed_hh);
+            }
+            else {
+                if ( $j % 2 == 0 ) {
+                    $d->note($d->quarter, $d->closed_hh, $d->kick);
+                }
+                else {
+                    $d->note($d->quarter, $d->closed_hh, $d->snare);
+                }
+                $j++;
+            }
+        }
+    }
+}
+
+sub rhythm {
+    set_chan_patch($d->score, 0, 24);
+    my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
+    my $Dm = $mcg->transform('D3', 'm', 3);
+    my $Am = $mcg->transform('A2', 'm', 2);
+    my $G = $mcg->transform('G2', '', 3);
+    $d->rest($d->whole);
+    for my $i (1 .. 4) {
+        for my $n (1 .. $d->bars) {
+            if ($n == 3 || $n == 4 || $n == 7) {
+                phrase($Am);
+            }
+            elsif ($n == 8) {
+                phrase($G);
+            }
+            else {
+                phrase($Dm);
+            }
+        }
+    }
+}
+
+sub phrase {
+    my ($notes) = @_;
+    $d->rest($d->quarter);
+    $d->note($d->eighth, @$notes);
+    $d->rest($d->dotted_quarter);
+    $d->note($d->eighth, @$notes);
+    $d->rest($d->eighth);
+}
