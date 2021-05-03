@@ -1,0 +1,242 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Praxis-Variation MIDI-Drummer-Tiny MIDI-Util);
+use MIDI::Drummer::Tiny;
+use MIDI::Chord::Guitar;
+use MIDI::Praxis::Variation qw(tie_durations);
+use MIDI::Util qw(set_chan_patch);
+
+my $d = MIDI::Drummer::Tiny->new(
+    file => $0 . '.mid',
+    bpm  => 140,
+    bars => 12,
+);
+
+my $treble_patch = 24; # classical guitar, piano=0, etc.
+my $bass_patch = 35; # fretless bass
+
+my $channel = 0;
+
+$d->score->synch(
+    \&drums,
+    \&chords,
+    \&bass,
+    \&melody,
+);
+
+$d->write;
+
+sub drums {
+    $d->count_in(1);
+    for my $n (1 .. $d->bars) {
+        $d->note($d->quarter,        $d->ride1, $d->kick);
+        $d->note($d->triplet_eighth, $d->ride1);
+        $d->rest($d->triplet_eighth);
+        $d->note($d->triplet_eighth, $d->ride1);
+        $d->note($d->quarter,        $d->ride1, $d->snare);
+        $d->note($d->triplet_eighth, $d->ride1, $d->kick);
+        $d->rest($d->triplet_eighth);
+        $d->note($d->triplet_eighth, $d->ride1);
+    }
+}
+
+sub chords {
+    set_chan_patch($d->score, $channel++, $treble_patch);
+
+    my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
+    my $Bb    = $mcg->transform('Bb2', '', 3);
+    my $Bb7   = $mcg->transform('Bb2', '7', 3);
+    my $Eb    = $mcg->transform('Eb3', '', 1);
+    my $Eb7   = $mcg->transform('Eb3', '7', 1);
+    my $Edim7 = $mcg->transform('E3', 'dim7', 1);
+    my $F7    = $mcg->transform('F3', '7', 1);
+
+    $d->rest($d->whole); # while counting-in
+
+    $d->note($d->whole, @$Bb);
+    $d->note($d->whole, @$Eb7);
+    $d->note($d->half,  @$Bb);
+    $d->note($d->half,  @$F7);
+    $d->note($d->half,  @$Bb);
+    $d->note($d->half,  @$Bb7);
+    $d->note($d->whole, @$Eb);
+    $d->note($d->whole, @$Edim7);
+    $d->note($d->half,  @$Bb);
+    $d->note($d->half,  @$F7);
+    $d->note($d->whole, @$Bb);
+    $d->note($d->whole, @$F7);
+    $d->note($d->whole, @$F7);
+    $d->note($d->whole, @$Bb);
+    $d->note($d->whole, @$Bb);
+}
+
+sub bass {
+    set_chan_patch($d->score, $channel++, $bass_patch);
+
+    $d->rest($d->whole); # while counting-in
+
+    $d->note($d->quarter, 'Bf2');
+    $d->note($d->quarter, 'D3');
+    $d->note($d->quarter, 'F3');
+    $d->note($d->quarter, 'Bf2');
+
+    $d->note($d->quarter, 'Ef3');
+    $d->note($d->quarter, 'G3');
+    $d->note($d->quarter, 'Bf3');
+    $d->note($d->quarter, 'E3');
+
+    $d->note($d->quarter, 'Bf2');
+    $d->note($d->quarter, 'Bf2');
+    $d->note($d->quarter, 'F2');
+    $d->note($d->quarter, 'A2');
+
+    $d->note($d->quarter, 'Bf2');
+    $d->note($d->quarter, 'C3');
+    $d->note($d->quarter, 'D3');
+    $d->note($d->quarter, 'F3');
+
+    $d->note($d->quarter, 'Ef3');
+    $d->note($d->quarter, 'G3');
+    $d->note($d->quarter, 'Bf3');
+    $d->note($d->quarter, 'Ef3');
+
+    $d->note($d->quarter, 'E3');
+    $d->note($d->quarter, 'G3');
+    $d->note($d->quarter, 'Bf3');
+    $d->note($d->quarter, 'A2');
+
+    $d->note($d->quarter, 'Bf2');
+    $d->note($d->quarter, 'Bf2');
+    $d->note($d->quarter, 'F2');
+    $d->note($d->quarter, 'A2');
+
+    $d->note($d->quarter, 'Bf2');
+    $d->note($d->quarter, 'A2');
+    $d->note($d->quarter, 'F3');
+    $d->note($d->quarter, 'A2');
+
+    $d->note($d->quarter, 'F2');
+    $d->note($d->quarter, 'A2');
+    $d->note($d->quarter, 'C3');
+    $d->note($d->quarter, 'Ef3');
+
+    $d->note($d->quarter, 'F3');
+    $d->note($d->quarter, 'Ef3');
+    $d->note($d->quarter, 'D3');
+    $d->note($d->quarter, 'C3');
+
+    $d->note($d->quarter, 'Bf2');
+    $d->note($d->quarter, 'D3');
+    $d->note($d->quarter, 'Ef3');
+    $d->note($d->quarter, 'E3');
+
+    $d->note($d->quarter, 'F3');
+    $d->note($d->quarter, 'Ef3');
+    $d->note($d->quarter, 'G2');
+    $d->note($d->quarter, 'Bf2');
+}
+
+sub melody {
+    set_chan_patch($d->score, $channel++, $treble_patch);
+
+    my @ties = (
+        'd' . tie_durations($d->half, $d->triplet_eighth),
+        'd' . tie_durations($d->half, $d->triplet_eighth, $d->quarter),
+        'd' . tie_durations($d->triplet_eighth, $d->eighth),
+        'd' . tie_durations($d->half, $d->eighth),
+        'd' . tie_durations($d->half, $d->eighth, $d->quarter),
+        'd' . tie_durations($d->triplet_eighth, $d->quarter),
+    );
+
+    $d->rest($d->whole); # while counting-in
+
+    $d->note($d->triplet_eighth, 'D4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'Ef4');
+    $d->note($d->triplet_eighth, 'E4');
+    $d->rest($d->triplet_eighth);
+    $d->note($ties[0], 'F4');
+
+    $d->note($d->triplet_eighth, 'G4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'Gs4');
+    $d->note($d->triplet_eighth, 'A4');
+    $d->rest($d->triplet_eighth);
+    $d->note($ties[0], 'Bf4');
+
+    $d->note($d->triplet_eighth, 'F4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'G4');
+    $d->note($d->triplet_eighth, 'F4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'E4');
+    $d->note($d->triplet_eighth, 'Ef4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'F3');
+    $d->note($d->triplet_eighth, 'Cs4');
+    $d->rest($d->triplet_eighth);
+    $d->note($ties[2], 'D4');
+    $d->note($d->quarter, 'Df4');
+    $d->note($ties[3], 'C4');
+
+    $d->note($d->triplet_eighth, 'G4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'Gs4');
+    $d->note($d->triplet_eighth, 'A4');
+    $d->rest($d->triplet_eighth);
+    $d->note($ties[0], 'Bf4');
+
+    $d->note($d->triplet_eighth, 'Bf4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'B4');
+    $d->note($d->triplet_eighth, 'C5');
+    $d->rest($d->triplet_eighth);
+    $d->note($ties[0], 'Df5');
+
+    $d->note($d->triplet_eighth, 'F4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'G4');
+    $d->note($d->triplet_eighth, 'F4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'E4');
+    $d->note($d->triplet_eighth, 'Ef4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'F3');
+    $d->note($d->triplet_eighth, 'Cs4');
+    $d->rest($d->triplet_eighth);
+    $d->note($ties[1], 'D4');
+    $d->note($d->triplet_eighth, 'F4');
+    $d->note($d->triplet_eighth, 'F4');
+    $d->note($d->triplet_eighth, 'F4');
+
+    $d->note($d->eighth, 'F4');
+    $d->note($ties[4], 'F3');
+
+    $d->note($d->triplet_eighth, 'F4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'G4');
+    $d->note($d->triplet_eighth, 'F4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'E4');
+    $d->note($d->triplet_eighth, 'Ef4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'F3');
+    $d->note($d->triplet_eighth, 'Cs4');
+    $d->rest($d->triplet_eighth);
+    $d->note($ties[5], 'D4');
+    $d->note($d->triplet_eighth, 'F4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'G4');
+    $d->note($d->triplet_eighth, 'F4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'E4');
+    $d->note($d->triplet_eighth, 'Ef4');
+    $d->rest($d->triplet_eighth);
+    $d->note($d->triplet_eighth, 'F3');
+
+    $d->note($d->triplet_eighth, 'Cs4');
+    $d->rest($d->triplet_eighth);
+    $d->note($ties[1], 'D4');
+}
