@@ -78,65 +78,13 @@ sub bass {
 
     $d->rest($d->whole); # while counting-in
 
-    $d->note($d->quarter, 'Bf2');
-    $d->note($d->quarter, 'D3');
-    $d->note($d->quarter, 'F3');
-    $d->note($d->quarter, 'Bf2');
-
-    $d->note($d->quarter, 'Ef3');
-    $d->note($d->quarter, 'G3');
-    $d->note($d->quarter, 'Bf3');
-    $d->note($d->quarter, 'E3');
-
-    $d->note($d->quarter, 'Bf2');
-    $d->note($d->quarter, 'Bf2');
-    $d->note($d->quarter, 'F2');
-    $d->note($d->quarter, 'A2');
-
-    $d->note($d->quarter, 'Bf2');
-    $d->note($d->quarter, 'C3');
-    $d->note($d->quarter, 'D3');
-    $d->note($d->quarter, 'F3');
-
-    $d->note($d->quarter, 'Ef3');
-    $d->note($d->quarter, 'G3');
-    $d->note($d->quarter, 'Bf3');
-    $d->note($d->quarter, 'Ef3');
-
-    $d->note($d->quarter, 'E3');
-    $d->note($d->quarter, 'G3');
-    $d->note($d->quarter, 'Bf3');
-    $d->note($d->quarter, 'A2');
-
-    $d->note($d->quarter, 'Bf2');
-    $d->note($d->quarter, 'Bf2');
-    $d->note($d->quarter, 'F2');
-    $d->note($d->quarter, 'A2');
-
-    $d->note($d->quarter, 'Bf2');
-    $d->note($d->quarter, 'A2');
-    $d->note($d->quarter, 'F3');
-    $d->note($d->quarter, 'A2');
-
-    $d->note($d->quarter, 'F2');
-    $d->note($d->quarter, 'A2');
-    $d->note($d->quarter, 'C3');
-    $d->note($d->quarter, 'Ef3');
-
-    $d->note($d->quarter, 'F3');
-    $d->note($d->quarter, 'Ef3');
-    $d->note($d->quarter, 'D3');
-    $d->note($d->quarter, 'C3');
-
-    $d->note($d->quarter, 'Bf2');
-    $d->note($d->quarter, 'D3');
-    $d->note($d->quarter, 'Ef3');
-    $d->note($d->quarter, 'E3');
-
-    $d->note($d->quarter, 'F3');
-    $d->note($d->quarter, 'Ef3');
-    $d->note($d->quarter, 'G2');
-    $d->note($d->quarter, 'Bf2');
+    for my $note (qw(
+        Bf2 D3 F3 Bf2   Ef3 G3 Bf3 E3  Bf2 Bf2 F2 A2  Bf2 C3 D3 F3
+        Ef3 G3 Bf3 Ef3  E3 G3 Bf3 A2   Bf2 Bf2 F2 A2  Bf2 A2 F3 A2
+        F2 A2 C3 Ef3    F3 Ef3 D3 C3   Bf2 D3 Ef3 E3  F3 Ef3 G2 Bf2
+    )) {
+        $d->note($d->quarter, $note);
+    }
 }
 
 sub melody {
