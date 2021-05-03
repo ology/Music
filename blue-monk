@@ -84,7 +84,7 @@ sub chords {
     $d->note($d->whole, @$F7);
     $d->note($d->whole, @$F7);
     $d->note($d->whole, @$Bb);
-    $d->note($d->whole, @$Bb7);
+    $d->note($d->whole, @$Bb);
 }
 
 sub melody {
