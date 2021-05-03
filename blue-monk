@@ -22,8 +22,8 @@ my $channel = 0;
 
 $d->score->synch(
     \&drums,
-    \&chords,
     \&bass,
+    \&chords,
     \&melody,
 );
 
@@ -40,6 +40,20 @@ sub drums {
         $d->note($d->triplet_eighth, $d->ride1, $d->kick);
         $d->rest($d->triplet_eighth);
         $d->note($d->triplet_eighth, $d->ride1);
+    }
+}
+
+sub bass {
+    set_chan_patch($d->score, $channel++, $bass_patch);
+
+    $d->rest($d->whole); # while counting-in
+
+    for my $note (qw(
+        Bf2 D3 F3 Bf2   Ef3 G3 Bf3 E3  Bf2 Bf2 F2 A2  Bf2 C3 D3 F3
+        Ef3 G3 Bf3 Ef3  E3 G3 Bf3 A2   Bf2 Bf2 F2 A2  Bf2 A2 F3 A2
+        F2 A2 C3 Ef3    F3 Ef3 D3 C3   Bf2 D3 Ef3 E3  F3 Ef3 G2 Bf2
+    )) {
+        $d->note($d->quarter, $note);
     }
 }
 
@@ -71,20 +85,6 @@ sub chords {
     $d->note($d->whole, @$F7);
     $d->note($d->whole, @$Bb);
     $d->note($d->whole, @$Bb);
-}
-
-sub bass {
-    set_chan_patch($d->score, $channel++, $bass_patch);
-
-    $d->rest($d->whole); # while counting-in
-
-    for my $note (qw(
-        Bf2 D3 F3 Bf2   Ef3 G3 Bf3 E3  Bf2 Bf2 F2 A2  Bf2 C3 D3 F3
-        Ef3 G3 Bf3 Ef3  E3 G3 Bf3 A2   Bf2 Bf2 F2 A2  Bf2 A2 F3 A2
-        F2 A2 C3 Ef3    F3 Ef3 D3 C3   Bf2 D3 Ef3 E3  F3 Ef3 G2 Bf2
-    )) {
-        $d->note($d->quarter, $note);
-    }
 }
 
 sub melody {
