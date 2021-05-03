@@ -45,7 +45,7 @@ sub drums {
 sub chords {
     set_chan_patch($d->score, $channel++, $treble_patch);
 
-    my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
+    my $mcg = MIDI::Chord::Guitar->new;#(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
     my $Bb    = $mcg->transform('Bb2', '', 3);
     my $Bb7   = $mcg->transform('Bb2', '7', 3);
     my $Eb    = $mcg->transform('Eb3', '', 1);
