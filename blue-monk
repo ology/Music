@@ -14,8 +14,9 @@ my $d = MIDI::Drummer::Tiny->new(
     bars => 12,
 );
 
-my $treble_patch = 24; # classical guitar, piano=0, etc.
 my $bass_patch = 35; # fretless bass
+my $chord_patch = 24; # classical guitar, piano=0, etc.
+my $melody_patch = 24;
 
 my $channel = 0;
 
@@ -43,7 +44,7 @@ sub drums {
 }
 
 sub chords {
-    set_chan_patch($d->score, $channel++, $treble_patch);
+    set_chan_patch($d->score, $channel++, $chord_patch);
 
     my $mcg = MIDI::Chord::Guitar->new;#(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
     my $Bb    = $mcg->transform('Bb2', '', 3);
@@ -139,7 +140,7 @@ sub bass {
 }
 
 sub melody {
-    set_chan_patch($d->score, $channel++, $treble_patch);
+    set_chan_patch($d->score, $channel++, $melody_patch);
 
     my @ties = (
         'd' . tie_durations($d->half, $d->triplet_eighth),
