@@ -10,13 +10,13 @@ use MIDI::Util qw(set_chan_patch);
 
 my $d = MIDI::Drummer::Tiny->new(
     file => $0 . '.mid',
-    bpm  => 140,
+    bpm  => 120,
     bars => 12,
 );
 
 my $bass_patch = 35; # fretless bass
-my $chord_patch = 24; # classical guitar, piano=0, etc.
-my $melody_patch = 24;
+my $chord_patch = 0; # classical guitar, piano=0, etc.
+my $melody_patch = 0;
 
 my $channel = 0;
 
@@ -32,14 +32,28 @@ $d->write;
 sub drums {
     $d->count_in(1);
     for my $n (1 .. $d->bars) {
-        $d->note($d->quarter,        $d->ride1, $d->kick);
-        $d->note($d->triplet_eighth, $d->ride1);
-        $d->rest($d->triplet_eighth);
-        $d->note($d->triplet_eighth, $d->ride1);
-        $d->note($d->quarter,        $d->ride1, $d->snare);
-        $d->note($d->triplet_eighth, $d->ride1, $d->kick);
-        $d->rest($d->triplet_eighth);
-        $d->note($d->triplet_eighth, $d->ride1);
+        if ($n % 2 == 0) {
+            $d->note($d->quarter,        $d->ride1, $d->kick);
+            $d->note($d->triplet_eighth, $d->ride1);
+            $d->rest($d->triplet_eighth);
+            $d->note($d->triplet_eighth, $d->ride1);
+            $d->note($d->quarter,        $d->ride1, $d->snare);
+            $d->note($d->triplet_eighth, $d->ride1, $d->kick);
+            $d->rest($d->triplet_eighth);
+            $d->note($d->triplet_eighth, $d->ride1);
+        }
+        else {
+            $d->note($d->quarter,        $d->ride1, $d->kick);
+            $d->note($d->triplet_eighth, $d->ride1, $d->snare, $d->pedal_hh);
+            $d->rest($d->triplet_eighth);
+            $d->note($d->triplet_eighth, $d->ride1, $d->snare);
+            $d->note($d->triplet_eighth, $d->ride1);
+            $d->rest($d->triplet_eighth);
+            $d->note($d->triplet_eighth, $d->kick);
+            $d->note($d->triplet_eighth, $d->ride1, $d->snare, $d->pedal_hh);
+            $d->rest($d->triplet_eighth);
+            $d->note($d->triplet_eighth, $d->ride1, $d->snare);
+        }
     }
 }
 
@@ -60,7 +74,7 @@ sub bass {
 sub chords {
     set_chan_patch($d->score, $channel++, $chord_patch);
 
-    my $mcg = MIDI::Chord::Guitar->new;#(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
+    my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
     my $Bb    = $mcg->transform('Bb2', '', 3);
     my $Bb7   = $mcg->transform('Bb2', '7', 3);
     my $Eb    = $mcg->transform('Eb3', '', 1);
