@@ -68,7 +68,7 @@ sub chords {
     my $Afaug7  = $mcg->transform('Ab2', '7#5', 3);
     my $Edim    = $mcg->transform('E3', 'dim', 0);
     my $Dfmaj7F = ['41', @$Dfmaj7]; # XXX * Impossible on the guitar?
-    my $G7b5    = $mcg->transform('G2', '7b5', 2);
+    my $G7f5    = $mcg->transform('G2', '7b5', 2);
     my $Bf7     = $mcg->transform('Bb2', '7', 3);
 
     $d->rest($d->whole); # while counting-in
@@ -108,7 +108,7 @@ sub chords {
     $d->note($d->quarter, @$Efm7);
     $d->note($d->quarter, @$Edim);
     $d->note($d->half, @$Dfmaj7F); # *
-    $d->note($d->half, @$G7b5);
+    $d->note($d->half, @$G7f5);
     $d->note($d->whole, @$Gfmaj7);
     $d->note($d->quarter, @$Ef7);
     $d->note($d->quarter, @$Ef7);
