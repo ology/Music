@@ -63,7 +63,7 @@ sub chords {
     my $Gdim    = [qw(43 49 57 62)]; #$mcg->transform('G2', 'dim', 1);
     my $Df6Af   = [qw(44 49 53 58 61)]; #$mcg->transform('Db3', '6', 5);
     my $Afm7    = $mcg->transform('Ab2', 'm7', 2);
-    my $Bf7f9   = $mcg->transform('Bb2', '7b9', 0);
+    my $Bf7f9   = $mcg->transform('Bb2', '7b9', 0); # XXX Only the 0th entry works?
     my $Abaug7  = [qw(44 54 60 64)]; #$mcg->transform('Ab2', 'aug7', 0);
     my $Edim    = $mcg->transform('E3', 'dim', 0);
     my $Dfmaj7F = ['41', @$Dfmaj7]; # XXX * Impossible on the guitar?
