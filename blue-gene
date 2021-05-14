@@ -1,0 +1,174 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition);
+use MIDI::Drummer::Tiny;
+use MIDI::Chord::Guitar;
+use MIDI::Util qw(set_chan_patch);
+use Music::Duration::Partition;
+use Music::Scales;
+use Music::VoiceGen;
+
+my $bpm   = shift || 100;
+my $scale = shift || 'pentatonic';
+
+my $note = 'Bb';
+my $bass_patch = 35;
+my $melody_patch = 66;
+my $chord_patch = 4;
+
+my $d = MIDI::Drummer::Tiny->new(
+    file => $0 . '.mid',
+    bpm  => 100,
+    bars => 4,
+);
+
+my $channel = 0; # Internal increment
+
+$d->score->synch(
+    \&drums,
+    \&bass,
+    \&chords,
+    \&melody,
+);
+
+$d->write;
+
+sub drums {
+    $d->count_in(1);
+    for my $n (1 .. $d->bars * $d->bars) {
+        $d->note($d->quarter,        $d->ride1, $d->kick);
+        $d->note($d->triplet_eighth, $d->ride1);
+        $d->rest($d->triplet_eighth);
+        $d->note($d->triplet_eighth, $d->ride1);
+        $d->note($d->quarter,        $d->ride1, $d->snare);
+        $d->note($d->triplet_eighth, $d->ride1, $d->kick);
+        $d->rest($d->triplet_eighth);
+        $d->note($d->triplet_eighth, $d->ride1);
+    }
+}
+
+sub bass {
+    set_chan_patch($d->score, $channel++, $bass_patch);
+
+    my @pitches = (
+        get_scale_MIDI($note, 1, $scale),
+        get_scale_MIDI($note, 2, $scale)
+    );
+    my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
+    my $voice = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@intervals,
+    );
+
+    $d->rest($d->whole); # while counting-in
+
+    for my $n (1 .. $d->bars * $d->bars) {
+        $d->note($d->quarter,  $voice->rand) for 1 .. 4;
+    }
+}
+
+sub chords {
+    set_chan_patch($d->score, $channel++, $chord_patch);
+
+    my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
+    # 1
+    my $Bfmaj7 = $mcg->transform('Bb2', 'maj7', 3);
+    my $Dfmaj7 = $mcg->transform('Db3', 'maj7', 1);
+    my $Cm7    = $mcg->transform('C3', 'm7', 1);
+    my $Gm7    = $mcg->transform('G2', 'm7', 2);
+    my $Af7f5  = $mcg->transform('Ab2', '7b5', 0);
+    # 2
+    my $Bf   = $mcg->transform('Bb2', '', 3);
+    my $Bf7  = $mcg->transform('Bb2', '7', 3);
+    my $Ef   = $mcg->transform('Eb3', '', 1);
+    my $Ef9  = $mcg->transform('Eb3', '9', 0);
+    my $D7s9 = $mcg->transform('D3', '7#9', 0);
+
+    $d->rest($d->whole); # while counting-in
+
+    for my $n (1 .. $d->bars) {
+        if ($n % 2 == 0) {
+            $d->note($d->whole, @$Bfmaj7);
+            $d->note($d->whole, @$Dfmaj7);
+            $d->note($d->whole, @$Cm7);
+            $d->note($d->half,  @$Gm7);
+            $d->note($d->half,  @$Af7f5);
+        }
+        else {
+            $d->note($d->whole, @$Bf);
+            $d->note($d->whole, @$Bf7);
+            $d->note($d->whole, @$Ef);
+            $d->note($d->half,  @$Ef9);
+            $d->note($d->half,  @$D7s9);
+        }
+    }
+}
+
+sub melody {
+    set_chan_patch($d->score, $channel++, $melody_patch);
+
+    my $mdp = Music::Duration::Partition->new(
+        size => 4,
+        pool => [qw/wn hn dhn dqn qn en/],
+#        groups => [0, 0, 2, 2],
+    );
+    my $motif1 = $mdp->motif;
+    print 'Melody motif #1: ', ddc($motif1);
+    my $motif2 = $mdp->motif;
+    print 'Melody motif #2: ', ddc($motif2);
+
+    my @pitches = (
+        get_scale_MIDI($note, 2, $scale),
+        get_scale_MIDI($note, 3, $scale)
+    );
+    my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
+    my $voice = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@intervals,
+    );
+
+    my @notes1 = map { $voice->rand } @$motif1;
+    print 'Melody pitches #1: ', ddc(\@notes1);
+    my @notes2 = map { $voice->rand } @$motif2;
+    print 'Melody pitches #2: ', ddc(\@notes2);
+    my @notes3 = map { $voice->rand } @$motif1;
+    print 'Melody pitches #3: ', ddc(\@notes3);
+    my @notes4 = map { $voice->rand } @$motif2;
+    print 'Melody pitches #4: ', ddc(\@notes4);
+
+    $d->rest($d->whole); # while counting-in
+
+    for my $n (1 .. $d->bars) {
+        if ($n % 2 == 0) {
+            for my $i (0 .. $#$motif2) {
+                $d->note($motif2->[$i], $notes1[$i]);
+            }
+            for my $i (0 .. $#$motif1) {
+                $d->note($motif1->[$i], $notes2[$i]);
+            }
+            for my $i (0 .. $#$motif2) {
+                $d->note($motif2->[$i], $notes3[$i]);
+            }
+            for my $i (0 .. $#$motif1) {
+                $d->note($motif1->[$i], $notes4[$i]);
+            }
+        }
+        else {
+            for my $i (0 .. $#$motif1) {
+                $d->note($motif1->[$i], $notes1[$i]);
+            }
+            for my $i (0 .. $#$motif2) {
+                $d->note($motif2->[$i], $notes2[$i]);
+            }
+            for my $i (0 .. $#$motif1) {
+                $d->note($motif1->[$i], $notes3[$i]);
+            }
+            for my $i (0 .. $#$motif2) {
+                $d->note($motif2->[$i], $notes4[$i]);
+            }
+        }
+    }
+}
