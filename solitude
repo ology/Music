@@ -1,0 +1,194 @@
+#!/usr/bin/env perl
+
+# Real Book #387
+# Duke Ellington, Solitude (in Db)
+
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util);
+use MIDI::Drummer::Tiny;
+use MIDI::Chord::Guitar;
+use MIDI::Util qw(set_chan_patch);
+
+my $bpm = shift || 70;
+my $note = shift || 'Db';
+
+my $chord_patch = 24;
+my $melody_patch = 24;
+
+my $d = MIDI::Drummer::Tiny->new(
+    file => $0 . '.mid',
+    bpm  => $bpm,
+    bars => 31,
+);
+
+my $channel = 0; # Internal increment
+
+$d->sync(
+    \&drums,
+    \&chords,
+    \&melody,
+);
+
+$d->write;
+
+sub drums {
+    $d->count_in(1);
+    for my $n (1 .. $d->bars) {
+        $d->note($d->quarter,        $d->ride1, $d->kick);
+        $d->note($d->triplet_eighth, $d->ride1);
+        $d->rest($d->triplet_eighth);
+        $d->note($d->triplet_eighth, $d->ride1);
+        $d->note($d->quarter,        $d->ride1, $d->snare);
+        $d->note($d->triplet_eighth, $d->ride1, $d->kick);
+        $d->rest($d->triplet_eighth);
+        $d->note($d->triplet_eighth, $d->ride1);
+    }
+}
+
+sub chords {
+    set_chan_patch($d->score, $channel++, $chord_patch);
+
+    my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
+
+    my $Dfmaj7  = $mcg->transform('Db3', 'maj7', 1);
+    my $Bfm7    = $mcg->transform('Bb2', 'm7', 2);
+    my $Ef7     = $mcg->transform('Eb3', '7', 1);
+    my $Efm7    = $mcg->transform('Eb3', 'm7', 1);
+    my $Af7     = $mcg->transform('Ab2', '7', 3);
+    my $Aaug7   = [qw(45 55 61 65)]; #$mcg->transform('A2', 'aug7', 0);
+    my $Df7     = $mcg->transform('Db3', '7', 1);
+    my $Gfmaj7  = $mcg->transform('Gb2', 'maj7', 3);
+    my $Gdim    = [qw(43 49 57 62)]; #$mcg->transform('G2', 'dim', 1);
+    my $Df6Af   = [qw(44 49 53 58 61)]; #$mcg->transform('Db3', '6', 5);
+    my $Afm7    = $mcg->transform('Ab2', 'm7', 2);
+    my $Bf7f9   = $mcg->transform('Bb2', '7b9', 0);
+    my $Abaug7  = [qw(44 54 60 64)]; #$mcg->transform('Ab2', 'aug7', 0);
+    my $Edim    = $mcg->transform('E3', 'dim', 0);
+    my $Dfmaj7F = ['41', @$Dfmaj7]; # XXX * Impossible on the guitar?
+    my $G7b5    = $mcg->transform('G2', '7b5', 2);
+    my $Bf7     = $mcg->transform('Bb2', '7', 3);
+
+    $d->rest($d->whole); # while counting-in
+
+    for my $n (1 .. 2) {
+        $d->note($d->whole, @$Dfmaj7);
+        $d->note($d->quarter, @$Dfmaj7);
+        $d->note($d->quarter, @$Dfmaj7);
+        $d->note($d->half, @$Bfm7);
+        $d->note($d->whole, @$Ef7);
+        $d->note($d->whole, @$Ef7);
+        $d->note($d->whole, @$Efm7);
+        $d->note($d->whole, @$Af7);
+        $d->note($d->whole, @$Dfmaj7);
+        if ($n % 2) { # odd
+            $d->note($d->half, @$Aaug7);
+            $d->note($d->half, @$Af7);
+        }
+        else { # even
+            $d->note($d->half, @$Dfmaj7);
+            $d->note($d->half, @$Df7);
+        }
+    }
+    $d->note($d->whole, @$Gfmaj7);
+    $d->note($d->whole, @$Gdim);
+    $d->note($d->whole, @$Df6Af);
+    $d->note($d->half, @$Afm7);
+    $d->note($d->half, @$Df7);
+    $d->note($d->whole, @$Gfmaj7);
+    $d->note($d->whole, @$Gdim);
+    $d->note($d->half, @$Df6Af);
+    $d->note($d->half, @$Bf7f9);
+    $d->note($d->half, @$Efm7);
+    $d->note($d->half, @$Abaug7);
+    $d->note($d->quarter, @$Dfmaj7);
+    $d->note($d->quarter, @$Dfmaj7);
+    $d->note($d->quarter, @$Efm7);
+    $d->note($d->quarter, @$Edim);
+    $d->note($d->half, @$Dfmaj7F); # *
+    $d->note($d->half, @$G7b5);
+    $d->note($d->whole, @$Gfmaj7);
+    $d->note($d->quarter, @$Ef7);
+    $d->note($d->quarter, @$Ef7);
+    $d->note($d->quarter, @$Ef7);
+    $d->note($d->quarter, @$Bf7);
+    $d->note($d->whole, @$Efm7);
+    $d->note($d->whole, @$Af7);
+    $d->note($d->whole, @$Dfmaj7);
+}
+
+sub melody {
+    set_chan_patch($d->score, $channel++, $melody_patch);
+
+    $d->rest($d->half); # while counting-in
+
+    $d->note($d->quarter, 'Af4');
+    $d->note($d->quarter, 'Bf4');
+
+    for my $n (1 .. 2) {
+        $d->note($d->quarter, 'C5');
+        $d->note($d->quarter, 'C5');
+        $d->note($d->whole, 'C5');
+        $d->note($d->half, 'Df5');
+        $d->note($d->whole, 'Df5');
+        $d->note($d->dotted_half, 'F4');
+        $d->note($d->quarter, 'Bf4');
+        $d->note($d->quarter, 'Bf4');
+        $d->note($d->quarter, 'Af4');
+        $d->note($d->dotted_half, 'Af4');
+        $d->note($d->quarter, 'Gf4');
+        $d->note($d->quarter, 'Gf4');
+        $d->note($d->quarter, 'F4');
+        $d->note($d->dotted_whole, 'F4');
+        if ($n % 2) { # odd
+            $d->note($d->quarter, 'Af4');
+            $d->note($d->quarter, 'Bf4');
+        }
+        else { # even
+            $d->rest($d->dotted_quarter);
+            $d->note($d->eighth, 'Bf4');
+        }
+    }
+
+    for my $n (1 .. 2) {
+        for my $m (1 .. 2) {
+            $d->note($d->eighth, 'Df5');
+            $d->note($d->eighth, 'Bf4');
+            $d->note($d->quarter, 'Df5');
+            $d->note($d->dotted_quarter, 'Df4');
+            $d->note($d->eighth, 'Bf4');
+        }
+        $d->note($d->triplet_quarter, 'Df5');
+        $d->note($d->triplet_quarter, 'Bf4');
+        $d->note($d->triplet_quarter, 'Df5');
+        $d->note($d->quarter, 'Bf4');
+        if ($n % 2) { # odd
+            $d->note($d->quarter, 'F4');
+            $d->note($d->dotted_half, 'Ef4');
+            $d->rest($d->eighth);
+            $d->note($d->eighth, 'Bf4');
+        }
+        else { # even
+            $d->note($d->quarter, 'Bf4');
+            $d->note($d->half, 'Bf4');
+            $d->note($d->quarter, 'Af4');
+            $d->note($d->quarter, 'Bf4');
+        }
+    }
+
+    $d->note($d->quarter, 'C5');
+    $d->note($d->quarter, 'C5');
+    $d->note($d->whole, 'C5');
+    $d->note($d->half, 'Df5');
+    $d->note($d->whole, 'Df5');
+    $d->note($d->dotted_half, 'F4');
+    $d->note($d->quarter, 'Bf4');
+    $d->note($d->quarter, 'Bf4');
+    $d->note($d->quarter, 'Af4');
+    $d->note($d->dotted_half, 'Af4');
+    $d->note($d->quarter, 'Gf4');
+    $d->note($d->quarter, 'Gf4');
+    $d->note($d->quarter, 'Gf4');
+    $d->note($d->whole, 'F4');
+}
