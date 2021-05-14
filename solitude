@@ -60,7 +60,7 @@ sub chords {
     my $Aaug7   = [qw(45 55 61 65)]; #$mcg->transform('A2', 'aug7', 0);
     my $Df7     = $mcg->transform('Db3', '7', 1);
     my $Gfmaj7  = $mcg->transform('Gb2', 'maj7', 3);
-    my $Gdim    = [qw(43 49 57 62)]; #$mcg->transform('G2', 'dim', 1);
+    my $Gdim    = $mcg->transform('G2', 'dim', 1);
     my $Df6     = $mcg->transform('Db3', '6', 0);
     my $Df6Af   = ['44', @$Df6]; # XXX * Impossible on the guitar?
     my $Afm7    = $mcg->transform('Ab2', 'm7', 2);
