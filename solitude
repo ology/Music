@@ -95,12 +95,12 @@ sub chords {
     }
     $d->note($d->whole, @$Gfmaj7);
     $d->note($d->whole, @$Gdim);
-    $d->note($d->whole, @$Df6Af);
+    $d->note($d->whole, @$Df6Af); # *
     $d->note($d->half, @$Afm7);
     $d->note($d->half, @$Df7);
     $d->note($d->whole, @$Gfmaj7);
     $d->note($d->whole, @$Gdim);
-    $d->note($d->half, @$Df6Af);
+    $d->note($d->half, @$Df6Af); # *
     $d->note($d->half, @$Bf7f9);
     $d->note($d->half, @$Efm7);
     $d->note($d->half, @$Afaug7);
