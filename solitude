@@ -57,7 +57,7 @@ sub chords {
     my $Ef7     = $mcg->transform('Eb3', '7', 1);
     my $Efm7    = $mcg->transform('Eb3', 'm7', 1);
     my $Af7     = $mcg->transform('Ab2', '7', 3);
-    my $Aaug7   = [qw(45 55 61 65)]; #$mcg->transform('A2', 'aug7', 0);
+    my $Aaug7   = $mcg->transform('A2', '7#5', 3);
     my $Df7     = $mcg->transform('Db3', '7', 1);
     my $Gfmaj7  = $mcg->transform('Gb2', 'maj7', 3);
     my $Gdim    = $mcg->transform('G2', 'dim', 1);
@@ -65,7 +65,7 @@ sub chords {
     my $Df6Af   = ['44', @$Df6]; # XXX * Impossible on the guitar?
     my $Afm7    = $mcg->transform('Ab2', 'm7', 2);
     my $Bf7f9   = $mcg->transform('Bb2', '7b9', 0); # XXX Only the 0th entry works?
-    my $Abaug7  = [qw(44 54 60 64)]; #$mcg->transform('Ab2', 'aug7', 0);
+    my $Afaug7   = $mcg->transform('Ab2', '7#5', 3);
     my $Edim    = $mcg->transform('E3', 'dim', 0);
     my $Dfmaj7F = ['41', @$Dfmaj7]; # XXX * Impossible on the guitar?
     my $G7b5    = $mcg->transform('G2', '7b5', 2);
@@ -102,7 +102,7 @@ sub chords {
     $d->note($d->half, @$Df6Af);
     $d->note($d->half, @$Bf7f9);
     $d->note($d->half, @$Efm7);
-    $d->note($d->half, @$Abaug7);
+    $d->note($d->half, @$Afaug7);
     $d->note($d->quarter, @$Dfmaj7);
     $d->note($d->quarter, @$Dfmaj7);
     $d->note($d->quarter, @$Efm7);
