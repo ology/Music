@@ -64,8 +64,8 @@ sub chords {
     my $Df6     = $mcg->transform('Db3', '6', 0);
     my $Df6Af   = ['44', @$Df6]; # XXX * Impossible on the guitar?
     my $Afm7    = $mcg->transform('Ab2', 'm7', 2);
-    my $Bf7f9   = $mcg->transform('Bb2', '7b9', 0); # XXX Only the 0th entry works?
-    my $Afaug7   = $mcg->transform('Ab2', '7#5', 3);
+    my $Bf7f9   = $mcg->transform('Bb2', '7b9', 0);
+    my $Afaug7  = $mcg->transform('Ab2', '7#5', 3);
     my $Edim    = $mcg->transform('E3', 'dim', 0);
     my $Dfmaj7F = ['41', @$Dfmaj7]; # XXX * Impossible on the guitar?
     my $G7b5    = $mcg->transform('G2', '7b5', 2);
