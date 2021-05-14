@@ -15,7 +15,7 @@ my $bpm = shift || 70;
 my $note = shift || 'Db';
 
 my $chord_patch = 24;
-my $melody_patch = 24;
+my $melody_patch = 66;
 
 my $d = MIDI::Drummer::Tiny->new(
     file => $0 . '.mid',
