@@ -63,12 +63,12 @@ sub chords {
     my $Gfmaj7  = $mcg->transform('Gb2', 'maj7', 3);
     my $Gdim    = $mcg->transform('G2', 'dim', 1);
     my $Df6     = $mcg->transform('Db3', '6', 0);
-    my $Df6Af   = ['44', @$Df6]; # XXX * Impossible on the guitar?
+    my $Df6Af   = ['44', @$Df6]; # * Impossible on the guitar?
     my $Afm7    = $mcg->transform('Ab2', 'm7', 2);
     my $Bf7f9   = $mcg->transform('Bb2', '7b9', 0);
     my $Afaug7  = $mcg->transform('Ab2', '7#5', 3);
     my $Edim    = $mcg->transform('E3', 'dim', 0);
-    my $Dfmaj7F = ['41', @$Dfmaj7]; # XXX * Impossible on the guitar?
+    my $Dfmaj7F = ['41', @$Dfmaj7]; # * Impossible on the guitar?
     my $G7f5    = $mcg->transform('G2', '7b5', 2);
     my $Bf7     = $mcg->transform('Bb2', '7', 3);
 
