@@ -58,7 +58,6 @@ sub bass {
         get_scale_MIDI($note, 1, $bscale),
         get_scale_MIDI($note, 2, $bscale)
     );
-warn(__PACKAGE__,' ',__LINE__," MARK: ",ddc(\@pitches));
     my @intervals = qw(-2 -1 1 2);
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
