@@ -47,7 +47,7 @@ for my $n (@notes) {
 }
 @pitches = sort { $a <=> $b } @pitches; # Pitches are midi numbers
 
-# Determine if we should skip certain notes given the chord
+# Determine if we should skip certain notes given the chord flavor
 my @tones = get_scale_notes($chord_note, $scale);
 print "SCALE: ",ddc(\@tones);
 my @fixed;
