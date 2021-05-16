@@ -8,11 +8,12 @@ use MIDI::Drummer::Tiny;
 use MIDI::Chord::Guitar;
 use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
-use Music::Scales;
+use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen;
 
-my $bpm   = shift || 100;
-my $scale = shift || 'pentatonic';
+my $bpm = shift || 100;
+my $tscale = shift || 'pentatonic';
+my $bscale = shift || 'major';
 
 my $note = 'Bb';
 my $bass_patch = 35;
@@ -54,10 +55,11 @@ sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
     my @pitches = (
-        get_scale_MIDI($note, 1, $scale),
-        get_scale_MIDI($note, 2, $scale)
+        get_scale_MIDI($note, 1, $bscale),
+        get_scale_MIDI($note, 2, $bscale)
     );
-    my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
+warn(__PACKAGE__,' ',__LINE__," MARK: ",ddc(\@pitches));
+    my @intervals = qw(-2 -1 1 2);
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
         intervals => \@intervals,
@@ -121,8 +123,8 @@ sub melody {
     print 'Melody motif #2: ', ddc($motif2);
 
     my @pitches = (
-        get_scale_MIDI($note, 2, $scale),
-        get_scale_MIDI($note, 3, $scale)
+        get_scale_MIDI($note, 2, $tscale),
+        get_scale_MIDI($note, 3, $tscale)
     );
     my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
     my $voice = Music::VoiceGen->new(
