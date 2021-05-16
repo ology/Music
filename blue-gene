@@ -123,8 +123,6 @@ sub _bass {
         push @fixed, $p;
     }
 
-    @named = map { Music::Note->new($_, 'midinum')->format('ISO') } @fixed;
-
     my @intervals = qw(-3 -2 -1 1 2 3);
 
     my $voice = Music::VoiceGen->new(
