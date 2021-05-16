@@ -18,7 +18,7 @@ my $d = MIDI::Drummer::Tiny->new(
     bars => 12,
 );
 
-my $bass_patch = 35; # fretless bass
+my $bass_patch = 35; # fretless bass=35
 my $chord_patch = 0; # classical guitar=24, piano=0, etc.
 my $melody_patch = 0;
 
