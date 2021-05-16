@@ -93,6 +93,7 @@ sub _bass {
     while ($pitches[0] < 40) {
         shift @pitches;
     }
+
     my @named = map { Music::Note->new($_, 'midinum')->format('ISO') } @pitches;
     for my $n (@notes) {
         if (not any { $_ eq $n } @named) {
@@ -101,7 +102,6 @@ sub _bass {
         }
     }
     @pitches = sort { $a <=> $b } @pitches;
-#warn(__PACKAGE__,' ',__LINE__," MARK: ",ddc(\@pitches));
 
     my @intervals = qw(-2 -1 1 2);
 
