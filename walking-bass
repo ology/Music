@@ -9,13 +9,14 @@ use Music::Note;
 use Music::Scales qw(get_scale_notes get_scale_MIDI);
 use Music::VoiceGen;
 
-my $chord = shift || 'C7b5';
-my $duration = shift || 4;
+my $chord = shift || 'C7b5'; # Chords of Music::Chord::Note
+my $duration = shift || 4; # In quarter notes
 
-my $octave = 2;
+my $octave = 2; # We are a bass!
 
 my $scale = $chord =~ /^[A-G][#b]?m/ ? 'minor' : 'major';
 
+# Parse the chord
 my $chord_note;
 my $flavor;
 if ($chord =~ /^([A-G][#b]?)(.*)$/) {
@@ -30,10 +31,11 @@ my @notes = $cn->chord_with_octave($chord, $octave);
 my @pitches = get_scale_MIDI($chord_note, $octave, $scale);
 
 # Guitar constraint
-#    while ($pitches[0] < 40) {
-#        shift @pitches;
-#    }
+#while ($pitches[0] < 40) {
+#    shift @pitches;
+#}
 
+# Add unique chord notes to the pitches
 my @named = map { Music::Note->new($_, 'midinum')->format('ISO') } @pitches;
 for my $n (@notes) {
     if (not any { $_ eq $n } @named) {
@@ -43,11 +45,11 @@ for my $n (@notes) {
         print "$chord ADDS: $n\n";
     }
 }
-@pitches = sort { $a <=> $b } @pitches;
+@pitches = sort { $a <=> $b } @pitches; # Pitches are midi numbers
 
+# Determine if we should skip certain notes given the chord
 my @tones = get_scale_notes($chord_note, $scale);
 print "SCALE: ",ddc(\@tones);
-
 my @fixed;
 for my $p (@pitches) {
     my $x = Music::Note->new($p, 'midinum')->format('isobase');
@@ -64,6 +66,7 @@ for my $p (@pitches) {
     push @fixed, $p;
 }
 
+# Debugging:
 @named = map { Music::Note->new($_, 'midinum')->format('ISO') } @fixed;
 print "NEW: ",ddc(\@named);
 
@@ -74,8 +77,10 @@ my $voice = Music::VoiceGen->new(
     intervals => \@intervals,
 );
 
+# Try to start in the middle of the range
 $voice->context($fixed[int @fixed / 2]);
 
+# Show them what they've won, Bob!
 for (1 .. $duration) {
     my $v = $voice->rand;
     my $x = Music::Note->new($v, 'midinum')->format('ISO');
