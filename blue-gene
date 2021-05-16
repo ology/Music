@@ -11,7 +11,7 @@ use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
 use Music::Chord::Note;
 use Music::Note;
-use Music::Scales qw(get_scale_MIDI);
+use Music::Scales qw(get_scale_notes get_scale_MIDI);
 use Music::VoiceGen;
 
 my $bpm = shift || 100;
@@ -19,9 +19,9 @@ my $tscale = shift || 'pentatonic';
 my $bscale = shift || 'major';
 
 my $note = 'Bb';
-my $bass_patch = 35;
+my $bass_patch = 0; # fretless bass=35
 my $melody_patch = 66;
-my $chord_patch = 4;
+my $chord_patch = 0; # electric piano=4
 
 my $d = MIDI::Drummer::Tiny->new(
     file => $0 . '.mid',
@@ -35,7 +35,7 @@ $d->score->synch(
     \&drums,
     \&bass,
     \&chords,
-    \&melody,
+#    \&melody,
 );
 
 $d->write;
@@ -79,8 +79,10 @@ sub _bass {
     my $scale = $chord =~ /^[A-G][#b]?m/ ? 'minor' : 'major';
 
     my $chord_note;
-    if ($chord =~ /^([A-G][#b]?).*$/) {
+    my $flavor;
+    if ($chord =~ /^([A-G][#b]?)(.*)$/) {
         $chord_note = $1;
+        $flavor = $2;
     }
 
     my $cn = Music::Chord::Note->new;
@@ -89,31 +91,53 @@ sub _bass {
 
     my @pitches = get_scale_MIDI($chord_note, $octave, $scale);
 
-    # Guitar constraint:
-    while ($pitches[0] < 40) {
-        shift @pitches;
-    }
+    # Guitar constraint
+#    while ($pitches[0] < 40) {
+#        shift @pitches;
+#    }
 
     my @named = map { Music::Note->new($_, 'midinum')->format('ISO') } @pitches;
     for my $n (@notes) {
         if (not any { $_ eq $n } @named) {
             my $x = Music::Note->new($n, 'ISO')->format('midinum');
-            push @pitches, $x unless $x < 40;
+#            push @pitches, $x unless $x < 40; # Guitar constraint
+            push @pitches, $x;
         }
     }
     @pitches = sort { $a <=> $b } @pitches;
 
-    my @intervals = qw(-2 -1 1 2);
+    my @tones = get_scale_notes($chord_note, $scale);
+
+    my @fixed;
+    for my $p (@pitches) {
+        my $x = Music::Note->new($p, 'midinum')->format('isobase');
+        if (
+            ($flavor =~ /5/ && $x eq $tones[4])
+            ||
+            ($flavor =~ /7/ && $x eq $tones[6])
+            ||
+            ($flavor =~ /[#b]9/ && $x eq $tones[1])
+        ) {
+            next;
+        }
+        push @fixed, $p;
+    }
+
+    @named = map { Music::Note->new($_, 'midinum')->format('ISO') } @fixed;
+
+    my @intervals = qw(-3 -2 -1 1 2 3);
 
     my $voice = Music::VoiceGen->new(
-        pitches   => \@pitches,
+        pitches   => \@fixed,
         intervals => \@intervals,
     );
 
-    $voice->context($pitches[int @pitches / 2]);
+    $voice->context($fixed[int @fixed / 2]);
 
     for (1 .. $duration) {
-        $d->note($d->quarter, $voice->rand);
+        my $v = $voice->rand;
+        my $x = Music::Note->new($v, 'midinum')->format('ISO');
+        $d->note($d->quarter, $v);
     }
 }
 
