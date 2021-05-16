@@ -59,19 +59,19 @@ sub bass {
 
     $d->rest($d->whole); # while counting-in
 
-    _bass('Bb', 4);
-    _bass('Bb7', 4);
-    _bass('Eb', 4);
-    _bass('Eb9', 2);
-    _bass('D7#9', 2);
-    _bass('BbM7', 4);
-    _bass('DbM7', 4);
-    _bass('Cm7', 4);
-    _bass('Gm7', 2);
-    _bass('Ab7b5', 2);
+    _walk('Bb', 4);
+    _walk('Bb7', 4);
+    _walk('Eb', 4);
+    _walk('Eb9', 2);
+    _walk('D7#9', 2);
+    _walk('BbM7', 4);
+    _walk('DbM7', 4);
+    _walk('Cm7', 4);
+    _walk('Gm7', 2);
+    _walk('Ab7b5', 2);
 }
 
-sub _bass {
+sub _walk {
     my ($chord, $duration) = @_;
 
     my $octave = 2;
