@@ -72,7 +72,7 @@ sub bass {
 }
 
 sub _bass {
-    my ($chord, $duration) = @_;;
+    my ($chord, $duration) = @_;
 
     my $octave = 2;
 
@@ -112,6 +112,8 @@ sub _bass {
         pitches   => \@pitches,
         intervals => \@intervals,
     );
+
+    $voice->context($pitches[int @pitches / 2]);
 
     for (1 .. $duration) {
         $d->note($d->quarter, $voice->rand);
