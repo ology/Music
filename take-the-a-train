@@ -54,14 +54,14 @@ sub chords {
     # (Local voicing file used on the author's machine.)
     my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
 
-    my $C    = $mcg->transform('C3', '',    0);
+    my $C    = $mcg->transform('C3', '',    1);
     my $D7f5 = $mcg->transform('D3', '7b5', 0);
-    my $Dm7  = $mcg->transform('D3', 'm7',  0);
-    my $G7   = $mcg->transform('G2', '7',   0);
-    my $C7   = $mcg->transform('C3', '7',   0);
-    my $F    = $mcg->transform('F2', '',    0);
-    my $D7   = $mcg->transform('D3', '7',   0);
-    my $G7f9 = $mcg->transform('G2', '7b9', 0);
+    my $Dm7  = $mcg->transform('D3', 'm7',  1);
+    my $G7   = $mcg->transform('G2', '7',   3);
+    my $C7   = $mcg->transform('C3', '7',   1);
+    my $F    = $mcg->transform('F2', '',    3);
+    my $D7   = $mcg->transform('D3', '7',   1);
+    my $G7f9 = $mcg->transform('G2', '7b9', 1);
 
     $d->rest($d->whole); # while counting-in
 
