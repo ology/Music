@@ -78,9 +78,9 @@ sub _bass {
 
     my $scale = $chord =~ /^[A-G][#b]?m/ ? 'minor' : 'major';
 
-    my $note;
+    my $chord_note;
     if ($chord =~ /^([A-G][#b]?).*$/) {
-        $note = $1;
+        $chord_note = $1;
     }
 
     my $cn = Music::Chord::Note->new;
@@ -90,8 +90,8 @@ sub _bass {
     );
 
     my @pitches = (
-        get_scale_MIDI($note, $octave, $scale),
-        get_scale_MIDI($note, $octave + 1, $scale),
+        get_scale_MIDI($chord_note, $octave, $scale),
+        get_scale_MIDI($chord_note, $octave + 1, $scale),
     );
     # Guitar:
     #while ($pitches[0] < 40) {
