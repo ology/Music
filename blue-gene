@@ -133,8 +133,7 @@ sub _bass {
     $voice->context($fixed[int @fixed / 2]);
 
     for (1 .. $duration) {
-        my $v = $voice->rand;
-        $d->note($d->quarter, $v);
+        $d->note($d->quarter, $voice->rand);
     }
 }
 
