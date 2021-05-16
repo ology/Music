@@ -12,7 +12,6 @@ use MIDI::Chord::Guitar;
 use MIDI::Util qw(set_chan_patch);
 
 my $bpm = shift || 70;
-my $note = shift || 'Db';
 
 my $chord_patch = 4;
 my $melody_patch = 66;
