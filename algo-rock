@@ -87,7 +87,7 @@ sub bass {
     my $n = 4;
     my $duration = 'qn';
 
-    my $bassline = MIDI::Bassline::Walk->new(verbose => 1);
+    my $bassline = MIDI::Bassline::Walk->new(verbose => 0);
 
     for my $p (@progressions) {
         my @chords = split /-/, $p;
