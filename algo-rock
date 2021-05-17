@@ -1,0 +1,103 @@
+#!/usr/bin/env perl
+
+# Play a random rock progression with a randomized bassline.
+
+# Unfortunately, certain chords are unknown (e.g. 6sus4) yet.
+
+use strict;
+use warnings;
+
+use List::MoreUtils qw(first_index);
+use Data::Dataset::ChordProgressions;
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util);
+use MIDI::Util qw(setup_score midi_format);
+use MIDI::Bassline::Walk;
+use Music::Chord::Note;
+use Music::Scales qw(get_scale_notes);
+
+my $reps  = shift || 1;
+my $sects = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
+
+my @sections = split /-/, $sects;
+
+my $octave = 4;
+
+my @progressions;
+
+my $score = setup_score();
+
+$score->synch(
+    \&chords,
+    \&bass,
+);
+
+sub chords {
+    my $cn = Music::Chord::Note->new;
+
+    my %data = Data::Dataset::ChordProgressions::as_hash();
+
+    for my $sect (@sections) {
+        my ($note, $section, $scale, @pool);
+        if ($sect =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
+            ($note, $scale, $section) = ($1, $2, $3);
+            if ($scale eq 'M') {
+                if ($section eq 'v') {
+                    @pool = @{ $data{rock}{major}{verse} };
+                }
+                else {
+                    @pool = @{ $data{rock}{major}{chorus} };
+                }
+                $scale = 'major';
+            }
+            else {
+                if ($section eq 'v') {
+                    @pool = @{ $data{rock}{minor}{verse} };
+                }
+                else {
+                    @pool = @{ $data{rock}{minor}{chorus} };
+                }
+                $scale = 'minor';
+            }
+        }
+
+        my %note_map;
+        @note_map{ get_scale_notes('C', $scale) } = get_scale_notes($note, $scale);
+
+        my $progression = $pool[int rand @pool];
+
+        (my $named = $progression->[0]) =~ s/([A-G][#b]?)/$note_map{$1}/g;
+
+        push @progressions, $named;
+
+        print "$note $scale: $named, $progression->[1]\n";
+
+        my @chords = split /-/, $named;
+
+        for my $j (1 .. $reps) {
+            for my $chord (@chords) {
+                my @notes = $cn->chord_with_octave($chord, $octave);
+                @notes = midi_format(@notes);
+                $score->n('wn', @notes);
+            }
+        }
+    }
+}
+
+sub bass {
+    my $n = 4;
+    my $duration = 'qn';
+
+    my $bassline = MIDI::Bassline::Walk->new(verbose => 1);
+
+    for my $p (@progressions) {
+        my @chords = split /-/, $p;
+
+        for my $chord (@chords) {
+            my $notes = $bassline->generate($chord, $n);
+
+            $score->n($duration, $_) for @$notes;
+        }
+    }
+}
+
+$score->write_score("$0.mid");
