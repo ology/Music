@@ -15,7 +15,7 @@ use MIDI::Util qw(set_chan_patch);
 my $bpm = shift || 70;
 
 my $chord_patch = 4;
-my $bass_patch = 0;
+my $bass_patch = 35;
 my $melody_patch = 66;
 
 my $d = MIDI::Drummer::Tiny->new(
