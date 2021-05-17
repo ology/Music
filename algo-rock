@@ -107,8 +107,8 @@ sub chords {
 sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
-    my $n = 4;
-    my $duration = $d->quarter;
+    my $n = 2;
+    my $duration = $d->half;
 
     my $bassline = MIDI::Bassline::Walk->new(verbose => 0);
 
