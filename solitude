@@ -6,7 +6,8 @@
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Chord-Guitar Music-Duration MIDI-Drummer-Tiny MIDI-Util);
+use MIDI::Bassline::Walk;
 use MIDI::Drummer::Tiny;
 use MIDI::Chord::Guitar;
 use MIDI::Util qw(set_chan_patch);
@@ -14,6 +15,7 @@ use MIDI::Util qw(set_chan_patch);
 my $bpm = shift || 70;
 
 my $chord_patch = 4;
+my $bass_patch = 0;
 my $melody_patch = 66;
 
 my $d = MIDI::Drummer::Tiny->new(
@@ -28,6 +30,7 @@ $d->sync(
     \&drums,
     \&chords,
     \&melody,
+    \&bass,
 );
 
 $d->write;
@@ -193,4 +196,60 @@ sub melody {
     $d->note($d->quarter, 'Gf4');
     $d->note($d->quarter, 'Gf4');
     $d->note($d->whole, 'F4');
+}
+
+sub bass {
+    set_chan_patch($d->score, $channel++, $bass_patch);
+
+    my $n = 2;
+    my $duration = $d->half;
+
+    my $bassline = MIDI::Bassline::Walk->new(verbose => 1);
+
+    $d->rest($d->whole); # while counting-in
+
+    for my $n (1 .. 2) {
+        _walk($bassline, 'DbM7', 6);
+        _walk($bassline, 'Bbm7', 2);
+        _walk($bassline, 'Eb7', 8); # whole + whole ticks
+        _walk($bassline, 'Ebm7', 4);
+        _walk($bassline, 'Ab7', 4);
+        _walk($bassline, 'DbM7', 4);
+        if ($n % 2) { # odd
+            _walk($bassline, 'Aaug7', 2);
+            _walk($bassline, 'Ab7', 2);
+        }
+        else { # even
+            _walk($bassline, 'DbM7', 2);
+            _walk($bassline, 'Db7', 2);
+        }
+    }
+    _walk($bassline, 'GbM7', 4);
+    _walk($bassline, 'Gdim', 4);
+    _walk($bassline, 'Db6', 4);
+    _walk($bassline, 'Abm7', 2);
+    _walk($bassline, 'Db7', 2);
+    _walk($bassline, 'GbM7', 4);
+    _walk($bassline, 'Gdim', 4);
+    _walk($bassline, 'Db6', 2);
+    _walk($bassline, 'Bb7b9', 2);
+    _walk($bassline, 'Ebm7', 2);
+    _walk($bassline, 'Abaug7', 2);
+    _walk($bassline, 'DbM7', 2);
+    _walk($bassline, 'Ebm7', 1);
+    _walk($bassline, 'Edim', 1);
+    _walk($bassline, 'DbM7', 2);
+    _walk($bassline, 'G7b5', 2);
+    _walk($bassline, 'GbM7', 4);
+    _walk($bassline, 'Eb7', 3);
+    _walk($bassline, 'Bb7', 1);
+    _walk($bassline, 'Ebm7', 2);
+    _walk($bassline, 'Ab7', 4);
+    _walk($bassline, 'DbM7', 4);
+}
+
+sub _walk {
+    my ($bassline, $chord, $n) = @_;
+    my $notes = $bassline->generate($chord, $n);
+    $d->note('qn', $_) for @$notes;
 }
