@@ -40,6 +40,8 @@ $d->sync(
     \&bass,
 );
 
+$d->write;
+
 sub drums {
     $d->metronome44($d->bars);
 }
@@ -122,5 +124,3 @@ sub bass {
         }
     }
 }
-
-$d->write;
