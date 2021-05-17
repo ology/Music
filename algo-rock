@@ -38,6 +38,7 @@ sub chords {
 
     for my $sect (@sections) {
         my ($note, $section, $scale, @pool);
+        # Set the pool of possible progressions given scale and section
         if ($sect =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
             ($note, $scale, $section) = ($1, $2, $3);
             if ($scale eq 'M') {
@@ -60,19 +61,24 @@ sub chords {
             }
         }
 
+        # Set the transposition map
         my %note_map;
         @note_map{ get_scale_notes('C', $scale) } = get_scale_notes($note, $scale);
 
+        # Get a random progression
         my $progression = $pool[int rand @pool];
 
+        # Transpose the progression chords from C
         (my $named = $progression->[0]) =~ s/([A-G][#b]?)/$note_map{$1}/g;
 
+        # Keep track of the progressions used
         push @progressions, $named;
 
         print "$note $scale: $named, $progression->[1]\n";
 
         my @chords = split /-/, $named;
 
+        # Add each chord to the score
         for my $j (1 .. $reps) {
             for my $chord (@chords) {
                 my @notes = $cn->chord_with_octave($chord, $octave);
