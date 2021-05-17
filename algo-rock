@@ -9,9 +9,10 @@ use warnings;
 
 use List::MoreUtils qw(first_index);
 use Data::Dataset::ChordProgressions;
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util);
-use MIDI::Util qw(setup_score midi_format);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util MIDI-Drummer-Tiny Music-Duration);
+use MIDI::Util qw(set_chan_patch midi_format);
 use MIDI::Bassline::Walk;
+use MIDI::Drummer::Tiny;
 use Music::Chord::Note;
 use Music::Scales qw(get_scale_notes);
 
@@ -20,18 +21,32 @@ my $sects = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
 
 my @sections = split /-/, $sects;
 
+my $chords_patch = 0;
+my $bass_patch = 0;
+my $channel = 0;
 my $octave = 4;
 
 my @progressions;
 
-my $score = setup_score();
+my $d = MIDI::Drummer::Tiny->new(
+    file => "$0.mid",
+    bpm => 100,
+    bars => 16,
+);
 
-$score->synch(
+$d->sync(
+    \&drums,
     \&chords,
     \&bass,
 );
 
+sub drums {
+    $d->metronome44($d->bars);
+}
+
 sub chords {
+    set_chan_patch($d->score, $channel++, $chords_patch);
+
     my $cn = Music::Chord::Note->new;
 
     my %data = Data::Dataset::ChordProgressions::as_hash();
@@ -83,15 +98,17 @@ sub chords {
             for my $chord (@chords) {
                 my @notes = $cn->chord_with_octave($chord, $octave);
                 @notes = midi_format(@notes);
-                $score->n('wn', @notes);
+                $d->note($d->whole, @notes);
             }
         }
     }
 }
 
 sub bass {
+    set_chan_patch($d->score, $channel++, $bass_patch);
+
     my $n = 4;
-    my $duration = 'qn';
+    my $duration = $d->quarter;
 
     my $bassline = MIDI::Bassline::Walk->new(verbose => 0);
 
@@ -101,9 +118,9 @@ sub bass {
         for my $chord (@chords) {
             my $notes = $bassline->generate($chord, $n);
 
-            $score->n($duration, $_) for @$notes;
+            $d->note($duration, $_) for @$notes;
         }
     }
 }
 
-$score->write_score("$0.mid");
+$d->write;
