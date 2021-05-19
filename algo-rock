@@ -118,7 +118,10 @@ sub bass {
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
 
-    my $bassline = MIDI::Bassline::Walk->new(verbose => 0);
+    my $bassline = MIDI::Bassline::Walk->new(
+        verbose => 0,
+        scale => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+    );
 
     for my $p (@progressions) {
         my @chords = split /-/, $p;
