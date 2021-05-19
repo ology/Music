@@ -9,10 +9,11 @@ use warnings;
 
 use List::MoreUtils qw(first_index);
 use Data::Dataset::ChordProgressions;
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util MIDI-Drummer-Tiny Music-Duration);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util MIDI-Drummer-Tiny Music-Duration Music-Duration-Partition);
 use MIDI::Util qw(set_chan_patch midi_format);
 use MIDI::Bassline::Walk;
 use MIDI::Drummer::Tiny;
+use Music::Duration::Partition;
 use Music::Chord::Note;
 use Music::Scales qw(get_scale_notes);
 
@@ -109,18 +110,36 @@ sub chords {
 sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
-    my $n = 2;
-    my $duration = $d->half;
+    my $mdp = Music::Duration::Partition->new(
+        size => 4,
+        pool => [qw/ wn dhn hn qn /],
+#        weights => [2, 1],
+    );
+    my $motif1 = $mdp->motif;
+    my $motif2 = $mdp->motif;
 
     my $bassline = MIDI::Bassline::Walk->new(verbose => 0);
 
     for my $p (@progressions) {
         my @chords = split /-/, $p;
 
-        for my $chord (@chords) {
-            my $notes = $bassline->generate($chord, $n);
+        my $i = 0;
 
-            $d->note($duration, $_) for @$notes;
+        for my $chord (@chords) {
+            my $m;
+            if ($i % 2 == 0) {
+                $m = $motif2;
+            }
+            else {
+                $m = $motif1;
+            }
+            my $notes = $bassline->generate($chord, scalar(@$m));
+
+            for my $j (0 .. $#$m) {
+                $d->note($m->[$j], $notes->[$j]);
+            }
+
+            $i++;
         }
     }
 }
