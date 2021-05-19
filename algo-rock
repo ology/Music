@@ -32,7 +32,7 @@ my @progressions;
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
     bpm => 100,
-    bars => 16,
+    bars => 4 * @sections,
 );
 
 $d->sync(
@@ -113,7 +113,7 @@ sub bass {
     my $mdp = Music::Duration::Partition->new(
         size => 4,
         pool => [qw/ wn dhn hn qn /],
-#        weights => [2, 1],
+        weights => [1, 1, 2, 3],
     );
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
