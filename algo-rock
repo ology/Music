@@ -32,7 +32,7 @@ my @progressions;
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
     bpm => 100,
-    bars => 4 * @sections,
+    bars => 4 * @sections * $reps,
 );
 
 $d->sync(
