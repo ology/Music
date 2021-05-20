@@ -2,7 +2,6 @@
 
 # Play a random rock progression with a randomized bassline.
 # The patches are jazzy, but are the best defaults imho.
-
 # Unfortunately, certain chords are unknown (e.g. 6sus4) yet.
 
 use strict;
