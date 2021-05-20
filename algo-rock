@@ -22,8 +22,8 @@ my $sects = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
 
 my @sections = split /-/, $sects;
 
-my $chords_patch = 5;
-my $bass_patch = 35;
+my $chords_patch = 25;
+my $bass_patch = 34;
 my $channel = 0;
 my $octave = 4;
 
