@@ -22,8 +22,8 @@ my $sects = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
 
 my @sections = split /-/, $sects;
 
-my $chords_patch = 0;
-my $bass_patch = 34;
+my $chords_patch = 5;
+my $bass_patch = 35;
 my $channel = 0;
 my $octave = 4;
 
@@ -112,8 +112,8 @@ sub bass {
 
     my $mdp = Music::Duration::Partition->new(
         size => 4,
-        pool => [qw/ wn dhn hn qn /],
-        weights => [1, 1, 2, 3],
+        pool => [qw/ dhn hn qn /],
+        weights => [1, 2, 3],
     );
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
