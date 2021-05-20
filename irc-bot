@@ -31,6 +31,7 @@ use Music::Chord::Note;
 use Music::Note;
 use Music::Note::Frequency;
 #use App::MusicTools; # <- Needed for `vov`
+#use Algorithm::Combinatorics; # <- Needed for ?
 use MP3::Tag;
 
 # Use local author libraries
