@@ -61,7 +61,6 @@ my $conf = LoadFile("$0.yml");
 my $irc = Mojo::IRC->new(
   nick => $conf->{nick},
   user => $conf->{user},
-  password => $conf->{password},
   server => $conf->{server},
   tls => {},
 );
