@@ -1,0 +1,54 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+use String::Random;
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration);
+use MIDI::Drummer::Tiny;
+
+my $bpm     = 100;
+my $bars    = 4; # Repeat the phrase (4 times)
+my $digits  = 3; # Simultaneous events (closed hihat, snare, kick)
+my $groups  = 8; # Divisions of the bar (eighth notes)
+my $dura    = 'en';
+
+# NB: 8 possible strings of [01]{3} = n
+# NB: variations_with_repetition(n,k) = n**k => 8**8 = 16,777,216
+my $sr = String::Random->new;
+my @beat = map { $sr->randregex("[01]{$digits}") } 1 .. $groups;
+print ddc(\@beat);
+
+my $d = MIDI::Drummer::Tiny->new(
+    file => "$0.mid",
+    bpm  => $bpm,
+    bars => $bars,
+);
+
+for my $bar (1 .. $d->bars) {
+    for my $beat (@beat) {
+        my @strike;
+        my $i = 0;
+        for my $hit (split //, $beat) {
+            $i++;
+            next unless $hit;
+            if ($i == 1) {
+                push @strike, $d->closed_hh;
+            }
+            if ($i == 2) {
+                push @strike, $d->snare;
+            }
+            if ($i == 3) {
+                push @strike, $d->kick;
+            }
+        }
+        if (@strike) {
+            $d->note($dura, @strike);
+        }
+        else {
+            $d->rest($dura);
+        }
+    }
+}
+
+$d->write;
