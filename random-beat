@@ -7,11 +7,11 @@ use String::Random;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration);
 use MIDI::Drummer::Tiny;
 
-my $bpm     = 100;
-my $bars    = 4; # Repeat the phrase (4 times)
-my $digits  = 3; # Simultaneous events (closed hihat, snare, kick)
-my $groups  = 8; # Divisions of the bar (eighth notes)
-my $dura    = 'en';
+my $bpm    = 100;
+my $bars   = 4; # Repeat the phrase (4 times)
+my $digits = 3; # Simultaneous events (closed hihat, snare, kick)
+my $groups = 8; # Divisions of the bar (eighth notes)
+my $dura   = 'en';
 
 # NB: 8 possible strings of [01]{3} = n
 # NB: variations_with_repetition(n,k) = n**k => 8**8 = 16,777,216
