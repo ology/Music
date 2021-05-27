@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+# Choose a random beat from all possible 3-strike, eighth-note patterns.
+
 use Data::Dumper::Compact qw(ddc);
 use String::Random;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration);
