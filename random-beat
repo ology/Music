@@ -38,6 +38,7 @@ for my $bar (1 .. $d->bars) {
         my @strike;
         my $i = 0;
 
+        # Decide what strikes should happen
         $_ && $act{$i} ? push @strike, $act{ $i++ } : $i++
             for split //, $beat;
 
