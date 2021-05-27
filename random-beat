@@ -28,9 +28,9 @@ my $d = MIDI::Drummer::Tiny->new(
 );
 
 my %act = (
-    1 => sub { $d->closed_hh },
-    2 => sub { $d->snare },
-    3 => sub { $d->kick },
+    0 => $d->closed_hh,
+    1 => $d->snare,
+    2 => $d->kick,
 );
 
 for my $bar (1 .. $d->bars) {
@@ -38,7 +38,7 @@ for my $bar (1 .. $d->bars) {
         my @strike;
         my $i = 0;
 
-        $_ && $act{$i} ? push @strike, $act{ $i++ }->() : $i++
+        $_ && $act{$i} ? push @strike, $act{ $i++ } : $i++
             for split //, $beat;
 
         @strike ? $d->note($dura, @strike) : $d->rest($dura);
