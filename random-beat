@@ -39,7 +39,7 @@ for my $bar (1 .. $d->bars) {
         my $i = 0;
 
         # Decide what strikes should happen if any
-        $_ && $strikes{$i} ? push @strike, $strikes{ $i++ } : $i++
+        $_ && exists $strikes{$i} ? push @strike, $strikes{ $i++ } : $i++
             for split //, $beat;
 
         @strike ? $d->note($dura, @strike) : $d->rest($dura);
