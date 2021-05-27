@@ -15,7 +15,7 @@ my $digits = 3; # Simultaneous events (closed hihat, snare, kick)
 my $groups = 8; # Divisions of the bar (eighth notes) => k
 my $dura   = 'en';
 
-# NB: 2**3 = 8 possible strings of [01]{3} => n
+# NB: 2**3 = 8 possible strings of [01]{3} => n. groups => k
 # NB: variations_with_repetition(n,k) = n**k => 8**8 = 16,777,216
 my $sr = String::Random->new;
 my @beat = map { $sr->randregex("[01]{$digits}") } 1 .. $groups;
