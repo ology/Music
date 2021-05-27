@@ -39,8 +39,10 @@ for my $bar (1 .. $d->bars) {
         my $i = 0;
 
         # Decide what strikes should happen if any
-        $_ && $strikes[$i] ? push @strike, $strikes[ $i++ ] : $i++
-            for split //, $beat;
+        for my $bit (split //, $beat) {
+            push @strike, $strikes[$i] if $bit && $strikes[$i];
+            $i++;
+        }
 
         @strike ? $d->note($dura, @strike) : $d->rest($dura);
     }
