@@ -12,7 +12,7 @@ use MIDI::Drummer::Tiny;
 my $bpm    = 100;
 my $bars   = 4; # Repeat the phrase (4 times)
 my $digits = 3; # Simultaneous events (closed hihat, snare, kick)
-my $groups = 8; # Divisions of the bar (eighth notes) = k
+my $groups = 8; # Divisions of the bar (eighth notes) => k
 my $dura   = 'en';
 
 # NB: 8 possible strings of [01]{3} => n
