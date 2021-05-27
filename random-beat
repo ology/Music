@@ -27,10 +27,10 @@ my $d = MIDI::Drummer::Tiny->new(
     bars => $bars,
 );
 
-my %strikes = (
-    0 => $d->closed_hh,
-    1 => $d->snare,
-    2 => $d->kick,
+my @strikes = (
+    $d->closed_hh,
+    $d->snare,
+    $d->kick,
 );
 
 for my $bar (1 .. $d->bars) {
@@ -39,7 +39,7 @@ for my $bar (1 .. $d->bars) {
         my $i = 0;
 
         # Decide what strikes should happen if any
-        $_ && exists $strikes{$i} ? push @strike, $strikes{ $i++ } : $i++
+        $_ && $strikes[$i] ? push @strike, $strikes[ $i++ ] : $i++
             for split //, $beat;
 
         @strike ? $d->note($dura, @strike) : $d->rest($dura);
