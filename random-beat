@@ -40,7 +40,7 @@ for my $bar (1 .. $d->bars) {
 
         # Decide what strikes should happen if any
         for my $bit (split //, $beat) {
-            push @strike, $strikes[$i] if $bit && $strikes[$i];
+            push @strike, $strikes[$i] if $bit;
             $i++;
         }
 
