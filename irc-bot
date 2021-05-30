@@ -13,6 +13,9 @@
 # scp_dir: 'web/docroot/tunes/'
 # web_host: 'http://foo.host.net/tunes'
 # fretboard: 'http://foo.host.net/frets'
+# allowed:
+#   - jack
+#   - jill
 
 use strict;
 use warnings;
