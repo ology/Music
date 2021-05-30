@@ -130,13 +130,8 @@ sub bass {
             my $i = 0;
 
             for my $chord (@chords) {
-                my $m;
-                if ($i % 2 == 0) {
-                    $m = $motif2;
-                }
-                else {
-                    $m = $motif1;
-                }
+                my $m = $i % 2 == 0 ? $motif2 : $motif1;
+
                 my $notes = $bassline->generate($chord, scalar(@$m));
 
                 for my $j (0 .. $#$m) {
