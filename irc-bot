@@ -35,12 +35,13 @@ use Music::Chord::Namer qw(chordname);
 use Music::Chord::Note;
 use Music::Note;
 use Music::Note::Frequency;
-#use App::MusicTools; # <- Needed for `vov`
-#use Algorithm::Combinatorics; # <- Needed for ?
-#use Math::Factor::XS; # <- Needed for ?
-#use MIDI::Pitch; # <- Needed for ?
-#use Number::Fraction; # <- Needed for ?
 use MP3::Tag;
+
+#App::MusicTools # <- Needed for `vov`
+#Algorithm::Combinatorics # <- Needed for Music::Intervals
+#Math::Factor::XS
+#MIDI::Pitch
+#Number::Fraction
 
 # Use local author libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals);
