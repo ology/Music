@@ -123,7 +123,7 @@ sub bass {
         scale => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
     );
 
-    for my $j (1 .. $reps) {
+    for (1 .. $reps) {
         for my $p (@progressions) {
             my @chords = split /-/, $p;
 
