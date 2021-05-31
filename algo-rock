@@ -119,6 +119,7 @@ sub bass {
     my $motif2 = $mdp->motif;
 
     my $bassline = MIDI::Bassline::Walk->new(
+        guitar => 1,
         verbose => 0,
         scale => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
     );
