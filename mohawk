@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
 # Charlie Parker, Mohawk (B♭ major/G minor)
+# https://jazz.okstate.edu/wp-content/uploads/2019/06/Mohawk-lead-sheet-piano-guitar-PianoGuitar.pdf
 
 use strict;
 use warnings;
@@ -121,7 +122,7 @@ sub melody {
     $d->rest('d' . tie_durations($d->dotted_half, $d->eighth)); # while counting-in
 
     for my $n (1 .. 2) {
-        $d->note($d->dotted_quarter, 'Bf4');
+        $d->note($d->dotted_quarter, 'Bf4'); # tie->
 
         $d->note($d->eighth, 'A4');
         $d->note($d->eighth, 'Fs4');
