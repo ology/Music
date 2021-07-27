@@ -207,5 +207,6 @@ sub melody {
         $d->note($d->eighth, 'F4');
         $d->note($d->eighth, 'A4');
     }
+
     $d->note($d->dotted_quarter, 'Bf4');
 }
