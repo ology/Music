@@ -183,68 +183,78 @@ sub process_msg {
   }
   # COMMAND: play
   elsif ($msg =~ /^play\s+(.+)$/) {
-    my $phrase = $1;
-    my @phrase = split /\s+/, $phrase;
-    my $bpm = DEFAULT_BPM;
-    $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
-    my $repeat = DEFAULT_REPEATS;
-    $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
-    my $name = sprintf '%s-%s-%d', $who, $0, time();
-    my $mid_file = "/tmp/$name.mid";
-    my $mp3_file = "/tmp/$name.mp3";
-    my $score = setup_score(bpm => $bpm);
-    my $cn = Music::Chord::Note->new;
-    my $size = 0;
-    try {
-      for my $i (1 .. $repeat) {
-        $size += parse_phrase($score, $cn, \@phrase);
+    if (exists $conf->{scp_host}) {
+      my $phrase = $1;
+      my @phrase = split /\s+/, $phrase;
+      my $bpm = DEFAULT_BPM;
+      $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
+      my $repeat = DEFAULT_REPEATS;
+      $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
+      my $name = sprintf '%s-%s-%d', $who, $0, time();
+      my $mid_file = "/tmp/$name.mid";
+      my $mp3_file = "/tmp/$name.mp3";
+      my $score = setup_score(bpm => $bpm);
+      my $cn = Music::Chord::Note->new;
+      my $size = 0;
+      try {
+        for my $i (1 .. $repeat) {
+          $size += parse_phrase($score, $cn, \@phrase);
+        }
+        die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
+        die "Not enough BPM\n" if $bpm < MIN_BPM;
+        die "Too many repeats\n" if $repeat > MAX_REPEATS;
+        $score->write_score($mid_file);
+        my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
+        $irc->write(@$to, ":URL: $url");
       }
-      die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
-      die "Not enough BPM\n" if $bpm < MIN_BPM;
-      die "Too many repeats\n" if $repeat > MAX_REPEATS;
-      $score->write_score($mid_file);
-      my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
-      $irc->write(@$to, ":URL: $url");
+      catch ($e) {
+        $irc->write(@$to, ":Something went wrong: $e");
+      }
+      unlink $mid_file;
+      unlink $mp3_file;
     }
-    catch ($e) {
-      $irc->write(@$to, ":Something went wrong: $e");
+    else {
+        $irc->write(@$to, ":Something went wrong: No scp_host");
     }
-    unlink $mid_file;
-    unlink $mp3_file;
   }
   # COMMAND: perc
   elsif ($msg =~ /^perc\s+(.+)$/) {
-    my $phrase = $1;
-    my @phrase = split /\s+/, $phrase;
-    my $bpm = DEFAULT_BPM;
-    $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
-    my $repeat = DEFAULT_REPEATS;
-    $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
-    my $name = sprintf '%s-%s-%d', $who, $0, time();
-    my $mid_file = "/tmp/$name.mid";
-    my $mp3_file = "/tmp/$name.mp3";
-    my $d = MIDI::Drummer::Tiny->new(
-        file   => $mid_file,
-        bpm    => $bpm,
-        reverb => 15,
-    );
-    my $size = 0;
-    try {
-      for my $i (1 .. $repeat) {
-        $size += parse_drums($d, \@phrase);
+    if (exists $conf->{scp_host}) {
+      my $phrase = $1;
+      my @phrase = split /\s+/, $phrase;
+      my $bpm = DEFAULT_BPM;
+      $bpm = shift @phrase if $phrase[0] =~ /^\d+$/;
+      my $repeat = DEFAULT_REPEATS;
+      $repeat = shift @phrase if $phrase[0] =~ /^\d+$/;
+      my $name = sprintf '%s-%s-%d', $who, $0, time();
+      my $mid_file = "/tmp/$name.mid";
+      my $mp3_file = "/tmp/$name.mp3";
+      my $d = MIDI::Drummer::Tiny->new(
+          file   => $mid_file,
+          bpm    => $bpm,
+          reverb => 15,
+      );
+      my $size = 0;
+      try {
+        for my $i (1 .. $repeat) {
+          $size += parse_drums($d, \@phrase);
+        }
+        die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
+        die "Not enough BPM\n" if $bpm < MIN_BPM;
+        die "Too many repeats\n" if $repeat > MAX_REPEATS;
+        $d->write;
+        my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
+        $irc->write(@$to, ":URL: $url");
       }
-      die "Phrase too large\n" if $size / $repeat > MAX_PHRASE;
-      die "Not enough BPM\n" if $bpm < MIN_BPM;
-      die "Too many repeats\n" if $repeat > MAX_REPEATS;
-      $d->write;
-      my $url = mid2mp3($conf, $name, $mid_file, $mp3_file, $phrase);
-      $irc->write(@$to, ":URL: $url");
+      catch ($e) {
+        $irc->write(@$to, ":Something went wrong: $e");
+      }
+      unlink $mid_file;
+      unlink $mp3_file;
     }
-    catch ($e) {
-      $irc->write(@$to, ":Something went wrong: $e");
+    else {
+        $irc->write(@$to, ":Something went wrong: No scp_host");
     }
-    unlink $mid_file;
-    unlink $mp3_file;
   }
   # COMMAND: vov
   elsif ($msg =~ /^vov\s+([\w \/]+)$/) {
@@ -445,8 +455,13 @@ sub process_msg {
   }
   # COMMAND: fret
   elsif ($msg =~ /^fret\s+(\w+)\s+(\d+)$/) {
-    my $url = sprintf '%s/%s/%d', $conf->{fretboard}, $1, $2;
-    $irc->write(@$to, ":URL: $url");
+    if (exists $conf->{fretboard}) {
+      my $url = sprintf '%s/%s/%d', $conf->{fretboard}, $1, $2;
+      $irc->write(@$to, ":URL: $url");
+    }
+    else {
+        $irc->write(@$to, ":Something went wrong: No fretboard host");
+    }
   }
   # COMMAND: fingering
   elsif ($msg =~ /^fingering\s+([A-G][b#]?\d+)\s*(.+)?$/) {
