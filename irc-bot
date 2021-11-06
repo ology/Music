@@ -90,7 +90,7 @@ $irc->on(irc_privmsg => sub {
     process_msg($to, $who, $message->{params}[1]);
   }
   else {
-    $irc->write(@$to, ':Invalid');
+    $irc->write(@$to, ':Publics only please');
   }
 });
 
