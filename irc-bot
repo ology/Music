@@ -2,6 +2,8 @@
 
 # Musical processing IRC bot
 
+# Write-up: https://ology.github.io/2021/03/30/irc-music-bot/
+
 # Sample config (irc-bot.yml):
 #
 # nick: 'yourbot'
@@ -55,21 +57,21 @@ use MIDI::Chord::Guitar;
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(setup_score set_chan_patch midi_format dura_size);
 
-use constant OPTIONS => { max_width => 256 }; # For ddc()
-use constant MIN_BPM => 60;
-use constant DEFAULT_BPM => 100;
+use constant OPTIONS         => { max_width => 256 }; # For ddc()
+use constant MIN_BPM         => 60;
+use constant DEFAULT_BPM     => 100;
 use constant DEFAULT_REPEATS => 2;
-use constant MAX_REPEATS => 8;
-use constant MAX_PHRASE => 8 * 4; # 8 whole-notes
+use constant MAX_REPEATS     => 8;
+use constant MAX_PHRASE      => 8 * 4; # 8 whole-notes
 
 my $conf = LoadFile("$0.yml");
 
 my $irc = Mojo::IRC->new(
-  nick => $conf->{nick},
-  user => $conf->{user},
-  pass => $conf->{password},
+  nick   => $conf->{nick},
+  user   => $conf->{user},
+  pass   => $conf->{password},
   server => $conf->{server},
-  tls => {},
+  tls    => {},
 );
 
 $irc->parser(Parse::IRC->new(ctcp => 1, public => 1));
