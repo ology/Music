@@ -32,7 +32,7 @@ my @progressions;
 
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
-    bpm => 100,
+    bpm  => 100,
     bars => 4 * @sections * $reps,
 );
 
@@ -112,17 +112,17 @@ sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
     my $mdp = Music::Duration::Partition->new(
-        size => 4,
-        pool => [qw/ dhn hn qn /],
+        size    => 4,
+        pool    => [qw/ dhn hn qn /],
         weights => [1, 2, 3],
     );
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
 
     my $bassline = MIDI::Bassline::Walk->new(
-        guitar => 1,
+        guitar  => 1,
         verbose => 0,
-        scale => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
     );
 
     for (1 .. $reps) {
