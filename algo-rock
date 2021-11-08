@@ -108,9 +108,11 @@ sub chords {
             }
         }
         for my $j (1 .. $multi) {
+            print "\t", join ', ', map { "[@$_]" } @accum;
             for my $n (@accum) {
                 $d->note($d->whole, @$n);
             }
+            print "\n";
         }
     }
 }
