@@ -64,21 +64,15 @@ sub chords {
         if ($part =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
             ($note, $scale, $section) = ($1, $2, $3);
             if ($scale eq 'M') {
-                if ($section eq 'v') {
-                    @pool = @{ $data{rock}{major}{verse} };
-                }
-                else {
-                    @pool = @{ $data{rock}{major}{chorus} };
-                }
+                @pool = $section eq 'v'
+                    ? @{ $data{rock}{major}{verse} }
+                    : @{ $data{rock}{major}{chorus} };
                 $scale = 'major';
             }
             else {
-                if ($section eq 'v') {
-                    @pool = @{ $data{rock}{minor}{verse} };
-                }
-                else {
-                    @pool = @{ $data{rock}{minor}{chorus} };
-                }
+                @pool = $section eq 'v'
+                    ? @{ $data{rock}{minor}{verse} }
+                    : @{ $data{rock}{minor}{chorus} };
                 $scale = 'minor';
             }
         }
