@@ -20,12 +20,13 @@ use Music::Scales qw(get_scale_notes);
 my $reps  = shift || 1;
 my $sects = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
 
+my $chords_patch = shift || 5;
+my $bass_patch   = shift || 35;
+
 my @sections = split /-/, $sects;
 
-my $chords_patch = 5;
-my $bass_patch = 35;
 my $channel = 0;
-my $octave = 4;
+my $octave  = 4;
 
 my @progressions;
 
@@ -44,7 +45,7 @@ $d->sync(
 $d->write;
 
 sub drums {
-    $d->count_in($d->bars);
+    $d->metronome44($d->bars);
 }
 
 sub chords {
