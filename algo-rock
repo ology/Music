@@ -20,7 +20,7 @@ use Music::Scales qw(get_scale_notes);
 my $reps  = shift || 1;
 my $sects = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
 
-my $chords_patch = shift || 5;
+my $chords_patch = shift || 42;
 my $bass_patch   = shift || 35;
 
 my @sections = split /-/, $sects;
