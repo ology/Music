@@ -63,18 +63,10 @@ sub chords {
         # Set the pool of possible progressions given scale and section
         if ($part =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
             ($note, $scale, $section) = ($1, $2, $3);
-            if ($scale eq 'M') {
-                @pool = $section eq 'v'
-                    ? @{ $data{rock}{major}{verse} }
-                    : @{ $data{rock}{major}{chorus} };
-                $scale = 'major';
-            }
-            else {
-                @pool = $section eq 'v'
-                    ? @{ $data{rock}{minor}{verse} }
-                    : @{ $data{rock}{minor}{chorus} };
-                $scale = 'minor';
-            }
+            $scale = $scale eq 'M' ? 'major' : 'minor';
+            @pool = $section eq 'v'
+                ? @{ $data{rock}{$scale}{verse} }
+                : @{ $data{rock}{$scale}{chorus} };
         }
 
         # Set the transposition map
