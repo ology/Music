@@ -56,6 +56,8 @@ sub chords {
 
     my %data = Data::Dataset::ChordProgressions::as_hash();
 
+    my @accum; # Note accumulator
+
     for my $part (@parts) {
         my ($note, $section, $scale, @pool);
         # Set the pool of possible progressions given scale and section
@@ -99,7 +101,6 @@ sub chords {
         my @chords = split /-/, $named;
 
         # Add each chord to the score
-        my @accum;
         for my $j (1 .. $reps) {
             for my $chord (@chords) {
                 my @notes = $cn->chord_with_octave($chord, $octave);
@@ -107,13 +108,14 @@ sub chords {
                 push @accum, \@notes;
             }
         }
-        for my $j (1 .. $multi) {
-            print "\t", join ', ', map { "[@$_]" } @accum;
-            for my $n (@accum) {
-                $d->note($d->whole, @$n);
-            }
-            print "\n";
+    }
+
+    for my $j (1 .. $multi) {
+        print "\t", join ', ', map { "[@$_]" } @accum;
+        for my $n (@accum) {
+            $d->note($d->whole, @$n);
         }
+        print "\n";
     }
 }
 
