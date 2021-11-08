@@ -18,9 +18,9 @@ use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
 use Music::Chord::Note;
 
-my $reps  = shift || 1; # The number of times to generate a phrase
+my $reps  = shift || 1;                 # The number of times to generate a phrase
 my $parts = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
-my $multi = shift || 1; # The number of times the generated phrase is repeated
+my $multi = shift || 1;                 # The number of times the generated phrase is repeated
 
 my $chords_patch = shift || 42;
 my $bass_patch   = shift || 35;
