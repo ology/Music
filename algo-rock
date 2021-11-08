@@ -18,12 +18,12 @@ use Music::Chord::Note;
 use Music::Scales qw(get_scale_notes);
 
 my $reps  = shift || 1;
-my $sects = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
+my $parts = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
 
 my $chords_patch = shift || 42;
 my $bass_patch   = shift || 35;
 
-my @sections = split /-/, $sects;
+my @parts = split /-/, $parts;
 
 my $channel = 0;
 my $octave  = 4;
@@ -33,7 +33,7 @@ my @progressions;
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
     bpm  => 100,
-    bars => 4 * @sections * $reps,
+    bars => 4 * @parts * $reps,
 );
 
 $d->sync(
@@ -55,10 +55,10 @@ sub chords {
 
     my %data = Data::Dataset::ChordProgressions::as_hash();
 
-    for my $sect (@sections) {
+    for my $part (@parts) {
         my ($note, $section, $scale, @pool);
         # Set the pool of possible progressions given scale and section
-        if ($sect =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
+        if ($part =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
             ($note, $scale, $section) = ($1, $2, $3);
             if ($scale eq 'M') {
                 if ($section eq 'v') {
