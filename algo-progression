@@ -23,7 +23,7 @@ use Music::Duration::Partition;
 
 my $reps  = shift || 1;                 # The number of times to generate a phrase
 my $parts = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
-my $multi = shift || 1;                 # The number of times the generated phrase is repeated
+my $multi = shift || 1;                 # The number of times the whole phrase is repeated
 
 my $chords_patch = shift || 4;
 my $bass_patch   = shift || 0;
