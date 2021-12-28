@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 
 # Play a random rock progression with a randomized walking bassline.
-# The patches are jazzy, but are the most audible defaults imho.
 # * Unfortunately, certain chords are unknown (e.g. 6sus4) yet.
 
 # Example:
@@ -26,8 +25,8 @@ my $reps  = shift || 1;                 # The number of times to generate a phra
 my $parts = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
 my $multi = shift || 1;                 # The number of times the generated phrase is repeated
 
-my $chords_patch = shift || 42;
-my $bass_patch   = shift || 35;
+my $chords_patch = shift || 4;
+my $bass_patch   = shift || 0;
 
 my @parts = split /-/, $parts;
 
