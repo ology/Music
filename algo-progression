@@ -5,6 +5,7 @@
 
 # Example:
 # $ perl algo-progression 1 Amv-Amc 2
+# $ perl algo-progression 2 Amv-DMc 1 42 35
 # $ timidity %.mid
 
 use strict;
