@@ -65,13 +65,13 @@ sub chords {
     my @accum; # Note accumulator
 
     for my $part (@parts) {
-        my ($note, $section, $scale, @pool);
+        my ($note, $section, $scale, $pool);
         # Set the pool of possible progressions given scale and section
         if ($part =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
             ($note, $scale, $section) = ($1, $2, $3);
             $scale   = $scale eq 'M' ? 'major' : 'minor';
             $section = $section eq 'v' ? 'verse' : 'chorus';
-            @pool    = @{ $data{rock}{$scale}{$section} };
+            $pool    = $data{rock}{$scale}{$section};
         }
 
         # Set the transposition map
@@ -79,7 +79,7 @@ sub chords {
         @note_map{ get_scale_notes('C', $scale) } = get_scale_notes($note, $scale);
 
         # Get a random progression
-        my $progression = $pool[int rand @pool];
+        my $progression = $pool->[int rand @$pool];
 
         # Transpose the progression chords from C
         (my $named = $progression->[0]) =~ s/([A-G][#b]?)/$note_map{$1}/g;
