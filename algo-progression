@@ -4,8 +4,8 @@
 # * Unfortunately, certain chords are unknown (e.g. 6sus4) yet.
 
 # Example:
-# $ perl algo-progression 1 Amv-Amc 2
-# $ perl algo-progression 2 Amv-DMc 1 42 35
+# $ perl algo-progression 120 1 Amv-Amc 2
+# $ perl algo-progression 70 2 Amv-DMc 1 42 35
 # $ timidity %.mid
 
 use strict;
@@ -21,6 +21,7 @@ use MIDI::Drummer::Tiny;
 use MIDI::Util qw(set_chan_patch midi_format);
 use Music::Duration::Partition;
 
+my $bpm   = shift || 100;
 my $reps  = shift || 1;                 # The number of times to generate a phrase
 my $parts = shift || 'Amv-DMc-Emv-DMc'; # <note><major|minor><verse|chorus>
 my $multi = shift || 1;                 # The number of times the whole phrase is repeated
@@ -37,7 +38,7 @@ my @progressions;
 
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
-    bpm    => 100,
+    bpm    => $bpm,
     bars   => 4 * @parts * $reps,
     reverb => 10,
 );
