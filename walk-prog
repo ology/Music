@@ -11,7 +11,6 @@ use MIDI::Bassline::Walk;
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(set_chan_patch midi_format);
 use Music::Chord::Progression;
-use Music::Chord::Namer qw(chordname);
 use Music::Duration::Partition;
 
 my $bpm = shift || 100;
@@ -56,7 +55,7 @@ sub chords {
     );
     my $chords = $prog->generate;
 
-    push @progressions, $chords;
+    push @progressions, $prog->phrase;
 
     for my $chord (@$chords) {
         my @chord = midi_format(@$chord);
@@ -82,21 +81,9 @@ sub bass {
     );
 
     for my $p (@progressions) {
-        # Do these gymnasics to get the name of the chord
-        my @tones;
-        for my $tone (@$p) {
-            my @notes;
-            for my $note (@$tone) {
-                $note =~ s/\d//g;
-                push @notes, $note;
-            }
-            push @tones, \@notes;
-        }
-        my @chords = map { scalar chordname(@$_) } @tones;
-
         my $i = 0;
 
-        for my $chord (@chords) {
+        for my $chord (@$p) {
             my $m = $i % 2 == 0 ? $motif2 : $motif1;
 
             my $notes = $bassline->generate($chord, scalar(@$m));
