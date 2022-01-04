@@ -80,6 +80,7 @@ sub bass {
         scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
     );
 
+    # Do these gymnasics to get the name of the chord
     for my $p (@progressions) {
         my @tones;
         for my $tone (@$p) {
