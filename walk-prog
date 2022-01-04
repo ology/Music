@@ -16,8 +16,8 @@ use Music::Duration::Partition;
 
 my $bpm = shift || 100;
 
-my $chords_patch = shift || 4;
-my $bass_patch   = shift || 0;
+my $chords_patch = shift // 4;
+my $bass_patch   = shift // 0;
 
 my $channel = 0;
 my $octave  = 4;
