@@ -1,0 +1,109 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+use Music::Scales qw(get_scale_notes);
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util MIDI-Drummer-Tiny Music-Chord-Progression Music-Duration Music-Duration-Partition);
+use MIDI::Bassline::Walk;
+use MIDI::Drummer::Tiny;
+use MIDI::Util qw(set_chan_patch midi_format);
+use Music::Chord::Progression;
+use Music::Chord::Namer qw(chordname);
+use Music::Duration::Partition;
+
+my $bpm = shift || 100;
+
+my $chords_patch = shift || 4;
+my $bass_patch   = shift || 0;
+
+my $channel = 0;
+my $octave  = 4;
+
+my @progressions;
+
+my $d = MIDI::Drummer::Tiny->new(
+    file   => "$0.mid",
+    bpm    => $bpm,
+    bars   => 8,
+    reverb => 10,
+);
+
+$d->sync(
+    \&drums,
+    \&chords,
+    \&bass,
+);
+
+$d->write;
+
+sub drums {
+    $d->metronome44($d->bars, 1);
+}
+
+sub chords {
+    set_chan_patch($d->score, $channel++, $chords_patch);
+
+    my $prog = Music::Chord::Progression->new(
+        chord_map => ['', 'm', 'm', '', '', 'm', 'm'],
+#        chord_map => [qw(M7 m7 m7 M7 7 m7 dim7)],
+#        substitute => 1,
+#        resolve => 0,
+        verbose => 1,
+    );
+    my $chords = $prog->generate;
+
+    push @progressions, $chords;
+
+    for my $chord (@$chords) {
+        my @chord = midi_format(@$chord);
+        $d->note($d->whole, @chord);
+    }
+}
+
+sub bass {
+    set_chan_patch($d->score, $channel++, $bass_patch);
+
+    my $mdp = Music::Duration::Partition->new(
+        size    => 4,
+        pool    => [qw/ dhn hn qn en /],
+        weights => [    1,  2, 3, 2   ],
+    );
+    my $motif1 = $mdp->motif;
+    my $motif2 = $mdp->motif;
+
+    my $bassline = MIDI::Bassline::Walk->new(
+        guitar  => 1,
+        verbose => 0,
+        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+    );
+
+    for my $p (@progressions) {
+        my @tones;
+        for my $tone (@$p) {
+            my @notes;
+            for my $note (@$tone) {
+                $note =~ s/\d//g;
+                push @notes, $note;
+            }
+            push @tones, \@notes;
+        }
+        my @chords = map { scalar chordname(@$_) } @tones;
+
+        my $i = 0;
+
+        for my $chord (@chords) {
+            my $m = $i % 2 == 0 ? $motif2 : $motif1;
+
+            my $notes = $bassline->generate($chord, scalar(@$m));
+
+            for my $j (0 .. $#$m) {
+                $d->note($m->[$j], $notes->[$j]);
+            }
+
+            $i++;
+        }
+    }
+}
