@@ -47,6 +47,7 @@ sub chords {
     set_chan_patch($d->score, $channel++, $chords_patch);
 
     my $prog = Music::Chord::Progression->new(
+        max => $d->bars,
         chord_map => ['', 'm', 'm', '', '', 'm', 'm'],
 #        chord_map => [qw(M7 m7 m7 M7 7 m7 dim7)],
 #        substitute => 1,
