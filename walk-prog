@@ -33,13 +33,14 @@ my $d = MIDI::Drummer::Tiny->new(
 $d->sync(
     \&drums,
     \&chords,
-    \&bass,
+#    \&bass,
 );
 
 $d->write;
 
 sub drums {
-    $d->metronome44($d->bars, 1);
+#    $d->metronome44($d->bars, 1);
+    $d->metronome44swing($d->bars);
 }
 
 sub chords {
@@ -47,9 +48,9 @@ sub chords {
 
     my $prog = Music::Chord::Progression->new(
         max => $d->bars,
-        chord_map => ['', 'm', 'm', '', '', 'm', 'm'],
-#        chord_map => [qw(M7 m7 m7 M7 7 m7 dim7)],
-#        substitute => 1,
+#        chord_map => ['', 'm', 'm', '', '', 'm', 'm'],
+        chord_map => [qw(M7 m7 m7 M7 7 m7 dim7)],
+        substitute => 1,
 #        resolve => 0,
         verbose => 1,
     );
