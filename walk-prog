@@ -34,7 +34,7 @@ my $d = MIDI::Drummer::Tiny->new(
 $d->sync(
     \&drums,
     \&chords,
-#    \&bass,
+    \&bass,
 );
 
 $d->write;
@@ -79,7 +79,8 @@ sub bass {
     my $bassline = MIDI::Bassline::Walk->new(
         guitar  => 1,
         verbose => 0,
-        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+#        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'minor' : 'major' },
     );
 
     for my $p (@progressions) {
