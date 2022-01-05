@@ -20,13 +20,14 @@ my $bass_patch   = shift // 0;
 
 my $channel = 0;
 my $octave  = 4;
+my $bars    = 8;
 
 my @progressions;
 
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $bpm,
-    bars   => 8,
+    bars   => $bars,
     reverb => 10,
 );
 
@@ -68,7 +69,7 @@ sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
     my $mdp = Music::Duration::Partition->new(
-        size    => 4,
+        size    => $d->bars / 2,
         pool    => [qw/ dhn hn qn /],
         weights => [    1,  2, 3   ],
     );
