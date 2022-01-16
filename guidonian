@@ -21,7 +21,7 @@ my %opts = (
     max   => 72,
     num   => 1,
 );
-GetOptions( \%opts, 
+GetOptions(\%opts, 
     'file=s',
     'text=s',
     'scale=s',
