@@ -52,6 +52,8 @@ if ($opts{file}) {
     $opts{text} = $file->slurp;
 }
 
+$opts{text} =~ s/([$opts{regex}])[$opts{regex}]/$1/g;
+
 my @vowels = lc($opts{text}) =~ m/([$opts{regex}])/g;
 
 my $iter = $mg->iterator(\@vowels);
