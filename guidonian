@@ -16,8 +16,6 @@ my $min   = shift || 48;
 my $max   = shift || 72;
 my $regex = shift || 'aeiouy';
 
-my $keys = [ split //, $regex];
-
 # Get the scale intervals
 my @scale     = (get_scale_nums($scale), 12);
 my @intervals = map { $scale[$_ + 1] - $scale[$_]} 0 .. $#scale - 1;
@@ -25,7 +23,7 @@ my @intervals = map { $scale[$_ + 1] - $scale[$_]} 0 .. $#scale - 1;
 my $mg = Music::Guidonian->new(
   key_set => {
     intervals => \@intervals,
-    keys      => $keys,
+    keys      => [ split //, $regex],
     min       => $min,
     max       => $max,
   }
