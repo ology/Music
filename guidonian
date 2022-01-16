@@ -28,7 +28,7 @@ my $mg = Music::Guidonian->new(
   }
 );
 
-my @vowels = lc($text) =~ m/([aeiou])/g;
+my @vowels = lc($text) =~ m/([aeiouy])/g;
 
 my $iter = $mg->iterator(\@vowels);
  
