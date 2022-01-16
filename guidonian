@@ -7,8 +7,10 @@ use Music::Guidonian;
 use Music::Scales qw(get_scale_nums);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
+use Mojo::File;
 
 my %opts = (
+    file  => undef,
     text  => 'Lorem ipsum dolor sit',
     scale => 'major',
     regex => 'aeiouy',
@@ -20,6 +22,7 @@ my %opts = (
     num   => 1,
 );
 GetOptions( \%opts, 
+    'file=s',
     'text=s',
     'scale=s',
     'regex=s',
@@ -43,6 +46,11 @@ my $mg = Music::Guidonian->new(
     max       => $opts{max},
   }
 );
+
+if ($opts{file}) {
+    my $file = Mojo::File->new($opts{file});
+    $opts{text} = $file->slurp;
+}
 
 my @vowels = lc($opts{text}) =~ m/([$opts{regex}])/g;
 
