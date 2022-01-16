@@ -2,8 +2,6 @@
 use strict;
 use warnings;
 
-use Data::Dumper::Compact qw(ddc);
-
 use Music::Guidonian;
 use Music::Scales qw(get_scale_nums);
 
