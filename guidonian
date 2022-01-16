@@ -2,40 +2,53 @@
 use strict;
 use warnings;
 
+use Getopt::Long;
 use Music::Guidonian;
 use Music::Scales qw(get_scale_nums);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 
-my $text  = shift || 'Lorem ipsum dolor sit';
-my $scale = shift || 'major';
-my $bpm   = shift || 200;
-my $patch = shift || 4;
-my $vol   = shift || 120;
-my $min   = shift || 48;
-my $max   = shift || 72;
-my $regex = shift || 'aeiouy';
+my %opts = (
+    text  => 'Lorem ipsum dolor sit',
+    scale => 'major',
+    bpm   => 200,
+    patch => 4,
+    vol   => 120,
+    min   => 48,
+    max   => 72,
+    regex => 'aeiouy',
+);
+GetOptions( \%opts, 
+    'text=s',
+    'scale=s',
+    'regex=s',
+    'bpm=i', 
+    'patch=i', 
+    'vol=i', 
+    'min=i', 
+    'max=i', 
+) or die "Can't get options: $!";
 
 # Get the scale intervals
-my @scale     = (get_scale_nums($scale), 12);
+my @scale     = (get_scale_nums($opts{scale}), 12);
 my @intervals = map { $scale[$_ + 1] - $scale[$_]} 0 .. $#scale - 1;
 
 my $mg = Music::Guidonian->new(
   key_set => {
     intervals => \@intervals,
-    keys      => [ split //, $regex],
-    min       => $min,
-    max       => $max,
+    keys      => [ split //, $opts{regex} ],
+    min       => $opts{min},
+    max       => $opts{max},
   }
 );
 
-my @vowels = lc($text) =~ m/([$regex])/g;
+my @vowels = lc($opts{text}) =~ m/([$opts{regex}])/g;
 
 my $iter = $mg->iterator(\@vowels);
  
 my $phrase = $iter->();
 
-my $score = setup_score(bpm => $bpm, patch => $patch, volume => $vol);
+my $score = setup_score(bpm => $opts{bpm}, patch => $opts{patch}, volume => $opts{vol});
 
 $score->n('qn', $_) for @$phrase;
 $score->write_score("$0.mid");
