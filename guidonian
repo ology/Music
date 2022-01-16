@@ -17,6 +17,7 @@ my %opts = (
     vol   => 120,
     min   => 48,
     max   => 72,
+    num   => 1,
 );
 GetOptions( \%opts, 
     'text=s',
@@ -27,6 +28,7 @@ GetOptions( \%opts,
     'vol=i', 
     'min=i', 
     'max=i', 
+    'num=i', 
 ) or die "Can't get options: $!";
 
 # Get the scale intervals
@@ -50,5 +52,8 @@ my $phrase = $iter->();
 
 my $score = setup_score(bpm => $opts{bpm}, patch => $opts{patch}, volume => $opts{vol});
 
-$score->n('qn', $_) for @$phrase;
+for (1 .. $opts{num}) {
+    $score->n('qn', $_) for @$phrase;
+}
+
 $score->write_score("$0.mid");
