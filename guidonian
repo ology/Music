@@ -54,11 +54,9 @@ if ($opts{file}) {
 
 # Only use the first vowel of a dipthong
 $opts{text} =~ s/([$opts{regex}])[$opts{regex}]/$1/g;
-
 my @vowels = lc($opts{text}) =~ m/([$opts{regex}])/g;
 
 my $iter = $mg->iterator(\@vowels);
- 
 my $phrase = $iter->();
 
 my $score = setup_score(bpm => $opts{bpm}, patch => $opts{patch}, volume => $opts{vol});
