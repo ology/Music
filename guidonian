@@ -10,20 +10,19 @@ use Music::Scales qw(get_scale_nums);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 
-my $scale = shift || 'major';
 my $text  = shift || 'Lorem ipsum dolor sit';
+my $scale = shift || 'major';
 
 my @scale = get_scale_nums($scale);
+push @scale, 12;
+@scale = map { $scale[$_ + 1] - $scale[$_]} 0 .. $#scale - 1;
 
 my $mg = Music::Guidonian->new(
   key_set => {
-#    intervals => [2,2,1,2,2,2,1], # Major scale
-    intervals => [2,1,2,2,1,2,2], # Minor scale
-#    intervals => [2,2,2,2,2,2], # Whole-tone scale
-    # vowels to map from min to max by the intervals
-    keys      => [qw(a e i o u)],
-    min       => 48,
-    max       => 72
+    intervals => \@scale,
+    keys => [qw(a e i o u)],
+    min => 48,
+    max => 72
   }
 );
 #warn ddc $mg->key2pitch;
