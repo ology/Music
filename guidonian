@@ -22,7 +22,7 @@ my @intervals = map { $scale[$_ + 1] - $scale[$_]} 0 .. $#scale - 1;
 my $mg = Music::Guidonian->new(
   key_set => {
     intervals => \@intervals,
-    keys      => [qw(a e i o u)],
+    keys      => [qw(a e i o u y)],
     min       => $min,
     max       => $max,
   }
