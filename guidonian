@@ -20,6 +20,7 @@ my %opts = (
     min   => 48,
     max   => 72,
     num   => 1,
+    int   => 0,
 );
 GetOptions(\%opts, 
     'file=s',
@@ -32,11 +33,19 @@ GetOptions(\%opts,
     'min=i', 
     'max=i', 
     'num=i', 
+    'int=i', 
 ) or die "Can't get options: $!";
 
-# Get the scale intervals
-my @scale     = (get_scale_nums($opts{scale}), 12);
-my @intervals = map { $scale[$_ + 1] - $scale[$_]} 0 .. $#scale - 1;
+my @intervals;
+
+if ($opts{int} == 0) {
+    # Get the scale intervals
+    my @scale  = (get_scale_nums($opts{scale}), 12);
+    @intervals = map { $scale[$_ + 1] - $scale[$_]} 0 .. $#scale - 1;
+}
+else {
+    @intervals = map { int(rand $opts{int}) + 1 } 1 .. 7;
+}
 
 my $mg = Music::Guidonian->new(
   key_set => {
