@@ -12,6 +12,8 @@ use MIDI::Util qw(setup_score);
 
 my $text  = shift || 'Lorem ipsum dolor sit';
 my $scale = shift || 'major';
+my $min   = shift || 48;
+my $max   = shift || 72;
 
 my @scale = get_scale_nums($scale);
 push @scale, 12;
@@ -21,15 +23,12 @@ my $mg = Music::Guidonian->new(
   key_set => {
     intervals => \@intervals,
     keys => [qw(a e i o u)],
-    min => 48,
-    max => 72
+    min => $min,
+    max => $max,
   }
 );
-#warn ddc $mg->key2pitch;
 
-# TODO: sanitize text
-my @vowels = $text =~ m/([aeiou])/g;
-#warn __PACKAGE__,' L',__LINE__,' ',ddc(\@vowels);
+my @vowels = lc($text) =~ m/([aeiou])/g;
 
 my $iter = $mg->iterator(\@vowels);
  
