@@ -14,6 +14,9 @@ my $text  = shift || 'Lorem ipsum dolor sit';
 my $scale = shift || 'major';
 my $min   = shift || 48;
 my $max   = shift || 72;
+my $bpm   = shift || 200;
+my $patch = shift || 4;
+my $vol   = shift || 120;
 
 # Get the scale intervals
 my @scale     = (get_scale_nums($scale), 12);
@@ -34,7 +37,7 @@ my $iter = $mg->iterator(\@vowels);
  
 my $phrase = $iter->();
 
-my $score = setup_score(bpm => 200, patch => 4, volume => 120);
+my $score = setup_score(bpm => $bpm, patch => $patch, volume => $vol);
 
 $score->n('wn', $_) for @$phrase;
 $score->write_score("$0.mid");
