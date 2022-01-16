@@ -11,12 +11,12 @@ use MIDI::Util qw(setup_score);
 my %opts = (
     text  => 'Lorem ipsum dolor sit',
     scale => 'major',
+    regex => 'aeiouy',
     bpm   => 200,
     patch => 4,
     vol   => 120,
     min   => 48,
     max   => 72,
-    regex => 'aeiouy',
 );
 GetOptions( \%opts, 
     'text=s',
