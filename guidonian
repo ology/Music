@@ -12,11 +12,11 @@ use MIDI::Util qw(setup_score);
 
 my $text  = shift || 'Lorem ipsum dolor sit';
 my $scale = shift || 'major';
-my $min   = shift || 48;
-my $max   = shift || 72;
 my $bpm   = shift || 200;
 my $patch = shift || 4;
 my $vol   = shift || 120;
+my $min   = shift || 48;
+my $max   = shift || 72;
 
 # Get the scale intervals
 my @scale     = (get_scale_nums($scale), 12);
