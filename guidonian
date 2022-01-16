@@ -52,6 +52,7 @@ if ($opts{file}) {
     $opts{text} = $file->slurp;
 }
 
+# Only use the first vowel of a dipthong
 $opts{text} =~ s/([$opts{regex}])[$opts{regex}]/$1/g;
 
 my @vowels = lc($opts{text}) =~ m/([$opts{regex}])/g;
