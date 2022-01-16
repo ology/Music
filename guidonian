@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+
+use Music::Guidonian;
+use Music::Scales qw(get_scale_nums);
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util qw(setup_score);
+
+my $scale = shift || 'major';
+my $text  = shift || 'Lorem ipsum dolor sit';
+
+my @scale = get_scale_nums($scale);
+
+my $mg = Music::Guidonian->new(
+  key_set => {
+#    intervals => [2,2,1,2,2,2,1], # Major scale
+    intervals => [2,1,2,2,1,2,2], # Minor scale
+#    intervals => [2,2,2,2,2,2], # Whole-tone scale
+    # vowels to map from min to max by the intervals
+    keys      => [qw(a e i o u)],
+    min       => 48,
+    max       => 72
+  }
+);
+#warn ddc $mg->key2pitch;
+
+# TODO: sanitize text
+my @vowels = $text =~ m/([aeiou])/g;
+#warn __PACKAGE__,' L',__LINE__,' ',ddc(\@vowels);
+
+my $iter = $mg->iterator(\@vowels);
+ 
+my $phrase = $iter->();
+
+my $score = setup_score(bpm => 200, patch => 4, volume => 120);
+
+$score->n('wn', $_) for @$phrase;
+$score->write_score("$0.mid");
