@@ -15,8 +15,7 @@ my $scale = shift || 'major';
 my $min   = shift || 48;
 my $max   = shift || 72;
 
-my @scale = get_scale_nums($scale);
-push @scale, 12;
+my @scale = (get_scale_nums($scale), 12);
 my @intervals = map { $scale[$_ + 1] - $scale[$_]} 0 .. $#scale - 1;
 
 my $mg = Music::Guidonian->new(
