@@ -132,9 +132,14 @@ sub measure8b {
 }
 sub measure9 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(qn C5));
+    $score->r(qw(en));
 }
 sub measure9b {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(qn C3));
+    $score->n(qw(qn G2));
+    $score->n(qw(qn C2));
 }
 sub measure10 {
     print '', (caller(0))[3], "\n";
