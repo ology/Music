@@ -15,14 +15,14 @@ my $tpatch = shift || 0;  # Treble
 my $bpatch = shift || 42; # Bass
 
 # Declare the available measures
-my $total_measures = 8;
+my $total_measures = 76;
 my @measures  = map { my $sub = 'measure' . $_; \&$sub } 2 .. $total_measures;
 my @measuresb = map { my $sub = 'measure' . $_ . 'b'; \&$sub } 2 .. $total_measures;
 
 # Setup the MIDI score
 my $score = setup_score(bpm => $bpm);
 
-# Choose the mesures to play
+# Choose the measures to play
 my @choices;
 for (1 .. $max) {
     push @choices, int rand @measures;
