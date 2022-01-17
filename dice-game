@@ -1,0 +1,540 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+##
+# Musical dice game, attributed to Mozart
+##
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util qw(setup_score set_chan_patch);
+
+my $max    = shift || 16;  # Number of measures to produce
+my $bpm    = shift || 100; # Beats per minute
+my $tpatch = shift || 0;   # Treble
+my $bpatch = shift || 42;  # Bass
+
+# Declare the available measures
+my $total_measures = 8;
+my @measures  = map { my $sub = 'measure' . $_; \&$sub } 2 .. $total_measures;
+my @measuresb = map { my $sub = 'measure' . $_ . 'b'; \&$sub } 2 .. $total_measures;
+
+# Setup the MIDI score
+my $score = setup_score(bpm => $bpm);
+
+my @choices;
+for (1 .. $max) {
+    push @choices, int rand @measures;
+}
+
+my $tproc = sub {
+    set_chan_patch($score, 0, $tpatch);
+    $measures[$_]->() for @choices;
+};
+my $bproc = sub {
+    set_chan_patch($score, 1, $bpatch);
+    $measuresb[$_]->()for @choices;
+};
+
+# Mash the phrases together as MIDI tracks
+$score->synch($tproc, $bproc);
+
+# Write the score to a MIDI file
+$score->write_score("$0.mid");
+
+# Available measures:
+
+sub measure2 {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(en F5));
+    $score->n(qw(en D5));
+    $score->n(qw(en G5));
+}
+sub measure2b {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(en F3));
+    $score->n(qw(en D3));
+    $score->n(qw(en G3));
+}
+sub measure3 {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(en A4));
+    $score->n(qw(sn Fs4));
+    $score->n(qw(sn G4));
+    $score->n(qw(sn B4));
+    $score->n(qw(sn G5));
+}
+sub measure3b {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(qn B2 G3));
+    $score->r(qw(en));
+}
+sub measure4 {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(en G5));
+    $score->n(qw(en C5));
+    $score->n(qw(en E5));
+}
+sub measure4b {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(qn C3 E3));
+    $score->r(qw(en));
+}
+sub measure5 {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(en G5));
+    $score->n(qw(qn D5));
+}
+sub measure5b {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(sn G2));
+    $score->n(qw(sn B2));
+    $score->n(qw(en G3));
+    $score->n(qw(en B2));
+}
+sub measure6 {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(qn G5 D5 B4 G4));
+    $score->r(qw(en));
+}
+sub measure6b {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(en G2));
+    $score->n(qw(sn B3 G3));
+    $score->n(qw(sn G3 F3));
+    $score->n(qw(sn Fs3 E3));
+    $score->n(qw(sn E3 D3));
+}
+sub measure7 {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(en G4));
+    $score->n(qw(en C5));
+    $score->n(qw(en E5));
+}
+sub measure7b {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(qn C3 E3));
+    $score->r(qw(en));
+}
+sub measure8 {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(sn E5));
+    $score->n(qw(sn C5));
+    $score->n(qw(sn E5));
+    $score->n(qw(sn G5));
+    $score->n(qw(sn C6));
+    $score->n(qw(sn G5));
+}
+sub measure8b {
+    print '', (caller(0))[3], "\n";
+    $score->n(qw(qn C3 G3));
+    $score->r(qw(en));
+}
+sub measure9 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure9b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure10 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure10b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure11 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure11b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure12 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure12b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure13 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure13b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure14 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure14b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure15 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure15b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure16 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure16b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure17 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure17b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure18 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure18b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure19 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure19b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure20 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure20b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure21 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure21b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure22 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure22b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure23 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure23b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure24 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure24b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure25 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure25b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure26 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure26b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure27 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure27b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure28 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure28b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure29 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure29b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure30 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure30b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure31 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure31b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure32 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure32b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure33 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure33b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure34 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure34b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure35 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure35b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure36 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure36b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure37 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure37b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure38 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure38b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure39 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure39b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure40 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure40b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure41 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure41b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure42 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure42b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure43 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure43b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure44 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure44b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure45 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure45b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure46 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure46b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure47 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure47b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure48 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure48b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure49 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure49b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure50 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure50b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure51 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure51b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure52 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure52b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure53 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure53b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure54 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure54b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure55 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure55b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure56 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure56b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure57 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure57b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure58 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure58b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure59 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure59b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure60 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure60b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure61 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure61b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure62 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure62b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure63 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure63b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure64 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure64b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure65 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure65b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure66 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure66b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure67 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure67b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure68 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure68b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure69 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure69b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure70 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure70b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure71 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure71b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure72 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure72b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure73 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure73b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure74 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure74b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure75 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure75b {
+    print '', (caller(0))[3], "\n";
+}
+sub measure76 {
+    print '', (caller(0))[3], "\n";
+}
+sub measure76b {
+    print '', (caller(0))[3], "\n";
+}
