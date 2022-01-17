@@ -25,7 +25,7 @@ my $score = setup_score(bpm => $bpm);
 
 # Choose the measures to play
 # * Technically, this should be the sum of two dice...
-my @choices = map { int rand @barst } for 1 .. $max;
+my @choices = map { int rand @barst } 1 .. $max;
 
 # Define the procedures to actually play the chosen measures
 my $tproc = sub {
