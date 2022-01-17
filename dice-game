@@ -4,6 +4,7 @@ use warnings;
 
 ##
 # Musical dice game, attributed to Mozart
+# 16 measures x 11 dice sums (2-12) = 176 2D-grid of 3/8 measures
 ##
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
