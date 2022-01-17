@@ -24,6 +24,7 @@ my @barsb = map { my $sub = 'barb' . $_; \&$sub } 1 .. $total_bars;
 my $score = setup_score(bpm => $bpm);
 
 # Choose the measures to play
+# * Technically, this should be the sum of two dice...
 my @choices;
 for (0 .. $max - 1) {
     push @choices, int rand @barst;
