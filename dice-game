@@ -15,9 +15,9 @@ my $tpatch = shift || 4;  # Treble
 my $bpatch = shift || 35; # Bass
 
 # Declare the available measures
-my $total_measures = 8;
-my @measures  = map { my $sub = 'measure' . $_;       \&$sub } 1 .. $total_measures;
-my @measuresb = map { my $sub = 'measure' . $_ . 'b'; \&$sub } 1 .. $total_measures;
+my $total_bars = 8;
+my @bars  = map { my $sub = 'bart' . $_; \&$sub } 1 .. $total_bars;
+my @barsb = map { my $sub = 'barb' . $_; \&$sub } 1 .. $total_bars;
 
 # Setup the MIDI score
 my $score = setup_score(bpm => $bpm);
@@ -25,17 +25,17 @@ my $score = setup_score(bpm => $bpm);
 # Choose the measures to play
 my @choices;
 for (0 .. $max - 1) {
-    push @choices, int rand @measures;
+    push @choices, int rand @bars;
 }
 
 # Define the procedures to actually play the chosen measures
 my $tproc = sub {
     set_chan_patch($score, 0, $tpatch);
-    $measures[$_]->() for @choices;
+    $bars[$_]->() for @choices;
 };
 my $bproc = sub {
     set_chan_patch($score, 1, $bpatch);
-    $measuresb[$_]->()for @choices;
+    $barsb[$_]->()for @choices;
 };
 
 # Mash the phrases together as MIDI tracks
@@ -46,19 +46,19 @@ $score->write_score("$0.mid");
 
 # Available measures:
 
-sub measure1 {
+sub bart1 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(en F5));
     $score->n(qw(en D5));
     $score->n(qw(en G5));
 }
-sub measure1b {
+sub barb1 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(en F3));
     $score->n(qw(en D3));
     $score->n(qw(en G3));
 }
-sub measure2 {
+sub bart2 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(en A4));
     $score->n(qw(sn Fs4));
@@ -66,40 +66,40 @@ sub measure2 {
     $score->n(qw(sn B4));
     $score->n(qw(sn G5));
 }
-sub measure2b {
+sub barb2 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(qn B2 G3));
     $score->r(qw(en));
 }
-sub measure3 {
+sub bart3 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(en G5));
     $score->n(qw(en C5));
     $score->n(qw(en E5));
 }
-sub measure3b {
+sub barb3 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(qn C3 E3));
     $score->r(qw(en));
 }
-sub measure4 {
+sub bart4 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(en G5));
     $score->n(qw(qn D5));
 }
-sub measure4b {
+sub barb4 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(sn G2));
     $score->n(qw(sn B2));
     $score->n(qw(en G3));
     $score->n(qw(en B2));
 }
-sub measure5 {
+sub bart5 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(qn G5 D5 B4 G4));
     $score->r(qw(en));
 }
-sub measure5b {
+sub barb5 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(en G2));
     $score->n(qw(sn B3 G3));
@@ -107,18 +107,18 @@ sub measure5b {
     $score->n(qw(sn Fs3 E3));
     $score->n(qw(sn E3 D3));
 }
-sub measure6 {
+sub bart6 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(en G4));
     $score->n(qw(en C5));
     $score->n(qw(en E5));
 }
-sub measure6b {
+sub barb6 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(qn C3 E3));
     $score->r(qw(en));
 }
-sub measure7 {
+sub bart7 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(sn E5));
     $score->n(qw(sn C5));
@@ -127,17 +127,17 @@ sub measure7 {
     $score->n(qw(sn C6));
     $score->n(qw(sn G5));
 }
-sub measure7b {
+sub barb7 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(qn C3 G3));
     $score->r(qw(en));
 }
-sub measure8 {
+sub bart8 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(qn C5));
     $score->r(qw(en));
 }
-sub measure8b {
+sub barb8 {
     print '', (caller(0))[3], "\n";
     $score->n(qw(en C3));
     $score->n(qw(en G2));
