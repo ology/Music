@@ -11,11 +11,11 @@ use MIDI::Util qw(setup_score set_chan_patch);
 
 my $max    = shift || 16; # Number of measures to produce
 my $bpm    = shift || 90; # Beats per minute
-my $tpatch = shift || 0;  # Treble
-my $bpatch = shift || 42; # Bass
+my $tpatch = shift || 4;  # Treble
+my $bpatch = shift || 35; # Bass
 
 # Declare the available measures
-my $total_measures = 76;
+my $total_measures = 9;
 my @measures  = map { my $sub = 'measure' . $_; \&$sub } 2 .. $total_measures;
 my @measuresb = map { my $sub = 'measure' . $_ . 'b'; \&$sub } 2 .. $total_measures;
 
