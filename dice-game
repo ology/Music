@@ -142,6 +142,9 @@ sub barb8 {
 }
 sub bart9 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en E5 C5));
+    $score->n(qw(en B4 D5));
+    $score->r(qw(en));
 }
 sub barb9 {
     print '', (caller(0))[3], "\n";
@@ -150,6 +153,12 @@ sub barb9 {
 }
 sub bart10 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn B4));
+    $score->n(qw(sn A4));
+    $score->n(qw(sn B4));
+    $score->n(qw(sn C5));
+    $score->n(qw(sn D5));
+    $score->n(qw(sn B4));
 }
 sub barb10 {
     print '', (caller(0))[3], "\n";
@@ -158,6 +167,12 @@ sub barb10 {
 }
 sub bart11 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn E5));
+    $score->n(qw(sn C5));
+    $score->n(qw(sn B4));
+    $score->n(qw(sn A4));
+    $score->n(qw(sn G4));
+    $score->n(qw(sn Fs4));
 }
 sub barb11 {
     print '', (caller(0))[3], "\n";
@@ -167,15 +182,21 @@ sub barb11 {
 }
 sub bart12 {
     print '', (caller(0))[3], "\n";
+    for (1 .. 3) {
+        $score->n(qw(en C5 E4));
+    }
 }
 sub barb12 {
     print '', (caller(0))[3], "\n";
-    $score->n(qw(en C3));
-    $score->n(qw(en C3));
-    $score->n(qw(en C3));
+    for (1 .. 3) {
+        $score->n(qw(en C3));
+    }
 }
 sub bart13 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en C5));
+    $score->n(qw(en G4));
+    $score->n(qw(en E4));
 }
 sub barb13 {
     print '', (caller(0))[3], "\n";
@@ -190,6 +211,10 @@ sub barb14 {
 }
 sub bart15 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en E5));
+    $score->n(qw(sn G5));
+    $score->n(qw(sn E5));
+    $score->n(qw(en C5));
 }
 sub barb15 {
     print '', (caller(0))[3], "\n";
@@ -198,6 +223,9 @@ sub barb15 {
 }
 sub bart16 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en A5));
+    $score->n(qw(en Fs5));
+    $score->n(qw(en D5));
 }
 sub barb16 {
     print '', (caller(0))[3], "\n";
