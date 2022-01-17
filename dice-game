@@ -22,11 +22,13 @@ my @measuresb = map { my $sub = 'measure' . $_ . 'b'; \&$sub } 2 .. $total_measu
 # Setup the MIDI score
 my $score = setup_score(bpm => $bpm);
 
+# Choose the mesures to play
 my @choices;
 for (1 .. $max) {
     push @choices, int rand @measures;
 }
 
+# Define the procedures to actually play the chosen measures
 my $tproc = sub {
     set_chan_patch($score, 0, $tpatch);
     $measures[$_]->() for @choices;
