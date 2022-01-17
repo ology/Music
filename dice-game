@@ -24,7 +24,7 @@ my $score = setup_score(bpm => $bpm);
 
 # Choose the measures to play
 my @choices;
-for (1 .. $max) {
+for (0 .. $max - 1) {
     push @choices, int rand @measures;
 }
 
