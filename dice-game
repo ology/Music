@@ -49,7 +49,7 @@ my $bproc = sub { # Bass
 };
 
 # Mash the phrases together
-$score->synch($bproc);
+$score->synch($tproc, $bproc);
 
 $score->write_score("$0.mid");
 
