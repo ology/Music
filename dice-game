@@ -45,11 +45,11 @@ my $bproc = sub { # Bass
     set_chan_patch($score, 1, $bpatch);
     $barsb[$_]->() for @choices;
     # Outro
-    $score->n('dqn', 'C3') for 1 .. 2;
+    $score->n('dqn', $_) for qw(C3 C2);
 };
 
 # Mash the phrases together
-$score->synch($tproc, $bproc);
+$score->synch($bproc);
 
 $score->write_score("$0.mid");
 
