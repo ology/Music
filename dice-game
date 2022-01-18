@@ -20,7 +20,6 @@ my $total_bars = 24;
 my @barst = map { my $sub = 'bart' . $_; \&$sub } 1 .. $total_bars;
 my @barsb = map { my $sub = 'barb' . $_; \&$sub } 1 .. $total_bars;
 
-# Setup the MIDI score
 my $score = setup_score(bpm => $bpm);
 
 # Choose the measures to play
@@ -40,7 +39,6 @@ my $bproc = sub {
 # Mash the phrases together as MIDI tracks
 $score->synch($tproc, $bproc);
 
-# Write the score to a MIDI file
 $score->write_score("$0.mid");
 
 # Available measures:
