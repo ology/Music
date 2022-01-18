@@ -17,7 +17,7 @@ my $tpatch = shift || 4;  # Treble
 my $bpatch = shift || 35; # Bass
 
 # Declare the available measures
-my $total_bars = 39;
+my $total_bars = 48;
 my @barst = map { my $sub = 'bart' . $_; \&$sub } 1 .. $total_bars; # Treble
 my @barsb = map { my $sub = 'barb' . $_; \&$sub } 1 .. $total_bars; # Bass
 
