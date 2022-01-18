@@ -7,8 +7,9 @@ use warnings;
 # 16 measures x 11 dice sums (2-12) = 176 2D-grid of 3/8 measures
 ##
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToRoman);
 use MIDI::Util qw(setup_score set_chan_patch);
+use Music::Cadence;
 
 my $max    = shift || 16; # Number of measures to produce
 my $bpm    = shift || 70; # Beats per minute
@@ -38,6 +39,18 @@ my $bproc = sub {
 
 # Mash the phrases together as MIDI tracks
 $score->synch($tproc, $bproc);
+
+set_chan_patch($score, 0, $tpatch);
+my $mc = Music::Cadence->new(
+    key    => 'C',
+    scale  => 'major',
+    octave => 4,
+    format => 'midinum',
+);
+my $chords = $mc->cadence(type => 'perfect');
+$score->n('dqn', @$_) for @$chords;
+$chords = $mc->cadence(type => 'plagal');
+$score->n('dqn', @$_) for @$chords;
 
 $score->write_score("$0.mid");
 
