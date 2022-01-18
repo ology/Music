@@ -16,7 +16,7 @@ my $tpatch = shift || 4;  # Treble
 my $bpatch = shift || 35; # Bass
 
 # Declare the available measures
-my $total_bars = 16;
+my $total_bars = 24;
 my @barst = map { my $sub = 'bart' . $_; \&$sub } 1 .. $total_bars;
 my @barsb = map { my $sub = 'barb' . $_; \&$sub } 1 .. $total_bars;
 
@@ -234,12 +234,21 @@ sub barb16 {
 }
 sub bart17 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn C5));
+    $score->n(qw(sn G4));
+    $score->n(qw(sn C5));
+    $score->n(qw(sn E5));
+    $score->n(qw(sn G4));
+    $score->n(qw(sn C5));
 }
 sub barb17 {
     barb13();
 }
 sub bart18 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en G4));
+    $score->n(qw(en C5));
+    $score->n(qw(en E5));
 }
 sub barb18 {
     print '', (caller(0))[3], "\n";
@@ -248,6 +257,10 @@ sub barb18 {
 }
 sub bart19 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn E5));
+    $score->n(qw(sn C5));
+    $score->n(qw(en E5));
+    $score->n(qw(en G5));
 }
 sub barb19 {
     print '', (caller(0))[3], "\n";
@@ -256,6 +269,10 @@ sub barb19 {
 }
 sub bart20 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en G5));
+    $score->n(qw(sn B5));
+    $score->n(qw(sn D6));
+    $score->n(qw(en D5));
 }
 sub barb20 {
     print '', (caller(0))[3], "\n";
@@ -264,12 +281,21 @@ sub barb20 {
 }
 sub bart21 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn C5));
+    $score->n(qw(sn E5));
+    $score->n(qw(sn G5));
+    $score->n(qw(sn D5));
+    $score->n(qw(sn A4));
+    $score->n(qw(sn Fs5));
 }
 sub barb21 {
     barb11();
 }
 sub bart22 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en E5));
+    $score->n(qw(en C5));
+    $score->n(qw(en G4));
 }
 sub barb22 {
     print '', (caller(0))[3], "\n";
@@ -278,6 +304,12 @@ sub barb22 {
 }
 sub bart23 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn F5));
+    $score->n(qw(sn E5));
+    $score->n(qw(sn D5));
+    $score->n(qw(sn E5));
+    $score->n(qw(sn F5));
+    $score->n(qw(sn G5));
 }
 sub barb23 {
     print '', (caller(0))[3], "\n";
