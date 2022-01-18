@@ -42,8 +42,6 @@ $score->synch($tproc, $bproc);
 
 set_chan_patch($score, 0, $tpatch);
 my $mc = Music::Cadence->new(
-    key    => 'C',
-    scale  => 'major',
     octave => 4,
     format => 'midinum',
 );
