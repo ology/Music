@@ -49,8 +49,8 @@ my $mc = Music::Cadence->new(
 );
 my $chords = $mc->cadence(type => 'perfect');
 $score->n('dqn', @$_) for @$chords;
-$chords = $mc->cadence(type => 'plagal');
-$score->n('dqn', @$_) for @$chords;
+#$chords = $mc->cadence(type => 'plagal');
+#$score->n('dqn', @$_) for @$chords;
 
 $score->write_score("$0.mid");
 
