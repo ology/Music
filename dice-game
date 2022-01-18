@@ -34,7 +34,7 @@ my $tproc = sub { # Treble
 };
 my $bproc = sub { # Bass
     set_chan_patch($score, 1, $bpatch);
-    $barsb[$_]->()for @choices;
+    $barsb[$_]->() for @choices;
 };
 
 # Mash the phrases together as MIDI tracks
