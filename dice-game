@@ -31,24 +31,25 @@ my @choices = map { int rand @barst } 1 .. $max;
 my $tproc = sub { # Treble
     set_chan_patch($score, 0, $tpatch);
     $barst[$_]->() for @choices;
+    # Outro
+    my $mc = Music::Cadence->new(
+        octave => 4,
+        format => 'midinum',
+    );
+    my $chords = $mc->cadence(type => 'perfect');
+    $score->n('dqn', @$_) for @$chords;
+    #$chords = $mc->cadence(type => 'plagal');
+    #$score->n('dqn', @$_) for @$chords;
 };
 my $bproc = sub { # Bass
     set_chan_patch($score, 1, $bpatch);
     $barsb[$_]->() for @choices;
+    # Outro
+    $score->n('dqn', 'C3') for 1 .. 2;
 };
 
 # Mash the phrases together
 $score->synch($tproc, $bproc);
-
-set_chan_patch($score, 0, $tpatch);
-my $mc = Music::Cadence->new(
-    octave => 4,
-    format => 'midinum',
-);
-my $chords = $mc->cadence(type => 'perfect');
-$score->n('dqn', @$_) for @$chords;
-#$chords = $mc->cadence(type => 'plagal');
-#$score->n('dqn', @$_) for @$chords;
 
 $score->write_score("$0.mid");
 
