@@ -30,6 +30,7 @@ my @choices = map { int rand @barst } 1 .. $max;
 # Define the procedures to actually play the chosen measures
 my $tproc = sub { # Treble
     set_chan_patch($score, 0, $tpatch);
+    # Add phrases to the score
     $barst[$_]->() for @choices;
     # Outro
     my $mc = Music::Cadence->new(
@@ -43,6 +44,7 @@ my $tproc = sub { # Treble
 };
 my $bproc = sub { # Bass
     set_chan_patch($score, 1, $bpatch);
+    # Add phrases to the score
     $barsb[$_]->() for @choices;
     # Outro
     $score->n('dqn', $_) for qw(C3 C2);
