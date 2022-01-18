@@ -37,7 +37,7 @@ my $bproc = sub { # Bass
     $barsb[$_]->() for @choices;
 };
 
-# Mash the phrases together as MIDI tracks
+# Mash the phrases together
 $score->synch($tproc, $bproc);
 
 set_chan_patch($score, 0, $tpatch);
