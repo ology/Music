@@ -486,18 +486,35 @@ sub barb39 {
 }
 sub bart40 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn C5));
+    $score->n(qw(sn B4));
+    $score->n(qw(sn C5));
+    $score->n(qw(sn E5));
+    $score->n(qw(sn G4));
+    $score->n(qw(sn C5));
 }
 sub barb40 {
     barb6();
 }
 sub bart41 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn C5));
+    $score->n(qw(sn B4));
+    $score->n(qw(sn C5));
+    $score->n(qw(sn E5));
+    $score->n(qw(en G4));
 }
 sub barb41 {
     barb6();
 }
 sub bart42 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn B4));
+    $score->n(qw(sn C5));
+    $score->n(qw(sn D5));
+    $score->n(qw(sn B4));
+    $score->n(qw(sn A4));
+    $score->n(qw(sn G4));
 }
 sub barb42 {
     $score->n(qw(qn A2));
@@ -505,12 +522,22 @@ sub barb42 {
 }
 sub bart43 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en G5));
+    $score->n(qw(sn F5));
+    $score->n(qw(sn E5));
+    $score->n(qw(sn D5));
+    $score->n(qw(sn C5));
 }
 sub barb43 {
     barb6();
 }
 sub bart44 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en A4));
+    $score->n(qw(sn F5));
+    $score->n(qw(sn D5));
+    $score->n(qw(sn A4));
+    $score->n(qw(sn B4));
 }
 sub barb44 {
     $score->n(qw(qn F3));
@@ -518,24 +545,44 @@ sub barb44 {
 }
 sub bart45 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(sn C5));
+    $score->n(qw(sn B4));
+    $score->n(qw(sn C5));
+    $score->n(qw(sn G4));
+    $score->n(qw(sn E4));
+    $score->n(qw(sn C4));
 }
 sub barb45 {
     barb13();
 }
 sub bart46 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en G5));
+    $score->n(qw(sn B5));
+    $score->n(qw(sn G5));
+    $score->n(qw(sn D5));
+    $score->n(qw(sn B4));
 }
 sub barb46 {
     barb37();
 }
 sub bart47 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en G5));
+    $score->n(qw(sn G5));
+    $score->n(qw(sn D5));
+    $score->n(qw(en B5));
 }
 sub barb47 {
     barb37();
 }
 sub bart48 {
     print '', (caller(0))[3], "\n";
+    $score->n(qw(en E5));
+    $score->n(qw(sn C5));
+    $score->n(qw(sn E5));
+    $score->n(qw(sn G5));
+    $score->n(qw(sn C6));
 }
 sub barb48 {
     barb19();
