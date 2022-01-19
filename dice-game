@@ -18,6 +18,7 @@ use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Cadence;
 
 use constant DQN => 'dqn';
+use constant TOTAL_BARS => 48;
 
 my $max    = shift || 16; # Number of measures to produce
 my $bpm    = shift || 70; # Beats per minute
@@ -26,9 +27,8 @@ my $bpatch = shift // 35; # Bass
 my $choice = shift || ''; # Comma-separated motifs. Blank for random
 
 # Declare the available measures
-my $total_bars = 48;
-my @barst = map { my $sub = 'bart' . $_; \&$sub } 1 .. $total_bars; # Treble
-my @barsb = map { my $sub = 'barb' . $_; \&$sub } 1 .. $total_bars; # Bass
+my @barst = map { my $sub = 'bart' . $_; \&$sub } 1 .. TOTAL_BARS; # Treble
+my @barsb = map { my $sub = 'barb' . $_; \&$sub } 1 .. TOTAL_BARS; # Bass
 
 my $score = setup_score(bpm => $bpm);
 
