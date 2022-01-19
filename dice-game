@@ -17,8 +17,8 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToR
 use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Cadence;
 
-use constant DQN => 'dqn';
-use constant TOTAL_BARS => 48;
+use constant DQN => 'dqn';     # Dotted-quarter-note duration
+use constant TOTAL_BARS => 48; # Total available measure subroutines
 
 my $max    = shift || 16; # Number of measures to produce
 my $bpm    = shift || 70; # Beats per minute
