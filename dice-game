@@ -42,10 +42,7 @@ my $tproc = sub { # Treble
     # Add phrases to the score
     $barst[$_]->() for @choices;
     # Outro
-    my $mc = Music::Cadence->new(
-        octave => 4,
-        format => 'midinum',
-    );
+    my $mc = Music::Cadence->new(octave => 4, format => 'midinum');
     my $chords = $mc->cadence(type => 'plagal');
     $score->n('dqn', @$_) for @$chords;
     $chords = $mc->cadence(type => 'perfect');
