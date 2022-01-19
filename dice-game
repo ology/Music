@@ -33,7 +33,7 @@ my $score = setup_score(bpm => $bpm);
 # Choose the measures to play - either user defined or at random
 # * Technically, this should be the sum of two dice for random choice
 my @choices = $choice
-    ? map { $_ - 1 } split(/,/, $choice)
+    ? map { $_ - 1 } split /,/, $choice
     : map { int rand @barst } 1 .. $max;
 
 # Define the procedures to actually play the chosen measures
