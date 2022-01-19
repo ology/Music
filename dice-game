@@ -13,7 +13,7 @@ use warnings;
 #   $ timidity dice-game.mid
 ##
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToRoman);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToRoman); # Local author libs
 use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Cadence;
 
