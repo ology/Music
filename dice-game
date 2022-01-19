@@ -13,8 +13,8 @@ use Music::Cadence;
 
 my $max    = shift || 16; # Number of measures to produce
 my $bpm    = shift || 70; # Beats per minute
-my $tpatch = shift || 4;  # Treble
-my $bpatch = shift || 35; # Bass
+my $tpatch = shift // 4;  # Treble
+my $bpatch = shift // 35; # Bass
 my $choice = shift // ''; # Comma-separated motifs. Blank for random
 
 # Declare the available measures
