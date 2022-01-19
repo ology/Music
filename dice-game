@@ -15,7 +15,7 @@ my $max    = shift || 16; # Number of measures to produce
 my $bpm    = shift || 70; # Beats per minute
 my $tpatch = shift // 4;  # Treble
 my $bpatch = shift // 35; # Bass
-my $choice = shift // ''; # Comma-separated motifs. Blank for random
+my $choice = shift || ''; # Comma-separated motifs. Blank for random
 
 # Declare the available measures
 my $total_bars = 48;
@@ -26,7 +26,7 @@ my $score = setup_score(bpm => $bpm);
 
 # Choose the measures to play
 # * Technically, this should be the sum of two dice...
-my @choices = defined $choice
+my @choices = $choice
     ? map { $_ - 1 } split(/,/, $choice)
     : map { int rand @barst } 1 .. $max;
 
