@@ -8,7 +8,7 @@ use warnings;
 # 16 measures x 11 dice sums (2-12) = 176 2D-grid of 3/8 measures
 # Examples:
 #   $ perl dice-game
-#   $ perl dice-game 8 80 0 0
+#   $ perl dice-game  8 80 0 0
 #   $ perl dice-game 16 70 4 35 39,45,7,8,26,44,48,9,25,8,37,19,28,39,31,29
 #   $ timidity dice-game.mid
 ##
