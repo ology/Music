@@ -17,6 +17,8 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToR
 use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Cadence;
 
+use constant DQN => 'dqn';
+
 my $max    = shift || 16; # Number of measures to produce
 my $bpm    = shift || 70; # Beats per minute
 my $tpatch = shift // 4;  # Treble
@@ -44,16 +46,16 @@ my $tproc = sub { # Treble
     # Outro
     my $mc = Music::Cadence->new(octave => 4, format => 'midinum');
     my $chords = $mc->cadence(type => 'plagal');
-    $score->n('dqn', @$_) for @$chords;
+    $score->n(DQN, @$_) for @$chords;
     $chords = $mc->cadence(type => 'perfect');
-    $score->n('dqn', @$_) for @$chords;
+    $score->n(DQN, @$_) for @$chords;
 };
 my $bproc = sub { # Bass
     set_chan_patch($score, 1, $bpatch);
     # Add phrases to the score
     $barsb[$_]->() for @choices;
     # Outro
-    $score->n('dqn', $_) for qw(F3 C3 G3 C2);
+    $score->n(DQN, $_) for qw(F3 C3 G3 C2);
 };
 
 # Mash the phrases together
