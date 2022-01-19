@@ -46,10 +46,10 @@ my $tproc = sub { # Treble
         octave => 4,
         format => 'midinum',
     );
-    my $chords = $mc->cadence(type => 'perfect');
+    my $chords = $mc->cadence(type => 'plagal');
     $score->n('dqn', @$_) for @$chords;
-    #$chords = $mc->cadence(type => 'plagal');
-    #$score->n('dqn', @$_) for @$chords;
+    $chords = $mc->cadence(type => 'perfect');
+    $score->n('dqn', @$_) for @$chords;
 };
 my $bproc = sub { # Bass
     set_chan_patch($score, 1, $bpatch);
