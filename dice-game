@@ -56,7 +56,7 @@ my $bproc = sub { # Bass
     # Add phrases to the score
     $barsb[$_]->() for @choices;
     # Outro
-    $score->n('dqn', $_) for qw(C3 C2);
+    $score->n('dqn', $_) for qw(F3 C3 G3 C2);
 };
 
 # Mash the phrases together
