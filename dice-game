@@ -29,8 +29,8 @@ my @barsb = map { my $sub = 'barb' . $_; \&$sub } 1 .. $total_bars; # Bass
 
 my $score = setup_score(bpm => $bpm);
 
-# Choose the measures to play
-# * Technically, this should be the sum of two dice...
+# Choose the measures to play - either user defined or at random
+# * Technically, this should be the sum of two dice for random choice
 my @choices = $choice
     ? map { $_ - 1 } split(/,/, $choice)
     : map { int rand @barst } 1 .. $max;
