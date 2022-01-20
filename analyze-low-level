@@ -8,6 +8,8 @@ use Mojo::File;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(WebService-AcousticBrainz);
 use WebService::AcousticBrainz;
 
+use constant PATH => $ENV{HOME} . '/tmp/radial/';
+
 my @mbids;
 while (my $mbid = readline(DATA)) {
     chomp $mbid;
@@ -54,7 +56,7 @@ for my $title (sort keys %stats) {
 
     $chart->plot(\@data);
 
-    my $file = Mojo::File->new('/home/gene/tmp/radial/' . $title . '.png');
+    my $file = Mojo::File->new(PATH . $title . '.png');
     $file->spurt($chart->png);
 }
 
