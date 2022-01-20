@@ -27,7 +27,6 @@ for my $mbid (@mbids) {
         mbid     => $mbid,
         endpoint => 'low-level',
     );
-#warn __PACKAGE__,' L',__LINE__,' ',ddc($r->{lowlevel}{spectral_energy});last;
 
     my $title = $r->{metadata}{tags}{title}[0];
     $stats{$title} = {
