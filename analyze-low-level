@@ -23,10 +23,7 @@ for my $mbid (@mbids) {
     $i++;
 
     warn "$i. Fetching: $mbid\n";
-    my $r = $w->fetch(
-        mbid     => $mbid,
-        endpoint => 'low-level',
-    );
+    my $r = $w->fetch(mbid => $mbid, endpoint => 'low-level');
 
     my $title = $r->{metadata}{tags}{title}[0];
     $stats{$title} = {
