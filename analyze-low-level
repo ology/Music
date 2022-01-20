@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-use Data::Dumper::Compact qw(ddc);
 use GD::Chart::Radial;
 use Math::Utils qw(uniform_01scaling);
 use Mojo::File;
@@ -18,8 +17,6 @@ while (my $mbid = readline(DATA)) {
 my $w = WebService::AcousticBrainz->new;
 
 my %stats;
-
-my $max = 4;
 my $i = 0;
 
 for my $mbid (@mbids) {
@@ -44,10 +41,7 @@ for my $mbid (@mbids) {
     };
 
     sleep 4; # play nice
-#last if $i >= $max;
 }
-#warn __PACKAGE__,' L',__LINE__,' ',ddc(\%bounds, {max_width => 128});exit;
-#warn __PACKAGE__,' L',__LINE__,' ',ddc(\%stats, {max_width => 128});exit;
 
 for my $title (sort keys %stats) {
     my $chart = GD::Chart::Radial->new(1000, 1000);
