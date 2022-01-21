@@ -5,6 +5,7 @@ use warnings;
 use GD::Chart::Radial;
 use Math::Utils qw(uniform_01scaling);
 use Mojo::File;
+use Statistics::Basic qw(mean);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(WebService-AcousticBrainz);
 use WebService::AcousticBrainz;
 
@@ -41,16 +42,35 @@ for my $mbid (@mbids) {
     sleep 4; # play nice
 }
 
+my @stats = qw(
+    dissonance
+    dynamic_complexity
+    spectral_complexity
+    spectral_entropy
+    danceability
+);
+my %avgs;
+for my $title (keys %stats) {
+    for my $stat (@stats) {
+        push @{ $avgs{$stat} }, $stats{$title}->{$stat};
+    }
+}
+for my $stat (keys %avgs) {
+    $avgs{$stat} = mean($avgs{$stat});
+}
+
 for my $title (sort keys %stats) {
     my $chart = GD::Chart::Radial->new(1000, 1000);
     $chart->set(
         title         => $title,
         y_max_value   => 1,
         y_tick_number => 0.1,
+        colours       => [qw/white black grey red/],
     );
 
     my @data = (
         [ sort keys %{ $stats{$title} } ],
+        [ map { $avgs{$_} } sort keys %{ $stats{$title} } ],
         [ map { $stats{$title}->{$_} } sort keys %{ $stats{$title} } ],
     );
 
