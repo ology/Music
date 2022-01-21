@@ -12,13 +12,13 @@ use WebService::MusicBrainz;
 
 use constant PATH => $ENV{HOME} . '/tmp/radial/';
 
-my $id = shift || 'b1ac6222-a637-49cd-96df-d5a0ffa7ae14';
+my $artist_id = shift || 'b1ac6222-a637-49cd-96df-d5a0ffa7ae14';
 
 my $mb = WebService::MusicBrainz->new;
-my $result = $mb->search(artist => { mbid => $id, inc => ['recordings'] });
+my $result = $mb->search(artist => { mbid => $artist_id, inc => ['recordings'] });
 my @mbids = map { $_->{id} } @{ $result->{recordings} };
 
-my $w = WebService::AcousticBrainz->new;
+my $ab = WebService::AcousticBrainz->new;
 
 my %stats;
 my $i = 0;
@@ -27,7 +27,7 @@ for my $mbid (@mbids) {
     $i++;
 
     warn "$i. Fetching: $mbid\n";
-    my $r = $w->fetch(mbid => $mbid, endpoint => 'low-level');
+    my $r = $ab->fetch(mbid => $mbid, endpoint => 'low-level');
 
     my $title = $r->{metadata}{tags}{title}[0];
     $stats{$title} = {
@@ -66,7 +66,7 @@ for my $title (sort keys %stats) {
         title         => $title,
         y_max_value   => 1,
         y_tick_number => 0.1,
-        colours       => [qw/white black grey red/],
+        colours       => [qw(white black grey red)],
     );
 
     my @data = (
