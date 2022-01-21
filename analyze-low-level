@@ -8,14 +8,15 @@ use Mojo::File;
 use Statistics::Basic qw(mean);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(WebService-AcousticBrainz);
 use WebService::AcousticBrainz;
+use WebService::MusicBrainz;
 
 use constant PATH => $ENV{HOME} . '/tmp/radial/';
 
-my @mbids;
-while (my $mbid = readline(DATA)) {
-    chomp $mbid;
-    push @mbids, $mbid;
-}
+my $id = shift || 'b1ac6222-a637-49cd-96df-d5a0ffa7ae14';
+
+my $mb = WebService::MusicBrainz->new;
+my $result = $mb->search(artist => { mbid => $id, inc => ['recordings'] });
+my @mbids = map { $_->{id} } @{ $result->{recordings} };
 
 my $w = WebService::AcousticBrainz->new;
 
@@ -79,31 +80,3 @@ for my $title (sort keys %stats) {
     my $file = Mojo::File->new(PATH . $title . '.png');
     $file->spurt($chart->png);
 }
-
-__DATA__
-a97b846e-739f-4960-b5a6-40b58b73fa81
-8a37c8c0-fcaa-4429-b6df-c57d68e71fcc
-c51f788f-f2ac-4d4e-aa72-205f002b8752
-c6cb8312-3108-4e73-b76b-7f8820076ca2
-e1272274-8bec-4ec7-9c4f-71a960334b71
-126cdc79-ca1a-4104-8a16-f5eec131c5be
-46af9a60-ed58-4f41-bf5f-2745b4913cf3
-b6bab2bd-4aa2-4b58-aada-7ba6639d937a
-279cf67c-6b18-442e-b5ad-37dc888c38dd
-7f670e9f-d89e-4a4c-8472-76fca3812647
-5dc9d803-a451-48e6-808c-28f90ce68b4d
-4a362432-0615-4db8-96fe-3e8cbc139fb8
-276004b9-9843-405a-ad09-3c7dd21aad19
-745f2777-fa1e-4229-8960-f184d97e16ff
-272c5fdd-8f4d-44b7-99e6-c1140db85243
-751a46fe-90ea-4931-9316-97ee5ee809ae
-2dd75814-914d-4bfe-9846-2629684133d8
-fce55003-28a1-4089-9542-16c39fd6cf13
-012ba251-2c8a-4ef3-8a35-e7972c68a1b5
-37371dd3-a34a-4c5d-a4de-c747bd4b1ade
-e68c3879-1020-48fd-ac48-fc3d2d80e046
-a2fc71d0-324d-4921-b6e5-e8422bcb38cc
-75aeb3d5-c730-4256-bbc4-fe026d1555e0
-726336c2-8dfc-487a-ac2a-aee97ccc45c6
-a85a22b7-a417-475b-b8ae-a4e466dae905
-9b5edd2f-e0ba-4a86-8362-479b1f58bf8f
