@@ -13,8 +13,19 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(WebService-AcousticBrainz);
 use WebService::AcousticBrainz;
 use WebService::MusicBrainz;
 
-use constant PATH => $ENV{HOME} . '/tmp/radial/';
-use constant SIZE => 700; # Chart dimensions
+use constant PATH => $ENV{HOME} . '/tmp/radial/'; # Where the charts will be created
+use constant SIZE => 700; # Chart pixel dimensions
+
+# Sonic measurements to chart
+my @stats = qw(
+    dissonance
+    dynamic_complexity
+    spectral_complexity
+    spectral_energy
+    spectral_entropy
+    danceability
+    chords_changes_rate
+);
 
 # Fetch the interesting mbids
 my $i = 0;
@@ -38,6 +49,7 @@ my $ab = WebService::AcousticBrainz->new;
 
 $i = 0;
 
+# Gather sonic measurements
 my %stats;
 for my $mbid (@mbids) {
     $i++;
@@ -59,27 +71,20 @@ for my $mbid (@mbids) {
     sleep 4; # play nice
 }
 
-my @stats = qw(
-    dissonance
-    dynamic_complexity
-    spectral_complexity
-    spectral_energy
-    spectral_entropy
-    danceability
-    chords_changes_rate
-);
-
+# Find the measurement maximums
 my %maxs;
 for my $stat (@stats) {
     $maxs{$stat} = max(map { $stats{$_}->{$stat} } keys %stats);
 }
 
+# Scale the measurements to [0,1]
 for my $title (keys %stats) {
     for my $stat (@stats) {
         ($stats{$title}->{$stat}) = uniform_01scaling([0, $maxs{$stat}], $stats{$title}->{$stat});
     }
 }
 
+# Find the measurement averages
 my %avgs;
 for my $title (keys %stats) {
     for my $stat (@stats) {
@@ -92,6 +97,7 @@ for my $stat (keys %avgs) {
 my $first = (sort keys %stats)[0];
 my $avgs  = [ map { $avgs{$_} } sort keys %{ $stats{$first} } ];
 
+# Create the charts
 for my $title (sort keys %stats) {
     my $chart = GD::Chart::Radial->new(SIZE, SIZE);
     $chart->set(
@@ -113,7 +119,7 @@ for my $title (sort keys %stats) {
     $file->spurt($chart->png);
 }
 
-# Album releases:
+# Led Zeppelin album releases:
 __DATA__
 3df3b60f-d6e1-3af9-913f-0014e73650ee
 d7be0adc-dbcb-3a6c-878c-ddac4dc711f5
