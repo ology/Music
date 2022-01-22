@@ -96,7 +96,7 @@ my $key = (keys %stats)[0];
 my $avgs = [ map { $avgs{$_} } sort keys %{ $stats{$key} } ];
 
 # Get the measurement names
-my $names = [ sort keys %{ $stats{$key} } ];
+my $names = [ sort @stats ];
 
 # Create the charts
 for my $title (sort keys %stats) {
