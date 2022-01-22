@@ -1,0 +1,126 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+
+use GD::Chart::Radial;
+use List::Util qw(max);
+use Math::Utils qw(uniform_01scaling);
+use Mojo::File;
+use Statistics::Basic qw(mean);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(WebService-AcousticBrainz);
+use WebService::AcousticBrainz;
+use WebService::MusicBrainz;
+
+use constant PATH => $ENV{HOME} . '/tmp/radial/';
+use constant SIZE => 700; # Chart dimensions
+
+# Fetch the interesting mbids
+my $i = 0;
+my @releases;
+while (my $id = readline(DATA)) {
+    chomp $id;
+    push @releases, $id;
+}
+my $mb = WebService::MusicBrainz->new;
+my @mbids;
+for my $release (@releases) {
+    $i++;
+    warn "$i. Release: $release\n";
+    my $result = $mb->search(release => { mbid => $release, inc => ['recordings'] });
+    my @ids = map { $_->{recording}{id} } @{ $result->{media}[0]{tracks} };
+    push @mbids, @ids;
+    sleep 4; # play nice
+}
+
+my $ab = WebService::AcousticBrainz->new;
+
+$i = 0;
+
+my %stats;
+for my $mbid (@mbids) {
+    $i++;
+
+    warn "$i. Recording: $mbid\n";
+    my $r = $ab->fetch(mbid => $mbid, endpoint => 'low-level');
+
+    my $title = $r->{metadata}{tags}{title}[0];
+    $stats{$title} = {
+        dissonance          => $r->{lowlevel}{dissonance}{mean},
+        dynamic_complexity  => $r->{lowlevel}{dynamic_complexity},
+        spectral_complexity => $r->{lowlevel}{spectral_complexity}{mean},
+        spectral_energy     => $r->{lowlevel}{spectral_energy}{mean},
+        spectral_entropy    => $r->{lowlevel}{spectral_entropy}{mean},
+        danceability        => $r->{rhythm}{danceability},
+        chords_changes_rate => $r->{tonal}{chords_changes_rate},
+    };
+
+    sleep 4; # play nice
+}
+
+my @stats = qw(
+    dissonance
+    dynamic_complexity
+    spectral_complexity
+    spectral_energy
+    spectral_entropy
+    danceability
+    chords_changes_rate
+);
+
+my %maxs;
+for my $stat (@stats) {
+    $maxs{$stat} = max(map { $stats{$_}->{$stat} } keys %stats);
+}
+
+for my $title (keys %stats) {
+    for my $stat (@stats) {
+        ($stats{$title}->{$stat}) = uniform_01scaling([0, $maxs{$stat}], $stats{$title}->{$stat});
+    }
+}
+
+my %avgs;
+for my $title (keys %stats) {
+    for my $stat (@stats) {
+        push @{ $avgs{$stat} }, $stats{$title}->{$stat};
+    }
+}
+for my $stat (keys %avgs) {
+    $avgs{$stat} = mean($avgs{$stat});
+}
+my $first = (sort keys %stats)[0];
+my $avgs  = [ map { $avgs{$_} } sort keys %{ $stats{$first} } ];
+
+for my $title (sort keys %stats) {
+    my $chart = GD::Chart::Radial->new(SIZE, SIZE);
+    $chart->set(
+        title         => $title,
+        y_max_value   => 1,
+        y_tick_number => 0.1,
+        colours       => [qw(white black grey red)],
+    );
+
+    my @data = (
+        [ sort keys %{ $stats{$title} } ],
+        $avgs,
+        [ map { $stats{$title}->{$_} } sort keys %{ $stats{$title} } ],
+    );
+
+    $chart->plot(\@data);
+
+    my $file = Mojo::File->new(PATH . $title . '.png');
+    $file->spurt($chart->png);
+}
+
+# Album releases:
+__DATA__
+3df3b60f-d6e1-3af9-913f-0014e73650ee
+d7be0adc-dbcb-3a6c-878c-ddac4dc711f5
+7aadcfa2-df82-480e-8d2d-7ec4d0b41172
+71eafe5d-33b0-4e41-9b51-754b8450302e
+3ccb4cb2-940a-4e2e-b1fd-4c0b7483280f
+0d06025c-afff-49fd-a1db-8005e686e4d9
+0c6e631d-4d64-3313-80d5-505eccbfbffa
+d1184ff9-8667-4141-b7f5-b021202d793c
+7e2e0d82-9b09-35c2-8e1f-357cb5bb419a
