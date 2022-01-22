@@ -102,10 +102,9 @@ my $names = [ sort @stats ];
 for my $title (sort keys %stats) {
     my $chart = GD::Chart::Radial->new(SIZE, SIZE);
     $chart->set(
-        title         => $title,
-        y_max_value   => 1,
-        y_tick_number => 0.1,
-        colours       => [qw(white black grey red)],
+        title       => $title,
+        y_max_value => 1,
+        colours     => [qw(white black grey red)],
     );
 
     my @data = (
