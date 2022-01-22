@@ -91,11 +91,9 @@ for my $title (keys %stats) {
         push @{ $avgs{$stat} }, $stats{$title}->{$stat};
     }
 }
-for my $stat (keys %avgs) {
-    $avgs{$stat} = mean($avgs{$stat});
-}
-my $first = (sort keys %stats)[0];
-my $avgs  = [ map { $avgs{$_} } sort keys %{ $stats{$first} } ];
+%avgs = map { $_ => mean($avgs{$_}) } keys %avgs;
+my $key = (keys %stats)[0];
+my $avgs = [ map { $avgs{$_} } sort keys %{ $stats{$key} } ];
 
 # Create the charts
 for my $title (sort keys %stats) {
