@@ -53,10 +53,8 @@ $i = 0;
 my %stats;
 for my $mbid (@mbids) {
     $i++;
-
     warn "$i. Recording: $mbid\n";
     my $r = $ab->fetch(mbid => $mbid, endpoint => 'low-level');
-
     my $title = $r->{metadata}{tags}{title}[0];
     $stats{$title} = {
         dissonance          => $r->{lowlevel}{dissonance}{mean},
