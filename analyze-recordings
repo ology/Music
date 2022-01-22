@@ -62,13 +62,13 @@ my $ab = WebService::AcousticBrainz->new;
 $i = 0;
 
 # Gather sonic measurements
-my %stats;
+my %titles;
 for my $mbid (@mbids) {
     $i++;
     warn "$i. Recording: $mbid\n";
     my $r = $ab->fetch(mbid => $mbid, endpoint => 'low-level');
     my $title = $r->{metadata}{tags}{title}[0];
-    $stats{$title} = {
+    $titles{$title} = {
         dissonance          => $r->{lowlevel}{dissonance}{mean},
         dynamic_complexity  => $r->{lowlevel}{dynamic_complexity},
         spectral_complexity => $r->{lowlevel}{spectral_complexity}{mean},
@@ -84,32 +84,32 @@ for my $mbid (@mbids) {
 # Find the measurement maximums
 my %maxs;
 for my $stat (@stats) {
-    $maxs{$stat} = max(map { $stats{$_}->{$stat} } keys %stats);
+    $maxs{$stat} = max(map { $titles{$_}->{$stat} } keys %titles);
 }
 
 # Scale the measurements to [0,1]
-for my $title (keys %stats) {
+for my $title (keys %titles) {
     for my $stat (@stats) {
-        ($stats{$title}->{$stat}) = uniform_01scaling([0, $maxs{$stat}], $stats{$title}->{$stat});
+        ($titles{$title}->{$stat}) = uniform_01scaling([0, $maxs{$stat}], $titles{$title}->{$stat});
     }
 }
 
 # Find the measurement averages
 my %avgs;
-for my $title (keys %stats) {
+for my $title (keys %titles) {
     for my $stat (@stats) {
-        push @{ $avgs{$stat} }, $stats{$title}->{$stat};
+        push @{ $avgs{$stat} }, $titles{$title}->{$stat};
     }
 }
 %avgs = map { $_ => mean($avgs{$_}) } keys %avgs;
-my $key = (keys %stats)[0];
-my $avgs = [ map { $avgs{$_} } sort keys %{ $stats{$key} } ];
+my $key = (keys %titles)[0];
+my $avgs = [ map { $avgs{$_} } sort keys %{ $titles{$key} } ];
 
 # Get the measurement names
 my $names = [ sort @stats ];
 
 # Create the charts
-for my $title (sort keys %stats) {
+for my $title (sort keys %titles) {
     my $chart = GD::Chart::Radial->new(SIZE, SIZE);
     $chart->set(
         title       => $title,
@@ -120,7 +120,7 @@ for my $title (sort keys %stats) {
     my @data = (
         $names,
         $avgs,
-        [ map { $stats{$title}->{$_} } sort keys %{ $stats{$title} } ],
+        [ map { $titles{$title}->{$_} } sort keys %{ $titles{$title} } ],
     );
 
     $chart->plot(\@data);
