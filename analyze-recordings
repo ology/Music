@@ -41,7 +41,6 @@ else {
     while (my $id = readline(DATA)) {
         chomp $id;
         push @releases, $id;
-last;
     }
 }
 my $mb = WebService::MusicBrainz->new;
