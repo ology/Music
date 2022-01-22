@@ -95,6 +95,9 @@ for my $title (keys %stats) {
 my $key = (keys %stats)[0];
 my $avgs = [ map { $avgs{$_} } sort keys %{ $stats{$key} } ];
 
+# Get the measurement names
+my $names = [ sort keys %{ $stats{$key} } ];
+
 # Create the charts
 for my $title (sort keys %stats) {
     my $chart = GD::Chart::Radial->new(SIZE, SIZE);
@@ -106,7 +109,7 @@ for my $title (sort keys %stats) {
     );
 
     my @data = (
-        [ sort keys %{ $stats{$title} } ],
+        $names,
         $avgs,
         [ map { $stats{$title}->{$_} } sort keys %{ $stats{$title} } ],
     );
