@@ -31,6 +31,8 @@ my @stats = qw(
     chords_changes_rate
 );
 
+die "Chart directory does not exist\n" unless -d PATH;
+
 # Fetch the interesting mbids
 my $i = 0;
 my @releases;
