@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+# Write-up: https://ology.github.io/2022/01/21/led-zeppelin-in-seven-dimensions/
+
 use Data::Dumper::Compact qw(ddc);
 
 use GD::Chart::Radial;
