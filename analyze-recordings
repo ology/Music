@@ -53,6 +53,7 @@ for my $release (@releases) {
     push @mbids, @ids;
     sleep 4; # play nice
 }
+die "No MBIDs to process.\n" unless @mbids;
 
 my $ab = WebService::AcousticBrainz->new;
 
