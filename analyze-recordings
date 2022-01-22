@@ -7,9 +7,9 @@ use warnings;
 use Data::Dumper::Compact qw(ddc);
 
 use GD::Chart::Radial;
+use File::Slurper qw(read_lines write_binary);
 use List::Util qw(max);
 use Math::Utils qw(uniform_01scaling);
-use Mojo::File;
 use Statistics::Basic qw(mean);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(WebService-AcousticBrainz);
 use WebService::AcousticBrainz;
@@ -17,6 +17,8 @@ use WebService::MusicBrainz;
 
 use constant PATH => $ENV{HOME} . '/tmp/radial/'; # Where the charts will be created
 use constant SIZE => 700; # Chart pixel dimensions
+
+my $mbid_file = shift || ''; # Optional. Use __DATA__ if not given
 
 # Sonic measurements to chart
 my @stats = qw(
@@ -32,9 +34,15 @@ my @stats = qw(
 # Fetch the interesting mbids
 my $i = 0;
 my @releases;
-while (my $id = readline(DATA)) {
-    chomp $id;
-    push @releases, $id;
+if ($mbid_file && -e $mbid_file) {
+    @releases = read_lines($mbid_file);
+}
+else {
+    while (my $id = readline(DATA)) {
+        chomp $id;
+        push @releases, $id;
+last;
+    }
 }
 my $mb = WebService::MusicBrainz->new;
 my @mbids;
@@ -115,8 +123,7 @@ for my $title (sort keys %stats) {
 
     $chart->plot(\@data);
 
-    my $file = Mojo::File->new(PATH . $title . '.png');
-    $file->spurt($chart->png);
+    write_binary(PATH . $title . '.png', $chart->png);
 }
 
 # Led Zeppelin album releases:
