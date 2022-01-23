@@ -9,7 +9,7 @@ use File::Slurper qw(read_lines write_binary);
 use List::Util qw(max);
 use Math::Utils qw(uniform_01scaling);
 use Statistics::Basic qw(mean);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(WebService-AcousticBrainz);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(WebService-AcousticBrainz); # Local author libs
 use WebService::AcousticBrainz;
 use WebService::MusicBrainz;
 
