@@ -18,6 +18,8 @@ use constant SIZE => 700; # Chart pixel dimensions
 
 my $mbid_file = shift || ''; # Optional. Use __DATA__ if not given
 
+die "Chart directory does not exist\n" unless -d PATH;
+
 # Sonic measurements to chart
 my @stats = qw(
     dissonance
@@ -28,8 +30,6 @@ my @stats = qw(
     danceability
     chords_changes_rate
 );
-
-die "Chart directory does not exist\n" unless -d PATH;
 
 # Fetch the interesting mbids
 my @releases;
