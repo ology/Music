@@ -74,7 +74,8 @@ sub barb1 {
 }
 sub bart2 {
     print '', (caller(0))[3], "\n";
-    $score->n('sn', $_) for qw(A4 Fs4 G4 B4 G5);
+    $score->n(qw(en A4));
+    $score->n('sn', $_) for qw(Fs4 G4 B4 G5);
 }
 sub barb2 {
     $score->n(qw(qn B2 G3));
