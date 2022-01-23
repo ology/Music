@@ -90,7 +90,7 @@ for my $title (keys %titles) {
     }
 }
 
-# Find the measurement averages
+# Compute the measurement averages
 my %avgs;
 for my $title (keys %titles) {
     for my $stat (@stats) {
