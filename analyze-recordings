@@ -55,11 +55,9 @@ for my $release (@releases) {
 }
 die "No MBIDs to process.\n" unless @mbids;
 
-my $ab = WebService::AcousticBrainz->new;
-
-$i = 0;
-
 # Gather sonic measurements
+$i = 0;
+my $ab = WebService::AcousticBrainz->new;
 my %titles;
 for my $mbid (@mbids) {
     $i++;
