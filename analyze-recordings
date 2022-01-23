@@ -126,7 +126,7 @@ for my $title (sort keys %titles) {
     write_binary(PATH . $title . '.png', $chart->png);
 }
 
-# Led Zeppelin album US releases:
+# Led Zeppelin US releases:
 __DATA__
 3df3b60f-d6e1-3af9-913f-0014e73650ee
 d7be0adc-dbcb-3a6c-878c-ddac4dc711f5
