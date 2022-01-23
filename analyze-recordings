@@ -120,7 +120,9 @@ for my $title (sort keys %titles) {
 
     $chart->plot(\@data);
 
-    write_binary(PATH . $title . '.png', $chart->png);
+    my $file = PATH . $title . '.png';
+    warn "Creating: $file\n";
+    write_binary($file, $chart->png);
 }
 
 # Led Zeppelin US releases:
