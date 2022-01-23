@@ -75,7 +75,6 @@ for my $mbid (@mbids) {
         danceability        => $r->{rhythm}{danceability},
         chords_changes_rate => $r->{tonal}{chords_changes_rate},
     };
-
     sleep 4; # play nice
 }
 
