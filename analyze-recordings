@@ -81,13 +81,11 @@ for my $mbid (@mbids) {
     sleep 4; # play nice
 }
 
-# Find the measurement maximums
+# Scale the measurements to [0,1]
 my %maxs;
 for my $stat (@stats) {
     $maxs{$stat} = max(map { $titles{$_}->{$stat} } keys %titles);
 }
-
-# Scale the measurements to [0,1]
 for my $title (keys %titles) {
     for my $stat (@stats) {
         ($titles{$title}->{$stat}) = uniform_01scaling([0, $maxs{$stat}], $titles{$title}->{$stat});
