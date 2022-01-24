@@ -49,7 +49,7 @@ for my $release (@releases) {
     $i++;
     warn "$i. Release: $release\n";
     my $result = $mb->search(release => { mbid => $release, inc => ['recordings'] });
-    my @ids = map { $_->{recording}{id} } @{ $result->{media}[0]{tracks} };
+    my @ids = map { $_->{recording}{id} } $result->{media}[0]{tracks}->@*;
     push @mbids, @ids;
     sleep 4; # play nice
 }
@@ -91,7 +91,7 @@ for my $title (keys %titles) {
 my %avgs;
 for my $title (keys %titles) {
     for my $stat (@stats) {
-        push @{ $avgs{$stat} }, $titles{$title}->{$stat};
+        push $avgs{$stat}->@*, $titles{$title}->{$stat};
     }
 }
 %avgs = map { $_ => mean($avgs{$_}) } keys %avgs;
