@@ -77,6 +77,7 @@ for my $title (sort keys %stats) {
 
     $chart->plot(\@data);
 
+    $title =~ s/\W/_/g;
     my $file = Mojo::File->new(PATH . $title . '.png');
     $file->spurt($chart->png);
 }
