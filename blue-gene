@@ -10,9 +10,7 @@ use MIDI::Chord::Guitar;
 use MIDI::Bassline::Walk;
 use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
-use Music::Chord::Note;
-use Music::Note;
-use Music::Scales qw(get_scale_notes get_scale_MIDI);
+use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen;
 
 my $bpm    = shift || 100;
