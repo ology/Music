@@ -62,7 +62,7 @@ sub bass {
 
     $d->rest($d->whole); # while counting-in
 
-    for my $n (1 .. $d->bars) {
+    for my $n (1 .. 2) {
         _walk($bassline, 'Bb', 4, 'Bb7');
         _walk($bassline, 'Bb7', 4, 'Eb');
         _walk($bassline, 'Eb', 4, 'Eb9');
