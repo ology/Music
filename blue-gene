@@ -43,16 +43,7 @@ $d->write;
 
 sub drums {
     $d->count_in(1);
-    for my $n (1 .. $d->bars * $d->bars) {
-        $d->note($d->quarter,        $d->ride1, $d->kick);
-        $d->note($d->triplet_eighth, $d->ride1);
-        $d->rest($d->triplet_eighth);
-        $d->note($d->triplet_eighth, $d->ride1);
-        $d->note($d->quarter,        $d->ride1, $d->snare);
-        $d->note($d->triplet_eighth, $d->ride1, $d->kick);
-        $d->rest($d->triplet_eighth);
-        $d->note($d->triplet_eighth, $d->ride1);
-    }
+    $d->metronome44swing($d->bars * $d->bars);
 }
 
 sub bass {
