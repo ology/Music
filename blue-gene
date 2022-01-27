@@ -58,7 +58,11 @@ sub drums {
 sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
-    my $bassline = MIDI::Bassline::Walk->new(verbose => 1, tonic => 1);
+    my $bassline = MIDI::Bassline::Walk->new(
+        verbose => 1,
+        tonic   => 1,
+        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+    );
 
     $d->rest($d->whole); # while counting-in
 
