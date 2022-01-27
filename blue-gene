@@ -89,7 +89,11 @@ sub _walk {
 sub chords {
     set_chan_patch($d->score, $channel++, $chord_patch);
 
-    my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
+    my $mcg = MIDI::Chord::Guitar->new(
+        # Local voicings for me. Unneeded for everyone else!
+        voicing_file =>
+            "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv"
+    );
     # 1
     my $Bfmaj7 = $mcg->transform('Bb2', 'maj7', 3);
     my $Dfmaj7 = $mcg->transform('Db3', 'maj7', 1);
