@@ -125,7 +125,7 @@ sub melody {
         size => 4,
         pool => [qw/hn dqn qn en/],
     );
-    my @motifs = map { $mdp->motif } 1 .. 4;
+    my @motifs = map { $mdp->motif } 1 .. 8;
     print 'Melody motifs: ', ddc(\@motifs);
 
     my @pitches = (
