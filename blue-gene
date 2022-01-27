@@ -67,15 +67,15 @@ sub bass {
     $d->rest($d->whole); # while counting-in
 
     for my $n (1 .. 2) {
-        _walk($bassline, 'Bb', 4, 'Bb7');
-        _walk($bassline, 'Bb7', 4, 'Eb');
-        _walk($bassline, 'Eb', 4, 'Eb9');
-        _walk($bassline, 'Eb9', 2, 'D7#9');
-        _walk($bassline, 'D7#9', 2, 'BbM7');
-        _walk($bassline, 'BbM7', 4, 'DbM7');
-        _walk($bassline, 'DbM7', 4, 'Cm7');
-        _walk($bassline, 'Cm7', 4, 'Gm7');
-        _walk($bassline, 'Gm7', 2, 'Ab7b5');
+        _walk($bassline, 'Bb',    4, 'Bb7');
+        _walk($bassline, 'Bb7',   4, 'Eb');
+        _walk($bassline, 'Eb',    4, 'Eb9');
+        _walk($bassline, 'Eb9',   2, 'D7#9');
+        _walk($bassline, 'D7#9',  2, 'BbM7');
+        _walk($bassline, 'BbM7',  4, 'DbM7');
+        _walk($bassline, 'DbM7',  4, 'Cm7');
+        _walk($bassline, 'Cm7',   4, 'Gm7');
+        _walk($bassline, 'Gm7',   2, 'Ab7b5');
         _walk($bassline, 'Ab7b5', 2);
     }
 }
