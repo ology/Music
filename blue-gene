@@ -4,9 +4,10 @@ use warnings;
 
 use Data::Dumper::Compact qw(ddc);
 use List::Util qw(any);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
 use MIDI::Drummer::Tiny;
 use MIDI::Chord::Guitar;
+use MIDI::Bassline::Walk;
 use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
 use Music::Chord::Note;
@@ -18,10 +19,10 @@ my $bpm = shift || 100;
 my $tscale = shift || 'pentatonic';
 my $bscale = shift || 'major';
 
-my $note = 'Bb';
-my $bass_patch = 0; # fretless bass=35
+my $note         = 'Bb';
+my $bass_patch   = 35; # fretless bass=35
 my $melody_patch = 66;
-my $chord_patch = 0; # electric piano=4
+my $chord_patch  = 4;  # electric piano=4
 
 my $d = MIDI::Drummer::Tiny->new(
     file => $0 . '.mid',
@@ -57,84 +58,26 @@ sub drums {
 sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
+    my $bassline = MIDI::Bassline::Walk->new(verbose => 1, tonic => 1);
+
     $d->rest($d->whole); # while counting-in
 
-    _walk('Bb', 4);
-    _walk('Bb7', 4);
-    _walk('Eb', 4);
-    _walk('Eb9', 2);
-    _walk('D7#9', 2);
-    _walk('BbM7', 4);
-    _walk('DbM7', 4);
-    _walk('Cm7', 4);
-    _walk('Gm7', 2);
-    _walk('Ab7b5', 2);
+    _walk($bassline, 'Bb', 4, 'Bb7');
+    _walk($bassline, 'Bb7', 4, 'Eb');
+    _walk($bassline, 'Eb', 4, 'Eb9');
+    _walk($bassline, 'Eb9', 2, 'D7#9');
+    _walk($bassline, 'D7#9', 2, 'BbM7');
+    _walk($bassline, 'BbM7', 4, 'DbM7');
+    _walk($bassline, 'DbM7', 4, 'Cm7');
+    _walk($bassline, 'Cm7', 4, 'Gm7');
+    _walk($bassline, 'Gm7', 2, 'Ab7b5');
+    _walk($bassline, 'Ab7b5', 2);
 }
 
 sub _walk {
-    my ($chord, $duration) = @_;
-
-    my $octave = 2;
-
-    my $scale = $chord =~ /^[A-G][#b]?m/ ? 'minor' : 'major';
-
-    my $chord_note;
-    my $flavor;
-    if ($chord =~ /^([A-G][#b]?)(.*)$/) {
-        $chord_note = $1;
-        $flavor = $2;
-    }
-
-    my $cn = Music::Chord::Note->new;
-
-    my @notes = $cn->chord_with_octave($chord, $octave);
-
-    my @pitches = get_scale_MIDI($chord_note, $octave, $scale);
-
-    # Guitar constraint
-#    while ($pitches[0] < 40) {
-#        shift @pitches;
-#    }
-
-    my @named = map { Music::Note->new($_, 'midinum')->format('ISO') } @pitches;
-    for my $n (@notes) {
-        if (not any { $_ eq $n } @named) {
-            my $x = Music::Note->new($n, 'ISO')->format('midinum');
-#            push @pitches, $x unless $x < 40; # Guitar constraint
-            push @pitches, $x;
-        }
-    }
-    @pitches = sort { $a <=> $b } @pitches;
-
-    my @tones = get_scale_notes($chord_note, $scale);
-
-    my @fixed;
-    for my $p (@pitches) {
-        my $x = Music::Note->new($p, 'midinum')->format('isobase');
-        if (
-            ($flavor =~ /5/ && $x eq $tones[4])
-            ||
-            ($flavor =~ /7/ && $x eq $tones[6])
-            ||
-            ($flavor =~ /[#b]9/ && $x eq $tones[1])
-        ) {
-            next;
-        }
-        push @fixed, $p;
-    }
-
-    my @intervals = qw(-3 -2 -1 1 2 3);
-
-    my $voice = Music::VoiceGen->new(
-        pitches   => \@fixed,
-        intervals => \@intervals,
-    );
-
-    $voice->context($fixed[int @fixed / 2]);
-
-    for (1 .. $duration) {
-        $d->note($d->quarter, $voice->rand);
-    }
+    my ($bassline, $chord, $n, $next_chord) = @_;
+    my $notes = $bassline->generate($chord, $n, $next_chord);
+    $d->note('qn', $_) for @$notes;
 }
 
 sub chords {
