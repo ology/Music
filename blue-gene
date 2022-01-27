@@ -36,7 +36,7 @@ $d->score->synch(
     \&drums,
     \&bass,
     \&chords,
-#    \&melody,
+    \&melody,
 );
 
 $d->write;
@@ -123,13 +123,10 @@ sub melody {
 
     my $mdp = Music::Duration::Partition->new(
         size => 4,
-        pool => [qw/wn hn dhn dqn qn en/],
-#        groups => [0, 0, 2, 2],
+        pool => [qw/hn dqn qn en/],
     );
-    my $motif1 = $mdp->motif;
-    print 'Melody motif #1: ', ddc($motif1);
-    my $motif2 = $mdp->motif;
-    print 'Melody motif #2: ', ddc($motif2);
+    my @motifs = map { $mdp->motif } 1 .. 4;
+    print 'Melody motifs: ', ddc(\@motifs);
 
     my @pitches = (
         get_scale_MIDI($note, 2, $tscale),
@@ -141,45 +138,17 @@ sub melody {
         intervals => \@intervals,
     );
 
-    my @notes1 = map { $voice->rand } @$motif1;
-    print 'Melody pitches #1: ', ddc(\@notes1);
-    my @notes2 = map { $voice->rand } @$motif2;
-    print 'Melody pitches #2: ', ddc(\@notes2);
-    my @notes3 = map { $voice->rand } @$motif1;
-    print 'Melody pitches #3: ', ddc(\@notes3);
-    my @notes4 = map { $voice->rand } @$motif2;
-    print 'Melody pitches #4: ', ddc(\@notes4);
+    my @notes = map { [ map { $voice->rand } @$_ ] } @motifs;
+    print 'Melody pitches: ', ddc(\@notes);
 
     $d->rest($d->whole); # while counting-in
 
-    for my $n (1 .. $d->bars) {
-        if ($n % 2 == 0) {
-            for my $i (0 .. $#$motif2) {
-                $d->note($motif2->[$i], $notes1[$i]);
-            }
-            for my $i (0 .. $#$motif1) {
-                $d->note($motif1->[$i], $notes2[$i]);
-            }
-            for my $i (0 .. $#$motif2) {
-                $d->note($motif2->[$i], $notes3[$i]);
-            }
-            for my $i (0 .. $#$motif1) {
-                $d->note($motif1->[$i], $notes4[$i]);
-            }
-        }
-        else {
-            for my $i (0 .. $#$motif1) {
-                $d->note($motif1->[$i], $notes1[$i]);
-            }
-            for my $i (0 .. $#$motif2) {
-                $d->note($motif2->[$i], $notes2[$i]);
-            }
-            for my $i (0 .. $#$motif1) {
-                $d->note($motif1->[$i], $notes3[$i]);
-            }
-            for my $i (0 .. $#$motif2) {
-                $d->note($motif2->[$i], $notes4[$i]);
-            }
+    for my $n (1 .. $d->bars * $d->bars) {
+        my $index = int rand @motifs;
+        my $motif = $motifs[$index];
+        my $notes = $notes[$index];
+        for my $i (0 .. $#$motif) {
+            $d->note($motif->[$i], $notes->[$i]);
         }
     }
 }
