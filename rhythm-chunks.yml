@@ -1,0 +1,17 @@
+treble:
+  - en en en
+  - en qn
+  - en sn sn en
+  - en sn sn sn sn
+  - qn en
+  - sn sn en en
+  - sn sn en sn sn
+  - sn sn sn sn en
+  - sn sn sn sn sn sn
+
+bass:
+  - en en en
+  - en sn sn sn sn
+  - qn en
+  - qn sn sn
+  - sn sn en en

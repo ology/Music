@@ -1,0 +1,82 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util qw(setup_score set_chan_patch);
+use Music::Scales qw(get_scale_MIDI);
+use Music::VoiceGen;
+use YAML::XS qw(LoadFile);
+
+my $max    = shift || 16;
+my $bpm    = shift || 70;
+my $tscale = shift || 'major';
+my $bscale = shift || 'pentatonic';
+
+my $note   = 'C';
+my $bpatch = 35; # fretless bass=35
+my $tpatch = 4;  # electric piano=4
+
+my $motifs = LoadFile('rhythm-chunks.yml');
+
+my @tmotifs = map { [ split / /, $_ ] } @{ $motifs->{treble} };
+my @bmotifs = map { [ split / /, $_ ] } @{ $motifs->{bass} };
+
+my $score = setup_score(bpm => $bpm);
+
+$score->synch(
+    \&bass,
+    \&treble,
+);
+
+$score->write_score("$0.mid");
+
+sub bass {
+    set_chan_patch($score, 0, $bpatch);
+    my @pitches = (
+        get_scale_MIDI($note, 2, $bscale),
+    );
+    my @intervals = qw(-3 -2 -1 1 2 3);
+    my $voicegen = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@intervals,
+    );
+    my @voices = map { [ map { $voicegen->rand } @$_ ] } @bmotifs;
+    print 'Bass voices: ', ddc(\@voices);
+    for my $n (1 .. $max) {
+        my $index = int rand @bmotifs;
+        my $motif = $tmotifs[$index];
+        my $voice = $voices[$index];
+        print 'Motif: ', ddc($motif);
+        print 'Voice: ', ddc($voice);
+        for my $i (0 .. $#$motif) {
+            $score->n($motif->[$i], $voice->[$i]);
+        }
+    }
+}
+
+sub treble {
+    set_chan_patch($score, 1, $tpatch);
+    my @pitches = (
+        get_scale_MIDI($note, 3, $tscale),
+        get_scale_MIDI($note, 4, $tscale),
+    );
+    my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
+    my $voicegen = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@intervals,
+    );
+    my @voices = map { [ map { $voicegen->rand } @$_ ] } @tmotifs;
+    print 'Treble voices: ', ddc(\@voices);
+    for my $n (1 .. $max) {
+        my $index = int rand @tmotifs;
+        my $motif = $tmotifs[$index];
+        my $voice = $voices[$index];
+        print 'Motif: ', ddc($motif);
+        print 'Voice: ', ddc($voice);
+        for my $i (0 .. $#$motif) {
+            $score->n($motif->[$i], $voice->[$i]);
+        }
+    }
+}
