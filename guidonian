@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+# Write-up: https://ology.github.io/2022/01/15/text-to-guidonian-melodies/
+
 use Getopt::Long;
 use Music::Guidonian;
 use Music::Scales qw(get_scale_nums);
