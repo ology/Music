@@ -4,7 +4,7 @@ use warnings;
 
 use Math::Curve::Hilbert;
 use lib '/Users/gene/sandbox/MIDI-Util/lib';
-use MIDI::Util;
+use MIDI::Util qw(setup_score);
 use lib '/Users/gene/sandbox/Music-ScaleNote/lib';
 use Music::ScaleNote;
 use Music::Note;
@@ -14,7 +14,7 @@ my $bpm     = shift || 120;
 my $t_scale = shift || 'dorian';
 my $b_scale = shift || 'pminor';
 
-my $score = MIDI::Util::setup_score( bpm => $bpm );
+my $score = setup_score( bpm => $bpm );
 
 my $format = 'midinum';
 
