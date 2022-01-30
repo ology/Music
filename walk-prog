@@ -49,9 +49,9 @@ sub chords {
 
     my $prog = Music::Chord::Progression->new(
         max => $d->bars,
-#        chord_map => ['', 'm', 'm', '', '', 'm', 'm'],
-        chord_map => [qw(M7 m7 m7 M7 7 m7 dim7)],
-        substitute => 1,
+        chord_map => ['', 'm', 'm', '', '', 'm', 'm'],
+#        chord_map => [qw(M7 m7 m7 M7 7 m7 dim7)],
+#        substitute => 1,
 #        resolve => 0,
         verbose => 1,
     );
@@ -70,8 +70,10 @@ sub bass {
 
     my $mdp = Music::Duration::Partition->new(
         size    => $d->bars / 2,
-        pool    => [qw/ dhn hn qn /],
-        weights => [    1,  2, 3   ],
+#        pool    => [qw/ dhn hn qn /],
+#        weights => [    1,  2, 3   ],
+        pool    => [qw/ hn qn en /],
+        weights => [    1, 2, 1   ],
     );
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
@@ -79,8 +81,8 @@ sub bass {
     my $bassline = MIDI::Bassline::Walk->new(
         guitar  => 1,
         verbose => 0,
-#        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
-        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'minor' : 'major' },
+        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+#        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'minor' : 'major' },
     );
 
     for my $p (@progressions) {
