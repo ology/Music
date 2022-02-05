@@ -86,12 +86,12 @@ $irc->on(irc_privmsg => sub {
   print "$message->{prefix} said: $message->{params}[1]\n";
   (my $who = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
   my $to = [ privmsg => $who ];
-  if (any { $_ eq $who } @{ $conf->{allowed} }) {
+#  if (any { $_ eq $who } @{ $conf->{allowed} }) {
     process_msg($to, $who, $message->{params}[1]);
-  }
-  else {
-    $irc->write(@$to, ':Publics only please');
-  }
+#  }
+#  else {
+#    $irc->write(@$to, ':Publics only please');
+#  }
 });
 
 $irc->on(irc_public => sub {
@@ -319,31 +319,21 @@ sub process_msg {
     my $arg = $1;
     my @notes = split /\s+/, $arg;
     try {
-      die "Give 2 or 3 notes to process\n" unless @notes == 2 || @notes == 3;
       my ($mi, $v);
       if ($arg =~ /[A-Za-z]/) {
-        $mi = Music::Intervals->new(
-          notes    => \@notes,
-          size     => scalar(@notes),
-          justin   => 1,
-          interval => 1,
-        );
-        $v = (values %{ $mi->natural_intervals })[0];
+        $mi = Music::Intervals->new(notes => \@notes);
+        $v = $mi->natural_intervals;
       }
       else {
-        $mi = Music::Intervals::Numeric->new(
-          notes    => \@notes,
-          interval => 1,
-        );
-        $v = (values %{ $mi->intervals })[0];
+        $mi = Music::Intervals::Numeric->new(notes => \@notes);
+        $v = $mi->intervals;
       }
       # Gymnastics :\
       my $flat = ddc($v, OPTIONS);
       $flat =~ s/\n//g;
       $flat =~ s/\s+/ /g;
       $flat =~ s/^{\s*//;
-      $flat =~ s/,}$//;
-      $flat =~ s/} }$/}/;
+      $flat =~ s/\s*}$//;
       $flat =~ s/ =>/:/g;
       $irc->write(@$to, ":Interval: $flat");
     }
