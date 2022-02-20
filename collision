@@ -9,7 +9,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 
 my $max = shift || 32;  # Number of times to detect collisions
-my $bpm = shift || 60;  # "Wind speed"
+my $bpm = shift || 40;  # "Wind speed"
 my $duration = shift || 'sn';
 
 my $score = setup_score(lead_in => 0, bpm => $bpm, patch => 14);
