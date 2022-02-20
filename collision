@@ -5,6 +5,7 @@ use warnings;
 # Attempt to simulate a wind-chime
 
 use Collision::2D qw(hash2circle dynamic_collision);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 
 my $max = shift || 32;  # Number of times to detect collisions
