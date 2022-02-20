@@ -280,7 +280,7 @@ sub process_msg {
     eval { $chord = chordname(@notes) };
     $chord =~ s/([A-G]#)(.*)$/$enharmonic{$1}$2/g
       if $arg =~ /b/;
-    $chord =~ s/maj/M/g;
+    $chord =~ s/maj/M/;
     $irc->write(@$to, ":Chord: $chord");
   }
   # COMMAND: notes
