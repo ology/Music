@@ -11,8 +11,9 @@ use MIDI::Util qw(setup_score);
 my $max = shift || 32;  # Number of times to detect collisions
 my $bpm = shift || 40;  # "Wind speed"
 my $duration = shift || 'sn';
+my $patch = shift || 14;
 
-my $score = setup_score(lead_in => 0, bpm => $bpm, patch => 14);
+my $score = setup_score(lead_in => 0, bpm => $bpm, patch => $patch);
 
 my @chimes = (
     { chime => hash2circle({ x => 0,  y => 4,  radius => 1 }), note => 'C5' }, # N
