@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use AI::Genetic;
-use List::Util qw(sum0);
 use Music::Tension::Cope;
 use Data::Dumper::Compact qw(ddc);
 
