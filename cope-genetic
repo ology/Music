@@ -29,7 +29,9 @@ for my $n (1 .. $max) {
     ]);
 
     $ga->evolve('rouletteTwoPoint', 100);
-    print "$n. Best: [", join(', ', sort { $a <=> $b } $ga->getFittest->genes), '] => ', $ga->getFittest->score, "\n";
+    print "$n. Best: [",
+        join(', ', sort { $a <=> $b } $ga->getFittest->genes),
+        '] => ', $ga->getFittest->score, "\n";
 }
 
 sub fitness {
