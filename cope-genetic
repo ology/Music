@@ -8,25 +8,29 @@ use Data::Dumper::Compact qw(ddc);
 
 use constant THRESHOLD => 0.65;
 
+my $max = shift || 4;
+
 my $tension = Music::Tension::Cope->new;
 
-my $ga = AI::Genetic->new(
-    -fitness    => \&fitness,
-    -terminate  => \&terminate,
-    -type       => 'listvector',
-    -population => 500,
-    -crossover  => 0.9,
-    -mutation   => 0.01,
-);
+for my $n (1 .. $max) {
+    my $ga = AI::Genetic->new(
+        -fitness    => \&fitness,
+        -terminate  => \&terminate,
+        -type       => 'listvector',
+        -population => 500,
+        -crossover  => 0.9,
+        -mutation   => 0.01,
+    );
 
-$ga->init([
-    [0 .. 11],
-    [0 .. 11],
-    [0 .. 11],
-]);
+    $ga->init([
+        [0 .. 11],
+        [0 .. 11],
+        [0 .. 11],
+    ]);
 
-$ga->evolve('rouletteTwoPoint', 100);
-print 'Best: [', join(', ', sort { $a <=> $b } $ga->getFittest->genes), '] => ', $ga->getFittest->score, "\n";
+    $ga->evolve('rouletteTwoPoint', 100);
+    print "$n. Best: [", join(', ', sort { $a <=> $b } $ga->getFittest->genes), '] => ', $ga->getFittest->score, "\n";
+}
 
 sub fitness {
     my $genes = shift;
