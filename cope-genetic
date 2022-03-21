@@ -8,6 +8,8 @@ use Data::Dumper::Compact qw(ddc);
 
 use constant THRESHOLD => 0.65;
 
+my $tension = Music::Tension::Cope->new;
+
 my $ga = AI::Genetic->new(
     -fitness    => \&fitness,
     -terminate  => \&terminate,
@@ -31,7 +33,6 @@ sub fitness {
     $genes = [ sort { $a <=> $b } @$genes ];
     my $fitness = 1;
     my @tension;
-    my $tension = Music::Tension::Cope->new;
     push @tension, scalar $tension->vertical([ $genes->[0], $genes->[1] ]);
     push @tension, scalar $tension->vertical([ $genes->[0], $genes->[2] ]);
     push @tension, scalar $tension->vertical([ $genes->[1], $genes->[2] ]);
