@@ -4,6 +4,7 @@ use warnings;
 
 ##
 # This is a Perl orchestration of Terry Riley's venerable composition, "In C."
+# Writeup: https://techn.ology.net/terry-rileys-in-c-in-perl/
 ##
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
