@@ -38,6 +38,7 @@ my @phrases;
 
 for my $note (@notes) {
     push @phrases, sub {
+        $score->control_change($channel, 91, 127);
         set_chan_patch($score, $channel++, $patch);
         $channel++ if $channel == $drums; # Skip the drums
 
