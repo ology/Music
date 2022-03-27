@@ -22,9 +22,8 @@ my $patch = shift // 73; # 49=Strings, 73=Flute, 95=Synth, etc.
 
 my @notes = @ARGV ? @ARGV : qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/; # s=sharp. Key of Ab
 
-my $factor = 4; # Number of whole note durations in a loop
-
 # NOTE Changing bpm or ticks will make minute calculation meaningless
+my $factor = 4; # Number of whole note durations in a loop
 my $bpm = 60;
 my $ticks = 96; # Magical number for a quarter-note in MIDI-Perl
 my $whole = $ticks * 4; # A whole note
