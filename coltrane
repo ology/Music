@@ -132,6 +132,11 @@ $d->sync(
 
 $d->write;
 
+sub drums {
+    $d->metronome44swing; # swing for the number of bars
+    $d->note($d->quarter, $d->ride1, $d->kick);
+}
+
 sub coltrane {
     set_chan_patch($d->score, $channel, $patch);
 
@@ -239,9 +244,4 @@ sub iterate_params {
         $section = $outer->[$section_num];
     }
     $index = first_index { $_ eq $formatted } @$section;
-}
-
-sub drums {
-    $d->metronome44swing; # swing for the number of bars
-    $d->note($d->quarter, $d->ride1, $d->kick);
 }
