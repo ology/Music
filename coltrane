@@ -99,6 +99,6 @@ warn __PACKAGE__,' L',__LINE__,' ',,"[@$section] $index, $current_note, $directi
 }
 
 sub drums {
-    $d->metronome44swing;
+    $d->metronome44swing; # swing for the number of bars
     $d->note( $d->quarter, $d->ride1, $d->kick );
 }
