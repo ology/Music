@@ -146,25 +146,42 @@ sub coltrane {
 
     for my $n (1 .. $max * 8) {
         if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
-            # step() ignores scale type
-            $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
-            $formatted = $next_note->format(FORMAT);
-            $formatted =~ s/\d+$//;
-            $in_out = !$in_out;
-            $section_num = $in_out ? $inner_links{$section_num}->{$formatted} : $outer_links{$section_num}->{$formatted};
-            $section = $in_out ? $inner[$section_num] : $outer[$section_num];
-            $index = first_index { $_ eq $formatted } @$section;
+            iterate_params(
+                $next_note,
+                $in_out,
+                $inner_scale,
+                $outer_scale,
+                $current_note,
+                $direction,
+                $formatted,
+                $section_num,
+                $section,
+                \@inner,
+                \@outer,
+                \%inner_links,
+                \%outer_links,
+                $index,
+            );
         }
         else {
             my $roll = int rand 2;
             if ($index == MIDDLE && $roll) {
-                $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
-                $formatted = $next_note->format(FORMAT);
-                $formatted =~ s/\d+$//;
-                $in_out = !$in_out;
-                $section_num = $in_out ? $inner_links{$section_num}->{$formatted} : $outer_links{$section_num}->{$formatted};
-                $section = $in_out ? $inner[$section_num] : $outer[$section_num];
-                $index = first_index { $_ eq $formatted } @$section;
+                iterate_params(
+                    $next_note,
+                    $in_out,
+                    $inner_scale,
+                    $outer_scale,
+                    $current_note,
+                    $direction,
+                    $formatted,
+                    $section_num,
+                    $section,
+                    \@inner,
+                    \@outer,
+                    \%inner_links,
+                    \%outer_links,
+                    $index,
+                );
             }
             else {
                 $next_note = $in_out
@@ -185,6 +202,43 @@ sub coltrane {
         $current_note = $section->[$index];
         $direction    = int rand 2 ? RIGHT : LEFT;
     }
+}
+
+sub iterate_params {
+    my (
+        $next_note,
+        $in_out,
+        $inner_scale,
+        $outer_scale,
+        $current_note,
+        $direction,
+        $formatted,
+        $section_num,
+        $section,
+        $inner,
+        $outer,
+        $inner_links,
+        $outer_links,
+        $index,
+    ) = @_;
+
+    # step() ignores scale type
+    $next_note = $in_out
+        ? $inner_scale->step(note_name => $current_note, steps => $direction)
+        : $outer_scale->step(note_name => $current_note, steps => $direction);
+    $formatted = $next_note->format(FORMAT);
+    $formatted =~ s/\d+$//; # remove the octave
+    $in_out = !$in_out;
+    my $i = $direction == RIGHT ? 1 : 0;
+    if ($in_out) {
+        $section_num = $inner_links->{$section_num}{$formatted}[$i];
+        $section = $inner->[$section_num];
+    }
+    else {
+        $section_num = $outer_links->{$section_num}{$formatted}[$i];
+        $section = $outer->[$section_num];
+    }
+    $index = first_index { $_ eq $formatted } @$section;
 }
 
 sub drums {
