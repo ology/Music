@@ -35,14 +35,14 @@ my @inner = (
     [qw(Ef F  G  A  B )],
 );
 
-my $outer_scale = Music::ScaleNote->new(
-  scale_note  => 'C',
+my $inner_scale = Music::ScaleNote->new(
+  scale_note  => 'C#',
   scale_name  => 'wholetone',
   note_format => FORMAT,
   verbose     => 1,
 );
-my $inner_scale = Music::ScaleNote->new(
-  scale_note  => 'C#',
+my $outer_scale = Music::ScaleNote->new(
+  scale_note  => 'C',
   scale_name  => 'wholetone',
   note_format => FORMAT,
   verbose     => 1,
