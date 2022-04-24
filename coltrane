@@ -68,11 +68,11 @@ $d->write;
 sub coltrane {
     set_chan_patch($d->score, $channel, $patch);
 
-    my $in_out = int rand 2;
-    my $section = $in_out ? $inner[ int rand @inner ] : $outer[ int rand @outer ];
-    my $index = int rand @$section;
+    my $in_out       = int rand 2;
+    my $section      = $in_out ? $inner[ int rand @inner ] : $outer[ int rand @outer ];
+    my $index        = int rand @$section;
     my $current_note = $section->[$index];
-    my $direction = int rand 2 ? RIGHT : LEFT;
+    my $direction    = int rand 2 ? RIGHT : LEFT;
     my $next_note;
 
     for my $n (1 .. $max) {
