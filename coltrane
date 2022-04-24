@@ -20,6 +20,8 @@ my $max   = shift || 12;
 my $bpm   = shift || 90;
 my $patch = shift || 66; # soprano sax=64, alto=65, tenor=66, bari=67
 
+my $channel = 0;
+
 my @outer = (
     [qw(Af Bf C  D  E )],
     [qw(Fs Af Bf C  D )],
@@ -64,7 +66,7 @@ $d->sync(
 $d->write;
 
 sub coltrane {
-    set_chan_patch($d->score, 0, $patch);
+    set_chan_patch($d->score, $channel, $patch);
 
     my $in_out = int rand 2;
     my $section = $in_out ? $inner[ int rand @inner ] : $outer[ int rand @outer ];
