@@ -43,13 +43,13 @@ my $inner_scale = Music::ScaleNote->new(
   scale_note  => 'C#',
   scale_name  => 'wholetone',
   note_format => FORMAT,
-  verbose     => 1,
+#  verbose     => 1,
 );
 my $outer_scale = Music::ScaleNote->new(
   scale_note  => 'C',
   scale_name  => 'wholetone',
   note_format => FORMAT,
-  verbose     => 1,
+#  verbose     => 1,
 );
 
 my $d = MIDI::Drummer::Tiny->new(
@@ -75,7 +75,7 @@ sub coltrane {
     my $direction    = int rand 2 ? RIGHT : LEFT;
     my $next_note;
 
-    for my $n (1 .. $max) {
+    for my $n (1 .. $max * 2) {
         if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
             # step() ignores scale type
             $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
@@ -94,7 +94,11 @@ sub coltrane {
             }
         }
         my $formatted = $next_note->format(FORMAT);
-warn __PACKAGE__,' L',__LINE__,' ',,"[@$section] $index, $current_note, $direction => $formatted\n";
+
+        $d->note($d->eighth, $formatted);
+
+        warn sprintf "%d. (%s)[%d] = %s, %d => %s\n",
+            $n, "@$section", $index, $current_note, $direction, $formatted;
 
         # Iterate the parameters:
         $section = $in_out ? $inner[ int rand @inner ] : $outer[ int rand @outer ];
