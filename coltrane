@@ -168,10 +168,10 @@ sub coltrane {
             $n, "@$section", $index, $current_note, $direction, $formatted;
 
         # Iterate the parameters:
-        $section = $in_out ? $inner[ int rand @inner ] : $outer[ int rand @outer ];
-        $index = int rand @$section;
+        $section      = $in_out ? $inner[$section_num] : $outer[$section_num];
+        $index        = int rand @$section;
         $current_note = $section->[$index];
-        $direction = int rand 2 ? RIGHT : LEFT;
+        $direction    = int rand 2 ? RIGHT : LEFT;
     }
 }
 
