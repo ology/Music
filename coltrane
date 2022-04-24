@@ -1,0 +1,88 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-ScaleNote);
+use MIDI::Drummer::Tiny;
+use Music::ScaleNote;
+
+use constant HEAD   => 0;
+use constant MIDDLE => 2;
+use constant TAIL   => 4;
+use constant LEFT   => -1;
+use constant RIGHT  => 1;
+use constant FORMAT  => 'midi';
+
+my @outer = (
+    [qw(Af Bf C  D  E )],
+    [qw(Fs Af Bf C  D )],
+    [qw(E  Fs Af Bf C )],
+    [qw(D  E  Fs Af Bf)],
+    [qw(C  D  E  Fs Af)],
+    [qw(Bf C  D  E  Fs)],
+);
+my @inner = (
+    [qw(Cs Ef F  G  A )],
+    [qw(B  Cs Ef F  G )],
+    [qw(A  B  Cs Ef F )],
+    [qw(G  A  B  Cs Ef)],
+    [qw(F  G  A  B  Cs)],
+    [qw(Ef F  G  A  B )],
+);
+
+my $outer_scale = Music::ScaleNote->new(
+  scale_note  => 'C',
+  scale_name  => 'wholetone',
+  note_format => FORMAT,
+  verbose     => 1,
+);
+my $inner_scale = Music::ScaleNote->new(
+  scale_note  => 'C#',
+  scale_name  => 'wholetone',
+  note_format => FORMAT,
+  verbose     => 1,
+);
+
+my $d = MIDI::Drummer::Tiny->new(
+    file => "$0.mid",
+    bpm  => 90,
+    bars => 12,
+);
+
+$d->sync(
+    \&coltrane,
+    \&drums,
+);
+
+$d->write;
+
+sub coltrane {
+    my $in_out = int rand 2;
+    my $section = $in_out ? $inner[ int rand @inner ] : $outer[ int rand @outer ];
+    my $index = int rand @$section;
+    my $current_note = $section->[$index];
+    my $direction = int rand 2 ? RIGHT : LEFT;
+    my $next_note;
+    if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
+        # step() ignores scale type
+        $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
+    }
+    else {
+        my $roll = int rand 2;
+        if ($index == MIDDLE && $roll) {
+            $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
+        }
+        else {
+            $next_note = $in_out
+                ? $inner_scale->get_offset(note_name => $current_note, offset => $direction)
+                : $outer_scale->get_offset(note_name => $current_note, offset => $direction);
+        }
+    }
+    my $formatted = $next_note->format(FORMAT);
+warn __PACKAGE__,' L',__LINE__,' ',,"[@$section] $index, $current_note, $direction => $formatted\n";
+}
+
+sub drums {
+    $d->metronome44swing;
+    $d->note( $d->quarter, $d->ride1, $d->kick );
+}
