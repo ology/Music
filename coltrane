@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+# Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
+
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-ScaleNote);
 use MIDI::Drummer::Tiny;
 use Music::ScaleNote;
