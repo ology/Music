@@ -14,7 +14,7 @@ use constant MIDDLE => 2;
 use constant TAIL   => 4;
 use constant LEFT   => -1;
 use constant RIGHT  => 1;
-use constant FORMAT  => 'midi';
+use constant FORMAT => 'midi';
 
 my $max   = shift || 12;
 my $bpm   = shift || 90;
