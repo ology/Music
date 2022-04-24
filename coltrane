@@ -4,6 +4,7 @@ use warnings;
 
 # Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
 
+use List::SomeUtils qw(first_index);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-ScaleNote);
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(set_chan_patch);
@@ -141,26 +142,39 @@ sub coltrane {
     my $current_note = $section->[$index];
     my $direction    = int rand 2 ? RIGHT : LEFT;
     my $next_note;
+    my $formatted;
 
     for my $n (1 .. $max * 8) {
         if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
             # step() ignores scale type
             $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
+            $formatted = $next_note->format(FORMAT);
+            $formatted =~ s/\d+$//;
             $in_out = !$in_out;
+            $section_num = $in_out ? $inner_links{$section_num}->{$formatted} : $outer_links{$section_num}->{$formatted};
+            $section = $in_out ? $inner[$section_num] : $outer[$section_num];
+            $index = first_index { $_ eq $formatted } @$section;
         }
         else {
             my $roll = int rand 2;
             if ($index == MIDDLE && $roll) {
                 $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
+                $formatted = $next_note->format(FORMAT);
+                $formatted =~ s/\d+$//;
                 $in_out = !$in_out;
+                $section_num = $in_out ? $inner_links{$section_num}->{$formatted} : $outer_links{$section_num}->{$formatted};
+                $section = $in_out ? $inner[$section_num] : $outer[$section_num];
+                $index = first_index { $_ eq $formatted } @$section;
             }
             else {
                 $next_note = $in_out
                     ? $inner_scale->get_offset(note_name => $current_note, offset => $direction)
                     : $outer_scale->get_offset(note_name => $current_note, offset => $direction);
+                $formatted = $next_note->format(FORMAT);
+                $formatted =~ s/\d+$//;
+                $index = first_index { $_ eq $formatted } @$section;
             }
         }
-        my $formatted = $next_note->format(FORMAT);
 
         $d->note($d->eighth, $formatted);
 
@@ -168,8 +182,6 @@ sub coltrane {
             $n, "@$section", $index, $current_note, $direction, $formatted;
 
         # Iterate the parameters:
-        $section      = $in_out ? $inner[$section_num] : $outer[$section_num];
-        $index        = int rand @$section;
         $current_note = $section->[$index];
         $direction    = int rand 2 ? RIGHT : LEFT;
     }
