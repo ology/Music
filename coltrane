@@ -6,6 +6,7 @@ use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-ScaleNote);
 use MIDI::Drummer::Tiny;
+use MIDI::Util qw(set_chan_patch);
 use Music::ScaleNote;
 
 use constant HEAD   => 0;
@@ -15,8 +16,9 @@ use constant LEFT   => -1;
 use constant RIGHT  => 1;
 use constant FORMAT  => 'midi';
 
-my $max = shift || 12;
-my $bpm = shift || 90;
+my $max   = shift || 12;
+my $bpm   = shift || 90;
+my $patch = shift || 66; # soprano sax=64, alto=65, tenor=66, bari=67
 
 my @outer = (
     [qw(Af Bf C  D  E )],
@@ -55,13 +57,15 @@ my $d = MIDI::Drummer::Tiny->new(
 );
 
 $d->sync(
-    \&coltrane,
     \&drums,
+    \&coltrane,
 );
 
 $d->write;
 
 sub coltrane {
+    set_chan_patch($d->score, 0, $patch);
+
     my $in_out = int rand 2;
     my $section = $in_out ? $inner[ int rand @inner ] : $outer[ int rand @outer ];
     my $index = int rand @$section;
