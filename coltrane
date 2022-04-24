@@ -178,8 +178,8 @@ sub coltrane {
 
         $d->note($d->eighth, $formatted);
 
-        warn sprintf "%d. (%s)[%d] = %s, %d => %s\n",
-            $n, "@$section", $index, $current_note, $direction, $formatted;
+        warn sprintf "%d. %d (%s)[%d] = %s, %d => %s\n",
+            $n, $section_num, "@$section", $index, $current_note, $direction, $formatted;
 
         # Iterate the parameters:
         $current_note = $section->[$index];
