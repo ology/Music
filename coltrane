@@ -75,7 +75,7 @@ sub coltrane {
     my $direction    = int rand 2 ? RIGHT : LEFT;
     my $next_note;
 
-    for my $n (1 .. $max * 2) {
+    for my $n (1 .. $max * 8) {
         if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
             # step() ignores scale type
             $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
