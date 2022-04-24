@@ -24,18 +24,18 @@ my $channel = 0;
 
 my @outer = (
     [qw(Af Bf C  D  E )],
-    [qw(Fs Af Bf C  D )],
-    [qw(E  Fs Af Bf C )],
-    [qw(D  E  Fs Af Bf)],
-    [qw(C  D  E  Fs Af)],
-    [qw(Bf C  D  E  Fs)],
+    [qw(Gf Af Bf C  D )],
+    [qw(E  Gf Af Bf C )],
+    [qw(D  E  Gf Af Bf)],
+    [qw(C  D  E  Gf Af)],
+    [qw(Bf C  D  E  Gf)],
 );
 my @inner = (
-    [qw(Cs Ef F  G  A )],
-    [qw(B  Cs Ef F  G )],
-    [qw(A  B  Cs Ef F )],
-    [qw(G  A  B  Cs Ef)],
-    [qw(F  G  A  B  Cs)],
+    [qw(Df Ef F  G  A )],
+    [qw(B  Df Ef F  G )],
+    [qw(A  B  Df Ef F )],
+    [qw(G  A  B  Df Ef)],
+    [qw(F  G  A  B  Df)],
     [qw(Ef F  G  A  B )],
 );
 
@@ -43,12 +43,14 @@ my $inner_scale = Music::ScaleNote->new(
   scale_note  => 'C#',
   scale_name  => 'wholetone',
   note_format => FORMAT,
+  flat        => 1,
 #  verbose     => 1,
 );
 my $outer_scale = Music::ScaleNote->new(
   scale_note  => 'C',
   scale_name  => 'wholetone',
   note_format => FORMAT,
+  flat        => 1,
 #  verbose     => 1,
 );
 
@@ -110,5 +112,5 @@ sub coltrane {
 
 sub drums {
     $d->metronome44swing; # swing for the number of bars
-    $d->note( $d->quarter, $d->ride1, $d->kick );
+    $d->note($d->quarter, $d->ride1, $d->kick);
 }
