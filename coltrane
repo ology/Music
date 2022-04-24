@@ -15,6 +15,9 @@ use constant LEFT   => -1;
 use constant RIGHT  => 1;
 use constant FORMAT  => 'midi';
 
+my $max = shift || 12;
+my $bpm = shift || 90;
+
 my @outer = (
     [qw(Af Bf C  D  E )],
     [qw(Fs Af Bf C  D )],
@@ -47,8 +50,8 @@ my $inner_scale = Music::ScaleNote->new(
 
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
-    bpm  => 90,
-    bars => 12,
+    bpm  => $bpm,
+    bars => $max,
 );
 
 $d->sync(
@@ -65,23 +68,34 @@ sub coltrane {
     my $current_note = $section->[$index];
     my $direction = int rand 2 ? RIGHT : LEFT;
     my $next_note;
-    if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
-        # step() ignores scale type
-        $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
-    }
-    else {
-        my $roll = int rand 2;
-        if ($index == MIDDLE && $roll) {
+
+    for my $n (1 .. $max) {
+        if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
+            # step() ignores scale type
             $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
+            $in_out = !$in_out;
         }
         else {
-            $next_note = $in_out
-                ? $inner_scale->get_offset(note_name => $current_note, offset => $direction)
-                : $outer_scale->get_offset(note_name => $current_note, offset => $direction);
+            my $roll = int rand 2;
+            if ($index == MIDDLE && $roll) {
+                $next_note = $inner_scale->step(note_name => $current_note, steps => $direction);
+                $in_out = !$in_out;
+            }
+            else {
+                $next_note = $in_out
+                    ? $inner_scale->get_offset(note_name => $current_note, offset => $direction)
+                    : $outer_scale->get_offset(note_name => $current_note, offset => $direction);
+            }
         }
-    }
-    my $formatted = $next_note->format(FORMAT);
+        my $formatted = $next_note->format(FORMAT);
 warn __PACKAGE__,' L',__LINE__,' ',,"[@$section] $index, $current_note, $direction => $formatted\n";
+
+        # Iterate the parameters:
+        $section = $in_out ? $inner[ int rand @inner ] : $outer[ int rand @outer ];
+        $index = int rand @$section;
+        $current_note = $section->[$index];
+        $direction = int rand 2 ? RIGHT : LEFT;
+    }
 }
 
 sub drums {
