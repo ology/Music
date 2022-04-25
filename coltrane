@@ -265,7 +265,7 @@ sub step_in_out {
     $formatted = $next_note->format(FORMAT);
     (my $sans_octave = $formatted) =~ s/\d+$//;
 
-    $in_out = $in_out ? 0 : 1;
+    $in_out = $in_out ? 0 : 1; # jump rings
     if ($in_out) {
         ($section_num, $section) = get_section(
             $outer_links,
