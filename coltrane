@@ -6,11 +6,12 @@ no autovivification;
 # Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
 
 use Data::Dumper::Compact qw(ddc);
-
 use List::SomeUtils qw(first_index);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-ScaleNote);
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(set_chan_patch);
+use Music::Duration::Partition;
 use Music::ScaleNote;
 
 use constant HEAD   => 0;
@@ -153,31 +154,22 @@ sub coltrane {
     my $next_note;
     my $formatted;
 
-    for my $n (1 .. $max * 8) {
+    my $mdp = Music::Duration::Partition->new(
+        size    => 4,
+        pool    => [qw/ qn tqn en ten /],
+        groups  => [    1, 3,  1, 3    ],
+#        weights => [    1, 2,  3, 2   ],
+    );
+    my @motifs = map { $mdp->motif } 1 .. 4;
+
+    for my $n (1 .. $max) {
         warn sprintf "%d. %d (%s)[%d] = %s, %d\n",
             $n, $section_num, "@$section", $index, $current_note, $direction;
 
-        if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
-            ($in_out, $section_num, $index, $formatted, $section) = step_in_out(
-                $next_note,
-                $in_out,
-                $inner_scale,
-                $outer_scale,
-                $current_note,
-                $direction,
-                $formatted,
-                $section_num,
-                $section,
-                \@inner,
-                \@outer,
-                \%inner_links,
-                \%outer_links,
-                $index,
-            );
-        }
-        else {
-            my $roll = int rand 2;
-            if ($index == MIDDLE && $roll) {
+        my $motif = $motifs[ int rand @motifs ];
+
+        for my $m (@$motif) {
+            if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
                 ($in_out, $section_num, $index, $formatted, $section) = step_in_out(
                     $next_note,
                     $in_out,
@@ -196,24 +188,45 @@ sub coltrane {
                 );
             }
             else {
-                $next_note = $in_out
-                    ? $inner_scale->get_offset(note_name => $current_note, offset => $direction)
-                    : $outer_scale->get_offset(note_name => $current_note, offset => $direction);
+                my $roll = int rand 2;
+                if ($index == MIDDLE && $roll) {
+                    ($in_out, $section_num, $index, $formatted, $section) = step_in_out(
+                        $next_note,
+                        $in_out,
+                        $inner_scale,
+                        $outer_scale,
+                        $current_note,
+                        $direction,
+                        $formatted,
+                        $section_num,
+                        $section,
+                        \@inner,
+                        \@outer,
+                        \%inner_links,
+                        \%outer_links,
+                        $index,
+                    );
+                }
+                else {
+                    $next_note = $in_out
+                        ? $inner_scale->get_offset(note_name => $current_note, offset => $direction)
+                        : $outer_scale->get_offset(note_name => $current_note, offset => $direction);
 
-                $formatted = $next_note->format(FORMAT);
-                (my $sans_octave = $formatted) =~ s/\d+$//;
+                    $formatted = $next_note->format(FORMAT);
+                    (my $sans_octave = $formatted) =~ s/\d+$//;
 
-                $index = first_index { $_ eq $sans_octave } @$section;
+                    $index = first_index { $_ eq $sans_octave } @$section;
+                }
             }
+
+            $d->note($m, $formatted);
+
+            warn "\tNew note: (@$section)[$index] = $formatted, $m\n",
+
+            # Iterate the parameters:
+            $current_note = $section->[$index];
+            $direction    = int rand 2 ? RIGHT : LEFT;
         }
-
-        $d->note($d->eighth, $formatted);
-
-        warn "\tNew note: (@$section)[$index] = $formatted\n",
-
-        # Iterate the parameters:
-        $current_note = $section->[$index];
-        $direction    = int rand 2 ? RIGHT : LEFT;
     }
 }
 
