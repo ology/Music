@@ -174,8 +174,8 @@ sub coltrane {
 
     # produce max bars of phrases
     for my $n (1 .. $max) {
-        warn sprintf "%d. %d (%s)[%d] = %s%d, %d\n",
-            $n, $section_num, "@$section", $index, $current_note, $octave, $direction;
+        warn sprintf "%d. %d (%s)[%d] = %s%d\n",
+            $n, $section_num, "@$section", $index, $current_note, $octave;
 
         my $motif = $motifs[ int rand @motifs ];
 
