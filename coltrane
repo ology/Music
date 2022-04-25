@@ -301,6 +301,7 @@ sub get_section {
         $sections,
         $section,
     ) = @_;
+
     my $i = exists $links->{$section_num}{$current_note}
         && defined $links->{$section_num}{$current_note}[RIGHT]
         && $direction == RIGHT ? 1 : 0;
