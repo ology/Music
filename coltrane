@@ -267,24 +267,47 @@ sub step_in_out {
 
     $in_out = $in_out ? 0 : 1;
     if ($in_out) {
-        my $i = exists $outer_links->{$section_num}{$current_note}
-            && defined $outer_links->{$section_num}{$current_note}[RIGHT]
-            && $direction == RIGHT ? 1 : 0;
-
-        $section_num = $outer_links->{$section_num}{$current_note}[$i];
-
-        $section = $inner->[$section_num];
+        ($section_num, $section) = get_section(
+            $outer_links,
+            $section_num,
+            $current_note,
+            $direction,
+            $inner,
+            $section,
+        );
     }
     else {
-        my $i = exists $inner_links->{$section_num}{$current_note}
-            && defined $inner_links->{$section_num}{$current_note}[RIGHT]
-            && $direction == RIGHT ? 1 : 0;
-
-        $section_num = $inner_links->{$section_num}{$current_note}[$i];
-
-        $section = $outer->[$section_num];
+        ($section_num, $section) = get_section(
+            $inner_links,
+            $section_num,
+            $current_note,
+            $direction,
+            $outer,
+            $section,
+        );
     }
+
     $index = first_index { $_ eq $sans_octave } @$section;
 
     return $in_out, $section_num, $index, $formatted, $section;
+}
+
+sub get_section {
+    my (
+        $links,
+        $section_num,
+        $current_note,
+        $direction,
+        $sections,
+        $section,
+    ) = @_;
+    my $i = exists $links->{$section_num}{$current_note}
+        && defined $links->{$section_num}{$current_note}[RIGHT]
+        && $direction == RIGHT ? 1 : 0;
+
+    $section_num = $links->{$section_num}{$current_note}[$i];
+
+    $section = $sections->[$section_num];
+
+    return $section_num, $section;
 }
