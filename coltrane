@@ -15,19 +15,19 @@ use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
 use Music::ScaleNote;
 
-use constant HEAD   => 0;
-use constant MIDDLE => 2;
-use constant TAIL   => 4;
-use constant LEFT   => -1;
-use constant RIGHT  => 1;
+use constant HEAD   => 0;      # diagram index
+use constant MIDDLE => 2;      # "
+use constant TAIL   => 4;      # "
+use constant LEFT   => -1;     # direction
+use constant RIGHT  => 1;      # "
 use constant FORMAT => 'midi';
-use constant HIGH   => 6;
-use constant LOW    => 3;
+use constant HIGH   => 6;      # octave bound
+use constant LOW    => 3;      # "
 
-my $max    = shift || 12;
+my $max    = shift || 12; # number of measures to play
 my $bpm    = shift || 100;
 my $patch  = shift || 66; # soprano sax=64, alto=65, tenor=66, bari=67
-my $octave = shift || 4;
+my $octave = shift || 4; # starting octave
 
 my $channel = 0;
 
