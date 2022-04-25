@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+
 no autovivification;
 
 # Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
