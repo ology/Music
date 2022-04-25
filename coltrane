@@ -28,6 +28,7 @@ my $patch = shift || 66; # soprano sax=64, alto=65, tenor=66, bari=67
 
 my $channel = 0;
 
+# describe Coltrane's circle diagram
 my @outer = (
     [qw( Af Bf C  D  E  )],
     [qw( Gf Af Bf C  D  )],
