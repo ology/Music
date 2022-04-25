@@ -235,7 +235,6 @@ sub step_in_out {
         $index,
     ) = @_;
 
-    # step() ignores scale type
     $next_note = $in_out
         ? $inner_scale->step(note_name => $current_note, steps => $direction)
         : $outer_scale->step(note_name => $current_note, steps => $direction);
