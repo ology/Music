@@ -29,20 +29,20 @@ my $patch = shift || 66; # soprano sax=64, alto=65, tenor=66, bari=67
 my $channel = 0;
 
 my @outer = (
-    [qw(Af Bf C  D  E )],
-    [qw(Gf Af Bf C  D )],
-    [qw(E  Gf Af Bf C )],
-    [qw(D  E  Gf Af Bf)],
-    [qw(C  D  E  Gf Af)],
-    [qw(Bf C  D  E  Gf)],
+    [qw( Af Bf C  D  E  )],
+    [qw( Gf Af Bf C  D  )],
+    [qw( E  Gf Af Bf C  )],
+    [qw( D  E  Gf Af Bf )],
+    [qw( C  D  E  Gf Af )],
+    [qw( Bf C  D  E  Gf )],
 );
 my @inner = (
-    [qw(Df Ef F  G  A )],
-    [qw(B  Df Ef F  G )],
-    [qw(A  B  Df Ef F )],
-    [qw(G  A  B  Df Ef)],
-    [qw(F  G  A  B  Df)],
-    [qw(Ef F  G  A  B )],
+    [qw( Df Ef F  G  A  )],
+    [qw( B  Df Ef F  G  )],
+    [qw( A  B  Df Ef F  )],
+    [qw( G  A  B  Df Ef )],
+    [qw( F  G  A  B  Df )],
+    [qw( Ef F  G  A  B  )],
 );
 my %outer_links = (
     0 => {
