@@ -8,7 +8,7 @@ no autovivification;
 use Data::Dumper::Compact qw(ddc);
 use List::SomeUtils qw(first_index);
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
+#use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
