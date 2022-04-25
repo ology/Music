@@ -234,6 +234,7 @@ sub coltrane {
 }
 
 sub step_in_out {
+    # XXX This mass argument import is ugly at best
     my (
         $next_note,
         $in_out,
