@@ -6,7 +6,6 @@ no autovivification;
 
 # Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
 
-use Data::Dumper::Compact qw(ddc);
 use List::SomeUtils qw(first_index);
 
 #use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
@@ -22,9 +21,10 @@ use constant LEFT   => -1;
 use constant RIGHT  => 1;
 use constant FORMAT => 'midi';
 
-my $max   = shift || 12;
-my $bpm   = shift || 100;
-my $patch = shift || 66; # soprano sax=64, alto=65, tenor=66, bari=67
+my $max    = shift || 12;
+my $bpm    = shift || 100;
+my $patch  = shift || 66; # soprano sax=64, alto=65, tenor=66, bari=67
+my $octave = shift || 4;
 
 my $channel = 0;
 
@@ -167,8 +167,8 @@ sub coltrane {
 
     # produce max bars of phrases
     for my $n (1 .. $max) {
-        warn sprintf "%d. %d (%s)[%d] = %s, %d\n",
-            $n, $section_num, "@$section", $index, $current_note, $direction;
+        warn sprintf "%d. %d (%s)[%d] = %s%d, %d\n",
+            $n, $section_num, "@$section", $index, $current_note, $octave, $direction;
 
         my $motif = $motifs[ int rand @motifs ];
 
@@ -179,6 +179,7 @@ sub coltrane {
                     $in_out,
                     $inner_scale,
                     $outer_scale,
+                    $octave,
                     $current_note,
                     $direction,
                     $formatted,
@@ -199,6 +200,7 @@ sub coltrane {
                         $in_out,
                         $inner_scale,
                         $outer_scale,
+                        $octave,
                         $current_note,
                         $direction,
                         $formatted,
@@ -212,9 +214,10 @@ sub coltrane {
                     );
                 }
                 else {
+#warn __PACKAGE__,' L',__LINE__,' ',,"C: $current_note\n";
                     $next_note = $in_out
-                        ? $inner_scale->get_offset(note_name => $current_note, offset => $direction)
-                        : $outer_scale->get_offset(note_name => $current_note, offset => $direction);
+                        ? $inner_scale->get_offset(note_name => $current_note . $octave, offset => $direction)
+                        : $outer_scale->get_offset(note_name => $current_note . $octave, offset => $direction);
 
                     $formatted = $next_note->format(FORMAT);
                     (my $sans_octave = $formatted) =~ s/\d+$//;
@@ -242,6 +245,7 @@ sub step_in_out {
         $in_out,
         $inner_scale,
         $outer_scale,
+        $octave,
         $current_note,
         $direction,
         $formatted,
@@ -255,8 +259,8 @@ sub step_in_out {
     ) = @_;
 
     $next_note = $in_out
-        ? $inner_scale->step(note_name => $current_note, steps => $direction)
-        : $outer_scale->step(note_name => $current_note, steps => $direction);
+        ? $inner_scale->step(note_name => $current_note . $octave, steps => $direction)
+        : $outer_scale->step(note_name => $current_note . $octave, steps => $direction);
 
     $formatted = $next_note->format(FORMAT);
     (my $sans_octave = $formatted) =~ s/\d+$//;
