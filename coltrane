@@ -158,7 +158,7 @@ sub coltrane {
             $n, $section_num, "@$section", $index, $current_note, $direction;
 
         if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
-            ($in_out, $section_num, $index, $formatted, $section) = iterate_params(
+            ($in_out, $section_num, $index, $formatted, $section) = step_in_out(
                 $next_note,
                 $in_out,
                 $inner_scale,
@@ -178,7 +178,7 @@ sub coltrane {
         else {
             my $roll = int rand 2;
             if ($index == MIDDLE && $roll) {
-                ($in_out, $section_num, $index, $formatted, $section) = iterate_params(
+                ($in_out, $section_num, $index, $formatted, $section) = step_in_out(
                     $next_note,
                     $in_out,
                     $inner_scale,
@@ -217,7 +217,7 @@ sub coltrane {
     }
 }
 
-sub iterate_params {
+sub step_in_out {
     my (
         $next_note,
         $in_out,
