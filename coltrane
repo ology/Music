@@ -21,8 +21,8 @@ use constant TAIL   => 4;
 use constant LEFT   => -1;
 use constant RIGHT  => 1;
 use constant FORMAT => 'midi';
-use constant HIGH => 6;
-use constant LOW  => 3;
+use constant HIGH   => 6;
+use constant LOW    => 3;
 
 my $max    = shift || 12;
 my $bpm    = shift || 100;
