@@ -19,6 +19,8 @@ use constant TAIL   => 4;
 use constant LEFT   => -1;
 use constant RIGHT  => 1;
 use constant FORMAT => 'midi';
+use constant HIGH => 6;
+use constant LOW  => 3;
 
 my $max    = shift || 12;
 my $bpm    = shift || 100;
@@ -219,6 +221,8 @@ sub coltrane {
 
                     $formatted = $next_note->format(FORMAT);
                     ($octave = $formatted) =~ s/^[A-G][fs]?(\d+)$/$1/;
+                    $octave-- if $octave > HIGH;
+                    $octave++ if $octave < LOW;
                     (my $sans_octave = $formatted) =~ s/\d+$//;
 
                     $index = first_index { $_ eq $sans_octave } @$section;
@@ -263,6 +267,8 @@ sub step_in_out {
 
     $formatted = $next_note->format(FORMAT);
     ($octave = $formatted) =~ s/^[A-G][fs]?(\d+)$/$1/;
+    $octave-- if $octave > HIGH;
+    $octave++ if $octave < LOW;
     (my $sans_octave = $formatted) =~ s/\d+$//;
 
     $in_out = $in_out ? 0 : 1; # jump rings
