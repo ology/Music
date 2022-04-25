@@ -1,8 +1,11 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+no autovivification;
 
 # Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
+
+use Data::Dumper::Compact qw(ddc);
 
 use List::SomeUtils qw(first_index);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-ScaleNote);
@@ -18,7 +21,7 @@ use constant RIGHT  => 1;
 use constant FORMAT => 'midi';
 
 my $max   = shift || 12;
-my $bpm   = shift || 90;
+my $bpm   = shift || 100;
 my $patch = shift || 66; # soprano sax=64, alto=65, tenor=66, bari=67
 
 my $channel = 0;
@@ -150,8 +153,11 @@ sub coltrane {
     my $formatted;
 
     for my $n (1 .. $max * 8) {
+        warn sprintf "%d. %d (%s)[%d] = %s, %d\n",
+            $n, $section_num, "@$section", $index, $current_note, $direction;
+
         if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
-            iterate_params(
+            ($in_out, $section_num, $index, $formatted, $section) = iterate_params(
                 $next_note,
                 $in_out,
                 $inner_scale,
@@ -171,7 +177,7 @@ sub coltrane {
         else {
             my $roll = int rand 2;
             if ($index == MIDDLE && $roll) {
-                iterate_params(
+                ($in_out, $section_num, $index, $formatted, $section) = iterate_params(
                     $next_note,
                     $in_out,
                     $inner_scale,
@@ -193,15 +199,14 @@ sub coltrane {
                     ? $inner_scale->get_offset(note_name => $current_note, offset => $direction)
                     : $outer_scale->get_offset(note_name => $current_note, offset => $direction);
                 $formatted = $next_note->format(FORMAT);
-                $formatted =~ s/\d+$//;
-                $index = first_index { $_ eq $formatted } @$section;
+                (my $sans_octave = $formatted) =~ s/\d+$//;
+                $index = first_index { $_ eq $sans_octave } @$section;
             }
         }
 
         $d->note($d->eighth, $formatted);
 
-        warn sprintf "%d. %d (%s)[%d] = %s, %d => %s\n",
-            $n, $section_num, "@$section", $index, $current_note, $direction, $formatted;
+        warn "\tNew note: (@$section)[$index] = $formatted\n",
 
         # Iterate the parameters:
         $current_note = $section->[$index];
@@ -231,17 +236,30 @@ sub iterate_params {
     $next_note = $in_out
         ? $inner_scale->step(note_name => $current_note, steps => $direction)
         : $outer_scale->step(note_name => $current_note, steps => $direction);
+
     $formatted = $next_note->format(FORMAT);
-    $formatted =~ s/\d+$//; # remove the octave
-    $in_out = !$in_out;
-    my $i = $direction == RIGHT ? 1 : 0;
+    (my $sans_octave = $formatted) =~ s/\d+$//;
+
+    $in_out = $in_out ? 0 : 1;
     if ($in_out) {
-        $section_num = $inner_links->{$section_num}{$formatted}[$i];
+        my $i = exists $outer_links->{$section_num}{$current_note}
+            && defined $outer_links->{$section_num}{$current_note}[RIGHT]
+            && $direction == RIGHT ? 1 : 0;
+
+        $section_num = $outer_links->{$section_num}{$current_note}[$i];
+
         $section = $inner->[$section_num];
     }
     else {
-        $section_num = $outer_links->{$section_num}{$formatted}[$i];
+        my $i = exists $inner_links->{$section_num}{$current_note}
+            && defined $inner_links->{$section_num}{$current_note}[RIGHT]
+            && $direction == RIGHT ? 1 : 0;
+
+        $section_num = $inner_links->{$section_num}{$current_note}[$i];
+
         $section = $outer->[$section_num];
     }
-    $index = first_index { $_ eq $formatted } @$section;
+    $index = first_index { $_ eq $sans_octave } @$section;
+
+    return $in_out, $section_num, $index, $formatted, $section;
 }
