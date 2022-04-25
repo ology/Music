@@ -145,14 +145,14 @@ sub coltrane {
     set_chan_patch($d->score, $channel, $patch);
 
     # initial conditions
-    my $in_out       = int rand 2;
-    my $section_num  = int rand @inner;
+    my $in_out       = int rand 2; # choose a ring, inner or outer
+    my $section_num  = int rand @inner; # choose a section of the ring
     my $section      = $in_out ? $inner[$section_num] : $outer[$section_num];
-    my $index        = int rand @$section;
-    my $current_note = $section->[$index];
-    my $direction    = int rand 2 ? RIGHT : LEFT;
-    my $next_note;
-    my $formatted;
+    my $index        = int rand @$section; # get the current note & its index
+    my $current_note = $section->[$index]; # "
+    my $direction    = int rand 2 ? RIGHT : LEFT; # which way are we headed?
+    my $next_note; # The new note to generate
+    my $formatted; # "
 
     my $mdp = Music::Duration::Partition->new(
         size    => 4,
