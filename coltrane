@@ -174,7 +174,7 @@ sub coltrane {
 
         for my $m (@$motif) {
             if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
-                ($in_out, $section_num, $index, $formatted, $section) = step_in_out(
+                ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
                     $next_note,
                     $in_out,
                     $inner_scale,
@@ -195,7 +195,7 @@ sub coltrane {
             else {
                 my $roll = int rand 2;
                 if ($index == MIDDLE && $roll) {
-                    ($in_out, $section_num, $index, $formatted, $section) = step_in_out(
+                    ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
                         $next_note,
                         $in_out,
                         $inner_scale,
@@ -214,12 +214,12 @@ sub coltrane {
                     );
                 }
                 else {
-#warn __PACKAGE__,' L',__LINE__,' ',,"C: $current_note\n";
                     $next_note = $in_out
                         ? $inner_scale->get_offset(note_name => $current_note . $octave, offset => $direction)
                         : $outer_scale->get_offset(note_name => $current_note . $octave, offset => $direction);
 
                     $formatted = $next_note->format(FORMAT);
+                    ($octave = $formatted) =~ s/^[A-Gfs](\d+)$/$1/;
                     (my $sans_octave = $formatted) =~ s/\d+$//;
 
                     $index = first_index { $_ eq $sans_octave } @$section;
@@ -263,6 +263,7 @@ sub step_in_out {
         : $outer_scale->step(note_name => $current_note . $octave, steps => $direction);
 
     $formatted = $next_note->format(FORMAT);
+    ($octave = $formatted) =~ s/^[A-Gfs](\d+)$/$1/;
     (my $sans_octave = $formatted) =~ s/\d+$//;
 
     $in_out = $in_out ? 0 : 1; # jump rings
@@ -289,7 +290,7 @@ sub step_in_out {
 
     $index = first_index { $_ eq $sans_octave } @$section;
 
-    return $in_out, $section_num, $index, $formatted, $section;
+    return $in_out, $section_num, $index, $formatted, $octave, $section;
 }
 
 sub get_section {
