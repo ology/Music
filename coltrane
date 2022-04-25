@@ -107,15 +107,15 @@ my %inner_links = (
     },
 );
 
-my $inner_scale = Music::ScaleNote->new(
-  scale_note  => 'C#',
+my $outer_scale = Music::ScaleNote->new(
+  scale_note  => 'C',
   scale_name  => 'wholetone',
   note_format => FORMAT,
   flat        => 1,
 #  verbose     => 1,
 );
-my $outer_scale = Music::ScaleNote->new(
-  scale_note  => 'C',
+my $inner_scale = Music::ScaleNote->new(
+  scale_note  => 'C#',
   scale_name  => 'wholetone',
   note_format => FORMAT,
   flat        => 1,
