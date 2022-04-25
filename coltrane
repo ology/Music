@@ -219,7 +219,7 @@ sub coltrane {
                         : $outer_scale->get_offset(note_name => $current_note . $octave, offset => $direction);
 
                     $formatted = $next_note->format(FORMAT);
-                    ($octave = $formatted) =~ s/^[A-Gfs]+(\d+)$/$1/;
+                    ($octave = $formatted) =~ s/^[A-G][fs]?+(\d+)$/$1/;
                     (my $sans_octave = $formatted) =~ s/\d+$//;
 
                     $index = first_index { $_ eq $sans_octave } @$section;
@@ -263,7 +263,7 @@ sub step_in_out {
         : $outer_scale->step(note_name => $current_note . $octave, steps => $direction);
 
     $formatted = $next_note->format(FORMAT);
-    ($octave = $formatted) =~ s/^[A-Gfs]+(\d+)$/$1/;
+    ($octave = $formatted) =~ s/^[A-G][fs]?+(\d+)$/$1/;
     (my $sans_octave = $formatted) =~ s/\d+$//;
 
     $in_out = $in_out ? 0 : 1; # jump rings
