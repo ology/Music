@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 
+# Attempt to imitate John Coltrane via his mysterious circle diagram.
 # Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
 
 use strict;
