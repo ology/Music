@@ -226,7 +226,7 @@ sub coltrane {
             # add the motif note to the score
             $d->note($m, $formatted);
 
-            warn "\tNew note: (@$section)[$index] = $formatted, $m\n",
+            warn "\tNew note: (@$section)[$index] = $formatted, $m\n";
 
             # iterate the parameters
             $current_note = $section->[$index];
