@@ -1,10 +1,11 @@
 #!/usr/bin/env perl
+
+# Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
+
 use strict;
 use warnings;
 
 no autovivification;
-
-# Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
 
 use List::SomeUtils qw(first_index);
 #use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
