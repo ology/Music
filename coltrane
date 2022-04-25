@@ -20,7 +20,7 @@ use constant MIDDLE => 2;      # "
 use constant TAIL   => 4;      # "
 use constant LEFT   => -1;     # direction
 use constant RIGHT  => 1;      # "
-use constant FORMAT => 'midi';
+use constant FORMAT => 'midi'; # note conversion format
 use constant HIGH   => 6;      # octave bound
 use constant LOW    => 3;      # "
 
