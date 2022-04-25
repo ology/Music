@@ -29,7 +29,7 @@ my $bpm    = shift || 100; # beats per minute
 my $patch  = shift || 66;  # soprano sax=64, alto=65, tenor=66, bari=67
 my $octave = shift || 4;   # starting octave
 
-my $channel = 0;
+my $channel = 0; # midi channel
 
 # describe Coltrane's circle diagram
 my @outer = (
@@ -113,6 +113,7 @@ my %inner_links = (
     },
 );
 
+# instantiate scale movement objects
 my $outer_scale = Music::ScaleNote->new(
   scale_note  => 'C',
   scale_name  => 'wholetone',
@@ -128,17 +129,20 @@ my $inner_scale = Music::ScaleNote->new(
 #  verbose     => 1,
 );
 
+# instantiate a drummer object
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
     bpm  => $bpm,
     bars => $max,
 );
 
+# play the parts simultaneously
 $d->sync(
     \&drums,
     \&coltrane,
 );
 
+# write the score as a midi file
 $d->write;
 
 sub drums {
