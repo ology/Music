@@ -154,6 +154,7 @@ sub coltrane {
     my $next_note; # The new note to generate
     my $formatted; # "
 
+    # initialize a phrase generator
     my $mdp = Music::Duration::Partition->new(
         size    => 4,
         pool    => [qw/ qn tqn en ten sn /],
@@ -162,6 +163,7 @@ sub coltrane {
     );
     my @motifs = map { $mdp->motif } 1 .. 3;
 
+    # produce max bars of phrases
     for my $n (1 .. $max) {
         warn sprintf "%d. %d (%s)[%d] = %s, %d\n",
             $n, $section_num, "@$section", $index, $current_note, $direction;
@@ -219,11 +221,12 @@ sub coltrane {
                 }
             }
 
+            # add the motif note to the score
             $d->note($m, $formatted);
 
             warn "\tNew note: (@$section)[$index] = $formatted, $m\n",
 
-            # Iterate the parameters:
+            # iterate the parameters
             $current_note = $section->[$index];
             $direction    = int rand 2 ? RIGHT : LEFT;
         }
