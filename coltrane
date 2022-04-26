@@ -9,7 +9,7 @@ use warnings;
 no autovivification;
 
 use List::SomeUtils qw(first_index);
-#use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
@@ -293,22 +293,20 @@ sub step_in_out {
     $in_out = $in_out ? 0 : 1; # jump rings
     if ($in_out) {
         ($section_num, $section) = get_section(
-            $outer_links,
-            $section_num,
-            $current_note,
-            $direction,
-            $inner,
-            $section,
+            links        => $outer_links,
+            section_num  => $section_num,
+            current_note => $current_note,
+            direction    => $direction,
+            sections     => $inner,
         );
     }
     else {
         ($section_num, $section) = get_section(
-            $inner_links,
-            $section_num,
-            $current_note,
-            $direction,
-            $outer,
-            $section,
+            links        => $inner_links,
+            section_num  => $section_num,
+            current_note => $current_note,
+            direction    => $direction,
+            sections     => $outer,
         );
     }
 
@@ -318,22 +316,18 @@ sub step_in_out {
 }
 
 sub get_section {
-    my (
-        $links,
-        $section_num,
-        $current_note,
-        $direction,
-        $sections,
-        $section,
-    ) = @_;
+    my (%args) = @_;
 
-    my $i = exists $links->{$section_num}{$current_note}
-        && defined $links->{$section_num}{$current_note}[RIGHT]
-        && $direction == RIGHT ? 1 : 0;
+    my $section_num  = $args{section_num};
+    my $current_note = $args{current_note};
 
-    $section_num = $links->{$section_num}{$current_note}[$i];
+    my $i = exists $args{links}->{$section_num}{$current_note}
+        && defined $args{links}->{$section_num}{$current_note}[RIGHT]
+        && $args{direction} == RIGHT ? 1 : 0;
 
-    $section = $sections->[$section_num];
+    $section_num = $args{links}->{$section_num}{$current_note}[$i];
+
+    my $section = $args{sections}->[$section_num];
 
     return $section_num, $section;
 }
