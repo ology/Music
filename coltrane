@@ -9,7 +9,7 @@ use warnings;
 no autovivification;
 
 use List::SomeUtils qw(first_index);
-#use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(set_chan_patch);
 use Music::Duration::Partition;
@@ -181,40 +181,34 @@ sub coltrane {
         for my $m (@$motif) {
             if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
                 ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
-                    $in_out,
-                    $inner_scale,
-                    $outer_scale,
-                    $octave,
-                    $current_note,
-                    $direction,
-                    $formatted,
-                    $section_num,
-                    $section,
-                    \@inner,
-                    \@outer,
-                    \%inner_links,
-                    \%outer_links,
-                    $index,
+                    in_out       => $in_out,
+                    inner_scale  => $inner_scale,
+                    outer_scale  => $outer_scale,
+                    octave       => $octave,
+                    current_note => $current_note,
+                    direction    => $direction,
+                    section_num  => $section_num,
+                    inner        => \@inner,
+                    outer        => \@outer,
+                    inner_links  => \%inner_links,
+                    outer_links  => \%outer_links,
                 );
             }
             else {
                 my $roll = int rand 2;
                 if ($index == MIDDLE && $roll) {
                     ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
-                        $in_out,
-                        $inner_scale,
-                        $outer_scale,
-                        $octave,
-                        $current_note,
-                        $direction,
-                        $formatted,
-                        $section_num,
-                        $section,
-                        \@inner,
-                        \@outer,
-                        \%inner_links,
-                        \%outer_links,
-                        $index,
+                        in_out       => $in_out,
+                        inner_scale  => $inner_scale,
+                        outer_scale  => $outer_scale,
+                        octave       => $octave,
+                        current_note => $current_note,
+                        direction    => $direction,
+                        section_num  => $section_num,
+                        inner        => \@inner,
+                        outer        => \@outer,
+                        inner_links  => \%inner_links,
+                        outer_links  => \%outer_links,
                     );
                 }
                 else {
@@ -262,51 +256,37 @@ sub normalize_octave {
 }
 
 sub step_in_out {
-    # XXX This mass argument import is ugly at best
-    my (
-        $in_out,
-        $inner_scale,
-        $outer_scale,
-        $octave,
-        $current_note,
-        $direction,
-        $formatted,
-        $section_num,
-        $section,
-        $inner,
-        $outer,
-        $inner_links,
-        $outer_links,
-        $index,
-    ) = @_;
+    my (%args) = @_;
 
-    my $next_note = $in_out
-        ? $inner_scale->step(note_name => $current_note . $octave, steps => $direction)
-        : $outer_scale->step(note_name => $current_note . $octave, steps => $direction);
+    my $next_note = $args{in_out}
+        ? $args{inner_scale}->step(note_name => $args{current_note} . $args{octave}, steps => $args{direction})
+        : $args{outer_scale}->step(note_name => $args{current_note} . $args{octave}, steps => $args{direction});
 
-    (my $sans_octave, $octave, $formatted) = normalize_octave($next_note);
+    my ($sans_octave, $octave, $formatted) = normalize_octave($next_note);
 
-    $in_out = $in_out ? 0 : 1; # jump rings
+    my ($section_num, $section);
+
+    my $in_out = $args{in_out} ? 0 : 1; # jump rings
     if ($in_out) {
         ($section_num, $section) = get_section(
-            links        => $outer_links,
-            section_num  => $section_num,
-            current_note => $current_note,
-            direction    => $direction,
-            sections     => $inner,
+            links        => $args{outer_links},
+            section_num  => $args{section_num},
+            current_note => $args{current_note},
+            direction    => $args{direction},
+            sections     => $args{inner},
         );
     }
     else {
         ($section_num, $section) = get_section(
-            links        => $inner_links,
-            section_num  => $section_num,
-            current_note => $current_note,
-            direction    => $direction,
-            sections     => $outer,
+            links        => $args{inner_links},
+            section_num  => $args{section_num},
+            current_note => $args{current_note},
+            direction    => $args{direction},
+            sections     => $args{outer},
         );
     }
 
-    $index = first_index { $_ eq $sans_octave } @$section;
+    my $index = first_index { $_ eq $sans_octave } @$section;
 
     return $in_out, $section_num, $index, $formatted, $octave, $section;
 }
