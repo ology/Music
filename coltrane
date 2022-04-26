@@ -160,8 +160,7 @@ sub coltrane {
     my $index        = int rand @$section; # get the current note & its index
     my $current_note = $section->[$index]; # "
     my $direction    = int rand 2 ? RIGHT : LEFT; # which way are we headed?
-    my $next_note; # The new note to generate
-    my $formatted; # "
+    my $formatted; # The new note to generate
 
     # initialize a phrase generator
     my $mdp = Music::Duration::Partition->new(
@@ -182,7 +181,6 @@ sub coltrane {
         for my $m (@$motif) {
             if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
                 ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
-                    $next_note,
                     $in_out,
                     $inner_scale,
                     $outer_scale,
@@ -203,7 +201,6 @@ sub coltrane {
                 my $roll = int rand 2;
                 if ($index == MIDDLE && $roll) {
                     ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
-                        $next_note,
                         $in_out,
                         $inner_scale,
                         $outer_scale,
@@ -221,7 +218,7 @@ sub coltrane {
                     );
                 }
                 else {
-                    $next_note = $in_out
+                    my $next_note = $in_out
                         ? $inner_scale->get_offset(note_name => $current_note . $octave, offset => $direction)
                         : $outer_scale->get_offset(note_name => $current_note . $octave, offset => $direction);
 
@@ -267,7 +264,6 @@ sub normalize_octave {
 sub step_in_out {
     # XXX This mass argument import is ugly at best
     my (
-        $next_note,
         $in_out,
         $inner_scale,
         $outer_scale,
@@ -284,7 +280,7 @@ sub step_in_out {
         $index,
     ) = @_;
 
-    $next_note = $in_out
+    my $next_note = $in_out
         ? $inner_scale->step(note_name => $current_note . $octave, steps => $direction)
         : $outer_scale->step(note_name => $current_note . $octave, steps => $direction);
 
