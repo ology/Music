@@ -298,7 +298,7 @@ sub get_section {
     # Do we have 1 or 2 linkages? If 2, use it
     my $i = exists $args{links}->{$section_num}{$current_note}
         && @{ $args{links}->{$section_num}{$current_note} } == 2
-        && $args{direction} == RIGHT ? 1 : 0;
+        && $args{direction} == RIGHT ? 1 : 0; # XXX Wait - why?
 
     $section_num = $args{links}->{$section_num}{$current_note}[$i];
 
