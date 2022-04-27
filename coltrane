@@ -6,8 +6,6 @@
 use strict;
 use warnings;
 
-no autovivification;
-
 use List::SomeUtils qw(first_index);
 #use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
 use MIDI::Drummer::Tiny;
@@ -299,7 +297,7 @@ sub get_section {
 
     # Do we have 1 or 2 linkages? If 2, use it
     my $i = exists $args{links}->{$section_num}{$current_note}
-        && defined $args{links}->{$section_num}{$current_note}[RIGHT]
+        && @{ $args{links}->{$section_num}{$current_note} } == 2
         && $args{direction} == RIGHT ? 1 : 0;
 
     $section_num = $args{links}->{$section_num}{$current_note}[$i];
