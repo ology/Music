@@ -79,7 +79,7 @@ sub bass {
         ['Cm7',    2, 'G7'],
         ['G7',     2, 'Dm7'],
         ['Dm7',    2, 'G7'],
-        ['G7',    2, undef],
+        ['G7',     2, undef],
     ) {
         my $notes = $bassline->generate($spec->@*);
         $d->note('qn', $_) for @$notes;
@@ -91,17 +91,17 @@ sub harmony {
 
     my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
 
-    my $C   = $mcg->transform('C', '', 0);
-    my $C7  = $mcg->transform('C', '7', 0);
-    my $Cm7 = $mcg->transform('C', 'm7', 0);
-    my $Dm7 = $mcg->transform('D', 'm7', 0);
-    my $F   = $mcg->transform('F', '', 0);
-    my $F7  = $mcg->transform('F', '7', 0);
-    my $Fm7 = $mcg->transform('F', 'm7', 0);
+    my $C      = $mcg->transform('C', '', 0);
+    my $C7     = $mcg->transform('C', '7', 0);
+    my $Cm7    = $mcg->transform('C', 'm7', 0);
+    my $Dm7    = $mcg->transform('D', 'm7', 0);
+    my $F      = $mcg->transform('F', '', 0);
+    my $F7     = $mcg->transform('F', '7', 0);
+    my $Fm7    = $mcg->transform('F', 'm7', 0);
     my $Fsdim7 = $mcg->transform('F#', 'dim7', 0);
-    my $G   = $mcg->transform('G', '', 0);
-    my $G7  = $mcg->transform('G', '7', 0);
-    my $Af7 = $mcg->transform('Ab', '7', 0);
+    my $G      = $mcg->transform('G', '', 0);
+    my $G7     = $mcg->transform('G', '7', 0);
+    my $Af7    = $mcg->transform('Ab', '7', 0);
 
     my $half  = 'hn';
     my $whole = 'wn';
@@ -225,21 +225,30 @@ sub coltrane {
     #  verbose     => 1,
     );
 
-    # initialize a phrase generator
-    my $mdp = Music::Duration::Partition->new(
+    # initialize phrase generators
+    my $slow = Music::Duration::Partition->new(
         size    => 4, # 4 quarter notes = 1 measure
-        pool    => [qw/ qn tqn en ten sn /], # XXX but what note durations
-        groups  => [    1, 3,  1, 3,  2   ], # XXX did Coltrane actually
-        weights => [    1, 1,  2, 2,  2   ], # XXX play?
+        pool    => [qw/ hn thn qn tqn /], # XXX but what note durations
+        groups  => [    1, 3,  1, 3    ], # XXX did Coltrane actually
+#        weights => [    1, 2,  1, 2    ], # XXX play?
     );
-    my @motifs = map { $mdp->motif } 1 .. 3;
+    my @slow_motifs = map { $slow->motif } 1 .. 2;
+    my $fast = Music::Duration::Partition->new(
+        size    => 4,
+        pool    => [qw/ qn tqn en ten sn /],
+        groups  => [    1, 3,  1, 3,  2   ],
+        weights => [    1, 1,  2, 2,  2   ],
+    );
+    my @fast_motifs = map { $fast->motif } 1 .. 2;
 
     # produce max bars of phrases
     for my $n (1 .. $max) {
         warn sprintf "%d. %d (%s)[%d] = %s%d\n",
             $n, $section_num, "@$section", $index, $current_note, $octave;
 
-        my $motif = $motifs[ int rand @motifs ];
+        my $motif = $n < 3
+            ? $slow_motifs[ int rand @slow_motifs ]
+            : $fast_motifs[ int rand @fast_motifs ];
 
         for my $m (@$motif) {
             if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
