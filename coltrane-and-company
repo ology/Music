@@ -69,14 +69,17 @@ sub bass {
         ['Fm7',    4, 'Cm7'],
         ['Cm7',    4, 'Cm7'],
         ['Cm7',    4, 'Fm7'],
-        ['Fm7',    4, 'F#dim7'],
+        ['Fm7',    2, 'Cm7'],
+        ['Cm7',    2, 'F#dim7'],
         ['F#dim7', 4, 'Cm7'],
         ['Cm7',    4, 'G'],
         ['G',      4, 'Ab7'],
         ['Ab7',    4, 'G7'],
         ['G7',     4, 'Cm7'],
-        ['Cm7',    4, 'Dm7'],
-        ['Dm7',    4, undef],
+        ['Cm7',    2, 'G7'],
+        ['G7',     2, 'Dm7'],
+        ['Dm7',    2, 'G7'],
+        ['G7',    2, undef],
     ) {
         my $notes = $bassline->generate($spec->@*);
         $d->note('qn', $_) for @$notes;
@@ -100,12 +103,13 @@ sub harmony {
     my $G7  = $mcg->transform('G', '7', 0);
     my $Af7 = $mcg->transform('Ab', '7', 0);
 
+    my $half  = 'hn';
     my $whole = 'wn';
 
     for my $spec (
         [$whole, @$Cm7], [$whole, @$Fm7], [$whole, @$Cm7], [$whole, @$Cm7],
-        [$whole, @$Fm7], [$whole, @$Fsdim7], [$whole, @$Cm7], [$whole, @$G],
-        [$whole, @$Af7], [$whole, @$G7], [$whole, @$Cm7], [$whole, @$Dm7],
+        [$half, @$Fm7], [$half, @$C7], [$whole, @$Fsdim7], [$whole, @$Cm7], [$whole, @$G7],
+        [$whole, @$Af7], [$whole, @$G7], [$half, @$Cm7], [$half, @$G7], [$half, @$Dm7], [$half, @$G7],
     ) {
         $d->score->n(@$spec);
     }
