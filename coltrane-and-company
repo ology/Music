@@ -45,7 +45,7 @@ $d->sync(
     \&drums,
     \&bass,
     \&harmony,
-#    \&coltrane,
+    \&coltrane,
 );
 
 # write the score as a midi file
