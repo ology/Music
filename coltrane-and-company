@@ -246,7 +246,7 @@ sub coltrane {
         warn sprintf "%d. %d (%s)[%d] = %s%d\n",
             $n, $section_num, "@$section", $index, $current_note, $octave;
 
-        my $motif = $n < 3
+        my $motif = $n <= 4
             ? $slow_motifs[ int rand @slow_motifs ]
             : $fast_motifs[ int rand @fast_motifs ];
 
