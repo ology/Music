@@ -1,0 +1,402 @@
+#!/usr/bin/env perl
+
+# Attempt to imitate John Coltrane via his mysterious circle diagram.
+# Writeup: https://ology.github.io/2022/04/23/coltranes-mystery-music-diagram/
+
+use strict;
+use warnings;
+
+use List::SomeUtils qw(first_index);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Chord-Guitar MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
+use MIDI::Bassline::Walk;
+use MIDI::Chord::Guitar;
+use MIDI::Drummer::Tiny;
+use MIDI::Util qw(set_chan_patch);
+use Music::Duration::Partition;
+use Music::ScaleNote;
+
+use constant HEAD   => 0;      # diagram index
+use constant MIDDLE => 2;      # "
+use constant TAIL   => 4;      # "
+use constant LEFT   => -1;     # direction
+use constant RIGHT  => 1;      # "
+use constant FORMAT => 'midi'; # note conversion format
+use constant HIGH   => 6;      # octave bound
+use constant LOW    => 3;      # "
+
+my $max    = shift || 12;  # number of measures to play
+my $bpm    = shift || 100; # beats per minute
+my $cpatch = shift || 66;  # soprano sax=64, alto=65, tenor=66, bari=67
+my $hpatch = shift || 4;   # electric pianos=4 & 5, nylon guitar=24
+my $bpatch = shift || 35; # fretless bass=35
+my $octave = shift || 4;   # starting octave
+
+my $channel = 0; # midi channel
+
+# instantiate a drummer object
+my $d = MIDI::Drummer::Tiny->new(
+    file => "$0.mid",
+    bpm  => $bpm,
+    bars => $max,
+);
+
+# play the parts simultaneously
+$d->sync(
+    \&drums,
+    \&bass,
+    \&harmony,
+#    \&coltrane,
+);
+
+# write the score as a midi file
+$d->write;
+
+sub drums {
+    $d->metronome44swing; # swing for the number of bars
+    $d->note($d->quarter, $d->ride1, $d->kick);
+}
+
+sub bass {
+    set_chan_patch($d->score, $channel++, $bpatch);
+
+    my $bassline = MIDI::Bassline::Walk->new(
+        verbose => 1,
+        tonic   => 1,
+    );
+
+    _walk($bassline, 'Cm7', 4, 'Fm7');
+    _walk($bassline, 'Fm7', 4, 'Cm7');
+    _walk($bassline, 'Cm7', 4, 'Cm7');
+    _walk($bassline, 'Cm7', 4, 'Fm7');
+    _walk($bassline, 'Fm7', 4, 'F#dim7');
+    _walk($bassline, 'F#dim7', 4, 'Cm7');
+    _walk($bassline, 'Cm7', 4, 'G');
+    _walk($bassline, 'G', 4, 'Ab7');
+    _walk($bassline, 'Ab7', 4, 'G7');
+    _walk($bassline, 'G7', 4, 'Cm7');
+    _walk($bassline, 'Cm7', 4, 'Dm7');
+    _walk($bassline, 'Dm7', 4);
+}
+
+sub _walk {
+    my ($bassline, $chord, $n, $next_chord) = @_;
+    my $notes = $bassline->generate($chord, $n, $next_chord);
+    $d->note('qn', $_) for @$notes;
+}
+
+sub harmony {
+    set_chan_patch($d->score, $channel++, $hpatch);
+
+    my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
+
+    my $C   = $mcg->transform('C', '', 0);
+    my $C7  = $mcg->transform('C', '7', 0);
+    my $Cm7 = $mcg->transform('C', 'm7', 0);
+    my $Dm7 = $mcg->transform('D', 'm7', 0);
+    my $F   = $mcg->transform('F', '', 0);
+    my $F7  = $mcg->transform('F', '7', 0);
+    my $Fm7 = $mcg->transform('F', 'm7', 0);
+    my $Fsdim7 = $mcg->transform('F#', 'dim7', 0);
+    my $G   = $mcg->transform('G', '', 0);
+    my $G7  = $mcg->transform('G', '7', 0);
+    my $Af7 = $mcg->transform('Ab', '7', 0);
+
+    for my $chord (
+        # https://en.wikipedia.org/wiki/Twelve-bar_blues#Seventh_chords
+        #$C, $F, $C, $C7,
+        #$F, $F7, $C, $C7,
+        #$G, $F, $C, $C,
+        # https://en.wikipedia.org/wiki/Twelve-bar_blues#Bebop_blues
+        #$C7, $F7, $C7, $C7,
+        #$F7, $Fsdim7, $C7, $G,
+        #$Dm7, $G7, $C7, $Dm7,
+        # https://en.wikipedia.org/wiki/Twelve-bar_blues#Minor_blues
+        #$Cm7, $Cm7, $Cm7, $Cm7,
+        #$Fm7, $Fm7, $Cm7, $Cm7,
+        #$Af7, $G7, $Cm7, $Cm7,
+        # Blended
+        $Cm7, $Fm7, $Cm7, $Cm7,
+        $Fm7, $Fsdim7, $Cm7, $G,
+        $Af7, $G7, $Cm7, $Dm7,
+        # https://en.wikipedia.org/wiki/Twelve-bar_blues#/media/File:Standard_12-bar_blues_progression_variations.png
+        # A
+        #$C7, $C7, $C7, $C7,
+        #$F7, $F7, $C7, $C7,
+        #$G7, $F7, $C7, $G7,
+        # B
+        #$C7, $C7, $C7, $C7,
+        #$F7, $F7, $C7, $C7,
+        #$G7, $F7, $C7, $C7,
+        # C
+        #$C7, $C7, $C7, $C7,
+        #$F7, $F7, $C7, $C7,
+        #$F7, $G7, $C7, $G7,
+        # D
+        #$C7, $F7, $C7, $C7,
+        #$F7, $F7, $C7, $C7,
+        #$G7, $F7, $C7, $G7,
+        # E
+        #$C7, $C7, $C7, $C7,
+        #$F7, $F7, $C7, $C7,
+        #$G7, $G7, $C7, $C7,
+    ) {
+        $d->score->n('wn', @$chord);
+    }
+}
+
+sub coltrane {
+    set_chan_patch($d->score, $channel++, $cpatch);
+
+    # describe Coltrane's circle diagram
+    my @outer = (
+        [qw( Af Bf C  D  E  )],
+        [qw( Gf Af Bf C  D  )],
+        [qw( E  Gf Af Bf C  )],
+        [qw( D  E  Gf Af Bf )],
+        [qw( C  D  E  Gf Af )],
+        [qw( Bf C  D  E  Gf )],
+    );
+    my @inner = (
+        [qw( Df Ef F  G  A  )],
+        [qw( B  Df Ef F  G  )],
+        [qw( A  B  Df Ef F  )],
+        [qw( G  A  B  Df Ef )],
+        [qw( F  G  A  B  Df )],
+        [qw( Ef F  G  A  B  )],
+    );
+    my %outer_links = (
+        0 => {
+            Af => [5],
+            C  => [5,0],
+            E  => [0],
+        },
+        1 => {
+            Gf => [0],
+            Bf => [0,1],
+            D  => [1],
+        },
+        2 => {
+            E  => [1],
+            Af => [1,2],
+            C  => [2],
+        },
+        3 => {
+            D  => [2],
+            Gf => [2,3],
+            Bf => [3],
+        },
+        4 => {
+            C  => [3],
+            E  => [3,4],
+            Af => [4],
+        },
+        5 => {
+            Bf => [4],
+            D  => [4,5],
+            Gf => [5],
+        },
+    );
+    my %inner_links = (
+        0 => {
+            Df => [0],
+            F  => [0,1],
+            A  => [1],
+        },
+        1 => {
+            B  => [1],
+            Ef => [1,2],
+            G  => [2],
+        },
+        2 => {
+            A  => [2],
+            Df => [2,3],
+            F  => [3],
+        },
+        3 => {
+            G  => [3],
+            B  => [3,4],
+            Ef => [4],
+        },
+        4 => {
+            F  => [4],
+            A  => [4,5],
+            Df => [5],
+        },
+        5 => {
+            Ef => [5],
+            G  => [5,0],
+            B  => [0],
+        },
+    );
+
+    # initial conditions
+    my $in_out       = int rand 2; # choose a ring, inner or outer
+    my $section_num  = int rand @inner; # choose a section of the ring
+    my $section      = $in_out ? $inner[$section_num] : $outer[$section_num];
+    my $index        = int rand @$section; # get the current note & its index
+    my $current_note = $section->[$index]; # "
+    my $direction    = int rand 2 ? RIGHT : LEFT; # which way are we headed?
+    my $formatted; # The new note to generate
+
+    # instantiate scale movement objects
+    my $outer_scale = Music::ScaleNote->new(
+      scale_note  => 'C',
+      scale_name  => 'wholetone',
+      note_format => FORMAT,
+      flat        => 1,
+    #  verbose     => 1,
+    );
+    my $inner_scale = Music::ScaleNote->new(
+      scale_note  => 'C#',
+      scale_name  => 'wholetone',
+      note_format => FORMAT,
+      flat        => 1,
+    #  verbose     => 1,
+    );
+
+    # initialize a phrase generator
+    my $mdp = Music::Duration::Partition->new(
+        size    => 4, # 4 quarter notes = 1 measure
+        pool    => [qw/ qn tqn en ten sn /], # XXX but what note durations
+        groups  => [    1, 3,  1, 3,  2   ], # XXX did Coltrane actually
+        weights => [    1, 1,  2, 2,  2   ], # XXX play?
+    );
+    my @motifs = map { $mdp->motif } 1 .. 3;
+
+    # produce max bars of phrases
+    for my $n (1 .. $max) {
+        warn sprintf "%d. %d (%s)[%d] = %s%d\n",
+            $n, $section_num, "@$section", $index, $current_note, $octave;
+
+        my $motif = $motifs[ int rand @motifs ];
+
+        for my $m (@$motif) {
+            if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
+                ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
+                    in_out       => $in_out,
+                    inner_scale  => $inner_scale,
+                    outer_scale  => $outer_scale,
+                    octave       => $octave,
+                    current_note => $current_note,
+                    direction    => $direction,
+                    section_num  => $section_num,
+                    inner        => \@inner,
+                    outer        => \@outer,
+                    inner_links  => \%inner_links,
+                    outer_links  => \%outer_links,
+                );
+            }
+            else {
+                my $roll = int rand 2;
+                if ($index == MIDDLE && $roll) {
+                    ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
+                        in_out       => $in_out,
+                        inner_scale  => $inner_scale,
+                        outer_scale  => $outer_scale,
+                        octave       => $octave,
+                        current_note => $current_note,
+                        direction    => $direction,
+                        section_num  => $section_num,
+                        inner        => \@inner,
+                        outer        => \@outer,
+                        inner_links  => \%inner_links,
+                        outer_links  => \%outer_links,
+                    );
+                }
+                else {
+                    my $next_note = $in_out
+                        ? $inner_scale->get_offset(note_name => $current_note . $octave, offset => $direction)
+                        : $outer_scale->get_offset(note_name => $current_note . $octave, offset => $direction);
+
+                    (my $sans_octave, $octave, $formatted) = normalize_octave($next_note);
+
+                    $index = first_index { $_ eq $sans_octave } @$section;
+                }
+            }
+
+            # add the motif note to the score
+            $d->note($m, $formatted);
+
+            warn "\tNew note: (@$section)[$index] = $formatted, $m\n";
+
+            # iterate the parameters
+            $current_note = $section->[$index];
+            $direction    = int rand 2 ? RIGHT : LEFT;
+        }
+    }
+}
+
+sub normalize_octave {
+    my ($next_note) = @_;
+
+    my $formatted = $next_note->format(FORMAT);
+
+    my $octave;
+    my $sans_octave;
+
+    if ($formatted =~ /^([A-G][fs]?)(\d+)$/) {
+        $sans_octave = $1;
+        $octave = $2;
+
+        $octave-- if $octave > HIGH;
+        $octave++ if $octave < LOW;
+
+        $formatted = $sans_octave . $octave;
+    }
+
+    return $sans_octave, $octave, $formatted;
+}
+
+sub step_in_out {
+    my (%args) = @_;
+
+    my $next_note = $args{in_out}
+        ? $args{inner_scale}->step(note_name => $args{current_note} . $args{octave}, steps => $args{direction})
+        : $args{outer_scale}->step(note_name => $args{current_note} . $args{octave}, steps => $args{direction});
+
+    my ($sans_octave, $octave, $formatted) = normalize_octave($next_note);
+
+    my ($section_num, $section);
+
+    my $in_out = $args{in_out} ? 0 : 1; # jump rings
+    if ($in_out) {
+        ($section_num, $section) = get_section(
+            links        => $args{outer_links},
+            section_num  => $args{section_num},
+            current_note => $args{current_note},
+            direction    => $args{direction},
+            sections     => $args{inner},
+        );
+    }
+    else {
+        ($section_num, $section) = get_section(
+            links        => $args{inner_links},
+            section_num  => $args{section_num},
+            current_note => $args{current_note},
+            direction    => $args{direction},
+            sections     => $args{outer},
+        );
+    }
+
+    my $index = first_index { $_ eq $sans_octave } @$section;
+
+    return $in_out, $section_num, $index, $formatted, $octave, $section;
+}
+
+sub get_section {
+    my (%args) = @_;
+
+    my $section_num  = $args{section_num};
+    my $current_note = $args{current_note};
+
+    # Do we have 1 or 2 linkages? If 2, use it
+    my $i = exists $args{links}->{$section_num}{$current_note}
+        && @{ $args{links}->{$section_num}{$current_note} } == 2
+        && $args{direction} == RIGHT ? 1 : 0; # XXX Wait - why?
+
+    $section_num = $args{links}->{$section_num}{$current_note}[$i];
+
+    my $section = $args{sections}->[$section_num];
+
+    return $section_num, $section;
+}
