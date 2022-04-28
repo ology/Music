@@ -100,46 +100,14 @@ sub harmony {
     my $G7  = $mcg->transform('G', '7', 0);
     my $Af7 = $mcg->transform('Ab', '7', 0);
 
-    for my $chord (
-        # https://en.wikipedia.org/wiki/Twelve-bar_blues#Seventh_chords
-        #$C, $F, $C, $C7,
-        #$F, $F7, $C, $C7,
-        #$G, $F, $C, $C,
-        # https://en.wikipedia.org/wiki/Twelve-bar_blues#Bebop_blues
-        #$C7, $F7, $C7, $C7,
-        #$F7, $Fsdim7, $C7, $G,
-        #$Dm7, $G7, $C7, $Dm7,
-        # https://en.wikipedia.org/wiki/Twelve-bar_blues#Minor_blues
-        #$Cm7, $Cm7, $Cm7, $Cm7,
-        #$Fm7, $Fm7, $Cm7, $Cm7,
-        #$Af7, $G7, $Cm7, $Cm7,
-        # Blended
-        $Cm7, $Fm7, $Cm7, $Cm7,
-        $Fm7, $Fsdim7, $Cm7, $G,
-        $Af7, $G7, $Cm7, $Dm7,
-        # https://en.wikipedia.org/wiki/Twelve-bar_blues#/media/File:Standard_12-bar_blues_progression_variations.png
-        # A
-        #$C7, $C7, $C7, $C7,
-        #$F7, $F7, $C7, $C7,
-        #$G7, $F7, $C7, $G7,
-        # B
-        #$C7, $C7, $C7, $C7,
-        #$F7, $F7, $C7, $C7,
-        #$G7, $F7, $C7, $C7,
-        # C
-        #$C7, $C7, $C7, $C7,
-        #$F7, $F7, $C7, $C7,
-        #$F7, $G7, $C7, $G7,
-        # D
-        #$C7, $F7, $C7, $C7,
-        #$F7, $F7, $C7, $C7,
-        #$G7, $F7, $C7, $G7,
-        # E
-        #$C7, $C7, $C7, $C7,
-        #$F7, $F7, $C7, $C7,
-        #$G7, $G7, $C7, $C7,
+    my $whole = 'wn';
+
+    for my $spec (
+        [$whole, @$Cm7], [$whole, @$Fm7], [$whole, @$Cm7], [$whole, @$Cm7],
+        [$whole, @$Fm7], [$whole, @$Fsdim7], [$whole, @$Cm7], [$whole, @$G],
+        [$whole, @$Af7], [$whole, @$G7], [$whole, @$Cm7], [$whole, @$Dm7],
     ) {
-        $d->score->n('wn', @$chord);
+        $d->score->n(@$spec);
     }
 }
 
