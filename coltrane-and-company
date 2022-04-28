@@ -79,7 +79,7 @@ sub bass {
         ['Dm7',    4, undef],
     ) {
         my $notes = $bassline->generate($spec->@*);
-        $d->note('qn', $_) for @$notes;
+        $d->note($spec->[1] == 2 ? 'en' : 'qn', $_) for @$notes;
     }
 }
 
