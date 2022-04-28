@@ -20,12 +20,12 @@ use constant LEFT   => -1;     # direction
 use constant RIGHT  => 1;      # "
 use constant FORMAT => 'midi'; # note conversion format
 use constant HIGH   => 6;      # octave bound
-use constant LOW    => 3;      # "
+use constant LOW    => 4;      # "
 
 my $max    = shift || 12;  # number of measures to play
 my $bpm    = shift || 100; # beats per minute
 my $patch  = shift || 66;  # soprano sax=64, alto=65, tenor=66, bari=67
-my $octave = shift || 4;   # starting octave
+my $octave = shift || 5;   # starting octave
 
 my $channel = 0; # midi channel
 
@@ -136,7 +136,7 @@ my $d = MIDI::Drummer::Tiny->new(
 
 # play the parts simultaneously
 $d->sync(
-    \&drums,
+#    \&drums,
     \&coltrane,
 );
 
