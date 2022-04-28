@@ -64,21 +64,21 @@ sub bass {
         tonic   => 1,
     );
 
-    _walk($bassline, 'Cm7', 4, 'Fm7');
-    _walk($bassline, 'Fm7', 4, 'Cm7');
-    _walk($bassline, 'Cm7', 4, 'Cm7');
-    _walk($bassline, 'Cm7', 4, 'Fm7');
-    _walk($bassline, 'Fm7', 4, 'F#dim7');
-    _walk($bassline, 'F#dim7', 4, 'Cm7');
-    _walk($bassline, 'Cm7', 4, 'G');
-    _walk($bassline, 'G', 4, 'Ab7');
-    _walk($bassline, 'Ab7', 4, 'G7');
-    _walk($bassline, 'G7', 4, 'Cm7');
-    _walk($bassline, 'Cm7', 4, 'Dm7');
-    _walk($bassline, 'Dm7', 4);
+    walk($bassline, 'Cm7', 4, 'Fm7');
+    walk($bassline, 'Fm7', 4, 'Cm7');
+    walk($bassline, 'Cm7', 4, 'Cm7');
+    walk($bassline, 'Cm7', 4, 'Fm7');
+    walk($bassline, 'Fm7', 4, 'F#dim7');
+    walk($bassline, 'F#dim7', 4, 'Cm7');
+    walk($bassline, 'Cm7', 4, 'G');
+    walk($bassline, 'G', 4, 'Ab7');
+    walk($bassline, 'Ab7', 4, 'G7');
+    walk($bassline, 'G7', 4, 'Cm7');
+    walk($bassline, 'Cm7', 4, 'Dm7');
+    walk($bassline, 'Dm7', 4);
 }
 
-sub _walk {
+sub walk {
     my ($bassline, $chord, $n, $next_chord) = @_;
     my $notes = $bassline->generate($chord, $n, $next_chord);
     $d->note('qn', $_) for @$notes;
