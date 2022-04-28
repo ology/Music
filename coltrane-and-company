@@ -65,20 +65,20 @@ sub bass {
     );
 
     for my $spec (
-        ['Cm7',    'Fm7'],
-        ['Fm7',    'Cm7'],
-        ['Cm7',    'Cm7'],
-        ['Cm7',    'Fm7'],
-        ['Fm7',    'F#dim7'],
-        ['F#dim7', 'Cm7'],
-        ['Cm7',    'G'],
-        ['G',      'Ab7'],
-        ['Ab7',    'G7'],
-        ['G7',     'Cm7'],
-        ['Cm7',    'Dm7'],
-        ['Dm7', ''],
+        ['Cm7',    4, 'Fm7'],
+        ['Fm7',    4, 'Cm7'],
+        ['Cm7',    4, 'Cm7'],
+        ['Cm7',    4, 'Fm7'],
+        ['Fm7',    4, 'F#dim7'],
+        ['F#dim7', 4, 'Cm7'],
+        ['Cm7',    4, 'G'],
+        ['G',      4, 'Ab7'],
+        ['Ab7',    4, 'G7'],
+        ['G7',     4, 'Cm7'],
+        ['Cm7',    4, 'Dm7'],
+        ['Dm7',    4, undef],
     ) {
-        my $notes = $bassline->generate($spec->[0], 4, $spec->[1]);
+        my $notes = $bassline->generate($spec->@*);
         $d->note('qn', $_) for @$notes;
     }
 }
