@@ -31,7 +31,7 @@ my $hpatch = shift || 4;   # electric pianos=4 & 5, nylon guitar=24
 my $bpatch = shift || 35; # fretless bass=35
 my $octave = shift || 4;   # starting octave
 
-my $channel = 0; # midi channel
+my $channel = 0; # initial midi channel
 
 # instantiate a drummer object
 my $d = MIDI::Drummer::Tiny->new(
