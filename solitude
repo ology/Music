@@ -211,7 +211,7 @@ sub bass {
     for my $n (1 .. 2) {
         _walk($bassline, 'DbM7', 6);
         _walk($bassline, 'Bbm7', 2);
-        _walk($bassline, 'Eb7', 8); # whole + whole ticks
+        _walk($bassline, 'Eb7', 8);
         _walk($bassline, 'Ebm7', 4);
         _walk($bassline, 'Ab7', 4);
         _walk($bassline, 'DbM7', 4);
