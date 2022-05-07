@@ -13,9 +13,12 @@ my $bpm               = shift || 100;
 my $scale_note        = shift || 'C';
 my $treble_scale_name = shift || 'major';
 my $bass_scale_name   = shift || 'pentatonic';
+my $treble_patch      = shift || 0;
+my $bass_patch        = shift || 35;
 
 my $treble_octave = 5;
 my $bass_octave   = 3;
+my $channel       = 0;
 
 my @treble_notes = map { $_ . $treble_octave } get_scale_notes($scale_note, $treble_scale_name);
 my @bass_notes   = map { $_ . $bass_octave } get_scale_notes($scale_note, $bass_scale_name);
@@ -54,12 +57,14 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub bass {
+    set_chan_patch($score, $channel++, $bass_patch);
     for my $note (@bass) {
         $score->n('wn', $note);
     }
 }
 
 sub treble {
+    set_chan_patch($score, $channel++, $treble_patch);
     for my $notes (@treble) {
         $score->n('wn', @$notes);
     }
