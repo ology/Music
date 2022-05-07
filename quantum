@@ -26,12 +26,12 @@ for my $n (1 .. $max) {
     my ($realized, @phrase);
 
     while (!@phrase || ($phrase[0] eq $phrase[1] || $phrase[0] eq $phrase[2] || $phrase[1] eq $phrase[2])) {
-        my @chord = map { superpos(@treble_notes) } 1 .. 3;
-        my $bass = superpos(@bass_notes);
+        my @chord  = map { superpos(@treble_notes) } 1 .. 3;
+        my $bass   = superpos(@bass_notes);
         my $phrase = join ' ', @chord, $bass;
-        my $random_phrase = superpos($phrase);
-        $realized = $random_phrase->collapse;
-        @phrase = split / /, $realized;
+        my $random = superpos($phrase);
+        $realized  = $random->collapse;
+        @phrase    = split / /, $realized;
         warn ddc(\@phrase);
     }
 
