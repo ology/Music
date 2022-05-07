@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Music::Scales qw(get_scale_notes);
+use Quantum::Superpositions::Lazy;
+
+my $scale_note        = shift || 'C';
+my $treble_scale_name = shift || 'major';
+my $bass_scale_name   = shift || 'pentatonic';
+
+my $treble_octave = 4;
+my $bass_octave   = 2;
+
+my @treble_notes = map { $_ . $treble_octave } get_scale_notes($scale_note, $treble_scale_name);
+my @bass_notes   = map { $_ . $bass_octave } get_scale_notes($scale_note, $bass_scale_name);
+
+my @chord = map { superpos(@treble_notes) } 1 .. 3;
+my $bass = superpos(@bass_notes);
+my $phrase = join ' ', @chord, $bass;
+
+my $random_phrase = superpos($phrase);
+my $realized = $random_phrase->collapse;
+
+print $realized;
