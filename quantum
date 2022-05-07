@@ -23,20 +23,13 @@ my @bass_notes   = map { $_ . $bass_octave } get_scale_notes($scale_note, $bass_
 my @phrases;
 
 for my $n (1 .. $max) {
-    my @chord = map { superpos(@treble_notes) } 1 .. 3;
-    my $bass = superpos(@bass_notes);
-    my $phrase = join ' ', @chord, $bass;
-    my $random_phrase = superpos($phrase);
-    my $realized = $random_phrase->collapse;
-    my @phrase = split / /, $realized;
-    warn 'Initial: ', ddc(\@phrase);
+    my ($realized, @phrase);
 
-    # get a new phrase if the current has duplicates
-    while ($phrase[0] eq $phrase[1] || $phrase[0] eq $phrase[2] || $phrase[1] eq $phrase[2]) {
-        @chord = map { superpos(@treble_notes) } 1 .. 3;
-        $bass = superpos(@bass_notes);
-        $phrase = join ' ', @chord, $bass;
-        $random_phrase = superpos($phrase);
+    while (!@phrase || ($phrase[0] eq $phrase[1] || $phrase[0] eq $phrase[2] || $phrase[1] eq $phrase[2])) {
+        my @chord = map { superpos(@treble_notes) } 1 .. 3;
+        my $bass = superpos(@bass_notes);
+        my $phrase = join ' ', @chord, $bass;
+        my $random_phrase = superpos($phrase);
         $realized = $random_phrase->collapse;
         @phrase = split / /, $realized;
         warn 'Recompute: ', ddc(\@phrase);
