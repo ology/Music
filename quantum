@@ -32,18 +32,17 @@ for my $n (1 .. $max) {
         my $random_phrase = superpos($phrase);
         $realized = $random_phrase->collapse;
         @phrase = split / /, $realized;
-        warn 'Recompute: ', ddc(\@phrase);
+        warn ddc(\@phrase);
     }
 
-    print $realized, "\n";
-    push @phrases, $realized;
+    print "Phrase: $realized\n";
+    push @phrases, \@phrase;
 }
 
 my (@treble, @bass);
 for my $p (@phrases) {
-    my @parts = split / /, $p;
-    push @treble, [ @parts[0 .. 2] ];
-    push @bass, $parts[3];
+    push @treble, [ @$p[0 .. 2] ];
+    push @bass, $p->[3];
 }
 
 my $score = setup_score(bpm => $bpm);
