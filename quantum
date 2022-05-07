@@ -22,7 +22,7 @@ my $phrase = join ' ', @chord, $bass;
 my $random_phrase = superpos($phrase);
 my $realized = $random_phrase->collapse;
 my @phrase = split / /, $realized;
-warn 'Initial: ', ddc(\@phrase, {max_width=>128});
+warn 'Initial: ', ddc(\@phrase);
 
 while ($phrase[0] eq $phrase[1] || $phrase[0] eq $phrase[2] || $phrase[1] eq $phrase[2]) {
     @chord = map { superpos(@treble_notes) } 1 .. 3;
@@ -31,7 +31,7 @@ while ($phrase[0] eq $phrase[1] || $phrase[0] eq $phrase[2] || $phrase[1] eq $ph
     $random_phrase = superpos($phrase);
     $realized = $random_phrase->collapse;
     @phrase = split / /, $realized;
-    warn 'Recompute: ', ddc(\@phrase, {max_width=>128});
+    warn 'Recompute: ', ddc(\@phrase);
 }
 
 print $realized;
