@@ -9,15 +9,18 @@ use Music::Scales qw(get_scale_notes);
 use Quantum::Superpositions::Lazy;
 
 my $max               = shift || 8;
+my $bpm               = shift || 100;
 my $scale_note        = shift || 'C';
 my $treble_scale_name = shift || 'major';
 my $bass_scale_name   = shift || 'pentatonic';
 
-my $treble_octave = 4;
-my $bass_octave   = 2;
+my $treble_octave = 5;
+my $bass_octave   = 3;
 
 my @treble_notes = map { $_ . $treble_octave } get_scale_notes($scale_note, $treble_scale_name);
 my @bass_notes   = map { $_ . $bass_octave } get_scale_notes($scale_note, $bass_scale_name);
+
+my @phrases;
 
 for my $n (1 .. $max) {
     my @chord = map { superpos(@treble_notes) } 1 .. 3;
@@ -28,6 +31,7 @@ for my $n (1 .. $max) {
     my @phrase = split / /, $realized;
     warn 'Initial: ', ddc(\@phrase);
 
+    # get a new phrase if the current has duplicates
     while ($phrase[0] eq $phrase[1] || $phrase[0] eq $phrase[2] || $phrase[1] eq $phrase[2]) {
         @chord = map { superpos(@treble_notes) } 1 .. 3;
         $bass = superpos(@bass_notes);
@@ -39,4 +43,33 @@ for my $n (1 .. $max) {
     }
 
     print $realized, "\n";
+    push @phrases, $realized;
+}
+
+my (@treble, @bass);
+for my $p (@phrases) {
+    my @parts = split / /, $p;
+    push @treble, [ @parts[0 .. 2] ];
+    push @bass, $parts[3];
+}
+
+my $score = setup_score(bpm => $bpm);
+
+$score->synch(
+    \&bass,
+    \&treble,
+);
+
+$score->write_score("$0.mid");
+
+sub bass {
+    for my $note (@bass) {
+        $score->n('wn', $note);
+    }
+}
+
+sub treble {
+    for my $notes (@treble) {
+        $score->n('wn', @$notes);
+    }
 }
