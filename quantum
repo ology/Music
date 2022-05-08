@@ -4,15 +4,15 @@ use warnings;
 
 use Data::Dumper::Compact qw(ddc);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
-use MIDI::Util qw(setup_score set_chan_patch);
+use MIDI::Util qw(setup_score set_chan_patch midi_format);
 use Music::Scales qw(get_scale_notes);
 use Quantum::Superpositions::Lazy;
 
-my $max               = shift || 8;
+my $max               = shift || 16;
 my $bpm               = shift || 100;
 my $scale_note        = shift || 'C';
-my $treble_scale_name = shift || 'major';
-my $bass_scale_name   = shift || 'pentatonic';
+my $treble_scale_name = shift || 'dorian';
+my $bass_scale_name   = shift || 'pminor';
 my $treble_patch      = shift || 0;
 my $bass_patch        = shift || 35;
 
@@ -59,7 +59,7 @@ $score->write_score("$0.mid");
 sub bass {
     set_chan_patch($score, $channel++, $bass_patch);
     for my $notes (@bass) {
-        for my $note (@$notes) {
+        for my $note (midi_format(@$notes)) {
             $score->n('qn', $note);
         }
     }
@@ -68,6 +68,6 @@ sub bass {
 sub treble {
     set_chan_patch($score, $channel++, $treble_patch);
     for my $notes (@treble) {
-        $score->n('wn', @$notes);
+        $score->n('wn', midi_format(@$notes));
     }
 }
