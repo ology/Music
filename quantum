@@ -13,7 +13,7 @@ my $bpm               = shift || 100;
 my $scale_note        = shift || 'D';
 my $treble_scale_name = shift || 'dorian';
 my $bass_scale_name   = shift || 'pminor';
-my $treble_patch      = shift || 0;
+my $treble_patch      = shift || 4;
 my $bass_patch        = shift || 35;
 
 my $treble_octave = 5;
