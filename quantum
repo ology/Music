@@ -10,7 +10,7 @@ use Quantum::Superpositions::Lazy;
 
 my $max               = shift || 16;
 my $bpm               = shift || 100;
-my $scale_note        = shift || 'C';
+my $scale_note        = shift || 'D';
 my $treble_scale_name = shift || 'dorian';
 my $bass_scale_name   = shift || 'pminor';
 my $treble_patch      = shift || 0;
