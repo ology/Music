@@ -29,8 +29,8 @@ for my $n (1 .. $max) {
 
     while (!@phrase || ($phrase[0] eq $phrase[1] || $phrase[0] eq $phrase[2] || $phrase[1] eq $phrase[2])) {
         my @chord  = map { superpos(@treble_notes) } 1 .. 3;
-        my $bass   = superpos(@bass_notes);
-        my $phrase = join ' ', @chord, $bass;
+        my @bass   = map { superpos(@bass_notes) } 1 .. 4;
+        my $phrase = join ' ', @chord, @bass;
         my $random = superpos($phrase);
         $realized  = $random->collapse;
         @phrase    = split / /, $realized;
@@ -44,7 +44,7 @@ for my $n (1 .. $max) {
 my (@treble, @bass);
 for my $p (@phrases) {
     push @treble, [ @$p[0 .. 2] ];
-    push @bass, $p->[3];
+    push @bass, [ @$p[3 .. 6] ];
 }
 
 my $score = setup_score(bpm => $bpm);
@@ -58,8 +58,10 @@ $score->write_score("$0.mid");
 
 sub bass {
     set_chan_patch($score, $channel++, $bass_patch);
-    for my $note (@bass) {
-        $score->n('wn', $note);
+    for my $notes (@bass) {
+        for my $note (@$notes) {
+            $score->n('qn', $note);
+        }
     }
 }
 
