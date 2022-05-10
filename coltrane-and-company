@@ -284,6 +284,15 @@ sub coltrane {
                     );
                 }
                 else {
+                    # jump?
+#                    if ($direction == RIGHT && $index != 3) {
+#warn __PACKAGE__,' L',__LINE__,' ',,"RIGHT: $direction, C: $current_note, S: [@$section] I: $index\n";
+#                        $direction++ if int rand 2;
+#                    }
+#                    elsif ($direction == LEFT && $index != 1) {
+#warn __PACKAGE__,' L',__LINE__,' ',,"LEFT: $direction, C: $current_note, S: [@$section] I: $index\n";
+#                        $direction-- if int rand 2;
+#                    }
                     my $next_note = $in_out
                         ? $inner_scale->get_offset(note_name => $current_note . $octave, offset => $direction)
                         : $outer_scale->get_offset(note_name => $current_note . $octave, offset => $direction);
