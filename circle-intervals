@@ -1,0 +1,74 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Math::Trig;
+use SVG;
+
+use constant PI     => 2 * atan2(1,0);
+use constant HALF   => PI / 2;
+use constant DOUBLE => 2 * PI;
+
+my $diameter = shift || 512;
+
+my $total_marks   = 60;
+my $border_width  = 10;
+my $border_height = 10;
+my $sub_radius    = 10;
+my $radius        = $diameter / 2;
+my $frame_width   = $diameter + 2 * $border_width;
+my $frame_height  = $diameter + 2 * $border_height;
+
+my $svg = SVG->new(
+    width  => $frame_width,
+    height => $frame_height,
+);
+$svg->title()->cdata('I am a title');
+ 
+# use explicit element constructor to generate a group element
+my $y = $svg->group(
+    id    => 'group_y',
+    style => {
+        stroke => 'gray',
+        fill   => 'white',
+    },
+);
+ 
+$y->circle(
+    cx => $frame_width / 2,
+    cy => $frame_height / 2,
+    r  => $radius,
+    id => 'circle_in_group_y',
+);
+
+my @marks =
+#    map { $_ * 5 } 1 .. 12; # chromatic, perfect 4th/5th
+#    map { $_ * 10 } 1 .. 6; # wholetone
+    map { $_ * 2 } 1 .. 30; # wholetone
+
+for my $mark (@marks) {
+    my ($p) = time_point($mark);
+    $y->circle(
+        cx => $p->[0] + $sub_radius,
+        cy => $p->[1] + $sub_radius,
+        r  => $sub_radius,
+        id => $mark . '-sub_circle_in_group_y',
+    );
+}
+ 
+print $svg->xmlify;
+
+sub time_point {
+    my ($p) = @_;
+
+    # Compute the analog minute time equivalent
+    $p = $p / $total_marks * DOUBLE - HALF;
+
+    # Replace the time value with the polar coordinate
+    $p = [
+        $radius + $radius * cos $p,
+        $radius + $radius * sin $p
+    ];
+
+    return $p;
+}
