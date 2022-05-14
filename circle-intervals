@@ -98,12 +98,10 @@ my @outer_scale = get_scale_notes('C', 'chromatic');
 my @inner_scale = get_scale_notes('C#', 'chromatic');
 
 my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] }
-    1 .. $show_marks * $interval;
-push @outer_labels, $outer_labels[0];
+    1 .. $show_marks;
 
 my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
-    1 .. $show_marks * $interval;
-push @inner_labels, $inner_labels[0];
+    1 .. $show_marks;
 
 my $svg = SVG->new(
     width  => $frame_size,
@@ -146,7 +144,7 @@ for my $mark (@marks) {
         id     => $i . '-style1-group-outer-sub-text',
         x      => $p->[0] + $sub_radius - ($sub_radius / 2),
         y      => $p->[1] + $sub_radius + ($sub_radius / 2),
-        -cdata => $outer_labels[$i],
+        -cdata => $outer_labels[ $i % @outer_labels ],
     );
 }
 
@@ -179,7 +177,7 @@ for my $mark (@marks) {
         id     => $i . '-style1-group-inner-sub-text',
         x      => $p->[0] + $sub_radius * 3 + 3,
         y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
-        -cdata => $inner_labels[$i],
+        -cdata => $inner_labels[ $i % @inner_labels ],
     );
 }
 
