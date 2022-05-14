@@ -51,7 +51,7 @@ for my $mark (@marks) {
     my ($p) = time_point($mark);
 
     $style1->circle(
-        id => $mark . '-sub_circle_in_group_y',
+        id => $mark . '-sub_circle',
         cx => $p->[0] + $sub_radius,
         cy => $p->[1] + $sub_radius,
         r  => $sub_radius,
