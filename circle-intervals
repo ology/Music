@@ -37,7 +37,6 @@ my $inner_fill = shift || 'white';
 my $text_line  = shift || 'black';
 
 my $font_size   = 20;           # size of the center info font
-my $knowns      = 11;           # known intervals 1-11
 my $total_marks = 60;           # maximum number of interval markers 2-60
 my $border_size = 10;           # chart margin
 my $sub_radius  = 11;           # radius for sub-circle markings
@@ -153,7 +152,7 @@ if ($show_inner) {
         0.18, 0.18, 0.17,
     );
     my %intervals;
-    for my $known (1 .. $knowns) {
+    for my $known (keys %named) {
         for my $mark (2 .. $total_marks) {
             $intervals{ $known . ',' . $mark } = $factors[$mark];
         }
