@@ -59,7 +59,7 @@ my $svg = SVG->new(
     width  => $frame_size,
     height => $frame_size,
 );
-$svg->title()->cdata("Show $show_marks marks around a note circle for interval $interval");
+$svg->title()->cdata("Show $show_marks marks around a note circle for the $named{$interval} interval");
 
 # generate a group element
 my $outer_style = $svg->group(
