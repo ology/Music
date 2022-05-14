@@ -25,6 +25,7 @@ my $frame_size  = $diameter + 2 * $border_size;
 
 my @factors = (
     0,
+    0,
     1.7,
     1.2,
     0.9,
