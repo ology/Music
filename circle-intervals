@@ -96,7 +96,7 @@ for my $mark (@marks) {
         id     => $i . '-style1-group-inner-sub-text',
         x      => $p->[0] + $sub_radius * 3 + 3,
         y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
-        -cdata => $labels[$i],
+        -cdata => $labels[ $i + 1 ],
     );
 }
  
