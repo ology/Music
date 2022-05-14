@@ -119,8 +119,8 @@ sub time_point {
     my $coord;
     if ($inner) {
         $coord = [
-            $radius + $radius * cos($analog - 0.05),
-            $radius + $radius * sin($analog - 0.05)
+            $radius + $radius * cos($analog - DOUBLE / $total * 2),
+            $radius + $radius * sin($analog - DOUBLE / $total * 2)
         ];
     }
     else {
