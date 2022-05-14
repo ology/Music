@@ -13,7 +13,7 @@ use warnings;
 
 use List::SomeUtils qw(first_index);
 use Math::Trig ();
-use Music::Scales qw(get_scale_nums get_scale_notes);
+use Music::Scales qw(get_scale_notes);
 use SVG qw(title);
 
 use constant PI     => 2 * atan2(1,0);
