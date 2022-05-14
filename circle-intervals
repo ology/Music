@@ -14,16 +14,16 @@ use constant PI     => 2 * atan2(1,0);
 use constant HALF   => PI / 2;
 use constant DOUBLE => 2 * PI;
 
-my $interval   = shift || 1;   # interval to calculate: default chromatic
-my $show_marks = shift || 12;  # how many circular note marks to display
-my $show_inner = shift // 0;   # show we show the inner ring?
-my $flat       = shift // 0;   # show note names with flats: default sharps
-my $diameter   = shift || 512; # the diameter of the circle
+my $interval   = shift || 1;    # interval to calculate: default chromatic
+my $show_marks = shift || 12;   # how many circular note marks to display
+my $show_inner = shift // 0;    # show we show the inner ring?
+my $flat       = shift // 0;    # show note names with flats: default sharps
+my $diameter   = shift || 512;  # the diameter of the circle
 
-my $knowns      = 5;  # known intervals 1-5
-my $total_marks = 60; # maximum number of interval markers
-my $border_size = 10; # chart margin
-my $sub_radius  = 11; # radius for sub-circle markings
+my $knowns      = 5;            # known intervals 1-5
+my $total_marks = 60;           # maximum number of interval markers
+my $border_size = 10;           # chart margin
+my $sub_radius  = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
