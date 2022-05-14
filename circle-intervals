@@ -111,14 +111,14 @@ sub time_point {
     # Replace the time value with the polar coordinate
     if ($inner) {
         $p = [
-            $radius + $radius * cos $p - 1,
-            $radius + $radius * sin $p - 1
+            $radius + $radius * cos($p - 1),
+            $radius + $radius * sin($p - 1)
         ];
     }
     else {
         $p = [
-            $radius + $radius * cos $p,
-            $radius + $radius * sin $p
+            $radius + $radius * cos($p),
+            $radius + $radius * sin($p)
         ];
     }
 
