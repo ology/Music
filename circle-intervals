@@ -6,9 +6,11 @@ use warnings;
 # Optionally show an inner circle of offset notes.
 # Examples:
 # Chromatic: perl circle-intervals 1 24 > circle-intervals.svg
-# Circle of fifths: perl circle-intervals 5 12 > circle-intervals.svg
+# Circle of fifths: perl circle-intervals 5 12 0 1 > circle-intervals.svg
+# Numeric: perl circle-intervals 5 12 0 1 512 C C\# 1 > circle-intervals.svg
 # Coltrane's wholetone: perl circle-intervals 2 30 1 1 > circle-intervals.svg
 
+use List::SomeUtils qw(first_index);
 use Math::Trig ();
 use Music::Scales qw(get_scale_nums get_scale_notes);
 use SVG qw(title);
@@ -25,6 +27,7 @@ my $flat       = shift // 0;    # show note names with flats: default sharps
 my $diameter   = shift || 512;  # the diameter of the circle
 my $outer_note = shift || 'C';  # starting outer ring note
 my $inner_note = shift || 'C#'; # starting inner ring note
+my $numeric    = shift // 0;
 
 my $knowns      = 5;            # known intervals 1-5
 my $total_marks = 60;           # maximum number of interval markers 2-60
@@ -79,11 +82,14 @@ for my $mark (@marks) {
     );
 
     my $item = $outer_labels[ $i % @outer_labels ];
+    my $text = $numeric
+        ? first_index { $_ eq $item } @outer_scale
+        : $item;
     $outer_style->text(
         id     => $i . '-style-group-outer-sub-text',
         x      => $p->[0] + $sub_radius - ($sub_radius / 2),
         y      => $p->[1] + $sub_radius + ($sub_radius / 2),
-        -cdata => $item,
+        -cdata => $text,
     );
 }
 
@@ -154,11 +160,16 @@ if ($show_inner) {
             cy => $p->[1] + $sub_radius * 4,
             r  => $sub_radius,
         );
+
+        my $item = $inner_labels[ $i % @inner_labels ];
+        my $text = $numeric
+            ? first_index { $_ eq $item } @inner_scale
+            : $item;
         $inner_style->text(
             id     => $i . '-style-group-inner-sub-text',
             x      => $p->[0] + $sub_radius * 3 + 3,
             y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
-            -cdata => $inner_labels[ $i % @inner_labels ],
+            -cdata => $text,
         );
     }
 }
