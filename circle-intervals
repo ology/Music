@@ -55,6 +55,7 @@ my %named       = (
     11 => 'seventh',
 );
 my $caption = "Interval: $named{$interval}, Notes: $show_marks";
+my $title   = "Show $show_marks marks around a note circle for the $named{$interval} interval";
 
 my @outer_scale = get_scale_notes($outer_note, SCALE, undef, $flat ? 'b' : '#');
 
@@ -64,7 +65,7 @@ my $svg = SVG->new(
     width  => $frame_size,
     height => $frame_size,
 );
-$svg->title()->cdata("Show $show_marks marks around a note circle for the $named{$interval} interval");
+$svg->title()->cdata($title);
 
 # generate a group element
 my $outer_style = $svg->group(
