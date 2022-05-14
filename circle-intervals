@@ -133,9 +133,9 @@ if ($show_inner) {
         0.18, 0.18, 0.17,
     );
     my %intervals;
-    for my $major (1 .. $knowns) {
-        for my $minor (2 .. $total_marks) {
-            $intervals{ $major . ',' . $minor } = $factors[$minor];
+    for my $known (1 .. $knowns) {
+        for my $mark (2 .. $total_marks) {
+            $intervals{ $known . ',' . $mark } = $factors[$mark];
         }
     }
 
