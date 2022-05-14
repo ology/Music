@@ -22,8 +22,8 @@ my $show_marks = shift || 12;   # how many circular note marks to display 2-60
 my $show_inner = shift // 0;    # show the inner ring?
 my $flat       = shift // 0;    # show note names with flats: default sharps
 my $diameter   = shift || 512;  # the diameter of the circle
-my $outer_note = shift || 'C';
-my $inner_note = shift || 'C#';
+my $outer_note = shift || 'C';  # starting outer ring note
+my $inner_note = shift || 'C#'; # starting inner ring note
 
 my $knowns      = 5;            # known intervals 1-5
 my $total_marks = 60;           # maximum number of interval markers 2-60
