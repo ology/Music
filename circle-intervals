@@ -58,6 +58,7 @@ my $caption = "Interval: $named{$interval}, Notes: $show_marks";
 my $title   = 'Circular Music Intervals';
 my $desc    = "Show $show_marks marks around a note circle for the $named{$interval} interval";
 
+# build the outer ring
 my @outer_scale = get_scale_notes($outer_note, SCALE, undef, $flat ? 'b' : '#');
 
 my @outer_labels = get_labels(\@outer_scale, $interval, $show_marks);
