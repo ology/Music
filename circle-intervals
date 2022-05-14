@@ -30,6 +30,11 @@ my $diameter   = shift || 512;  # the diameter of the circle
 my $outer_note = shift || 'C';  # starting outer ring note
 my $inner_note = shift || 'C#'; # starting inner ring note
 my $numeric    = shift // 0;
+my $outer_line = shift || 'green';
+my $outer_fill = shift || 'white';
+my $inner_line = shift || 'gray';
+my $inner_fill = shift || 'white';
+my $text_line  = shift || 'black';
 
 my $knowns      = 11;           # known intervals 1-11
 my $total_marks = 60;           # maximum number of interval markers 2-60
@@ -65,8 +70,8 @@ $svg->title()->cdata("Show $show_marks marks around a note circle for the $named
 my $outer_style = $svg->group(
     id    => 'outer-style-group',
     style => {
-        stroke => 'green',
-        fill   => 'white',
+        stroke => $outer_line,
+        fill   => $outer_fill,
     },
 );
 
@@ -82,7 +87,7 @@ $outer_style->text(
     x     => $frame_size / 2 - $sub_radius * 6,
     y     => $frame_size / 2,
     style => {
-        stroke => 'gray',
+        stroke => $text_line,
     },
     -cdata => "Interval: $named{$interval}, Notes: $show_marks",
 ) if !$show_inner;
@@ -121,8 +126,8 @@ if ($show_inner) {
     my $inner_style = $svg->group(
         id    => 'inner-style-group',
         style => {
-            stroke => 'gray',
-            fill   => 'white',
+            stroke => $inner_line,
+            fill   => $inner_fill,
         },
     );
 
@@ -166,9 +171,12 @@ if ($show_inner) {
     );
 
     $inner_style->text(
-        id     => 'style-group-inner-info',
-        x      => $frame_size / 2 - $sub_radius * 6,
-        y      => $frame_size / 2,
+        id    => 'style-group-inner-info',
+        x     => $frame_size / 2 - $sub_radius * 6,
+        y     => $frame_size / 2,
+        style => {
+            stroke => $text_line,
+        },
         -cdata => "Interval: $named{$interval}, Notes: $show_marks",
     );
 
