@@ -42,8 +42,11 @@ $y->circle(
     id => 'circle_in_group_y',
 );
 
+my $i = 0;
+
 my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 for my $mark (@marks) {
+    $i++;
     my ($p) = time_point($mark);
     $y->circle(
         id => $mark . '-sub_circle_in_group_y',
@@ -55,7 +58,7 @@ for my $mark (@marks) {
         id     => $mark . '-sub_text',
         x      => $p->[0] + $sub_radius - ($sub_radius / 2),
         y      => $p->[1] + $sub_radius + ($sub_radius / 2),
-        -cdata => $mark,
+        -cdata => $i,
     );
 }
  
