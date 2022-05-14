@@ -220,8 +220,8 @@ print $svg->xmlify;
 sub get_labels {
     my ($scale, $interval, $marks) = @_;
 
-    my @labels = map { $scale->[ (($_ - 1) * $interval) % @$scale ] }
-        1 .. $marks;
+    my @labels = map { $scale->[ ($_ * $interval) % @$scale ] }
+        0 .. $marks - 1;
 
     return @labels;
 }
