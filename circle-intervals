@@ -30,10 +30,9 @@ my $diameter   = shift || 512;  # the diameter of the circle
 my $outer_note = shift || 'C';  # starting outer ring note
 my $inner_note = shift || 'C#'; # starting inner ring note
 my $numeric    = shift // 0;    # display notes as pitch numbers
+my $fill       = shift || 'white';
 my $outer_line = shift || 'green';
-my $outer_fill = shift || 'white';
 my $inner_line = shift || 'gray';
-my $inner_fill = shift || 'white';
 my $text_line  = shift || 'black';
 
 my $total_marks = 60;           # maximum number of interval markers 2-60
@@ -72,7 +71,7 @@ my $outer_style = $svg->group(
     id    => 'outer-style-group',
     style => {
         stroke => $outer_line,
-        fill   => $outer_fill,
+        fill   => $fill,
     },
 );
 
@@ -129,7 +128,7 @@ if ($show_inner) {
         id    => 'inner-style-group',
         style => {
             stroke => $inner_line,
-            fill   => $inner_fill,
+            fill   => $fill,
         },
     );
 
