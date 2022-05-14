@@ -181,8 +181,7 @@ if ($show_inner) {
             stroke      => $text_line,
             'font-size' => $font_size,
         },
-        -cdata => $caption,
-    );
+    )->cdata($caption);
 
     $i = 0;
 
