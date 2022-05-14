@@ -26,39 +26,9 @@ my $sub_radius  = 11;
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
-# adjust the inner ring
-my @factors = (
-    0, 0,
-    1.7,  1.2,  0.9,  0.7,
-    0.65, 0.6,  0.5,  0.45,
-    0.45, 0.4,  0.35, 0.35,
-    0.35, 0.35, 0.35, 0.3,
-    0.3,  0.25, 0.25, 0.25,
-    0.25, 0.25, 0.25, 0.24,
-    0.24, 0.23, 0.22, 0.22,
-    0.22, 0.22, 0.21, 0.21,
-    0.2,  0.2,  0.2,  0.2,
-    0.2,  0.2,  0.2,  0.2,
-    0.19, 0.19, 0.19, 0.19,
-    0.19, 0.19, 0.18, 0.18,
-    0.18, 0.18, 0.18, 0.18,
-    0.18, 0.18, 0.18, 0.18,
-    0.18, 0.18, 0.17,
-);
-my %intervals;
-for my $major (1 .. 5) {
-    for my $minor (2 .. 60) {
-        $intervals{ $major . ',' . $minor } = $factors[$minor];
-    }
-}
-
 my @outer_scale = get_scale_notes('C', 'chromatic', undef, $flat ? 'b' : '#');
-my @inner_scale = get_scale_notes('C#', 'chromatic', undef, $flat ? 'b' : '#');
 
 my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] }
-    1 .. $show_marks;
-
-my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
     1 .. $show_marks;
 
 my $svg = SVG->new(
@@ -107,6 +77,37 @@ for my $mark (@marks) {
 }
 
 if ($show_inner) {
+    # adjust the inner ring
+    my @factors = (
+        0, 0,
+        1.7,  1.2,  0.9,  0.7,
+        0.65, 0.6,  0.5,  0.45,
+        0.45, 0.4,  0.35, 0.35,
+        0.35, 0.35, 0.35, 0.3,
+        0.3,  0.25, 0.25, 0.25,
+        0.25, 0.25, 0.25, 0.24,
+        0.24, 0.23, 0.22, 0.22,
+        0.22, 0.22, 0.21, 0.21,
+        0.2,  0.2,  0.2,  0.2,
+        0.2,  0.2,  0.2,  0.2,
+        0.19, 0.19, 0.19, 0.19,
+        0.19, 0.19, 0.18, 0.18,
+        0.18, 0.18, 0.18, 0.18,
+        0.18, 0.18, 0.18, 0.18,
+        0.18, 0.18, 0.17,
+    );
+    my %intervals;
+    for my $major (1 .. 5) {
+        for my $minor (2 .. 60) {
+            $intervals{ $major . ',' . $minor } = $factors[$minor];
+        }
+    }
+
+    my @inner_scale = get_scale_notes('C#', 'chromatic', undef, $flat ? 'b' : '#');
+
+    my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
+        1 .. $show_marks;
+
     $style->circle(
         cx => $frame_size / 2,
         cy => $frame_size / 2,
