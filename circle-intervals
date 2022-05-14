@@ -5,13 +5,15 @@ use warnings;
 # Evenly space a number of named sub-circles around a circle
 
 use Math::Trig;
+use Music::Scales qw(get_scale_notes);
 use SVG;
 
 use constant PI     => 2 * atan2(1,0);
 use constant HALF   => PI / 2;
 use constant DOUBLE => 2 * PI;
 
-my $show_marks = shift || 60;
+my $interval   = shift || 1;
+my $show_marks = shift || 12;
 my $diameter   = shift || 512;
 
 my $total_marks = 60;
@@ -19,6 +21,10 @@ my $border_size = 10;
 my $sub_radius  = 10;
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
+
+my @scale = get_scale_notes('C', 'chromatic');
+
+my @labels = map { $scale[ ($_ - 1) % @scale ] } 1 .. $show_marks + 1;
 
 my $svg = SVG->new(
     width  => $frame_size,
@@ -61,7 +67,7 @@ for my $mark (@marks) {
         id     => $i . '-style1-group-sub-text',
         x      => $p->[0] + $sub_radius - ($sub_radius / 2),
         y      => $p->[1] + $sub_radius + ($sub_radius / 2),
-        -cdata => $i,
+        -cdata => $labels[$i],
     );
 }
  
