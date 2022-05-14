@@ -113,21 +113,22 @@ sub time_point {
     my ($p, $total, $radius, $inner) = @_;
 
     # Compute the analog minute time equivalent
-    $p = $p / $total * DOUBLE - HALF;
+    my $analog = $p / $total * DOUBLE - HALF;
 
     # Replace the time value with the polar coordinate
+    my $coord;
     if ($inner) {
-        $p = [
-            $radius + $radius * cos($p),
-            $radius + $radius * sin($p)
+        $coord = [
+            $radius + $radius * cos($analog - 0.05),
+            $radius + $radius * sin($analog - 0.05)
         ];
     }
     else {
-        $p = [
-            $radius + $radius * cos($p),
-            $radius + $radius * sin($p)
+        $coord = [
+            $radius + $radius * cos($analog),
+            $radius + $radius * sin($analog)
         ];
     }
 
-    return $p;
+    return $coord;
 }
