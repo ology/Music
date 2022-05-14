@@ -169,7 +169,7 @@ if ($show_inner) {
         $inner_style->text(
             id     => $i . '-style-group-inner-sub-text',
             x      => $p->[0] + $sub_radius * 3 + 3,
-            y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
+            y      => $p->[1] + $sub_radius * 3 + 3 + $sub_radius,
             -cdata => $text,
         );
     }
