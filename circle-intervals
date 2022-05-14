@@ -45,6 +45,7 @@ $style1->circle(
 my $i = 0;
 
 my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
+
 for my $mark (@marks) {
     $i++;
 
