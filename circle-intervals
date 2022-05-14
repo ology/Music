@@ -4,6 +4,7 @@ use warnings;
 
 # Evenly space a number of named sub-circles around a circle
 
+use Data::Dumper::Compact qw(ddc);
 use Math::Trig ();
 use Music::Scales qw(get_scale_notes);
 use SVG qw(title);
@@ -22,24 +23,87 @@ my $sub_radius  = 10;
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
-my %intervals = (
-    '1,60' => 5,
-    '2,3'  => -1,
-    '2,6'  => 3.7,
-    '2,12' => 1.9,
-    '2,18' => 1.3,
-    '2,24' => 2.6,
-    '2,48' => 2.15,
-    '3,32' => 1,
+my @factors = (
+    0,
+    1.7,
+    1.2,
+    0.9,
+    0.7,
+    0.65,
+    0.6,
+    0.5,
+    0.45,
+    0.45,
+    0.4,
+    0.35,
+    0.35,
+    0.35,
+    0.35,
+    0.35,
+    0.3,
+    0.3,
+    0.25,
+    0.25,
+    0.25,
+    0.25,
+    0.25,
+    0.25,
+    0.24,
+    0.24,
+    0.23,
+    0.22,
+    0.22,
+    0.22,
+    0.22,
+    0.21,
+    0.21,
+    0.2,
+    0.2,
+    0.2,
+    0.2,
+    0.2,
+    0.2,
+    0.2,
+    0.2,
+    0.19,
+    0.19,
+    0.19,
+    0.19,
+    0.19,
+    0.19,
+    0.18,
+    0.18,
+    0.18,
+    0.18,
+    0.18,
+    0.18,
+    0.18,
+    0.18,
+    0.18,
+    0.18,
+    0.18,
+    0.18,
+    0.17,
 );
+
+# adjust the inner ring
+my %intervals;
+for my $major (1 .. 4) {
+    for my $minor (2 .. 60) {
+        $intervals{ $major . ',' . $minor } = $factors[$minor];
+    }
+}
 
 my @outer_scale = get_scale_notes('C', 'chromatic');
 my @inner_scale = get_scale_notes('C#', 'chromatic');
 
 my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] }
-    1 .. ($show_marks + 1) * $interval;
+    1 .. $show_marks * $interval;
+push @outer_labels, $outer_labels[0];
+
 my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
-    1 .. ($show_marks + 1) * $interval + 1;
+    1 .. $show_marks * $interval;
+push @inner_labels, $inner_labels[0];
 
 my $svg = SVG->new(
     width  => $frame_size,
@@ -85,8 +149,6 @@ for my $mark (@marks) {
         -cdata => $outer_labels[$i],
     );
 }
- 
-#=pod
 
 $style1->circle(
     cx => $frame_size / 2,
@@ -100,7 +162,12 @@ $i = 0;
 for my $mark (@marks) {
     $i++;
 
-    my $p = time_point($mark, $total_marks, $radius - $sub_radius * 3, $intervals{ $interval . ',' . $show_marks });
+    my $p = time_point(
+        $mark,
+        $total_marks,
+        $radius - $sub_radius * 3,
+        $intervals{ $interval . ',' . $show_marks }
+    );
 
     $style1->circle(
         id => $mark . '-style1-group-inner-sub-circle',
@@ -112,12 +179,10 @@ for my $mark (@marks) {
         id     => $i . '-style1-group-inner-sub-text',
         x      => $p->[0] + $sub_radius * 3 + 3,
         y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
-        -cdata => $inner_labels[$i - ($interval + 1)],
+        -cdata => $inner_labels[$i],
     );
 }
 
-#=cut
- 
 print $svg->xmlify;
 
 sub time_point {
