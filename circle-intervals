@@ -83,7 +83,7 @@ $outer_style->text(
     style => {
         stroke => 'gray',
     },
-    -cdata => "Interval: $interval ($named{$interval}), Notes: $show_marks",
+    -cdata => "Interval: $named{$interval}, Notes: $show_marks",
 );
 
 my $i = 0;
@@ -168,7 +168,7 @@ if ($show_inner) {
         id     => 'style-group-inner-info',
         x      => $frame_size / 2 - $sub_radius * 6,
         y      => $frame_size / 2,
-        -cdata => "Interval: $interval ($named{$interval}), Notes: $show_marks",
+        -cdata => "Interval: $named{$interval}, Notes: $show_marks",
     );
 
     $i = 0;
