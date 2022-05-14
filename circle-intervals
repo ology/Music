@@ -5,7 +5,6 @@ use warnings;
 # Evenly space a number of named sub-circles around a circle.
 # Optionally show an inner circle of offset notes.
 
-use Data::Dumper::Compact qw(ddc);
 use Math::Trig ();
 use Music::Scales qw(get_scale_notes);
 use SVG qw(title);
