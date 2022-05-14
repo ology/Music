@@ -9,7 +9,8 @@ use constant PI     => 2 * atan2(1,0);
 use constant HALF   => PI / 2;
 use constant DOUBLE => 2 * PI;
 
-my $diameter = shift || 512;
+my $show_marks = shift || 60;
+my $diameter   = shift || 512;
 
 my $total_marks   = 60;
 my $border_width  = 10;
@@ -41,11 +42,7 @@ $y->circle(
     id => 'circle_in_group_y',
 );
 
-my @marks =
-#    map { $_ * 5 } 1 .. 12; # chromatic, perfect 4th/5th
-#    map { $_ * 10 } 1 .. 6; # wholetone
-    map { $_ * 2 } 1 .. 30; # wholetone
-
+my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 for my $mark (@marks) {
     my ($p) = time_point($mark);
     $y->circle(
