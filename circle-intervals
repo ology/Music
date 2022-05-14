@@ -27,7 +27,7 @@ my $svg = SVG->new(
 $svg->title()->cdata("$show_marks marks around a circle");
  
 # use explicit element constructor to generate a group element
-my $y = $svg->group(
+my $style1 = $svg->group(
     id    => 'group_y',
     style => {
         stroke => 'gray',
@@ -35,7 +35,7 @@ my $y = $svg->group(
     },
 );
  
-$y->circle(
+$style1->circle(
     cx => $frame_size / 2,
     cy => $frame_size / 2,
     r  => $radius,
@@ -50,13 +50,13 @@ for my $mark (@marks) {
 
     my ($p) = time_point($mark);
 
-    $y->circle(
+    $style1->circle(
         id => $mark . '-sub_circle_in_group_y',
         cx => $p->[0] + $sub_radius,
         cy => $p->[1] + $sub_radius,
         r  => $sub_radius,
     );
-    $y->text(
+    $style1->text(
         id     => $mark . '-sub_text',
         x      => $p->[0] + $sub_radius - ($sub_radius / 2),
         y      => $p->[1] + $sub_radius + ($sub_radius / 2),
