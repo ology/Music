@@ -36,6 +36,7 @@ my $inner_line = shift || 'gray';
 my $inner_fill = shift || 'white';
 my $text_line  = shift || 'black';
 
+my $font_size   = 20;           # size of the center info font
 my $knowns      = 11;           # known intervals 1-11
 my $total_marks = 60;           # maximum number of interval markers 2-60
 my $border_size = 10;           # chart margin
@@ -87,7 +88,8 @@ $outer_style->text(
     x     => $frame_size / 2 - $sub_radius * 6,
     y     => $frame_size / 2,
     style => {
-        stroke => $text_line,
+        stroke      => $text_line,
+        'font-size' => $font_size,
     },
     -cdata => "Interval: $named{$interval}, Notes: $show_marks",
 ) if !$show_inner;
@@ -175,7 +177,8 @@ if ($show_inner) {
         x     => $frame_size / 2 - $sub_radius * 6,
         y     => $frame_size / 2,
         style => {
-            stroke => $text_line,
+            stroke      => $text_line,
+            'font-size' => $font_size,
         },
         -cdata => "Interval: $named{$interval}, Notes: $show_marks",
     );
