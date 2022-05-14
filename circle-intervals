@@ -15,8 +15,9 @@ use constant DOUBLE => 2 * PI;
 
 my $interval   = shift || 1;
 my $show_marks = shift || 12;
+my $show_inner = shift // 0;
+my $flat       = shift // 0;
 my $diameter   = shift || 512;
-my $flat       = shift || 0;
 
 my $total_marks = 60;
 my $border_size = 10;
@@ -104,37 +105,39 @@ for my $mark (@marks) {
     );
 }
 
-$style1->circle(
-    cx => $frame_size / 2,
-    cy => $frame_size / 2,
-    r  => $radius - $sub_radius * 3,
-    id => 'style1-group-inner-circle',
-);
-
-$i = 0;
-
-for my $mark (@marks) {
-    $i++;
-
-    my $p = time_point(
-        $mark,
-        $total_marks,
-        $radius - $sub_radius * 3,
-        $intervals{ $interval . ',' . $show_marks }
-    );
-
+if ($show_inner) {
     $style1->circle(
-        id => $mark . '-style1-group-inner-sub-circle',
-        cx => $p->[0] + $sub_radius * 4,
-        cy => $p->[1] + $sub_radius * 4,
-        r  => $sub_radius,
+        cx => $frame_size / 2,
+        cy => $frame_size / 2,
+        r  => $radius - $sub_radius * 3,
+        id => 'style1-group-inner-circle',
     );
-    $style1->text(
-        id     => $i . '-style1-group-inner-sub-text',
-        x      => $p->[0] + $sub_radius * 3 + 3,
-        y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
-        -cdata => $inner_labels[ $i % @inner_labels ],
-    );
+
+    $i = 0;
+
+    for my $mark (@marks) {
+        $i++;
+
+        my $p = time_point(
+            $mark,
+            $total_marks,
+            $radius - $sub_radius * 3,
+            $intervals{ $interval . ',' . $show_marks }
+        );
+
+        $style1->circle(
+            id => $mark . '-style1-group-inner-sub-circle',
+            cx => $p->[0] + $sub_radius * 4,
+            cy => $p->[1] + $sub_radius * 4,
+            r  => $sub_radius,
+        );
+        $style1->text(
+            id     => $i . '-style1-group-inner-sub-text',
+            x      => $p->[0] + $sub_radius * 3 + 3,
+            y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
+            -cdata => $inner_labels[ $i % @inner_labels ],
+        );
+    }
 }
 
 print $svg->xmlify;
