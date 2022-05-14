@@ -24,7 +24,7 @@ my $svg = SVG->new(
     width  => $frame_size,
     height => $frame_size,
 );
-$svg->title()->cdata("$show_marks marks around a circle");
+$svg->title()->cdata("Show $show_marks marks around a circle");
  
 # use explicit element constructor to generate a group element
 my $style1 = $svg->group(
