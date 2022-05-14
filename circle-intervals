@@ -67,19 +67,19 @@ my $svg = SVG->new(
 $svg->title()->cdata("Show $show_marks marks around a circle");
 
 # generate a group element
-my $style1 = $svg->group(
-    id    => 'style1-group',
+my $style = $svg->group(
+    id    => 'style-group',
     style => {
         stroke => 'gray',
         fill   => 'white',
     },
 );
 
-$style1->circle(
+$style->circle(
     cx => $frame_size / 2,
     cy => $frame_size / 2,
     r  => $radius,
-    id => 'style1-group-outer-circle',
+    id => 'style-group-outer-circle',
 );
 
 my $i = 0;
@@ -91,14 +91,14 @@ for my $mark (@marks) {
 
     my $p = time_point($mark, $total_marks, $radius);
 
-    $style1->circle(
-        id => $mark . '-style1-group-outer-sub-circle',
+    $style->circle(
+        id => $mark . '-style-group-outer-sub-circle',
         cx => $p->[0] + $sub_radius,
         cy => $p->[1] + $sub_radius,
         r  => $sub_radius,
     );
-    $style1->text(
-        id     => $i . '-style1-group-outer-sub-text',
+    $style->text(
+        id     => $i . '-style-group-outer-sub-text',
         x      => $p->[0] + $sub_radius - ($sub_radius / 2),
         y      => $p->[1] + $sub_radius + ($sub_radius / 2),
         -cdata => $outer_labels[ $i % @outer_labels ],
@@ -106,11 +106,11 @@ for my $mark (@marks) {
 }
 
 if ($show_inner) {
-    $style1->circle(
+    $style->circle(
         cx => $frame_size / 2,
         cy => $frame_size / 2,
         r  => $radius - $sub_radius * 3,
-        id => 'style1-group-inner-circle',
+        id => 'style-group-inner-circle',
     );
 
     $i = 0;
@@ -125,14 +125,14 @@ if ($show_inner) {
             $intervals{ $interval . ',' . $show_marks }
         );
 
-        $style1->circle(
-            id => $mark . '-style1-group-inner-sub-circle',
+        $style->circle(
+            id => $mark . '-style-group-inner-sub-circle',
             cx => $p->[0] + $sub_radius * 4,
             cy => $p->[1] + $sub_radius * 4,
             r  => $sub_radius,
         );
-        $style1->text(
-            id     => $i . '-style1-group-inner-sub-text',
+        $style->text(
+            id     => $i . '-style-group-inner-sub-text',
             x      => $p->[0] + $sub_radius * 3 + 3,
             y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
             -cdata => $inner_labels[ $i % @inner_labels ],
