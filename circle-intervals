@@ -28,7 +28,7 @@ $svg->title()->cdata("$show_marks marks around a circle");
  
 # use explicit element constructor to generate a group element
 my $style1 = $svg->group(
-    id    => 'group_y',
+    id    => 'style1-group',
     style => {
         stroke => 'gray',
         fill   => 'white',
