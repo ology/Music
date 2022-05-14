@@ -17,6 +17,7 @@ use SVG qw(title);
 use constant PI     => 2 * atan2(1,0);
 use constant HALF   => PI / 2;
 use constant DOUBLE => 2 * PI;
+use constant SCALE  => 'chromatic';
 
 my $interval   = shift || 1;    # interval to calculate: default chromatic 1-5
 my $show_marks = shift || 12;   # how many circular note marks to display 2-60
@@ -34,11 +35,10 @@ my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
 my @outer_scale = $outer_note =~ /[A-Ga-g]/
-    ? get_scale_notes($outer_note, 'chromatic', undef, $flat ? 'b' : '#')
-    : get_scale_nums('chromatic');
+    ? get_scale_notes($outer_note, SCALE, undef, $flat ? 'b' : '#')
+    : get_scale_nums(SCALE);
 
-my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] }
-    1 .. $show_marks;
+my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] } 1 .. $show_marks;
 
 my $svg = SVG->new(
     width  => $frame_size,
@@ -123,8 +123,8 @@ if ($show_inner) {
     }
 
     my @inner_scale = $inner_note =~ /[A-Ga-g]/
-        ? get_scale_notes($inner_note, 'chromatic', undef, $flat ? 'b' : '#')
-        : get_scale_nums('chromatic');
+        ? get_scale_notes($inner_note, SCALE, undef, $flat ? 'b' : '#')
+        : get_scale_nums(SCALE);
 
     my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
         1 .. $show_marks;
