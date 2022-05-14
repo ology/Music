@@ -7,7 +7,7 @@ use warnings;
 # Examples:
 # Chromatic: perl circle-intervals 1 24 1 > circle-intervals.svg
 # Circle of 5ths: perl circle-intervals 5 12 > circle-intervals.svg
-#    "          : perl circle-intervals 7 12 1 1 512 C F > circle-intervals.svg
+#    "          : perl circle-intervals 7 12 1 0 512 C F > circle-intervals.svg
 # Numeric: perl circle-intervals 5 12 0 0 512 C C\# 1 > circle-intervals.svg
 #    "   : perl circle-intervals 3 16 1 0 512 C C\# 1 > circle-intervals.svg
 # Coltrane's wholetone: perl circle-intervals 2 30 1 1 > circle-intervals.svg
