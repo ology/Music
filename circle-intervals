@@ -48,7 +48,7 @@ my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 for my $mark (@marks) {
     $i++;
 
-    my ($p) = time_point($mark);
+    my $p = time_point($mark);
 
     $style1->circle(
         id => $mark . '-sub_circle',
