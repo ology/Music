@@ -36,7 +36,7 @@ my $inner_line = shift || 'gray';
 my $text_line  = shift || 'black';
 
 my $total_marks = 60;           # maximum number of interval markers 2-60
-my $font_size   = 20;           # size of the center info font
+my $font_size   = 20;           # size of the caption font
 my $border_size = 10;           # chart margin
 my $sub_radius  = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
@@ -84,7 +84,7 @@ $outer_style->circle(
 );
 
 $outer_style->text(
-    id    => 'style-group-outer-info',
+    id    => 'style-group-outer-caption',
     x     => $frame_size / 2 - $sub_radius * 10,
     y     => $frame_size / 2,
     style => {
@@ -173,7 +173,7 @@ if ($show_inner) {
     );
 
     $inner_style->text(
-        id    => 'style-group-inner-info',
+        id    => 'style-group-inner-caption',
         x     => $frame_size / 2 - $sub_radius * 10,
         y     => $frame_size / 2,
         style => {
