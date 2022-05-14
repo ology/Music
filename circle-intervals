@@ -46,10 +46,10 @@ my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 for my $mark (@marks) {
     my ($p) = time_point($mark);
     $y->circle(
+        id => $mark . '-sub_circle_in_group_y',
         cx => $p->[0] + $sub_radius,
         cy => $p->[1] + $sub_radius,
         r  => $sub_radius,
-        id => $mark . '-sub_circle_in_group_y',
     );
     $y->text(
         id     => $mark . '-sub_text',
