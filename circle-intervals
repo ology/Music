@@ -75,7 +75,7 @@ for my $mark (@marks) {
     );
 }
  
-=pod
+#=pod
 
 $style1->circle(
     cx => $frame_size / 2,
@@ -101,11 +101,11 @@ for my $mark (@marks) {
         id     => $i . '-style1-group-inner-sub-text',
         x      => $p->[0] + $sub_radius * 3 + 3,
         y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
-        -cdata => $inner_labels[ $i + 1 ],
+        -cdata => $inner_labels[$i],
     );
 }
 
-=cut
+#=cut
  
 print $svg->xmlify;
 
@@ -118,8 +118,8 @@ sub time_point {
     # Replace the time value with the polar coordinate
     if ($inner) {
         $p = [
-            $radius + $radius * cos($p - 1),
-            $radius + $radius * sin($p - 1)
+            $radius + $radius * cos($p),
+            $radius + $radius * sin($p)
         ];
     }
     else {
