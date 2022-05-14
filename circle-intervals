@@ -127,6 +127,7 @@ for my $mark (@marks) {
 }
 
 if ($show_inner) {
+    # generate a group element
     my $inner_style = $svg->group(
         id    => 'inner-style-group',
         style => {
