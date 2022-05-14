@@ -5,12 +5,13 @@ use warnings;
 # Evenly space a number of named sub-circles around a circle.
 # Optionally show an inner circle of offset notes.
 # Examples:
-# Chromatic: perl circle-intervals 1 24 > ~/tmp/circle-intervals.svg
-# Circle of fifths: perl circle-intervals 5 12 > ~/tmp/circle-intervals.svg
-# Coltrane's wholetone: perl circle-intervals 2 30 1 1 > ~/tmp/circle-intervals.svg
+# Chromatic: perl circle-intervals 1 24 > circle-intervals.svg
+# Circle of fifths: perl circle-intervals 5 12 > circle-intervals.svg
+# Coltrane's wholetone: perl circle-intervals 2 30 1 1 > circle-intervals.svg
+# Numeric: perl circle-intervals 5 12 1 1 512 0 1 > circle-intervals.svg
 
 use Math::Trig ();
-use Music::Scales qw(get_scale_notes);
+use Music::Scales qw(get_scale_nums get_scale_notes);
 use SVG qw(title);
 
 use constant PI     => 2 * atan2(1,0);
@@ -22,8 +23,8 @@ my $show_marks = shift || 12;   # how many circular note marks to display 2-60
 my $show_inner = shift // 0;    # show the inner ring?
 my $flat       = shift // 0;    # show note names with flats: default sharps
 my $diameter   = shift || 512;  # the diameter of the circle
-my $outer_note = shift || 'C';  # starting outer ring note
-my $inner_note = shift || 'C#'; # starting inner ring note
+my $outer_note = shift // 'C';  # starting outer ring note
+my $inner_note = shift // 'C#'; # starting inner ring note
 
 my $knowns      = 5;            # known intervals 1-5
 my $total_marks = 60;           # maximum number of interval markers 2-60
@@ -32,7 +33,9 @@ my $sub_radius  = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
-my @outer_scale = get_scale_notes($outer_note, 'chromatic', undef, $flat ? 'b' : '#');
+my @outer_scale = $outer_note =~ /[A-Ga-g]/
+    ? get_scale_notes($outer_note, 'chromatic', undef, $flat ? 'b' : '#')
+    : get_scale_nums('chromatic');
 
 my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] }
     1 .. $show_marks;
@@ -119,7 +122,9 @@ if ($show_inner) {
         }
     }
 
-    my @inner_scale = get_scale_notes($inner_note, 'chromatic', undef, $flat ? 'b' : '#');
+    my @inner_scale = $inner_note =~ /[A-Ga-g]/
+        ? get_scale_notes($inner_note, 'chromatic', undef, $flat ? 'b' : '#')
+        : get_scale_nums('chromatic');
 
     my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
         1 .. $show_marks;
