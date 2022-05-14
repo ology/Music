@@ -36,8 +36,8 @@ my $inner_line = shift || 'gray';
 my $inner_fill = shift || 'white';
 my $text_line  = shift || 'black';
 
-my $font_size   = 20;           # size of the center info font
 my $total_marks = 60;           # maximum number of interval markers 2-60
+my $font_size   = 20;           # size of the center info font
 my $border_size = 10;           # chart margin
 my $sub_radius  = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
