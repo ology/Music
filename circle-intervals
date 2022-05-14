@@ -20,6 +20,7 @@ my $show_inner = shift // 0;
 my $flat       = shift // 0;
 my $diameter   = shift || 512;
 
+my $knowns      = 5;
 my $total_marks = 60;
 my $border_size = 10;
 my $sub_radius  = 11;
@@ -97,8 +98,8 @@ if ($show_inner) {
         0.18, 0.18, 0.17,
     );
     my %intervals;
-    for my $major (1 .. 5) {
-        for my $minor (2 .. 60) {
+    for my $major (1 .. $knowns) {
+        for my $minor (2 .. $total_marks) {
             $intervals{ $major . ',' . $minor } = $factors[$minor];
         }
     }
