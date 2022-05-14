@@ -16,6 +16,7 @@ use constant DOUBLE => 2 * PI;
 my $interval   = shift || 1;
 my $show_marks = shift || 12;
 my $diameter   = shift || 512;
+my $flat       = shift || 0;
 
 my $total_marks = 60;
 my $border_size = 10;
@@ -49,8 +50,8 @@ for my $major (1 .. 4) {
     }
 }
 
-my @outer_scale = get_scale_notes('C', 'chromatic');
-my @inner_scale = get_scale_notes('C#', 'chromatic');
+my @outer_scale = get_scale_notes('C', 'chromatic', undef, $flat ? 'b' : '#');
+my @inner_scale = get_scale_notes('C#', 'chromatic', undef, $flat ? 'b' : '#');
 
 my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] }
     1 .. $show_marks;
