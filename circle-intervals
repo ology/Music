@@ -39,8 +39,7 @@ my $frame_size  = $diameter + 2 * $border_size;
 
 my @outer_scale = get_scale_notes($outer_note, SCALE, undef, $flat ? 'b' : '#');
 
-my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] }
-    1 .. $show_marks;
+my @outer_labels = get_labels(\@outer_scale, $interval, $show_marks);
 
 my $svg = SVG->new(
     width  => $frame_size,
@@ -141,8 +140,7 @@ if ($show_inner) {
 
     my @inner_scale = get_scale_notes($inner_note, SCALE, undef, $flat ? 'b' : '#');
 
-    my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
-        1 .. $show_marks;
+    my @inner_labels = get_labels(\@inner_scale, $interval, $show_marks);
 
     my $inner_radius = $radius - $sub_radius * 3;
 
@@ -193,6 +191,15 @@ if ($show_inner) {
 }
 
 print $svg->xmlify;
+
+sub get_labels {
+    my ($scale, $interval, $marks) = @_;
+
+    my @labels = map { $scale->[ (($_ - 1) * $interval) % @$scale ] }
+        1 .. $marks;
+
+    return @labels;
+}
 
 sub coordinate {
     my ($p, $total, $radius, $inner) = @_;
