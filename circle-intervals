@@ -64,6 +64,16 @@ $outer_style->circle(
     id => 'style-group-outer-circle',
 );
 
+$outer_style->text(
+    id     => 'style-group-outer-info',
+    x      => $frame_size / 2 - $sub_radius * 4,
+    y      => $frame_size / 2,
+    style => {
+        stroke => 'gray',
+    },
+    -cdata => "Interval: $interval, Marks: $show_marks",
+);
+
 my $i = 0;
 
 # compute the ring positions
@@ -137,10 +147,17 @@ if ($show_inner) {
     my $inner_radius = $radius - $sub_radius * 3;
 
     $inner_style->circle(
+        id => 'style-group-inner-circle',
         cx => $frame_size / 2,
         cy => $frame_size / 2,
         r  => $inner_radius,
-        id => 'style-group-inner-circle',
+    );
+
+    $inner_style->text(
+        id     => 'style-group-inner-info',
+        x      => $frame_size / 2 - $sub_radius * 4,
+        y      => $frame_size / 2,
+        -cdata => "Interval: $interval, Marks: $show_marks",
     );
 
     $i = 0;
