@@ -12,17 +12,15 @@ use constant DOUBLE => 2 * PI;
 my $show_marks = shift || 60;
 my $diameter   = shift || 512;
 
-my $total_marks   = 60;
-my $border_width  = 10;
-my $border_height = 10;
-my $sub_radius    = 10;
-my $radius        = $diameter / 2;
-my $frame_width   = $diameter + 2 * $border_width;
-my $frame_height  = $diameter + 2 * $border_height;
+my $total_marks = 60;
+my $border_size = 10;
+my $sub_radius  = 10;
+my $radius      = $diameter / 2;
+my $frame_size  = $diameter + 2 * $border_size;
 
 my $svg = SVG->new(
-    width  => $frame_width,
-    height => $frame_height,
+    width  => $frame_size,
+    height => $frame_size,
 );
 $svg->title()->cdata('I am a title');
  
@@ -36,8 +34,8 @@ my $y = $svg->group(
 );
  
 $y->circle(
-    cx => $frame_width / 2,
-    cy => $frame_height / 2,
+    cx => $frame_size / 2,
+    cy => $frame_size / 2,
     r  => $radius,
     id => 'circle_in_group_y',
 );
