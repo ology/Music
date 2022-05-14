@@ -32,7 +32,7 @@ my $svg = SVG->new(
     height => $frame_size,
 );
 $svg->title()->cdata("Show $show_marks marks around a circle");
- 
+
 # use explicit element constructor to generate a group element
 my $style1 = $svg->group(
     id    => 'style1-group',
@@ -41,12 +41,12 @@ my $style1 = $svg->group(
         fill   => 'white',
     },
 );
- 
+
 $style1->circle(
     cx => $frame_size / 2,
     cy => $frame_size / 2,
     r  => $radius,
-    id => 'style1-group-circle',
+    id => 'style1-group-outer-circle',
 );
 
 my $i = 0;
@@ -59,15 +59,43 @@ for my $mark (@marks) {
     my $p = time_point($mark, $total_marks, $radius);
 
     $style1->circle(
-        id => $mark . '-style1-group-sub-circle',
+        id => $mark . '-style1-group-outer-sub-circle',
         cx => $p->[0] + $sub_radius,
         cy => $p->[1] + $sub_radius,
         r  => $sub_radius,
     );
     $style1->text(
-        id     => $i . '-style1-group-sub-text',
+        id     => $i . '-style1-group-outer-sub-text',
         x      => $p->[0] + $sub_radius - ($sub_radius / 2),
         y      => $p->[1] + $sub_radius + ($sub_radius / 2),
+        -cdata => $labels[$i],
+    );
+}
+ 
+$style1->circle(
+    cx => $frame_size / 2,
+    cy => $frame_size / 2,
+    r  => $radius - $sub_radius * 3,
+    id => 'style1-group-inner-circle',
+);
+
+$i = 0;
+
+for my $mark (@marks) {
+    $i++;
+
+    my $p = time_point($mark, $total_marks, $radius - $sub_radius * 3, 1);
+
+    $style1->circle(
+        id => $mark . '-style1-group-inner-sub-circle',
+        cx => $p->[0] + $sub_radius * 4,
+        cy => $p->[1] + $sub_radius * 4,
+        r  => $sub_radius,
+    );
+    $style1->text(
+        id     => $i . '-style1-group-inner-sub-text',
+        x      => $p->[0] + $sub_radius * 3 + 3,
+        y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
         -cdata => $labels[$i],
     );
 }
@@ -75,16 +103,24 @@ for my $mark (@marks) {
 print $svg->xmlify;
 
 sub time_point {
-    my ($p, $total, $radius) = @_;
+    my ($p, $total, $radius, $inner) = @_;
 
     # Compute the analog minute time equivalent
     $p = $p / $total * DOUBLE - HALF;
 
     # Replace the time value with the polar coordinate
-    $p = [
-        $radius + $radius * cos $p,
-        $radius + $radius * sin $p
-    ];
+    if ($inner) {
+        $p = [
+            $radius + $radius * cos $p - 1,
+            $radius + $radius * sin $p - 1
+        ];
+    }
+    else {
+        $p = [
+            $radius + $radius * cos $p,
+            $radius + $radius * sin $p
+        ];
+    }
 
     return $p;
 }
