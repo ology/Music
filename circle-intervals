@@ -62,7 +62,7 @@ my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 for my $mark (@marks) {
     $i++;
 
-    my $p = time_point($mark, $total_marks, $radius);
+    my $p = coordinate($mark, $total_marks, $radius);
 
     $outer_style->circle(
         id => $mark . '-style-group-outer-sub-circle',
@@ -132,7 +132,7 @@ if ($show_inner) {
     for my $mark (@marks) {
         $i++;
 
-        my $p = time_point(
+        my $p = coordinate(
             $mark,
             $total_marks,
             $inner_radius,
@@ -156,7 +156,7 @@ if ($show_inner) {
 
 print $svg->xmlify;
 
-sub time_point {
+sub coordinate {
     my ($p, $total, $radius, $inner) = @_;
 
     # Compute the analog minute time equivalent
