@@ -20,7 +20,7 @@ my $flat       = shift || 0;
 
 my $total_marks = 60;
 my $border_size = 10;
-my $sub_radius  = 10;
+my $sub_radius  = 11;
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
