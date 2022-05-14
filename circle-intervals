@@ -5,7 +5,7 @@ use warnings;
 # Evenly space a number of named sub-circles around a circle.
 # Optionally show an inner circle of offset notes.
 # Examples:
-# Chromatic: perl circle-intervals 1 24 > circle-intervals.svg
+# Chromatic: perl circle-intervals 1 24 1 > circle-intervals.svg
 # Circle of fifths: perl circle-intervals 5 12 0 1 > circle-intervals.svg
 # Numeric: perl circle-intervals 5 12 0 1 512 C C\# 1 > circle-intervals.svg
 #    "   : perl circle-intervals 3 16 1 1 512 C C\# 1 > circle-intervals.svg
