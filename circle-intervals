@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+# Evenly space a number of named sub-circles around a circle
+
 use Math::Trig;
 use SVG;
 
