@@ -21,7 +21,7 @@ use constant HALF   => PI / 2;
 use constant DOUBLE => 2 * PI;
 use constant SCALE  => 'chromatic';
 
-my $interval   = shift || 1;    # interval to calculate: default chromatic 1-6
+my $interval   = shift || 1;    # interval to calculate: default chromatic 1-11
 my $show_marks = shift || 12;   # how many circular note marks to display 2-60
 my $show_inner = shift // 0;    # show the inner ring?
 my $flat       = shift // 0;    # show note names with flats: default sharps
@@ -30,7 +30,7 @@ my $outer_note = shift || 'C';  # starting outer ring note
 my $inner_note = shift || 'C#'; # starting inner ring note
 my $numeric    = shift // 0;
 
-my $knowns      = 6;            # known intervals 1-6
+my $knowns      = 11;           # known intervals 1-11
 my $total_marks = 60;           # maximum number of interval markers 2-60
 my $border_size = 10;           # chart margin
 my $sub_radius  = 11;           # radius for sub-circle markings
