@@ -44,7 +44,7 @@ my @factors = (
     0.18, 0.18, 0.17,
 );
 my %intervals;
-for my $major (1 .. 4) {
+for my $major (1 .. 5) {
     for my $minor (2 .. 60) {
         $intervals{ $major . ',' . $minor } = $factors[$minor];
     }
