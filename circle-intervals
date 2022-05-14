@@ -24,7 +24,8 @@ my $frame_size  = $diameter + 2 * $border_size;
 
 my @scale = get_scale_notes('C', 'chromatic');
 
-my @labels = map { $scale[ ($_ - 1) % @scale ] } 1 .. $show_marks + 1;
+my @labels = map { $scale[ (($_ - 1) * $interval) % @scale ] }
+    1 .. ($show_marks + 1) * $interval;
 
 my $svg = SVG->new(
     width  => $frame_size,
