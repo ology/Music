@@ -84,7 +84,7 @@ $outer_style->text(
         stroke => 'gray',
     },
     -cdata => "Interval: $named{$interval}, Notes: $show_marks",
-);
+) unless $show_inner;
 
 my $i = 0;
 
