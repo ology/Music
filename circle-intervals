@@ -28,7 +28,7 @@ my @inner_scale = get_scale_notes('C#', 'chromatic');
 my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] }
     1 .. ($show_marks + 1) * $interval;
 my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
-    1 .. ($show_marks + 1) * $interval;
+    1 .. ($show_marks + 1) * $interval + 1;
 
 my $svg = SVG->new(
     width  => $frame_size,
@@ -75,6 +75,8 @@ for my $mark (@marks) {
     );
 }
  
+=pod
+
 $style1->circle(
     cx => $frame_size / 2,
     cy => $frame_size / 2,
@@ -102,6 +104,8 @@ for my $mark (@marks) {
         -cdata => $inner_labels[ $i + 1 ],
     );
 }
+
+=cut
  
 print $svg->xmlify;
 
@@ -114,8 +118,8 @@ sub time_point {
     # Replace the time value with the polar coordinate
     if ($inner) {
         $p = [
-            $radius + $radius * cos($p - 1),
-            $radius + $radius * sin($p - 1)
+            $radius + $radius * cos($p),
+            $radius + $radius * sin($p)
         ];
     }
     else {
