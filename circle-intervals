@@ -55,6 +55,7 @@ my %named       = (
     10 => 'flat 7',
     11 => 'seventh',
 );
+my $caption = "Interval: $named{$interval}, Notes: $show_marks";
 
 my @outer_scale = get_scale_notes($outer_note, SCALE, undef, $flat ? 'b' : '#');
 
@@ -90,7 +91,7 @@ $outer_style->text(
         stroke      => $text_line,
         'font-size' => $font_size,
     },
-    -cdata => "Interval: $named{$interval}, Notes: $show_marks",
+    -cdata => $caption,
 ) if !$show_inner;
 
 my $i = 0;
@@ -179,7 +180,7 @@ if ($show_inner) {
             stroke      => $text_line,
             'font-size' => $font_size,
         },
-        -cdata => "Interval: $named{$interval}, Notes: $show_marks",
+        -cdata => $caption,
     );
 
     $i = 0;
