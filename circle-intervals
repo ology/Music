@@ -22,6 +22,17 @@ my $sub_radius  = 10;
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
+my %intervals = (
+    '1,60' => 5,
+    '2,3'  => -1,
+    '2,6'  => 3.7,
+    '2,12' => 1.9,
+    '2,18' => 1.3,
+    '2,24' => 2.6,
+    '2,48' => 2.15,
+    '3,32' => 1,
+);
+
 my @outer_scale = get_scale_notes('C', 'chromatic');
 my @inner_scale = get_scale_notes('C#', 'chromatic');
 
@@ -89,7 +100,7 @@ $i = 0;
 for my $mark (@marks) {
     $i++;
 
-    my $p = time_point($mark, $total_marks, $radius - $sub_radius * 3, 1);
+    my $p = time_point($mark, $total_marks, $radius - $sub_radius * 3, $intervals{ $interval . ',' . $show_marks });
 
     $style1->circle(
         id => $mark . '-style1-group-inner-sub-circle',
@@ -101,7 +112,7 @@ for my $mark (@marks) {
         id     => $i . '-style1-group-inner-sub-text',
         x      => $p->[0] + $sub_radius * 3 + 3,
         y      => $p->[1] + $sub_radius * 3 + $sub_radius + 3,
-        -cdata => $inner_labels[$i - 1],
+        -cdata => $inner_labels[$i - ($interval + 1)],
     );
 }
 
@@ -119,8 +130,8 @@ sub time_point {
     my $coord;
     if ($inner) {
         $coord = [
-            $radius + $radius * cos($analog - DOUBLE / $total * 2),
-            $radius + $radius * sin($analog - DOUBLE / $total * 2)
+            $radius + $radius * cos($analog - DOUBLE / $total + $inner),
+            $radius + $radius * sin($analog - DOUBLE / $total + $inner)
         ];
     }
     else {
