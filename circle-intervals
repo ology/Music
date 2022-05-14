@@ -39,7 +39,7 @@ $style1->circle(
     cx => $frame_size / 2,
     cy => $frame_size / 2,
     r  => $radius,
-    id => 'circle_in_group_y',
+    id => 'style1-group-circle',
 );
 
 my $i = 0;
@@ -52,13 +52,13 @@ for my $mark (@marks) {
     my $p = time_point($mark, $total_marks, $radius);
 
     $style1->circle(
-        id => $mark . '-sub_circle',
+        id => $mark . '-style1-group-sub-circle',
         cx => $p->[0] + $sub_radius,
         cy => $p->[1] + $sub_radius,
         r  => $sub_radius,
     );
     $style1->text(
-        id     => $i . '-sub_text',
+        id     => $i . '-style1-group-sub-text',
         x      => $p->[0] + $sub_radius - ($sub_radius / 2),
         y      => $p->[1] + $sub_radius + ($sub_radius / 2),
         -cdata => $i,
