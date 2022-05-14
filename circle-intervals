@@ -18,6 +18,8 @@ my $show_marks = shift || 12;   # how many circular note marks to display 2-60
 my $show_inner = shift // 0;    # show the inner ring?
 my $flat       = shift // 0;    # show note names with flats: default sharps
 my $diameter   = shift || 512;  # the diameter of the circle
+my $outer_note = shift || 'C';
+my $inner_note = shift || 'C#';
 
 my $knowns      = 5;            # known intervals 1-5
 my $total_marks = 60;           # maximum number of interval markers 2-60
@@ -26,7 +28,7 @@ my $sub_radius  = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
-my @outer_scale = get_scale_notes('C', 'chromatic', undef, $flat ? 'b' : '#');
+my @outer_scale = get_scale_notes($outer_note, 'chromatic', undef, $flat ? 'b' : '#');
 
 my @outer_labels = map { $outer_scale[ (($_ - 1) * $interval) % @outer_scale ] }
     1 .. $show_marks;
@@ -113,7 +115,7 @@ if ($show_inner) {
         }
     }
 
-    my @inner_scale = get_scale_notes('C#', 'chromatic', undef, $flat ? 'b' : '#');
+    my @inner_scale = get_scale_notes($inner_note, 'chromatic', undef, $flat ? 'b' : '#');
 
     my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
         1 .. $show_marks;
