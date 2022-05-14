@@ -42,7 +42,14 @@ $svg->title()->cdata("Show $show_marks marks around a circle");
 my $style = $svg->group(
     id    => 'style-group',
     style => {
-        stroke => 'gray',
+        stroke => 'green',
+        fill   => 'white',
+    },
+);
+my $style2 = $svg->group(
+    id    => 'style2-group',
+    style => {
+        stroke => 'blue',
         fill   => 'white',
     },
 );
@@ -63,13 +70,13 @@ for my $mark (@marks) {
 
     my $p = time_point($mark, $total_marks, $radius);
 
-    $style->circle(
+    $style2->circle(
         id => $mark . '-style-group-outer-sub-circle',
         cx => $p->[0] + $sub_radius,
         cy => $p->[1] + $sub_radius,
         r  => $sub_radius,
     );
-    $style->text(
+    $style2->text(
         id     => $i . '-style-group-outer-sub-text',
         x      => $p->[0] + $sub_radius - ($sub_radius / 2),
         y      => $p->[1] + $sub_radius + ($sub_radius / 2),
