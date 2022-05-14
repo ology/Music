@@ -16,7 +16,7 @@ use constant DOUBLE => 2 * PI;
 
 my $interval   = shift || 1;    # interval to calculate: default chromatic
 my $show_marks = shift || 12;   # how many circular note marks to display
-my $show_inner = shift // 0;    # show we show the inner ring?
+my $show_inner = shift // 0;    # show the inner ring?
 my $flat       = shift // 0;    # show note names with flats: default sharps
 my $diameter   = shift || 512;  # the diameter of the circle
 
