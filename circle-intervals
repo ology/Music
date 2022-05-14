@@ -4,9 +4,9 @@ use warnings;
 
 # Evenly space a number of named sub-circles around a circle
 
-use Math::Trig;
+use Math::Trig ();
 use Music::Scales qw(get_scale_notes);
-use SVG;
+use SVG qw(title);
 
 use constant PI     => 2 * atan2(1,0);
 use constant HALF   => PI / 2;
