@@ -36,6 +36,19 @@ my $border_size = 10;           # chart margin
 my $sub_radius  = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
+my %named       = (
+    1  => 'halfstep',
+    2  => 'wholestep',
+    3  => 'min 3rd',
+    4  => 'maj 3rd',
+    5  => 'perf 4th',
+    6  => 'tritone',
+    7  => 'perf 5th',
+    8  => 'sharp 5',
+    9  => 'sixth',
+    10 => 'flat 7',
+    11 => 'seventh',
+);
 
 my @outer_scale = get_scale_notes($outer_note, SCALE, undef, $flat ? 'b' : '#');
 
@@ -70,7 +83,7 @@ $outer_style->text(
     style => {
         stroke => 'gray',
     },
-    -cdata => "Interval: $interval, Marks: $show_marks",
+    -cdata => "Interval: $interval ($named{$interval}), Notes: $show_marks",
 );
 
 my $i = 0;
@@ -153,9 +166,9 @@ if ($show_inner) {
 
     $inner_style->text(
         id     => 'style-group-inner-info',
-        x      => $frame_size / 2 - $sub_radius * 4,
+        x      => $frame_size / 2 - $sub_radius * 6,
         y      => $frame_size / 2,
-        -cdata => "Interval: $interval, Marks: $show_marks",
+        -cdata => "Interval: $interval ($named{$interval}), Notes: $show_marks",
     );
 
     $i = 0;
