@@ -77,9 +77,9 @@ $outer_style->circle(
 );
 
 $outer_style->text(
-    id     => 'style-group-outer-info',
-    x      => $frame_size / 2 - $sub_radius * 6,
-    y      => $frame_size / 2,
+    id    => 'style-group-outer-info',
+    x     => $frame_size / 2 - $sub_radius * 6,
+    y     => $frame_size / 2,
     style => {
         stroke => 'gray',
     },
