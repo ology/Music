@@ -55,8 +55,10 @@ $outer_style->circle(
 
 my $i = 0;
 
+# compute the ring positions
 my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 
+# display the ring positions
 for my $mark (@marks) {
     $i++;
 
@@ -85,7 +87,7 @@ if ($show_inner) {
         },
     );
 
-    # adjust the inner ring
+    # adjust the inner ring with these rotations
     my @factors = (
         0, 0,
         1.7,  1.2,  0.9,  0.7,
@@ -116,10 +118,12 @@ if ($show_inner) {
     my @inner_labels = map { $inner_scale[ (($_ - 1) * $interval) % @inner_scale ] }
         1 .. $show_marks;
 
+    my $inner_radius = $radius - $sub_radius * 3;
+
     $inner_style->circle(
         cx => $frame_size / 2,
         cy => $frame_size / 2,
-        r  => $radius - $sub_radius * 3,
+        r  => $inner_radius,
         id => 'style-group-inner-circle',
     );
 
@@ -131,7 +135,7 @@ if ($show_inner) {
         my $p = time_point(
             $mark,
             $total_marks,
-            $radius - $sub_radius * 3,
+            $inner_radius,
             $intervals{ $interval . ',' . $show_marks }
         );
 
