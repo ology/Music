@@ -84,7 +84,7 @@ $outer_style->circle(
 
 $outer_style->text(
     id    => 'style-group-outer-info',
-    x     => $frame_size / 2 - $sub_radius * 9,
+    x     => $frame_size / 2 - $sub_radius * 10,
     y     => $frame_size / 2,
     style => {
         stroke      => $text_line,
@@ -173,7 +173,7 @@ if ($show_inner) {
 
     $inner_style->text(
         id    => 'style-group-inner-info',
-        x     => $frame_size / 2 - $sub_radius * 9,
+        x     => $frame_size / 2 - $sub_radius * 10,
         y     => $frame_size / 2,
         style => {
             stroke      => $text_line,
