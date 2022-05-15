@@ -65,10 +65,10 @@ for my $mark (@marks) {
     push @coordinates, $p if $onsets{$i};
 
     $style->circle(
-        id => $mark . '-style-group-beat-circle',
-        cx => $p->[0] + $beat_radius + $border_size / 3,
-        cy => $p->[1] + $beat_radius + $border_size / 3,
-        r  => $beat_radius,
+        id    => $mark . '-style-group-beat-circle',
+        cx    => $p->[0] + $beat_radius + $border_size / 3,
+        cy    => $p->[1] + $beat_radius + $border_size / 3,
+        r     => $beat_radius,
         style => {
             fill => $onsets{$i} ? $beat_fill : $fill,
         },
