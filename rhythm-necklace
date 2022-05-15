@@ -52,7 +52,7 @@ $style->circle(
 );
 
 # compute the circle positions
-my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
+my @marks = map { $_ * $total_marks / $show_marks } 0 .. $show_marks - 1;
 
 # keep track of the beat coordinates
 my @coordinates;
