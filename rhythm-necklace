@@ -12,14 +12,14 @@ use constant DOUBLE => 2 * PI;
 my $phrase   = shift || 'x...x.x...x.x...'; # pattern to render
 my $diameter = shift || 512; # size of the circle
 
-my $show_marks  = length $phrase; # circular beats marks to display
+my $show_marks  = length $phrase; # circular beat marks to display
 my $fill        = 'white';
 my $beat_fill   = 'gray';
 my $border      = 'green';
 my $total_marks = 60; # maximum number of note markers
 # NB: Changing the border_size and beat_radius apparently messes up placement
 my $border_size = 15; # chart margin
-my $beat_radius = 11; # radius for sub-circle markings
+my $beat_radius = 11; # radius for beat-circle markings
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
