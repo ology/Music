@@ -232,10 +232,10 @@ sub get_labels {
 sub coordinate {
     my ($p, $total, $radius, $inner) = @_;
 
-    # Compute the analog minute time equivalent
+    # compute the analog minute time equivalent
     my $analog = $p / $total * DOUBLE - HALF;
 
-    # Replace the time value with the polar coordinate
+    # replace the time value with the polar coordinate
     my $coord;
     if ($inner) {
         $coord = [
