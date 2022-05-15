@@ -78,10 +78,10 @@ my $outer_style = $svg->group(
 );
 
 $outer_style->circle(
+    id => 'style-group-outer-circle',
     cx => $frame_size / 2,
     cy => $frame_size / 2,
     r  => $radius,
-    id => 'style-group-outer-circle',
 );
 
 $outer_style->text(
