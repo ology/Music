@@ -235,7 +235,7 @@ sub coordinate {
     # compute the analog minute time equivalent
     my $analog = $p / $total * DOUBLE - HALF;
 
-    # get the polar coordinate of the time value
+    # get the coordinate of the time value
     my $coord;
     if ($inner) {
         $coord = [
