@@ -44,12 +44,12 @@ $style->circle(
     r  => $radius,
 );
 
-# compute the ring positions
+# compute the circle positions
 my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 
 my $i = 0;
 
-# display the ring positions
+# display the circle positions
 for my $mark (@marks) {
     $i++;
 
