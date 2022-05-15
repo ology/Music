@@ -54,9 +54,13 @@ $style->circle(
 # compute the circle positions
 my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 
+# keep track of the beat coordinates
+my @coordinates;
+
 # display the circle positions
 for my $mark (@marks) {
     my $p = coordinate($mark, $total_marks, $radius);
+    push @coordinates, $p;
 
     $style->circle(
         id => $mark . '-style-group-beat-circle',
