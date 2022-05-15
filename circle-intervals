@@ -35,7 +35,8 @@ my $outer_line = shift || 'green';
 my $inner_line = shift || 'gray';
 my $text_line  = shift || 'black';
 
-my $total_marks = 60;           # maximum number of note markers (2-60)
+my $min_marks   = 2;            # minimum number of note markers
+my $total_marks = 60;           # maximum number of note markers
 my $font_size   = 20;           # size of the caption font
 # NB: Changing the border_size apparently messes up placement of text
 my $border_size = 10;           # chart margin
@@ -158,7 +159,7 @@ if ($show_inner) {
     );
     my %intervals;
     for my $known (keys %named) {
-        for my $mark (2 .. $total_marks) {
+        for my $mark ($min_marks .. $total_marks) {
             $intervals{ $known . ',' . $mark } = $factors[$mark];
         }
     }
