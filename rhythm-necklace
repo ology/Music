@@ -9,7 +9,7 @@ use constant PI     => 2 * atan2(1,0);
 use constant HALF   => PI / 2;
 use constant DOUBLE => 2 * PI;
 
-my $show_marks = shift || 12;   # how many circular note marks to display (2-60)
+my $show_marks = shift || 16;   # how many circular note marks to display (2-60)
 my $diameter   = shift || 512;  # size of the outer circle
 
 my $fill        = 'white';
