@@ -1,0 +1,81 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Math::Trig ();
+use SVG qw(title);
+
+use constant PI     => 2 * atan2(1,0);
+use constant HALF   => PI / 2;
+use constant DOUBLE => 2 * PI;
+
+my $show_marks = shift || 12;   # how many circular note marks to display (2-60)
+my $diameter   = shift || 512;  # size of the outer circle
+
+my $fill        = 'white';
+my $beat_fill   = 'gray';
+my $border      = 'green';
+my $min_marks   = 2;            # minimum number of note markers
+my $total_marks = 60;           # maximum number of note markers
+# NB: Changing the border_size and sub_radius apparently messes up placement
+my $border_size = 15;           # chart margin
+my $beat_radius = 11;           # radius for sub-circle markings
+my $radius      = $diameter / 2;
+my $frame_size  = $diameter + 2 * $border_size;
+
+my $svg = SVG->new(
+    width  => $frame_size,
+    height => $frame_size,
+);
+$svg->title()->cdata('Rhythm Necklace');
+
+my $style = $svg->group(
+    id    => 'style-group',
+    style => {
+        stroke => $border,
+        fill   => $fill,
+    },
+);
+
+$style->circle(
+    id => 'style-group-circle',
+    cx => $frame_size / 2,
+    cy => $frame_size / 2,
+    r  => $radius,
+);
+
+# compute the ring positions
+my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
+
+my $i = 0;
+
+# display the ring positions
+for my $mark (@marks) {
+    $i++;
+
+    my $p = coordinate($mark, $total_marks, $radius);
+
+    $style->circle(
+        id => $mark . '-style-group-beat-circle',
+        cx => $p->[0] + $beat_radius + $border_size / 3,
+        cy => $p->[1] + $beat_radius + $border_size / 3,
+        r  => $beat_radius,
+    );
+}
+
+print $svg->xmlify;
+
+sub coordinate {
+    my ($p, $total, $radius) = @_;
+
+    # compute the analog minute time equivalent
+    my $analog = $p / $total * DOUBLE - HALF;
+
+    # get the coordinate of the time value
+    my $coord = [
+        $radius + $radius * cos($analog),
+        $radius + $radius * sin($analog)
+    ];
+
+    return $coord;
+}
