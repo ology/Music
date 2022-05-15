@@ -22,7 +22,7 @@ use constant HALF   => PI / 2;
 use constant DOUBLE => 2 * PI;
 use constant SCALE  => 'chromatic';
 
-my $interval   = shift || 1;    # default half-step (1-11)
+my $interval   = shift || 1;    # default half-step (intervals: 1-11)
 my $show_marks = shift || 12;   # how many circular note marks to display (2-60)
 my $show_inner = shift // 0;    # show the inner ring?
 my $flat       = shift // 0;    # show note names with flats: default sharps
