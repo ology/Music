@@ -38,8 +38,8 @@ my $text_line  = shift || 'black';
 my $min_marks   = 2;            # minimum number of note markers
 my $total_marks = 60;           # maximum number of note markers
 my $font_size   = 20;           # size of the caption font
-# NB: Changing the border_size apparently messes up placement of text
-my $border_size = 10;           # chart margin
+# NB: Changing the border_size apparently messes up placement
+my $border_size = 15;           # chart margin
 my $sub_radius  = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
@@ -112,8 +112,8 @@ for my $mark (@marks) {
 
     $outer_style->circle(
         id => $mark . '-style-group-outer-sub-circle',
-        cx => $p->[0] + $sub_radius,
-        cy => $p->[1] + $sub_radius,
+        cx => $p->[0] + $sub_radius + $border_size / 3,
+        cy => $p->[1] + $sub_radius + $border_size / 3,
         r  => $sub_radius,
     );
 
@@ -123,8 +123,8 @@ for my $mark (@marks) {
         : $item;
     $outer_style->text(
         id => $i . '-style-group-outer-sub-text',
-        x  => $p->[0] + $sub_radius - ($sub_radius / 2),
-        y  => $p->[1] + $sub_radius + ($sub_radius / 2),
+        x  => $p->[0] + $sub_radius - ($sub_radius / 2) + $border_size / 3,
+        y  => $p->[1] + $sub_radius + ($sub_radius / 2) + $border_size / 3,
     )->cdata($text);
 }
 
@@ -201,8 +201,8 @@ if ($show_inner) {
 
         $inner_style->circle(
             id => $mark . '-style-group-inner-sub-circle',
-            cx => $p->[0] + $sub_radius * 4,
-            cy => $p->[1] + $sub_radius * 4,
+            cx => $p->[0] + $sub_radius * 4 + $border_size / 3,
+            cy => $p->[1] + $sub_radius * 4 + $border_size / 3,
             r  => $sub_radius,
         );
 
@@ -212,8 +212,8 @@ if ($show_inner) {
             : $item;
         $inner_style->text(
             id => $i . '-style-group-inner-sub-text',
-            x  => $p->[0] + $sub_radius * 3 + 3,
-            y  => $p->[1] + $sub_radius * 3 + 3 + $sub_radius,
+            x  => $p->[0] + $sub_radius * 3 + 3 + $border_size / 3,
+            y  => $p->[1] + $sub_radius * 3 + 3 + $sub_radius + $border_size / 3,
         )->cdata($text);
     }
 }
