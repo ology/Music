@@ -54,12 +54,8 @@ $style->circle(
 # compute the circle positions
 my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 
-$i = 0;
-
 # display the circle positions
 for my $mark (@marks) {
-    $i++;
-
     my $p = coordinate($mark, $total_marks, $radius);
 
     $style->circle(
