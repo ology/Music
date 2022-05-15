@@ -35,9 +35,9 @@ my $outer_line = shift || 'green';
 my $inner_line = shift || 'gray';
 my $text_line  = shift || 'black';
 
-# NB: Changing these values will probably mess up the placement of the text
 my $total_marks = 60;           # maximum number of interval markers 2-60
 my $font_size   = 20;           # size of the caption font
+# NB: Changing this value apparently messes up the placement of the text
 my $border_size = 10;           # chart margin
 my $sub_radius  = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
