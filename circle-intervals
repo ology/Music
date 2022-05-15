@@ -66,11 +66,7 @@ $svg->title()->cdata($title);
 $svg->desc(id => 'document-desc')->cdata($desc);
 
 # build the outer ring
-my @outer_scale = get_scale_notes($outer_note, SCALE, undef, $flat ? 'b' : '#');
 
-my @outer_labels = get_labels(\@outer_scale, $interval, $show_marks);
-
-# generate a group element
 my $outer_style = $svg->group(
     id    => 'outer-style-group',
     style => {
@@ -97,10 +93,14 @@ $outer_style->text(
     -cdata => $caption,
 ) if !$show_inner;
 
-my $i = 0;
+my @outer_scale = get_scale_notes($outer_note, SCALE, undef, $flat ? 'b' : '#');
+
+my @outer_labels = get_labels(\@outer_scale, $interval, $show_marks);
 
 # compute the ring positions
 my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
+
+my $i = 0;
 
 # display the ring positions
 for my $mark (@marks) {
