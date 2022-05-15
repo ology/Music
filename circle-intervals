@@ -37,7 +37,7 @@ my $text_line  = shift || 'black';
 
 my $total_marks = 60;           # maximum number of interval markers 2-60
 my $font_size   = 20;           # size of the caption font
-# NB: Changing this value apparently messes up the placement of the text
+# NB: Changing the border_size apparently messes up the placement of the text
 my $border_size = 10;           # chart margin
 my $sub_radius  = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
