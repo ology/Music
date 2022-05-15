@@ -57,6 +57,8 @@ my @marks = map { $_ * $total_marks / $show_marks } 0 .. $show_marks - 1;
 # keep track of the beat coordinates
 my @coordinates;
 
+my $offset = $beat_radius + $border_size / 3;
+
 $i = 0;
 
 # display the circle positions
@@ -66,8 +68,8 @@ for my $mark (@marks) {
 
     $style->circle(
         id    => $mark . '-style-group-beat-circle',
-        cx    => $p->[0] + $beat_radius + $border_size / 3,
-        cy    => $p->[1] + $beat_radius + $border_size / 3,
+        cx    => $p->[0] + $offset,
+        cy    => $p->[1] + $offset,
         r     => $beat_radius,
         style => {
             fill => $onsets{$i} ? $beat_fill : $fill,
@@ -78,8 +80,8 @@ for my $mark (@marks) {
 }
 
 # render the beat polygon
-my $xv = [ map { $_->[0] + $beat_radius + $border_size / 3 } @coordinates ];
-my $yv = [ map { $_->[1] + $beat_radius + $border_size / 3 } @coordinates ];
+my $xv = [ map { $_->[0] + $offset } @coordinates ];
+my $yv = [ map { $_->[1] + $offset } @coordinates ];
 my $points = $svg->get_path(
     x     => $xv,
     y     => $yv,
