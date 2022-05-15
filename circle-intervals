@@ -22,8 +22,8 @@ use constant HALF   => PI / 2;
 use constant DOUBLE => 2 * PI;
 use constant SCALE  => 'chromatic';
 
-my $interval   = shift || 1;    # default chromatic 1-11
-my $show_marks = shift || 12;   # how many circular note marks to display 2-60
+my $interval   = shift || 1;    # default half-step (1-11)
+my $show_marks = shift || 12;   # how many circular note marks to display (2-60)
 my $show_inner = shift // 0;    # show the inner ring?
 my $flat       = shift // 0;    # show note names with flats: default sharps
 my $numeric    = shift // 0;    # display notes as pitch numbers
@@ -35,7 +35,7 @@ my $outer_line = shift || 'green';
 my $inner_line = shift || 'gray';
 my $text_line  = shift || 'black';
 
-my $total_marks = 60;           # maximum number of interval markers 2-60
+my $total_marks = 60;           # maximum number of interval markers (2-60)
 my $font_size   = 20;           # size of the caption font
 # NB: Changing the border_size apparently messes up placement of text
 my $border_size = 10;           # chart margin
