@@ -24,9 +24,9 @@ my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
 
 my $i = 0;
-my @onsets; # beats to draw
+my %onsets; # beats to draw
 for my $beat (split //, $phrase) {
-    push @onsets, $i if $beat eq 'x';
+    $onsets{$i}++ if $beat eq 'x';
     $i++;
 }
 
@@ -57,10 +57,12 @@ my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 # keep track of the beat coordinates
 my @coordinates;
 
+$i = 0;
+
 # display the circle positions
 for my $mark (@marks) {
     my $p = coordinate($mark, $total_marks, $radius);
-    push @coordinates, $p;
+    push @coordinates, $p if $onsets{$i};
 
     $style->circle(
         id => $mark . '-style-group-beat-circle',
@@ -68,7 +70,25 @@ for my $mark (@marks) {
         cy => $p->[1] + $beat_radius + $border_size / 3,
         r  => $beat_radius,
     );
+
+    $i++;
 }
+
+# a five-sided polygon
+my $xv = [ map { $_->[0] } @coordinates ];
+my $yv = [ map { $_->[1] } @coordinates ];
+my $points = $svg->get_path(
+    x     => $xv,
+    y     => $yv,
+    -type => 'polygon',
+);
+my $poly = $svg->polygon(
+    %$points,
+    id    => 'beat-polygon',
+    style => {
+        fill => $beat_fill,
+    },
+);
 
 print $svg->xmlify;
 
