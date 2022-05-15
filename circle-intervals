@@ -35,7 +35,7 @@ my $outer_line = shift || 'green';
 my $inner_line = shift || 'gray';
 my $text_line  = shift || 'black';
 
-my $total_marks = 60;           # maximum number of interval markers (2-60)
+my $total_marks = 60;           # maximum number of note markers (2-60)
 my $font_size   = 20;           # size of the caption font
 # NB: Changing the border_size apparently messes up placement of text
 my $border_size = 10;           # chart margin
