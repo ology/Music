@@ -9,10 +9,10 @@ use constant PI     => 2 * atan2(1,0);
 use constant HALF   => PI / 2;
 use constant DOUBLE => 2 * PI;
 
-my $show_marks = shift || 16;            # circular beats marks to display (2-60)
-my $onsets     = shift || '0,4,6,10,12'; # beats to draw
-my $diameter   = shift || 512;           # size of the circle
+my $phrase   = shift || 'x...x.x...x.x...'; # pattern to render
+my $diameter = shift || 512; # size of the circle
 
+my $show_marks  = length $phrase; # circular beats marks to display
 my $fill        = 'white';
 my $beat_fill   = 'gray';
 my $border      = 'green';
@@ -23,6 +23,13 @@ my $border_size = 15;           # chart margin
 my $beat_radius = 11;           # radius for sub-circle markings
 my $radius      = $diameter / 2;
 my $frame_size  = $diameter + 2 * $border_size;
+
+my $i = 0;
+my @onsets; # beats to draw
+for my $beat (split //, $phrase) {
+    push @onsets, $beat if $beat eq 'x';
+    $i++;
+}
 
 my $svg = SVG->new(
     width  => $frame_size,
@@ -48,7 +55,7 @@ $style->circle(
 # compute the circle positions
 my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
 
-my $i = 0;
+$i = 0;
 
 # display the circle positions
 for my $mark (@marks) {
