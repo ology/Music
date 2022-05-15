@@ -2,8 +2,8 @@
 use strict;
 use warnings;
 
-# Evenly space a number of named sub-circles around a circle.
-# Optionally show an inner circle of offset notes.
+# Evenly space a number of named sub-circles around the perimeter a circle.
+# Optionally show another inner circle of offset notes.
 # Examples:
 # Chromatic:      perl circle-intervals 1 24 1 > circle-intervals.svg
 # Circle of 5ths: perl circle-intervals 7 12 1 0 0 C F > circle-intervals.svg
