@@ -26,7 +26,7 @@ my $frame_size  = $diameter + 2 * $border_size;
 my $i = 0;
 my @onsets; # beats to draw
 for my $beat (split //, $phrase) {
-    push @onsets, $beat if $beat eq 'x';
+    push @onsets, $i if $beat eq 'x';
     $i++;
 }
 
