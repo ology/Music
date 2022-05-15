@@ -74,9 +74,8 @@ for my $mark (@marks) {
     $i++;
 }
 
-# a five-sided polygon
-my $xv = [ map { $_->[0] } @coordinates ];
-my $yv = [ map { $_->[1] } @coordinates ];
+my $xv = [ map { $_->[0] + $beat_radius + $border_size / 3 } @coordinates ];
+my $yv = [ map { $_->[1] + $beat_radius + $border_size / 3 } @coordinates ];
 my $points = $svg->get_path(
     x     => $xv,
     y     => $yv,
