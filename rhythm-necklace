@@ -101,7 +101,7 @@ print $svg->xmlify;
 
 my $d = MIDI::Drummer::Tiny->new(
    file   => "$0.mid",
-   bpm    => 100,
+   bpm    => 120,
    volume => 120,
    bars   => 4,
    reverb => 15,
