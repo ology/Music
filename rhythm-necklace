@@ -63,7 +63,7 @@ my $offset = $beat_radius + $border_size / 3;
 
 $i = 0;
 
-# display the circle positions
+# display the beat positions
 for my $mark (@marks) {
     my $p = coordinate($mark, $total_marks, $radius);
     push @coordinates, $p if $onsets{$i};
