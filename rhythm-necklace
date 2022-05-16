@@ -105,8 +105,6 @@ my $d = MIDI::Drummer::Tiny->new(
    volume => 120,
    bars   => 4,
    reverb => 15,
-   kick   => 36, # Override default patch
-   snare  => 40, # "
 );
 
 for my $bar (1 .. $d->bars) {
