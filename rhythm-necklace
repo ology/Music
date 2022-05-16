@@ -15,7 +15,7 @@ my $phrase   = shift || 'x..x..x...x.x...'; # pattern to render (default: son)
 my $diameter = shift || 512; # size of the circle
 
 my $show_marks  = length $phrase; # circular beat marks to display
-my $total_marks = 60; # maximum number of note markers
+my $total_marks = 60; # maximum number of beat markers
 my $fill        = 'white';
 my $beat_fill   = 'gray';
 my $border      = 'green';
