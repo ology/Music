@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny);
+use MIDI::Drummer::Tiny;
 use Math::Trig ();
 use SVG qw(title);
 
@@ -96,6 +98,30 @@ my $poly = $svg->polygon(
 );
 
 print $svg->xmlify;
+
+my $d = MIDI::Drummer::Tiny->new(
+   file   => "$0.mid",
+   bpm    => 100,
+   volume => 120,
+   bars   => 4,
+   reverb => 15,
+   kick   => 36, # Override default patch
+   snare  => 40, # "
+);
+
+for my $bar (1 .. $d->bars) {
+    for my $beat (split //, $phrase) {
+        if ($beat eq 'x') {
+            $d->note($d->eighth, $d->claves);
+        }
+        else {
+            $d->rest($d->eighth);
+        }
+        $i++;
+    }
+}
+
+$d->write;
 
 sub coordinate {
     my ($p, $total, $radius) = @_;
