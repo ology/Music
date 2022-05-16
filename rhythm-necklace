@@ -66,6 +66,7 @@ $i = 0;
 # display the beat positions
 for my $mark (@marks) {
     my $p = coordinate($mark, $total_marks, $radius);
+
     push @coordinates, $p if $onsets{$i};
 
     $style->circle(
