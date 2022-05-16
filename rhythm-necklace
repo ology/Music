@@ -89,7 +89,7 @@ my $points = $svg->get_path(
     y     => $yv,
     -type => 'polygon',
 );
-my $poly = $svg->polygon(
+$svg->polygon(
     %$points,
     id    => 'beat-polygon',
     style => {
