@@ -101,7 +101,6 @@ my @outer_labels = get_labels(\@outer_scale, $interval, $show_marks);
 
 # compute the ring positions
 my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
-
 my $fract = ($marks[1] - $marks[0]) / 2;
 
 my $i = 0;
