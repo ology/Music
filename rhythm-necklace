@@ -4,12 +4,11 @@ use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny);
 use MIDI::Drummer::Tiny;
-use Math::Trig ();
+use Math::Trig qw(pi);
 use SVG qw(title);
 
-use constant PI     => 2 * atan2(1,0);
-use constant HALF   => PI / 2;
-use constant DOUBLE => 2 * PI;
+use constant HALF   => pi / 2;
+use constant DOUBLE => 2 * pi;
 
 my $phrase   = shift || 'x..x..x...x.x...'; # pattern to render (default: son)
 my $diameter = shift || 512; # size of the circle
