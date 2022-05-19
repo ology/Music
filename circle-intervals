@@ -13,13 +13,12 @@ use warnings;
 # Coltrane's wholetone: perl circle-intervals 2 30 1 1 > circle-intervals.svg
 
 use List::SomeUtils qw(first_index);
-use Math::Trig ();
+use Math::Trig qw(pi);
 use Music::Scales qw(get_scale_notes);
 use SVG qw(title);
 
-use constant PI     => 2 * atan2(1,0);
-use constant HALF   => PI / 2;
-use constant DOUBLE => 2 * PI;
+use constant HALF   => pi / 2;
+use constant DOUBLE => 2 * pi;
 use constant SCALE  => 'chromatic';
 
 my $interval   = shift || 1;    # default half-step (intervals: 1-11)
