@@ -61,7 +61,7 @@ sub bass {
 
     my $bassline = MIDI::Bassline::Walk->new(
         tonic   => 1,
-#        verbose => 1,
+#       verbose => 1,
     );
 
     for my $spec (
@@ -215,14 +215,14 @@ sub coltrane {
       scale_name  => 'wholetone',
       note_format => FORMAT,
       flat        => 1,
-    #  verbose     => 1,
+#     verbose     => 1,
     );
     my $inner_scale = Music::ScaleNote->new(
       scale_note  => 'C#',
       scale_name  => 'wholetone',
       note_format => FORMAT,
       flat        => 1,
-    #  verbose     => 1,
+#     verbose     => 1,
     );
 
     # initialize phrase generators
@@ -230,7 +230,7 @@ sub coltrane {
         size    => 4, # 4 quarter notes = 1 measure
         pool    => [qw/ hn thn qn tqn /], # XXX but what note durations
         groups  => [    1, 3,  1, 3    ], # XXX did Coltrane actually
-#        weights => [    1, 2,  1, 2    ], # XXX play?
+#       weights => [    1, 2,  1, 2    ], # XXX play?
     );
     my @slow_motifs = map { $slow->motif } 1 .. 2;
     my $fast = Music::Duration::Partition->new(
