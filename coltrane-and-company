@@ -20,9 +20,9 @@ use constant MIDDLE => 2;      # "
 use constant TAIL   => 4;      # "
 use constant LEFT   => -1;     # direction
 use constant RIGHT  => 1;      # "
-use constant FORMAT => 'midi'; # note conversion format
 use constant HIGH   => 6;      # octave bound
 use constant LOW    => 4;      # "
+use constant FORMAT => 'midi'; # note conversion format
 
 my $max    = shift || 12;  # number of measures to play
 my $bpm    = shift || 100; # beats per minute
@@ -45,7 +45,7 @@ $d->sync(
     \&drums,
     \&bass,
     \&harmony,
-    \&coltrane,
+#    \&coltrane,
 );
 
 # write the score as a midi file
