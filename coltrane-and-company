@@ -252,37 +252,27 @@ sub coltrane {
             : $fast_motifs[ int rand @fast_motifs ];
 
         for my $m (@$motif) {
+            my %args = (
+                in_out       => $in_out,
+                inner_scale  => $inner_scale,
+                outer_scale  => $outer_scale,
+                octave       => $octave,
+                current_note => $current_note,
+                direction    => $direction,
+                section_num  => $section_num,
+                inner        => \@inner,
+                outer        => \@outer,
+                inner_links  => \%inner_links,
+                outer_links  => \%outer_links,
+            );
+
             if (($index == HEAD && $direction == LEFT) || ($index == TAIL && $direction == RIGHT)) {
-                ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
-                    in_out       => $in_out,
-                    inner_scale  => $inner_scale,
-                    outer_scale  => $outer_scale,
-                    octave       => $octave,
-                    current_note => $current_note,
-                    direction    => $direction,
-                    section_num  => $section_num,
-                    inner        => \@inner,
-                    outer        => \@outer,
-                    inner_links  => \%inner_links,
-                    outer_links  => \%outer_links,
-                );
+                ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(%args);
             }
             else {
                 my $roll = int rand 2;
                 if ($index == MIDDLE && $roll) {
-                    ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(
-                        in_out       => $in_out,
-                        inner_scale  => $inner_scale,
-                        outer_scale  => $outer_scale,
-                        octave       => $octave,
-                        current_note => $current_note,
-                        direction    => $direction,
-                        section_num  => $section_num,
-                        inner        => \@inner,
-                        outer        => \@outer,
-                        inner_links  => \%inner_links,
-                        outer_links  => \%outer_links,
-                    );
+                    ($in_out, $section_num, $index, $formatted, $octave, $section) = step_in_out(%args);
                 }
                 else {
                     if ($jump) {
