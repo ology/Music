@@ -16,7 +16,9 @@ use Music::Duration::Partition;
 use Music::ScaleNote;
 
 use constant HEAD   => 0;      # diagram index
+use constant FIRST  => 1;      # "
 use constant MIDDLE => 2;      # "
+use constant PENULT => 3;      # "
 use constant TAIL   => 4;      # "
 use constant LEFT   => -1;     # direction
 use constant RIGHT  => 1;      # "
@@ -92,17 +94,17 @@ sub harmony {
 
     my $mcg = MIDI::Chord::Guitar->new(voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv");
 
-    my $C      = $mcg->transform('C', '', 0);
-    my $C7     = $mcg->transform('C', '7', 0);
-    my $Cm7    = $mcg->transform('C', 'm7', 0);
-    my $Dm7    = $mcg->transform('D', 'm7', 0);
-    my $F      = $mcg->transform('F', '', 0);
-    my $F7     = $mcg->transform('F', '7', 0);
-    my $Fm7    = $mcg->transform('F', 'm7', 0);
+    my $C      = $mcg->transform('C',  '',     0);
+    my $C7     = $mcg->transform('C',  '7',    0);
+    my $Cm7    = $mcg->transform('C',  'm7',   0);
+    my $Dm7    = $mcg->transform('D',  'm7',   0);
+    my $F      = $mcg->transform('F',  '',     0);
+    my $F7     = $mcg->transform('F',  '7',    0);
+    my $Fm7    = $mcg->transform('F',  'm7',   0);
     my $Fsdim7 = $mcg->transform('F#', 'dim7', 0);
-    my $G      = $mcg->transform('G', '', 0);
-    my $G7     = $mcg->transform('G', '7', 0);
-    my $Af7    = $mcg->transform('Ab', '7', 0);
+    my $G      = $mcg->transform('G',  '',     0);
+    my $G7     = $mcg->transform('G',  '7',    0);
+    my $Af7    = $mcg->transform('Ab', '7',    0);
 
     my $half  = 'hn';
     my $whole = 'wn';
@@ -276,10 +278,10 @@ sub coltrane {
                 }
                 else {
                     if ($jump) {
-                        if ($direction == RIGHT && $index != 3) {
+                        if ($direction == RIGHT && $index != PENULT) {
                             $direction++ if int rand 2;
                         }
-                        elsif ($direction == LEFT && $index != 1) {
+                        elsif ($direction == LEFT && $index != FIRST) {
                             $direction-- if int rand 2;
                         }
                     }
