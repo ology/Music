@@ -26,6 +26,7 @@ use constant FORMAT => 'midi'; # note conversion format
 
 my $max    = shift || 12;  # number of measures to play
 my $bpm    = shift || 100; # beats per minute
+my $jump   = shift || 0;   # allow jumps > 1
 my $cpatch = shift || 66;  # soprano sax=64, alto=65, tenor=66, bari=67
 my $hpatch = shift || 4;   # electric pianos=4 & 5, nylon guitar=24
 my $bpatch = shift || 35;  # fretless bass=35
@@ -284,15 +285,14 @@ sub coltrane {
                     );
                 }
                 else {
-                    # jump?
-#                    if ($direction == RIGHT && $index != 3) {
-#warn __PACKAGE__,' L',__LINE__,' ',,"RIGHT: $direction, C: $current_note, S: [@$section] I: $index\n";
-#                        $direction++ if int rand 2;
-#                    }
-#                    elsif ($direction == LEFT && $index != 1) {
-#warn __PACKAGE__,' L',__LINE__,' ',,"LEFT: $direction, C: $current_note, S: [@$section] I: $index\n";
-#                        $direction-- if int rand 2;
-#                    }
+                    if ($jump) {
+                        if ($direction == RIGHT && $index != 3) {
+                            $direction++ if int rand 2;
+                        }
+                        elsif ($direction == LEFT && $index != 1) {
+                            $direction-- if int rand 2;
+                        }
+                    }
                     my $next_note = $in_out
                         ? $inner_scale->get_offset(note_name => $current_note . $octave, offset => $direction)
                         : $outer_scale->get_offset(note_name => $current_note . $octave, offset => $direction);
