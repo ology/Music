@@ -1,0 +1,41 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+use Net::CoverArtArchive;
+use lib map { "$ENV{HOME}/repos/$_/lib" } qw(webservice-musicbrainz);
+use WebService::MusicBrainz;
+#$ENV{MUSICBRAINZ_DEBUG} = 1;
+
+my $who  = shift || 'David Bowie';  # artist
+my $what = shift || 'Diamond Dogs'; # release
+
+my $image;
+
+my $caa = Net::CoverArtArchive->new;
+my $mb  = WebService::MusicBrainz->new;
+
+my $result = $mb->search(artist => { artist => $who });
+
+my $artist_id = $result->{artists}[0]{id};
+
+my $key = 'release-groups';
+$result = $mb->search(artist => { mbid => $artist_id, inc => [$key]});
+#warn ddc($result, {max_width=>128});
+
+print "$what:\n";
+for my $group (@{ $result->{$key} }) {
+    if ($group->{title} eq $what) {
+        $key = 'releases';
+        $result = $mb->search('release-group' => { mbid => $group->{id}, inc => [$key]});
+        #warn ddc($result, {max_width=>128});
+        for my $release (@{ $result->{$key} }) {
+            my $release_id = $release->{id};
+            my $artwork = $caa->find_available_artwork($release_id);
+            #warn ddc($artwork, {max_width=>128});
+            print $artwork->[0]{image}, "\n" if $artwork->[0]{image};
+        }
+        last;
+    }
+}
