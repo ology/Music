@@ -26,12 +26,16 @@ $result = $mb->search(artist => { mbid => $artist_id, inc => [$key]});
 
 print "$who:\n";
 
+my $i = 0;
+
 for my $group (@{ $result->{$key} }) {
     my $condition = $what
         ? $group->{title} eq $what
         : !@{ $group->{'secondary-types'} }; # studio albums only?
     if ($condition) {
-        print "$group->{title}:\n";
+        $i++;
+
+        print "$i. $group->{title}:\n";
 
         $key = 'releases';
         $result = $mb->search('release-group' => { mbid => $group->{id}, inc => [$key]});
