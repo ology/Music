@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
+use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib'; # local author
 use MIDI::Util qw(midi_dump);
 use Data::Dumper::Compact qw(ddc);
 
