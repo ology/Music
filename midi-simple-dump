@@ -6,8 +6,9 @@ use lib $ENV{HOME} . '/sandbox/MIDI-Util/lib';
 use MIDI::Util qw(midi_dump);
 use Data::Dumper::Compact qw(ddc);
 
-$Data::Dumper::Varname = 'Length';
-print ddc(midi_dump('length'));
+my $name = shift || 'length';
+
+print ddc(midi_dump($name));
 
 __END__
 volume
