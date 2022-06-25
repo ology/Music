@@ -9,7 +9,7 @@ use WebService::MusicBrainz;
 #$ENV{MUSICBRAINZ_DEBUG} = 1;
 
 my $who  = shift || 'David Bowie';  # artist
-my $what = shift || 'Diamond Dogs'; # release
+my $what = shift || ''; #'Diamond Dogs'; # release
 
 my $image;
 
@@ -22,20 +22,28 @@ my $artist_id = $result->{artists}[0]{id};
 
 my $key = 'release-groups';
 $result = $mb->search(artist => { mbid => $artist_id, inc => [$key]});
-#warn ddc($result, {max_width=>128});
+#warn ddc($result, {max_width=>128});exit;
 
-print "$what:\n";
+print "$who:\n";
+
 for my $group (@{ $result->{$key} }) {
-    if ($group->{title} eq $what) {
+    my $condition = $what
+        ? $group->{title} eq $what
+        : !@{ $group->{'secondary-types'} }; # studio albums only?
+    if ($condition) {
+        print "$group->{title}:\n";
+
         $key = 'releases';
         $result = $mb->search('release-group' => { mbid => $group->{id}, inc => [$key]});
         #warn ddc($result, {max_width=>128});
+
         for my $release (@{ $result->{$key} }) {
             my $release_id = $release->{id};
             my $artwork = $caa->find_available_artwork($release_id);
             #warn ddc($artwork, {max_width=>128});
             print $artwork->[0]{image}, "\n" if $artwork->[0]{image};
         }
-        last;
+
+        last if $what;
     }
 }
