@@ -254,7 +254,7 @@ sub bass {
 }
 
 sub _walk {
-    my ($bassline, $chord, $n) = @_;
-    my $notes = $bassline->generate($chord, $n);
+    my ($bassline, $chord, $n, $next) = @_;
+    my $notes = $bassline->generate($chord, $n, $next);
     $d->note('qn', $_) for @$notes;
 }
