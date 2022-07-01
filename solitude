@@ -30,7 +30,7 @@ $d->sync(
     \&drums,
     \&chords,
     \&melody,
-#    \&bass,
+    \&bass,
 );
 
 $d->write;
@@ -204,7 +204,11 @@ sub bass {
     my $n = 2;
     my $duration = $d->half;
 
-    my $bassline = MIDI::Bassline::Walk->new(verbose => 1);
+    my $bassline = MIDI::Bassline::Walk->new(
+        verbose   => 1,
+        modal     => 1,
+        keycenter => 'Db',
+    );
 
     $d->rest($d->whole); # while counting-in
 
