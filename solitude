@@ -206,6 +206,7 @@ sub bass {
 
     my $bassline = MIDI::Bassline::Walk->new(
         verbose   => 1,
+        guitar    => 1,
         modal     => 1,
         keycenter => 'Db',
     );
