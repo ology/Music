@@ -78,15 +78,15 @@ sub chords {
     $d->rest($d->whole); # while counting-in
 
     for my $n (1 .. 2) {
-        $d->note($d->whole, @$Dfmaj7);
+        $d->note($d->whole,   @$Dfmaj7);
         $d->note($d->quarter, @$Dfmaj7);
         $d->note($d->quarter, @$Dfmaj7);
-        $d->note($d->half, @$Bfm7);
-        $d->note($d->whole, @$Ef7_1);
-        $d->note($d->whole, @$Ef7_2);
-        $d->note($d->whole, @$Efm7);
-        $d->note($d->whole, @$Af7);
-        $d->note($d->whole, @$Dfmaj7);
+        $d->note($d->half,    @$Bfm7);
+        $d->note($d->whole,   @$Ef7_1);
+        $d->note($d->whole,   @$Ef7_2);
+        $d->note($d->whole,   @$Efm7);
+        $d->note($d->whole,   @$Af7);
+        $d->note($d->whole,   @$Dfmaj7);
         if ($n % 2) { # odd
             $d->note($d->half, @$Aaug7);
             $d->note($d->half, @$Af7);
@@ -210,6 +210,12 @@ sub bass {
         chord_notes => 0,
         modal       => 1,
         keycenter   => 'Db',
+    );
+
+    my $tandem = MIDI::Bassline::Walk->new(
+        verbose => 1,
+        guitar  => 1,
+        scale   => sub { '' }, # chord notes only
     );
 
     $d->rest($d->whole); # while counting-in
