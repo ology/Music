@@ -204,7 +204,7 @@ sub bass {
     my $n = 2;
     my $duration = $d->half;
 
-    my $bassline = MIDI::Bassline::Walk->new(
+    my $modal = MIDI::Bassline::Walk->new(
         verbose     => 1,
         guitar      => 1,
         chord_notes => 0,
@@ -221,47 +221,47 @@ sub bass {
     $d->rest($d->whole); # while counting-in
 
     for my $n (1 .. 2) {
-        _walk($bassline, 'DbM7', 6, 'Bbm7');
-        _walk($bassline, 'Bbm7', 2, 'Eb7');
-        _walk($bassline, 'Eb7',  8, 'Ebm7');
-        _walk($bassline, 'Ebm7', 4, 'Ab7');
-        _walk($bassline, 'Ab7',  4, 'DbM7');
-        _walk($bassline, 'DbM7', 4);
+        _walk($modal, 'DbM7', 6, 'Bbm7');
+        _walk($modal, 'Bbm7', 2, 'Eb7');
+        _walk($modal, 'Eb7',  8, 'Ebm7');
+        _walk($modal, 'Ebm7', 4, 'Ab7');
+        _walk($modal, 'Ab7',  4, 'DbM7');
+        _walk($modal, 'DbM7', 4);
         if ($n % 2) { # odd
-            _walk($bassline, 'Aaug7', 2, 'Ab7');
-            _walk($bassline, 'Ab7',   2, 'GbM7');
+            _walk($tandem, 'Aaug7', 2);
+            _walk($tandem, 'Ab7',   2);
         }
         else { # even
-            _walk($bassline, 'DbM7', 2, 'Db7');
-            _walk($bassline, 'Db7',  2, 'GbM7');
+            _walk($modal, 'DbM7', 2, 'Db7');
+            _walk($modal, 'Db7',  2, 'GbM7');
         }
     }
-    _walk($bassline, 'GbM7',   4, 'Gdim');
-    _walk($bassline, 'Gdim',   4, 'Db6');
-    _walk($bassline, 'Db6',    4, 'Abm7');
-    _walk($bassline, 'Abm7',   2, 'Db7');
-    _walk($bassline, 'Db7',    2, 'GbM7');
-    _walk($bassline, 'GbM7',   4, 'Gdim');
-    _walk($bassline, 'Gdim',   4, 'Db6');
-    _walk($bassline, 'Db6',    2, 'Bb7b9');
-    _walk($bassline, 'Bb7b9',  2, 'Ebm7');
-    _walk($bassline, 'Ebm7',   2, 'Abaug7');
-    _walk($bassline, 'Abaug7', 2, 'DbM7');
-    _walk($bassline, 'DbM7',   2, 'Ebm7');
-    _walk($bassline, 'Ebm7',   1, 'Edim');
-    _walk($bassline, 'Edim',   1, 'DbM7');
-    _walk($bassline, 'DbM7',   2, 'G7b5');
-    _walk($bassline, 'G7b5',   2, 'GbM7');
-    _walk($bassline, 'GbM7',   4, 'Eb7');
-    _walk($bassline, 'Eb7',    3, 'Bb7');
-    _walk($bassline, 'Bb7',    1, 'Ebm7');
-    _walk($bassline, 'Ebm7',   2, 'Ab7');
-    _walk($bassline, 'Ab7',    4, 'DbM7');
-    _walk($bassline, 'DbM7',   4);
+    _walk($modal, 'GbM7',   4, 'Gdim');
+    _walk($modal, 'Gdim',   4, 'Db6');
+    _walk($modal, 'Db6',    4, 'Abm7');
+    _walk($modal, 'Abm7',   2, 'Db7');
+    _walk($modal, 'Db7',    2, 'GbM7');
+    _walk($modal, 'GbM7',   4, 'Gdim');
+    _walk($modal, 'Gdim',   4, 'Db6');
+    _walk($modal, 'Db6',    2, 'Bb7b9');
+    _walk($modal, 'Bb7b9',  2, 'Ebm7');
+    _walk($modal, 'Ebm7',   2, 'Abaug7');
+    _walk($modal, 'Abaug7', 2, 'DbM7');
+    _walk($modal, 'DbM7',   2, 'Ebm7');
+    _walk($modal, 'Ebm7',   1, 'Edim');
+    _walk($modal, 'Edim',   1, 'DbM7');
+    _walk($modal, 'DbM7',   2, 'G7b5');
+    _walk($modal, 'G7b5',   2, 'GbM7');
+    _walk($modal, 'GbM7',   4, 'Eb7');
+    _walk($modal, 'Eb7',    3, 'Bb7');
+    _walk($modal, 'Bb7',    1, 'Ebm7');
+    _walk($modal, 'Ebm7',   2, 'Ab7');
+    _walk($modal, 'Ab7',    4, 'DbM7');
+    _walk($modal, 'DbM7',   4);
 }
 
 sub _walk {
-    my ($bassline, $chord, $n, $next) = @_;
-    my $notes = $bassline->generate($chord, $n, $next);
+    my ($modal, $chord, $n, $next) = @_;
+    my $notes = $modal->generate($chord, $n, $next);
     $d->note('qn', $_) for @$notes;
 }
