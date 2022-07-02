@@ -204,6 +204,7 @@ sub bass {
     my $n = 2;
     my $duration = $d->half;
 
+    # for in-key chords
     my $modal = MIDI::Bassline::Walk->new(
         verbose     => 1,
         guitar      => 1,
@@ -212,6 +213,7 @@ sub bass {
         keycenter   => 'Db',
     );
 
+    # for "flavored" chords
     my $tandem = MIDI::Bassline::Walk->new(
         verbose => 1,
         guitar  => 1,
