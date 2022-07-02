@@ -217,41 +217,41 @@ sub bass {
     for my $n (1 .. 2) {
         _walk($bassline, 'DbM7', 6, 'Bbm7');
         _walk($bassline, 'Bbm7', 2, 'Eb7');
-        _walk($bassline, 'Eb7', 8, 'Ebm7');
+        _walk($bassline, 'Eb7',  8, 'Ebm7');
         _walk($bassline, 'Ebm7', 4, 'Ab7');
-        _walk($bassline, 'Ab7', 4, 'DbM7');
+        _walk($bassline, 'Ab7',  4, 'DbM7');
         _walk($bassline, 'DbM7', 4);
         if ($n % 2) { # odd
             _walk($bassline, 'Aaug7', 2, 'Ab7');
-            _walk($bassline, 'Ab7', 2, 'GbM7');
+            _walk($bassline, 'Ab7',   2, 'GbM7');
         }
         else { # even
             _walk($bassline, 'DbM7', 2, 'Db7');
-            _walk($bassline, 'Db7', 2, 'GbM7');
+            _walk($bassline, 'Db7',  2, 'GbM7');
         }
     }
-    _walk($bassline, 'GbM7', 4, 'Gdim');
-    _walk($bassline, 'Gdim', 4, 'Db6');
-    _walk($bassline, 'Db6', 4, 'Abm7');
-    _walk($bassline, 'Abm7', 2, 'Db7');
-    _walk($bassline, 'Db7', 2, 'GbM7');
-    _walk($bassline, 'GbM7', 4, 'Gdim');
-    _walk($bassline, 'Gdim', 4, 'Db6');
-    _walk($bassline, 'Db6', 2, 'Bb7b9');
-    _walk($bassline, 'Bb7b9', 2, 'Ebm7');
-    _walk($bassline, 'Ebm7', 2, 'Abaug7');
+    _walk($bassline, 'GbM7',   4, 'Gdim');
+    _walk($bassline, 'Gdim',   4, 'Db6');
+    _walk($bassline, 'Db6',    4, 'Abm7');
+    _walk($bassline, 'Abm7',   2, 'Db7');
+    _walk($bassline, 'Db7',    2, 'GbM7');
+    _walk($bassline, 'GbM7',   4, 'Gdim');
+    _walk($bassline, 'Gdim',   4, 'Db6');
+    _walk($bassline, 'Db6',    2, 'Bb7b9');
+    _walk($bassline, 'Bb7b9',  2, 'Ebm7');
+    _walk($bassline, 'Ebm7',   2, 'Abaug7');
     _walk($bassline, 'Abaug7', 2, 'DbM7');
-    _walk($bassline, 'DbM7', 2, 'Ebm7');
-    _walk($bassline, 'Ebm7', 1, 'Edim');
-    _walk($bassline, 'Edim', 1, 'DbM7');
-    _walk($bassline, 'DbM7', 2, 'G7b5');
-    _walk($bassline, 'G7b5', 2, 'GbM7');
-    _walk($bassline, 'GbM7', 4, 'Eb7');
-    _walk($bassline, 'Eb7', 3, 'Bb7');
-    _walk($bassline, 'Bb7', 1, 'Ebm7');
-    _walk($bassline, 'Ebm7', 2, 'Ab7');
-    _walk($bassline, 'Ab7', 4, 'DbM7');
-    _walk($bassline, 'DbM7', 4);
+    _walk($bassline, 'DbM7',   2, 'Ebm7');
+    _walk($bassline, 'Ebm7',   1, 'Edim');
+    _walk($bassline, 'Edim',   1, 'DbM7');
+    _walk($bassline, 'DbM7',   2, 'G7b5');
+    _walk($bassline, 'G7b5',   2, 'GbM7');
+    _walk($bassline, 'GbM7',   4, 'Eb7');
+    _walk($bassline, 'Eb7',    3, 'Bb7');
+    _walk($bassline, 'Bb7',    1, 'Ebm7');
+    _walk($bassline, 'Ebm7',   2, 'Ab7');
+    _walk($bassline, 'Ab7',    4, 'DbM7');
+    _walk($bassline, 'DbM7',   4);
 }
 
 sub _walk {
