@@ -96,31 +96,31 @@ sub chords {
             $d->note($d->half, @$Df7);
         }
     }
-    $d->note($d->whole, @$Gfmaj7);
-    $d->note($d->whole, @$Gdim);
-    $d->note($d->whole, @$Df6Af); # *
-    $d->note($d->half, @$Afm7);
-    $d->note($d->half, @$Df7);
-    $d->note($d->whole, @$Gfmaj7);
-    $d->note($d->whole, @$Gdim);
-    $d->note($d->half, @$Df6Af); # *
-    $d->note($d->half, @$Bf7f9);
-    $d->note($d->half, @$Efm7);
-    $d->note($d->half, @$Afaug7);
+    $d->note($d->whole,   @$Gfmaj7);
+    $d->note($d->whole,   @$Gdim);
+    $d->note($d->whole,   @$Df6Af); # *
+    $d->note($d->half,    @$Afm7);
+    $d->note($d->half,    @$Df7);
+    $d->note($d->whole,   @$Gfmaj7);
+    $d->note($d->whole,   @$Gdim);
+    $d->note($d->half,    @$Df6Af); # *
+    $d->note($d->half,    @$Bf7f9);
+    $d->note($d->half,    @$Efm7);
+    $d->note($d->half,    @$Afaug7);
     $d->note($d->quarter, @$Dfmaj7);
     $d->note($d->quarter, @$Dfmaj7);
     $d->note($d->quarter, @$Efm7);
     $d->note($d->quarter, @$Edim);
-    $d->note($d->half, @$Dfmaj7F); # *
-    $d->note($d->half, @$G7f5);
-    $d->note($d->whole, @$Gfmaj7);
+    $d->note($d->half,    @$Dfmaj7F); # *
+    $d->note($d->half,    @$G7f5);
+    $d->note($d->whole,   @$Gfmaj7);
     $d->note($d->quarter, @$Ef7_1);
     $d->note($d->quarter, @$Ef7_1);
     $d->note($d->quarter, @$Ef7_1);
     $d->note($d->quarter, @$Bf7);
-    $d->note($d->whole, @$Efm7);
-    $d->note($d->whole, @$Af7);
-    $d->note($d->whole, @$Dfmaj7);
+    $d->note($d->whole,   @$Efm7);
+    $d->note($d->whole,   @$Af7);
+    $d->note($d->whole,   @$Dfmaj7);
 }
 
 sub melody {
