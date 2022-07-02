@@ -236,28 +236,28 @@ sub bass {
             _walk($modal, 'Db7',  2, 'GbM7');
         }
     }
-    _walk($modal, 'GbM7',   4, 'Gdim');
+    _walk($modal,  'GbM7',   4, 'Gdim');
     _walk($tandem, 'Gdim',   4, 'Db6');
-    _walk($modal, 'Db6',    4, 'Abm7');
-    _walk($modal, 'Abm7',   2, 'Db7');
-    _walk($modal, 'Db7',    2, 'GbM7');
-    _walk($modal, 'GbM7',   4, 'Gdim');
+    _walk($modal,  'Db6',    4, 'Abm7');
+    _walk($modal,  'Abm7',   2, 'Db7');
+    _walk($modal,  'Db7',    2, 'GbM7');
+    _walk($modal,  'GbM7',   4, 'Gdim');
     _walk($tandem, 'Gdim',   4, 'Db6');
-    _walk($modal, 'Db6',    2, 'Bb7b9');
+    _walk($modal,  'Db6',    2, 'Bb7b9');
     _walk($tandem, 'Bb7b9',  2, 'Ebm7');
-    _walk($modal, 'Ebm7',   2, 'Abaug7');
+    _walk($modal,  'Ebm7',   2, 'Abaug7');
     _walk($tandem, 'Abaug7', 2, 'DbM7');
-    _walk($modal, 'DbM7',   2, 'Ebm7');
-    _walk($modal, 'Ebm7',   1, 'Edim');
+    _walk($modal,  'DbM7',   2, 'Ebm7');
+    _walk($modal,  'Ebm7',   1, 'Edim');
     _walk($tandem, 'Edim',   1, 'DbM7');
-    _walk($modal, 'DbM7',   2, 'G7b5');
+    _walk($modal,  'DbM7',   2, 'G7b5');
     _walk($tandem, 'G7b5',   2, 'GbM7');
-    _walk($modal, 'GbM7',   4, 'Eb7');
-    _walk($modal, 'Eb7',    3, 'Bb7');
-    _walk($modal, 'Bb7',    1, 'Ebm7');
-    _walk($modal, 'Ebm7',   2, 'Ab7');
-    _walk($modal, 'Ab7',    4, 'DbM7');
-    _walk($modal, 'DbM7',   4);
+    _walk($modal,  'GbM7',   4, 'Eb7');
+    _walk($modal,  'Eb7',    3, 'Bb7');
+    _walk($modal,  'Bb7',    1, 'Ebm7');
+    _walk($modal,  'Ebm7',   2, 'Ab7');
+    _walk($modal,  'Ab7',    4, 'DbM7');
+    _walk($modal,  'DbM7',   4);
 }
 
 sub _walk {
