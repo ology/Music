@@ -132,19 +132,19 @@ sub melody {
     $d->note($d->quarter, 'Bf4');
 
     for my $n (1 .. 2) {
-        $d->note($d->quarter, 'C5');
-        $d->note($d->quarter, 'C5');
-        $d->note($d->whole, 'C5');
-        $d->note($d->half, 'Df5');
-        $d->note($d->whole, 'Df5');
-        $d->note($d->dotted_half, 'F4');
-        $d->note($d->quarter, 'Bf4');
-        $d->note($d->quarter, 'Bf4');
-        $d->note($d->quarter, 'Af4');
-        $d->note($d->dotted_half, 'Af4');
-        $d->note($d->quarter, 'Gf4');
-        $d->note($d->quarter, 'Gf4');
-        $d->note($d->quarter, 'F4');
+        $d->note($d->quarter,      'C5');
+        $d->note($d->quarter,      'C5');
+        $d->note($d->whole,        'C5');
+        $d->note($d->half,         'Df5');
+        $d->note($d->whole,        'Df5');
+        $d->note($d->dotted_half,  'F4');
+        $d->note($d->quarter,      'Bf4');
+        $d->note($d->quarter,      'Bf4');
+        $d->note($d->quarter,      'Af4');
+        $d->note($d->dotted_half,  'Af4');
+        $d->note($d->quarter,      'Gf4');
+        $d->note($d->quarter,      'Gf4');
+        $d->note($d->quarter,      'F4');
         $d->note($d->dotted_whole, 'F4');
         if ($n % 2) { # odd
             $d->note($d->quarter, 'Af4');
@@ -158,44 +158,44 @@ sub melody {
 
     for my $n (1 .. 2) {
         for my $m (1 .. 2) {
-            $d->note($d->eighth, 'Df5');
-            $d->note($d->eighth, 'Bf4');
-            $d->note($d->quarter, 'Df5');
+            $d->note($d->eighth,         'Df5');
+            $d->note($d->eighth,         'Bf4');
+            $d->note($d->quarter,        'Df5');
             $d->note($d->dotted_quarter, 'Df4');
-            $d->note($d->eighth, 'Bf4');
+            $d->note($d->eighth,         'Bf4');
         }
         $d->note($d->triplet_quarter, 'Df5');
         $d->note($d->triplet_quarter, 'Bf4');
         $d->note($d->triplet_quarter, 'Df5');
-        $d->note($d->quarter, 'Bf4');
+        $d->note($d->quarter,         'Bf4');
         if ($n % 2) { # odd
-            $d->note($d->quarter, 'F4');
+            $d->note($d->quarter,     'F4');
             $d->note($d->dotted_half, 'Ef4');
             $d->rest($d->eighth);
-            $d->note($d->eighth, 'Bf4');
+            $d->note($d->eighth,      'Bf4');
         }
         else { # even
             $d->note($d->quarter, 'Bf4');
-            $d->note($d->half, 'Bf4');
+            $d->note($d->half,    'Bf4');
             $d->note($d->quarter, 'Af4');
             $d->note($d->quarter, 'Bf4');
         }
     }
 
-    $d->note($d->quarter, 'C5');
-    $d->note($d->quarter, 'C5');
-    $d->note($d->whole, 'C5');
-    $d->note($d->half, 'Df5');
-    $d->note($d->whole, 'Df5');
+    $d->note($d->quarter,     'C5');
+    $d->note($d->quarter,     'C5');
+    $d->note($d->whole,       'C5');
+    $d->note($d->half,        'Df5');
+    $d->note($d->whole,       'Df5');
     $d->note($d->dotted_half, 'F4');
-    $d->note($d->quarter, 'Bf4');
-    $d->note($d->quarter, 'Bf4');
-    $d->note($d->quarter, 'Af4');
+    $d->note($d->quarter,     'Bf4');
+    $d->note($d->quarter,     'Bf4');
+    $d->note($d->quarter,     'Af4');
     $d->note($d->dotted_half, 'Af4');
-    $d->note($d->quarter, 'Gf4');
-    $d->note($d->quarter, 'Gf4');
-    $d->note($d->quarter, 'Gf4');
-    $d->note($d->whole, 'F4');
+    $d->note($d->quarter,     'Gf4');
+    $d->note($d->quarter,     'Gf4');
+    $d->note($d->quarter,     'Gf4');
+    $d->note($d->whole,       'F4');
 }
 
 sub bass {
