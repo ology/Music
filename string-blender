@@ -3,6 +3,8 @@ use strict;
 use warnings;
 
 use String::Blender;
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util qw(setup_score);
 use Music::Scales qw(get_scale_MIDI);
 
 my $note   = shift || 'C';
@@ -25,6 +27,14 @@ my $blender = String::Blender->new(
     delimiter    => ' ',
 );
 
-my @result = $blender->blend(8);
+my @phrases = $blender->blend(8);
 use Data::Dumper::Compact qw(ddc);
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\@result);
+warn __PACKAGE__,' L',__LINE__,' ',ddc(\@phrases);
+
+my $score = setup_score();
+
+for my $phrase (@phrases) {
+    $score->n('qn', $_) for @$phrase;
+}
+
+$score->write_score;
