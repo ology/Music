@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use String::Blender;
+use Music::Scales qw(get_scale_MIDI);
+
+my $note   = shift || 'C';
+my $scale  = shift || 'major';
+my $octave = shift || 4;
+
+my @pitches = get_scale_MIDI($note, $octave, $scale);
+
+my $blender = String::Blender->new(
+    vocabs => [
+        [ @pitches[0,2,3,4] ],
+        \@pitches,
+        \@pitches,
+        [ @pitches[0,2,3,4] ],
+    ],
+    strict_order => 1,
+    min_elements => 4,
+    max_elements => 4,
+    max_length   => 11,
+    delimiter    => ' ',
+);
+
+my @result = $blender->blend(8);
+use Data::Dumper::Compact qw(ddc);
+warn __PACKAGE__,' L',__LINE__,' ',ddc(\@result);
