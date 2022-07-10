@@ -16,7 +16,7 @@ my $blender = String::Blender->new(
         [ @pitches[0,2,3,4] ],
         \@pitches,
         \@pitches,
-        [ @pitches[0,2,3,4] ],
+        [ @pitches[1,5,6] ],
     ],
     strict_order => 1,
     min_elements => 4,
