@@ -13,6 +13,9 @@ my $octave = shift || 4;
 my $p      = shift || 8; # Number of phrases to generate
 my $n      = shift || 4; # Number of notes per phrase
 
+my $size = 3; # named note length, i.e. Gb3
+my $max  = $size * $n + $n - 1;
+
 my @pitches = get_scale_MIDI($note, $octave, $scale);
 
 my $blender = String::Blender->new(
@@ -25,7 +28,7 @@ my $blender = String::Blender->new(
     strict_order => 1,
     min_elements => $n,
     max_elements => $n,
-    max_length   => 15,
+    max_length   => $max,
     delimiter    => ' ',
 );
 
