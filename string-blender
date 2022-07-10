@@ -13,7 +13,7 @@ my $octave = shift || 4;
 my $p      = shift || 8; # Number of phrases to generate
 my $n      = shift || 4; # Number of notes per phrase
 
-my $size = 3; # named note length, i.e. Gb3
+my $size = 3; # named note length, e.g. Gb3
 my $max  = $size * $n + $n - 1;
 
 my @pitches = get_scale_MIDI($note, $octave, $scale);
