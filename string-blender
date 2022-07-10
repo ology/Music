@@ -34,7 +34,7 @@ warn __PACKAGE__,' L',__LINE__,' ',ddc(\@phrases);
 my $score = setup_score();
 
 for my $phrase (@phrases) {
-    $score->n('qn', $_) for @$phrase;
+    $score->n('qn', $_) for split / /, $phrase;
 }
 
-$score->write_score;
+$score->write_score("$0.mid");
