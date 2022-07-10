@@ -10,8 +10,8 @@ use Music::Scales qw(get_scale_MIDI);
 my $note   = shift || 'C';
 my $scale  = shift || 'major';
 my $octave = shift || 4;
-my $n      = shift || 8; # Number of phrases to generate
-my $m      = shift || 4; # Number of notes per phrase
+my $p      = shift || 8; # Number of phrases to generate
+my $n      = shift || 4; # Number of notes per phrase
 
 my @pitches = get_scale_MIDI($note, $octave, $scale);
 
@@ -23,13 +23,13 @@ my $blender = String::Blender->new(
         [ @pitches[1,5,6] ],
     ],
     strict_order => 1,
-    min_elements => $m,
-    max_elements => $m,
+    min_elements => $n,
+    max_elements => $n,
     max_length   => 11,
     delimiter    => ' ',
 );
 
-my @phrases = $blender->blend($n);
+my @phrases = $blender->blend($p);
 use Data::Dumper::Compact qw(ddc);
 warn __PACKAGE__,' L',__LINE__,' ',ddc(\@phrases);
 
