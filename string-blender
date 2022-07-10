@@ -25,7 +25,7 @@ my $blender = String::Blender->new(
     strict_order => 1,
     min_elements => $n,
     max_elements => $n,
-    max_length   => 20,
+    max_length   => 15,
     delimiter    => ' ',
 );
 
