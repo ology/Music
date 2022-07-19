@@ -24,7 +24,7 @@ my $key = 'release-groups';
 $result = $mb->search(artist => { mbid => $artist_id, inc => [$key]});
 #warn ddc($result, {max_width=>128});exit;
 
-print "$who:\n";
+print "$who ($artist_id):\n";
 
 my $i = 0;
 
