@@ -4,7 +4,6 @@ use warnings;
 
 use Data::Dumper::Compact qw(ddc);
 use Net::CoverArtArchive;
-use lib map { "$ENV{HOME}/repos/$_/lib" } qw(webservice-musicbrainz); # https://github.com/bfaist/webservice-musicbrainz/pull/13
 use WebService::MusicBrainz;
 #$ENV{MUSICBRAINZ_DEBUG} = 1;
 
