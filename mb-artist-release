@@ -34,7 +34,7 @@ for my $group (@{ $result->{$key} }) {
     if ($condition) {
         $i++;
 
-        print "$i. $group->{title}:\n";
+        print "$i. $group->{title} ($group->{id}):\n";
 
         $key = 'releases';
         $result = $mb->search('release-group' => { mbid => $group->{id}, inc => [$key]});
