@@ -1,0 +1,49 @@
+#!/usr/bin/env perl
+
+# Brute force your way to knowing that a chord belongs to what keys?
+
+use strict;
+use warnings;
+
+use Set::Tiny ();
+use Data::Dumper::Compact qw(ddc);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util); # author local directory
+use MIDI::Util qw(midi_format);
+use Music::Chord::Note ();
+use Music::Note ();
+use Music::Scales qw(get_scale_notes);
+
+my $chord = shift || 'C'; # Chord names as known to Music::Chord::Note
+
+my $c = Music::Chord::Note->new;
+
+# make sure the notes are flat not sharp, and the doubles are converted to their "true names"
+my @notes = midi_format(flatten($c->chord($chord)));
+warn 'Chord notes: ', ddc \@notes;
+my $notes_set = Set::Tiny->new(@notes); # save the chord notes as a set
+
+# get all the notes, as flats
+my @chromatic = get_scale_notes('C', 'chromatic', 0, 'b');
+
+for my $scale_note (@chromatic) {
+    # make sure the scale notes are flat not sharp, and the doubles are converted to their "true names"
+    my @scale = midi_format(get_scale_notes($scale_note, 'major'));
+    my $scale_set = Set::Tiny->new(@scale);
+    print "\tsubset of the $scale_note major scale\n"
+        if $notes_set->is_subset($scale_set);
+    # ...same for minor
+    @scale = midi_format(get_scale_notes($scale_note, 'minor'));
+    $scale_set = Set::Tiny->new(@scale);
+    print "\tsubset of the $scale_note minor scale\n"
+        if $notes_set->is_subset($scale_set);
+}
+
+sub flatten {
+    my @notes = @_;
+    for (@notes) {
+        my $note = Music::Note->new($_, 'isobase');
+        $note->en_eq('flat');
+        $_ = $note->format('isobase');
+    }
+    return @notes;
+}
