@@ -32,7 +32,7 @@ for my $scale_note (@chromatic) {
 
 sub is_subset_of {
     my ($notes_set, $scale_note, $scale_name) = @_;
-    # make sure the doubles are converted to their "true names"
+    # make sure doubles are converted to their "true names"
     my @scale = midi_format(get_scale_notes($scale_note, $scale_name));
     my $scale_set = Set::Tiny->new(@scale);
     print "\tsubset of the $scale_note $scale_name scale\n"
