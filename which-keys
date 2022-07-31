@@ -26,21 +26,23 @@ my $notes_set = Set::Tiny->new(@notes); # save the chord notes as a set
 my @chromatic = get_scale_notes('C', 'chromatic', 0, 'b');
 
 for my $scale_note (@chromatic) {
+    is_subset_of($notes_set, $scale_note, 'major');
+    is_subset_of($notes_set, $scale_note, 'minor');
+}
+
+sub is_subset_of {
+    my ($notes_set, $scale_note, $scale_name) = @_;
     # make sure the doubles are converted to their "true names"
-    my @scale = midi_format(get_scale_notes($scale_note, 'major'));
+    my @scale = midi_format(get_scale_notes($scale_note, $scale_name));
     my $scale_set = Set::Tiny->new(@scale);
-    print "\tsubset of the $scale_note major scale\n"
-        if $notes_set->is_subset($scale_set);
-    # ...same for minor
-    @scale = midi_format(get_scale_notes($scale_note, 'minor'));
-    $scale_set = Set::Tiny->new(@scale);
-    print "\tsubset of the $scale_note minor scale\n"
+    print "\tsubset of the $scale_note $scale_name scale\n"
         if $notes_set->is_subset($scale_set);
 }
 
 sub flatten {
     my @notes = @_;
     for (@notes) {
+        next unless /#/;
         my $note = Music::Note->new($_, 'isobase');
         $note->en_eq('flat');
         $_ = $note->format('isobase');
