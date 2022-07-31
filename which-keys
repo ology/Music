@@ -26,7 +26,7 @@ my $notes_set = Set::Tiny->new(@notes); # save the chord notes as a set
 my @chromatic = get_scale_notes('C', 'chromatic', 0, 'b');
 
 for my $scale_note (@chromatic) {
-    # make sure the scale notes are flat not sharp, and the doubles are converted to their "true names"
+    # make sure the doubles are converted to their "true names"
     my @scale = midi_format(get_scale_notes($scale_note, 'major'));
     my $scale_set = Set::Tiny->new(@scale);
     print "\tsubset of the $scale_note major scale\n"
