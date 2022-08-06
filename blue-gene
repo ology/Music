@@ -19,7 +19,7 @@ my $bscale = shift || 'major';
 
 my $note         = 'Bb';
 my $bass_patch   = 35; # fretless bass=35
-my $melody_patch = 66;
+my $melody_patch = 66; # ?
 my $chord_patch  = 4;  # electric piano=4
 
 my $d = MIDI::Drummer::Tiny->new(
@@ -48,9 +48,11 @@ sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
     my $bassline = MIDI::Bassline::Walk->new(
-        verbose => 1,
-        tonic   => 1,
-        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+        verbose   => 1,
+        tonic     => 1,
+        modal     => 1,
+        keycenter => $note,
+#        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
     );
 
     $d->rest($d->whole); # while counting-in
@@ -121,21 +123,23 @@ sub melody {
 
     my $mdp = Music::Duration::Partition->new(
         size => 4,
-        pool => [qw/hn dqn qn en/],
+        pool => [qw/dqn qn den en dsn sn/],
+        weights => [1,  2, 2,  2, 2,  3],
+        groups  => [1,  1, 1,  2, 1,  4],
     );
     my @motifs = map { $mdp->motif } 1 .. 8;
     print 'Melody motifs: ', ddc(\@motifs);
 
     my @pitches = (
         get_scale_MIDI($note, 2, $tscale),
-        get_scale_MIDI($note, 3, $tscale)
+        get_scale_MIDI($note, 3, $tscale),
+#        get_scale_MIDI($note, 4, $tscale),
     );
     my @intervals = qw(-4 -3 -2 -1 1 2 3 4);
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
         intervals => \@intervals,
     );
-
     my @notes = map { [ map { $voice->rand } @$_ ] } @motifs;
     print 'Melody pitches: ', ddc(\@notes);
 
