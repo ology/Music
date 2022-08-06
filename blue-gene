@@ -13,7 +13,7 @@ use Music::Duration::Partition;
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen;
 
-my $bpm    = shift || 100;
+my $bpm    = shift || 90;
 my $tscale = shift || 'pentatonic';
 my $bscale = shift || 'major';
 
@@ -34,7 +34,7 @@ $d->score->synch(
     \&drums,
     \&bass,
     \&chords,
-    \&melody,
+#    \&melody,
 );
 
 $d->write;
