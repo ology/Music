@@ -19,7 +19,7 @@ my $bscale = shift || 'major';
 
 my $note         = 'Bb';
 my $bass_patch   = 35; # fretless bass=35
-my $melody_patch = 66; # ?
+my $melody_patch = 69; # English horn=69
 my $chord_patch  = 4;  # electric piano=4
 
 my $d = MIDI::Drummer::Tiny->new(
