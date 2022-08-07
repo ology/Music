@@ -34,7 +34,7 @@ $d->score->synch(
     \&drums,
     \&bass,
     \&chords,
-#    \&melody,
+    \&melody,
 );
 
 $d->write;
@@ -47,28 +47,33 @@ sub drums {
 sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
-    my $bassline = MIDI::Bassline::Walk->new(
+    my $modal = MIDI::Bassline::Walk->new(
         verbose   => 1,
         guitar    => 1,
         tonic     => 1,
         modal     => 1,
         keycenter => $note,
-#        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+    );
+    my $tandem = MIDI::Bassline::Walk->new(
+        verbose => 1,
+        guitar  => 1,
+        tonic   => 1,
+        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
     );
 
     $d->rest($d->whole); # while counting-in
 
     for my $n (1 .. 2) {
-        _walk($bassline, 'Bb',    4, 'Bb7');
-        _walk($bassline, 'Bb7',   4, 'Eb');
-        _walk($bassline, 'Eb',    4, 'Eb9');
-        _walk($bassline, 'Eb9',   2, 'D7#9');
-        _walk($bassline, 'D7#9',  2, 'BbM7');
-        _walk($bassline, 'BbM7',  4, 'DbM7');
-        _walk($bassline, 'DbM7',  4, 'Cm7');
-        _walk($bassline, 'Cm7',   4, 'Gm7');
-        _walk($bassline, 'Gm7',   2, 'Ab7b5');
-        _walk($bassline, 'Ab7b5', 2, 'Bb');
+        _walk($modal,  'Bb',    4, 'Bb7');
+        _walk($modal,  'Bb7',   4, 'Eb');
+        _walk($modal,  'Eb',    4, 'Eb9');
+        _walk($modal,  'Eb9',   2, 'D7#9');
+        _walk($tandem, 'D7#9',  2, 'BbM7');
+        _walk($modal,  'BbM7',  4, 'DbM7');
+        _walk($modal,  'DbM7',  4, 'Cm7');
+        _walk($modal,  'Cm7',   4, 'Gm7');
+        _walk($modal,  'Gm7',   2, 'Ab7b5');
+        _walk($tandem, 'Ab7b5', 2, 'Bb');
     }
 }
 
@@ -122,14 +127,23 @@ sub chords {
 sub melody {
     set_chan_patch($d->score, $channel++, $melody_patch);
 
-    my $mdp = Music::Duration::Partition->new(
+    my $slower = Music::Duration::Partition->new(
         size => 4,
-        pool => [qw/dqn qn den en dsn sn/],
-        weights => [1,  2, 2,  2, 2,  3],
-        groups  => [1,  1, 1,  2, 1,  4],
+        pool => [qw/hn dqn qn den en/],
+#        weights => [1, 1,  2, 2,  2],
+        groups  => [1, 2,  1, 2,  1],
     );
-    my @motifs = map { $mdp->motif } 1 .. 8;
+    my @motifs = map { $slower->motif } 1 .. 8;
     print 'Melody motifs: ', ddc(\@motifs);
+
+#    my $faster = Music::Duration::Partition->new(
+#        size => 4,
+#        pool => [qw/dqn qn den en dsn sn/],
+#        weights => [1,  2, 2,  2, 2,  3],
+#        groups  => [1,  1, 1,  2, 1,  4],
+#    );
+#    my @motifs = map { $faster->motif } 1 .. 8;
+#    print 'Melody motifs: ', ddc(\@motifs);
 
     my @pitches = (
         get_scale_MIDI($note, 2, $tscale),
