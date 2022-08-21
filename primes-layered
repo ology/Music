@@ -19,10 +19,10 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Scales qw(get_scale_MIDI);
 
-use constant BASE  => 'C';
-use constant WHOLE => 'wn';
-use constant NOTE  => 'en';
-use constant PARTS => 8;
+use constant BASE  => 'C';  # scale note
+use constant WHOLE => 'wn'; # bottom duration
+use constant NOTE  => 'en'; # top duration
+use constant PARTS => 8;    # number of parts given by the NOTE constant
 
 my $limit   = shift || 1024;
 my $scale   = shift || 'major';
