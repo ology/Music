@@ -50,7 +50,7 @@ sub top {
         get_scale_MIDI('C', $toctave + 1, $scale),
     );
 
-    prime_loop(\@scale);
+    prime_loop(\@scale, 'en');
 }
 
 sub bottom {
@@ -60,22 +60,19 @@ sub bottom {
 
     my @scale = get_scale_MIDI('C', $boctave, $scale);
 
-    prime_loop(\@scale, 'bottom');
+    prime_loop(\@scale, 'wn');
 }
 
 sub prime_loop {
-    my ($scale, $flag) = @_;
+    my ($scale, $duration) = @_;
 
     my @loop;
-    my $duration;
 
-    if ($flag) {
+    if ($duration eq 'wn') {
         @loop = @primes[0 .. @primes / 8];
-        $duration = 'wn';
     }
     else {
         @loop = @primes;
-        $duration = 'en';
     }
 
     my $i = 0;
