@@ -70,12 +70,9 @@ sub prime_loop {
 
     my @loop;
 
-    if ($duration eq 'wn') {
-        @loop = @primes[0 .. @primes / EIGHTH_NOTE];
-    }
-    else {
-        @loop = @primes;
-    }
+    @loop = $duration eq 'wn'
+        ? @primes[0 .. @primes / EIGHTH_NOTE]
+        : @primes;
 
     my $i = 0;
 
