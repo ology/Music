@@ -68,6 +68,7 @@ sub prime_loop {
 
     my @loop;
     my $duration;
+
     if ($flag) {
         @loop = @primes[0 .. @primes / 8];
         $duration = 'wn';
