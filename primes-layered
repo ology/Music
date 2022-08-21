@@ -4,13 +4,14 @@ use warnings;
 
 ###
 #
-# Play the prime numbers modulo the number of notes of the given scale
-# in 2 parts: Fast (top) and Long (bottom)
+# Play the prime numbers modulo the number of notes of the
+# given scale in 2 parts: Fast (top) and Long (bottom)
 #
 # Example:
 # perl primes-layered 2048 major 300 0 73; timidity primes.mid
 #
-# * This tiny program uses global variables. Run away if that frightens you.
+# This tiny program uses global variables. Run away if that
+# frightens you.
 #
 ###
 
