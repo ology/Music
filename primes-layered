@@ -71,9 +71,7 @@ sub bottom {
 sub prime_loop {
     my ($scale, $duration) = @_;
 
-    my @loop;
-
-    @loop = $duration eq WHOLE
+    my @loop = $duration eq WHOLE
         ? @primes[ 0 .. @primes / PARTS ]
         : @primes;
 
