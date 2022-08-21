@@ -19,6 +19,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Scales qw(get_scale_MIDI);
 
+use constant WHOLE => 'wn';
 use constant NOTE  => 'en';
 use constant PARTS => 8;
 
@@ -63,7 +64,7 @@ sub bottom {
 
     my @scale = get_scale_MIDI('C', $boctave, $scale);
 
-    prime_loop(\@scale, 'wn');
+    prime_loop(\@scale, WHOLE);
 }
 
 sub prime_loop {
@@ -71,7 +72,7 @@ sub prime_loop {
 
     my @loop;
 
-    @loop = $duration eq 'wn'
+    @loop = $duration eq WHOLE
         ? @primes[0 .. @primes / PARTS]
         : @primes;
 
