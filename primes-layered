@@ -21,8 +21,8 @@ use Music::Scales qw(get_scale_MIDI);
 
 use constant BASE  => 'C';  # scale note
 use constant WHOLE => 'wn'; # bottom duration
-use constant NOTE  => 'en'; # top duration
-use constant PARTS => 8;    # number of parts given by the NOTE constant
+use constant PART  => 'en'; # top duration
+use constant PARTS => 8;    # number of parts given by the PART constant
 
 my $limit   = shift || 1024;
 my $scale   = shift || 'major';
@@ -55,7 +55,7 @@ sub top {
         get_scale_MIDI(BASE, $toctave + 1, $scale),
     );
 
-    prime_loop(\@scale, NOTE);
+    prime_loop(\@scale, PART);
 }
 
 sub bottom {
