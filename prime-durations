@@ -1,0 +1,120 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+###
+#
+# Example:
+# perl prime-durations TODO; timidity primes.mid
+#
+###
+
+use Math::Prime::XS qw(primes);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partition); # local author directory
+use MIDI::Util qw(setup_score set_chan_patch);
+use Music::Duration::Partition;
+use Music::Scales qw(get_scale_MIDI);
+
+use constant BASE  => 'C';  # scale note
+use constant WHOLE => 'wn'; # bottom duration
+use constant BOCT  => 3;    # bottom octave
+use constant TOCT  => 4;    # top octave
+
+use constant TICKS      => 96;        # MIDI::Simple ticks per quarter note
+use constant DURA_LIMIT => TICKS * 4; # limit of allowed prime durations
+
+my $max     = shift || 16;    # measures
+my $limit   = shift || 2048;  # some big number of 'em
+my $scale   = shift || 'major';
+my $bpm     = shift || 100;
+my $tpatch  = shift // 4;   # 4=electric piano
+my $bpatch  = shift // 95;  # 95=synth
+my $phrases = shift || 8;   # number of motifs
+
+my $channel = 0;
+my $count   = 0;
+
+my @primes    = primes($limit);
+my @durations = primes(DURA_LIMIT);
+
+my $score = setup_score(bpm => $bpm);
+
+my @phrases = ( # order matters
+    \&bottom,
+    \&top,
+);
+
+$score->synch(@phrases);
+
+$score->write_score("$0.mid");
+
+sub top {
+    print "top()\n";
+
+    set_chan_patch($score, $channel++, $tpatch);
+
+    my @scale = (
+        get_scale_MIDI(BASE, TOCT, $scale),
+        get_scale_MIDI(BASE, TOCT + 1, $scale),
+    );
+
+    my $mdp = Music::Duration::Partition->new(
+        size => DURA_LIMIT,
+        pool => [ map { 'd' . $_ } @durations ],
+    );
+    my @motifs = map { $mdp->motif } 1 .. $phrases;
+
+    for my $i (1 .. $max - 1) {
+      print "\tCount: $i\n";
+      prime_motifs(\@scale, \@motifs);
+    }
+}
+
+sub bottom {
+    print "bottom()\n";
+
+    set_chan_patch($score, $channel++, $bpatch);
+
+    my @scale = get_scale_MIDI(BASE, BOCT, $scale);
+
+    prime_loop(\@scale, WHOLE);
+}
+
+sub prime_motifs {
+    my ($scale, $motifs) = @_;
+
+    my $m = @$motifs[ int rand @$motifs ];
+
+    my $i = 0;
+
+    for my $duration (@$m) {
+        $i++;
+
+        my $p    = shift @primes;
+        my $mod  = $p % @$scale;
+        my $note = $scale->[$mod];
+
+        print "$i. P: $p, Mod: $mod, Note: $note, D: $duration\n";
+
+        $score->n($duration, $note);
+    }
+}
+
+sub prime_loop {
+    my ($scale) = @_;
+
+    my @loop = @primes[ 0 .. $max - 1 ];
+
+    my $i = 0;
+
+    for my $p (@loop) {
+        $i++;
+
+        my $mod  = $p % @$scale;
+        my $note = $scale->[$mod];
+
+        print "$i. P: $p, Mod: $mod, Note: $note\n";
+
+        $score->n(WHOLE, $note);
+    }
+}
