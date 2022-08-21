@@ -10,7 +10,7 @@ use warnings;
 # Example:
 # perl primes-layered 2048 major 300 0 73; timidity primes.mid
 #
-# * This tiny program uses global variables. Run if that frightens you.
+# * This tiny program uses global variables. Run away if that frightens you.
 #
 ###
 
