@@ -19,6 +19,8 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Scales qw(get_scale_MIDI);
 
+use constant EIGHTH_NOTE => 8;
+
 my $limit   = shift || 1024;
 my $scale   = shift || 'major';
 my $bpm     = shift || 100;
@@ -69,7 +71,7 @@ sub prime_loop {
     my @loop;
 
     if ($duration eq 'wn') {
-        @loop = @primes[0 .. @primes / 8];
+        @loop = @primes[0 .. @primes / EIGHTH_NOTE];
     }
     else {
         @loop = @primes;
