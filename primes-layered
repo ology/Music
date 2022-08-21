@@ -32,6 +32,8 @@ my $bpm     = shift || 100;
 my $tpatch  = shift // 4;   # 4=electric piano
 my $bpatch  = shift // 95;  # 95=synth
 
+my $channel = 0;
+
 my @primes = primes($limit);
 
 my $score = setup_score(bpm => $bpm);
@@ -48,7 +50,7 @@ $score->write_score("$0.mid");
 sub top {
     print "top()\n";
 
-    set_chan_patch($score, 0, $tpatch);
+    set_chan_patch($score, $channel++, $tpatch);
 
     my @scale = (
         get_scale_MIDI(BASE, TOCT, $scale),
@@ -61,7 +63,7 @@ sub top {
 sub bottom {
     print "bottom()\n";
 
-    set_chan_patch($score, 1, $bpatch);
+    set_chan_patch($score, $channel++, $bpatch);
 
     my @scale = get_scale_MIDI(BASE, BOCT, $scale);
 
