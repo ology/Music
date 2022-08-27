@@ -1,0 +1,90 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# https://www.youtube.com/watch?v=_WviF3f1VLM
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partition);
+use MIDI::Util qw(setup_score set_chan_patch);
+use Music::Duration::Partition ();
+use Music::Scales qw(get_scale_MIDI);
+use Music::VoiceGen ();
+
+my $max     = shift || 28;  # number of measures to play
+my $bpm     = shift || 10;  # beats per minute
+my $note    = shift || 'C'; # tonic
+my $tpatch  = shift || 89;  # electric piano=4, warm synth=89
+my $bpatch  = shift || 95;  # fretless bass=35, sweep synth=95
+my $tscale  = shift || 'pentatonic';
+my $bscale  = shift || 'pentatonic';
+my $toctave = shift || 4;
+my $boctave = shift || 2;
+
+my $channel = 0; # initial midi channel
+
+my $score = setup_score(
+    lead_in => 0,
+    bpm     => $bpm,
+);
+
+$score->synch(
+    \&bottom,
+    \&top,
+);
+
+$score->write_score("$0.mid");
+
+sub bottom {
+    set_chan_patch($score, $channel++, $bpatch);
+
+    my $mdp = Music::Duration::Partition->new(
+        size => 4, # 4 quarter notes = 1 measure
+        pool => [qw/ wn dhn hn qn /],
+    );
+    my @motifs = map { $mdp->motif } 1 .. 4;
+
+    my @pitches = get_scale_MIDI($note, $boctave, $bscale);
+    my @intervals = qw(-3 -2 -1 1 2 3);
+    my $voice = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@intervals,
+    );
+
+    for my $n (1 .. $max) {
+        my $motif = $motifs[ int rand @motifs ];
+        my @notes = map { $voice->rand } @$motif;
+
+        for my $duration (0 .. $#$motif) {
+            $score->n($motif->[$duration], $notes[$duration]);
+        }
+    }
+}
+
+sub top {
+    set_chan_patch($score, $channel++, $tpatch);
+
+    my $mdp = Music::Duration::Partition->new(
+        size => 4, # 4 quarter notes = 1 measure
+        pool => [qw/ hn dqn qn /],
+    );
+    my @motifs = map { $mdp->motif } 1 .. 8;
+
+    my @pitches = (
+        get_scale_MIDI($note, $toctave, $tscale),
+        get_scale_MIDI($note, $toctave + 1, $tscale)
+    );
+    my @intervals = qw(-3 -2 -1 1 2 3);
+    my $voice = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@intervals,
+    );
+
+    for my $n (1 .. $max) {
+        my $motif = $motifs[ int rand @motifs ];
+        my @notes = map { $voice->rand } @$motif;
+
+        for my $duration (0 .. $#$motif) {
+            $score->n($motif->[$duration], $notes[$duration]);
+        }
+    }
+}
