@@ -13,8 +13,8 @@ use Music::VoiceGen ();
 my $max     = shift || 28;  # number of measures to play
 my $bpm     = shift || 10;  # beats per minute
 my $note    = shift || 'C'; # tonic
-my $tpatch  = shift || 89;  # electric piano=4, warm synth=89
-my $bpatch  = shift || 95;  # fretless bass=35, sweep synth=95
+my $tpatch  = shift || 95;  # electric piano=4, warm synth=89
+my $bpatch  = shift || 89;  # fretless bass=35, sweep synth=95
 my $tscale  = shift || 'pentatonic';
 my $bscale  = shift || 'pentatonic';
 my $toctave = shift || 4;
@@ -63,11 +63,13 @@ sub bottom {
 sub top {
     set_chan_patch($score, $channel++, $tpatch);
 
+    $score->Volume(80);
+
     my $mdp = Music::Duration::Partition->new(
         size => 4, # 4 quarter notes = 1 measure
-        pool => [qw/ hn dqn qn /],
+        pool => [qw/ hn dqn qn dqn en /],
     );
-    my @motifs = map { $mdp->motif } 1 .. 8;
+    my @motifs = map { $mdp->motif } 1 .. 6;
 
     my @pitches = (
         get_scale_MIDI($note, $toctave, $tscale),
