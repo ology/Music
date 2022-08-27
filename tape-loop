@@ -47,8 +47,8 @@ for my $note (@notes) {
         # Compute the intervals
         my $extra = int rand($whole * 2);
         my $width = $whole * $factor + $extra;
-        my $head = int rand($width - $whole);
-        my $tail = $width - ($head + $whole);
+        my $head  = int rand($width - $whole);
+        my $tail  = $width - ($head + $whole);
         printf "%d. Note: %s, Head=%d, Ticks=%d, Tail=%d, Total=%d\n",
             $channel, $note, $head, $whole, $tail, $width;
 
