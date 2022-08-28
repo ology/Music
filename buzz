@@ -4,17 +4,19 @@ use warnings;
 
 # https://www.youtube.com/watch?v=_WviF3f1VLM
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partition);
-use MIDI::Util qw(setup_score set_chan_patch);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Chord-Progression Music-Duration-Partition);
+use MIDI::Util qw(setup_score set_chan_patch midi_format);
+use Music::Chord::Progression ();
 use Music::Duration::Partition ();
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen ();
 
-my $max     = shift || 28;  # number of measures to play
-my $bpm     = shift || 10;  # beats per minute
+my $max     = shift || 16;  # number of measures to play
+my $bpm     = shift || 90;  # beats per minute
 my $note    = shift || 'C'; # tonic
-my $tpatch  = shift || 95;  # electric piano=4, warm synth=89
-my $bpatch  = shift || 89;  # fretless bass=35, sweep synth=95
+my $tpatch  = shift || 69;  # electric piano=4&5, warm synth=89, sweep synth=95, fretless bass=35, English horn=69
+my $cpatch  = shift || 5;
+my $bpatch  = shift || 35;
 my $tscale  = shift || 'pentatonic';
 my $bscale  = shift || 'pentatonic';
 my $toctave = shift || 4;
@@ -30,6 +32,7 @@ my $score = setup_score(
 $score->synch(
     \&bottom,
     \&top,
+    \&chords,
 );
 
 $score->write_score("$0.mid");
@@ -87,6 +90,28 @@ sub top {
 
         for my $duration (0 .. $#$motif) {
             $score->n($motif->[$duration], $notes[$duration]);
+        }
+    }
+}
+
+sub chords {
+    set_chan_patch($score, $channel++, $cpatch);
+
+    $score->Volume(100);
+
+    my $prog = Music::Chord::Progression->new(
+        max       => 4,
+        chord_map => ['', 'm', 'm', '', '', 'm', 'm'],
+#        tonic     => 0,
+        resolve   => 0,
+        verbose   => 1,
+    );
+
+    my $progressions = [ map { $prog->generate } 1 .. $max / $prog->max ];
+
+    for my $chords (@$progressions) {
+        for my $chord (@$chords) {
+            $score->n('wn', midi_format(@$chord));
         }
     }
 }
