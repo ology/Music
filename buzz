@@ -61,6 +61,8 @@ sub bottom {
             $score->n($motif->[$duration], $notes[$duration]);
         }
     }
+
+    $score->n('wn', $pitches[0]);
 }
 
 sub top {
