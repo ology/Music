@@ -7,13 +7,19 @@ use Net::CoverArtArchive;
 use WebService::MusicBrainz;
 #$ENV{MUSICBRAINZ_DEBUG} = 1;
 
-my $who  = shift || 'David Bowie';  # artist
-my $what = shift || ''; #'Diamond Dogs'; # release
+my $who  = shift || 'david bowie';  # artist
+my $what = shift || '';#'Diamond Dogs'; # release
 
 my $image;
 
 my $caa = Net::CoverArtArchive->new;
 my $mb  = WebService::MusicBrainz->new;
+
+# XXX No:
+#my $result = $mb->search('release-group' => { artist => $who });
+#for my $r ($result->{'release-groups'}->@*) {
+#    printf "%s - %s\n", $r->{title}, $r->{'secondary-types'};#unless $r->{'secondary-types'};
+#}
 
 my $result = $mb->search(artist => { artist => $who });
 
@@ -27,10 +33,10 @@ print "$who ($artist_id):\n";
 
 my $i = 0;
 
-for my $group (@{ $result->{$key} }) {
+for my $group ($result->{$key}->@*) {
     my $condition = $what
         ? $group->{title} eq $what
-        : !@{ $group->{'secondary-types'} }; # studio albums only?
+        : !$group->{'secondary-types'}->@*; # studio albums only
     if ($condition) {
         $i++;
 
@@ -40,11 +46,14 @@ for my $group (@{ $result->{$key} }) {
         $result = $mb->search('release-group' => { mbid => $group->{id}, inc => [$key]});
         #warn ddc($result, {max_width=>128});
 
-        for my $release (@{ $result->{$key} }) {
+        for my $release ($result->{$key}->@*) {
             my $release_id = $release->{id};
             my $artwork = $caa->find_available_artwork($release_id);
             #warn ddc($artwork, {max_width=>128});
-            print $artwork->[0]{image}, "\n" if $artwork->[0]{image};
+            if ($artwork->[0]{image}) {
+                print "\t", $artwork->[0]{image}, "\n";
+                last;
+            }
         }
 
         last if $what;
