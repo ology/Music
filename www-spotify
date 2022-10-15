@@ -36,6 +36,16 @@ $spotify->oauth_client_id($cfg->{oauth_client_id});
 $spotify->oauth_client_secret($cfg->{oauth_client_secret});
 $spotify->force_client_auth(1);
 $spotify->auto_json_decode(1);
+
+my $key = $opts{track} ? 'tracks' : $opts{album} ? 'albums' : 'artists';
+
+my @query = ( $opts{artist}, 'artist' );
+if ($key eq 'tracks') {
+    @query = ( $opts{track}, 'track' );
+}
+elsif ($key eq 'albums') {
+    @query = ( $opts{album}, 'album' );
+}
  
 my $limit = 10;
 my $max = 50;
@@ -44,18 +54,16 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
 #warn __PACKAGE__,' L',__LINE__," offset=$i, limit=$step\n";
 
     my $result = $spotify->search(
-#        $opts{artist}, 'artist',
-#        $opts{album}, 'album',
-        $opts{track}, 'track',
+        @query,
         { limit => $step, offset => $i }
     );
+#warn __PACKAGE__,' L',__LINE__,' ',ddc($result, {max_width=>128});exit;
 #warn __PACKAGE__,' L',__LINE__,' Batch: ',scalar($result->{tracks}{items}->@*),"\n";
-#warn __PACKAGE__,' L',__LINE__,' ',ddc($result, {max_width=>128});
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($result->{artists}{items}[0], {max_width=>128});
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($result->{tracks}{items}[0]{artists}[0]{name}, {max_width=>128});
 
     #for my $item ($result->{albums}{items}->@*) {
-    for my $item ($result->{tracks}{items}->@*) {
+    for my $item ($result->{$key}{items}->@*) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
 warn __PACKAGE__,' L',__LINE__,' ',$item->{name},"\n";
         if ($item->{name} eq $opts{track} && $item->{artists}[0]{name} eq $opts{artist}) {
