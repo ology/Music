@@ -1,0 +1,69 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Lookup stuff on spotify
+
+# settings.yml example:
+# oauth_client_id: abcdefghijklmnopqrstuvwxyz
+# oauth_client_secret: 12345678901234567890
+
+use Data::Dumper::Compact qw(ddc);
+use Getopt::Long;
+use WWW::Spotify;
+use JSON::MaybeXS qw(decode_json);
+use YAML::XS 'LoadFile';
+
+my %opts = (
+    artist => undef,
+    album  => undef,
+    track  => undef,
+    config => 'settings.yml',
+);
+GetOptions( \%opts,
+    'artist=s',
+    'album=s',
+    'track=s',
+);
+
+die qq/Usage: perl $0 config="settings.yml" artist="Gene Boggs" album="IX" track="Clubster"\n/
+    unless $opts{artist} || $opts{album} || $opts{track};
+
+my $cfg = YAML::XS::LoadFile($opts{config});
+
+my $spotify = WWW::Spotify->new;
+$spotify->oauth_client_id($cfg->{oauth_client_id});
+$spotify->oauth_client_secret($cfg->{oauth_client_secret});
+$spotify->force_client_auth(1);
+$spotify->auto_json_decode(1);
+ 
+my $limit = 10;
+my $max = 50;
+BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
+    my $step = $max - $i < $limit ? $max - $i + 1 : $limit;
+#warn __PACKAGE__,' L',__LINE__," offset=$i, limit=$step\n";
+
+    my $result = $spotify->search(
+    #    $opts{artist}, 'artist',
+    #    $opts{album}, 'album',
+        $opts{track}, 'track',
+        { limit => $step, offset => $i }
+    );
+    warn __PACKAGE__,' L',__LINE__,' Batch: ',scalar($result->{tracks}{items}->@*),"\n";
+#warn __PACKAGE__,' L',__LINE__,' ',ddc($result, {max_width=>128});
+#warn __PACKAGE__,' L',__LINE__,' ',ddc($result->{artists}{items}[0], {max_width=>128});
+#warn __PACKAGE__,' L',__LINE__,' ',ddc($result->{tracks}{items}[0]{artists}[0]{name}, {max_width=>128});
+
+    #for my $item ($result->{albums}{items}->@*) {
+    for my $item ($result->{tracks}{items}->@*) {
+    #warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
+warn __PACKAGE__,' L',__LINE__,' ',$item->{name},"\n";
+        if ($item->{name} eq $opts{track} && $item->{artists}[0]{name} eq $opts{artist}) {
+warn __PACKAGE__,' L',__LINE__,' ',ddc($item->{album}{images}[0]{url}, {max_width=>128});
+            last BATCH;
+        }
+    #    if ($item->{artists}[0]{name} eq $opts{artist}) {
+#warn __PACKAGE__,' L',__LINE__,' ',ddc($item->{album}{images}[0]{url}, {max_width=>128});
+    #    }
+    }
+}
