@@ -44,8 +44,8 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
 #warn __PACKAGE__,' L',__LINE__," offset=$i, limit=$step\n";
 
     my $result = $spotify->search(
-    #    $opts{artist}, 'artist',
-    #    $opts{album}, 'album',
+#        $opts{artist}, 'artist',
+#        $opts{album}, 'album',
         $opts{track}, 'track',
         { limit => $step, offset => $i }
     );
@@ -56,14 +56,14 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
 
     #for my $item ($result->{albums}{items}->@*) {
     for my $item ($result->{tracks}{items}->@*) {
-    #warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
+#warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
 warn __PACKAGE__,' L',__LINE__,' ',$item->{name},"\n";
         if ($item->{name} eq $opts{track} && $item->{artists}[0]{name} eq $opts{artist}) {
 warn __PACKAGE__,' L',__LINE__,' ',ddc($item->{album}{images}[0]{url}, {max_width=>128});
             last BATCH;
         }
-    #    if ($item->{artists}[0]{name} eq $opts{artist}) {
+#        if ($item->{artists}[0]{name} eq $opts{artist}) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($item->{album}{images}[0]{url}, {max_width=>128});
-    #    }
+#        }
     }
 }
