@@ -49,7 +49,7 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
         $opts{track}, 'track',
         { limit => $step, offset => $i }
     );
-    warn __PACKAGE__,' L',__LINE__,' Batch: ',scalar($result->{tracks}{items}->@*),"\n";
+#warn __PACKAGE__,' L',__LINE__,' Batch: ',scalar($result->{tracks}{items}->@*),"\n";
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($result, {max_width=>128});
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($result->{artists}{items}[0], {max_width=>128});
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($result->{tracks}{items}[0]{artists}[0]{name}, {max_width=>128});
