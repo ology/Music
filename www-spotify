@@ -37,13 +37,14 @@ $spotify->oauth_client_secret($cfg->{oauth_client_secret});
 $spotify->force_client_auth(1);
 $spotify->auto_json_decode(1);
 
-my $key = $opts{track} ? 'tracks' : $opts{album} ? 'albums' : 'artists';
+my $key = $opts{track} ? 'track' : $opts{album} ? 'albums' : 'artist';
+my $keys = $key . 's';
 
 my @query = ( $opts{artist}, 'artist' );
-if ($key eq 'tracks') {
+if ($keys eq 'tracks') {
     @query = ( $opts{track}, 'track' );
 }
-elsif ($key eq 'albums') {
+elsif ($keys eq 'albums') {
     @query = ( $opts{album}, 'album' );
 }
  
@@ -63,10 +64,10 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($result->{tracks}{items}[0]{artists}[0]{name}, {max_width=>128});
 
     #for my $item ($result->{albums}{items}->@*) {
-    for my $item ($result->{$key}{items}->@*) {
+    for my $item ($result->{$keys}{items}->@*) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
 warn __PACKAGE__,' L',__LINE__,' ',$item->{name},"\n";
-        if ($item->{name} eq $opts{track} && $item->{artists}[0]{name} eq $opts{artist}) {
+        if ($item->{name} eq $opts{$key} && $item->{artists}[0]{name} eq $opts{artist}) {
 warn __PACKAGE__,' L',__LINE__,' ',ddc($item->{album}{images}[0]{url}, {max_width=>128});
             last BATCH;
         }
