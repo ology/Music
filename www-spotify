@@ -52,7 +52,7 @@ my $limit = 10;
 my $max   = 100;
 BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
     my $step = $max - $i < $limit ? $max - $i + 1 : $limit;
-#warn __PACKAGE__,' L',__LINE__," offset=$i, limit=$step\n";
+    warn "offset=$i, limit=$step\n";
 
     my $result = $spotify->search(
         @query,
