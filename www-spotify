@@ -9,7 +9,7 @@ use warnings;
 # oauth_client_secret: 12345678901234567890
 
 use Data::Dumper::Compact qw(ddc);
-use Getopt::Long;
+use Getopt::Long qw(GetOptions);
 use WWW::Spotify;
 use YAML::XS qw(LoadFile);
 
