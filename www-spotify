@@ -33,7 +33,7 @@ GetOptions( \%opts,
 die qq/Usage: perl $0 config="settings.yml" artist="Gene Boggs" album="X" track="Clubster"\n/
     unless $opts{artist} || $opts{album} || $opts{track};
 
-my $cfg = YAML::XS::LoadFile($opts{config});
+my $cfg = LoadFile($opts{config});
 
 my $spotify = WWW::Spotify->new;
 $spotify->oauth_client_id($cfg->{oauth_client_id});
