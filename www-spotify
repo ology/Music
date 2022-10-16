@@ -12,7 +12,7 @@ use Data::Dumper::Compact qw(ddc);
 use Getopt::Long;
 use WWW::Spotify;
 use JSON::MaybeXS qw(decode_json);
-use YAML::XS 'LoadFile';
+use YAML::XS qw(LoadFile);
 
 my %opts = (
     artist => undef,
