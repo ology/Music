@@ -30,7 +30,7 @@ GetOptions( \%opts,
     'max=i',
 );
 
-die qq/Usage: perl $0 config="settings.yml" artist="Gene Boggs" album="IX" track="Clubster"\n/
+die qq/Usage: perl $0 config="settings.yml" artist="Gene Boggs" album="X" track="Clubster"\n/
     unless $opts{artist} || $opts{album} || $opts{track};
 
 my $cfg = YAML::XS::LoadFile($opts{config});
