@@ -43,9 +43,7 @@ $spotify->auto_json_decode(1);
 
 my $key   = $opts{track} ? 'track' : $opts{album} ? 'album' : 'artist';
 my $keys  = $key . 's';
-my @query = ( $opts{artist}, 'artist' );
-@query = ( $opts{$key}, $key )
-    if $key eq 'track' || $key eq 'album';
+my @query = ($opts{$key}, $key);
 
 my ($limit, $max) = @opts{ qw(limit max) };
  
