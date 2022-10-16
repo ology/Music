@@ -41,16 +41,11 @@ $spotify->oauth_client_secret($cfg->{oauth_client_secret});
 $spotify->force_client_auth(1);
 $spotify->auto_json_decode(1);
 
-my $key = $opts{track} ? 'track' : $opts{album} ? 'album' : 'artist';
-my $keys = $key . 's';
-
+my $key   = $opts{track} ? 'track' : $opts{album} ? 'album' : 'artist';
+my $keys  = $key . 's';
 my @query = ( $opts{artist}, 'artist' );
-if ($keys eq 'tracks') {
-    @query = ( $opts{track}, 'track' );
-}
-elsif ($keys eq 'albums') {
-    @query = ( $opts{album}, 'album' );
-}
+@query = ( $opts{$key}, $key )
+    if $key eq 'track' || $key eq 'album';
 
 my $limit = $opts{limit};
 my $max   = $opts{max};
