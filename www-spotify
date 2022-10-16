@@ -37,7 +37,7 @@ $spotify->oauth_client_secret($cfg->{oauth_client_secret});
 $spotify->force_client_auth(1);
 $spotify->auto_json_decode(1);
 
-my $key = $opts{track} ? 'track' : $opts{album} ? 'albums' : 'artist';
+my $key = $opts{track} ? 'track' : $opts{album} ? 'album' : 'artist';
 my $keys = $key . 's';
 
 my @query = ( $opts{artist}, 'artist' );
@@ -49,7 +49,7 @@ elsif ($keys eq 'albums') {
 }
  
 my $limit = 10;
-my $max = 50;
+my $max   = 100;
 BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
     my $step = $max - $i < $limit ? $max - $i + 1 : $limit;
 #warn __PACKAGE__,' L',__LINE__," offset=$i, limit=$step\n";
@@ -59,20 +59,22 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
         { limit => $step, offset => $i }
     );
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($result, {max_width=>128});exit;
-#warn __PACKAGE__,' L',__LINE__,' Batch: ',scalar($result->{tracks}{items}->@*),"\n";
-#warn __PACKAGE__,' L',__LINE__,' ',ddc($result->{artists}{items}[0], {max_width=>128});
-#warn __PACKAGE__,' L',__LINE__,' ',ddc($result->{tracks}{items}[0]{artists}[0]{name}, {max_width=>128});
+#warn __PACKAGE__,' L',__LINE__,' Batch: ',scalar($result->{$keys}{items}->@*),"\n";
 
-    #for my $item ($result->{albums}{items}->@*) {
-    for my $item ($result->{$keys}{items}->@*) {
-#warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
-warn __PACKAGE__,' L',__LINE__,' ',$item->{name},"\n";
-        if ($item->{name} eq $opts{$key} && $item->{artists}[0]{name} eq $opts{artist}) {
-warn __PACKAGE__,' L',__LINE__,' ',ddc($item->{album}{images}[0]{url}, {max_width=>128});
-            last BATCH;
+    if ($key eq 'artist') {
+        for my $item ($result->{$keys}{items}->@*) {
+            if ($item->{name} eq $opts{artist}) {
+warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
+                last BATCH;
+            }
         }
-#        if ($item->{artists}[0]{name} eq $opts{artist}) {
-#warn __PACKAGE__,' L',__LINE__,' ',ddc($item->{album}{images}[0]{url}, {max_width=>128});
-#        }
+    }
+    else {
+        for my $item ($result->{$keys}{items}->@*) {
+            if ($item->{name} eq $opts{$key} && $item->{artists}[0]{name} eq $opts{artist}) {
+warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
+                last BATCH;
+            }
+        }
     }
 }
