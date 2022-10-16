@@ -61,8 +61,8 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
     for my $item ($result->{$keys}{items}->@*) {
         if ($key eq 'artist' && $item->{name} eq $opts{artist}) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
-            print 'Genres: ', join(', ', $item->{genres}->@*), "\n";
-            print "Image: $item->{images}[1]{url}\n";
+            print 'Genres: ', join(', ', $item->{genres}->@*), "\n",
+                "Image: $item->{images}[1]{url}\n";
             last BATCH;
         }
         elsif ($item->{name} =~ /^$opts{$key}\b/
