@@ -31,7 +31,7 @@ GetOptions( \%opts,
 );
 
 die qq/Usage: perl $0 config="settings.yml" artist="Gene Boggs" album="X" track="Clubster"\n/
-    unless $opts{artist} || $opts{album} || $opts{track};
+    unless $opts{artist};
 
 my $cfg = LoadFile($opts{config});
 
