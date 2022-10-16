@@ -61,20 +61,14 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($result, {max_width=>128});exit;
 #warn __PACKAGE__,' L',__LINE__,' Batch: ',scalar($result->{$keys}{items}->@*),"\n";
 
-    if ($key eq 'artist') {
-        for my $item ($result->{$keys}{items}->@*) {
-            if ($item->{name} eq $opts{artist}) {
+    for my $item ($result->{$keys}{items}->@*) {
+        if ($key eq 'artist' && $item->{name} eq $opts{artist}) {
 warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
-                last BATCH;
-            }
+            last BATCH;
         }
-    }
-    else {
-        for my $item ($result->{$keys}{items}->@*) {
-            if ($item->{name} eq $opts{$key} && $item->{artists}[0]{name} eq $opts{artist}) {
+        elsif ($item->{name} eq $opts{$key} && $item->{artists}[0]{name} eq $opts{artist}) {
 warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
-                last BATCH;
-            }
+            last BATCH;
         }
     }
 }
