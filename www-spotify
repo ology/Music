@@ -73,9 +73,17 @@ warn __PACKAGE__,' L',__LINE__,' Genres: ',join(', ', $item->{genres}->@*), "\n"
 warn __PACKAGE__,' L',__LINE__,' Image: ',,"$item->{images}[1]{url}\n";
             last BATCH;
         }
-        elsif ($item->{name} eq $opts{$key} && $item->{artists}[0]{name} eq $opts{artist}) {
+        elsif ($item->{name} =~ /^$opts{$key}\b/
+            && defined $item->{artists}[0]{name}
+            && $item->{artists}[0]{name} eq $opts{artist}) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
+            if ($key eq 'track') {
 warn __PACKAGE__,' L',__LINE__,' Image: ',,"$item->{album}{images}[1]{url}\n";
+            }
+            elsif ($key eq 'album') {
+warn __PACKAGE__,' L',__LINE__,' Image: ',,"$item->{images}[1]{url}\n";
+            }
+
             last BATCH;
         }
     }
