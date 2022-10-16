@@ -69,8 +69,8 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
     for my $item ($result->{$keys}{items}->@*) {
         if ($key eq 'artist' && $item->{name} eq $opts{artist}) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
-warn __PACKAGE__,' L',__LINE__,' Genres: ',join(', ', $item->{genres}->@*), "\n";
-warn __PACKAGE__,' L',__LINE__,' Image: ',,"$item->{images}[1]{url}\n";
+            print 'Genres: ', join(', ', $item->{genres}->@*), "\n";
+            print "Image: $item->{images}[1]{url}\n";
             last BATCH;
         }
         elsif ($item->{name} =~ /^$opts{$key}\b/
@@ -79,10 +79,10 @@ warn __PACKAGE__,' L',__LINE__,' Image: ',,"$item->{images}[1]{url}\n";
         ) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
             if ($key eq 'track') {
-warn __PACKAGE__,' L',__LINE__,' Image: ',,"$item->{album}{images}[1]{url}\n";
+                print "Image: $item->{album}{images}[1]{url}\n";
             }
             elsif ($key eq 'album') {
-warn __PACKAGE__,' L',__LINE__,' Image: ',,"$item->{images}[1]{url}\n";
+                print "Image: $item->{images}[1]{url}\n";
             }
 
             last BATCH;
