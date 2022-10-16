@@ -22,6 +22,7 @@ my %opts = (
     max    => 50,
 );
 GetOptions( \%opts,
+    'config=s',
     'artist=s',
     'album=s',
     'track=s',
