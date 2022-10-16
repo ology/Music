@@ -70,13 +70,10 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
             && $item->{artists}[0]{name} eq $opts{artist}
         ) {
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($item, {max_width=>128});
-            if ($key eq 'track') {
-                print "Image: $item->{album}{images}[1]{url}\n";
-            }
-            elsif ($key eq 'album') {
-                print "Image: $item->{images}[1]{url}\n";
-            }
-
+            my $val = $key eq 'track'
+                ? $item->{album}{images}[1]{url}
+                : $item->{images}[1]{url};
+            print "Image: $val\n";
             last BATCH;
         }
     }
