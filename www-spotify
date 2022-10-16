@@ -44,9 +44,6 @@ $spotify->auto_json_decode(1);
 my $key = $opts{track} ? 'track' : $opts{album} ? 'album' : 'artist';
 my $keys = $key . 's';
 
-my $limit = $opts{limit};
-my $max   = $opts{max};
-
 my @query = ( $opts{artist}, 'artist' );
 if ($keys eq 'tracks') {
     @query = ( $opts{track}, 'track' );
@@ -54,6 +51,9 @@ if ($keys eq 'tracks') {
 elsif ($keys eq 'albums') {
     @query = ( $opts{album}, 'album' );
 }
+
+my $limit = $opts{limit};
+my $max   = $opts{max};
  
 BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
     my $step = $max - $i < $limit ? $max - $i + 1 : $limit;
