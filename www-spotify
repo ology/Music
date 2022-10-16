@@ -20,7 +20,7 @@ my %opts = (
     track  => undef,
     config => 'settings.yml',
     limit  => 10,
-    max    => 100,
+    max    => 50,
 );
 GetOptions( \%opts,
     'artist=s',
