@@ -48,12 +48,12 @@ my @query = ($opts{$key}, $key);
 my ($limit, $max) = @opts{ qw(limit max) };
  
 BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
-    my $step = $max - $i < $limit ? $max - $i + 1 : $limit;
-    warn "offset=$i, limit=$step\n";
+    my $batch = $max - $i < $limit ? $max - $i + 1 : $limit;
+    warn "offset=$i, limit=$batch\n";
 
     my $result = $spotify->search(
         @query,
-        { limit => $step, offset => $i }
+        { limit => $batch, offset => $i }
     );
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($result, {max_width=>128});exit;
 #warn __PACKAGE__,' L',__LINE__,' Batch: ',scalar($result->{$keys}{items}->@*),"\n";
