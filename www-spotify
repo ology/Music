@@ -19,11 +19,15 @@ my %opts = (
     album  => undef,
     track  => undef,
     config => 'settings.yml',
+    limit  => 10,
+    max    => 100,
 );
 GetOptions( \%opts,
     'artist=s',
     'album=s',
     'track=s',
+    'limit=i',
+    'max=i',
 );
 
 die qq/Usage: perl $0 config="settings.yml" artist="Gene Boggs" album="IX" track="Clubster"\n/
@@ -40,6 +44,9 @@ $spotify->auto_json_decode(1);
 my $key = $opts{track} ? 'track' : $opts{album} ? 'album' : 'artist';
 my $keys = $key . 's';
 
+my $limit = $opts{limit};
+my $max   = $opts{max};
+
 my @query = ( $opts{artist}, 'artist' );
 if ($keys eq 'tracks') {
     @query = ( $opts{track}, 'track' );
@@ -48,8 +55,6 @@ elsif ($keys eq 'albums') {
     @query = ( $opts{album}, 'album' );
 }
  
-my $limit = 10;
-my $max   = 100;
 BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
     my $step = $max - $i < $limit ? $max - $i + 1 : $limit;
     warn "offset=$i, limit=$step\n";
