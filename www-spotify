@@ -46,7 +46,7 @@ my $keys  = $key . 's';
 my @query = ($opts{$key}, $key);
 
 my ($limit, $max) = @opts{ qw(limit max) };
- 
+
 BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
     my $batch = $max - $i < $limit ? $max - $i + 1 : $limit;
     warn "offset=$i, limit=$batch\n";
