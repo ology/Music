@@ -30,7 +30,7 @@ GetOptions( \%opts,
     'max=i',
 );
 
-die qq/Usage: perl $0 artist="Gene Boggs" [album="X"|track="Clubster"] [config="settings.yml"]\n/
+die qq/Usage: perl $0 --artist="Gene Boggs" [--album="X"|--track="Clubster"] [--config="settings.yml"]\n/
     unless $opts{artist};
 
 my $cfg = LoadFile($opts{config});
