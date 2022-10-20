@@ -11,7 +11,7 @@ use warnings;
 
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
-use WWW::Spotify;
+use WWW::Spotify ();
 use YAML::XS qw(LoadFile);
 
 my %opts = (
