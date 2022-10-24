@@ -58,6 +58,7 @@ BATCH: for (my $i = 0; $i <= $max; $i += $limit) {
     );
 
     for my $item ($result->{$keys}{items}->@*) {
+#warn __PACKAGE__,' L',__LINE__,' ',,"$item->{name}\n";
         if ($key eq 'artist' && $item->{name} eq $opts{artist}) {
             print 'Genres: ', join(', ', $item->{genres}->@*), "\n",
                 "Image: $item->{images}[1]{url}\n";
