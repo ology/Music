@@ -123,24 +123,24 @@ sub chords {
         my $chord = $pool[ int rand @pool ];
         my @notes = $cn->chord_with_octave($chord, $opts{octave});
 
-        my $spec;
+        my @spec;
 
         my $i = int rand $opts{bars};
         if ($i > $opts{bars} / 2) {
-            push @specs, [ $d->half, midi_format(@notes) ];
+            push @spec, [ $d->half, @notes ];
 
             @pool = $net{$chord}->@*;
             $chord = $pool[ int rand @pool ];
             @notes = $cn->chord_with_octave($chord, $opts{octave});
 
-            $spec = [ $d->half, @notes ];
+            push @spec, [ $d->half, @notes ];
         }
         else {
-            $spec = [ $d->whole, @notes ];
+            push @spec, [ $d->whole, @notes ];
         }
 
-        printf '%*d. %s', length($opts{bars}), $n / 2 + 1, ddc($spec) if $opts{verbose};
-        push @specs, $spec;
+        printf '%*d. %s', length($opts{bars}), $n / 2 + 1, ddc(\@spec) if $opts{verbose};
+        push @specs, @spec;
     }
 
     for (1 .. $opts{repeat}) {
