@@ -10,7 +10,7 @@ use Music::Chord::Note ();
 my $patch  = shift // 5;   # 0=piano, etc general midi
 my $note   = shift || 'F'; # tonic
 my $octave = shift || 4;   # octave of chord notes
-my $bpm    = shift || 100; # beats per minute
+my $bpm    = shift || 90;  # beats per minute
 my $max    = shift || 12;  # number of 4/4 bars
 
 my $d = MIDI::Drummer::Tiny->new(
