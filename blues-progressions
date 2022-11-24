@@ -2,6 +2,10 @@
 use strict;
 use warnings;
 
+# Blues-jazz (Jazz-blues?) chord practice tool
+# Taken from the chart devised by Dan Haerle
+# Freely available in the Jamey Aebersold "Jazz Handbook"
+
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util);
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch midi_format);
