@@ -28,6 +28,11 @@ $d->sync(
 
 $d->write;
 
+sub drums {
+    $d->metronome44swing($d->bars * $repeat);
+    $d->note($d->whole, $d->kick, $d->ride1);
+}
+
 sub chords {
     set_chan_patch($d->score, 0, $patch);
 
@@ -121,9 +126,4 @@ sub chords {
 
     my @notes = $cn->chord_with_octave($chords[0][0], $octave);
     $d->note($d->whole, midi_format(@notes));
-}
-
-sub drums {
-    $d->metronome44swing($d->bars * $repeat);
-    $d->note($d->whole, $d->kick, $d->ride1);
 }
