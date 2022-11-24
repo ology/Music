@@ -100,5 +100,5 @@ sub chords {
 }
 
 sub drums {
-    $d->metronome44swing($d->bars);
+    $d->metronome44swing;
 }
