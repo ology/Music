@@ -50,7 +50,7 @@ sub chords {
         );
     };
 
-    my @net = do {
+    my %net = do {
         no warnings qw(qw);
         (
             'F7'    => [qw( F7 Bb7 C7 BbM7 E7 D7 Gm7 Db7 )],
@@ -95,7 +95,11 @@ sub chords {
         my @pool = $chords[$n]->@*;
         my $chord = $pool[ int rand @pool ];
         my @notes = $cn->chord_with_octave($chord, $octave);
-        $d->note($d->whole, midi_format(@notes));
+        $d->note($d->half, midi_format(@notes));
+        @pool = $net{$chord}->@*;
+        $chord = $pool[ int rand @pool ];
+        @notes = $cn->chord_with_octave($chord, $octave);
+        $d->note($d->half, midi_format(@notes));
     }
 }
 
