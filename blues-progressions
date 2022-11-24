@@ -12,6 +12,7 @@ my $note   = shift || 'F'; # tonic
 my $octave = shift || 4;   # octave of chord notes
 my $bpm    = shift || 90;  # beats per minute
 my $max    = shift || 12;  # number of 4/4 bars
+my $repeat = shift || 2;   # number of times to repeat
 
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
@@ -90,8 +91,10 @@ sub chords {
         );
     };
 
+    my @specs;
+
     for my $n (0 .. $d->bars * 2 - 1) {
-        next if $n % 2; # odd bars only
+        next if $n % 2; # odd bars only for now...
 
         my @pool = $chords[$n]->@*;
         my $chord = $pool[ int rand @pool ];
@@ -99,19 +102,23 @@ sub chords {
 
         my $i = int rand $max;
         if ($i > $max / 2) {
-            $d->note($d->half, midi_format(@notes));
+            push @specs, [ $d->half, midi_format(@notes) ];
 
             @pool = $net{$chord}->@*;
             $chord = $pool[ int rand @pool ];
             @notes = $cn->chord_with_octave($chord, $octave);
-            $d->note($d->half, midi_format(@notes));
+            push @specs, [ $d->half, midi_format(@notes) ];
         }
         else {
-            $d->note($d->whole, midi_format(@notes));
+            push @specs, [ $d->whole, midi_format(@notes) ];
         }
+    }
+
+    for (1 .. $repeat) {
+        $d->note(@$_) for @specs;
     }
 }
 
 sub drums {
-    $d->metronome44swing;
+    $d->metronome44swing($d->bars * $repeat);
 }
