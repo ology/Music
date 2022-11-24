@@ -1,0 +1,104 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util);
+use MIDI::Drummer::Tiny ();
+use MIDI::Util qw(set_chan_patch midi_format);
+use Music::Chord::Note qw();
+
+my $patch  = shift // 5;   # 0=piano, etc general midi
+my $note   = shift || 'F'; # tonic
+my $octave = shift || 4;   # octave of chord notes
+my $bpm    = shift || 100; # beats per minute
+my $max    = shift || 12;  # number of 4/4 bars
+
+my $d = MIDI::Drummer::Tiny->new(
+    file   => "$0.mid",
+    bars   => $max,
+    bpm    => $bpm,
+    reverb => 15,
+);
+
+$d->sync(
+    \&drums,
+    \&chords,
+);
+
+$d->write;
+
+sub chords {
+    set_chan_patch($d->score, 0, $patch);
+
+    my $cn = Music::Chord::Note->new;
+
+    my @chords = do {
+        no warnings qw(qw);
+        (
+            [qw( F7 FM7 F#m7 )],              [qw( B7 )],
+            [qw( F7 Bb7 Em7 BbM7 F#m7 )],     [qw( A7 Ebm7 B7 )],
+            [qw( F7 Dm7 Am7 EM7 )],           [qw( G7 Dbm7 Gm7 EbM7 )],
+            [qw( F7 Cm7 Gbm7 DbM7 )],         [qw( F7 Cb7 BM7 )],
+            [qw( Bb7 BbM7 )],                 [],
+            [qw( Bb7 Eb7 Bm7 Bdim7 Bbm7 )],   [qw( E7 Eb7 )],
+            [qw( F7 Am7 AbM7 AM7 )],          [qw( Am7 E7 D7 )],
+            [qw( F7 D7 Eb7 Abm7 Am7 )],       [qw( D7 Db7 )],
+            [qw( C7 G7 Gm7 Db7 GbM7 GM7 )],   [qw( C7 )],
+            [qw( C7 Bb7 Dbm7 Gb7 Gm7 GbM7 )], [qw( Bb7 Gb7 C7 )],
+            [qw( F7 Am7 FM7 )],               [qw( D7 Adim7 Ab7 AbM7 )],
+            [qw( F7 C7 Gm7 Db7 Dbm7 GM7 )],   [qw( C7 Gb )],
+        );
+    };
+
+    my @net = do {
+        no warnings qw(qw);
+        (
+            'F7'    => [qw( F7 Bb7 C7 BbM7 E7 D7 Gm7 Db7 )],
+            'FM7'   => [qw( Em7 BbM7 F#m7 AbM7 )],
+            'F#m7'  => [qw( B7 )],
+            'Gb7'   => [qw( F7 FM7 )],
+            'GbM7'  => [qw( Gm7 FM7 )],
+            'Gbm7'  => [qw( Cb7 )],
+            'G7'    => [qw( Cm7 Gbm7 )],
+            'GM7'   => [qw( GbM7 Gb )],
+            'Gm7'   => [qw( Gbm7 C7 Gb7 Gb )],
+            'AbM7'  => [qw( Abm7 GM7 )],
+            'Abm7'  => [qw( Db7 Gm7 )],
+            'A7'    => [qw( Dm7 )],
+            'AM7'   => [qw( Am7 )],
+            'Am7'   => [qw( Gm7 D7 Abm7 )],
+            'Adim7' => [qw( Gm7 )],
+            'Bb7'   => [qw( F7 Bb7 Eb7 Bm7 Bdim7 Am7 )],
+            'Bdim7' => [qw( Am7 )],
+            'BbM7'  => [qw( Am7 Bbm7 Bm7 )],
+            'Bbm7'  => [qw( Am7 Eb7 )],
+            'B7'    => [qw( Em7 EM7 )],
+            'BM7'   => [qw( BbM7 )],
+            'Bm7'   => [qw( E7 )],
+            'Cb7'   => [qw( BbM7 )],
+            'C7'    => [qw( C7 Bb7 F7 Bb7 Am7 )],
+            'Cm7'   => [qw( F7 Cb7 )],
+            'Db7'   => [qw( GbM7 Gm7 C7 )],
+            'DbM7'  => [qw( BM7 )],
+            'Dbm7'  => [qw( Cm7 Gb7 Gb )],
+            'D7'    => [qw( G7 Gm7 Db7 GM7 Dbm7 )],
+            'Dm7'   => [qw( G7 Dbm7 )],
+            'Eb7'   => [qw( F7 Am7 AbM7 D7 )],
+            'E7'    => [qw( Am7 AM7 )],
+            'EM7'   => [qw( EbM7 )],
+            'Em7'   => [qw( A7 Ebm7 )],
+        );
+    };
+
+    for my $n (0 .. $d->bars * 2 - 1) {
+        next if $n % 2;
+        my @pool = $chords[$n]->@*;
+        my $chord = $pool[ int rand @pool ];
+        my @notes = $cn->chord_with_octave($chord, $octave);
+        $d->note($d->whole, midi_format(@notes));
+    }
+}
+
+sub drums {
+    $d->metronome44swing($d->bars);
+}
