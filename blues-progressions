@@ -31,8 +31,6 @@ $d->write;
 sub chords {
     set_chan_patch($d->score, 0, $patch);
 
-    my $cn = Music::Chord::Note->new;
-
     my @chords = do {
         no warnings qw(qw);
         (
@@ -91,6 +89,8 @@ sub chords {
         );
     };
 
+    my $cn = Music::Chord::Note->new;
+
     my @specs;
 
     for my $n (0 .. $d->bars * 2 - 1) {
@@ -117,8 +117,12 @@ sub chords {
     for (1 .. $repeat) {
         $d->note(@$_) for @specs;
     }
+
+    my @notes = $cn->chord_with_octave($chords[0][0], $octave);
+    $d->note($d->whole, midi_format(@notes));
 }
 
 sub drums {
     $d->metronome44swing($d->bars * $repeat);
+    $d->note($d->whole, $d->kick, $d->ride1);
 }
