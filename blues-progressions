@@ -5,7 +5,7 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util);
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch midi_format);
-use Music::Chord::Note qw();
+use Music::Chord::Note ();
 
 my $patch  = shift // 5;   # 0=piano, etc general midi
 my $note   = shift || 'F'; # tonic
