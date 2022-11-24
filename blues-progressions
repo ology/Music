@@ -107,6 +107,7 @@ sub chords {
             @pool = $net{$chord}->@*;
             $chord = $pool[ int rand @pool ];
             @notes = $cn->chord_with_octave($chord, $octave);
+
             push @specs, [ $d->half, midi_format(@notes) ];
         }
         else {
