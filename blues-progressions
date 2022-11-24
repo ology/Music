@@ -126,5 +126,5 @@ sub chords {
 
     my @notes = $cn->chord_with_octave($chords[0][0], $octave);
     (my $lower = $notes[0]) =~ s/\d/$octave - 1/e;
-    $d->note($d->whole, $lower, midi_format(@notes));
+    $d->note($d->whole, midi_format($lower, @notes));
 }
