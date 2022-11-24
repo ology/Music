@@ -91,7 +91,7 @@ sub chords {
     };
 
     for my $n (0 .. $d->bars * 2 - 1) {
-        next if $n % 2;
+        next if $n % 2; # odd bars only
         my @pool = $chords[$n]->@*;
         my $chord = $pool[ int rand @pool ];
         my @notes = $cn->chord_with_octave($chord, $octave);
