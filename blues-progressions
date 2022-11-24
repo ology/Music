@@ -59,7 +59,7 @@ sub chords {
     my $cn = Music::Chord::Note->new;
 
     # all chords in F initially
-    my $transpose = $cn->scale($opts{tonic}) - $cn->scale('F');
+    my $transpose = $cn->scale($opts{tonic}) - $cn->scale('F') - 1;
 
     my @chords = do {
         no warnings qw(qw);
