@@ -6,6 +6,7 @@ use warnings;
 # Taken from the chart devised by Dan Haerle
 # Freely available in the Jamey Aebersold "Jazz Handbook"
 
+use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util);
 use MIDI::Drummer::Tiny ();
@@ -13,12 +14,13 @@ use MIDI::Util qw(set_chan_patch midi_format);
 use Music::Chord::Note ();
 
 my %opts = (
-    note   => 'F', # tonic
-    octave => 4,   # octave of chord notes
-    patch  => 5,   # 0=piano, etc general midi
-    bpm    => 90,  # beats per minute
-    bars   => 12,  # number of 4/4 bars
-    repeat => 2,   # number of times to repeat
+    note    => 'F', # tonic
+    octave  => 4,   # octave of chord notes
+    patch   => 5,   # 0=piano, etc general midi
+    bpm     => 90,  # beats per minute
+    bars    => 12,  # number of 4/4 bars
+    repeat  => 2,   # number of times to repeat
+    verbose => 0,
 );
 GetOptions( \%opts, 
     'note=s',
@@ -27,6 +29,7 @@ GetOptions( \%opts,
     'bpm=i',
     'bars=i',
     'repeat=i',
+    'verbose',
 );
 
 my $d = MIDI::Drummer::Tiny->new(
@@ -120,6 +123,8 @@ sub chords {
         my $chord = $pool[ int rand @pool ];
         my @notes = $cn->chord_with_octave($chord, $opts{octave});
 
+        my $spec;
+
         my $i = int rand $opts{bars};
         if ($i > $opts{bars} / 2) {
             push @specs, [ $d->half, midi_format(@notes) ];
@@ -128,15 +133,18 @@ sub chords {
             $chord = $pool[ int rand @pool ];
             @notes = $cn->chord_with_octave($chord, $opts{octave});
 
-            push @specs, [ $d->half, midi_format(@notes) ];
+            $spec = [ $d->half, @notes ];
         }
         else {
-            push @specs, [ $d->whole, midi_format(@notes) ];
+            $spec = [ $d->whole, @notes ];
         }
+
+        printf '%*d. %s', length($opts{bars}), $n / 2 + 1, ddc($spec) if $opts{verbose};
+        push @specs, $spec;
     }
 
     for (1 .. $opts{repeat}) {
-        $d->note(@$_) for @specs;
+        $d->note(midi_format(@$_)) for @specs;
     }
 
     my @notes = $cn->chord_with_octave($chords[0][0], $opts{octave});
