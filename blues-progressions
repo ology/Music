@@ -15,12 +15,12 @@ use Music::Chord::Note ();
 use Music::MelodicDevice::Transposition ();
 
 my %opts = (
-    tonic   => 'F', # note to transpose things to
-    octave  => 4,   # octave of chord notes
-    patch   => 5,   # 0=piano, etc general midi
-    bpm     => 90,  # beats per minute
-    bars    => 12,  # number of 4/4 bars
-    repeat  => 2,   # number of times to repeat
+    tonic   => 'Bb', # note to transpose things to
+    octave  => 4,    # octave of chord notes
+    patch   => 5,    # 0=piano, etc general midi
+    bpm     => 90,   # beats per minute
+    bars    => 12,   # number of 4/4 bars
+    repeat  => 2,    # number of times to repeat
     verbose => 0,
 );
 GetOptions( \%opts, 
