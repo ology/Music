@@ -6,12 +6,13 @@ use warnings;
 # Taken from the chart devised by Dan Haerle
 # Available in the Jamey Aebersold "Jazz Handbook"
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-MelodicDevice-Transposition); # local author libs
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Cadence Music-MelodicDevice-Transposition); # local author libs
 
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch midi_format);
+use Music::Cadence ();
 use Music::Chord::Note ();
 use Music::MelodicDevice::Transposition ();
 
@@ -58,6 +59,11 @@ sub drums {
 sub chords {
     set_chan_patch($d->score, 0, $opts{patch});
 
+    my $mc = Music::Cadence->new(
+        key    => $opts{tonic},
+        octave => $opts{octave},
+        format => 'midi',
+    );
     my $md = Music::MelodicDevice::Transposition->new;
     my $cn = Music::Chord::Note->new;
 
@@ -103,10 +109,11 @@ sub chords {
         $d->note(midi_format(@$_)) for @specs;
     }
 
-    my $new_chord = transposition($transpose, $bars[0][0], $md);
-    my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
-    (my $lower = $notes[0]) =~ s/\d/$opts{octave} - 1/e;
-    $d->note($d->whole, midi_format($lower, @notes));
+    my $cadence = $mc->cadence(
+      type      => 'imperfect',
+      inversion => { 1 => 1 },
+    );
+    $d->note($d->whole, $cadence->[0]->@*);
 }
 
 sub transposition {
