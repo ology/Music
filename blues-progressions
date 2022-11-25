@@ -170,4 +170,5 @@ sub transposition {
 #warn __PACKAGE__,' L',__LINE__,' ',,"$chord -> $new_chord\n";
         return $new_chord;
     }
+    return $chord;
 }
