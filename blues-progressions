@@ -21,7 +21,7 @@ my %opts = (
     bpm     => 90,  # beats per minute
     bars    => 12,  # number of 4/4 bars
     repeat  => 1,   # number of times to repeat
-    percent => 20,  # maximum approximate half-note percentage
+    percent => 20,  # maximum half-note percentage
     verbose => 0,
 );
 GetOptions( \%opts, 
