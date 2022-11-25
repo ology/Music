@@ -129,7 +129,7 @@ sub chords {
         my $new_chord = transposition($transpose, $chord, $md);
         my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
-        my $verbose = $new_chord;
+        my $names = $new_chord;
 
         my @spec;
 
@@ -142,7 +142,7 @@ sub chords {
             my $new_chord = transposition($transpose, $chord, $md);
             @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
-            $verbose .= "-$new_chord";
+            $names .= "-$new_chord";
 
             push @spec, [ $d->half, @notes ];
         }
@@ -150,7 +150,7 @@ sub chords {
             push @spec, [ $d->whole, @notes ];
         }
 
-        printf '%*d. %13s: %s', length($opts{bars}), $n / 2 + 1, $verbose, ddc(\@spec) if $opts{verbose};
+        printf '%*d. %13s: %s', length($opts{bars}), $n / 2 + 1, $names, ddc(\@spec) if $opts{verbose};
         push @specs, @spec;
     }
 
