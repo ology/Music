@@ -17,14 +17,15 @@ use Music::Chord::Note ();
 use Music::MelodicDevice::Transposition ();
 
 my %opts = (
-    tonic   => 'C', # note to transpose things to
-    octave  => 4,   # octave of chord notes
-    patch   => 5,   # 0=piano, etc general midi
-    bpm     => 90,  # beats per minute
-    bars    => 12,  # number of 4/4 bars
-    repeat  => 1,   # number of times to repeat
-    percent => 25,  # maximum half-note percentage
-    drums   => 0,   # to drum, or not to drum?
+    tonic   => 'C',     # note to transpose things to
+    octave  => 4,       # octave of chord notes
+    patch   => 5,       # 0=piano, etc general midi
+    bpm     => 90,      # beats per minute
+    bars    => 12,      # number of 4/4 bars
+    repeat  => 1,       # number of times to repeat
+    percent => 25,      # maximum half-note percentage
+    drums   => 0,       # to drum, or not to drum?
+    metrono => 'pedal', # hihat: pedal, closed, open
     verbose => 0,
 );
 GetOptions( \%opts, 
@@ -37,6 +38,7 @@ GetOptions( \%opts,
     'percent=i',
     'verbose',
     'drums',
+    'metrono=s',
 );
 
 my $d = MIDI::Drummer::Tiny->new(
@@ -59,9 +61,10 @@ sub drums {
         $d->note($d->whole, $d->kick, $d->ride1);
     }
     else {
+        my $metronome = $opts{metrono} . '_hh';
         $d->count_in({
             bars  => $d->bars * $opts{repeat},
-            patch => $d->pedal_hh,
+            patch => $d->$metronome(),
         });
     }
 }
