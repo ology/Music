@@ -64,68 +64,69 @@ sub chords {
     my @chords = do {
         no warnings qw(qw);
         (
-            [qw( C7 CM7 C#m7 )],             [qw( Gb7 )],
-            [qw( C7 F7 Bm7 FM7 C#m7 )],      [qw( E7 Bbm7 Gb7 )],
-            [qw( C7 Am7 Em7 BM7 )],          [qw( D7 Abm7 Dm7 BbM7 )],
-            [qw( C7 Gm7 Dbm7 AbM7 )],        [qw( C7 Gb7 GbM7 )],
-            [qw( F7 FM7 )],                  [],
-            [qw( F7 Bb7 Gbm7 Gbdim7 Fm7 )],  [qw( B7 Bb7 )],
-            [qw( C7 Em7 EbM7 EM7 )],         [qw( Em7 B7 A7 )],
-            [qw( C7 A7 Bb7 Ebm7 Em7 )],      [qw( A7 Ab7 )],
-            [qw( G7 D7 Dm7 Ab7 DbM7 DM7 )],  [qw( G7 )],
-            [qw( G7 F7 Abm7 Db7 Dm7 DbM7 )], [qw( F7 Db7 G7 )],
-            [qw( C7 Em7 FM7 )],              [qw( A7 Edim7 Ebm7 EbM7 )],
-            [qw( C7 G7 Dm7 Ab7 Abm7 DM7 )],  [qw( G7 Db )],
+            [qw( C7 CM7 C#m7 )],
+            [qw( C7 F7 Bm7 FM7 C#m7 )],
+            [qw( C7 Am7 Em7 BM7 )],
+            [qw( C7 Gm7 Dbm7 AbM7 )],
+            [qw( F7 FM7 )],
+            [qw( F7 Bb7 Gbm7 Gbdim7 Fm7 )],
+            [qw( C7 Em7 EbM7 EM7 )],
+            [qw( C7 A7 Bb7 Ebm7 Em7 )],
+            [qw( G7 D7 Dm7 Ab7 DbM7 DM7 )],
+            [qw( G7 F7 Abm7 Db7 Dm7 DbM7 )],
+            [qw( C7 Em7 FM7 )],
+            [qw( C7 G7 Dm7 Ab7 Abm7 DM7 )],
         );
     };
 
     my %net = do {
         no warnings qw(qw);
         (
-            'A7'   => [qw( Ebm7 D7 Dm7 Ab7 DM7 Abm7 )],
-            'Ab7'  => [qw( DbM7 Dm7 G7 )],
-            'AbM7' => [qw( GbM7 )],
-            'Abm7' => [qw( Db Gm7 Db7 )],
-            'Am7'  => [qw( D7 Abm7 )],
-            'B7'   => [qw( C7 Em7 EM7 Bb7 )],
-            'BM7'  => [qw( BbM7 )],
-            'Bb7'  => [qw( C7 Ebm7 Em7 EbM7 A7 )],
-            'Bbm7' => [qw( Am7 )],
-            'Bm7'  => [qw( E7 Bbm7 )],
-            'C#m7' => [qw( Gb7 )],
-            'C7'   => [qw( C7 F7 Gm7 FM7 A7 Em7 B7 G7 Dm7 Ab7 )],
-            'CM7'  => [qw( Bm7 FM7 C#m7 Ebm7 AbM7 )],
-            'D7'   => [qw( Gm7 Dbm7 )],
-            'DM7'  => [qw( DbM7 Db )],
-            'Db7'  => [qw( C7 CM7 )],
-            'DbM7' => [qw( Dm7 CM7 )],
-            'Dbm7' => [qw( Gb7 )],
-            'Dm7'  => [qw( Dbm7 G7 Db7 Db )],
-            'E7'   => [qw( Am7 )],
-            'EM7'  => [qw( Em7 )],
-            'EbM7' => [qw( Ebm7 DM7 )],
-            'Ebm7' => [qw( Ab7 Dm7 Ebm7 )],
-            'Em7'  => [qw( Dm7 A7 Ebm7 Edim7 )],
+            'A7'     => [qw( Ebm7 D7 Dm7 Ab7 DM7 Abm7 )],
+            'Ab7'    => [qw( DbM7 Dm7 G7 )],
+            'AbM7'   => [qw( GbM7 )],
+            'Abm7'   => [qw( Db Gm7 Db7 )],
+            'Am7'    => [qw( D7 Abm7 )],
+            'B7'     => [qw( C7 Em7 EM7 Bb7 )],
+            'BM7'    => [qw( BbM7 )],
+            'Bb7'    => [qw( C7 Ebm7 Em7 EbM7 A7 )],
+            'Bbm7'   => [qw( Am7 )],
+            'Bm7'    => [qw( E7 Bbm7 )],
+            'C#m7'   => [qw( Gb7 )],
+            'C7'     => [qw( C7 F7 Gm7 FM7 A7 Em7 B7 G7 Dm7 Ab7 )],
+            'CM7'    => [qw( Bm7 FM7 C#m7 Ebm7 AbM7 )],
+            'D7'     => [qw( Gm7 Dbm7 )],
+            'DM7'    => [qw( DbM7 Db )],
+            'Db7'    => [qw( C7 CM7 )],
+            'DbM7'   => [qw( Dm7 CM7 )],
+            'Dbm7'   => [qw( Gb7 )],
+            'Dm7'    => [qw( Dbm7 G7 Db7 Db )],
+            'E7'     => [qw( Am7 )],
+            'EM7'    => [qw( Em7 )],
+            'EbM7'   => [qw( Ebm7 DM7 )],
+            'Ebm7'   => [qw( Ab7 Dm7 Ebm7 )],
+            'Em7'    => [qw( Dm7 A7 Ebm7 Edim7 )],
             'Edim7'  => [qw( Dm7 )],
-            'F7'   => [qw( C7 Bb7 Eb7 Gbm7 Gbdim7 Em7 )],
-            'FM7'  => [qw( Em7 Fm7 Gbm7 )],
-            'Fm7'  => [qw( Em7 Bb7 )],
-            'G7'   => [qw( G7 F7 Abm7 C7 Em7 )],
-            'Gb7'  => [qw( Bm7 BM7 FM7 )],
-            'GbM7' => [qw( FM7 )],
-            'Gbm7' => [qw( B7 )],
+            'F7'     => [qw( C7 Bb7 Eb7 Gbm7 Gbdim7 Em7 )],
+            'FM7'    => [qw( Em7 Fm7 Gbm7 )],
+            'Fm7'    => [qw( Em7 Bb7 )],
+            'G7'     => [qw( G7 F7 Abm7 C7 Em7 )],
+            'Gb7'    => [qw( Bm7 BM7 FM7 )],
+            'GbM7'   => [qw( FM7 )],
+            'Gbm7'   => [qw( B7 )],
             'Gbdim7' => [qw( Em7 )],
-            'Gm7'  => [qw( C7 Gb7 )],
+            'Gm7'    => [qw( C7 Gb7 )],
         );
     };
 
     my @specs;
 
     for my $n (0 .. $d->bars * 2 - 1) {
-        next if $n % 2; # odd bars only for now...
-
+warn __PACKAGE__,' L',__LINE__,' ',,"N: $n\n";
         my @pool = $chords[$n]->@*;
+warn __PACKAGE__,' L',__LINE__,' ',ddc(\@pool, {max_width=>128});
         my $chord = $pool[ int rand @pool ];
+warn __PACKAGE__,' L',__LINE__,' ',,"C: $chord\n";
         my $new_chord = transposition($transpose, $chord, $md);
         my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
