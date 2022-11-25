@@ -140,7 +140,7 @@ sub chords {
             @pool = $net{$chord}->@*;
             $chord = $pool[ int rand @pool ];
             my $new_chord = transposition($transpose, $chord, $md);
-            @notes = $cn->chord_with_octave($chord, $opts{octave});
+            @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
             $verbose .= "-$new_chord";
 
