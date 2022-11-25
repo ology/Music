@@ -58,7 +58,7 @@ sub chords {
     my $md = Music::MelodicDevice::Transposition->new;
     my $cn = Music::Chord::Note->new;
 
-    # all chords in F initially
+    # all chords in C initially
     my $transpose = $cn->scale($opts{tonic});
 
     my @chords = do {
@@ -171,7 +171,6 @@ sub transposition {
         my $transposed = $md->transpose($transpose, [$note]);
         (my $new_note = $transposed->[0]) =~ s/^([A-G][#b]?).*$/$1/;
         my $new_chord = $new_note . $flav;
-#warn __PACKAGE__,' L',__LINE__,' ',,"$chord -> $new_chord\n";
         return $new_chord;
     }
     return $chord;
