@@ -111,7 +111,7 @@ sub chords {
 
     my $cadence = $mc->cadence(
       type      => 'imperfect',
-      inversion => { 1 => 1 },
+#      inversion => { 1 => 1 },
     );
     $d->note($d->whole, $cadence->[0]->@*);
 }
