@@ -68,11 +68,8 @@ sub chords {
     my @specs;
 
     for my $n (0 .. $d->bars * 2 - 1) {
-warn __PACKAGE__,' L',__LINE__,' ',,"N: $n\n";
-        my @pool = $bars[$n]->@*;
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\@pool, {max_width=>128});
+        my @pool = $bars[ $n % @bars ]->@*;
         my $chord = $pool[ int rand @pool ];
-warn __PACKAGE__,' L',__LINE__,' ',,"C: $chord\n";
         my $new_chord = transposition($transpose, $chord, $md);
         my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
