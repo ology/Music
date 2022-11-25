@@ -4,7 +4,7 @@ use warnings;
 
 # Blues-jazz (Jazz-blues?) chord progression practice tool
 # Taken from the chart devised by Dan Haerle
-# Freely available in the Jamey Aebersold "Jazz Handbook"
+# Available in the Jamey Aebersold "Jazz Handbook"
 
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
