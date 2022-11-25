@@ -62,8 +62,7 @@ sub chords {
     my $transpose = $cn->scale($opts{tonic});
 
     my @bars = bars();
-
-    my %net = net();
+    my %net  = net();
 
     my @specs;
 
