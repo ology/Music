@@ -72,13 +72,13 @@ sub drums {
 sub chords {
     set_chan_patch($d->score, 0, $opts{patch});
 
+    my $md = Music::MelodicDevice::Transposition->new;
+    my $cn = Music::Chord::Note->new;
     my $mc = Music::Cadence->new(
         key    => $opts{tonic},
         octave => $opts{octave},
         format => 'midi',
     );
-    my $md = Music::MelodicDevice::Transposition->new;
-    my $cn = Music::Chord::Note->new;
 
     # all chords in C initially
     my $transpose = $cn->scale($opts{tonic});
