@@ -20,7 +20,7 @@ my %opts = (
     patch   => 5,   # 0=piano, etc general midi
     bpm     => 90,  # beats per minute
     bars    => 12,  # number of 4/4 bars
-    repeat  => 2,   # number of times to repeat
+    repeat  => 1,   # number of times to repeat
     verbose => 0,
 );
 GetOptions( \%opts, 
