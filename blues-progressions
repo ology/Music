@@ -21,6 +21,7 @@ my %opts = (
     bpm     => 90,  # beats per minute
     bars    => 12,  # number of 4/4 bars
     repeat  => 1,   # number of times to repeat
+    percent => 20,  # approximate half-note percentage
     verbose => 0,
 );
 GetOptions( \%opts, 
@@ -66,7 +67,7 @@ sub chords {
 
     my @specs;
 
-    for my $n (0 .. $d->bars * 2 - 1) {
+    for my $n (0 .. $d->bars - 1) {
         my @pool = $bars[ $n % @bars ]->@*;
         my $chord = $pool[ int rand @pool ];
         my $new_chord = transposition($transpose, $chord, $md);
@@ -76,8 +77,7 @@ sub chords {
 
         my @spec;
 
-        my $i = int rand $opts{bars};
-        if ($i > $opts{bars} / 2) {
+        if (rand() < $opts{percent} / 100) {
             push @spec, [ $d->half, @notes ];
 
             @pool = $net{$chord}->@*;
@@ -93,7 +93,7 @@ sub chords {
             push @spec, [ $d->whole, @notes ];
         }
 
-        printf '%*d. %13s: %s', length($opts{bars}), $n / 2 + 1, $names, ddc(\@spec) if $opts{verbose};
+        printf '%*d. %13s: %s', length($opts{bars}), $n + 1, $names, ddc(\@spec) if $opts{verbose};
         push @specs, @spec;
     }
 
