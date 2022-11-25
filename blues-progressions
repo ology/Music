@@ -61,7 +61,7 @@ sub chords {
     # all chords in C initially
     my $transpose = $cn->scale($opts{tonic});
 
-    my @chords = bars();
+    my @bars = bars();
 
     my %net = net();
 
@@ -69,7 +69,7 @@ sub chords {
 
     for my $n (0 .. $d->bars * 2 - 1) {
 warn __PACKAGE__,' L',__LINE__,' ',,"N: $n\n";
-        my @pool = $chords[$n]->@*;
+        my @pool = $bars[$n]->@*;
 warn __PACKAGE__,' L',__LINE__,' ',ddc(\@pool, {max_width=>128});
         my $chord = $pool[ int rand @pool ];
 warn __PACKAGE__,' L',__LINE__,' ',,"C: $chord\n";
@@ -105,7 +105,7 @@ warn __PACKAGE__,' L',__LINE__,' ',,"C: $chord\n";
         $d->note(midi_format(@$_)) for @specs;
     }
 
-    my @notes = $cn->chord_with_octave($chords[0][0], $opts{octave});
+    my @notes = $cn->chord_with_octave($bars[0][0], $opts{octave});
     (my $lower = $notes[0]) =~ s/\d/$opts{octave} - 1/e;
     $d->note($d->whole, midi_format($lower, @notes));
 }
