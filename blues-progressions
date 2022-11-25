@@ -85,7 +85,7 @@ sub chords {
 
         my @spec;
 
-        if ($opts{percent} >= int rand 101) {
+        if ($opts{percent} >= int(rand 100) + 1) {
             push @spec, [ $d->half, @notes ];
 
             @pool = $net{$chord}->@*;
