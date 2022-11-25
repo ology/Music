@@ -45,17 +45,24 @@ my $d = MIDI::Drummer::Tiny->new(
     reverb => 15,
 );
 
-my @phrases;
-push @phrases, \&drums if $opts{drums};
-push @phrases, \&chords;
-
-$d->sync(@phrases);
+$d->sync(
+    \&drums,
+    \&chords,
+);
 
 $d->write;
 
 sub drums {
-    $d->metronome44swing($d->bars * $opts{repeat});
-    $d->note($d->whole, $d->kick, $d->ride1);
+    if ($opts{drums}) {
+        $d->metronome44swing($d->bars * $opts{repeat});
+        $d->note($d->whole, $d->kick, $d->ride1);
+    }
+    else {
+        $d->count_in({
+            bars  => $d->bars * $opts{repeat},
+            patch => $d->pedal_hh,
+        });
+    }
 }
 
 sub chords {
