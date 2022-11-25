@@ -6,9 +6,10 @@ use warnings;
 # Taken from the chart devised by Dan Haerle
 # Available in the Jamey Aebersold "Jazz Handbook"
 
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-MelodicDevice-Transposition); # local author libs
+
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-MelodicDevice-Transposition); # local author libs
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch midi_format);
 use Music::Chord::Note ();
