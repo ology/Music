@@ -31,6 +31,7 @@ GetOptions( \%opts,
     'bpm=i',
     'bars=i',
     'repeat=i',
+    'percent=i',
     'verbose',
 );
 
@@ -77,7 +78,7 @@ sub chords {
 
         my @spec;
 
-        if (rand() < $opts{percent} / 100) {
+        if ($opts{percent} >= int rand 101) {
             push @spec, [ $d->half, @notes ];
 
             @pool = $net{$chord}->@*;
