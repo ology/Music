@@ -36,9 +36,9 @@ GetOptions( \%opts,
     'bars=i',
     'repeat=i',
     'percent=i',
-    'verbose',
     'drums',
     'metrono=s',
+    'verbose',
 );
 
 my $d = MIDI::Drummer::Tiny->new(
