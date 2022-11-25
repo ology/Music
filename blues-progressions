@@ -101,7 +101,8 @@ sub chords {
         $d->note(midi_format(@$_)) for @specs;
     }
 
-    my @notes = $cn->chord_with_octave($bars[0][0], $opts{octave});
+    my $new_chord = transposition($transpose, $bars[0][0], $md);
+    my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
     (my $lower = $notes[0]) =~ s/\d/$opts{octave} - 1/e;
     $d->note($d->whole, midi_format($lower, @notes));
 }
