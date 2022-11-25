@@ -129,6 +129,8 @@ sub chords {
         my $new_chord = transposition($transpose, $chord, $md);
         my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
+        my $verbose = $new_chord;
+
         my @spec;
 
         my $i = int rand $opts{bars};
@@ -140,13 +142,15 @@ sub chords {
             my $new_chord = transposition($transpose, $chord, $md);
             @notes = $cn->chord_with_octave($chord, $opts{octave});
 
+            $verbose .= "-$new_chord";
+
             push @spec, [ $d->half, @notes ];
         }
         else {
             push @spec, [ $d->whole, @notes ];
         }
 
-        printf '%*d. %s', length($opts{bars}), $n / 2 + 1, ddc(\@spec) if $opts{verbose};
+        printf '%*d. %13s: %s', length($opts{bars}), $n / 2 + 1, $verbose, ddc(\@spec) if $opts{verbose};
         push @specs, @spec;
     }
 
