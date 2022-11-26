@@ -120,7 +120,9 @@ sub chords {
             push @spec, [ $d->whole, @notes ];
         }
 
-        printf '%*d. %13s: %s', length($opts{bars}), $n + 1, $names, ddc(\@spec) if $opts{verbose};
+        printf '%*d. %13s: %s', length($opts{bars}), $n + 1, $names, ddc(\@spec)
+            if $opts{verbose};
+
         push @specs, @spec;
     }
 
