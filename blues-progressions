@@ -156,14 +156,14 @@ sub transposition {
 }
 
 sub accidental {
-    my ($x) = @_; # note or chord
-    if ($x =~ /^([A-G]#)(.*)?$/) {
+    my ($string) = @_; # note or chord
+    if ($string =~ /^([A-G]#)(.*)?$/) {
         my $note = $1;
         my $flav = $2;
         my $mn = Music::Note->new($note, 'isobase');
         $mn->en_eq('b');
-        $x = $mn->format('isobase');
-        $x .= $flav if $flav;
+        $string = $mn->format('isobase');
+        $string .= $flav if $flav;
     }
     return $x;
 }
