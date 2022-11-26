@@ -165,7 +165,7 @@ sub accidental {
         $string = $mn->format('isobase');
         $string .= $flav if $flav;
     }
-    return $x;
+    return $string;
 }
 
 sub bars {
