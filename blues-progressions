@@ -158,8 +158,7 @@ sub accidental {
         my $flav = $2;
         my $mn = Music::Note->new($note, 'isobase');
         $mn->en_eq('b');
-        $note = $mn->format('isobase');
-        $equiv = $note;
+        $equiv = $mn->format('isobase');
         $equiv .= $flav if $flav;
     }
     return $equiv;
