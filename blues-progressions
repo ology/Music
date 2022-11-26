@@ -29,6 +29,7 @@ my %opts = (
     percent => 25,      # maximum half-note percentage
     metrono => 'pedal', # hihat: pedal, closed, open
     drums   => 0,       # to drum, or not to drum?
+    simple  => 0,       # don't randomly choose a transtion
     verbose => 0,
 );
 GetOptions( \%opts, 
@@ -41,6 +42,7 @@ GetOptions( \%opts,
     'percent=i',
     'metrono=s',
     'drums',
+    'simple',
     'verbose',
 );
 
@@ -93,7 +95,7 @@ sub chords {
 
     for my $n (0 .. $d->bars - 1) {
         my @pool = $bars[ $n % @bars ]->@*;
-        my $chord = $pool[ int rand @pool ];
+        my $chord = $opts{simple} ? $pool[0] : $pool[ int rand @pool ];
         my $new_chord = transposition($transpose, $chord, $md);
         my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
@@ -101,7 +103,7 @@ sub chords {
 
         my @spec;
 
-        if ($opts{percent} >= int(rand 100) + 1) {
+        if (!$opts{simple} && $opts{percent} >= int(rand 100) + 1) {
             $_ = accidental($_) for @notes;
             push @spec, [ $d->half, @notes ];
 
