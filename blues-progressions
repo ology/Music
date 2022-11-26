@@ -99,12 +99,13 @@ sub chords {
         my $new_chord = transposition($transpose, $chord, $md);
         my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
+        $_ = accidental($_) for @notes;
+
         my $names = $new_chord;
 
         my @spec;
 
         if (!$opts{simple} && $opts{percent} >= int(rand 100) + 1) {
-            $_ = accidental($_) for @notes;
             push @spec, [ $d->half, @notes ];
 
             @pool = $net{$chord}->@*;
@@ -112,13 +113,13 @@ sub chords {
             my $new_chord = transposition($transpose, $chord, $md);
             @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
+            $_ = accidental($_) for @notes;
+
             $names .= "-$new_chord";
 
-            $_ = accidental($_) for @notes;
             push @spec, [ $d->half, @notes ];
         }
         else {
-            $_ = accidental($_) for @notes;
             push @spec, [ $d->whole, @notes ];
         }
 
