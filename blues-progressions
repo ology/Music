@@ -29,7 +29,7 @@ my %opts = (
     percent => 25,      # maximum half-note percentage
     metrono => 'pedal', # hihat: pedal, closed, open
     drums   => 0,       # to drum, or not to drum?
-    simple  => 0,       # don't randomly choose a transtion
+    simple  => 0,       # don't randomly choose a transition
     verbose => 0,
 );
 GetOptions( \%opts, 
