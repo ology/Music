@@ -17,6 +17,7 @@ use MIDI::Util qw(set_chan_patch midi_format);
 use Music::Cadence ();
 use Music::Chord::Note ();
 use Music::MelodicDevice::Transposition ();
+use Music::Note ();
 
 my %opts = (
     tonic   => 'C',     # note to transpose things to
@@ -101,6 +102,7 @@ sub chords {
         my @spec;
 
         if ($opts{percent} >= int(rand 100) + 1) {
+            $_ = accidental($_) for @notes;
             push @spec, [ $d->half, @notes ];
 
             @pool = $net{$chord}->@*;
@@ -110,9 +112,11 @@ sub chords {
 
             $names .= "-$new_chord";
 
+            $_ = accidental($_) for @notes;
             push @spec, [ $d->half, @notes ];
         }
         else {
+            $_ = accidental($_) for @notes;
             push @spec, [ $d->whole, @notes ];
         }
 
@@ -138,10 +142,27 @@ sub transposition {
         my $flav = $2;
         my $transposed = $md->transpose($transpose, [$note]);
         (my $new_note = $transposed->[0]) =~ s/^([A-G][#b]?).*$/$1/;
-        my $new_chord = $new_note . $flav;
+        $new_note = accidental($new_note);
+        my $new_chord = $new_note;
+        $new_chord .= $flav if $flav;
         return $new_chord;
     }
     return $chord;
+}
+
+sub accidental {
+    my ($x) = @_; # note or chord
+    my $equiv = $x;
+    if ($x =~ /^([A-G]#)(.*)?$/) {
+        my $note = $1;
+        my $flav = $2;
+        my $mn = Music::Note->new($note, 'isobase');
+        $mn->en_eq('b');
+        $note = $mn->format('isobase');
+        $equiv = $note;
+        $equiv .= $flav if $flav;
+    }
+    return $equiv;
 }
 
 sub bars {
