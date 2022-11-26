@@ -152,16 +152,15 @@ sub transposition {
 
 sub accidental {
     my ($x) = @_; # note or chord
-    my $equiv = $x;
     if ($x =~ /^([A-G]#)(.*)?$/) {
         my $note = $1;
         my $flav = $2;
         my $mn = Music::Note->new($note, 'isobase');
         $mn->en_eq('b');
-        $equiv = $mn->format('isobase');
-        $equiv .= $flav if $flav;
+        $x = $mn->format('isobase');
+        $x .= $flav if $flav;
     }
-    return $equiv;
+    return $x;
 }
 
 sub bars {
