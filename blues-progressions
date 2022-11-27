@@ -29,7 +29,7 @@ my %opts = (            # defaults:
     percent => 25,      # maximum half-note percentage
     hihat   => 'pedal', # pedal, closed, open
     drums   => 0,       # to drum, or not to drum?
-    bass    => 0,       # to have a bass or not...
+    bass    => 0,       # to have a parallel bass or not
     simple  => 0,       # don't randomly choose a transition
     verbose => 0,
 );
