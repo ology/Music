@@ -32,18 +32,18 @@ my %opts = (
     simple  => 0,       # don't randomly choose a transition
     verbose => 0,
 );
-GetOptions( \%opts, # abbreviations:
-    'tonic=s',      # --t
-    'octave=i',     # --o
-    'patch=i',      # --pa
-    'bpm=i',        # --bp
-    'bars=i',       # --ba
-    'repeat=i',     # --r
-    'percent=i',    # --pe
-    'hihat=s',      # --h
-    'drums',        # --d
-    'simple',       # --s
-    'verbose',      # --v
+GetOptions( \%opts,     # abbreviations:
+    'tonic=s',          # --t
+    'octave=i',         # --o
+    'patch=i',          # --pa
+    'bpm=i',            # --bp
+    'bars=i',           # --ba
+    'repeat=i',         # --r
+    'percent=i',        # --pe
+    'hihat=s',          # --h
+    'drums',            # --d
+    'simple',           # --s
+    'verbose',          # --v
 );
 
 my $d = MIDI::Drummer::Tiny->new(
