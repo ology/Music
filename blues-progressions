@@ -133,10 +133,7 @@ sub chords {
         $d->note(midi_format(@$_)) for @specs;
     }
 
-    my $cadence = $mc->cadence(
-      type      => 'imperfect',
-#      inversion => { 1 => 1 },
-    );
+    my $cadence = $mc->cadence(type => 'imperfect');
     $d->note($d->whole, $cadence->[0]->@*);
 }
 
