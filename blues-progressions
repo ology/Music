@@ -80,9 +80,9 @@ sub drums {
 }
 
 sub bass {
-    set_chan_patch($d->score, 1, 35);
-
     if ($opts{bass}) {
+        set_chan_patch($d->score, 1, 35);
+
         for (1 .. $opts{repeat}) {
             for my $n (@bass_notes) {
                 $n =~ s/^([A-G][#b]?)\d$/$1 . 3/e;
