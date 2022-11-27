@@ -85,7 +85,7 @@ sub bass {
 
         for (1 .. $opts{repeat}) {
             for my $n (@bass_notes) {
-                $n =~ s/^([A-G][#b]?)\d$/$1 . 3/e;
+                $n =~ s/^([A-G][#b]?)\d$/$1 . 3/e; # change to octave 3
                 $d->note($d->whole, midi_format($n));
             }
         }
@@ -106,10 +106,11 @@ sub chords {
     # all chords in C initially
     my $transpose = $cn->scale($opts{tonic});
 
+    # get the chords - bars and network
     my @bars = bars();
     my %net  = net();
 
-    my @specs;
+    my @specs; # bucket for the actual MIDI notes to play
 
     for my $n (0 .. $d->bars - 1) {
         my @pool = $bars[ $n % @bars ]->@*;
@@ -117,13 +118,13 @@ sub chords {
         my $new_chord = transposition($transpose, $chord, $md);
         my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
-        $_ = accidental($_) for @notes;
+        $_ = accidental($_) for @notes; # convert to flat
 
-        push @bass_notes, $notes[0];
+        push @bass_notes, $notes[0]; # accumulate the bass notes to play
 
-        my $names = $new_chord;
+        my $names = $new_chord; # chord name verbose mode
 
-        my @spec;
+        my @spec; # for accumulating within the loop
 
         if (!$opts{simple} && $opts{percent} >= int(rand 100) + 1) {
             push @spec, [ $d->half, @notes ];
@@ -133,9 +134,9 @@ sub chords {
             my $new_chord = transposition($transpose, $chord, $md);
             @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
-            $_ = accidental($_) for @notes;
+            $_ = accidental($_) for @notes; # convert to flat
 
-            $names .= "-$new_chord";
+            $names .= "-$new_chord"; # chord name verbose mode
 
             push @spec, [ $d->half, @notes ];
         }
@@ -146,13 +147,15 @@ sub chords {
         printf '%*d. %13s: %s', length($opts{bars}), $n + 1, $names, ddc(\@spec)
             if $opts{verbose};
 
-        push @specs, @spec;
+        push @specs, @spec; # accumulate the note specifications
     }
 
+    # actually add the MIDI notes to the score
     for (1 .. $opts{repeat}) {
         $d->note(midi_format(@$_)) for @specs;
     }
 
+    # finally end with a cadence chord
     my $cadence = $mc->cadence(type => 'imperfect');
     $d->note($d->whole, $cadence->[0]->@*);
 }
@@ -164,7 +167,7 @@ sub transposition {
         my $flav = $2;
         my $transposed = $md->transpose($transpose, [$note]);
         (my $new_note = $transposed->[0]) =~ s/^([A-G][#b]?).*$/$1/;
-        $new_note = accidental($new_note);
+        $new_note = accidental($new_note); # convert to flat
         my $new_chord = $new_note;
         $new_chord .= $flav if $flav;
         return $new_chord;
@@ -178,7 +181,7 @@ sub accidental {
         my $note = $1;
         my $flav = $2;
         my $mn = Music::Note->new($note, 'isobase');
-        $mn->en_eq('b');
+        $mn->en_eq('b'); # convert to flat
         $string = $mn->format('isobase');
         $string .= $flav if $flav;
     }
