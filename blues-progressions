@@ -192,17 +192,17 @@ sub bars {
     no warnings qw(qw);
     return (
         [qw( C7 CM7 C#m7 )],
-        [qw( C7 F7 Bm7 FM7 C#m7 )],
-        [qw( C7 Am7 Em7 BM7 )],
-        [qw( C7 Gm7 Dbm7 AbM7 )],
-        [qw( F7 FM7 )],
-        [qw( F7 Bb7 Gbm7 Gbdim7 Fm7 )],
-        [qw( C7 Em7 EbM7 EM7 )],
-        [qw( C7 A7 Bb7 Ebm7 Em7 )],
-        [qw( G7 D7 Dm7 Ab7 DbM7 DM7 )],
-        [qw( G7 F7 Abm7 Db7 Dm7 DbM7 )],
-        [qw( C7 Em7 FM7 )],
-        [qw( C7 G7 Dm7 Ab7 Abm7 DM7 )],
+        [qw( C7 F7  Bm7  FM7    C#m7      )],
+        [qw( C7 Am7 Em7  BM7              )],
+        [qw( C7 Gm7 Dbm7 AbM7             )],
+        [qw( F7 FM7                       )],
+        [qw( F7 Bb7 Gbm7 Gbdim7 Fm7       )],
+        [qw( C7 Em7 EbM7 EM7              )],
+        [qw( C7 A7  Bb7  Ebm7   Em7       )],
+        [qw( G7 D7  Dm7  Ab7    DbM7 DM7  )],
+        [qw( G7 F7  Abm7 Db7    Dm7  DbM7 )],
+        [qw( C7 Em7 FM7                   )],
+        [qw( C7 G7  Dm7  Ab7    Abm7 DM7  )],
     );
 }
 
