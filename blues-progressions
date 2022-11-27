@@ -156,8 +156,8 @@ sub transposition {
 }
 
 sub accidental {
-    my ($string) = @_; # note or chord
-    if ($string =~ /^([A-G]#)(.*)?$/) {
+    my ($string) = @_; # note or chord name
+    if ($string =~ /^([A-G]#)(.*)?$/) { # is the note sharp?
         my $note = $1;
         my $flav = $2;
         my $mn = Music::Note->new($note, 'isobase');
