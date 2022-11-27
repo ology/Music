@@ -168,9 +168,8 @@ sub transposition {
         my $transposed = $md->transpose($transpose, [$note]);
         (my $new_note = $transposed->[0]) =~ s/^([A-G][#b]?).*$/$1/;
         $new_note = accidental($new_note); # convert to flat
-        my $new_chord = $new_note;
-        $new_chord .= $flav if $flav;
-        return $new_chord;
+        $chord = $new_note;
+        $chord .= $flav if $flav;
     }
     return $chord;
 }
