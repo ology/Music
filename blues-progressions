@@ -29,6 +29,7 @@ my %opts = (            # defaults:
     percent => 25,      # maximum half-note percentage
     hihat   => 'pedal', # pedal, closed, open
     drums   => 0,       # to drum, or not to drum?
+    bass    => 0,       # to have a bass or not...
     simple  => 0,       # don't randomly choose a transition
     verbose => 0,
 );
@@ -37,11 +38,12 @@ GetOptions( \%opts,     # abbreviations:
     'octave=i',         # --o
     'patch=i',          # --pa
     'bpm=i',            # --bp
-    'bars=i',           # --ba
+    'bars=i',           # --bar
     'repeat=i',         # --r
     'percent=i',        # --pe
     'hihat=s',          # --h
     'drums',            # --d
+    'bass',             # --bas
     'simple',           # --s
     'verbose',          # --v
 );
@@ -53,9 +55,12 @@ my $d = MIDI::Drummer::Tiny->new(
     reverb => 15,
 );
 
+my @bass_notes; # global accumulator
+
 $d->sync(
     \&drums,
     \&chords,
+    \&bass,
 );
 
 $d->write;
@@ -71,6 +76,19 @@ sub drums {
             bars  => $d->bars * $opts{repeat},
             patch => $d->$metronome(),
         });
+    }
+}
+
+sub bass {
+    set_chan_patch($d->score, 1, 35);
+
+    if ($opts{bass}) {
+        for (1 .. $opts{repeat}) {
+            for my $n (@bass_notes) {
+                $n =~ s/^([A-G][#b]?)\d$/$1 . 3/e;
+                $d->note($d->whole, midi_format($n));
+            }
+        }
     }
 }
 
@@ -100,6 +118,8 @@ sub chords {
         my @notes = $cn->chord_with_octave($new_chord, $opts{octave});
 
         $_ = accidental($_) for @notes;
+
+        push @bass_notes, $notes[0];
 
         my $names = $new_chord;
 
