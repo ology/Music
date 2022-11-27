@@ -19,7 +19,7 @@ use Music::Chord::Note ();
 use Music::MelodicDevice::Transposition ();
 use Music::Note ();
 
-my %opts = (
+my %opts = (            # defaults:
     tonic   => 'C',     # note to transpose things to
     octave  => 4,       # octave of chord notes
     patch   => 5,       # 0=piano, etc general midi
