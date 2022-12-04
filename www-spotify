@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 # Lookup stuff on spotify
+# For my case, this is an album image
 # Write-up: https://ology.github.io/2022/10/16/using-www-spotify/
 
 # settings.yml example:
