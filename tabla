@@ -17,7 +17,7 @@ my $bars   = shift || 8;
 my $bpm    = shift || 100;
 my $motifs = shift || 2;
 
-my @notes = (60 .. 88);
+my @notes = (60 .. 87);
 
 # Find a tabla player...
 my $d = MIDI::Drummer::Tiny->new(
