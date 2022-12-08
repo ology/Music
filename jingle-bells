@@ -46,10 +46,10 @@ for my $note (@notes) {
     my @note = split /\./, $note;
     my $spec;
 
-    if ($n == 1) {
-        $spec = $ornament->grace_note(@note, -1);
-    }
-    elsif ($n == 2) {
+#    if ($n == 1) {
+#        $spec = $ornament->grace_note(@note, -1);
+#    }
+    if ($n == 2) {
         $spec = $ornament->mordent(@note, 1);
     }
     elsif ($n == 6) {
