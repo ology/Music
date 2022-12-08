@@ -23,6 +23,7 @@ my $d = MIDI::Drummer::Tiny->new(
     file    => "$0.mid",
     bpm     => $bpm,
     channel => 0,
+    volume  => 127,
 );
 
 $d->sync(
