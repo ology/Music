@@ -60,7 +60,6 @@ for my $note (@notes) {
     }
 
     if ($spec) {
-        $spec = [ map { [ @$_ ] } @$spec ];
         $score->n(@$_) for @$spec;
     }
     else {
