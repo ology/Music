@@ -45,10 +45,12 @@ sub tabla {
 
     # For each measure...
     for my $n (1 .. $max) {
+        # Choose a motif
         my $motif = $n % 2 ? $motifs[0] : $motifs[1];
 
         # Play the fill motif
         for my $i (0 .. $#$motif) {
+            # Choose a random patch
             my $patch = $patches[ int rand @patches ];
             # Add the motif-patch note to the score
             $d->note($motif->[$i], $patch);
