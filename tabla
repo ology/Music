@@ -13,8 +13,8 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-
 use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
 
-my $max = shift || 8;
-my $bpm = shift || 100;
+my $bars = shift || 8;
+my $bpm  = shift || 100;
 
 my @notes = (60 .. 88);
 
@@ -45,7 +45,7 @@ sub tabla {
     my @motifs = map { $mdp->motif } 1 .. 2;
 
     # For each measure...
-    for my $n (1 .. $max) {
+    for my $n (1 .. $bars) {
         # Choose a motif
         my $motif = $n % 2 ? $motifs[0] : $motifs[1];
 
