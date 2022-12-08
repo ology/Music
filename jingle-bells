@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-use Data::Dumper::Compact 'ddc';
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation);
 use MIDI::Util qw(setup_score);
 
