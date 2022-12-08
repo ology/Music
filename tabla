@@ -40,11 +40,12 @@ sub tabla {
         weights => [   5, 10, 5, 5  ],
         groups  => [   1,  2, 3, 4  ],
     );
+    # Generate rhythmic phrases
+    my @motifs = map { $mdp->motif } 1 .. 2;
 
     # For each measure...
     for my $n (1 .. $max) {
-        # Generate a new rhythmic phrase
-        my $motif = $mdp->motif;
+        my $motif = $n % 2 ? $motifs[0] : $motifs[1];
 
         # Play the fill motif
         for my $i (0 .. $#$motif) {
