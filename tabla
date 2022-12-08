@@ -42,6 +42,7 @@ sub tabla {
     );
     # Generate rhythmic phrases
     my @motifs = map { $mdp->motif } 1 .. 2;
+    my @voices = map { $patches[ int rand @patches ] } 1 .. 2;
 
     # For each measure...
     for my $n (1 .. $max) {
@@ -51,7 +52,7 @@ sub tabla {
         for my $i (0 .. $#$motif) {
             my $patch = $patches[ int rand @patches ];
             # Add the motif-patch note to the score
-            $d->note($motif->[$i], $patch);
+            $d->note($motif->[$i], $voices[$i]);
         }
     }
 }
