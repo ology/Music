@@ -1,0 +1,88 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# $ cat ~/timidity.cfg
+# dir /home/gene/Music
+# soundfont Tabla.sf2
+#
+# $ rm -f tabla.mid ; perl tabla ; timidity -c ~/timidity.cfg tabla.mid
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition); # local author libraries
+use MIDI::Drummer::Tiny;
+use Music::Duration::Partition;
+
+my $max = shift || 8;
+my $bpm = shift || 100;
+
+my @patches = (60 .. 88);
+
+# Find a tabla player...
+my $d = MIDI::Drummer::Tiny->new(
+    file    => "$0.mid",
+    bpm     => $bpm,
+    channel => 0,
+);
+
+$d->sync(
+    \&tabla,
+    \&tabla,
+);
+
+$d->write;
+
+sub tabla {
+    # Instantiate a new phrase maker
+    my $mdp = Music::Duration::Partition->new(
+        size    => 4,
+        pool    => [qw(qn en ten sn)],
+        weights => [   5, 10, 5, 5  ],
+        groups  => [   1,  2, 3, 4  ],
+    );
+
+    # For each measure...
+    for my $n (1 .. $max) {
+        # Generate a new rhythmic phrase
+        my $motif = $mdp->motif;
+
+        # Play the fill motif
+        for my $i (0 .. $#$motif) {
+            my $patch = $patches[ int rand @patches ];
+            # Add the motif-patch note to the score
+            $d->note($motif->[$i], $patch);
+        }
+    }
+}
+
+__END__
+ ...
+ 1 60 ringing mid
+ 2 61 muted low
+ 3 62 slap
+ 4 63 ringing mid slap
+ 5 64 low knock
+ 6 65 muted ringing low
+ 7 66 lower
+ 8 67 low-up
+ 9 68 muted slap
+10 69 ringing low
+11 70 flam slap
+12 71 loud tap
+13 72 lowest mute
+14 73 ringing low
+15 74 muted low
+16 75 loud tap double
+17 76 high-low
+18 77 high slap
+19 78 tap
+20 79 high knock
+21 80 short low-up
+22 81 mid tap
+23 82 muted tap
+24 83 mid
+25 84 muted
+26 85 loud mid double
+27 86 slightly more muted
+28 87 low mid
+29 88 ringing mid
+...
