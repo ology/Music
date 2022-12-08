@@ -16,7 +16,7 @@ use Music::Duration::Partition;
 my $max = shift || 8;
 my $bpm = shift || 100;
 
-my @patches = (60 .. 88);
+my @notes = (60 .. 88);
 
 # Find a tabla player...
 my $d = MIDI::Drummer::Tiny->new(
@@ -51,10 +51,10 @@ sub tabla {
 
         # Play the fill motif
         for my $i (0 .. $#$motif) {
-            # Choose a random patch
-            my $patch = $patches[ int rand @patches ];
+            # Choose a random note
+            my $note = $notes[ int rand @notes ];
             # Add the motif-patch note to the score
-            $d->note($motif->[$i], $patch);
+            $d->note($motif->[$i], $note);
         }
     }
 }
