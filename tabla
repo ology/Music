@@ -54,7 +54,7 @@ sub tabla {
         for my $i (0 .. $#$motif) {
             # Choose a random note
             my $note = $notes[ int rand @notes ];
-            # Add the motif-patch note to the score
+            # Add the motif-note to the score
             $d->note($motif->[$i], $note);
         }
     }
