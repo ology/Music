@@ -23,6 +23,8 @@ For example, Jingle Bells was just too ordinary sounding to his ears. It needed 
 
 Here is what it sounded like at first:
 
+=for html <audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3">
+
 =cut
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation);
@@ -108,6 +110,10 @@ for my $note (@notes) {
 }
 
 $melody->write_score("$0.mid");
+
+=head1 RESULT
+
+=for html <audio controls><source src="jingle-bells-fancy.mp3" type="audio/mp3">
 
 =head1 AUTHOR
 
