@@ -92,10 +92,9 @@ my %dazzle = (
 my $n = 0;
 for my $note (@notes) {
     my @note = split /\./, $note;
-    my $fancy;
 
     if (exists $dazzle{$n}) {
-        $fancy = $dazzle{$n}->(@note);
+        my $fancy = $dazzle{$n}->(@note);
         $melody->n(@$_) for @$fancy;
     }
     else {
