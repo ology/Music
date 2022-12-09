@@ -71,7 +71,7 @@ Santa asked a couple of his more creative elves to come up with a way to brighte
 
 The cowbell was proposed, but that got shot down quick. Eventually the most musically experienced elf suggested adding "ornamentation" to certain notes. This she said, included commonly heard things like "trills."
 
-(And it is rumoured that she toured as a roadie with Hendrix, in the 60s.)
+(And it is rumoured that she toured as a roadie, in the 60s with Hendrix, The Byrds, Zeppelin, etc.)
 
 After some thinking about B<how> to go about adding ornaments to Jingle Bells, an old Blues-afficiando elf pointed to CPAN and the L<Music::MelodicDevice::Ornamentation> module, that seemed to fit the problem perfectly.
 
