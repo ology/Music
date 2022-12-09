@@ -79,9 +79,9 @@ use Music::MelodicDevice::Ornamentation;
 my $ornament = Music::MelodicDevice::Ornamentation->new(
     scale_note => 'C',
     scale_name => 'major',
-#    verbose => 1,
 );
 
+# Dazzle them with musical oranmentation
 my %dazzle = (
     #1 => sub { $ornament->grace_note(@_, -1) },
      2 => sub { $ornament->mordent(@_, 1) },
@@ -96,9 +96,6 @@ for my $note (@notes) {
 
     if (exists $dazzle{$n}) {
         $fancy = $dazzle{$n}->(@note);
-    }
-
-    if ($fancy) {
         $melody->n(@$_) for @$fancy;
     }
     else {
