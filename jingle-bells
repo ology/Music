@@ -103,7 +103,7 @@ for my $note (@notes) {
         $melody->n(@note);
     }
 
-    # increment the counter, or start over
+    # increment the counter, or start over if we've reached the max
     $counter = $counter == MAX ? 0 : $counter + 1;
 }
 
