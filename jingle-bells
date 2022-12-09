@@ -73,7 +73,7 @@ The cowbell was proposed, but that got shot down quick. Eventually the most musi
 
 (And it is rumoured that she toured as a roadie, in the 60s with Hendrix, The Byrds, Zeppelin, etc.)
 
-After some thinking about B<how> to go about adding ornaments to Jingle Bells, an old Blues-afficiando elf pointed to CPAN and the L<Music::MelodicDevice::Ornamentation> module, that seemed to fit the bill perfectly.
+After some thinking about B<how> to go about adding ornaments to Jingle Bells, an old blues guitarist elf pointed to CPAN and the L<Music::MelodicDevice::Ornamentation> module, that seemed to fit the bill perfectly.
 
 Then after reading the examples, the team modified the source and added that module. Also they listened to each of the ornaments and decided to trigger them based on a simple loop counter.  (More sophisticated triggers based on concepts of music theory were considered, but Christmastime was fast approaching!)
 
