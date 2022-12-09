@@ -28,7 +28,7 @@ Here is what Jingle Bells sounded like at first:
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation);
 use MIDI::Util qw(setup_score);
 
-my $score = setup_score(bpm => 140);
+my $melody = setup_score(bpm => 140);
 
 my @notes = qw(
     qn.E4 qn.E4 hn.E4
@@ -54,7 +54,7 @@ my @notes = qw(
 
 for my $note (@notes) {
     my @note = split /\./, $note;
-    $score->n(@note);
+    $melody->n(@note);
 }
 
 #$score->write_score("$0.mid");
@@ -85,32 +85,32 @@ my $ornament = Music::MelodicDevice::Ornamentation->new(
 my $n = 0;
 for my $note (@notes) {
     my @note = split /\./, $note;
-    my $spec;
+    my $fancy;
 
 #    if ($n == 1) {
-#        $spec = $ornament->grace_note(@note, -1);
+#        $fancy = $ornament->grace_note(@note, -1);
 #    }
     if ($n == 2) {
-        $spec = $ornament->mordent(@note, 1);
+        $fancy = $ornament->mordent(@note, 1);
     }
     elsif ($n == 6) {
-        $spec = $ornament->trill(@note, 2, 1);
+        $fancy = $ornament->trill(@note, 2, 1);
     }
     elsif ($n == 10) {
-        $spec = $ornament->turn(@note, 1);
+        $fancy = $ornament->turn(@note, 1);
     }
 
-    if ($spec) {
-        $score->n(@$_) for @$spec;
+    if ($fancy) {
+        $melody->n(@$_) for @$fancy;
     }
     else {
-        $score->n(@note);
+        $melody->n(@note);
     }
 
     $n = $n == 12 ? 0 : $n + 1;
 }
 
-$score->write_score("$0.mid");
+$melody->write_score("$0.mid");
 
 =head1 AUTHOR
 
