@@ -117,7 +117,7 @@ And here is the result:
 
 =for html <audio controls><source src="jingle-bells-fancy.mp3" type="audio/mp3">
 
-Santa approved the code review, and the team of intrepid elves went to work implementing ornamentation into the music system, driven by Perl, of course!
+Santa approved the code review, and the team of intrepid elves went to work implementing ornamentation into the music system, that is driven by Perl, of course!
 
 =head1 AUTHOR
 
