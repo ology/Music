@@ -2,6 +2,29 @@
 use strict;
 use warnings;
 
+=head1 NAME
+
+jingle-bells - Play Jingle Bells in two different ways!
+
+=head1 SYNOPSIS
+
+  $ perl jingle-bells
+  $ timidity jingle-bells.mid
+
+=head1 DESCRIPTION
+
+The Muzak at Santa's Workshop...
+
+=head2 SITUATION
+
+Santa was growing tired of the plain music piped into his workshop.
+
+For example, Jingle Bells was just too ordinary sounding to his ears. It needed a bit of Christmas cheer to pep up the Elves!
+
+Here is what Jingle Bells sounded like at first:
+
+=cut
+
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation);
 use MIDI::Util qw(setup_score);
 
@@ -33,6 +56,24 @@ for my $note (@notes) {
     my @note = split /\./, $note;
     $score->n(@note);
 }
+
+#$score->write_score("$0.mid");
+
+=head2 ASSESSMENT
+
+Ordinary to say the least!
+
+Santa asked a couple of his more creative elves to come up with a way to brighten things up musically. And they tinkered, the way elves do...
+
+The cowbell was proposed, but that got shot down quick. Eventually the most musically experienced elf suggested adding "ornamentation" to certain notes. This she said, included more commonly heard things like "trills."
+
+(And it is rumoured that she toured as a roadie with Hendrix, in the 60s.)
+
+After some thinking about B<how> to go about adding ornaments to Jingle Bells, an old Blues-afficiando elf pointed to CPAN and the L<Music::MelodicDevice::Ornamentation> module, that seemed to fit the problem perfectly.
+
+Then after reading the examples, the team modified the source and added that module. Also they listened to each of the ornaments and decided to trigger them based on a simple loop counter.  (More sophisticated triggers based on concepts of music theory were considered, but Christmastime was fast approaching!)
+
+=cut
 
 use Music::MelodicDevice::Ornamentation;
 my $ornament = Music::MelodicDevice::Ornamentation->new(
@@ -70,3 +111,9 @@ for my $note (@notes) {
 }
 
 $score->write_score("$0.mid");
+
+=head1 AUTHOR
+
+"Gene Boggs" <gene@cpan.org>
+
+=cut
