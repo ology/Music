@@ -28,6 +28,8 @@ Here is what Jingle Bells sounded like at first:
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation);
 use MIDI::Util qw(setup_score);
 
+use constant MAX => 12; # number of notes before resetting the counter
+
 my $melody = setup_score(bpm => 140);
 
 my @notes = qw(
@@ -101,7 +103,8 @@ for my $note (@notes) {
         $melody->n(@note);
     }
 
-    $n = $n == 12 ? 0 : $n + 1;
+    # increment the counter, or start over
+    $n = $n == MAX ? 0 : $n + 1;
 }
 
 $melody->write_score("$0.mid");
