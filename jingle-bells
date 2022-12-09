@@ -91,12 +91,12 @@ my %dazzle = (
     10 => sub { $ornament->turn(@_, 1) },
 );
 
-my $n = 0;
+my $counter = 0;
 for my $note (@notes) {
     my @note = split /\./, $note;
 
-    if (exists $dazzle{$n}) {
-        my $fancy = $dazzle{$n}->(@note);
+    if (exists $dazzle{$counter}) {
+        my $fancy = $dazzle{$counter}->(@note);
         $melody->n(@$_) for @$fancy;
     }
     else {
@@ -104,7 +104,7 @@ for my $note (@notes) {
     }
 
     # increment the counter, or start over
-    $n = $n == MAX ? 0 : $n + 1;
+    $counter = $counter == MAX ? 0 : $counter + 1;
 }
 
 $melody->write_score("$0.mid");
