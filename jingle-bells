@@ -29,6 +29,9 @@ Here is what it sounded like:
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation);
 use MIDI::Util qw(setup_score);
+use Music::MelodicDevice::Ornamentation;
+
+use constant MAX => 12; # number of notes before resetting our counter
 
 my $melody = setup_score(bpm => 140);
 
@@ -108,9 +111,6 @@ Then after reading the examples, the team modified the source and added the modu
 
 =cut
 
-use constant MAX => 12; # number of notes before resetting our counter
-
-use Music::MelodicDevice::Ornamentation;
 my $ornament = Music::MelodicDevice::Ornamentation->new(
     scale_note => 'C',
     scale_name => 'major',
@@ -157,6 +157,9 @@ Santa approved the code review, and the team of intrepid elves went to work impl
   use warnings;
 
   use MIDI::Util qw(setup_score);
+  use Music::MelodicDevice::Ornamentation;
+
+  use constant MAX => 12; # number of notes before resetting the counter
 
   my $melody = setup_score(bpm => 140);
 
@@ -188,9 +191,6 @@ Santa approved the code review, and the team of intrepid elves went to work impl
 
   $melody = setup_score(bpm => 140); # start over!
 
-  use constant MAX => 12; # number of notes before resetting the counter
-
-  use Music::MelodicDevice::Ornamentation;
   my $ornament = Music::MelodicDevice::Ornamentation->new(
       scale_note => 'C',
       scale_name => 'major',
