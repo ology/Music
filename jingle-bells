@@ -30,8 +30,6 @@ Here is what it sounded like:
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation);
 use MIDI::Util qw(setup_score);
 
-use constant MAX => 12; # number of notes before resetting the counter
-
 my $melody = setup_score(bpm => 140);
 
 my @notes = qw(
@@ -56,10 +54,7 @@ my @notes = qw(
     wn.C4
 );
 
-for my $note (@notes) {
-    my @note = split /\./, $note;
-    $melody->n(@note);
-}
+$melody->n(split /\./, $_) for @notes;
 
 $melody->write_score("$0-plain.mid");
 
@@ -68,6 +63,40 @@ $melody = setup_score(bpm => 140);
 =head2 ASSESSMENT
 
 Ordinary to say the least!
+
+And here is an example of the code that produces part of the Jingle Bells MIDI that plays at the workshop:
+
+  use MIDI::Util qw(setup_score);
+
+  use constant MAX => 12; # number of notes before resetting our counter
+
+  my $melody = setup_score(bpm => 140);
+
+  my @notes = qw(
+      qn.E4 qn.E4 hn.E4
+      qn.E4 qn.E4 hn.E4
+      qn.E4 qn.G4 qn.C4 qn.D4
+      wn.E4
+
+      qn.F4 qn.F4 qn.F4 qn.F4
+      qn.F4 qn.E4 qn.E4 qn.E4
+      qn.E4 qn.D4 qn.D4 qn.E4
+      hn.D4       hn.G4
+
+      qn.E4 qn.E4 hn.E4
+      qn.E4 qn.E4 hn.E4
+      qn.E4 qn.G4 qn.C4 qn.D4
+      wn.E4
+
+      qn.F4 qn.F4 qn.F4 qn.F4
+      qn.F4 qn.E4 qn.E4 qn.E4
+      qn.G4 qn.G4 qn.F4 qn.D4
+      wn.C4
+  );
+
+  $melody->n(split /\./, $_) for @notes;
+
+  $melody->write_score("$0-plain.mid");
 
 Santa asked a couple of his more creative elves to come up with a way to brighten things up musically. And they tinkered, the way elves do...
 
@@ -80,6 +109,8 @@ After some thinking about B<how> to go about adding ornaments to Jingle Bells, a
 Then after reading the examples, the team modified the source and added the module to try it out. Also they listened to each of the ornaments and decided to trigger them from a dispatch table, based on a loop counter.  More sophisticated triggers based on concepts of music theory were considered, but Christmastime was fast approaching!
 
 =cut
+
+use constant MAX => 12; # number of notes before resetting our counter
 
 use Music::MelodicDevice::Ornamentation;
 my $ornament = Music::MelodicDevice::Ornamentation->new(
@@ -129,8 +160,6 @@ Santa approved the code review, and the team of intrepid elves went to work impl
 
   use MIDI::Util qw(setup_score);
 
-  use constant MAX => 12; # number of notes before resetting the counter
-
   my $melody = setup_score(bpm => 140);
 
   my @notes = qw(
@@ -155,14 +184,13 @@ Santa approved the code review, and the team of intrepid elves went to work impl
       wn.C4
   );
 
-  for my $note (@notes) {
-      my @note = split /\./, $note;
-      $melody->n(@note);
-  }
+  $melody->n(split /\./, $_) for @notes;
 
   $melody->write_score("$0-plain.mid");
 
   $melody = setup_score(bpm => 140); # start over!
+
+  use constant MAX => 12; # number of notes before resetting the counter
 
   use Music::MelodicDevice::Ornamentation;
   my $ornament = Music::MelodicDevice::Ornamentation->new(
