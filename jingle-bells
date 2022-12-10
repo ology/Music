@@ -76,7 +76,7 @@ The cowbell was proposed, but that got shot down quick. Eventually the most musi
 
 After some thinking about B<how> to go about adding ornaments to Jingle Bells, a young guitarist elf pointed to CPAN and the L<Music::MelodicDevice::Ornamentation> module, that seemed to fit the bill perfectly.
 
-Then after reading the examples, the team modified the source and added it. Also they listened to each of the ornaments and decided to trigger them from a dispatch table, based on a loop counter.  (More sophisticated triggers based on concepts of music theory were considered, but Christmastime was fast approaching!)
+Then after reading the examples, the team modified the source and added the module to try it out. Also they listened to each of the ornaments and decided to trigger them from a dispatch table, based on a loop counter.  More sophisticated triggers based on concepts of music theory were considered, but Christmastime was fast approaching!
 
 =cut
 
