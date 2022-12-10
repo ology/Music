@@ -56,12 +56,13 @@ my @notes = qw(
     wn.C4
 );
 
-for my $note (@notes) {
-    my @note = split /\./, $note;
-    $melody->n(@note);
-}
+#for my $note (@notes) {
+#    my @note = split /\./, $note;
+#    $melody->n(@note);
+#}
 
 #$melody->write_score("$0.mid");
+#__END__
 
 =head2 ASSESSMENT
 
@@ -88,7 +89,7 @@ my $ornament = Music::MelodicDevice::Ornamentation->new(
 # Dazzle them with musical oranmentation
 my %dazzle = (
     #1 => sub { $ornament->grace_note(@_, -1) },
-     2 => sub { $ornament->mordent(@_, 1) },
+     3 => sub { $ornament->mordent(@_, 1) },
      6 => sub { $ornament->trill(@_, 2, 1) },
     10 => sub { $ornament->turn(@_, 1) },
 );
