@@ -90,6 +90,7 @@ sub bass {
 
     my $bassline = MIDI::Bassline::Walk->new(
         verbose   => 0,
+        guitar    => 1,
         modal     => 1,
         keycenter => 'Bb',
     );
