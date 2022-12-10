@@ -120,6 +120,80 @@ And here is the result:
 
 Santa approved the code review, and the team of intrepid elves went to work implementing ornamentation into the rest of the music system - driven by Perl, of course!
 
+=head2 CODE
+
+  #!/usr/bin/env perl
+  use strict;
+  use warnings;
+
+  use MIDI::Util qw(setup_score);
+
+  use constant MAX => 12; # number of notes before resetting the counter
+
+  my $melody = setup_score(bpm => 140);
+
+  my @notes = qw(
+      qn.E4 qn.E4 hn.E4
+      qn.E4 qn.E4 hn.E4
+      qn.E4 qn.G4 qn.C4 qn.D4
+      wn.E4
+
+      qn.F4 qn.F4 qn.F4 qn.F4
+      qn.F4 qn.E4 qn.E4 qn.E4
+      qn.E4 qn.D4 qn.D4 qn.E4
+      hn.D4       hn.G4
+
+      qn.E4 qn.E4 hn.E4
+      qn.E4 qn.E4 hn.E4
+      qn.E4 qn.G4 qn.C4 qn.D4
+      wn.E4
+
+      qn.F4 qn.F4 qn.F4 qn.F4
+      qn.F4 qn.E4 qn.E4 qn.E4
+      qn.G4 qn.G4 qn.F4 qn.D4
+      wn.C4
+  );
+
+  for my $note (@notes) {
+      my @note = split /\./, $note;
+      $melody->n(@note);
+  }
+
+  #$melody->write_score("$0.mid");
+  #__END__
+
+  use Music::MelodicDevice::Ornamentation;
+  my $ornament = Music::MelodicDevice::Ornamentation->new(
+      scale_note => 'C',
+      scale_name => 'major',
+  );
+
+  # Dazzle them with musical oranmentation
+  my %dazzle = (
+      #1 => sub { $ornament->grace_note(@_, -1) },
+      3 => sub { $ornament->mordent(@_, 1) },
+      6 => sub { $ornament->trill(@_, 2, 1) },
+      10 => sub { $ornament->turn(@_, 1) },
+  );
+
+  my $counter = 0;
+  for my $note (@notes) {
+      my @note = split /\./, $note;
+
+      if (exists $dazzle{$counter}) {
+          my $fancy = $dazzle{$counter}->(@note);
+          $melody->n(@$_) for @$fancy;
+      }
+      else {
+          $melody->n(@note);
+      }
+
+      # increment the counter, or start over if we've reached the max
+      $counter = $counter == MAX ? 0 : $counter + 1;
+  }
+
+  $melody->write_score("$0.mid");
+
 =head1 AUTHOR
 
 "Gene Boggs" <gene@cpan.org>
