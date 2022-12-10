@@ -61,7 +61,7 @@ my @notes = qw(
 #    $melody->n(@note);
 #}
 
-#$melody->write_score("$0.mid");
+#$melody->write_score("$0-plain.mid");
 #__END__
 
 =head2 ASSESSMENT
@@ -110,7 +110,7 @@ for my $note (@notes) {
     $counter = $counter == MAX ? 0 : $counter + 1;
 }
 
-$melody->write_score("$0.mid");
+$melody->write_score("$0-fancy.mid");
 
 =head1 RESULT
 
@@ -159,7 +159,7 @@ Santa approved the code review, and the team of intrepid elves went to work impl
       $melody->n(@note);
   }
 
-  #$melody->write_score("$0.mid");
+  #$melody->write_score("$0-plain.mid");
   #__END__
 
   use Music::MelodicDevice::Ornamentation;
@@ -192,7 +192,7 @@ Santa approved the code review, and the team of intrepid elves went to work impl
       $counter = $counter == MAX ? 0 : $counter + 1;
   }
 
-  $melody->write_score("$0.mid");
+  $melody->write_score("$0-fancy.mid");
 
 =head1 AUTHOR
 
