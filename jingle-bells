@@ -68,8 +68,6 @@ And here is an example of the code that produces part of the Jingle Bells MIDI t
 
   use MIDI::Util qw(setup_score);
 
-  use constant MAX => 12; # number of notes before resetting our counter
-
   my $melody = setup_score(bpm => 140);
 
   my @notes = qw(
