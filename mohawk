@@ -30,7 +30,7 @@ $d->sync(
     \&drums,
     \&chords,
     \&melody,
-#    \&bass, $ yuck
+    \&bass,
 );
 
 $d->write;
@@ -88,7 +88,11 @@ sub chords {
 sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
-    my $bassline = MIDI::Bassline::Walk->new(verbose => 0);
+    my $bassline = MIDI::Bassline::Walk->new(
+        verbose   => 0,
+        modal     => 1,
+        keycenter => 'Bb',
+    );
 
     $d->rest($d->whole); # while counting-in
 
