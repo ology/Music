@@ -61,7 +61,7 @@ for my $note (@notes) {
     $melody->n(@note);
 }
 
-#$score->write_score("$0.mid");
+#$melody->write_score("$0.mid");
 
 =head2 ASSESSMENT
 
