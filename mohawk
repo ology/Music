@@ -30,7 +30,7 @@ $d->sync(
     \&drums,
     \&chords,
     \&melody,
-#    \&bass,
+#    \&bass, $ yuck
 );
 
 $d->write;
