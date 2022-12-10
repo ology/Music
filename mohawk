@@ -90,7 +90,9 @@ sub bass {
 
     my $bassline = MIDI::Bassline::Walk->new(
         verbose   => 0,
+        octave    => 2,
         guitar    => 1,
+        wrap      => 'C3',
         modal     => 1,
         keycenter => 'Bb',
     );
@@ -98,27 +100,27 @@ sub bass {
     $d->rest($d->whole); # while counting-in
 
     for my $n (1 .. 2) {
-        _walk($bassline, 'Bb7',   4);
-        _walk($bassline, 'Eb7',   4);
-        _walk($bassline, 'Bb7',   4);
-        _walk($bassline, 'Fm7',   2);
-        _walk($bassline, 'Bb7b9', 2);
-        _walk($bassline, 'Eb7',   4);
-        _walk($bassline, 'Ebm7',  4);
-        _walk($bassline, 'Dm7',   4);
-        _walk($bassline, 'G7b9',  4);
-        _walk($bassline, 'Cm7',   4);
-        _walk($bassline, 'F7',    4);
         _walk($bassline, 'Bb7',   2);
+        _walk($bassline, 'Eb7',   2);
+        _walk($bassline, 'Bb7',   2);
+        _walk($bassline, 'Fm7',   1);
+        _walk($bassline, 'Bb7b9', 1);
+        _walk($bassline, 'Eb7',   2);
+        _walk($bassline, 'Ebm7',  2);
+        _walk($bassline, 'Dm7',   2);
+        _walk($bassline, 'G7b9',  2);
         _walk($bassline, 'Cm7',   2);
-        _walk($bassline, 'F7',    4);
+        _walk($bassline, 'F7',    2);
+        _walk($bassline, 'Bb7',   1);
+        _walk($bassline, 'Cm7',   1);
+        _walk($bassline, 'F7',    2);
     }
 }
 
 sub _walk {
     my ($bassline, $chord, $n) = @_;
     my $notes = $bassline->generate($chord, $n);
-    $d->note('qn', $_) for @$notes;
+    $d->note('hn', $_) for @$notes;
 }
 
 sub melody {
