@@ -171,8 +171,8 @@ Santa approved the code review, and the team of intrepid elves went to work impl
   # Dazzle them with musical oranmentation
   my %dazzle = (
       #1 => sub { $ornament->grace_note(@_, -1) },
-      3 => sub { $ornament->mordent(@_, 1) },
-      6 => sub { $ornament->trill(@_, 2, 1) },
+       3 => sub { $ornament->mordent(@_, 1) },
+       6 => sub { $ornament->trill(@_, 2, 1) },
       10 => sub { $ornament->turn(@_, 1) },
   );
 
