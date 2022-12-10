@@ -61,7 +61,7 @@ $melody->n(split /\./, $_) for @notes;
 
 $melody->write_score("$0-plain.mid");
 
-$melody = setup_score(bpm => 140);
+$melody = setup_score(bpm => 140); # start over!
 
 =head2 ASSESSMENT
 
