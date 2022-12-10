@@ -56,13 +56,14 @@ my @notes = qw(
     wn.C4
 );
 
-#for my $note (@notes) {
-#    my @note = split /\./, $note;
-#    $melody->n(@note);
-#}
+for my $note (@notes) {
+    my @note = split /\./, $note;
+    $melody->n(@note);
+}
 
-#$melody->write_score("$0-plain.mid");
-#__END__
+$melody->write_score("$0-plain.mid");
+
+$melody = setup_score(bpm => 140);
 
 =head2 ASSESSMENT
 
