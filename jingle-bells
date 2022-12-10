@@ -160,8 +160,9 @@ Santa approved the code review, and the team of intrepid elves went to work impl
       $melody->n(@note);
   }
 
-  #$melody->write_score("$0-plain.mid");
-  #__END__
+  $melody->write_score("$0-plain.mid");
+
+  $melody = setup_score(bpm => 140); # start over!
 
   use Music::MelodicDevice::Ornamentation;
   my $ornament = Music::MelodicDevice::Ornamentation->new(
