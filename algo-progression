@@ -1,8 +1,6 @@
 #!/usr/bin/env perl
 
 # Play a random rock progression with a randomized walking bassline.
-# * Unfortunately, certain chords are unknown (e.g. 6sus4) yet.
-
 # Example:
 # $ perl algo-progression 120 1 Amv-Amc 2
 # $ perl algo-progression 70 2 Amv-DMc 1 42 35
