@@ -19,7 +19,7 @@ use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch midi_format);
 use Music::Duration::Partition ();
 
-my $reps  = shift || 1;                 # The number of times to generate a phrase
+my $reps  = shift || 1;                 # The number of times to generate an individual phrase
 my $bpm   = shift || 100;
 my $parts = shift || 'Amv-DMc-Emv-DMc'; # <Note><Major|minor><verse|chorus>
 my $multi = shift || 1;                 # The number of times the whole phrase is repeated
