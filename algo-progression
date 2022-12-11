@@ -94,7 +94,7 @@ sub chords {
         # Add each chord to the score
         for my $j (1 .. $reps) {
             for my $chord (@chords) {
-                $chord =~ s/sus2/9/;
+                $chord =~ s/sus2/add9/;
                 $chord =~ s/6sus4/sus4/;
                 my @notes = $cn->chord_with_octave($chord, $octave);
                 @notes = midi_format(@notes);
@@ -136,7 +136,7 @@ sub bass {
             my $i = 0;
 
             for my $chord (@chords) {
-                $chord =~ s/sus2/9/;
+                $chord =~ s/sus2/add9/;
                 $chord =~ s/6sus4/sus4/;
 
                 my $m = $i % 2 == 0 ? $motif2 : $motif1;
