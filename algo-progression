@@ -11,15 +11,15 @@
 use strict;
 use warnings;
 
-use Music::Chord::Note;
+use Music::Chord::Note ();
 use Music::Scales qw(get_scale_notes);
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Data-Dataset-ChordProgressions MIDI-Bassline-Walk MIDI-Util MIDI-Drummer-Tiny Music-Duration Music-Duration-Partition);
-use Data::Dataset::ChordProgressions;
-use MIDI::Bassline::Walk;
-use MIDI::Drummer::Tiny;
+use Data::Dataset::ChordProgressions ();
+use MIDI::Bassline::Walk ();
+use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch midi_format);
-use Music::Duration::Partition;
+use Music::Duration::Partition ();
 
 my $bpm   = shift || 100;
 my $reps  = shift || 1;                 # The number of times to generate a phrase
