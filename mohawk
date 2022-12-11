@@ -42,7 +42,7 @@ sub drums {
         $d->note($d->triplet_eighth, $d->ride1);
         $d->rest($d->triplet_eighth);
         $d->note($d->triplet_eighth, $d->ride1);
-    Remove redundancy}
+    }
 }
 
 sub chords {
