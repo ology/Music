@@ -13,7 +13,8 @@ use MIDI::Chord::Guitar;
 use MIDI::Praxis::Variation qw(tie_durations);
 use MIDI::Util qw(set_chan_patch);
 
-my $bpm = shift || 162;
+my $bpm    = shift || 162;
+my $repeat = shift || 2;
 
 my $chord_patch  = 4;  # Electric Piano 1
 my $bass_patch   = 35; # Fretless Bass
@@ -37,7 +38,7 @@ $d->write;
 
 sub drums {
     $d->count_in(1);
-    for my $n (1 .. $d->bars * 2) {
+    for my $n (1 .. $d->bars * $repeat) {
         $d->note($d->quarter,        $d->ride1, $d->kick);
         $d->note($d->triplet_eighth, $d->ride1);
         $d->rest($d->triplet_eighth);
@@ -63,7 +64,7 @@ sub chords {
 
     $d->rest($d->whole); # while counting-in
 
-    for my $n (1 .. 2) {
+    for my $n (1 .. $repeat) {
         $d->note($d->whole, @$Bf7);
         $d->note($d->whole, @$Ef7);
         $d->note($d->whole, @$Bf7);
@@ -95,7 +96,7 @@ sub bass {
 
     $d->rest($d->whole); # while counting-in
 
-    for my $n (1 .. 2) {
+    for my $n (1 .. $repeat) {
         _walk($bassline, 'Bb7',   2);
         _walk($bassline, 'Eb7',   2);
         _walk($bassline, 'Bb7',   2);
@@ -124,7 +125,7 @@ sub melody {
 
     $d->rest('d' . tie_durations($d->dotted_half, $d->eighth)); # while counting-in
 
-    for my $n (1 .. 2) {
+    for my $n (1 .. $repeat) {
         $d->note($d->dotted_quarter, 'Bf4'); # tie->
 
         $d->note($d->eighth, 'A4');
