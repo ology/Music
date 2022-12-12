@@ -37,7 +37,7 @@ $d->write;
 sub tabla {
     # Instantiate a new phrase maker
     my $mdp = Music::Duration::Partition->new(
-        size    => 4,
+        size    => 5,
         pool    => [qw(qn en tqn sn)],
         weights => [   5, 10, 5, 5  ],
         groups  => [   1,  2, 3, 4  ],
