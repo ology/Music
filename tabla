@@ -3,11 +3,13 @@ use strict;
 use warnings;
 
 # $ cat ~/timidity.cfg
-# dir /home/gene/Music
+# dir /home/YOU/Music
 # # https://gleitz.github.io/midi-js-soundfonts/Tabla/Tabla.sf2
 # soundfont Tabla.sf2
 #
-# $ rm -f tabla.mid ; perl tabla ; timidity -c ~/timidity.cfg tabla.mid
+# $ rm -f tabla.mid
+# $ perl tabla 8 100 1
+# $ timidity -c ~/timidity.cfg tabla.mid
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition); # local author libraries
 use MIDI::Drummer::Tiny;
