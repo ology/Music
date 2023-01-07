@@ -69,9 +69,9 @@ sub top {
 }
 
 sub _apply {
-    my ($score, $duration, @notes) = @_;
-    print ddc(\@notes);
-    for my $phrase (@notes) {
+    my ($score, $duration, @phrases) = @_;
+    print ddc(\@phrases);
+    for my $phrase (@phrases) {
         $score->n($duration, $_) for @$phrase;
     }
 }
