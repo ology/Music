@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# * This program produces unsavory things. YMMV :\
+
 use strict;
 use warnings;
 
