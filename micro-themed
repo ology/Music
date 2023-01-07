@@ -46,8 +46,8 @@ sub top {
     );
 
     my $quarter = 'qn';
-    my $minimum = 4;
-    my $maximum = 10;
+    my $minimum = 4;  # number of voices per phrase
+    my $maximum = 10; # "
 
     my @notes;
     for my $i (1 .. $max) {
