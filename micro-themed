@@ -4,9 +4,10 @@ use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition Music-MelodicDevice-Inversion Music-MelodicDevice-Transposition);
 use Data::Dumper::Compact qw(ddc);
-use MIDI::Util qw(setup_score set_chan_patch);
+use MIDI::Util qw(setup_score set_chan_patch midi_format);
 use Music::MelodicDevice::Inversion ();
 use Music::MelodicDevice::Transposition ();
+use Music::Chord::Note ();
 use Music::Duration::Partition ();
 use Music::Note ();
 use Music::Scales qw(get_scale_MIDI);
@@ -125,4 +126,12 @@ sub _apply {
 }
 
 sub chords {
+    my $cn = Music::Chord::Note->new;
+    for my $i (1 .. 4) {
+        for my $phrase (@original) {
+            my $note = Music::Note->new($phrase->[0], 'midinum');
+            my @chord = $cn->chord_with_octave($note->format('isobase'), 4);
+            $score->n('wn', midi_format(@chord));
+        }
+    }
 }
