@@ -55,6 +55,9 @@ sub top {
         my $n = $minimum + int(rand($maximum + 1 - $minimum));
         push @original, [ map { $voice->rand } 1 .. $n ];
     }
+
+    my @motifs = _collect_motifs(\@original);
+
     _apply($score, $quarter, \@original);
 
     my @reversed = map { [ reverse @$_ ] } @original;
@@ -67,6 +70,44 @@ sub top {
     my $mdi = Music::MelodicDevice::Inversion->new(scale_name => $tscale);
     my @inverted = map { $mdi->invert($inv, $_) } @original;
     _apply($score, $quarter, \@inverted);
+}
+
+sub _collect_motifs {
+    my ($notes) = @_;
+
+    my @motifs;
+
+    my $mdp = Music::Duration::Partition->new(
+        size    => 4, # one measure in 4/4
+        pool    => [qw(qn en tqn sn)],
+        weights => [   1, 2, 1,  1  ],
+        groups  => [   1, 2, 3,  2  ],
+    );
+
+    for my $phrase (@$notes) {
+        my $motif;
+        my $limit = 100;
+        my $size = 0;
+        my $found = 0;
+        my $i = 0;
+
+        while (!$found) {
+            $i++;
+            $motif = $mdp->motif;
+            $size = @$motif;
+            warn __PACKAGE__,' L',__LINE__,' ',,"$i. $size\n";
+            if ($size == @$phrase) {
+                $found = 1;
+                last;
+            }
+            last if $i > $limit;
+        }
+        die "Can't find a motif of $size\n" unless $found;
+        push @motifs, $motif;
+    }
+    print ddc(\@motifs);
+
+    return @motifs;
 }
 
 sub _apply {
