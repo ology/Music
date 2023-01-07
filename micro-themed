@@ -2,11 +2,12 @@
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-MelodicDevice-Inversion Music-MelodicDevice-Transposition);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition Music-MelodicDevice-Inversion Music-MelodicDevice-Transposition);
 use Data::Dumper::Compact qw(ddc);
 use MIDI::Util qw(setup_score set_chan_patch);
 use Music::MelodicDevice::Inversion ();
 use Music::MelodicDevice::Transposition ();
+use Music::Duration::Partition ();
 use Music::Note ();
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen ();
@@ -49,22 +50,22 @@ sub top {
     my $minimum = 4;  # number of voices per phrase
     my $maximum = 10; # "
 
-    my @notes;
+    my @original;
     for my $i (1 .. $max) {
         my $n = $minimum + int(rand($maximum + 1 - $minimum));
-        push @notes, [ map { $voice->rand } 1 .. $n ];
+        push @original, [ map { $voice->rand } 1 .. $n ];
     }
-    _apply($score, $quarter, \@notes);
+    _apply($score, $quarter, \@original);
 
-    my @reversed = map { [ reverse @$_ ] } @notes;
+    my @reversed = map { [ reverse @$_ ] } @original;
     _apply($score, $quarter, \@reversed);
 
     my $mdt = Music::MelodicDevice::Transposition->new(scale_name => $tscale);
-    my @transposed = map { $mdt->transpose($transp, $_) } @notes;
+    my @transposed = map { $mdt->transpose($transp, $_) } @original;
     _apply($score, $quarter, \@transposed);
 
     my $mdi = Music::MelodicDevice::Inversion->new(scale_name => $tscale);
-    my @inverted = map { $mdi->invert($inv, $_) } @notes;
+    my @inverted = map { $mdi->invert($inv, $_) } @original;
     _apply($score, $quarter, \@inverted);
 }
 
