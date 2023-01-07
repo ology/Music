@@ -81,10 +81,8 @@ sub _collect_motifs {
     my @motifs;
 
     my $mdp = Music::Duration::Partition->new(
-        size    => 4, # one measure in 4/4
-        pool    => [qw(qn en tqn sn)],
-        weights => [   1, 2, 1,  1  ],
-        groups  => [   1, 2, 3,  2  ],
+        size => 4, # one measure in 4/4
+        pool => [qw(qn en sn)],
     );
 
     for my $phrase (@$notes) {
@@ -130,7 +128,7 @@ sub chords {
     for my $i (1 .. 4) {
         for my $phrase (@original) {
             my $note = Music::Note->new($phrase->[0], 'midinum');
-            my @chord = $cn->chord_with_octave($note->format('isobase'), 4);
+            my @chord = $cn->chord_with_octave($note->format('isobase'), 5);
             $score->n('wn', midi_format(@chord));
         }
     }
