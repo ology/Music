@@ -1,0 +1,77 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-MelodicDevice-Inversion Music-MelodicDevice-Transposition);
+use Data::Dumper::Compact qw(ddc);
+use MIDI::Util qw(setup_score set_chan_patch);
+use Music::MelodicDevice::Inversion ();
+use Music::MelodicDevice::Transposition ();
+use Music::Note ();
+use Music::Scales qw(get_scale_MIDI);
+use Music::VoiceGen ();
+
+my $max    = shift || 4;
+my $bpm    = shift || 105;
+my $note   = shift || 'C';
+my $tscale = shift || 'major';
+my $tpatch = shift || 0;
+my $transp = shift || 3;    # up a 3rd
+my $invert = shift || 'E4'; # 3rd of the scale
+
+my $inv = Music::Note->new($invert, 'ISO')->format('midinum');
+
+my $octave  = 1;
+my $channel = 0;
+
+my $score = setup_score(bpm => $bpm);
+
+$score->synch(
+    \&top,
+);
+
+$score->write_score("$0.mid");
+
+sub top {
+    set_chan_patch($score, $channel++, $tpatch);
+
+    my @pitches = (
+        get_scale_MIDI($note, $octave + 1, $tscale),
+        get_scale_MIDI($note, $octave + 2, $tscale)
+    );
+
+    my $voice = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => [qw(-4 -3 -2 -1 1 2 3 4)],
+    );
+
+    my $quarter = 'qn';
+    my $minimum = 4;
+    my $maximum = 10;
+    my @notes;
+
+    for my $i (1 .. $max) {
+        my $n = $minimum + int(rand($maximum + 1 - $minimum));
+        push @notes, [ map { $voice->rand } 1 .. $n ];
+    }
+    _apply($score, $quarter, @notes);
+
+    my @reversed = map { [ reverse @$_ ] } @notes;
+    _apply($score, $quarter, @reversed);
+
+    my $mdt = Music::MelodicDevice::Transposition->new(scale_name => $tscale);
+    my @transposed = map { $mdt->transpose($transp, $_) } @notes;
+    _apply($score, $quarter, @transposed);
+
+    my $mdi = Music::MelodicDevice::Inversion->new(scale_name => $tscale);
+    my @inverted = map { $mdi->invert($inv, $_) } @notes;
+    _apply($score, $quarter, @inverted);
+}
+
+sub _apply {
+    my ($score, $duration, @notes) = @_;
+    print ddc(\@notes);
+    for my $phrase (@notes) {
+        $score->n($duration, $_) for @$phrase;
+    }
+}
