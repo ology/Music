@@ -24,11 +24,13 @@ my $inv = Music::Note->new($invert, 'ISO')->format('midinum');
 
 my $octave  = 1;
 my $channel = 0;
+my @original; # the initial note phrases
 
 my $score = setup_score(bpm => $bpm);
 
 $score->synch(
     \&top,
+    \&chords,
 );
 
 $score->write_score("$0.mid");
@@ -50,12 +52,11 @@ sub top {
     my $minimum = 4;  # number of voices per phrase
     my $maximum = 10; # "
 
-    my @original;
     for my $i (1 .. $max) {
         my $n = $minimum + int(rand($maximum + 1 - $minimum));
         push @original, [ map { $voice->rand } 1 .. $n ];
     }
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\@original, {max_width=>128});
+    print ddc(\@original);
 
     my @motifs = _collect_motifs(\@original);
 
@@ -121,4 +122,7 @@ sub _apply {
         }
         $i++;
     }
+}
+
+sub chords {
 }
