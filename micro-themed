@@ -54,24 +54,24 @@ sub top {
         my $n = $minimum + int(rand($maximum + 1 - $minimum));
         push @notes, [ map { $voice->rand } 1 .. $n ];
     }
-    _apply($score, $quarter, @notes);
+    _apply($score, $quarter, \@notes);
 
     my @reversed = map { [ reverse @$_ ] } @notes;
-    _apply($score, $quarter, @reversed);
+    _apply($score, $quarter, \@reversed);
 
     my $mdt = Music::MelodicDevice::Transposition->new(scale_name => $tscale);
     my @transposed = map { $mdt->transpose($transp, $_) } @notes;
-    _apply($score, $quarter, @transposed);
+    _apply($score, $quarter, \@transposed);
 
     my $mdi = Music::MelodicDevice::Inversion->new(scale_name => $tscale);
     my @inverted = map { $mdi->invert($inv, $_) } @notes;
-    _apply($score, $quarter, @inverted);
+    _apply($score, $quarter, \@inverted);
 }
 
 sub _apply {
-    my ($score, $duration, @phrases) = @_;
-    print ddc(\@phrases);
-    for my $phrase (@phrases) {
+    my ($score, $duration, $phrases) = @_;
+    print ddc($phrases);
+    for my $phrase (@$phrases) {
         $score->n($duration, $_) for @$phrase;
     }
 }
