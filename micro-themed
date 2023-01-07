@@ -55,21 +55,22 @@ sub top {
         my $n = $minimum + int(rand($maximum + 1 - $minimum));
         push @original, [ map { $voice->rand } 1 .. $n ];
     }
+warn __PACKAGE__,' L',__LINE__,' ',ddc(\@original, {max_width=>128});
 
     my @motifs = _collect_motifs(\@original);
 
-    _apply($score, $quarter, \@original);
+    _apply($score, \@motifs, \@original);
 
     my @reversed = map { [ reverse @$_ ] } @original;
-    _apply($score, $quarter, \@reversed);
+    _apply($score, \@motifs, \@reversed);
 
     my $mdt = Music::MelodicDevice::Transposition->new(scale_name => $tscale);
     my @transposed = map { $mdt->transpose($transp, $_) } @original;
-    _apply($score, $quarter, \@transposed);
+    _apply($score, \@motifs, \@transposed);
 
     my $mdi = Music::MelodicDevice::Inversion->new(scale_name => $tscale);
     my @inverted = map { $mdi->invert($inv, $_) } @original;
-    _apply($score, $quarter, \@inverted);
+    _apply($score, \@motifs, \@inverted);
 }
 
 sub _collect_motifs {
@@ -95,7 +96,7 @@ sub _collect_motifs {
             $i++;
             $motif = $mdp->motif;
             $size = @$motif;
-            warn __PACKAGE__,' L',__LINE__,' ',,"$i. $size\n";
+            warn __PACKAGE__,' L',__LINE__,' ',,"$i. $size == ",scalar(@$phrase),"\n";
             if ($size == @$phrase) {
                 $found = 1;
                 last;
@@ -111,9 +112,13 @@ sub _collect_motifs {
 }
 
 sub _apply {
-    my ($score, $duration, $phrases) = @_;
+    my ($score, $durations, $phrases) = @_;
     print ddc($phrases);
+    my $i = 0;
     for my $phrase (@$phrases) {
-        $score->n($duration, $_) for @$phrase;
+        for my $n (0 .. $#$phrase) {
+            $score->n($durations->[$i][$n], $phrase->[$n]);
+        }
+        $i++;
     }
 }
