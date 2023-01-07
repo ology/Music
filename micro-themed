@@ -57,7 +57,7 @@ sub top {
         my $n = $minimum + int(rand($maximum + 1 - $minimum));
         push @original, [ map { $voice->rand } 1 .. $n ];
     }
-    print ddc(\@original);
+    #print ddc(\@original);
 
     my @motifs = _collect_motifs(\@original);
 
@@ -98,7 +98,7 @@ sub _collect_motifs {
             $i++;
             $motif = $mdp->motif;
             $size = @$motif;
-            warn __PACKAGE__,' L',__LINE__,' ',,"$i. $size == ",scalar(@$phrase),"\n";
+            #warn __PACKAGE__,' L',__LINE__,' ',,"$i. $size == ",scalar(@$phrase),"\n";
             if ($size == @$phrase) {
                 $found = 1;
                 last;
