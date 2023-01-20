@@ -33,13 +33,13 @@ my @pitches = map { $p->pitchnum($_) } @chord;
 my $notes = \@pitches;
 print "$i. ", ddc($notes), '   ', ddc(\@chord);
 
-$score->n('wn', @$notes);
+$score->n('wn', midi_format(@$notes));
 
 for my $t (@$transform) {
     $i++;
     my $transformed = $nrt->transform($t, $notes);
 
-    $score->n('wn', @$transformed);
+    $score->n('wn', midi_format(@$transformed));
 
     my @notes = map { $p->pitchname($_) } @$transformed;
     print "$i. ", ddc($transformed), '   ', ddc(\@notes);
