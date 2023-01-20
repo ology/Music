@@ -33,7 +33,7 @@ my @pitches = map { $p->pitchnum($_) } @chord;
 my $notes = \@pitches;
 print "$i. ", ddc($notes), '   ', ddc(\@chord);
 
-$score->n('wn', $notes);
+$score->n('wn', @$notes);
 
 for my $t (@$transform) {
     $i++;
