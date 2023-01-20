@@ -20,7 +20,7 @@ my $transform = shift || 'P,R,L'; # giving an integer = random
 
 if ($transform =~ /^\d+$/) {
     my @nro = qw(L P R);
-    $transform = [ map { $nro[int rand @nro ] } 1 .. $transform ];
+    $transform = [ map { $nro[ int rand @nro ] } 1 .. $transform ];
 }
 else {
     $transform = [ split /,/, $transform ];
