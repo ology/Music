@@ -19,7 +19,7 @@ my $octave    = shift || '4';
 my $transform = shift || 'P,R,L'; # giving an integer = random
 
 if ($transform =~ /^\d+$/) {
-    my @nro = qw(L P R);
+    my @nro = qw(L P R N S H);
     $transform = [ map { $nro[ int rand @nro ] } 1 .. $transform ];
 }
 else {
