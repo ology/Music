@@ -45,3 +45,5 @@ for my $t (@$transform) {
     print "$i. ", ddc($transformed), '   ', ddc(\@notes);
     $notes = $transformed;
 }
+
+$score->write_score("$0.mid");
