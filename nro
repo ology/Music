@@ -18,6 +18,8 @@ my $note      = shift || 'C';
 my $octave    = shift || '4';
 my $transform = shift || 'P,R,L';
 
+print "Initial: $note$octave. Transforms: $transform\n";
+
 $transform = [ split /,/, $transform ];
 
 my $nrt = Music::NeoRiemannianTonnetz->new;
