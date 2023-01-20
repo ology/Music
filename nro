@@ -21,12 +21,12 @@ my $nrt = Music::NeoRiemannianTonnetz->new;
 my $cn = Music::Chord::Note->new;
 my @chord = $cn->chord_with_octave($note, $octave);
 
+my $i = 1;
+
 my $p = MyPitch->new;
 my @pitches = map { $p->pitchnum($_) } @chord;
 my $notes = \@pitches;
-print "1. ", ddc($notes), '   ', ddc(\@chord);
-
-my $i = 1;
+print "$i. ", ddc($notes), '   ', ddc(\@chord);
 
 for my $t (@$transform) {
     $i++;
