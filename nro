@@ -9,7 +9,10 @@ use warnings;
 use Data::Dumper::Compact qw(ddc);
 use Music::NeoRiemannianTonnetz ();
 use Music::Chord::Note ();
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util qw(setup_score midi_format);
 
+my $bpm       = shift || 100;
 my $note      = shift || 'C';
 my $octave    = shift || '4';
 my $transform = shift || 'P,R,L';
@@ -21,6 +24,8 @@ my $nrt = Music::NeoRiemannianTonnetz->new;
 my $cn = Music::Chord::Note->new;
 my @chord = $cn->chord_with_octave($note, $octave);
 
+my $score = setup_score(bpm => $bpm);
+
 my $i = 1;
 
 my $p = MyPitch->new;
@@ -28,9 +33,14 @@ my @pitches = map { $p->pitchnum($_) } @chord;
 my $notes = \@pitches;
 print "$i. ", ddc($notes), '   ', ddc(\@chord);
 
+$score->n('wn', $notes);
+
 for my $t (@$transform) {
     $i++;
     my $transformed = $nrt->transform($t, $notes);
+
+    $score->n('wn', @$transformed);
+
     my @notes = map { $p->pitchname($_) } @$transformed;
     print "$i. ", ddc($transformed), '   ', ddc(\@notes);
     $notes = $transformed;
