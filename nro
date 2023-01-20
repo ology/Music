@@ -16,11 +16,17 @@ use MIDI::Util qw(setup_score midi_format);
 my $bpm       = shift || 100;
 my $note      = shift || 'C';
 my $octave    = shift || '4';
-my $transform = shift || 'P,R,L';
+my $transform = shift || 'P,R,L'; # giving a number = random
 
-print "Initial: $note$octave. Transforms: $transform\n";
+if ($transform =~ /^\d+$/) {
+    my @nro = qw(L P R);
+    $transform = [ map { $nro[int rand @nro ] } 1 .. $transform ];
+}
+else {
+    $transform = [ split /,/, $transform ];
+}
 
-$transform = [ split /,/, $transform ];
+print "Initial: $note$octave. Transforms: ", join(', ', @$transform), "\n";
 
 my $nrt = Music::NeoRiemannianTonnetz->new;
 
