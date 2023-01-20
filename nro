@@ -16,13 +16,13 @@ my $transform = shift || 'P,R,L';
 
 $transform = [ split /,/, $transform ];
 
+my $nrt = Music::NeoRiemannianTonnetz->new;
+
 my $cn = Music::Chord::Note->new;
 my @chord = $cn->chord_with_octave($note, $octave);
 
 my $p = MyPitch->new;
 my @pitches = map { $p->pitchnum($_) } @chord;
-
-my $nrt = Music::NeoRiemannianTonnetz->new;
  
 my $notes = \@pitches;
 
