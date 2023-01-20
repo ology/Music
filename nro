@@ -1,0 +1,36 @@
+package MyPitch;
+use Moo;
+with 'Music::PitchNum';
+
+package main;
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+use Music::NeoRiemannianTonnetz ();
+use Music::Chord::Note ();
+
+my $note      = shift || 'C';
+my $octave    = shift || '4';
+my $transform = shift || 'P,R,L';
+
+$transform = [ split /,/, $transform ];
+
+my $cn = Music::Chord::Note->new;
+my @chord = $cn->chord_with_octave($note, $octave);
+
+my $p = MyPitch->new;
+my @pitches = map { $p->pitchnum($_) } @chord;
+
+my $nrt = Music::NeoRiemannianTonnetz->new;
+ 
+my $notes = \@pitches;
+
+my $i = 0;
+
+for my $t (@$transform) {
+    $i++;
+    my $transformed = $nrt->transform($t, $notes);
+    print "$i. ", ddc($transformed);
+    $notes = $transformed;
+}
