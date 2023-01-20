@@ -26,7 +26,7 @@ else {
     $transform = [ split /,/, $transform ];
 }
 
-print "Initial: $note$octave. Transforms: ", join(', ', @$transform), "\n";
+print "Initial: $note$octave\nTransforms: ", join(', ', @$transform), "\n";
 
 my $nrt = Music::NeoRiemannianTonnetz->new;
 
