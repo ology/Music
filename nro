@@ -23,14 +23,15 @@ my @chord = $cn->chord_with_octave($note, $octave);
 
 my $p = MyPitch->new;
 my @pitches = map { $p->pitchnum($_) } @chord;
- 
 my $notes = \@pitches;
+print "1. ", ddc($notes), '   ', ddc(\@chord);
 
-my $i = 0;
+my $i = 1;
 
 for my $t (@$transform) {
     $i++;
     my $transformed = $nrt->transform($t, $notes);
-    print "$i. ", ddc($transformed);
+    my @notes = map { $p->pitchname($_) } @$transformed;
+    print "$i. ", ddc($transformed), '   ', ddc(\@notes);
     $notes = $transformed;
 }
