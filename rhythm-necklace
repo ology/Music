@@ -10,7 +10,7 @@ use SVG qw(title);
 use constant HALF   => pi / 2;
 use constant DOUBLE => 2 * pi;
 
-my $phrase   = shift || 'x..x..x...x.x...'; # pattern. Default: son. -1 for random
+my $phrase   = shift || 'x..x..x...x.x...'; # pattern or number for randomization
 my $diameter = shift || 512; # size of the circle
 
 if ($phrase =~ /^(\d+)$/) {
