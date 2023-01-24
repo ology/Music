@@ -120,10 +120,12 @@ my $d = MIDI::Drummer::Tiny->new(
 for my $bar (1 .. $d->bars) {
     for my $beat (split //, $phrase) {
         if ($beat eq 'x') {
-            $d->note($d->eighth, $d->claves);
+#            $d->note($d->eighth, $d->claves);
+            $d->note($d->eighth, $d->snare);
         }
         else {
-            $d->rest($d->eighth);
+#            $d->rest($d->eighth);
+            $d->note($d->eighth, $d->kick);
         }
         $i++;
     }
