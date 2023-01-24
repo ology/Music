@@ -13,6 +13,7 @@ use constant DOUBLE => 2 * pi;
 my $phrase   = shift || 'x..x..x...x.x...'; # pattern or number for randomization
 my $diameter = shift || 512; # size of the circle
 
+# shall we randomize?
 if ($phrase =~ /^(\d+)$/) {
     my $limit = $1;
     my @phrase;
@@ -23,6 +24,7 @@ if ($phrase =~ /^(\d+)$/) {
     $phrase = join '', @phrase;
 }
 
+# set parameters
 my $show_marks  = length $phrase; # circular beat marks to display
 my $total_marks = 60; # maximum number of beat markers
 my $fill        = 'white';
@@ -41,6 +43,7 @@ for my $beat (split //, $phrase) {
     $i++;
 }
 
+# give unto us a new image...
 my $svg = SVG->new(
     width  => $frame_size,
     height => $frame_size,
@@ -109,6 +112,7 @@ $svg->polygon(
 
 print $svg->xmlify;
 
+# ok - now render the MIDI
 my $d = MIDI::Drummer::Tiny->new(
    file   => "$0.mid",
    bpm    => 120,
