@@ -10,8 +10,18 @@ use SVG qw(title);
 use constant HALF   => pi / 2;
 use constant DOUBLE => 2 * pi;
 
-my $phrase   = shift || 'x..x..x...x.x...'; # pattern to render (default: son)
+my $phrase   = shift || 'x..x..x...x.x...'; # pattern. Default: son. -1 for random
 my $diameter = shift || 512; # size of the circle
+
+if ($phrase =~ /^(\d+)$/) {
+    my $limit = $1;
+    my @phrase;
+    for (1 .. $limit) {
+        my $x = int rand 2;
+        push @phrase, $x ? 'x' : '.';
+    }
+    $phrase = join '', @phrase;
+}
 
 my $show_marks  = length $phrase; # circular beat marks to display
 my $total_marks = 60; # maximum number of beat markers
