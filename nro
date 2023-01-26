@@ -23,7 +23,7 @@ if ($transform =~ /^\d+$/) {
     $transform = [ map { $nro[ int rand @nro ] } 1 .. $transform ];
 }
 else {
-    $transform = [ split /,/, $transform ];
+    $transform = [ split /,/, uc $transform ];
 }
 
 print "Initial: $note$octave\nTransforms: ", join(', ', @$transform), "\n";
