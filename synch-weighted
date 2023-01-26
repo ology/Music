@@ -5,9 +5,8 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Graph-Weighted MIDI-Simple-Drummer);
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
-use MIDI::Simple;
 use MIDI::Simple::Drummer;
-use Music::Tempo;
+use MIDI::Util qw(setup_score set_chan_patch);
 
 my $phrases = shift || 4;
 my $notes   = shift || 4; # Notes per bar
@@ -15,8 +14,7 @@ my $initial = shift // 0; # Initial graph node
 my $bpm     = shift || 100; # Beats per minute
 my $measure = 0;
 
-my $score = MIDI::Simple->new_score();
-$score->set_tempo( bpm_to_ms($bpm) * 1000 );
+my $score = setup_score(bpm => $bpm);
 
 $score->synch(
     \&drummer,
@@ -29,11 +27,7 @@ $score->write_score("$0.mid");
 sub melody {
     my $self = shift;
 
-    my $channel = 0;
-    my $patch   = 2;
-
-    $self->patch_change( $channel, $patch );
-    $self->noop( 'c' . $channel );
+    set_chan_patch($self, 0, 2);
 
     my $pitch = Graph::Weighted->new();
     $pitch->populate(
@@ -84,11 +78,7 @@ sub melody {
 sub bassline {
     my $self = shift;
 
-    my $channel = 1;
-    my $patch   = 2;
-
-    $self->patch_change( $channel, $patch );
-    $self->noop( 'c' . $channel );
+    set_chan_patch($self, 1, 2);
 
     my $pitch = Graph::Weighted->new();
     $pitch->populate(
