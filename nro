@@ -53,7 +53,7 @@ for my $t (@$transform) {
 
     my @notes = map { $p->pitchname($_) } @$transformed;
     @base = map { s/^([A-G][#b]?)\d/$1/r } @notes;
-    print "$i. ", ddc($transformed), '   ', ddc(\@notes), "\t", scalar chordname(@base), "\n";
+    print "$i. $t: ", ddc($transformed), '   ', ddc(\@notes), "\t", scalar chordname(@base), "\n";
     $notes = $transformed;
 }
 
