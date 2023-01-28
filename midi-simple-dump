@@ -8,7 +8,7 @@ use Data::Dumper::Compact qw(ddc);
 
 my $name = shift || 'length';
 
-print ddc(midi_dump($name));
+print "$name: ", ddc(midi_dump($name));
 
 __END__
 volume
