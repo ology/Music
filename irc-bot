@@ -48,14 +48,14 @@ use YAML::XS qw(LoadFile);
 # Use local author libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals);
 
+use MIDI::Chord::Guitar;
+use MIDI::Drummer::Tiny;
+use MIDI::Util qw(setup_score set_chan_patch midi_format dura_size);
 use Music::Duration;
 use Music::Duration::Partition;
 use Music::Intervals;
 use Music::Intervals::Numeric;
 use Music::Intervals::Ratios;
-use MIDI::Chord::Guitar;
-use MIDI::Drummer::Tiny;
-use MIDI::Util qw(setup_score set_chan_patch midi_format dura_size);
 
 use constant OPTIONS         => { max_width => 256 }; # For ddc()
 use constant MIN_BPM         => 60;
