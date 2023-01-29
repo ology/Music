@@ -23,21 +23,21 @@ use strict;
 use warnings;
 
 use Data::Dumper::Compact qw(ddc);
-use List::Util qw(any);
-use Mojo::IRC;
-use Mojo::DOM;
-use Mojo::UserAgent;
-use YAML::XS qw(LoadFile);
-use Parse::IRC ();
-use Syntax::Keyword::Try;
 use Encoding::FixLatin qw(fix_latin);
-use Text::Unidecode qw(unidecode);
+use List::Util qw(any);
+use Mojo::IRC ();
+use Mojo::DOM ();
+use Mojo::UserAgent ();
+use MP3::Tag ();
 use Music::Scales qw(get_scale_notes);
 use Music::Chord::Namer qw(chordname);
-use Music::Chord::Note;
-use Music::Note;
-use Music::Note::Frequency;
-use MP3::Tag;
+use Music::Chord::Note ();
+use Music::Note ();
+use Music::Note::Frequency ();
+use Parse::IRC ();
+use Syntax::Keyword::Try;
+use Text::Unidecode qw(unidecode);
+use YAML::XS qw(LoadFile);
 
 # App::MusicTools           # } Needed for `vov`
 # Algorithm::Combinatorics  # ⎫
