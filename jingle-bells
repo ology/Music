@@ -61,7 +61,7 @@ my $counter = 0;
 for my $note (@notes) {
     my @note = split /\./, $note;
 
-    # Add either a "plain" or ornamented note to the score
+    # Add either an ornamented or a "plain" note to the score
     if (exists $dazzle{$counter}) {
         my $fancy = $dazzle{$counter}->(@note);
         $melody->n(@$_) for @$fancy;
