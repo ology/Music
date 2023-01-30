@@ -49,19 +49,19 @@ print "$i. I: ", ddc($notes), '   ', ddc(\@chord), "\t", scalar chordname(@base)
 
 $score->n('wn', midi_format(@$notes));
 
-for my $t (@$transform) {
+for my $token (@$transform) {
     $i++;
 
     my $task;
-    $task = $nrt->taskify_tokens($t) if length $t > 1;
-    my $tx = defined $task ? $task : $t;
+    $task = $nrt->taskify_tokens($token) if length $token > 1;
+    my $tx = defined $task ? $task : $token;
     my $transformed = $nrt->transform($tx, $notes);
 
     $score->n('wn', midi_format(@$transformed));
 
     my @notes = map { $p->pitchname($_) } @$transformed;
     @base = map { s/^([A-G][#b]?)\d/$1/r } @notes;
-    print "$i. $t: ", ddc($transformed), '   ', ddc(\@notes), "\t", scalar chordname(@base), "\n";
+    print "$i. $token: ", ddc($transformed), '   ', ddc(\@notes), "\t", scalar chordname(@base), "\n";
     $notes = $transformed;
 }
 
