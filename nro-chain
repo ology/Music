@@ -27,8 +27,8 @@ my $transform = shift || 'X,PRL,R,L,R,L,R'; # Mostly diatonic
                                             # integer = random
 
 if ($transform =~ /^\d+$/) {
-    my @nro = qw(X L P R N S H PRL);
-    $transform = [ map { $nro[ int rand @nro ] } 1 .. $transform - 1 ];
+    my @nro = qw(L P R N S H PRL);
+    $transform = [ 'X', map { $nro[ int rand @nro ] } 2 .. $transform - 1 ];
 }
 else {
     $transform = [ split /,/, uc $transform ];
