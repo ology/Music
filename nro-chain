@@ -4,9 +4,6 @@ with 'Music::PitchNum';
 
 package main;
 
-# Example of a diatonic progression:
-# perl nro 100 G 4 PRL,R,L,R,L,R
-
 use strict;
 use warnings;
 
@@ -19,9 +16,10 @@ use MIDI::Util qw(setup_score midi_format);
 
 my $max       = shift || 8;
 my $bpm       = shift || 100;
-my $note      = shift || 'C';
+my $note      = shift || 'G';
 my $octave    = shift || '4';
-my $transform = shift || 'P,L,R,P,L,R'; # giving an integer = random
+my $transform = shift || 'PRL,R,L,R,L,R'; # "diatonic" progression
+                                          # integer = random
 
 if ($transform =~ /^\d+$/) {
     my @nro = qw(L P R N S H PRL);
