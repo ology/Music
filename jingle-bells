@@ -30,14 +30,19 @@ my @notes = qw(
     wn.C4
 );
 
+# Setup a MIDI score to use for the "plain version"
 my $melody = setup_score(bpm => 140);
 
+# Add the notes to the score
 $melody->n(split /\./, $_) for @notes;
 
+# Write out the score as a MIDI file
 $melody->write_score("$0-plain.mid");
 
+# Setup a new MIDI score for the ornamented version
 $melody = setup_score(bpm => 140); # start over!
 
+# Setup a new ornamenter
 my $ornament = Music::MelodicDevice::Ornamentation->new(
     scale_note => 'C',
     scale_name => 'major',
@@ -51,10 +56,12 @@ my %dazzle = (
     10 => sub { $ornament->turn(@_, 1) },
 );
 
+# For each duration.note...
 my $counter = 0;
 for my $note (@notes) {
     my @note = split /\./, $note;
 
+    # Add either a "plain" or ornamented note to the score
     if (exists $dazzle{$counter}) {
         my $fancy = $dazzle{$counter}->(@note);
         $melody->n(@$_) for @$fancy;
@@ -63,8 +70,9 @@ for my $note (@notes) {
         $melody->n(@note);
     }
 
-    # increment the counter, or start over if we've reached the max
+    # Increment the counter, or start over if we've reached the max
     $counter = $counter == MAX ? 0 : $counter + 1;
 }
 
+# Write out the new score as a MIDI file
 $melody->write_score("$0-fancy.mid");
