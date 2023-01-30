@@ -36,17 +36,11 @@ else {
 
 print "Initial: $note$octave\nTransforms: ", join(', ', @$transform), "\n";
 
-my $get_base = sub {
-    my (@chord) = @_;
-    my @base = map { s/^([A-G][#b]?)\d/$1/r } @chord;
-    return @base;
-};
-
 my $nrt = Music::NeoRiemannianTonnetz->new;
 
 my $cn = Music::Chord::Note->new;
 my @chord = $cn->chord_with_octave($note, $octave);
-my @base = $get_base->(@chord);
+my @base = get_base(@chord);
 
 my $score = setup_score(bpm => $bpm);
 
@@ -72,7 +66,7 @@ for my $i (1 .. $max) {
     $score->n('wn', midi_format(@$transformed));
 
     @chord = map { $p->pitchname($_) } @$transformed;
-    @base = $get_base->(@chord);
+    @base = get_base(@chord);
 
     print "$i. $token (", ($posn % @$transform), '): ', ddc($transformed),
         '   ', ddc(\@chord), '   ', scalar chordname(@base), "\n";
@@ -83,3 +77,9 @@ for my $i (1 .. $max) {
 }
 
 $score->write_score("$0.mid");
+
+sub get_base {
+    my (@chord) = @_;
+    my @base = map { s/^([A-G][#b]?)\d/$1/r } @chord;
+    return @base;
+};
