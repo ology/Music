@@ -18,11 +18,11 @@ my $max       = shift || 8;
 my $bpm       = shift || 100;
 my $note      = shift || 'G';
 my $octave    = shift || '4';
-my $transform = shift || 'PRL,R,L,R,L,R'; # "diatonic" progression
-                                          # integer = random
+my $transform = shift || 'X,PRL,R,L,R,L,R'; # "diatonic" progression
+                                            # integer = random
 
 if ($transform =~ /^\d+$/) {
-    my @nro = qw(L P R N S H PRL);
+    my @nro = qw(X L P R N S H PRL);
     $transform = [ map { $nro[ int rand @nro ] } 1 .. $transform - 1 ];
 }
 else {
@@ -44,22 +44,21 @@ my $p = MyPitch->new;
 my @base = map { s/^([A-G][#b]?)\d/$1/r } @chord;
 my @pitches = map { $p->pitchnum($_) } @chord;
 my $notes = \@pitches;
-print "$i. I (0): ", ddc($notes),
-    '   ', ddc(\@chord), "\t", scalar chordname(@base), "\n";
-
-$score->n('wn', midi_format(@$notes));
 
 my $posn = 0;
 
-for $i (2 .. $max) {
-    $posn = int rand 2 ? $posn + 1 : $posn - 1;
-
+for $i (1 .. $max) {
     my $token = $transform->[ $posn % @$transform ];
 
-    my $task;
-    $task = $nrt->taskify_tokens($token) if length $token > 1;
-    my $tx = defined $task ? $task : $token;
-    my $transformed = $nrt->transform($tx, $notes);
+    my $transformed;
+    if ($token =~ /^X$/) {
+        $transformed = \@pitches; # no transformation
+    }
+    else {
+        my $task = $nrt->taskify_tokens($token) if length $token > 1;
+        my $tx = defined $task ? $task : $token;
+        $transformed = $nrt->transform($tx, $notes);
+    }
 
     $score->n('wn', midi_format(@$transformed));
 
@@ -68,6 +67,8 @@ for $i (2 .. $max) {
     print "$i. $token (", ($posn % @$transform), '): ', ddc($transformed),
         '   ', ddc(\@notes), "\t", scalar chordname(@base), "\n";
     $notes = $transformed;
+
+    $posn = int rand 2 ? $posn + 1 : $posn - 1;
 }
 
 $score->write_score("$0.mid");
