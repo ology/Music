@@ -19,7 +19,7 @@ my $octave    = shift || '4';
 my $transform = shift || 'P,L,R,P,L,R'; # giving an integer = random
 
 if ($transform =~ /^\d+$/) {
-    my @nro = qw(L P R N S H);
+    my @nro = qw(L P R N S H PRL);
     $transform = [ map { $nro[ int rand @nro ] } 1 .. $transform - 1 ];
 }
 else {
@@ -29,6 +29,8 @@ else {
 print "Initial: $note$octave\nTransforms: ", join(', ', @$transform), "\n";
 
 my $nrt = Music::NeoRiemannianTonnetz->new;
+
+my $prl = $nrt->taskify_tokens('PRL');
 
 my $cn = Music::Chord::Note->new;
 my @chord = $cn->chord_with_octave($note, $octave);
@@ -41,13 +43,15 @@ my $p = MyPitch->new;
 my @base = map { s/^([A-G][#b]?)\d/$1/r } @chord;
 my @pitches = map { $p->pitchnum($_) } @chord;
 my $notes = \@pitches;
-print "$i. ", ddc($notes), '   ', ddc(\@chord), "\t", scalar chordname(@base), "\n";
+print "$i. Init: ", ddc($notes), '   ', ddc(\@chord), "\t", scalar chordname(@base), "\n";
 
 $score->n('wn', midi_format(@$notes));
 
 for my $t (@$transform) {
     $i++;
-    my $transformed = $nrt->transform($t, $notes);
+
+    my $tx = $t eq 'PRL' ? $prl : $t;
+    my $transformed = $nrt->transform($tx, $notes);
 
     $score->n('wn', midi_format(@$transformed));
 
