@@ -5,7 +5,7 @@ with 'Music::PitchNum';
 package main;
 
 # Ex:
-# perl nro 100 G 4 PRL,R,L,R,L,R,PRL,R,L
+# perl nro 100 G 4 PRL,R,L,R,L,R
 
 use strict;
 use warnings;
