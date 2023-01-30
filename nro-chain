@@ -4,7 +4,7 @@ with 'Music::PitchNum';
 
 package main;
 
-# Ex:
+# Example of a diatonic progression:
 # perl nro 100 G 4 PRL,R,L,R,L,R
 
 use strict;
