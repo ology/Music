@@ -3,6 +3,10 @@ use Moo;
 with 'Music::PitchNum';
 
 package main;
+
+# Ex:
+# perl nro 100 G 4 PRL,R,L,R,L,R,PRL,R,L
+
 use strict;
 use warnings;
 
