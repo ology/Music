@@ -36,13 +36,13 @@ else {
 
 print "Initial: $note$octave\nTransforms: ", join(', ', @$transform), "\n";
 
+my $score = setup_score(bpm => $bpm);
+
 my $nrt = Music::NeoRiemannianTonnetz->new;
 
 my $cn = Music::Chord::Note->new;
 my @chord = $cn->chord_with_octave($note, $octave);
 my @base = get_base(@chord);
-
-my $score = setup_score(bpm => $bpm);
 
 my $p = MyPitch->new;
 my @pitches = map { $p->pitchnum($_) } @chord;
