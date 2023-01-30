@@ -65,10 +65,10 @@ for my $i (1 .. $max) {
 
     $score->n('wn', midi_format(@$transformed));
 
-    my @notes = map { $p->pitchname($_) } @$transformed;
-    @base = map { s/^([A-G][#b]?)\d/$1/r } @notes;
+    @chord = map { $p->pitchname($_) } @$transformed;
+    @base = map { s/^([A-G][#b]?)\d/$1/r } @chord;
     print "$i. $token (", ($posn % @$transform), '): ', ddc($transformed),
-        '   ', ddc(\@notes), '   ', scalar chordname(@base), "\n";
+        '   ', ddc(\@chord), '   ', scalar chordname(@base), "\n";
     $notes = $transformed;
 
     $posn = int rand 2 ? $posn + 1 : $posn - 1;
