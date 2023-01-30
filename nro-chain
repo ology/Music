@@ -43,8 +43,6 @@ my @chord = $cn->chord_with_octave($note, $octave);
 
 my $score = setup_score(bpm => $bpm);
 
-my $i = 1;
-
 my $p = MyPitch->new;
 my @base = map { s/^([A-G][#b]?)\d/$1/r } @chord;
 my @pitches = map { $p->pitchnum($_) } @chord;
@@ -52,7 +50,7 @@ my $notes = \@pitches;
 
 my $posn = 0;
 
-for $i (1 .. $max) {
+for my $i (1 .. $max) {
     my $token = $transform->[ $posn % @$transform ];
 
     my $transformed;
