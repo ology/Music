@@ -68,8 +68,10 @@ for my $i (1 .. $max) {
     @chord = map { $p->pitchname($_) } @$transformed;
     @base = get_base(@chord);
 
-    print "$i. $token (", ($posn % @$transform), '): ', ddc($transformed),
-        '   ', ddc(\@chord), '   ', scalar chordname(@base), "\n";
+    printf "%d. %s (%d): %s\t%s\t%s\n",
+        $i, $token, $posn % @$transform,
+        ddc($transformed), ddc(\@chord),
+        scalar chordname(@base);
 
     $notes = $transformed;
 
