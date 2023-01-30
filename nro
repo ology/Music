@@ -30,8 +30,6 @@ print "Initial: $note$octave\nTransforms: ", join(', ', @$transform), "\n";
 
 my $nrt = Music::NeoRiemannianTonnetz->new;
 
-my $prl = $nrt->taskify_tokens('PRL');
-
 my $cn = Music::Chord::Note->new;
 my @chord = $cn->chord_with_octave($note, $octave);
 
@@ -43,14 +41,16 @@ my $p = MyPitch->new;
 my @base = map { s/^([A-G][#b]?)\d/$1/r } @chord;
 my @pitches = map { $p->pitchnum($_) } @chord;
 my $notes = \@pitches;
-print "$i. Init: ", ddc($notes), '   ', ddc(\@chord), "\t", scalar chordname(@base), "\n";
+print "$i. I: ", ddc($notes), '   ', ddc(\@chord), "\t", scalar chordname(@base), "\n";
 
 $score->n('wn', midi_format(@$notes));
 
 for my $t (@$transform) {
     $i++;
 
-    my $tx = $t eq 'PRL' ? $prl : $t;
+    my $task;
+    $task = $nrt->taskify_tokens($t) if length $t > 1;
+    my $tx = defined $task ? $task : $t;
     my $transformed = $nrt->transform($tx, $notes);
 
     $score->n('wn', midi_format(@$transformed));
