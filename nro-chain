@@ -65,7 +65,7 @@ for $i (1 .. $max) {
     my @notes = map { $p->pitchname($_) } @$transformed;
     @base = map { s/^([A-G][#b]?)\d/$1/r } @notes;
     print "$i. $token (", ($posn % @$transform), '): ', ddc($transformed),
-        '   ', ddc(\@notes), "\t", scalar chordname(@base), "\n";
+        '   ', ddc(\@notes), '   ', scalar chordname(@base), "\n";
     $notes = $transformed;
 
     $posn = int rand 2 ? $posn + 1 : $posn - 1;
