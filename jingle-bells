@@ -8,8 +8,6 @@ use Music::MelodicDevice::Ornamentation;
 
 use constant MAX => 12; # number of notes before resetting our counter
 
-my $melody = setup_score(bpm => 140);
-
 my @notes = qw(
     qn.E4 qn.E4 hn.E4
     qn.E4 qn.E4 hn.E4
@@ -31,6 +29,8 @@ my @notes = qw(
     qn.G4 qn.G4 qn.F4 qn.D4
     wn.C4
 );
+
+my $melody = setup_score(bpm => 140);
 
 $melody->n(split /\./, $_) for @notes;
 
