@@ -1,68 +1,34 @@
-package MyPitch;
-use Moo;
-with 'Music::PitchNum';
-
-package main;
-
-# Ex:
-# perl nro 100 G 4 PRL,R,L,R,L,R,PRL,R,L
-
+#!/usr/bin/env perl
 use strict;
 use warnings;
 
-use Data::Dumper::Compact qw(ddc);
-use Music::NeoRiemannianTonnetz ();
-use Music::Chord::Note ();
-use Music::Chord::Namer qw(chordname);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Chord-Progression-NRO);
 use MIDI::Util qw(setup_score midi_format);
+use Music::Chord::Progression::NRO ();
 
 my $bpm       = shift || 100;
 my $note      = shift || 'C';
 my $octave    = shift || '4';
 my $transform = shift || 'P,L,R,P,L,R'; # giving an integer = random
 
-if ($transform =~ /^\d+$/) {
-    my @nro = qw(L P R N S H PRL);
-    $transform = [ map { $nro[ int rand @nro ] } 1 .. $transform - 1 ];
-}
-else {
-    $transform = [ split /,/, uc $transform ];
+print "Initial: $note$octave\nTransforms: $transform\n";
+
+if ($transform =~ /[A-Z,]/) {
+    $transform = [ split /,/, $transform ];
 }
 
-print "Initial: $note$octave\nTransforms: ", join(', ', @$transform), "\n";
-
-my $nrt = Music::NeoRiemannianTonnetz->new;
-
-my $cn = Music::Chord::Note->new;
-my @chord = $cn->chord_with_octave($note, $octave);
+my $nro = Music::Chord::Progression::NRO->new(
+    base_note   => $note,
+    base_octave => $octave,
+    transform   => $transform,
+    verbose     => 1,
+);
+my $chords = $nro->generate;
 
 my $score = setup_score(bpm => $bpm);
 
-my $i = 1;
+#$score->n('wn', midi_format(@$notes));
 
-my $p = MyPitch->new;
-my @base = map { s/^([A-G][#b]?)\d/$1/r } @chord;
-my @pitches = map { $p->pitchnum($_) } @chord;
-my $notes = \@pitches;
-print "$i. I: ", ddc($notes), '   ', ddc(\@chord), "\t", scalar chordname(@base), "\n";
-
-$score->n('wn', midi_format(@$notes));
-
-for my $token (@$transform) {
-    $i++;
-
-    my $task;
-    $task = $nrt->taskify_tokens($token) if length $token > 1;
-    my $tx = defined $task ? $task : $token;
-    my $transformed = $nrt->transform($tx, $notes);
-
-    $score->n('wn', midi_format(@$transformed));
-
-    my @notes = map { $p->pitchname($_) } @$transformed;
-    @base = map { s/^([A-G][#b]?)\d/$1/r } @notes;
-    print "$i. $token: ", ddc($transformed), '   ', ddc(\@notes), "\t", scalar chordname(@base), "\n";
-    $notes = $transformed;
-}
+$score->n('wn', midi_format(@$_)) for @$chords;
 
 $score->write_score("$0.mid");
