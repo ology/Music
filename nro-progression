@@ -76,6 +76,8 @@ sub top {
 
             $score->n($motif->[$n], @$transformed);
 
+            printf "%d. %s: %s %s", $i, $token, $motif->[$n], ddc($transformed);
+
             $notes = $transformed;
         }
     }
