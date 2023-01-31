@@ -23,7 +23,7 @@ use MIDI::Util qw(setup_score midi_format);
 my $max       = shift || 8;
 my $bpm       = shift || 100;
 my $note      = shift || 'G';
-my $octave    = shift || '4';
+my $octave    = shift || 4;
 my $transform = shift || 'X,PRL,R,L,R,L,R'; # Mostly diatonic
                                             # integer = random
 my @bass; # collected by top
