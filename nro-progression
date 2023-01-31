@@ -12,12 +12,13 @@ package main;
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partition); # local author libs
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partition Music-MelodicDevice-Transposition); # local author libs
 
 use Data::Dumper::Compact qw(ddc);
 use Music::NeoRiemannianTonnetz ();
 use Music::Chord::Note ();
 use Music::Duration::Partition ();
+use Music::MelodicDevice::Transposition ();
 use MIDI::Util qw(setup_score midi_format);
 
 my $max    = shift || 8;
@@ -33,7 +34,7 @@ my $score = setup_score(bpm => $bpm);
 
 $score->synch(
     \&top,
-#    \&bottom,
+    \&bottom,
 );
 
 $score->write_score("$0.mid");
@@ -58,7 +59,7 @@ sub top {
     for my $i (1 .. $max) {
         my $motif = $motifs[ int rand @motifs ];
 
-        for my $m (@$motif) {
+        for my $n (0 .. $#$motif) {
             my $token = $nro[ int rand @nro ];
 
             my $transformed;
@@ -71,9 +72,19 @@ sub top {
                 $transformed = $nrt->transform($tx, $notes);
             }
 
-            $score->n($m, @$transformed);
+            push @bass, $transformed->[0] if $n == 0;
+
+            $score->n($motif->[$n], @$transformed);
 
             $notes = $transformed;
         }
+    }
+}
+
+sub bottom {
+    my $md = Music::MelodicDevice::Transposition->new;
+    my $transposed = $md->transpose(-12, \@bass);
+    for my $note (@$transposed) {
+        $score->n('wn', $note);
     }
 }
