@@ -4,11 +4,6 @@ with 'Music::PitchNum';
 
 package main;
 
-# Use a circular list ("necklace") of Neo-Riemannian transformations,
-# plus "X" meaning "make no transformation." Starting at position zero
-# move forward or backward along the necklace, transforming the
-# current chord, and render the resulting progression as MIDI.
-
 use strict;
 use warnings;
 
