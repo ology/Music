@@ -16,7 +16,8 @@ use Data::Dumper::Compact qw(ddc);
 use Music::NeoRiemannianTonnetz ();
 use Music::Chord::Note ();
 use Music::Chord::Namer qw(chordname);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Transposition);
+use Music::MelodicDevice::Transposition ();
 use MIDI::Util qw(setup_score midi_format);
 
 my $max       = shift || 8;
@@ -41,10 +42,18 @@ my $score = setup_score(bpm => $bpm);
 
 $score->synch(
     \&top,
-#    \&bottom,
+    \&bottom,
 );
 
 $score->write_score("$0.mid");
+
+sub bottom {
+    my $md = Music::MelodicDevice::Transposition->new;
+    my $transposed = $md->transpose(-24, \@bass);
+    for my $note (@$transposed) {
+        $score->n('wn', $note);
+    }
+}
 
 sub top {
     my $nrt = Music::NeoRiemannianTonnetz->new;
@@ -81,6 +90,8 @@ sub top {
             $i, $token, $posn % @$transform,
             ddc($transformed), ddc(\@chord),
             scalar chordname(@base);
+
+        push @bass, $transformed->[0];
 
         $notes = $transformed;
 
