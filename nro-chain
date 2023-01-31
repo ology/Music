@@ -25,6 +25,7 @@ my $note      = shift || 'G';
 my $octave    = shift || '4';
 my $transform = shift || 'X,PRL,R,L,R,L,R'; # Mostly diatonic
                                             # integer = random
+my @bass; # collected by top
 
 if ($transform =~ /^\d+$/) {
     my @nro = qw(L P R N S H PRL);
@@ -38,47 +39,54 @@ print "Initial: $note$octave\nTransforms: ", join(', ', @$transform), "\n";
 
 my $score = setup_score(bpm => $bpm);
 
-my $nrt = Music::NeoRiemannianTonnetz->new;
-
-my $cn = Music::Chord::Note->new;
-my @chord = $cn->chord_with_octave($note, $octave);
-my @base = get_base(@chord);
-
-my $p = MyPitch->new;
-my @pitches = map { $p->pitchnum($_) } @chord;
-my $notes = \@pitches;
-
-my $posn = 0;
-
-for my $i (1 .. $max) {
-    my $token = $transform->[ $posn % @$transform ];
-
-    my $transformed;
-    if ($token =~ /^X$/) {
-        $transformed = \@pitches; # no transformation
-    }
-    else {
-        my $task = $nrt->taskify_tokens($token) if length $token > 1;
-        my $tx = defined $task ? $task : $token;
-        $transformed = $nrt->transform($tx, $notes);
-    }
-
-    $score->n('wn', midi_format(@$transformed));
-
-    @chord = map { $p->pitchname($_) } @$transformed;
-    @base = get_base(@chord);
-
-    printf "%d. %s (%d): %s   %s   %s\n",
-        $i, $token, $posn % @$transform,
-        ddc($transformed), ddc(\@chord),
-        scalar chordname(@base);
-
-    $notes = $transformed;
-
-    $posn = int rand 2 ? $posn + 1 : $posn - 1;
-}
+$score->synch(
+    \&top,
+#    \&bottom,
+);
 
 $score->write_score("$0.mid");
+
+sub top {
+    my $nrt = Music::NeoRiemannianTonnetz->new;
+
+    my $cn = Music::Chord::Note->new;
+    my @chord = $cn->chord_with_octave($note, $octave);
+    my @base = get_base(@chord);
+
+    my $p = MyPitch->new;
+    my @pitches = map { $p->pitchnum($_) } @chord;
+    my $notes = \@pitches;
+
+    my $posn = 0;
+
+    for my $i (1 .. $max) {
+        my $token = $transform->[ $posn % @$transform ];
+
+        my $transformed;
+        if ($token =~ /^X$/) {
+            $transformed = \@pitches; # no transformation
+        }
+        else {
+            my $task = $nrt->taskify_tokens($token) if length $token > 1;
+            my $tx = defined $task ? $task : $token;
+            $transformed = $nrt->transform($tx, $notes);
+        }
+
+        $score->n('wn', midi_format(@$transformed));
+
+        @chord = map { $p->pitchname($_) } @$transformed;
+        @base = get_base(@chord);
+
+        printf "%d. %s (%d): %s   %s   %s\n",
+            $i, $token, $posn % @$transform,
+            ddc($transformed), ddc(\@chord),
+            scalar chordname(@base);
+
+        $notes = $transformed;
+
+        $posn = int rand 2 ? $posn + 1 : $posn - 1;
+    }
+}
 
 sub get_base {
     my (@chord) = @_;
