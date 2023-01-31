@@ -27,44 +27,53 @@ my $octave = shift || 4;
 my $size   = shift || 4;
 my $motifs = shift || 4;
 
+my @bass; # collected from the lowest not of the chords
+
 my $score = setup_score(bpm => $bpm);
 
-my $cn = Music::Chord::Note->new;
-
-my $p = MyPitch->new;
-my @chord = $cn->chord_with_octave($note, $octave);
-my @pitches = map { $p->pitchnum($_) } @chord;
-my $notes = \@pitches;
-
-my $nrt = Music::NeoRiemannianTonnetz->new;
-my @nro = qw(X L P R N S H PRL);
-
-my $mdp = Music::Duration::Partition->new(
-    size => $size,
-    pool => [qw(wn dhn hn qn)],
+$score->synch(
+    \&top,
+#    \&bottom,
 );
-my @motifs = map { $mdp->motif } 1 .. $motifs;
-
-for my $i (1 .. $max) {
-    my $motif = $motifs[ int rand @motifs ];
-
-    for my $m (@$motif) {
-        my $token = $nro[ int rand @nro ];
-
-        my $transformed;
-        if ($token =~ /^X$/) {
-            $transformed = \@pitches; # no transformation
-        }
-        else {
-            my $task = $nrt->taskify_tokens($token) if length $token > 1;
-            my $tx = defined $task ? $task : $token;
-            $transformed = $nrt->transform($tx, $notes);
-        }
-
-        $score->n($m, @$transformed);
-
-        $notes = $transformed;
-    }
-}
 
 $score->write_score("$0.mid");
+
+sub top {
+    my $cn = Music::Chord::Note->new;
+
+    my $p = MyPitch->new;
+    my @chord = $cn->chord_with_octave($note, $octave);
+    my @pitches = map { $p->pitchnum($_) } @chord;
+    my $notes = \@pitches;
+
+    my $nrt = Music::NeoRiemannianTonnetz->new;
+    my @nro = qw(X L P R N S H PRL);
+
+    my $mdp = Music::Duration::Partition->new(
+        size => $size,
+        pool => [qw(wn dhn hn qn)],
+    );
+    my @motifs = map { $mdp->motif } 1 .. $motifs;
+
+    for my $i (1 .. $max) {
+        my $motif = $motifs[ int rand @motifs ];
+
+        for my $m (@$motif) {
+            my $token = $nro[ int rand @nro ];
+
+            my $transformed;
+            if ($token =~ /^X$/) {
+                $transformed = \@pitches; # no transformation
+            }
+            else {
+                my $task = $nrt->taskify_tokens($token) if length $token > 1;
+                my $tx = defined $task ? $task : $token;
+                $transformed = $nrt->transform($tx, $notes);
+            }
+
+            $score->n($m, @$transformed);
+
+            $notes = $transformed;
+        }
+    }
+}
