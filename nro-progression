@@ -1,0 +1,70 @@
+package MyPitch;
+use Moo;
+with 'Music::PitchNum';
+
+package main;
+
+# Use a circular list ("necklace") of Neo-Riemannian transformations,
+# plus "X" meaning "make no transformation." Starting at position zero
+# move forward or backward along the necklace, transforming the
+# current chord, and render the resulting progression as MIDI.
+
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partition); # local author libs
+
+use Data::Dumper::Compact qw(ddc);
+use Music::NeoRiemannianTonnetz ();
+use Music::Chord::Note ();
+use Music::Duration::Partition ();
+use MIDI::Util qw(setup_score midi_format);
+
+my $max    = shift || 8;
+my $bpm    = shift || 100;
+my $note   = shift || 'G';
+my $octave = shift || 4;
+my $size   = shift || 4;
+my $motifs = shift || 4;
+
+my $score = setup_score(bpm => $bpm);
+
+my $cn = Music::Chord::Note->new;
+
+my $p = MyPitch->new;
+my @chord = $cn->chord_with_octave($note, $octave);
+my @pitches = map { $p->pitchnum($_) } @chord;
+my $notes = \@pitches;
+
+my $nrt = Music::NeoRiemannianTonnetz->new;
+my @nro = qw(X L P R N S H PRL);
+
+my $mdp = Music::Duration::Partition->new(
+    size => $size,
+    pool => [qw(wn dhn hn qn)],
+);
+my @motifs = map { $mdp->motif } 1 .. $motifs;
+
+for my $i (1 .. $max) {
+    my $motif = $motifs[ int rand @motifs ];
+
+    for my $m (@$motif) {
+        my $token = $nro[ int rand @nro ];
+
+        my $transformed;
+        if ($token =~ /^X$/) {
+            $transformed = \@pitches; # no transformation
+        }
+        else {
+            my $task = $nrt->taskify_tokens($token) if length $token > 1;
+            my $tx = defined $task ? $task : $token;
+            $transformed = $nrt->transform($tx, $notes);
+        }
+
+        $score->n($m, @$transformed);
+
+        $notes = $transformed;
+    }
+}
+
+$score->write_score("$0.mid");
