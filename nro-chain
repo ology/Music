@@ -29,7 +29,7 @@ my $transform = shift || 'X,PRL,R,L,R,L,R'; # Mostly diatonic
 my @bass; # collected by top
 
 if ($transform =~ /^\d+$/) {
-    my @nro = qw(L P R N S H PRL);
+    my @nro = qw(L P R N S H PRL LRP);
     $transform = [ 'X', map { $nro[ int rand @nro ] } 2 .. $transform - 1 ];
 }
 else {
