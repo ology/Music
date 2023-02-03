@@ -12,11 +12,11 @@ use Music::Chord::Note ();
 use Music::Chord::Progression::Transform ();
 use Music::Scales qw(get_scale_notes);
 
-my $bpm          = shift || 100;
-my $parts        = shift || 'Amv-DMc-Emv-DMc'; # <Note><Major|minor><verse|chorus> phrases
-my $reps         = shift || 1;                 # The number of times to generate an individual phrase
-my $multi        = shift || 1;                 # The number of times the whole phrase is repeated
-my $chords_patch = shift || 4;
+my $bpm   = shift || 100;
+my $parts = shift || 'Amv-DMc-Emv-DMc'; # <Note><Major|minor><verse|chorus> phrases
+my $reps  = shift || 1;                 # The number of times to generate an individual phrase
+my $multi = shift || 1;                 # The number of times the whole phrase is repeated
+my $patch = shift || 4;
 
 my @parts = split /-/, $parts;
 
@@ -44,7 +44,7 @@ sub drums {
 }
 
 sub chords {
-    set_chan_patch($d->score, 0, $chords_patch);
+    set_chan_patch($d->score, 0, $patch);
 
     my $cn = Music::Chord::Note->new;
 
