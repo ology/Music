@@ -97,7 +97,8 @@ sub chords {
                 my @notes = $cn->chord_with_octave($chord, $octave);
                 @notes = midi_format(@notes);
 
-                $last_chord = \@notes if $k == @chords && $i == @parts && $j == $reps;
+                $last_chord = \@notes
+                    if $k == @chords && $i == @parts && $j == $reps;
 
                 last if $k == @chords;
 
