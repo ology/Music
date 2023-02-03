@@ -70,7 +70,6 @@ sub chords {
         # get a random progression
         my $progression = $pool->[ int rand @$pool ];
 
-        # transpose the progression
         my $named = transpose($note, $scale, $progression);
 
         # keep track of the progressions used
