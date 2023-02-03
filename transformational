@@ -1,0 +1,132 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Data-Dataset-ChordProgressions MIDI-Util MIDI-Drummer-Tiny Music-Chord-Progression-Transform);
+
+use Data::Dumper::Compact qw(ddc);
+use Data::Dataset::ChordProgressions ();
+use MIDI::Drummer::Tiny ();
+use MIDI::Util qw(set_chan_patch midi_format);
+use Music::Chord::Note ();
+use Music::Chord::Progression::Transform ();
+use Music::Scales qw(get_scale_notes);
+
+my $bpm   = shift || 100;
+my $parts = shift || 'Amv-DMc-Emv-DMc'; # <Note><Major|minor><verse|chorus> phrases
+my $reps  = shift || 1;                 # The number of times to generate an individual phrase
+my $multi = shift || 1;                 # The number of times the whole phrase is repeated
+
+my $chords_patch = shift || 4;
+my $bass_patch   = shift || 0;
+
+my @parts = split /-/, $parts;
+
+my $channel = 0;
+my $octave  = 4;
+my $bars    = 0; # incremented by chords()
+
+my @progressions;
+
+my $d = MIDI::Drummer::Tiny->new(
+    file   => "$0.mid",
+    bpm    => $bpm,
+    reverb => 10,
+);
+
+$d->sync(
+    \&chords,
+    \&drums,
+);
+
+$d->write;
+
+sub drums {
+    set_chan_patch($d->score, 9, 0);
+    $d->metronome44($bars, 1);
+}
+
+sub chords {
+    set_chan_patch($d->score, $channel++, $chords_patch);
+
+    my $cn = Music::Chord::Note->new;
+
+    my %data = Data::Dataset::ChordProgressions::as_hash();
+
+    my @accum; # chord accumulator
+    my $last_chord; # final chord of the progression
+
+    my $i = 0;
+
+    for my $part (@parts) {
+        $i++;
+
+        my ($note, $section, $scale, $pool);
+        # Set the pool of possible progressions given scale and section
+        if ($part =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
+            ($note, $scale, $section) = ($1, $2, $3);
+            $scale   = $scale   eq 'M' ? 'major' : 'minor';
+            $section = $section eq 'v' ? 'verse' : 'chorus';
+            $pool    = $data{rock}{$scale}{$section};
+        }
+
+        # Set the transposition map
+        my %note_map;
+        @note_map{ get_scale_notes('C', $scale) } = get_scale_notes($note, $scale);
+
+        # Get a random progression
+        my $progression = $pool->[ int rand @$pool ];
+
+        # Transpose the progression chords from C
+        (my $named = $progression->[0]) =~ s/([A-G][#b]?)/$note_map{$1}/g;
+
+        # Keep track of the progressions used
+        push @progressions, $named;
+
+        print "$note $scale: $named, $progression->[1]\n";
+
+        my @chords = split /-/, $named;
+
+        # Add each chord to the score
+        for my $j (1 .. $reps) {
+            my $k = 0;
+            for my $chord (@chords) {
+                $k++;
+                $chord =~ s/sus2/add9/;
+                $chord =~ s/6sus4/sus4/;
+                $chord =~ s/sus$/sus4/;
+                my @notes = $cn->chord_with_octave($chord, $octave);
+                @notes = midi_format(@notes);
+                $last_chord = \@notes if $k == @chords && $i == @parts && $j == $reps;
+                last if $k == @chords;
+                push @accum, \@notes;
+            }
+
+            last if $i == @parts && $j == $reps;
+
+            my ($pitch, $quality);
+            if ($chords[2] =~ /^([A-G][#b]?)(.*)$/) {
+                $pitch   = $1;
+                $quality = $2 =~ /m/ ? 'm' : '';
+            }
+            my $prog = Music::Chord::Progression::Transform->new(
+                base_note     => $pitch,
+                base_octave   => $octave,
+                chord_quality => $quality,
+                transforms    => [qw(PRL)],
+            );
+            my $chord = $prog->generate;
+            push @accum, [ midi_format($chord->[0]->@*) ];
+        }
+    }
+
+    push @accum, $last_chord;
+
+    for my $j (1 .. $multi) {
+        print ddc(\@accum);
+        for my $n (@accum) {
+            $d->note($d->whole, @$n);
+            $bars += 1;
+        }
+    }
+}
