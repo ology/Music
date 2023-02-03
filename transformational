@@ -5,7 +5,7 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Data-Dataset-ChordProgressions MIDI-Util MIDI-Drummer-Tiny Music-Chord-Progression-Transform);
 
 use Data::Dumper::Compact qw(ddc);
-use Data::Dataset::ChordProgressions ();
+use Data::Dataset::ChordProgressions qw(as_hash transpose);
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch midi_format);
 use Music::Chord::Note ();
@@ -48,7 +48,7 @@ sub chords {
 
     my $cn = Music::Chord::Note->new;
 
-    my %data = Data::Dataset::ChordProgressions::as_hash();
+    my %data = as_hash();
 
     my @accum;      # chord accumulator
     my $last_chord; # final chord of the progression
@@ -71,7 +71,7 @@ sub chords {
         my $progression = $pool->[ int rand @$pool ];
 
         # transpose the progression
-        my $named = Data::Dataset::ChordProgressions::transpose($note, $scale, $progression);
+        my $named = transpose($note, $scale, $progression);
 
         # keep track of the progressions used
         push @progressions, $named;
