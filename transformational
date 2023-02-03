@@ -22,9 +22,8 @@ my $bass_patch   = shift || 0;
 
 my @parts = split /-/, $parts;
 
-my $channel = 0;
-my $octave  = 4;
-my $bars    = 0; # incremented by chords()
+my $octave = 4;
+my $bars   = 0; # incremented by chords()
 
 my @progressions;
 
@@ -47,7 +46,7 @@ sub drums {
 }
 
 sub chords {
-    set_chan_patch($d->score, $channel++, $chords_patch);
+    set_chan_patch($d->score, 0, $chords_patch);
 
     my $cn = Music::Chord::Note->new;
 
