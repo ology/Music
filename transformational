@@ -80,7 +80,7 @@ sub chords {
         # keep track of the progressions used
         push @progressions, $named;
 
-        print "$note $scale: $named, $progression->[1]\n";
+        print "$note $scale $section: $named, $progression->[1]\n";
 
         my @chords = split /-/, $named;
 
