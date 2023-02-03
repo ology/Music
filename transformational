@@ -89,13 +89,18 @@ sub chords {
             my $k = 0;
             for my $chord (@chords) {
                 $k++;
+
                 $chord =~ s/sus2/add9/;
                 $chord =~ s/6sus4/6/;
                 $chord =~ s/sus$/sus4/;
+
                 my @notes = $cn->chord_with_octave($chord, $octave);
                 @notes = midi_format(@notes);
+
                 $last_chord = \@notes if $k == @chords && $i == @parts && $j == $reps;
+
                 last if $k == @chords;
+
                 push @accum, \@notes;
             }
 
