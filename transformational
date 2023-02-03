@@ -128,6 +128,7 @@ sub chords {
         print ddc(\@accum);
         for my $n (@accum) {
             $d->note($d->whole, @$n);
+            # increment the bar count for the drums
             $bars += 1;
         }
     }
