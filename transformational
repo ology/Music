@@ -112,7 +112,7 @@ sub chords {
                 base_note     => $pitch,
                 base_octave   => $octave,
                 chord_quality => $quality,
-                transforms    => [qw(PRL)],
+                transforms    => 1,#[qw(PRL)],
                 verbose       => 1,
             );
             my $chord = $prog->generate;
