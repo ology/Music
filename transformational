@@ -102,7 +102,7 @@ sub chords {
 
             last if $i == @parts && $j == $reps;
 
-            # add a transformation of the 3rd chord
+            # add a transformation of the 3rd chord to all but the final phrase
             my ($pitch, $quality);
             if ($chords[2] =~ /^([A-G][#b]?)(.*)$/) {
                 $pitch   = $1;
