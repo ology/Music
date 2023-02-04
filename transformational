@@ -115,8 +115,8 @@ sub chords {
                 transforms    => 1,#[qw(PRL)],
                 verbose       => 1,
             );
-            my $chord = $prog->generate;
-            push @accum, [ midi_format($chord->[0]->@*) ];
+            my ($generated) = $prog->generate;
+            push @accum, [ midi_format($generated->[0]->@*) ];
         }
     }
 
