@@ -113,7 +113,7 @@ sub chords {
                 base_octave   => $octave,
                 chord_quality => $quality,
                 transforms    => [qw(PRL)],
-                verbose       Be verbose=> 1,
+                verbose       => 1,
             );
             my $chord = $prog->generate;
             push @accum, [ midi_format($chord->[0]->@*) ];
