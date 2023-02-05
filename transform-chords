@@ -102,14 +102,24 @@ sub chords {
 }
 
 sub bass {
+    my $mdp = Music::Duration::Partition->new(
+        size => 4,
+        pool => [qw(hn dhn qn)],
+    );
+    my @motifs = map { $mdp->motif } 1 .. $opt{motifs};
+
     my $bass = MIDI::Bassline::Walk->new(
         octave  => $opt{octave_low},
         tonic   => 1,
         verbose => $opt{verbose},
     );
 
-    for my $chord (@chords) {
-        my $notes = $bass->generate($chord, 2);
-        $score->n('hn', $_) for @$notes;
+    for my $n (0 .. $#chords) {
+        my $motif = $motifs[ $n % @motifs ];
+        # generate notes for the number of motif durations, given the nth chord
+        my $notes = $bass->generate($chords[$n], scalar @$motif);
+        for my $i (0 .. $#$motif) {
+            $score->n($motif->[$i], $notes->[$i]);
+        }
     }
 }
