@@ -1,6 +1,4 @@
 #!/usr/bin/env perl
-use strict;
-use warnings;
 
 # Generate or specify a series of chord transformations to render.
 # Examples:
@@ -8,6 +6,9 @@ use warnings;
 # perl transform-melody --b=120 --n=Bb --octave_low=1 --q=m --t=I,P,L,R,PLR --m=3  # same with abbreviations
 # perl transform-melody --t=12 --v
 # perl transform-melody  # or just go with the defaults!
+
+use strict;
+use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Music-Chord-Progression-Transform Music-Duration-Partition); # local author libs
 
