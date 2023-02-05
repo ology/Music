@@ -110,9 +110,7 @@ sub top {
 
     for my $n (1 .. $d->bars * 2) {
         if ($n % 4 == 0 || $n % 6 == 0) {
-            for my $i (0 .. $#$cm) {
-                $d->note($cm->[$i], $notes5[$i]);
-            }
+            $mdp->add_to_score($d->score, $cm, \@notes5);
         }
         else {
             for my $i (0 .. $#$motif1) {
