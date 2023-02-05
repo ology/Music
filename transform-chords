@@ -22,9 +22,9 @@ use Music::Duration::Partition ();
 my %opt = ( # defaults:
     bpm        => 100,
     note       => 'C',
-    octave_hi  => 6,
-    octave_med => 5,
-    octave_low => 2,
+    octave_hi  => 6,  # melody
+    octave_med => 5,  # chords
+    octave_low => 2,  # bass
     quality    => '', # '' = major, 'm' = minor
     transforms => 16,
     motifs     => 2,
