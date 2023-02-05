@@ -4,8 +4,8 @@ use warnings;
 
 # Generate or specify a series of chord transformations to render.
 # Examples:
-# perl transform-melody --bpm=120 --note=Bb --octave=4 --quality=m --transforms=I,P,L,R,PLR --motifs=3
-# perl transform-melody --b=120 --n=Bb --o=4 --q=m --t=I,P,L,R,PLR --m=3  # same thing but abbreviated
+# perl transform-melody --bpm=120 --note=Bb --octave_low=1 --quality=m --transforms=I,P,L,R,PLR --motifs=3
+# perl transform-melody --b=120 --n=Bb --octave_low=1 --q=m --t=I,P,L,R,PLR --m=3  # same thing with abbreviations
 # perl transform-melody --t=12 --v
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Music-Chord-Progression-Transform Music-Duration-Partition); # local author libs
@@ -20,7 +20,9 @@ use Music::Duration::Partition ();
 my %opt = ( # defaults:
     bpm        => 100,
     note       => 'C',
-    octave     => 5,
+    octave_hi  => 6,
+    octave_med => 5,
+    octave_low => 2,
     quality    => '', # '' = major, 'm' = minor
     transforms => 16,
     motifs     => 2,
@@ -29,7 +31,9 @@ my %opt = ( # defaults:
 GetOptions(\%opt,
     'bpm=i',
     'note=s',
-    'octave=i',
+    'octave_hi=i',
+    'octave_med=i',
+    'octave_low=i',
     'quality=s',
     'transforms=i',
     'motifs=i',
@@ -63,7 +67,7 @@ sub melody {
     my @motifs = map { $mdp->motif } 1 .. $opt{motifs};
 
     my $melody = MIDI::Bassline::Walk->new(
-        octave  => 6,
+        octave  => $opt{octave_hi},
         verbose => $opt{verbose},
     );
 
@@ -80,7 +84,7 @@ sub melody {
 sub chords {
     my $transform = Music::Chord::Progression::Transform->new(
         base_note     => $opt{note},
-        base_octave   => $opt{octave},
+        base_octave   => $opt{octave_med},
         chord_quality => $opt{quality},
         transforms    => $opt{transforms},
         verbose       => $opt{verbose},
@@ -96,7 +100,7 @@ sub chords {
 
 sub bass {
     my $bassline = MIDI::Bassline::Walk->new(
-        octave  => 2,
+        octave  => $opt{octave_low},
         tonic   => 1,
         verbose => $opt{verbose},
     );
