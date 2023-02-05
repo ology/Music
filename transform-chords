@@ -89,7 +89,7 @@ sub melody {
         size => 4,
         pool => [qw(qn en sn)],
     );
-    my @motifs = map { $phrase->motif } 1 .. $opt{motifs};
+    my @motifs = $phrase->motifs($opt{motifs});
 
     for my $n (0 .. $#chords) {
         my $motif = $motifs[ $n % @motifs ];
@@ -112,7 +112,7 @@ sub bass {
         size => 4,
         pool => [qw(hn dhn qn)],
     );
-    my @motifs = map { $phrase->motif } 1 .. $opt{motifs};
+    my @motifs = $phrase->motifs($opt{motifs});
 
     for my $n (0 .. $#chords) {
         my $motif = $motifs[ $n % @motifs ];
