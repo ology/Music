@@ -17,20 +17,23 @@ my $quality    = shift || 'm';
 my $transforms = shift || 16;
 my $motifs     = shift || 2;
 
+# convert a comma-separate string of transformations, if not given as a number
 if ($transforms !~ /^\d+$/) {
     $transforms = [ split /,/, $transforms ];
 }
 
 my $score = setup_score(bpm => $bpm);
 
-my @chords;
+my @chords; # populated by the chords function and used by the bass and melody
 
+# play the parts simultaneously
 $score->synch(
     \&chords,
     \&melody,
     \&bass,
 );
 
+# write the score to a midi file
 $score->write_score("$0.mid");
 
 sub melody {
