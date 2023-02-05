@@ -33,6 +33,7 @@ GetOptions(\%opt,
     'quality=s',
     'transforms=i',
     'motifs=i',
+    'verbose',
 );
 
 # convert a comma-separated string of transformations, if not given a number
