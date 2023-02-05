@@ -5,7 +5,7 @@ use warnings;
 # Generate or specify a series of chord transformations to render.
 # Examples:
 # perl transform-melody --bpm=120 --note=Bb --octave=4 --quality=m --transforms=I,P,L,R,PLR --motifs=3
-# perl transform-melody --b=120 --n=Bb --o=4 --q=m --t=I,P,L,R,PLR --m=3   # abbreviated
+# perl transform-melody --b=120 --n=Bb --o=4 --q=m --t=I,P,L,R,PLR --m=3  # same thing but abbreviated
 # perl transform-melody --t=12
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Music-Chord-Progression-Transform Music-Duration-Partition); # local author libs
