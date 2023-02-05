@@ -24,6 +24,7 @@ my %opt = ( # defaults:
     quality    => '', # '' = major, 'm' = minor
     transforms => 16,
     motifs     => 2,
+    verbose    => 0,
 );
 GetOptions(\%opt,
     'bpm=i',
@@ -62,7 +63,7 @@ sub melody {
 
     my $melody = MIDI::Bassline::Walk->new(
         octave  => 6,
-#        verbose => 1,
+        verbose => $opt{verbose},
     );
 
     for my $n (0 .. $#chords) {
@@ -81,7 +82,7 @@ sub chords {
         base_octave   => $opt{octave},
         chord_quality => $opt{quality},
         transforms    => $opt{transforms},
-#        verbose       => 1,
+        verbose       => $opt{verbose},
     );
     my ($generated, $transforms, $chords) = $transform->generate;
     print ddc($transforms, {max_width=>512});
@@ -96,7 +97,7 @@ sub bass {
     my $bassline = MIDI::Bassline::Walk->new(
         octave  => 2,
         tonic   => 1,
-#        verbose => 1,
+        verbose => $opt{verbose},
     );
 
     for my $chord (@chords) {
