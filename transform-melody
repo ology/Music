@@ -17,7 +17,7 @@ my $quality    = shift || 'm';
 my $transforms = shift || 16;
 my $motifs     = shift || 2;
 
-# convert a comma-separated string of transformations, if not given as a number
+# convert a comma-separated string of transformations, if not a number
 if ($transforms !~ /^\d+$/) {
     $transforms = [ split /,/, $transforms ];
 }
