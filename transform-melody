@@ -34,7 +34,7 @@ GetOptions(\%opt,
     'motifs=i',
 );
 
-# convert a comma-separated string of transformations, if not a number
+# convert a comma-separated string of transformations, if not given a number
 if ($opt{transforms} !~ /^\d+$/) {
     $opt{transforms} = [ split /,/, $opt{transforms} ];
 }
