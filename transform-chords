@@ -1,0 +1,115 @@
+#!/usr/bin/env perl
+
+# Generate or specify a series of chord transformations to render.
+# Examples:
+# perl transform-melody --bpm=120 --note=Bb --octave_low=1 --quality=m --transforms=I,P,L,R,PLR --motifs=3
+# perl transform-melody --b=120 --n=Bb --octave_low=1 --q=m --t=I,P,L,R,PLR --m=3  # same with abbreviations
+# perl transform-melody --t=12 --v
+# perl transform-melody  # or just go with the defaults!
+
+use strict;
+use warnings;
+
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Music-Chord-Progression-Transform Music-Duration-Partition); # local author libs
+
+use Data::Dumper::Compact qw(ddc);
+use Getopt::Long qw(GetOptions);
+use MIDI::Bassline::Walk ();
+use MIDI::Util qw(setup_score);
+use Music::Chord::Progression::Transform ();
+use Music::Duration::Partition ();
+
+my %opt = ( # defaults:
+    bpm        => 100,
+    note       => 'C',
+    octave_hi  => 6,
+    octave_med => 5,
+    octave_low => 2,
+    quality    => '', # '' = major, 'm' = minor
+    transforms => 16,
+    motifs     => 2,
+    verbose    => 0,
+);
+GetOptions(\%opt,
+    'bpm=i',
+    'note=s',
+    'octave_hi=i',
+    'octave_med=i',
+    'octave_low=i',
+    'quality=s',
+    'transforms=i',
+    'motifs=i',
+    'verbose',
+);
+
+# convert a comma-separated string of transformations, if not given a number
+if ($opt{transforms} !~ /^\d+$/) {
+    $opt{transforms} = [ split /,/, $opt{transforms} ];
+}
+
+my $score = setup_score(bpm => $opt{bpm});
+
+my @chords; # populated by chords() and used by bass() and melody()
+
+# play the parts simultaneously
+$score->synch(
+    \&chords,
+    \&melody,
+    \&bass,
+);
+
+# write the score to a midi file
+$score->write_score("$0.mid");
+
+sub melody {
+    my $mdp = Music::Duration::Partition->new(
+        size => 4,
+        pool => [qw(qn en sn)],
+    );
+    my @motifs = map { $mdp->motif } 1 .. $opt{motifs};
+
+    my $melody = MIDI::Bassline::Walk->new(
+        octave  => $opt{octave_hi},
+        verbose => $opt{verbose},
+    );
+
+    for my $n (0 .. $#chords) {
+        my $motif = $motifs[ $n % @motifs ];
+        # generate notes for the number of motif durations, given the nth chord
+        my $notes = $melody->generate($chords[$n], scalar @$motif);
+        for my $i (0 .. $#$motif) {
+            $score->n($motif->[$i], $notes->[$i]);
+        }
+    }
+}
+
+sub chords {
+    my $transform = Music::Chord::Progression::Transform->new(
+        base_note     => $opt{note},
+        base_octave   => $opt{octave_med},
+        chord_quality => $opt{quality},
+        transforms    => $opt{transforms},
+        format        => 'midinum',
+        verbose       => $opt{verbose},
+    );
+    my ($generated, $transforms, $chords) = $transform->generate;
+    print ddc($transforms, {max_width=>512});
+    print ddc($chords, {max_width=>512});
+
+    @chords = @$chords;
+
+    $score->n('wn', @$_) for @$generated;
+}
+
+sub bass {
+    my $bassline = MIDI::Bassline::Walk->new(
+        octave  => $opt{octave_low},
+        tonic   => 1,
+        verbose => $opt{verbose},
+    );
+
+    for my $chord (@chords) {
+        my $notes = $bassline->generate($chord, 2);
+        $score->n('hn', $_) for @$notes;
+    }
+}
