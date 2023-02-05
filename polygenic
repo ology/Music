@@ -87,9 +87,7 @@ sub bottom {
         # Select a random voice mapping
         my $voices = ($phrase->{voices}->@*)[int rand $phrase->{voices}->@*];
         # Add the voiced motif to the score
-        for my $n (0 .. $phrase->{motif}->$#*) {
-            $d->note($phrase->{motif}[$n], $voices->[$n]);
-        }
+        $mdp->add_to_score($score, $phrase->{motif}, $voices);
     }
 
     # Add a final resolving whole note to the score
