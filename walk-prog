@@ -93,7 +93,7 @@ sub bass {
 
             my $notes = $bassline->generate($chord, scalar(@$m));
 
-            $mdp->add_to_score($d->score, $n, $notes);
+            $mdp->add_to_score($d->score, $m, $notes);
 
             $i++;
         }
