@@ -24,7 +24,7 @@ if ($transforms !~ /^\d+$/) {
 
 my $score = setup_score(bpm => $bpm);
 
-my @chords; # populated by chords() and used by the bass() and melody()
+my @chords; # populated by chords() and used by bass() and melody()
 
 # play the parts simultaneously
 $score->synch(
