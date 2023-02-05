@@ -57,10 +57,7 @@ sub melody {
 
         my @phrase = $i % $mod ? @$motif : shuffle @$motif;
 
-        for my $n ( 0 .. @notes - 1 ) {
-            $score->n( $phrase[$n], $notes[$n] );
-#            $score->n( $motif->[$n], $notes[$n] );
-        }
+        $mdp->add_to_score($score, \@phrase, \@notes);
 
 #        $score->r('wn');
     }
@@ -89,10 +86,7 @@ sub bass {
 
         my @phrase = $i % 2 ? @$motif : shuffle @$motif;
 
-        for my $n ( 0 .. @notes - 1 ) {
-            $score->n( $phrase[$n], $notes[$n] );
-#            $score->n( $motif->[$n], $notes[$n] );
-        }
+        $mdp->add_to_score($score, \@phrase, \@notes);
 
         $score->n( 'wn', $voice->rand );
     }
