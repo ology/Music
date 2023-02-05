@@ -67,8 +67,8 @@ sub chords {
 #        verbose       => 1,
     );
     my ($generated, $transforms, $chords) = $transform->generate;
-    print ddc($transforms, {max_width=>128});
-    print ddc($chords, {max_width=>128});
+    print ddc($transforms, {max_width=>512});
+    print ddc($chords, {max_width=>512});
 
     @chords = @$chords;
 
