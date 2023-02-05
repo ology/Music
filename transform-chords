@@ -85,11 +85,11 @@ sub melody {
         verbose => $opt{verbose},
     );
 
-    my $mdp = Music::Duration::Partition->new(
+    my $phrase = Music::Duration::Partition->new(
         size => 4,
         pool => [qw(qn en sn)],
     );
-    my @motifs = map { $mdp->motif } 1 .. $opt{motifs};
+    my @motifs = map { $phrase->motif } 1 .. $opt{motifs};
 
     for my $n (0 .. $#chords) {
         my $motif = $motifs[ $n % @motifs ];
@@ -108,11 +108,11 @@ sub bass {
         verbose => $opt{verbose},
     );
 
-    my $mdp = Music::Duration::Partition->new(
+    my $phrase = Music::Duration::Partition->new(
         size => 4,
         pool => [qw(hn dhn qn)],
     );
-    my @motifs = map { $mdp->motif } 1 .. $opt{motifs};
+    my @motifs = map { $phrase->motif } 1 .. $opt{motifs};
 
     for my $n (0 .. $#chords) {
         my $motif = $motifs[ $n % @motifs ];
