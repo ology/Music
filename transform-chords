@@ -102,14 +102,14 @@ sub chords {
 }
 
 sub bass {
-    my $bassline = MIDI::Bassline::Walk->new(
+    my $bass = MIDI::Bassline::Walk->new(
         octave  => $opt{octave_low},
         tonic   => 1,
         verbose => $opt{verbose},
     );
 
     for my $chord (@chords) {
-        my $notes = $bassline->generate($chord, 2);
+        my $notes = $bass->generate($chord, 2);
         $score->n('hn', $_) for @$notes;
     }
 }
