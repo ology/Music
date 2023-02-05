@@ -5,24 +5,35 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Music-Chord-Progression-Transform Music-Duration-Partition); # local author libs
 
 use Data::Dumper::Compact qw(ddc);
+use Getopt::Long qw(GetOptions);
 use MIDI::Bassline::Walk ();
 use MIDI::Util qw(setup_score midi_format);
 use Music::Chord::Progression::Transform ();
 use Music::Duration::Partition ();
 
-my $bpm        = shift || 100;
-my $note       = shift || 'C';
-my $octave     = shift || 5;
-my $quality    = shift || 'm';
-my $transforms = shift || 16;
-my $motifs     = shift || 2;
+my %opt = ( # defaults:
+    bpm        => 100,
+    note       => 'C',
+    octave     => 5,
+    quality    => 'm',
+    transforms => 16,
+    motifs     => 2,
+);
+GetOptions(\%opt,
+    'bpm=i',
+    'note=s',
+    'octave=i',
+    'quality=s',
+    'transforms=i',
+    'motifs=i',
+);
 
 # convert a comma-separated string of transformations, if not a number
-if ($transforms !~ /^\d+$/) {
-    $transforms = [ split /,/, $transforms ];
+if ($opt{transforms} !~ /^\d+$/) {
+    $opt{transforms} = [ split /,/, $opt{transforms} ];
 }
 
-my $score = setup_score(bpm => $bpm);
+my $score = setup_score(bpm => $opt{bpm});
 
 my @chords; # populated by chords() and used by bass() and melody()
 
@@ -41,7 +52,7 @@ sub melody {
         size => 4,
         pool => [qw(qn en sn)],
     );
-    my @motifs = map { $mdp->motif } 1 .. $motifs;
+    my @motifs = map { $mdp->motif } 1 .. $opt{motifs};
 
     my $melody = MIDI::Bassline::Walk->new(
         octave  => 6,
@@ -60,10 +71,10 @@ sub melody {
 
 sub chords {
     my $transform = Music::Chord::Progression::Transform->new(
-        base_note     => $note,
-        base_octave   => $octave,
-        chord_quality => $quality,
-        transforms    => $transforms,
+        base_note     => $opt{note},
+        base_octave   => $opt{octave},
+        chord_quality => $opt{quality},
+        transforms    => $opt{transforms},
 #        verbose       => 1,
     );
     my ($generated, $transforms, $chords) = $transform->generate;
