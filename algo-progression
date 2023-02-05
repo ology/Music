@@ -141,9 +141,7 @@ sub bass {
 
                 my $notes = $bassline->generate($chord, scalar(@$m));
 
-                for my $j (0 .. $#$m) {
-                    $d->note($m->[$j], $notes->[$j]);
-                }
+                $mdp->add_to_score($d->score, $m, $notes);
 
                 $i++;
             }
