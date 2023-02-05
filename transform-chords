@@ -80,16 +80,16 @@ sub chords {
 }
 
 sub melody {
+    my $melody = MIDI::Bassline::Walk->new(
+        octave  => $opt{octave_hi},
+        verbose => $opt{verbose},
+    );
+
     my $mdp = Music::Duration::Partition->new(
         size => 4,
         pool => [qw(qn en sn)],
     );
     my @motifs = map { $mdp->motif } 1 .. $opt{motifs};
-
-    my $melody = MIDI::Bassline::Walk->new(
-        octave  => $opt{octave_hi},
-        verbose => $opt{verbose},
-    );
 
     for my $n (0 .. $#chords) {
         my $motif = $motifs[ $n % @motifs ];
@@ -102,17 +102,17 @@ sub melody {
 }
 
 sub bass {
-    my $mdp = Music::Duration::Partition->new(
-        size => 4,
-        pool => [qw(hn dhn qn)],
-    );
-    my @motifs = map { $mdp->motif } 1 .. $opt{motifs};
-
     my $bass = MIDI::Bassline::Walk->new(
         octave  => $opt{octave_low},
         tonic   => 1,
         verbose => $opt{verbose},
     );
+
+    my $mdp = Music::Duration::Partition->new(
+        size => 4,
+        pool => [qw(hn dhn qn)],
+    );
+    my @motifs = map { $mdp->motif } 1 .. $opt{motifs};
 
     for my $n (0 .. $#chords) {
         my $motif = $motifs[ $n % @motifs ];
