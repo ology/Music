@@ -164,8 +164,6 @@ sub melody {
         my $index = int rand @motifs;
         my $motif = $motifs[$index];
         my $notes = $notes[$index];
-        for my $i (0 .. $#$motif) {
-            $d->note($motif->[$i], $notes->[$i]);
-        }
+        $slower->add_to_score($d->score, $motif, $notes);
     }
 }
