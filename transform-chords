@@ -95,9 +95,7 @@ sub melody {
         my $motif = $motifs[ $n % @motifs ];
         # generate notes for the number of motif durations, given the nth chord
         my $notes = $melody->generate($chords[$n], scalar @$motif);
-        for my $i (0 .. $#$motif) {
-            $score->n($motif->[$i], $notes->[$i]);
-        }
+        $phrase->add_to_score($score, $motif, $notes);
     }
 }
 
@@ -118,8 +116,6 @@ sub bass {
         my $motif = $motifs[ $n % @motifs ];
         # generate notes for the number of motif durations, given the nth chord
         my $notes = $bass->generate($chords[$n], scalar @$motif);
-        for my $i (0 .. $#$motif) {
-            $score->n($motif->[$i], $notes->[$i]);
-        }
+        $phrase->add_to_score($score, $motif, $notes);
     }
 }
