@@ -14,7 +14,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Musi
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use MIDI::Bassline::Walk ();
-use MIDI::Util qw(setup_score midi_format);
+use MIDI::Util qw(setup_score);
 use Music::Chord::Progression::Transform ();
 use Music::Duration::Partition ();
 
@@ -88,6 +88,7 @@ sub chords {
         base_octave   => $opt{octave_med},
         chord_quality => $opt{quality},
         transforms    => $opt{transforms},
+        format        => 'midinum',
         verbose       => $opt{verbose},
     );
     my ($generated, $transforms, $chords) = $transform->generate;
@@ -96,7 +97,7 @@ sub chords {
 
     @chords = @$chords;
 
-    $score->n('wn', midi_format(@$_)) for @$generated;
+    $score->n('wn', @$_) for @$generated;
 }
 
 sub bass {
