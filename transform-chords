@@ -3,7 +3,7 @@
 # Generate or specify a series of chord transformations to render.
 # Examples:
 # perl transform-chords --bpm=120 --note=Bb --octave_low=1 --quality=m --transforms=I,P,L,R,PLR --motifs=3
-# perl transform-chords --b=120 --n=Bb --octave_low=1 --q=m --t=I,P,L,R,PLR --m=3  # same with abbreviations
+# perl transform-chords --b=120 --n=Bb --octave_l=1 --q=m --t=I,P,L,R,PLR --m=3  # same with abbreviations
 # perl transform-chords --t=12 --v
 # perl transform-chords  # or just go with the defaults!
 
