@@ -57,23 +57,17 @@ sub top {
         my @notes1 = map { $voice->rand } 0 .. @$motif - 1;
         my @notes2 = map { $voice->rand } 0 .. @$motif - 1;
 
-        for my $n ( 0 .. @$motif - 1 ) {
-            $score->n( $motif->[$n], $notes1[$n] );
-        }
+        $mdp->add_to_score($score, $motif, \@notes1);
 
         $score->r($wn);
 
         my @phrase = shuffle @$motif;
 
-        for my $n ( 0 .. @$motif - 1 ) {
-            $score->n( $phrase[$n], $notes2[$n] );
-        }
+        $mdp->add_to_score($score, \@phrase, \@notes2);
 
         $score->r($wn);
 
-        for my $n ( 0 .. @$motif - 1 ) {
-            $score->n( $motif->[$n], $notes1[$n] );
-        }
+        $mdp->add_to_score($score, $motif, \@notes1);
 
         $score->r('dhn');
     }
