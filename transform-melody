@@ -4,6 +4,7 @@ use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Music-Chord-Progression-Transform Music-Duration-Partition); # local author libs
 
+use Data::Dumper::Compact qw(ddc);
 use MIDI::Bassline::Walk ();
 use MIDI::Util qw(setup_score midi_format);
 use Music::Chord::Progression::Transform ();
@@ -41,7 +42,7 @@ sub melody {
 
     my $melody = MIDI::Bassline::Walk->new(
         octave  => 6,
-        verbose => 1,
+#        verbose => 1,
     );
 
     for my $n (0 .. $#chords) {
@@ -59,9 +60,11 @@ sub chords {
         base_octave   => $octave,
         chord_quality => $quality,
         transforms    => $transforms,
-        verbose       => 1,
+#        verbose       => 1,
     );
     my ($generated, $transforms, $chords) = $transform->generate;
+    print ddc($transforms, {max_width=>128});
+    print ddc($chords, {max_width=>128});
 
     @chords = @$chords;
 
@@ -72,7 +75,7 @@ sub bass {
     my $bassline = MIDI::Bassline::Walk->new(
         octave  => 2,
         tonic   => 1,
-        verbose => 1,
+#        verbose => 1,
     );
 
     for my $chord (@chords) {
