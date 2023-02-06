@@ -138,7 +138,7 @@ sub _to_score {
         # generate notes for the number of motif durations, given the nth chord
         my $notes = eval { $part->generate($chords->[$n], scalar @$motif) };
         if ($notes) {
-            $mdp->add_to_score($score, $motif, $notes) if $notes;
+            $mdp->add_to_score($score, $motif, $notes);
         }
         else {
             $score->r($_) for @$motif;
