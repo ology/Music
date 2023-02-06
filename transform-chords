@@ -17,7 +17,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Musi
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use MIDI::Bassline::Walk ();
-use MIDI::Util qw(setup_score set_chan_patch);
+use MIDI::Util qw(setup_score set_chan_patch midi_format);
 use Music::Chord::Progression::Transform ();
 use Music::Duration::Partition ();
 
@@ -146,7 +146,9 @@ sub _to_score {
             $mdp->add_to_score($score, $motif, $notes);
         }
         else {
-            $score->r($_) for @$motif;
+            (my $note = $chords->[$n]) =~ s/^([A-G][#b]?).*$/$1/;
+            my @note = midi_format($note . $part->octave);
+            $score->n('wn', $note[0]);
         }
     }
 }
