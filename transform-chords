@@ -32,6 +32,8 @@ my %opt = ( # defaults:
     patch_hi   => 0,
     patch_med  => 0,
     patch_low  => 0,
+    pool_hi    => 'qn,en,sn',
+    pool_low   => 'hn,dhn,qn',
     verbose    => 0,
 );
 GetOptions(\%opt,
@@ -46,6 +48,8 @@ GetOptions(\%opt,
     'patch_hi=i',
     'patch_med=i',
     'patch_low=i',
+    'pool_hi=s',
+    'pool_low=s',
     'verbose',
 );
 
@@ -53,6 +57,9 @@ GetOptions(\%opt,
 if ($opt{transforms} !~ /^\d+$/) {
     $opt{transforms} = [ split /,/, $opt{transforms} ];
 }
+# convert the pools
+$opt{pool_hi}  = [ split /,/, $opt{pool_hi} ];
+$opt{pool_low} = [ split /,/, $opt{pool_low} ];
 
 my $score = setup_score(bpm => $opt{bpm});
 
@@ -100,7 +107,7 @@ sub melody {
 
     my $phrase = Music::Duration::Partition->new(
         size => $size,
-        pool => [qw(qn en sn)],
+        pool => $opt{pool_hi},
     );
 
     _to_score($score, $melody, $phrase, \@chords);
@@ -117,7 +124,7 @@ sub bass {
 
     my $phrase = Music::Duration::Partition->new(
         size => $size,
-        pool => [qw(hn dhn qn)],
+        pool => $opt{pool_low},
     );
 
     _to_score($score, $bass, $phrase, \@chords);
