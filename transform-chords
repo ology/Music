@@ -101,9 +101,8 @@ sub melody {
         size => 4,
         pool => [qw(qn en sn)],
     );
-    my @motifs = $phrase->motifs($opt{motifs});
 
-    _to_score($score, $melody, $phrase, \@motifs, \@chords);
+    _to_score($score, $melody, $phrase, \@chords);
 }
 
 sub bass {
@@ -119,15 +118,15 @@ sub bass {
         size => 4,
         pool => [qw(hn dhn qn)],
     );
-    my @motifs = $phrase->motifs($opt{motifs});
 
-    _to_score($score, $bass, $phrase, \@motifs, \@chords);
+    _to_score($score, $bass, $phrase, \@chords);
 }
 
 sub _to_score {
-    my ($score, $part, $mdp, $motifs, $chords) = @_;
+    my ($score, $part, $mdp, $chords) = @_;
+    my @motifs = $mdp->motifs($opt{motifs});
     for my $n (0 .. $#chords) {
-        my $motif = $motifs->[ $n % @$motifs ];
+        my $motif = $motifs[ $n % @motifs ];
         # generate notes for the number of motif durations, given the nth chord
         my $notes = $part->generate($chords->[$n], scalar @$motif);
         $mdp->add_to_score($score, $motif, $notes);
