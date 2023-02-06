@@ -98,8 +98,6 @@ sub chords {
 }
 
 sub melody {
-    return if $opt{quality} && $opt{quality} ne 'm'; # XXX can't play crazy transformed chords of more than 3 notes :(
-
     set_chan_patch($score, $channel++, $opt{patch_hi});
 
     my $melody = MIDI::Bassline::Walk->new(
@@ -116,8 +114,6 @@ sub melody {
 }
 
 sub bass {
-    return if $opt{quality} && $opt{quality} ne 'm'; # XXX can't play crazy transformed chords of more than 3 notes :(
-
     set_chan_patch($score, $channel++, $opt{patch_low});
 
     my $bass = MIDI::Bassline::Walk->new(
@@ -140,7 +136,12 @@ sub _to_score {
     for my $n (0 .. $#chords) {
         my $motif = $motifs[ $n % @motifs ];
         # generate notes for the number of motif durations, given the nth chord
-        my $notes = $part->generate($chords->[$n], scalar @$motif);
-        $mdp->add_to_score($score, $motif, $notes);
+        my $notes = eval { $part->generate($chords->[$n], scalar @$motif) };
+        if ($notes) {
+            $mdp->add_to_score($score, $motif, $notes) if $notes;
+        }
+        else {
+            $score->r($_) for @$motif;
+        }
     }
 }
