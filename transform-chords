@@ -15,7 +15,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Musi
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use MIDI::Bassline::Walk ();
-use MIDI::Util qw(setup_score);
+use MIDI::Util qw(setup_score set_chan_patch);
 use Music::Chord::Progression::Transform ();
 use Music::Duration::Partition ();
 
@@ -28,6 +28,9 @@ my %opt = ( # defaults:
     quality    => '', # '' = major, 'm' = minor
     transforms => 16,
     motifs     => 2,
+    patch_hi   => 0,
+    patch_med  => 0,
+    patch_low  => 0,
     verbose    => 0,
 );
 GetOptions(\%opt,
@@ -39,6 +42,9 @@ GetOptions(\%opt,
     'quality=s',
     'transforms=i',
     'motifs=i',
+    'patch_hi=i',
+    'patch_med=i',
+    'patch_low=i',
     'verbose',
 );
 
@@ -49,6 +55,7 @@ if ($opt{transforms} !~ /^\d+$/) {
 
 my $score = setup_score(bpm => $opt{bpm});
 
+my $channel = 0;
 my @chords; # populated by chords() and used by bass() and melody()
 
 # play the parts simultaneously
@@ -62,6 +69,8 @@ $score->synch(
 $score->write_score("$0.mid");
 
 sub chords {
+    set_chan_patch($score, $channel++, $opt{patch_med});
+
     my $prog = Music::Chord::Progression::Transform->new(
         base_note     => $opt{note},
         base_octave   => $opt{octave_med},
@@ -80,6 +89,8 @@ sub chords {
 }
 
 sub melody {
+    set_chan_patch($score, $channel++, $opt{patch_hi});
+
     my $melody = MIDI::Bassline::Walk->new(
         octave  => $opt{octave_hi},
         verbose => $opt{verbose},
@@ -95,6 +106,8 @@ sub melody {
 }
 
 sub bass {
+    set_chan_patch($score, $channel++, $opt{patch_low});
+
     my $bass = MIDI::Bassline::Walk->new(
         octave  => $opt{octave_low},
         tonic   => 1,
