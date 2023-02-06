@@ -62,8 +62,8 @@ $opt{pool_hi}  = [ split /,/, $opt{pool_hi} ];
 $opt{pool_low} = [ split /,/, $opt{pool_low} ];
 
 my $channel = 0;
-my $size = 4; # number of beats per phrase
-my @chords; # populated by chords() and used by bass() and melody()
+my $size    = 4; # number of beats per phrase
+my @chords;      # populated by chords() and used by bass() and melody()
 
 my $score = setup_score(bpm => $opt{bpm});
 
