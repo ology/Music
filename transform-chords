@@ -4,7 +4,7 @@
 # Examples:
 # perl transform-chords --bpm=120 --note=Bb --octave_low=1 --quality=m --transforms=I,P,L,R,PLR --motifs=3
 # perl transform-chords --b=120 --n=Bb --octave_l=1 --q=m --t=I,P,L,R,PLR --m=3  # same with abbreviations
-# perl transform-chords --octave_hi=4 --patch_hi=69 --octave_hi=4 --patch_med=4 --patch_low=35 # change patches
+# perl transform-chords --octave_hi=4 --patch_hi=69 --octave_med=4 --patch_med=4 --patch_low=35 # change patches
 # perl transform-chords --t=12 --v
 # perl transform-chords  # or just go with the defaults!
 
