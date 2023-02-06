@@ -98,7 +98,7 @@ sub chords {
 }
 
 sub melody {
-    return if $opt{quality} && $opt{quality} ne 'm'; # XXX can't play crazy chords more than 3 notes :(
+    return if $opt{quality} && $opt{quality} ne 'm'; # XXX can't play crazy chords of more than 3 notes :(
 
     set_chan_patch($score, $channel++, $opt{patch_hi});
 
@@ -116,7 +116,7 @@ sub melody {
 }
 
 sub bass {
-    return if $opt{quality} && $opt{quality} ne 'm'; # XXX can't play crazy chords more than 3 notes :(
+    return if $opt{quality} && $opt{quality} ne 'm'; # XXX can't play crazy chords of more than 3 notes :(
 
     set_chan_patch($score, $channel++, $opt{patch_low});
 
