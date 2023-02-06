@@ -32,8 +32,8 @@ my %opt = ( # defaults:
     patch_hi   => 0,
     patch_med  => 0,
     patch_low  => 0,
-    pool_hi    => 'qn,en,sn',
-    pool_low   => 'hn,dhn,qn',
+    pool_hi    => 'qn,en,sn',  # melody
+    pool_low   => 'hn,dhn,qn', # bass
     verbose    => 0,
 );
 GetOptions(\%opt,
