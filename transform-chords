@@ -34,6 +34,7 @@ my %opt = ( # defaults:
     patch_low  => 0,
     pool_hi    => 'qn,en,sn',  # melody
     pool_low   => 'hn,dhn,qn', # bass
+    allowed    => 'N,T',
     verbose    => 0,
 );
 GetOptions(\%opt,
@@ -50,6 +51,7 @@ GetOptions(\%opt,
     'patch_low=i',
     'pool_hi=s',
     'pool_low=s',
+    'allowed=s',
     'verbose',
 );
 
@@ -60,6 +62,7 @@ if ($opt{transforms} !~ /^\d+$/) {
 # convert the pools
 $opt{pool_hi}  = [ split /,/, $opt{pool_hi} ];
 $opt{pool_low} = [ split /,/, $opt{pool_low} ];
+$opt{allowed}  = [ split /,/, $opt{allowed} ];
 
 my $channel = 0;
 my $size    = 4; # number of beats per phrase
@@ -86,6 +89,7 @@ sub chords {
         chord_quality => $opt{quality},
         transforms    => $opt{transforms},
         format        => 'midinum',
+        allowed       => $opt{allowed},
         verbose       => $opt{verbose},
     );
     my ($generated, $transforms, $chords) = $prog->generate;
