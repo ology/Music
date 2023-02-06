@@ -57,6 +57,7 @@ if ($opt{transforms} !~ /^\d+$/) {
 my $score = setup_score(bpm => $opt{bpm});
 
 my $channel = 0;
+my $size = 4; # number of beats per phrase
 my @chords; # populated by chords() and used by bass() and melody()
 
 # play the parts simultaneously
@@ -98,7 +99,7 @@ sub melody {
     );
 
     my $phrase = Music::Duration::Partition->new(
-        size => 4,
+        size => $size,
         pool => [qw(qn en sn)],
     );
 
@@ -115,7 +116,7 @@ sub bass {
     );
 
     my $phrase = Music::Duration::Partition->new(
-        size => 4,
+        size => $size,
         pool => [qw(hn dhn qn)],
     );
 
