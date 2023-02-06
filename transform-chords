@@ -61,11 +61,11 @@ if ($opt{transforms} !~ /^\d+$/) {
 $opt{pool_hi}  = [ split /,/, $opt{pool_hi} ];
 $opt{pool_low} = [ split /,/, $opt{pool_low} ];
 
-my $score = setup_score(bpm => $opt{bpm});
-
 my $channel = 0;
 my $size = 4; # number of beats per phrase
 my @chords; # populated by chords() and used by bass() and melody()
+
+my $score = setup_score(bpm => $opt{bpm});
 
 # play the parts simultaneously
 $score->synch(
