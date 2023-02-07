@@ -11,7 +11,7 @@ use Music::Scales qw(get_scale_notes);
 
 my $size = shift || 2;
 
-my @notes = get_scale_notes('C', 'chromatic');;
+my @notes = get_scale_notes('C', 'chromatic');
 
 my %intervals = (
     1  => 'half-step',
