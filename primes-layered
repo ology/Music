@@ -5,7 +5,7 @@
 # Play the prime numbers modulo the number of notes of the
 # given scale in 2 parts: Fast (top) and Long (bottom)
 #
-# Example:
+# Examples:
 # perl primes-layered  # just use the defaults!
 # perl primes-layered 2048 major 300 0 73; timidity primes-layered.mid
 #
