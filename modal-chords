@@ -4,12 +4,12 @@ use warnings;
 
 # Play the chords of the given scale mode.
 
-use Data::Dumper::Compact 'ddc';
+use Data::Dumper::Compact qw(ddc);
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-ToRoman);
 use MIDI::Util qw(setup_score midi_format);
-use Music::Chord::Note;
+use Music::Chord::Note ();
 use Music::Scales qw(get_scale_notes);
-use Music::ToRoman;
+use Music::ToRoman ();
 
 my $note = shift || 'C';
 my $mode = shift || 'ionian'; # ionian, dorian, phrygian, lydian, mixolydian, aeolian, locrian
