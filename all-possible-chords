@@ -10,14 +10,14 @@ use Music::Chord::Namer qw(chordname);
 
 my $size = shift || 3;
 
-my $x = PitchConvert->new;
+my $c = PitchConvert->new;
 my $i = 0;
 my %seen;
 
 my $iter = variations([0 .. 11], $size);
 
 while (my $v = $iter->next) {
-    my @notes = map { $x->pitchname($_, ignore_octave => 1) } @$v;
+    my @notes = map { $c->pitchname($_, ignore_octave => 1) } @$v;
 
     my $name = chordname(@notes);
 
