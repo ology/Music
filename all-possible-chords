@@ -23,6 +23,6 @@ while (my $v = $iter->next) {
 
     next if $seen{$name}++; # skip duplicate chords
 
-    printf "%4d. %-9s => %-11s => %s\n",
+    printf "%4d. %-9s = %-11s => %s\n",
         ++$i, "@$v", "@notes", $name;
 }
