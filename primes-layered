@@ -27,7 +27,7 @@ use Music::Scales qw(get_scale_MIDI);
 use constant BASE   => 'C';  # scale note
 use constant WHOLE  => 'wn'; # bottom duration
 use constant EIGHTH => 'en'; # top duration
-use constant BEATS  => 8;    # number of EIGHTHs in a WHOLE note
+use constant BEATS  => 8;    # number of eighths in a whole note
 use constant BOCT   => 3;    # bottom octave
 use constant TOCT   => 4;    # top octave
 
