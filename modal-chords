@@ -11,8 +11,8 @@ use Music::Chord::Note ();
 use Music::Scales qw(get_scale_notes);
 use Music::ToRoman ();
 
-my $note = shift || 'C';
-my $mode = shift || 'ionian'; # ionian, dorian, phrygian, lydian, mixolydian, aeolian, locrian
+my $note   = shift || 'C';
+my $mode   = shift || 'ionian'; # ionian, dorian, phrygian, lydian, mixolydian, aeolian, locrian
 my $octave = shift || 4;
 
 # Get a chord map of major/minor/diminished designations
@@ -25,7 +25,6 @@ my @chords = $mtr->get_scale_chords;
 my @scale = get_scale_notes($note, $mode);
 
 my @chord_scale = map { $scale[$_] . $chords[$_] } 0 .. $#chords;
-#warn(__PACKAGE__,' ',__LINE__," MARK: ",ddc(\@chord_scale));exit;
 
 my $score = setup_score();
 
