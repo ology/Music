@@ -27,11 +27,11 @@ use constant BEATS  => 8;    # number of EIGHTHs in a WHOLE note
 use constant BOCT   => 3;    # bottom octave
 use constant TOCT   => 5;    # top octave
 
-my $limit   = shift || 1024;
-my $scale   = shift || 'major';
-my $bpm     = shift || 100;
-my $tpatch  = shift // 4;   # 4=electric piano
-my $bpatch  = shift // 95;  # 95=synth
+my $limit   = shift || 1024;    # number of primes
+my $scale   = shift || 'major'; # scale of notes
+my $bpm     = shift || 100;     # beats per minute
+my $tpatch  = shift // 4;       # 4=electric piano
+my $bpatch  = shift // 95;      # 95=synth
 
 my $channel = 0;
 
