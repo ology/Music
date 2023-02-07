@@ -18,5 +18,5 @@ while (my $v = $iter->next) {
         push @notes, $x->pitchname($n, ignore_octave => 1);
     }
     my $name = chordname(@notes);
-    printf "%3d. %-7s => %-8s => %s\n", $i++, "@$v", "@notes", $name;
+    printf "%3d. %-9s => %-11s => %s\n", $i++, "@$v", "@notes", $name;
 }
