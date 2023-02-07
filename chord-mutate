@@ -12,7 +12,7 @@ my @chord = qw( C4 Ds4 C5 );
 my @bass  = qw( C3 G3 As3 C4 );
 my @duras = qw( en qn qn );
 
-my $trebp = shift || 4; # Treble patch
+my $trebp = shift || 4;  # Treble patch
 my $bassp = shift || 35; # Bass patch
 
 my $half  = 'hn';
