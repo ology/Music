@@ -20,25 +20,25 @@ my $mtr = Music::ToRoman->new(
     scale_note => $note,
     scale_name => $mode,
 );
-my @chords = $mtr->get_scale_chords;
+my @scale_chords = $mtr->get_scale_chords;
 
 my @scale = get_scale_notes($note, $mode);
 
-my @chord_scale = map { $scale[$_] . $chords[$_] } 0 .. $#chords;
+my @chords = map { $scale[$_] . $scale_chords[$_] } 0 .. $#scale_chords;
 
 my $score = setup_score();
 
 my $mcn = Music::Chord::Note->new;
 
 # Add each chord to the score
-for my $c (@chord_scale) {
+for my $c (@chords) {
     my @chord = $mcn->chord_with_octave($c, $octave);
     print ddc(\@chord);
     $score->n('wn', midi_format(@chord));
 }
 
 # Add a resolving chord to the score
-my @chord = $mcn->chord_with_octave($chord_scale[0], $octave);
+my @chord = $mcn->chord_with_octave($chords[0], $octave);
 print ddc(\@chord);
 $score->n('wn', midi_format(@chord));
 
