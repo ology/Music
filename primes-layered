@@ -56,7 +56,7 @@ sub top {
         get_scale_MIDI(BASE, TOCT + 1, $scale),
     );
 
-    prime_loop(\@scale, EIGHTH);
+    score_primes(\@scale, EIGHTH);
 }
 
 sub bottom {
@@ -66,10 +66,10 @@ sub bottom {
 
     my @scale = get_scale_MIDI(BASE, BOCT, $scale);
 
-    prime_loop(\@scale, WHOLE);
+    score_primes(\@scale, WHOLE);
 }
 
-sub prime_loop {
+sub score_primes {
     my ($scale, $duration) = @_;
 
     # select the appropriate number of primes to play
