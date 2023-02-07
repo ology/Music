@@ -12,6 +12,7 @@ my $size = shift || 3;
 
 my $x = MyCleverModule->new;
 my $i = 0;
+my %seen;
 
 my $iter = variations([0 .. 11], $size);
 while (my $v = $iter->next) {
@@ -20,6 +21,7 @@ while (my $v = $iter->next) {
         push @notes, $x->pitchname($n, ignore_octave => 1);
     }
     my $name = chordname(@notes);
+    next if $seen{$name}++;
     printf "%5d. %-9s => %-11s => %s\n",
         $i++, "@$v", "@notes", $name;
 }
