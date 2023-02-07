@@ -22,6 +22,6 @@ while (my $v = $iter->next) {
     }
     my $name = chordname(@notes);
     next if $seen{$name}++;
-    printf "%5d. %-9s => %-11s => %s\n",
+    printf "%4d. %-9s => %-11s => %s\n",
         ++$i, "@$v", "@notes", $name;
 }
