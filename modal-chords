@@ -34,9 +34,8 @@ my $mcn = Music::Chord::Note->new;
 # Add each chord to the score
 for my $c (@chord_scale) {
     my @chord = $mcn->chord_with_octave($c, $octave);
-    @chord = midi_format(@chord);
     print ddc(\@chord);
-    $score->n('wn', @chord);
+    $score->n('wn', midi_format(@chord));
 }
 
 # Add a resolving chord to the score
