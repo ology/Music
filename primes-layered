@@ -91,7 +91,7 @@ sub score_primes {
         $i++;
 
         # get the position of the prime in the scale
-        my $mod  = $p % @$scale;
+        my $mod = $p % @$scale;
         # get the scale note, given the position
         my $note = $scale->[$mod];
 
