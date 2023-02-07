@@ -28,7 +28,7 @@ use constant BOCT   => 3;    # bottom octave
 use constant TOCT   => 5;    # top octave
 
 my $limit  = shift || 1024;    # upper bound of primes
-my $scale  = shift || 'major'; # scale of notes
+my $scale  = shift || 'major'; # scale name
 my $bpm    = shift || 100;     # beats per minute
 my $tpatch = shift // 4;       # 4=electric piano
 my $bpatch = shift // 95;      # 95=synth
