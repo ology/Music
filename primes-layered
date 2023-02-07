@@ -10,8 +10,8 @@ use warnings;
 # Example:
 # perl primes-layered 2048 major 300 0 73; timidity primes.mid
 #
-# This tiny program uses global variables. Run away if that
-# frightens you.
+# * This tiny program uses global variables. Run away if that
+#   frightens you.
 #
 ###
 
@@ -74,6 +74,7 @@ sub bottom {
 sub prime_loop {
     my ($scale, $duration) = @_;
 
+    # select the appropriate number of primes
     my @loop = $duration eq WHOLE
         ? @primes[ 0 .. @primes / BEATS ]
         : @primes;
