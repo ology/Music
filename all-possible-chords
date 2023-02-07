@@ -17,10 +17,7 @@ my %seen;
 my $iter = variations([0 .. 11], $size);
 
 while (my $v = $iter->next) {
-    my @notes;
-    for my $n (@$v) {
-        push @notes, $x->pitchname($n, ignore_octave => 1);
-    }
+    my @notes = map { $x->pitchname($_, ignore_octave => 1) } @$v;
     my $name = chordname(@notes);
 
     next if $seen{$name}++; # skip duplicate chords
