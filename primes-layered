@@ -33,18 +33,16 @@ my $bpm    = shift || 100;     # beats per minute
 my $tpatch = shift // 4;       # 4=electric piano
 my $bpatch = shift // 95;      # 95=synth
 
-my $channel = 0;
+my $channel = 0; # the initial MIDI channel
 
 my @primes = primes($limit);
 
 my $score = setup_score(bpm => $bpm);
 
-my @phrases = (
+$score->synch(
     \&top,
     \&bottom,
 );
-
-$score->synch(@phrases);
 
 $score->write_score("$0.mid");
 
