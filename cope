@@ -14,15 +14,15 @@ my $size = shift || 2;
 my @notes = get_scale_notes('C', 'chromatic');
 
 my %intervals = (
-    1  => 'half-step',
-    2  => 'whole-step',
-    3  => 'minor 3rd',
-    4  => 'major 3rd',
-    5  => 'perfect 4th',
-    6  => 'tritone',
-    7  => 'perfect 5th',
-    8  => 'minor 6th',
-    9  => 'major 6th',
+     1 => 'half-step',
+     2 => 'whole-step',
+     3 => 'minor 3rd',
+     4 => 'major 3rd',
+     5 => 'perfect 4th',
+     6 => 'tritone',
+     7 => 'perfect 5th',
+     8 => 'minor 6th',
+     9 => 'major 6th',
     10 => 'flat 7',
     11 => '7th',
 );
