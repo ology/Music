@@ -24,7 +24,7 @@ my $max    = shift || 16; # Number of measures to produce
 my $bpm    = shift || 70; # Beats per minute
 my $tpatch = shift // 4;  # Treble patch
 my $bpatch = shift // 35; # Bass patch
-my $choice = shift || ''; # Comma-separated motifs. Blank for random
+my $choice = shift || ''; # Comma-separated sub numbers. Blank for random
 
 # Declare the available measures
 my @barst = map { my $sub = 'bart' . $_; \&$sub } 1 .. TOTAL_BARS; # Treble
