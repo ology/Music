@@ -15,13 +15,16 @@ my $i = 0;
 my %seen;
 
 my $iter = variations([0 .. 11], $size);
+
 while (my $v = $iter->next) {
     my @notes;
     for my $n (@$v) {
         push @notes, $x->pitchname($n, ignore_octave => 1);
     }
     my $name = chordname(@notes);
-    next if $seen{$name}++;
+
+    next if $seen{$name}++; # skip duplicate chords
+
     printf "%4d. %-9s => %-11s => %s\n",
         ++$i, "@$v", "@notes", $name;
 }
