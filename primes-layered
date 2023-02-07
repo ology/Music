@@ -10,8 +10,8 @@
 # perl primes-layered 2048 chromatic 300 0 73
 # timidity primes-layered.mid
 #
-# * This tiny program uses global variables. Run away if that
-#   disturbs you.
+# * This tiny program uses global variables.
+#   Run away if that disturbs you.
 #
 ###
 
