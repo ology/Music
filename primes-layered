@@ -82,11 +82,14 @@ sub prime_loop {
     for my $p (@p) {
         $i++;
 
+        # get the position of the prime given the number of notes in the scale
         my $mod  = $p % @$scale;
+        # get the scale note, given the position
         my $note = $scale->[$mod];
 
         print "\t$i. P: $p, Mod: $mod, Note: $note\n";
 
+        # add the note to the score
         $score->n($duration, $note);
     }
 }
