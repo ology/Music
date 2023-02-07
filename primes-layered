@@ -8,7 +8,7 @@ use warnings;
 # given scale in 2 parts: Fast (top) and Long (bottom)
 #
 # Example:
-# perl primes-layered 2048 major 300 0 73; timidity primes.mid
+# perl primes-layered 2048 major 300 0 73; timidity primes-layered.mid
 #
 # * This tiny program uses global variables. Run away if that
 #   disturbs you.
@@ -29,7 +29,7 @@ use constant TOCT   => 4;    # top octave
 
 my $limit  = shift || 1024;    # upper bound of primes
 my $scale  = shift || 'major'; # scale name
-my $bpm    = shift || 100;     # beats per minute
+my $bpm    = shift || 120;     # beats per minute
 my $tpatch = shift // 4;       # 4=electric piano
 my $bpatch = shift // 95;      # 95=synth
 
