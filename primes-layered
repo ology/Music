@@ -78,7 +78,7 @@ sub score_primes {
 
     # select the appropriate number of primes to play
     my @p = $duration eq WHOLE
-        ? @primes[ 0 .. @primes / BEATS ]
+        ? @primes[ 0 .. int @primes / BEATS ]
         : @primes;
 
     my $i = 0;
