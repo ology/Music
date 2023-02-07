@@ -6,6 +6,7 @@
 # given scale in 2 parts: Fast (top) and Long (bottom)
 #
 # Example:
+# perl primes-layered  # just use the defaults!
 # perl primes-layered 2048 major 300 0 73; timidity primes-layered.mid
 #
 # * This tiny program uses global variables. Run away if that
