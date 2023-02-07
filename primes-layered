@@ -82,8 +82,8 @@ sub score_primes {
         : @primes;
 
     my $m = length scalar @$scale; # the modulo field width
-    my $n = length scalar @p; # the loop counter field width
-    my $w = length $p[-1]; # the prime field width
+    my $n = length scalar @p;      # the loop counter field width
+    my $w = length $p[-1];         # the prime field width
 
     my $i = 0; # loop counter
 
