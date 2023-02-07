@@ -2,11 +2,11 @@
 use strict;
 use warnings;
 
-use Data::Dumper::Compact 'ddc';
+use Data::Dumper::Compact qw(ddc);
 use Algorithm::Combinatorics qw(combinations);
 use Music::Chord::Namer qw(chordname);
-use Music::Note;
-use Music::Tension::Cope;
+use Music::Note ();
+use Music::Tension::Cope ();
 
 my $size = shift || 2;
 
