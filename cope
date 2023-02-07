@@ -30,8 +30,7 @@ my $tension = Music::Tension::Cope->new;
 
 my %tensions;
 
-my @data = 0 .. 11;
-my $iter = combinations(\@data, $size);
+my $iter = combinations([0 .. 11], $size);
 
 while (my $v = $iter->next) {
     my $t = $tension->vertical($v);
