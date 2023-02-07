@@ -41,8 +41,7 @@ for my $c (@chord_scale) {
 
 # Add a resolving chord to the score
 my @chord = $mcn->chord_with_octave($chord_scale[0], $octave);
-@chord = midi_format(@chord);
 print ddc(\@chord);
-$score->n('wn', @chord);
+$score->n('wn', midi_format(@chord));
 
 $score->write_score("$0.mid");
