@@ -81,7 +81,10 @@ sub score_primes {
         ? @primes[ 0 .. int @primes / BEATS ]
         : @primes;
 
-    my $i = 0;
+    my $i = 0; # loop counter
+    my $m = length scalar @$scale; # the modulo field width
+    my $n = length scalar @p; # the counter field width
+    my $w = length $p[-1]; # the prime field width
 
     for my $p (@p) {
         $i++;
@@ -91,7 +94,8 @@ sub score_primes {
         # get the scale note, given the position
         my $note = $scale->[$mod];
 
-        print "\t$i. P: $p, Mod: $mod, Note: $note\n";
+        printf "\t%*d. P: %*d, Mod: %*d, Note: %d\n",
+            $n, $i, $w, $p, $m, $mod, $note;
 
         # add the note to the score
         $score->n($duration, $note);
