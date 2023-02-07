@@ -13,17 +13,17 @@ my $size = shift || 2;
 my @notes = qw(C C# D D# E F F# G G# A A# B);
 
 my %intervals = (
-    7  => 'perfect 5th',
-    4  => 'major 3rd',
+    1  => 'half-step',
+    2  => 'whole-step',
     3  => 'minor 3rd',
-    9  => 'major 6th',
-    8  => 'minor 6th',
+    4  => 'major 3rd',
     5  => 'perfect 4th',
     6  => 'tritone',
+    7  => 'perfect 5th',
+    8  => 'minor 6th',
+    9  => 'major 6th',
     10 => 'flat 7',
-    2  => 'whole-step',
     11 => '7th',
-    1  => 'half-step',
 );
 
 my $tension = Music::Tension::Cope->new;
