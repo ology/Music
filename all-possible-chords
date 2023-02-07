@@ -1,0 +1,22 @@
+package MyCleverModule;
+use Moo;
+with('Music::PitchNum');
+
+package main;
+use strict;
+use warnings;
+use Algorithm::Combinatorics qw(combinations);
+use Music::Chord::Namer qw(chordname);
+
+my $x = MyCleverModule->new;
+my $i = 0;
+
+my $iter = combinations([0 .. 11], 3);
+while (my $v = $iter->next) {
+    my @notes;
+    for my $n (@$v) {
+        push @notes, $x->pitchname($n, ignore_octave => 1);
+    }
+    my $name = chordname(@notes);
+    print $i++, ". @$v => @notes => $name\n";
+}
