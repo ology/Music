@@ -10,7 +10,11 @@ use Music::Tension::Cope;
 
 my $size = shift || 2;
 
-my @notes = qw(C C# D D# E F F# G G# A A# B);
+my @notes;
+{
+    no warnings qw(qw);
+    @notes = qw(C C# D D# E F F# G G# A A# B);
+}
 
 my %intervals = (
     1  => 'half-step',
