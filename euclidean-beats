@@ -16,8 +16,10 @@ my $loops = shift || 8;   # times to loop
 my $bpm   = shift || 90;  # beats per minute
 my $vol   = shift || 100; # volume 0-127
 
+# get the euclidean pattern generator
 my $mcr = Music::CreatingRhythms->new;
 
+# get a drummer!
 my $d = MIDI::Drummer::Tiny->new(
    file   => "$0.mid",
    bpm    => $bpm,
