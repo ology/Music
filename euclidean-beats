@@ -27,9 +27,9 @@ my $d = MIDI::Drummer::Tiny->new(
 );
 
 # get a list of primes less than or equal to N
+my @primes;
 my $it = Math::Prime::Util::PrimeIterator->new;
 my $p = $it->iterate;
-my @primes;
 while ($p <= $n) {
     push @primes, $p;
     $p = $it->iterate;
