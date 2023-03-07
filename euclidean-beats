@@ -32,6 +32,7 @@ while ($p <= $n) {
     push @primes, $p;
     $p = $it->iterate;
 }
+
 my $kick_p = 0;
 while ($kick_p < 3) {
     $kick_p = $primes[ int rand @primes ];
