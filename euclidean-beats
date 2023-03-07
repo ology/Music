@@ -11,16 +11,17 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-CreatingR
 use MIDI::Drummer::Tiny ();
 use Music::CreatingRhythms ();
 
-my $n = shift || 16; # number of terms
-
-my $loops = shift || 8; # times to loop
+my $n     = shift || 16;  # number of terms
+my $loops = shift || 8;   # times to loop
+my $bpm   = shift || 90;  # beats per minute
+my $vol   = shift || 100; # volume 0-127
 
 my $mcr = Music::CreatingRhythms->new;
 
 my $d = MIDI::Drummer::Tiny->new(
    file   => "$0.mid",
-   bpm    => 90,
-   volume => 100,
+   bpm    => $bpm,
+   volume => $vol,
    bars   => $loops,
    reverb => 15,
 );
