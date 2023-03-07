@@ -1,0 +1,85 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Play Euclidean word sets.
+
+use Data::Dumper::Compact qw(ddc);
+use Math::Prime::Util::PrimeIterator ();
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-CreatingRhythms); # local author libs
+use MIDI::Drummer::Tiny ();
+use Music::CreatingRhythms ();
+
+my $m = shift || 12;  # maximum onsets
+my $n = shift || 16;  # number of terms
+
+my $loops = shift || 8; # times to loop
+
+my $mcr = Music::CreatingRhythms->new;
+
+my $d = MIDI::Drummer::Tiny->new(
+   file   => "$0.mid",
+   bpm    => 90,
+   volume => 100,
+   bars   => $loops,
+   reverb => 15,
+);
+
+my $it = Math::Prime::Util::PrimeIterator->new;
+my @primes;
+my $p = $it->iterate;
+while ($p <= $n) {
+    push @primes, $p;
+    $p = $it->iterate;
+}
+my $kick_p = 0;
+while ($kick_p < 3) {
+    $kick_p = $primes[ int rand @primes ];
+}
+my $kick_sequence  = $mcr->euclid($kick_p, $n);
+
+my $snare_p = $kick_p;
+while ($snare_p >= $kick_p) {
+    $snare_p = $primes[ int rand @primes ];
+}
+my $snare_sequence = $mcr->euclid($snare_p, $n);
+
+$d->sync(
+    \&hihat,
+    \&snare_drum,
+    \&kick_drum,
+);
+
+$d->write;
+
+sub hihat {
+    my $x = int $n / 2;
+    my $sequence = [ (1) x $x ];
+    print "1/$x Hihat: ", ddc($sequence);
+    for my $n (1 .. $d->bars) {
+        for my $i (@$sequence) {
+            $i ? $d->note('en', $d->closed_hh) : $d->rest('en');
+        }
+    }
+}
+
+sub snare_drum {
+    my $p = int(rand $m) + 1;
+    print "1/$n Snare ($snare_p, $n): ", ddc($snare_sequence);
+    for (1 .. $d->bars) {
+        for my $i (@$snare_sequence) {
+            $i ? $d->note('sn', $d->snare) : $d->rest('sn');
+        }
+    }
+}
+
+sub kick_drum {
+    my $p = int(rand $m) + 1;
+    my $sequence = $mcr->euclid($p, $n);
+    print "1/$n Kick  ($kick_p, $n): ", ddc($kick_sequence);
+    for (1 .. $d->bars) {
+        for my $i (@$kick_sequence) {
+            $i ? $d->note('sn', $d->kick) : $d->rest('sn');
+        }
+    }
+}
