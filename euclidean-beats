@@ -72,7 +72,7 @@ sub snare_drum {
 
 sub kick_drum {
     my $sequence = $mcr->euclid($kick_p, $n);
-    print "1/16th Kick  ($kick_p, $n): ", ddc($sequence);
+    print "1/16th Kick ($kick_p, $n): ", ddc($sequence);
     _add_to_score($d, $d->sixteenth, $d->kick, $sequence);
 }
 
