@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Play Euclidean word sets.
+# Play Euclidean word sets where the onsets are unique prime numbers less than the total number of beats.
 
 use Data::Dumper::Compact qw(ddc);
 use Math::Prime::Util::PrimeIterator ();
