@@ -11,8 +11,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-CreatingR
 use MIDI::Drummer::Tiny ();
 use Music::CreatingRhythms ();
 
-my $m = shift || 12;  # maximum onsets
-my $n = shift || 16;  # number of terms
+my $n = shift || 16; # number of terms
 
 my $loops = shift || 8; # times to loop
 
@@ -66,7 +65,6 @@ sub hihat {
 }
 
 sub snare_drum {
-    my $p = int(rand $m) + 1;
     print "1/$n Snare ($snare_p, $n): ", ddc($snare_sequence);
     for (1 .. $d->bars) {
         for my $i (@$snare_sequence) {
@@ -76,7 +74,6 @@ sub snare_drum {
 }
 
 sub kick_drum {
-    my $p = int(rand $m) + 1;
     my $sequence = $mcr->euclid($p, $n);
     print "1/$n Kick  ($kick_p, $n): ", ddc($kick_sequence);
     for (1 .. $d->bars) {
