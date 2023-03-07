@@ -37,13 +37,11 @@ my $kick_p = 0;
 while ($kick_p < 3) {
     $kick_p = $primes[ int rand @primes ];
 }
-my $kick_sequence  = $mcr->euclid($kick_p, $n);
 
 my $snare_p = $kick_p;
 while ($snare_p >= $kick_p) {
     $snare_p = $primes[ int rand @primes ];
 }
-my $snare_sequence = $mcr->euclid($snare_p, $n);
 
 $d->sync(
     \&hihat,
@@ -65,19 +63,20 @@ sub hihat {
 }
 
 sub snare_drum {
-    print "1/$n Snare ($snare_p, $n): ", ddc($snare_sequence);
+    my $sequence = $mcr->euclid($snare_p, $n);
+    print "1/$n Snare ($snare_p, $n): ", ddc($sequence);
     for (1 .. $d->bars) {
-        for my $i (@$snare_sequence) {
+        for my $i (@$sequence) {
             $i ? $d->note('sn', $d->snare) : $d->rest('sn');
         }
     }
 }
 
 sub kick_drum {
-    my $sequence = $mcr->euclid($p, $n);
-    print "1/$n Kick  ($kick_p, $n): ", ddc($kick_sequence);
+    my $sequence = $mcr->euclid($kick_p, $n);
+    print "1/$n Kick  ($kick_p, $n): ", ddc($sequence);
     for (1 .. $d->bars) {
-        for my $i (@$kick_sequence) {
+        for my $i (@$sequence) {
             $i ? $d->note('sn', $d->kick) : $d->rest('sn');
         }
     }
