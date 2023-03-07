@@ -80,7 +80,7 @@ sub _add_to_score {
     my ($d, $duration, $patch, $sequence) = @_;
     for (1 .. $d->bars) {
         for my $i (@$sequence) {
-            $i ? $d->note($duration, $patch) : $d->rest('en');
+            $i ? $d->note($duration, $patch) : $d->rest($duration);
         }
     }
 }
