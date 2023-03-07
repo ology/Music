@@ -61,29 +61,26 @@ sub hihat {
     my $x = int $n / 2;
     my $sequence = [ (1) x $x ];
     print "1/$x Hihat: ", ddc($sequence);
-    for (1 .. $d->bars) {
-        for my $i (@$sequence) {
-            $i ? $d->note('en', $d->closed_hh) : $d->rest('en');
-        }
-    }
+    _add_to_score($d, $d->closed_hh, $sequence);
 }
 
 sub snare_drum {
     my $sequence = $mcr->euclid($snare_p, $n);
     print "1/$n Snare ($snare_p, $n): ", ddc($sequence);
-    for (1 .. $d->bars) {
-        for my $i (@$sequence) {
-            $i ? $d->note('sn', $d->snare) : $d->rest('sn');
-        }
-    }
+    _add_to_score($d, $d->snare, $sequence);
 }
 
 sub kick_drum {
     my $sequence = $mcr->euclid($kick_p, $n);
     print "1/$n Kick  ($kick_p, $n): ", ddc($sequence);
+    _add_to_score($d, $d->kick, $sequence);
+}
+
+sub _add_to_score {
+    my ($d, $patch, $sequence) = @_;
     for (1 .. $d->bars) {
         for my $i (@$sequence) {
-            $i ? $d->note('sn', $d->kick) : $d->rest('sn');
+            $i ? $d->note('en', $patch) : $d->rest('en');
         }
     }
 }
