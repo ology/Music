@@ -61,7 +61,7 @@ sub hihat {
     my $x = int $n / 2;
     my $sequence = [ (1) x $x ];
     print "1/$x Hihat: ", ddc($sequence);
-    for my $n (1 .. $d->bars) {
+    for (1 .. $d->bars) {
         for my $i (@$sequence) {
             $i ? $d->note('en', $d->closed_hh) : $d->rest('en');
         }
