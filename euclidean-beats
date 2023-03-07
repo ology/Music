@@ -60,19 +60,19 @@ $d->write;
 sub hihat {
     my $x = int $n / 2;
     my $sequence = [ (1) x $x ];
-    print "1/$x Hihat: ", ddc($sequence);
+    print '1/8th Hihat: ', ddc($sequence);
     _add_to_score($d, $d->eighth, $d->closed_hh, $sequence);
 }
 
 sub snare_drum {
     my $sequence = $mcr->euclid($snare_p, $n);
-    print "1/$n Snare ($snare_p, $n): ", ddc($sequence);
+    print "1/16th Snare ($snare_p, $n): ", ddc($sequence);
     _add_to_score($d, $d->sixteenth, $d->snare, $sequence);
 }
 
 sub kick_drum {
     my $sequence = $mcr->euclid($kick_p, $n);
-    print "1/$n Kick  ($kick_p, $n): ", ddc($sequence);
+    print "1/16th Kick  ($kick_p, $n): ", ddc($sequence);
     _add_to_score($d, $d->sixteenth, $d->kick, $sequence);
 }
 
