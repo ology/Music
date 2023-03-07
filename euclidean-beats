@@ -26,6 +26,7 @@ my $d = MIDI::Drummer::Tiny->new(
    reverb => 15,
 );
 
+# get a list of primes less than or equal to N
 my $it = Math::Prime::Util::PrimeIterator->new;
 my @primes;
 my $p = $it->iterate;
@@ -34,22 +35,26 @@ while ($p <= $n) {
     $p = $it->iterate;
 }
 
+# get the number of onsets for the kick drum
 my $kick_p = 0;
 while ($kick_p < 3) {
     $kick_p = $primes[ int rand @primes ];
 }
 
+# get the number of onsets for the snare drum
 my $snare_p = $kick_p;
 while ($snare_p >= $kick_p) {
     $snare_p = $primes[ int rand @primes ];
 }
 
+# play all the parts simultaneously
 $d->sync(
     \&hihat,
     \&snare_drum,
     \&kick_drum,
 );
 
+# write the score to a midi file
 $d->write;
 
 sub hihat {
