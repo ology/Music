@@ -87,10 +87,9 @@ sub fill {
             my $self = shift;
             my $snare_ons = 1 + int rand 8;
             return {
-              duration         => 16,     # sixteenth note fill
-              $self->closed_hh => '00000000',
-              $self->snare     => $d->euclidean($snare_ons, 8),
-              $self->kick      => '10001000',
+                $self->closed_hh => '00000000',
+                $self->snare     => $d->euclidean($snare_ons, 8),
+                $self->kick      => '10001000',
             };
         },
         $d->closed_hh => [ '11111111' ],
