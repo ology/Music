@@ -40,9 +40,7 @@ $d->sync(
 );
 
 set_chan_patch($d->score, 9, 0);
-$d->sync(
-    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111') x $d->bars ] ) },
-);
+$d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111') x $d->bars ] );
 
 $d->sync(
     sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                      x ($d->bars - 1) ] ) },
