@@ -31,7 +31,7 @@ $d->sync(
     sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                      x ($d->bars - 1) ] ) },
     sub { $d->pattern( instrument => $d->snare,     patterns => [ ($d->euclidean($snare_onset, 16)) x ($d->bars - 1) ] ) },
     sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_onset, 16))  x ($d->bars - 1) ] ) },
-    sub { bottom() },
+    sub { bottom($d->bars - 1) },
 );
 
 $d->sync(
@@ -92,8 +92,6 @@ sub bottom {
     my @notes1 = map { $voice->rand } @$motif1;
 
     for my $i (1 .. $bars) {
-        last if $i >= $d->bars;
-
         if ($i % 2) {
             $mdp1->add_to_score($d->score, $motif1, \@notes1);
         }
