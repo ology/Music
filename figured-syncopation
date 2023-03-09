@@ -1,0 +1,107 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# Use local libraries
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition );
+
+use MIDI::Drummer::Tiny;
+use MIDI::Util qw(set_chan_patch);
+use Music::Duration::Partition;
+use Music::Scales;
+use Music::VoiceGen;
+
+my $snare_onset = shift || 5;
+my $kick_onset  = shift || 7;
+
+my $bpm   = shift || 90;
+my $note  = shift || 'A';
+my $scale = shift || 'pminor';
+my $patch = 35;#42; # bass patch
+
+my $d = MIDI::Drummer::Tiny->new(
+    file    => "$0.mid",
+    bpm     => 90,
+    verbose => 1,
+);
+
+$d->count_in(1);
+
+$d->sync(
+    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                      x ($d->bars - 1) ] ) },
+    sub { $d->pattern( instrument => $d->snare,     patterns => [ ($d->euclidean($snare_onset, 16)) x ($d->bars - 1) ] ) },
+    sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_onset, 16))  x ($d->bars - 1) ] ) },
+    sub { bottom() },
+);
+
+$d->sync(
+    sub { fill() },
+    sub { bottom(1) },
+);
+
+$d->write;
+
+sub fill {
+    set_chan_patch($d->score, 9, 0);
+    $d->add_fill(
+        sub {
+            my $self = shift;
+            return {
+              duration         => 16,     # sixteenth note fill
+              $self->closed_hh => '00000000',
+              $self->snare     => '11111111',
+              $self->kick      => '10001000',
+            };
+        },
+        $d->closed_hh => [ '11111111' ],  # example phrase
+        $d->snare     => [ '0101' ],      # "
+        $d->kick      => [ '1010' ],      # "
+    );
+}
+
+sub bottom {
+    my ($bars) = @_;
+
+    $bars ||= $d->bars;
+
+    set_chan_patch($d->score, 1, $patch);
+
+    my $size = 3; # number of beats to play over
+
+    my $mdp1 = Music::Duration::Partition->new(
+        size => $size,
+        pool => [qw/qn en sn/],
+        #verbose=>1,
+    );
+    my $motif1 = $mdp1->motif;
+
+    my $mdp2 = Music::Duration::Partition->new(
+        size => $size,
+        pool => [qw/qn en/],
+        #verbose=>1,
+    );
+    my $motif2 = $mdp2->motif;
+
+    my @pitches = get_scale_MIDI($note, 1, $scale);
+
+    my $voice = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => [qw/-4 -3 -2 2 3 4/],
+    );
+
+    my @notes1 = map { $voice->rand } @$motif1;
+
+    for my $i (1 .. $bars) {
+        last if $i >= $d->bars;
+
+        if ($i % 2) {
+            $mdp1->add_to_score($d->score, $motif1, \@notes1);
+        }
+        else {
+            my @notes2 = map { $voice->rand } @$motif2;
+            $mdp2->add_to_score($d->score, $motif2, \@notes2);
+        }
+
+        $d->rest($d->quarter);
+    }
+}
