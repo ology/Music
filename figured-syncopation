@@ -53,9 +53,9 @@ sub fill {
               $self->kick      => '10001000',
             };
         },
-        $d->closed_hh => [ '11111111' ],  # example phrase
-        $d->snare     => [ '0101' ],      # "
-        $d->kick      => [ '1010' ],      # "
+        $d->closed_hh => [ '11111111' ],
+        $d->snare     => [ $d->euclidean($snare_onset, 16) ],
+        $d->kick      => [ $d->euclidean($kick_onset, 16) ],
     );
 }
 
