@@ -13,10 +13,9 @@ use Music::Scales;
 use Music::VoiceGen;
 
 my $bpm   = shift || 90;
+my $patch = shift // 35;#42; # bass patch : -1 = off
 my $note  = shift || 'A';
 my $scale = shift || 'pminor';
-my $patch = shift // 35;#42; # bass patch
-my $bass  = shift // 0; # turn the bass on or off
 
 my $phrase_size = 16; # changing this will possibly make the bass have a bad day
 
@@ -117,7 +116,7 @@ sub fill {
 sub bottom {
     my ($bars) = @_;
 
-    return unless $bass;
+    return if $patch < 0;
 
     $bars ||= $d->bars;
 
