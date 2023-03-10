@@ -16,7 +16,7 @@ my $note  = shift || 'A';
 my $scale = shift || 'pminor';
 my $patch = 35;#42; # bass patch
 
-my $snare_onset_A = shift || 2;
+my $snare_onset_A = shift || 3;
 my $kick_onset_A  = shift || 4;
 my $snare_onset_B = shift || 3;
 my $kick_onset_B  = shift || 5;
