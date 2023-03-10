@@ -21,7 +21,7 @@ my $patch = 35;#42; # bass patch
 
 my $d = MIDI::Drummer::Tiny->new(
     file    => "$0.mid",
-    bpm     => 90,
+    bpm     => $bpm,
     verbose => 1,
 );
 
