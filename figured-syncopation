@@ -43,13 +43,10 @@ $d->count_in(1);
 
 part($snare_onset_A, $kick_onset_A);
 #counterpart();
-
 part($snare_onset_A, $kick_onset_A);
 #counterpart();
-
 part($snare_onset_B, $kick_onset_B);
 #counterpart();
-
 part($snare_onset_B, $kick_onset_B);
 
 $d->write;
