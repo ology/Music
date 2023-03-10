@@ -17,7 +17,7 @@ my $patch = shift // 35;#42; # bass patch : -1 = off
 my $note  = shift || 'A';
 my $scale = shift || 'pminor';
 
-my $phrase_size = 12; # changing this will probably make the bass have a bad day
+my $phrase_size = 16; # changing this will probably make the bass have a bad day
 
 my $kick_onset_B = rand_onset();
 while ($kick_onset_B < 3) {
