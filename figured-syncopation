@@ -12,7 +12,7 @@ use Music::Duration::Partition;
 use Music::Scales;
 use Music::VoiceGen;
 
-use constant PHRASE_SIZE => 16;
+use constant PHRASE_SIZE => 16; # changing this will have unintended consequences
 
 my $bpm   = shift || 90;
 my $note  = shift || 'A';
