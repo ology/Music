@@ -11,13 +11,15 @@ use Music::Duration::Partition;
 use Music::Scales;
 use Music::VoiceGen;
 
-my $snare_onset = shift || 2;
-my $kick_onset  = shift || 3;
-
 my $bpm   = shift || 90;
 my $note  = shift || 'A';
 my $scale = shift || 'pminor';
 my $patch = 35;#42; # bass patch
+
+my $snare_onset_A = shift || 2;
+my $kick_onset_A  = shift || 4;
+my $snare_onset_B = shift || 3;
+my $kick_onset_B  = shift || 5;
 
 my $d = MIDI::Drummer::Tiny->new(
     file    => "$0.mid",
@@ -27,16 +29,16 @@ my $d = MIDI::Drummer::Tiny->new(
 
 $d->count_in(1);
 
-part($snare_onset, $kick_onset);
+part($snare_onset_A, $kick_onset_A);
 #counterpart();
 
-part($snare_onset, $kick_onset);
+part($snare_onset_A, $kick_onset_A);
 #counterpart();
 
-part($snare_onset, $kick_onset + 1);
+part($snare_onset_B, $kick_onset_B);
 #counterpart();
 
-part($snare_onset, $kick_onset + 1);
+part($snare_onset_B, $kick_onset_B);
 
 $d->write;
 
@@ -55,12 +57,13 @@ sub part {
         sub { bottom($d->bars - 1) },
     );
     $d->sync(
-        sub { fill() },
+        sub { fill($snare_ons, $kick_ons) },
         sub { bottom(1) },
     );
 }
 
 sub fill {
+    my ($snare_onset, $kick_onset) = @_;
     set_chan_patch($d->score, 9, 0);
     $d->add_fill(
         sub {
