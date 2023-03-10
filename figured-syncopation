@@ -54,7 +54,7 @@ $d->sync(
 
 set_chan_patch($d->score, 9, 0);
 $d->sync(
-    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                      x ($d->bars - 1) ] ) },
+    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                          x ($d->bars - 1) ] ) },
     sub { $d->pattern( instrument => $d->snare,     patterns => [ ($d->euclidean($snare_onset + 2, 16)) x ($d->bars - 1) ] ) },
     sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_onset + 2, 16))  x ($d->bars - 1) ] ) },
     sub { bottom($d->bars - 1) },
@@ -68,7 +68,7 @@ set_chan_patch($d->score, 9, 0);
 #$d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111') x $d->bars ] );
 
 $d->sync(
-    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                      x ($d->bars - 1) ] ) },
+    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                          x ($d->bars - 1) ] ) },
     sub { $d->pattern( instrument => $d->snare,     patterns => [ ($d->euclidean($snare_onset + 2, 16)) x ($d->bars - 1) ] ) },
     sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_onset + 2, 16))  x ($d->bars - 1) ] ) },
     sub { bottom($d->bars - 1) },
