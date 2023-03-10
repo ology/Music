@@ -11,8 +11,8 @@ use Music::Duration::Partition;
 use Music::Scales;
 use Music::VoiceGen;
 
-my $snare_onset = shift || 5;
-my $kick_onset  = shift || 7;
+my $snare_onset = shift || 3;
+my $kick_onset  = shift || 4;
 
 my $bpm   = shift || 90;
 my $note  = shift || 'A';
@@ -27,16 +27,16 @@ my $d = MIDI::Drummer::Tiny->new(
 
 $d->count_in(1);
 
-part($snare_onset - 2, $kick_onset);
-#counterpart();
-
-part($snare_onset - 2, $kick_onset);
-#counterpart();
-
 part($snare_onset, $kick_onset);
 #counterpart();
 
 part($snare_onset, $kick_onset);
+#counterpart();
+
+part($snare_onset, $kick_onset + 1);
+#counterpart();
+
+part($snare_onset, $kick_onset + 1);
 
 $d->write;
 
