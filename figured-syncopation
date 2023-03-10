@@ -99,11 +99,13 @@ sub fill {
         sub {
             my $self = shift;
             my $snare_ons = 1 + int rand($phrase_size / 2);
+            my $f_hh = '0' x ($phrase_size / 2);
+            (my $f_kick = $f_hh) =~ s/^0/1/;
             return {
                 duration         => $phrase_size,
-                $self->closed_hh => '00000000',
+                $self->closed_hh => $f_hh,
                 $self->snare     => $d->euclidean($snare_ons, $phrase_size / 2),
-                $self->kick      => '10001000',
+                $self->kick      => $f_kick,
             };
         },
         $d->closed_hh => [ $hh ],
