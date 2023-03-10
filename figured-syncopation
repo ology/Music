@@ -77,8 +77,9 @@ sub rotate_sequence {
 sub part {
     my ($snare_ons, $kick_ons) = @_;
     set_chan_patch($d->score, 9, 0);
+    my $hh = '1' x (PHRASE_SIZE / 2);
     $d->sync(
-        sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111') x ($d->bars - 1) ] ) },
+        sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ($hh) x ($d->bars - 1) ] ) },
         sub { $d->pattern( instrument => $d->snare,     patterns => [ (rotate_sequence($snare_ons)) x ($d->bars - 1) ] ) },
         sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_ons, PHRASE_SIZE)) x ($d->bars - 1) ] ) },
         sub { bottom($d->bars - 1) },
@@ -92,6 +93,7 @@ sub part {
 sub fill {
     my ($snare_onset, $kick_onset) = @_;
     set_chan_patch($d->score, 9, 0);
+    my $hh = '1' x (PHRASE_SIZE / 2);
     $d->add_fill(
         sub {
             my $self = shift;
@@ -103,7 +105,7 @@ sub fill {
                 $self->kick      => '10001000',
             };
         },
-        $d->closed_hh => [ '11111111' ],
+        $d->closed_hh => [ $hh ],
         $d->snare     => [ rotate_sequence($snare_onset) ],
         $d->kick      => [ $d->euclidean($kick_onset, PHRASE_SIZE) ],
     );
