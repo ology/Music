@@ -27,58 +27,38 @@ my $d = MIDI::Drummer::Tiny->new(
 
 $d->count_in(1);
 
-$d->sync(
-    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                      x ($d->bars - 1) ] ) },
-    sub { $d->pattern( instrument => $d->snare,     patterns => [ ($d->euclidean($snare_onset, 16)) x ($d->bars - 1) ] ) },
-    sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_onset, 16))  x ($d->bars - 1) ] ) },
-    sub { bottom($d->bars - 1) },
-);
-$d->sync(
-    sub { fill() },
-    sub { bottom(1) },
-);
+part($snare_onset - 2, $kick_onset);
+counterpart();
 
-set_chan_patch($d->score, 9, 0);
-#$d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111') x $d->bars ] );
+part($snare_onset - 2, $kick_onset);
+counterpart();
 
-$d->sync(
-    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                      x ($d->bars - 1) ] ) },
-    sub { $d->pattern( instrument => $d->snare,     patterns => [ ($d->euclidean($snare_onset, 16)) x ($d->bars - 1) ] ) },
-    sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_onset, 16))  x ($d->bars - 1) ] ) },
-    sub { bottom($d->bars - 1) },
-);
-$d->sync(
-    sub { fill() },
-    sub { bottom(1) },
-);
+part($snare_onset, $kick_onset);
+counterpart();
 
-set_chan_patch($d->score, 9, 0);
-$d->sync(
-    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                          x ($d->bars - 1) ] ) },
-    sub { $d->pattern( instrument => $d->snare,     patterns => [ ($d->euclidean($snare_onset + 2, 16)) x ($d->bars - 1) ] ) },
-    sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_onset + 2, 16))  x ($d->bars - 1) ] ) },
-    sub { bottom($d->bars - 1) },
-);
-$d->sync(
-    sub { fill() },
-    sub { bottom(1) },
-);
-
-set_chan_patch($d->score, 9, 0);
-#$d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111') x $d->bars ] );
-
-$d->sync(
-    sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                          x ($d->bars - 1) ] ) },
-    sub { $d->pattern( instrument => $d->snare,     patterns => [ ($d->euclidean($snare_onset + 2, 16)) x ($d->bars - 1) ] ) },
-    sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_onset + 2, 16))  x ($d->bars - 1) ] ) },
-    sub { bottom($d->bars - 1) },
-);
-$d->sync(
-    sub { fill() },
-    sub { bottom(1) },
-);
+part($snare_onset, $kick_onset);
 
 $d->write;
+
+sub counterpart {
+    set_chan_patch($d->score, 9, 0);
+    $d->count_in($d->bars);
+}
+
+sub part {
+    my ($snare_ons, $kick_ons) = @_;
+    set_chan_patch($d->score, 9, 0);
+    $d->sync(
+        sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                    x ($d->bars - 1) ] ) },
+        sub { $d->pattern( instrument => $d->snare,     patterns => [ ($d->euclidean($snare_ons, 16)) x ($d->bars - 1) ] ) },
+        sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_ons, 16))  x ($d->bars - 1) ] ) },
+        sub { bottom($d->bars - 1) },
+    );
+    $d->sync(
+        sub { fill() },
+        sub { bottom(1) },
+    );
+}
 
 sub fill {
     set_chan_patch($d->score, 9, 0);
