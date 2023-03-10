@@ -85,6 +85,10 @@ sub part {
 sub fill {
     my ($snare_onset, $kick_onset) = @_;
     set_chan_patch($d->score, 9, 0);
+    my $mcr = Music::CreatingRhythms->new;
+    my $sequence = $mcr->euclid($snare_onset, 16);
+    $sequence = $mcr->rotate_n(2, $sequence);
+    my $sequence_string = join '', @$sequence;
     $d->add_fill(
         sub {
             my $self = shift;
@@ -97,7 +101,7 @@ sub fill {
             };
         },
         $d->closed_hh => [ '11111111' ],
-        $d->snare     => [ $d->euclidean($snare_onset, 16) ],
+        $d->snare     => [ $sequence_string ],
         $d->kick      => [ $d->euclidean($kick_onset, 16) ],
     );
 }
