@@ -12,6 +12,8 @@ use Music::Duration::Partition;
 use Music::Scales;
 use Music::VoiceGen;
 
+use constant PHRASE_SIZE => 16;
+
 my $bpm   = shift || 90;
 my $note  = shift || 'A';
 my $scale = shift || 'pminor';
@@ -66,7 +68,7 @@ sub counterpart {
 sub rotate_sequence {
     my ($onsets) = @_;
     my $mcr = Music::CreatingRhythms->new;
-    my $sequence = $mcr->euclid($onsets, 16);
+    my $sequence = $mcr->euclid($onsets, PHRASE_SIZE);
     $sequence = $mcr->rotate_n(2, $sequence);
     my $sequence_string = join '', @$sequence;
     return $sequence_string;
@@ -76,9 +78,9 @@ sub part {
     my ($snare_ons, $kick_ons) = @_;
     set_chan_patch($d->score, 9, 0);
     $d->sync(
-        sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111')                   x ($d->bars - 1) ] ) },
-        sub { $d->pattern( instrument => $d->snare,     patterns => [ (rotate_sequence($snare_ons))  x ($d->bars - 1) ] ) },
-        sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_ons, 16)) x ($d->bars - 1) ] ) },
+        sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ('11111111') x ($d->bars - 1) ] ) },
+        sub { $d->pattern( instrument => $d->snare,     patterns => [ (rotate_sequence($snare_ons)) x ($d->bars - 1) ] ) },
+        sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_ons, PHRASE_SIZE)) x ($d->bars - 1) ] ) },
         sub { bottom($d->bars - 1) },
     );
     $d->sync(
@@ -93,17 +95,17 @@ sub fill {
     $d->add_fill(
         sub {
             my $self = shift;
-            my $snare_ons = 1 + int rand 8;
+            my $snare_ons = 1 + int rand(PHRASE_SIZE / 2);
             return {
-                duration         => 16,     # sixteenth note fill
+                duration         => PHRASE_SIZE,     # sixteenth note fill
                 $self->closed_hh => '00000000',
-                $self->snare     => $d->euclidean($snare_ons, 8),
+                $self->snare     => $d->euclidean($snare_ons, PHRASE_SIZE / 2),
                 $self->kick      => '10001000',
             };
         },
         $d->closed_hh => [ '11111111' ],
         $d->snare     => [ rotate_sequence($snare_onset) ],
-        $d->kick      => [ $d->euclidean($kick_onset, 16) ],
+        $d->kick      => [ $d->euclidean($kick_onset, PHRASE_SIZE) ],
     );
 }
 
@@ -114,7 +116,7 @@ sub bottom {
 
     set_chan_patch($d->score, 1, $patch);
 
-    my $size = 3; # number of beats to play over
+    my $size = PHRASE_SIZE / 4 - 1; # number of beats to play over
 
     my $mdp1 = Music::Duration::Partition->new(
         size => $size,
