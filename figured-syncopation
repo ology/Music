@@ -5,12 +5,12 @@ use warnings;
 # Use local libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Drummer-Tiny MIDI-Util Music-CreatingRhythms Music-Duration Music-Duration-Partition );
 
-use MIDI::Drummer::Tiny;
+use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch);
 use Music::CreatingRhythms ();
-use Music::Duration::Partition;
-use Music::Scales;
-use Music::VoiceGen;
+use Music::Duration::Partition ();
+use Music::Scales qw(get_scale_MIDI);
+use Music::VoiceGen ();
 
 my $bpm   = shift || 90;
 my $patch = shift // 35;#42; # bass patch : -1 = off
