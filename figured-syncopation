@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # Use local libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition );
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Drummer-Tiny MIDI-Util Music-CreatingRhythms Music-Duration Music-Duration-Partition );
 
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(set_chan_patch);
