@@ -11,8 +11,8 @@ use Music::Duration::Partition;
 use Music::Scales;
 use Music::VoiceGen;
 
-my $snare_onset = shift || 3;
-my $kick_onset  = shift || 4;
+my $snare_onset = shift || 2;
+my $kick_onset  = shift || 3;
 
 my $bpm   = shift || 90;
 my $note  = shift || 'A';
