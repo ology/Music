@@ -7,6 +7,7 @@
 # perl figured-syncopation --patch=35 # make up a bassline
 # perl figured-syncopation --akick=2 --asnare=3 --bkick=5 --bsnare=3
 # perl figured-syncopation --ak=2 --as=3 --bk=3 --bs=2 # abbreviate
+# perl figured-syncopation --ph=12 # try a different phrase length
 
 use strict;
 use warnings;
