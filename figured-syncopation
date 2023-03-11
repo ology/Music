@@ -46,34 +46,10 @@ GetOptions(\%opts,
 ) or die("Error in command line arguments\n");
 
 # initialize the kick and snare onsets
-my $kick_onset_B = $opts{bkick};
-unless ($kick_onset_B) {
-    $kick_onset_B = rand_onset();
-    while ($kick_onset_B < 3) {
-        $kick_onset_B = rand_onset();
-    }
-}
-my $snare_onset_B = $opts{bsnare};
-unless ($snare_onset_B) {
-    $snare_onset_B = rand_onset();
-    while ($snare_onset_B >= $kick_onset_B) {
-        $snare_onset_B = rand_onset();
-    }
-}
-my $kick_onset_A = $opts{akick};
-unless ($kick_onset_A) {
-    $kick_onset_A = rand_onset();
-    while ($kick_onset_A < 3) {
-        $kick_onset_A = rand_onset();
-    }
-}
-my $snare_onset_A = $opts{asnare};
-unless ($snare_onset_A) {
-    $snare_onset_A = rand_onset();
-    while ($snare_onset_A >= $kick_onset_B) {
-        $snare_onset_A = rand_onset();
-    }
-}
+my $kick_onset_B  = $opts{bkick}  || kick_onsets($opts{bkick});
+my $snare_onset_B = $opts{bsnare} || snare_onsets($opts{bsnare}, $kick_onset_B);
+my $kick_onset_A  = $opts{akick}  || kick_onsets($opts{akick});
+my $snare_onset_A = $opts{asnare} || snare_onsets($opts{asnare}, $kick_onset_A);
 print "Snare A onset = $snare_onset_A, Kick A onset = $kick_onset_A\n";
 print "Snare B onset = $snare_onset_B, Kick B onset = $kick_onset_B\n";
 
@@ -94,6 +70,28 @@ part($snare_onset_B, $kick_onset_B);
 part($snare_onset_B, $kick_onset_B);
 
 $d->write;
+
+sub kick_onsets {
+    my ($onsets) = @_;
+    unless ($onsets) {
+        $onsets = rand_onset();
+        while ($onsets < 3) {
+            $onsets = rand_onset();
+        }
+    }
+    return $onsets;
+}
+
+sub snare_onsets {
+    my ($onsets, $kick) = @_;
+    unless ($onsets) {
+        $onsets = rand_onset();
+        while ($onsets >= $kick) {
+            $onsets = rand_onset();
+        }
+    }
+    return $onsets;
+}
 
 sub rand_onset {
     my ($n) = @_;
