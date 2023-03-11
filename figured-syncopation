@@ -123,7 +123,7 @@ sub part {
         sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ($hh) x $bars ] ) },
         sub { $d->pattern( instrument => $d->snare,     patterns => [ (rotate_sequence($snare_ons)) x $bars ] ) },
         sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_ons, $opts{phrase_size})) x $bars ] ) },
-        sub { bottom($d->bars - 1) },
+        sub { bottom($bars) },
     );
     $d->sync(
         sub { fill($snare_ons, $kick_ons) },
