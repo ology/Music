@@ -190,6 +190,7 @@ sub bottom {
     my $mdp1 = Music::Duration::Partition->new(
         size    => $size,
         pool    => [qw/qn en sn/],
+        group   => [   1, 2, 4  ],
         verbose => $opts{verbose},
     );
     my $motif1 = $mdp1->motif;
