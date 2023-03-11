@@ -69,7 +69,7 @@ unless (@grooves) {
             snare => snare_onsets(0, $kick),
         };
     }
-    # slower grooves come first
+    # slower grooves go first
     @grooves = sort {
         $a->{kick} <=> $b->{kick}
         || ($a->{kick} == $b->{kick} && $a->{snare} <=> $b->{snare})
