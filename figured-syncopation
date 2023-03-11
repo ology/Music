@@ -53,6 +53,7 @@ my $kick_onset_B  = $opts{bkick}  || kick_onsets($opts{bkick});
 my $snare_onset_B = $opts{bsnare} || snare_onsets($opts{bsnare}, $kick_onset_B);
 # slower grooves come first
 if ($kick_onset_A > $kick_onset_B) {
+    # so swap A & B
     ($kick_onset_A, $kick_onset_B) = ($kick_onset_B, $kick_onset_A);
     ($snare_onset_A, $snare_onset_B) = ($snare_onset_B, $snare_onset_A);
 }
