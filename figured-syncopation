@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Use local libraries
+# Use my local author libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Drummer-Tiny MIDI-Util Music-CreatingRhythms Music-Duration Music-Duration-Partition );
 
 use Getopt::Long qw(GetOptions);
