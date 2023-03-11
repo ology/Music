@@ -26,19 +26,19 @@ use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen ();
 
 my %opts = (
-    bpm         => 90, # beats per minute
-    phrase_size => 16, # changing this will probably make the bass player have a bad day
-    euclid      => [], # list of kick,snare onsets
-    max         => 2,  # number of random grooves to generate unless given euclids
-    patch       => -1,       # 0 or 35 or 42, etc. Bass patch : -1 = off
-    note        => 'A',      # bass scale starting note
-    scale       => 'pminor', # bass scale name
-    verbose     => 0, # be overly snoopy
-    quiet       => 0, # be silent
+    bpm     => 90, # beats per minute
+    size    => 16, # changing this will probably make the bass player have a bad day
+    euclid  => [], # list of kick,snare onsets
+    max     => 2,  # number of random grooves to generate unless given euclids
+    patch   => -1,       # 0 or 35 or 42, etc. Bass patch : -1 = off
+    note    => 'A',      # bass scale starting note
+    scale   => 'pminor', # bass scale name
+    verbose => 0, # be overly snoopy
+    quiet   => 0, # be silent
 );
 GetOptions(\%opts,
     'bpm=i',
-    'phrase_size=i',
+    'size=i',
     'euclid=s@', # ex: --euclid=2,3 --euclid=3,2
     'max=i',
     'patch=i',
@@ -109,7 +109,7 @@ sub snare_onsets {
 
 sub rand_onset {
     my ($n) = @_;
-    $n ||= $opts{phrase_size} / 2;
+    $n ||= $opts{size} / 2;
     return 1 + int rand($n - 1);
 }
 
@@ -121,7 +121,7 @@ sub counterpart {
 sub rotate_sequence {
     my ($onsets) = @_;
     my $mcr = Music::CreatingRhythms->new;
-    my $sequence = $mcr->euclid($onsets, $opts{phrase_size});
+    my $sequence = $mcr->euclid($onsets, $opts{size});
     $sequence = $mcr->rotate_n(2, $sequence);
     my $sequence_string = join '', @$sequence;
     return $sequence_string;
@@ -131,11 +131,11 @@ sub part {
     my ($snare_ons, $kick_ons) = @_;
     set_chan_patch($d->score, 9, 0);
     my $bars = $d->bars - 1;
-    my $hh = '1' x ($opts{phrase_size} / 2);
+    my $hh = '1' x ($opts{size} / 2);
     $d->sync(
         sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ($hh) x $bars ] ) },
         sub { $d->pattern( instrument => $d->snare,     patterns => [ (rotate_sequence($snare_ons)) x $bars ] ) },
-        sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_ons, $opts{phrase_size})) x $bars ] ) },
+        sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_ons, $opts{size})) x $bars ] ) },
         sub { bottom($bars) },
     );
     $d->sync(
@@ -147,24 +147,24 @@ sub part {
 sub fill {
     my ($snare_onset, $kick_onset) = @_;
     set_chan_patch($d->score, 9, 0);
-    my $hh = '1' x ($opts{phrase_size} / 2);
+    my $hh = '1' x ($opts{size} / 2);
     $d->add_fill(
         \&_fill,
         $d->closed_hh => [ $hh ],
         $d->snare     => [ rotate_sequence($snare_onset) ],
-        $d->kick      => [ $d->euclidean($kick_onset, $opts{phrase_size}) ],
+        $d->kick      => [ $d->euclidean($kick_onset, $opts{size}) ],
     );
 }
 
 sub _fill {
     my ($self) = @_;
-    my $snare_ons = 1 + int rand($opts{phrase_size} / 2);
-    my $hh = '0' x ($opts{phrase_size} / 2);
+    my $snare_ons = 1 + int rand($opts{size} / 2);
+    my $hh = '0' x ($opts{size} / 2);
     (my $kick = $hh) =~ s/^0/1/;
     return {
-        duration         => $opts{phrase_size},
+        duration         => $opts{size},
         $self->closed_hh => $hh,
-        $self->snare     => $d->euclidean($snare_ons, $opts{phrase_size} / 2),
+        $self->snare     => $d->euclidean($snare_ons, $opts{size} / 2),
         $self->kick      => $kick,
     };
 }
@@ -178,7 +178,7 @@ sub bottom {
 
     set_chan_patch($d->score, 0, $opts{patch});
 
-    my $size = 3;#$opts{phrase_size} / 4 - 1; # number of beats to play over
+    my $size = 3;#$opts{size} / 4 - 1; # number of beats to play over
 
     my $mdp1 = Music::Duration::Partition->new(
         size    => $size,
