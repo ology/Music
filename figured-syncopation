@@ -6,7 +6,7 @@
 # perl figured-syncopation --bpm=200 # speed it up
 # perl figured-syncopation --patch=35 # make up a bass part
 # perl figured-syncopation --max=3 # number of phrases to generate
-# perl figured-syncopation --euclid=2,3 --euclid=5,3 # specify phrases
+# perl figured-syncopation --euclid=2,3 --euclid=5,3 # specify the phrases
 # perl figured-syncopation --eu=2,3 --eu=3,2 # abbreviate
 # perl figured-syncopation --ph=12 # try a different phrase length
 
