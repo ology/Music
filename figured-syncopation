@@ -96,8 +96,8 @@ sub snare_onsets {
 
 sub rand_onset {
     my ($n) = @_;
-    $n ||= 8;
-    return 1 + int rand $n;
+    $n ||= $opts{phrase_size} / 2;
+    return 1 + int rand($n - 1);
 }
 
 sub counterpart {
