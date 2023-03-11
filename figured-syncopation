@@ -16,6 +16,7 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-CreatingRhythms Music-Duration Music-Duration-Partition);
 
 use Getopt::Long qw(GetOptions);
+use Data::Dumper::Compact qw(ddc);
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch);
 use Music::CreatingRhythms ();
@@ -26,10 +27,8 @@ use Music::VoiceGen ();
 my %opts = (
     bpm         => 90, # beats per minute
     phrase_size => 16, # changing this will probably make the bass player have a bad day
-    akick       => 0,  # set by user or init below
-    asnare      => 0,  # "
-    bkick       => 0,  # "
-    bsnare      => 0,  # "
+    euclid      => [], # list of kick,snare onsets
+    max         => 2,  # number of random grooves to generate unless given euclids
     patch       => -1,       # 0 or 35 or 42, etc. Bass patch : -1 = off
     note        => 'A',      # bass scale starting note
     scale       => 'pminor', # bass scale name
@@ -37,28 +36,39 @@ my %opts = (
 GetOptions(\%opts,
     'bpm=i',
     'phrase_size=i',
-    'akick=i',
-    'asnare=i',
-    'bkick=i',
-    'bsnare=i',
+    'euclid=s@', # ex: --euclid=2,3 --euclid=3,2
+    'max=i',
     'patch=i',
     'note=s',
     'scale=s',
-) or die("Error in command line arguments\n");
+) or die "Error in command line arguments\n";
 
 # initialize the kick and snare onsets
-my $kick_onset_A  = $opts{akick}  || kick_onsets($opts{akick});
-my $snare_onset_A = $opts{asnare} || snare_onsets($opts{asnare}, $kick_onset_A);
-my $kick_onset_B  = $opts{bkick}  || kick_onsets($opts{bkick});
-my $snare_onset_B = $opts{bsnare} || snare_onsets($opts{bsnare}, $kick_onset_B);
-# slower grooves come first
-if ($kick_onset_A > $kick_onset_B || ($kick_onset_A == $kick_onset_B && $snare_onset_A > $snare_onset_B)) {
-    # swap A & B
-    ($kick_onset_A, $kick_onset_B) = ($kick_onset_B, $kick_onset_A);
-    ($snare_onset_A, $snare_onset_B) = ($snare_onset_B, $snare_onset_A);
+my @grooves;
+for my $item ($opts{euclid}->@*) {
+    my ($kick, $snare) = split /,/, $item;
+    push @grooves, {
+        kick  => $kick,
+        snare => $snare,
+    };
 }
-print "A onsets: Snare = $snare_onset_A, Kick = $kick_onset_A\n";
-print "B onsets: Snare = $snare_onset_B, Kick = $kick_onset_B\n";
+unless (@grooves) {
+    for my $i (1 .. $opts{max}) {
+        my $kick = kick_onsets();
+        push @grooves, {
+            kick  => $kick,
+            snare => snare_onsets(0, $kick),
+        };
+    }
+}
+print 'Onsets: ', ddc(\@grooves);
+# slower grooves come first
+#if ($kick_onset_A > $kick_onset_B || ($kick_onset_A == $kick_onset_B && $snare_onset_A > $snare_onset_B)) {
+    # swap A & B
+#    ($kick_onset_A, $kick_onset_B) = ($kick_onset_B, $kick_onset_A);
+#    ($snare_onset_A, $snare_onset_B) = ($snare_onset_B, $snare_onset_A);
+#}
+#print "B onsets: Snare = $snare_onset_B, Kick = $kick_onset_B\n";
 
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
@@ -68,13 +78,10 @@ my $d = MIDI::Drummer::Tiny->new(
 
 #$d->count_in(1);
 
-part($snare_onset_A, $kick_onset_A);
-#counterpart();
-part($snare_onset_A, $kick_onset_A);
-#counterpart();
-part($snare_onset_B, $kick_onset_B);
-#counterpart();
-part($snare_onset_B, $kick_onset_B);
+for my $groove (@grooves) {
+    part($groove->{snare}, $groove->{kick});
+    #counterpart() unless ...;
+}
 
 $d->write;
 
