@@ -55,8 +55,8 @@ my $snare_onset_B = $opts{bsnare} || snare_onsets($opts{bsnare}, $kick_onset_B);
 print "Snare B onset = $snare_onset_B, Kick B onset = $kick_onset_B\n";
 
 my $d = MIDI::Drummer::Tiny->new(
-    file    => "$0.mid",
-    bpm     => $opts{bpm},
+    file => "$0.mid",
+    bpm  => $opts{bpm},
     #verbose => 1,
 );
 
