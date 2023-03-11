@@ -33,6 +33,7 @@ my %opts = (
     patch   => -1,       # 0 or 35 or 42, etc. Bass patch : -1 = off
     note    => 'A',      # bass scale starting note
     scale   => 'pminor', # bass scale name
+    duel    => 0, # alternate with the hihat-only, counterpart section
     verbose => 0, # be overly snoopy
     quiet   => 0, # be silent
 );
@@ -44,6 +45,7 @@ GetOptions(\%opts,
     'patch=i',
     'note=s',
     'scale=s',
+    'duel',
     'verbose',
     'quiet',
 ) or die "Error in command line arguments\n";
@@ -80,7 +82,7 @@ my $d = MIDI::Drummer::Tiny->new(
 
 for my $groove (@grooves) {
     part($groove->{snare}, $groove->{kick});
-    #counterpart() unless ...;
+    counterpart() if $opts{duel};
 }
 
 $d->write;
