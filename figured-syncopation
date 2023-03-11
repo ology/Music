@@ -34,6 +34,7 @@ my %opts = (
     note    => 'A',      # bass scale starting note
     scale   => 'pminor', # bass scale name
     duel    => 0, # alternate with the hihat-only, counterpart section
+    countin => 0, # play 4 hihat notes to start things off
     verbose => 0, # be overly snoopy
     quiet   => 0, # be silent
 );
@@ -46,6 +47,7 @@ GetOptions(\%opts,
     'note=s',
     'scale=s',
     'duel',
+    'countin',
     'verbose',
     'quiet',
 ) or die "Error in command line arguments\n";
@@ -78,7 +80,7 @@ my $d = MIDI::Drummer::Tiny->new(
     verbose => $opts{verbose},
 );
 
-#$d->count_in(1);
+$d->count_in(1) if $opts{countin};
 
 for my $groove (@grooves) {
     part($groove->{snare}, $groove->{kick});
