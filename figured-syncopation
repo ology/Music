@@ -136,22 +136,24 @@ sub fill {
     set_chan_patch($d->score, 9, 0);
     my $hh = '1' x ($opts{phrase_size} / 2);
     $d->add_fill(
-        sub {
-            my $self = shift;
-            my $snare_ons = 1 + int rand($opts{phrase_size} / 2);
-            my $f_hh = '0' x ($opts{phrase_size} / 2);
-            (my $f_kick = $f_hh) =~ s/^0/1/;
-            return {
-                duration         => $opts{phrase_size},
-                $self->closed_hh => $f_hh,
-                $self->snare     => $d->euclidean($snare_ons, $opts{phrase_size} / 2),
-                $self->kick      => $f_kick,
-            };
-        },
+        \&_fill,
         $d->closed_hh => [ $hh ],
         $d->snare     => [ rotate_sequence($snare_onset) ],
         $d->kick      => [ $d->euclidean($kick_onset, $opts{phrase_size}) ],
     );
+}
+
+sub _fill {
+    my ($self) = @_;
+    my $snare_ons = 1 + int rand($opts{phrase_size} / 2);
+    my $hh = '0' x ($opts{phrase_size} / 2);
+    (my $kick = $hh) =~ s/^0/1/;
+    return {
+        duration         => $opts{phrase_size},
+        $self->closed_hh => $hh,
+        $self->snare     => $d->euclidean($snare_ons, $opts{phrase_size} / 2),
+        $self->kick      => $kick,
+    };
 }
 
 sub bottom {
