@@ -60,7 +60,7 @@ my $d = MIDI::Drummer::Tiny->new(
     #verbose => 1,
 );
 
-$d->count_in(1);
+#$d->count_in(1);
 
 part($snare_onset_A, $kick_onset_A);
 #counterpart();
