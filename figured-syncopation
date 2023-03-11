@@ -70,7 +70,10 @@ unless (@grooves) {
         };
     }
     # slower grooves come first
-    @grooves = sort { $a->{kick} <=> $b->{kick} || ($a->{kick} == $b->{kick} && $a->{snare} <=> $b->{snare}) } @grooves;
+    @grooves = sort {
+        $a->{kick} <=> $b->{kick}
+        || ($a->{kick} == $b->{kick} && $a->{snare} <=> $b->{snare})
+    } @grooves;
 }
 print 'Onsets: ', ddc(\@grooves) unless $opts{quiet};
 
