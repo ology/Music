@@ -5,6 +5,7 @@ use warnings;
 # Use local libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw( MIDI-Drummer-Tiny MIDI-Util Music-CreatingRhythms Music-Duration Music-Duration-Partition );
 
+use Getopt::Long qw(GetOptions);
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch);
 use Music::CreatingRhythms ();
@@ -12,35 +13,64 @@ use Music::Duration::Partition ();
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen ();
 
-my $bpm   = shift || 90;
-my $patch = shift // 35;#42; # bass patch : -1 = off
-my $note  = shift || 'A';
-my $scale = shift || 'pminor';
+my %opts = (
+    bpm         => 90, # beats per minute
+    phrase_size => 16, # changing this will probably make the bass player have a bad day
+    akick       => 0,  # set by user or init below
+    asnare      => 0,  # "
+    bkick       => 0,  # "
+    bsnare      => 0,  # "
+    patch       => -1,       # 0 or 35 or 42, etc. Bass patch : -1 = off
+    note        => 'A',      # bass scale starting note
+    scale       => 'pminor', # bass scale name
+);
+GetOptions(\%opts,
+    'bpm=i',
+    'phrase_size=i',
+    'akick=i',
+    'asnare=i',
+    'bkick=i',
+    'bsnare=i',
+    'patch=i',
+    'note=s',
+    'scale=s',
+) or die("Error in command line arguments\n");
 
-my $phrase_size = 16; # changing this will probably make the bass have a bad day
-
-my $kick_onset_B = rand_onset();
-while ($kick_onset_B < 3) {
+# initialize the kick and snare onsets
+my $kick_onset_B = $opts{bkick};
+unless ($kick_onset_B) {
     $kick_onset_B = rand_onset();
+    while ($kick_onset_B < 3) {
+        $kick_onset_B = rand_onset();
+    }
 }
-my $snare_onset_B = rand_onset();
-while ($snare_onset_B >= $kick_onset_B) {
+my $snare_onset_B = $opts{bsnare};
+unless ($snare_onset_B) {
     $snare_onset_B = rand_onset();
+    while ($snare_onset_B >= $kick_onset_B) {
+        $snare_onset_B = rand_onset();
+    }
 }
-my $kick_onset_A = rand_onset();
-while ($kick_onset_A < 3) {
+my $kick_onset_A = $opts{akick};
+unless ($kick_onset_A) {
     $kick_onset_A = rand_onset();
+    while ($kick_onset_A < 3) {
+        $kick_onset_A = rand_onset();
+    }
 }
-my $snare_onset_A = rand_onset();
-while ($snare_onset_A >= $kick_onset_B) {
+my $snare_onset_A = $opts{asnare};
+unless ($snare_onset_A) {
     $snare_onset_A = rand_onset();
+    while ($snare_onset_A >= $kick_onset_B) {
+        $snare_onset_A = rand_onset();
+    }
 }
 print "Snare A onset = $snare_onset_A, Kick A onset = $kick_onset_A\n";
 print "Snare B onset = $snare_onset_B, Kick B onset = $kick_onset_B\n";
 
 my $d = MIDI::Drummer::Tiny->new(
     file    => "$0.mid",
-    bpm     => $bpm,
+    bpm     => $opts{bpm},
 #    verbose => 1,
 );
 
@@ -70,7 +100,7 @@ sub counterpart {
 sub rotate_sequence {
     my ($onsets) = @_;
     my $mcr = Music::CreatingRhythms->new;
-    my $sequence = $mcr->euclid($onsets, $phrase_size);
+    my $sequence = $mcr->euclid($onsets, $opts{phrase_size});
     $sequence = $mcr->rotate_n(2, $sequence);
     my $sequence_string = join '', @$sequence;
     return $sequence_string;
@@ -79,11 +109,11 @@ sub rotate_sequence {
 sub part {
     my ($snare_ons, $kick_ons) = @_;
     set_chan_patch($d->score, 9, 0);
-    my $hh = '1' x ($phrase_size / 2);
+    my $hh = '1' x ($opts{phrase_size} / 2);
     $d->sync(
         sub { $d->pattern( instrument => $d->closed_hh, patterns => [ ($hh) x ($d->bars - 1) ] ) },
         sub { $d->pattern( instrument => $d->snare,     patterns => [ (rotate_sequence($snare_ons)) x ($d->bars - 1) ] ) },
-        sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_ons, $phrase_size)) x ($d->bars - 1) ] ) },
+        sub { $d->pattern( instrument => $d->kick,      patterns => [ ($d->euclidean($kick_ons, $opts{phrase_size})) x ($d->bars - 1) ] ) },
         sub { bottom($d->bars - 1) },
     );
     $d->sync(
@@ -95,36 +125,36 @@ sub part {
 sub fill {
     my ($snare_onset, $kick_onset) = @_;
     set_chan_patch($d->score, 9, 0);
-    my $hh = '1' x ($phrase_size / 2);
+    my $hh = '1' x ($opts{phrase_size} / 2);
     $d->add_fill(
         sub {
             my $self = shift;
-            my $snare_ons = 1 + int rand($phrase_size / 2);
-            my $f_hh = '0' x ($phrase_size / 2);
+            my $snare_ons = 1 + int rand($opts{phrase_size} / 2);
+            my $f_hh = '0' x ($opts{phrase_size} / 2);
             (my $f_kick = $f_hh) =~ s/^0/1/;
             return {
-                duration         => $phrase_size,
+                duration         => $opts{phrase_size},
                 $self->closed_hh => $f_hh,
-                $self->snare     => $d->euclidean($snare_ons, $phrase_size / 2),
+                $self->snare     => $d->euclidean($snare_ons, $opts{phrase_size} / 2),
                 $self->kick      => $f_kick,
             };
         },
         $d->closed_hh => [ $hh ],
         $d->snare     => [ rotate_sequence($snare_onset) ],
-        $d->kick      => [ $d->euclidean($kick_onset, $phrase_size) ],
+        $d->kick      => [ $d->euclidean($kick_onset, $opts{phrase_size}) ],
     );
 }
 
 sub bottom {
     my ($bars) = @_;
 
-    return if $patch < 0;
+    return if $opts{patch} < 0;
 
     $bars ||= $d->bars;
 
-    set_chan_patch($d->score, 1, $patch);
+    set_chan_patch($d->score, 1, $opts{patch});
 
-    my $size = $phrase_size / 4 - 1; # number of beats to play over
+    my $size = $opts{phrase_size} / 4 - 1; # number of beats to play over
 
     my $mdp1 = Music::Duration::Partition->new(
         size => $size,
@@ -140,7 +170,7 @@ sub bottom {
     );
     my $motif2 = $mdp2->motif;
 
-    my @pitches = get_scale_MIDI($note, 1, $scale);
+    my @pitches = get_scale_MIDI($opts{note}, 1, $opts{scale});
 
     my $voice = Music::VoiceGen->new(
         pitches   => \@pitches,
