@@ -5,7 +5,7 @@
 # perl figured-syncopation # just go with the defaults
 # perl figured-syncopation --bpm=200 # speed it up
 # perl figured-syncopation --patch=35 # make up a bassline
-# perl figured-syncopation --akick=2 --asnare=3 bkick=5 --bsnare=3
+# perl figured-syncopation --akick=2 --asnare=3 --bkick=5 --bsnare=3
 
 use strict;
 use warnings;
