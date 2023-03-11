@@ -33,7 +33,8 @@ my %opts = (
     patch       => -1,       # 0 or 35 or 42, etc. Bass patch : -1 = off
     note        => 'A',      # bass scale starting note
     scale       => 'pminor', # bass scale name
-    verbose     => 0,
+    verbose     => 0, # be overly snoopy
+    quiet       => 0, # be silent
 );
 GetOptions(\%opts,
     'bpm=i',
@@ -44,6 +45,7 @@ GetOptions(\%opts,
     'note=s',
     'scale=s',
     'verbose',
+    'quiet',
 ) or die "Error in command line arguments\n";
 
 # initialize the kick and snare onsets
@@ -66,7 +68,7 @@ unless (@grooves) {
     # slower grooves come first
     @grooves = sort { $a->{kick} <=> $b->{kick} || ($a->{kick} == $b->{kick} && $a->{snare} <=> $b->{snare}) } @grooves;
 }
-print 'Onsets: ', ddc(\@grooves);
+print 'Onsets: ', ddc(\@grooves) unless $opts{quiet};
 
 my $d = MIDI::Drummer::Tiny->new(
     file    => "$0.mid",
