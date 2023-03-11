@@ -33,6 +33,7 @@ my %opts = (
     patch       => -1,       # 0 or 35 or 42, etc. Bass patch : -1 = off
     note        => 'A',      # bass scale starting note
     scale       => 'pminor', # bass scale name
+    verbose     => 0,
 );
 GetOptions(\%opts,
     'bpm=i',
@@ -42,6 +43,7 @@ GetOptions(\%opts,
     'patch=i',
     'note=s',
     'scale=s',
+    'verbose',
 ) or die "Error in command line arguments\n";
 
 # initialize the kick and snare onsets
@@ -67,9 +69,9 @@ unless (@grooves) {
 print 'Onsets: ', ddc(\@grooves);
 
 my $d = MIDI::Drummer::Tiny->new(
-    file => "$0.mid",
-    bpm  => $opts{bpm},
-    #verbose => 1,
+    file    => "$0.mid",
+    bpm     => $opts{bpm},
+    verbose => $opts{verbose},
 );
 
 #$d->count_in(1);
@@ -177,16 +179,16 @@ sub bottom {
     my $size = 3;#$opts{phrase_size} / 4 - 1; # number of beats to play over
 
     my $mdp1 = Music::Duration::Partition->new(
-        size => $size,
-        pool => [qw/qn en sn/],
-        #verbose=>1,
+        size    => $size,
+        pool    => [qw/qn en sn/],
+        verbose => $opts{verbose},
     );
     my $motif1 = $mdp1->motif;
 
     my $mdp2 = Music::Duration::Partition->new(
-        size => $size,
-        pool => [qw/qn en/],
-        #verbose=>1,
+        size    => $size,
+        pool    => [qw/qn en/],
+        verbose => $opts{verbose},
     );
     my $motif2 = $mdp2->motif;
 
