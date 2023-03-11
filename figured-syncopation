@@ -27,7 +27,7 @@ use Music::VoiceGen ();
 
 my %opts = (
     bpm     => 90, # beats per minute
-    size    => 16, # changing this will probably make the bass player have a bad day
+    size    => 16, # changing this will make the bass player have a bad day
     euclid  => [], # list of "kick,snare" onsets, eg: --euclid=2,3 --euclid=3,2
     max     => 2,  # number of random grooves to generate unless given euclids
     patch   => -1,       # 0 or 35 or 42, etc. Bass patch : -1 = off
