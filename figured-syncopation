@@ -61,15 +61,10 @@ unless (@grooves) {
             snare => snare_onsets(0, $kick),
         };
     }
+    # slower grooves come first
+    @grooves = sort { $a->{kick} <=> $b->{kick} || $a->{snare} <=> $b->{snare} } @grooves;
 }
 print 'Onsets: ', ddc(\@grooves);
-# slower grooves come first
-#if ($kick_onset_A > $kick_onset_B || ($kick_onset_A == $kick_onset_B && $snare_onset_A > $snare_onset_B)) {
-    # swap A & B
-#    ($kick_onset_A, $kick_onset_B) = ($kick_onset_B, $kick_onset_A);
-#    ($snare_onset_A, $snare_onset_B) = ($snare_onset_B, $snare_onset_A);
-#}
-#print "B onsets: Snare = $snare_onset_B, Kick = $kick_onset_B\n";
 
 my $d = MIDI::Drummer::Tiny->new(
     file => "$0.mid",
