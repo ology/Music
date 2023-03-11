@@ -86,7 +86,7 @@ my $d = MIDI::Drummer::Tiny->new(
 $d->count_in(1) if $opts{countin};
 
 for my $groove (@grooves) {
-    part($groove->{snare}, $groove->{kick});
+    euclidean_part($groove->{snare}, $groove->{kick});
     counterpart() if $opts{duel};
 }
 
@@ -134,7 +134,7 @@ sub rotate_sequence {
     return $sequence_string;
 }
 
-sub part {
+sub euclidean_part {
     my ($snare_ons, $kick_ons) = @_;
     set_chan_patch($d->score, 9, 0);
     my $bars = $d->bars - 1;
