@@ -153,6 +153,7 @@ sub process_msg {
     $irc->write(@$to, ":$to_format note: " . $note->format($to_format));
   }
   # COMMAND: patch
+  # TODO handle percussion2notenum midi_dump
   elsif ($msg =~ /^patch\s+(\w+)$/) {
     my $arg = $1;
     if ($arg =~ /^\d+$/) {
