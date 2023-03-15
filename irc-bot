@@ -128,7 +128,7 @@ sub process_msg {
     'A#' => 'Bb',
     'B#' => 'C',
   );
-  my $imslp = 'https://imslp.org';
+  my $imslp = 'https://imslp.org'; # for bwv
   # COMMAND: leave
   if ($msg eq 'leave') {
     $irc->write(QUIT => 'oof');
