@@ -177,7 +177,7 @@ sub process_msg {
     my $motif = $mdp->motif;
     my @scale = map { $_ . 4 } get_scale_notes('C');
     my $phrase = [ map { $scale[int rand @scale] . '.' . $_ } @$motif ];
-    $phrase = ddc($phrase, OPTIONS);
+    $phrase = join ' ', @$phrase;
     $phrase =~ s/'//g;
     $phrase =~ s/,//g;
     $irc->write(@$to, ":$size beats: $phrase");
