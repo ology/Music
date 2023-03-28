@@ -67,11 +67,11 @@ use constant MAX_PHRASE      => 8 * 4; # 8 whole-notes
 my $conf = LoadFile("$0.yml");
 
 my $irc = Mojo::IRC->new(
+  server => $conf->{server},
   nick   => $conf->{nick},
   user   => $conf->{user},
-  pass   => $conf->{password},
-  server => $conf->{server},
-  tls    => {},
+#  pass   => $conf->{password},
+#  tls    => {},
 );
 
 $irc->parser(Parse::IRC->new(ctcp => 1, public => 1));
