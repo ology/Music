@@ -78,7 +78,7 @@ $irc->parser(Parse::IRC->new(ctcp => 1, public => 1));
 
 $irc->on(irc_join => sub {
   my($self, $message) = @_;
-  print "SUCCESS: $message->{params}[0] joined\n";
+  print "SUCCESS: $message->{prefix} joined $message->{params}[0]\n";
 });
 
 $irc->on(irc_privmsg => sub {
