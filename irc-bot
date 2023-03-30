@@ -78,7 +78,7 @@ $irc->parser(Parse::IRC->new(ctcp => 1, public => 1));
 
 $irc->on(irc_join => sub {
   my($self, $message) = @_;
-  (my $who = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
+  my $who = parse_nick($message);
   print "SUCCESS: $message->{prefix} joined $message->{params}[0]\n"
     if $who eq $conf->{nick};
 });
@@ -86,7 +86,7 @@ $irc->on(irc_join => sub {
 $irc->on(irc_privmsg => sub {
   my($self, $message) = @_;
   print "$message->{prefix} said: $message->{params}[1]\n";
-  (my $who = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
+  my $who = parse_nick($message);
   my $to = [ privmsg => $who ];
 #  if (any { $_ eq $who } @{ $conf->{allowed} }) {
     process_msg($to, $who, $message->{params}[1]);
@@ -104,7 +104,7 @@ $irc->on(irc_public => sub {
     my $msg = $2;
     if ($nick eq $conf->{nick}) {
       print "$message->{prefix} said: $message->{params}[1]\n";
-      (my $who = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
+      my $who = parse_nick($message);
       my $to = [ privmsg => $conf->{channel} ];
       process_msg($to, $who, $msg);
     }
@@ -678,4 +678,10 @@ sub mid2mp3 {
     or die "system($cmd) failed: $?\n";
   my $url = sprintf '%s/%s.mp3', $conf->{web_host}, $name;
   return $url;
+}
+
+sub parse_nick {
+  my ($msg) = @_;
+  (my $who = $msg->{prefix}) =~ s/^(.+?)!.*$/$1/;
+  return $who;
 }
