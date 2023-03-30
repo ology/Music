@@ -78,7 +78,9 @@ $irc->parser(Parse::IRC->new(ctcp => 1, public => 1));
 
 $irc->on(irc_join => sub {
   my($self, $message) = @_;
-  print "SUCCESS: $message->{prefix} joined $message->{params}[0]\n";
+  (my $who = $message->{prefix}) =~ s/^(.+?)!.*$/$1/;
+  print "SUCCESS: $message->{prefix} joined $message->{params}[0]\n"
+    if $who eq $conf->{nick};
 });
 
 $irc->on(irc_privmsg => sub {
