@@ -291,6 +291,7 @@ sub process_msg {
   # COMMAND: notes
   elsif ($msg =~ /^notes\s+(.+)$/) {
     my $arg = $1;
+    $arg =~ s/maj/M/;
     my $cn = Music::Chord::Note->new;
     my @notes = ();
     eval { @notes = $cn->chord($arg) };
