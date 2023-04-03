@@ -125,7 +125,6 @@ sub bass {
         octave  => 2,
         guitar  => 1,
         verbose => 0,
-        modal   => 1,
         scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
     );
 
