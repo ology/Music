@@ -25,12 +25,12 @@ my $reps  = shift || 1;                 # The number of times to generate an ind
 my $multi = shift || 1;                 # The number of times the whole phrase is repeated
 
 my $chords_patch = shift || 4;
-my $bass_patch   = shift || 0;
+my $bass_patch   = shift || 35;
 
 my @parts = split /-/, $parts;
 
 my $channel = 0;
-my $octave  = 4;
+my $octave  = 5;
 
 my @progressions;
 
@@ -122,6 +122,7 @@ sub bass {
     my $motif2 = $mdp->motif;
 
     my $bassline = MIDI::Bassline::Walk->new(
+        octave  => 2,
         guitar  => 1,
         verbose => 0,
         scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
