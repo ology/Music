@@ -40,7 +40,7 @@ while (my $line = readline($midi)) {
         my ($channel, $data);
 
         if (
-            ($event =~ /^Note \w+$/ || $event =~ /^\w+ change$/ || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
+            ($event =~ /^Note \w+$/a || $event =~ /^\w+ change$/a || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
             && $line =~ /^
                          \s*
                          [\d:]+
