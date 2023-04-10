@@ -25,8 +25,14 @@ while (my $line = readline($midi)) {
             ($channel, $data) = ($1, $2);
             warn "C: $channel | D: $data\n";
 
+            my @cmd;
             if ($event eq 'Note on') {
-                my @cmd = qw(xdotool type hello);
+                @cmd = qw(xdotool type hello);
+            }
+            elsif ($event eq 'Pitch bend') {
+                @cmd = qw(xdotool key ctrl+w);
+            }
+            if (@cmd) {
                 system(@cmd) == 0
                     or die "system(@cmd) failed: $?";
             }
