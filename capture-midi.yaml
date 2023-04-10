@@ -16,7 +16,7 @@ triggers:
     text: 'Abc 123! Xyz 667?' 
   - event: 'Note on'
     channel: 0
-    data: 'note 36, velocity [1-9][0-9]+?'
+    data: 'note 84, velocity [1-9][0-9]+?'
     text: '$' 
     # pads
   - event: 'Note on'
