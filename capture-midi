@@ -11,12 +11,15 @@ open(my $midi, "$dump -p $device |")
 
 while (my $line = readline($midi)) {
     chomp $line;
+
     if ($line =~ /^\s*([\d:]+)\s+(\w+(?:\s\w+)?(?:\s\w+)?)\s+.+?$/) {
         my $source = $1;
         my $event  = $2;
         warn "S: $source | E: $event\n";
+
         my $channel;
         my $data;
+
         if (
             ($event =~ /^Note \w+$/ || $event =~ /^\w change$/ || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
             && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(\d+),\s+(.+?)$/
@@ -24,6 +27,7 @@ while (my $line = readline($midi)) {
             $channel = $1;
             $data    = $2;
             warn "C: $channel | D: $data\n";
+
             if ($event eq 'Note on') {
                 my @cmd = qw(xdotool type hello);
                 system(@cmd) == 0
