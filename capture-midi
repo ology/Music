@@ -11,7 +11,7 @@ open(my $midi, "$command -p $device |")
 
 while (my $line = readline($midi)) {
     chomp $line;
-    if ($line =~ /^\s*([\d:]+)\s+(\w+(?:\s\w+)?(?:\s\w+)?)\s+?.+$/) {
+    if ($line =~ /^\s*([\d:]+)\s+(\w+(?:\s\w+)?(?:\s\w+)?)\s+.+?$/) {
         my $source = $1;
         my $event  = $2;
         warn "S: $source | E: $event\n";
