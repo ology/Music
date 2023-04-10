@@ -37,7 +37,7 @@ while (my $line = readline($midi)) {
             my @cmd;
 
             for my $entry ($config->{triggers}->@*) {
-                if ($event eq $entry->{event} && $data eq $entry->{data}) {
+                if ($event eq $entry->{event} && $data =~ /$entry->{data}/) {
                     if (exists $entry->{text}) {
                         @cmd = (@tool_type, $entry->{text});
                     }
