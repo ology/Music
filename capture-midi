@@ -2,9 +2,8 @@
 use strict;
 use warnings;
 
+my $DEBUG  = shift // 1;
 my $device = shift || 'MPK249';
-
-my $DEBUG = 1;
 
 my $dump = 'aseqdump';
 
