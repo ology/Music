@@ -2,8 +2,9 @@
 use strict;
 use warnings;
 
+my $input = shift || 'MPK249';
+
 my $command = 'aseqdump';
-my $input   = 'MPK249';
 
 open(my $status, "$command -p $input |")
     or die "Can't fork: $!";
