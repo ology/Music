@@ -3,6 +3,10 @@ device: 'MPK249'
 triggers:
   - event: 'Note on'
     channel: 0
+    data: 'note 36, velocity [1-9][0-9]+?'
+    text: '$' 
+  - event: 'Note on'
+    channel: 0
     data: 'note 59, velocity [1-9][0-9]+?'
     text: 'Hello there' 
   - event: 'Note on'
