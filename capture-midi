@@ -21,7 +21,14 @@ while (my $line = readline($midi)) {
 #    print $line; next;
     chomp $line;
 
-    if ($line =~ /^\s*([\d:]+)\s+(\w+(?:\s\w+)?(?:\s\w+)?)\s+.+?$/) {
+    if ($line =~ /^\s*
+                  ([\d:]+)
+                  \s+
+                  (\w+(?:\s\w+)?(?:\s\w+)?)
+                  \s+
+                  .+?
+                  $/x
+    ) {
         my ($source, $event) = ($1, $2);
         warn "S: $source | E: $event\n" if $DEBUG;
 
@@ -29,7 +36,15 @@ while (my $line = readline($midi)) {
 
         if (
             ($event =~ /^Note \w+$/ || $event =~ /^\w+ change$/ || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
-            && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(\d+),\s(.+?)$/
+            && $line =~ /^\s*
+                         [\d:]+
+                         \s+
+                         \w+(?:\s\w+)?(?:\s\w+)?
+                         \s+
+                         (\d+),
+                         \s
+                         (.+?)
+                         $/x
         ) {
             ($channel, $data) = ($1, $2);
             warn "C: $channel | D: $data\n" if $DEBUG;
@@ -58,7 +73,13 @@ while (my $line = readline($midi)) {
         }
         elsif (
             ($event eq 'Song position pointer' || $event eq 'System exclusive')
-            && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(.+?)$/
+            && $line =~ /^\s*
+                         [\d:]+
+                         \s+
+                         \w+(?:\s\w+)?(?:\s\w+)?
+                         \s+
+                         (.+?)
+                         $/x
         ) {
             $data = $1;
             warn "D: $data\n" if $DEBUG;
