@@ -6,6 +6,11 @@ my $DEBUG  = shift // 1;
 my $device = shift || 'MPK249';
 
 my $dump = 'aseqdump';
+my @type = qw(xdotool type);
+my @key  = qw(xdotool key);
+
+my $text = 'Abc 123! Xyz 667? ';
+my $key  = 'ctrl+w';
 
 open(my $midi, "$dump -p $device |")
     or die "Can't fork: $!";
@@ -30,10 +35,10 @@ while (my $line = readline($midi)) {
 
             my @cmd;
             if ($event eq 'Note on') {
-                @cmd = qw(xdotool type hello);
+                @cmd = (@type, $text);
             }
             elsif ($event eq 'Control change' && $data eq 'controller 28, value 127') {
-                @cmd = qw(xdotool key ctrl+w);
+                @cmd = (@key, $key);
             }
             if (@cmd) {
                 system(@cmd) == 0
