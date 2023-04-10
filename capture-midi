@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# Config file: capture-midi.yaml in this same directory
+
 use strict;
 use warnings;
 
