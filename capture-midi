@@ -13,11 +13,11 @@ my $config = LoadFile("$0.yaml");
 my $DEBUG  = shift // $config->{debug};
 my $device = shift || $config->{device};
 
-my @dump      = qw(aseqdump -p);
+my @dump_tool = qw(aseqdump -p);
 my @tool_type = qw(xdotool type);
 my @tool_key  = qw(xdotool key);
 
-open(my $midi, "@dump $device |")
+open(my $midi, "@dump_tool $device |")
     or die "Can't fork: $!";
 warn "PID: $$\n" if $DEBUG;
 
@@ -98,7 +98,7 @@ while (my $line = readline($midi)) {
 }
 
 close $midi
-    or die "Bad @dump: $! $?";
+    or die "Bad@dump_tool: $! $?";
 
 __END__
 Source  Event                  Ch  Data
