@@ -2,8 +2,12 @@
 use strict;
 use warnings;
 
-my $DEBUG  = shift // 1;
-my $device = shift || 'MPK249';
+use YAML::XS qw(LoadFile);
+
+my $config = LoadFile("$0.yaml");
+
+my $DEBUG  = shift // $config->{debug};
+my $device = shift || $config->{device};
 
 my $dump = 'aseqdump';
 my @tool_type = qw(xdotool type);
@@ -14,7 +18,7 @@ my $key  = 'ctrl+w';
 
 open(my $midi, "$dump -p $device |")
     or die "Can't fork: $!";
-warn __PACKAGE__,' L',__LINE__,' ',,"$$\n";
+warn "$$\n" if $DEBUG;
 
 while (my $line = readline($midi)) {
 #    print $line; next;
