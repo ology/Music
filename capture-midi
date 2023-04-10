@@ -32,7 +32,7 @@ while (my $line = readline($midi)) {
             if ($event eq 'Note on') {
                 @cmd = qw(xdotool type hello);
             }
-            elsif ($event eq 'Pitch bend') {
+            elsif ($event eq 'Control change') {
                 @cmd = qw(xdotool key ctrl+w);
             }
             if (@cmd) {
