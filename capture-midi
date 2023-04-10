@@ -1,0 +1,55 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+my $command = 'aseqdump';
+my $input   = 'MPK249';
+
+open(my $status, "$command -p $input |")
+    or die "Can't fork: $!";
+
+while (my $line = readline($status)) {
+    chomp $line;
+    if ($line =~ /^\s*([\d:]+)\s+(\w+(?:\s\w+)?(?:\s\w+)?)\s+?.+$/) {
+        my $source = $1;
+        my $event  = $2;
+        warn "S: $source | E: $event\n";
+        my $channel;
+        my $data;
+        if (
+            ($event =~ /^Note \w+$/ || $event eq 'Program change' || $event eq 'Control change' || $event eq 'Pitch bend')
+            && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(\d+),\s+(.+?)$/
+        ) {
+            $channel = $1;
+            $data    = $2;
+            warn "C: $channel | D: $data\n";
+        }
+        elsif (
+            ($event eq 'Song position pointer' || $event eq 'System exclusive')
+            && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(.+?)$/
+        ) {
+            $data = $1;
+            warn "D: $data\n";
+        }
+        else {
+            warn "L: $line\n";
+        }
+    }
+}
+
+close $status
+    or die "Bad $command: $! $?";
+
+__END__
+Source  Event                  Ch  Data
+ 20:0   Note on                 0, note 60, velocity 58
+ 20:0   Program change         15, program 31
+ 20:0   System exclusive           F0 7F 7F 06 01 F7
+ 20:0   System exclusive           F0 7F 7F 06 02 F7
+ 20:0   System exclusive           F0 7F 7F 06 06 F7
+ 20:0   Song position pointer      value 0
+ 20:0   Start
+ 20:0   Stop
+ 20:0   Control change         15, controller 28, value 127
+ 20:0   Control change         15, controller 28, value 0
+ 20:0   Control change          0, controller 3, value 1
