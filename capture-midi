@@ -13,12 +13,10 @@ while (my $line = readline($midi)) {
     chomp $line;
 
     if ($line =~ /^\s*([\d:]+)\s+(\w+(?:\s\w+)?(?:\s\w+)?)\s+.+?$/) {
-        my $source = $1;
-        my $event  = $2;
+        my ($source, $event) = ($1, $2);
         warn "S: $source | E: $event\n";
 
-        my $channel;
-        my $data;
+        my ($channel, $data);
 
         if (
             ($event =~ /^Note \w+$/ || $event =~ /^\w change$/ || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
