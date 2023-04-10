@@ -12,6 +12,7 @@ open(my $midi, "$dump -p $device |")
 warn __PACKAGE__,' L',__LINE__,' ',,"$$\n";
 
 while (my $line = readline($midi)) {
+#    print $line; next;
     chomp $line;
 
     if ($line =~ /^\s*([\d:]+)\s+(\w+(?:\s\w+)?(?:\s\w+)?)\s+.+?$/) {
@@ -21,8 +22,8 @@ while (my $line = readline($midi)) {
         my ($channel, $data);
 
         if (
-            ($event =~ /^Note \w+$/ || $event =~ /^\w change$/ || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
-            && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(\d+),\s+(.+?)$/
+            ($event =~ /^Note \w+$/ || $event =~ /^\w+ change$/ || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
+            && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(\d+),\s(.+?)$/
         ) {
             ($channel, $data) = ($1, $2);
             warn "C: $channel | D: $data\n" if $DEBUG;
@@ -58,10 +59,11 @@ close $midi
 __END__
 Source  Event                  Ch  Data
  20:0   Note on                 0, note 60, velocity 58
- 20:0   Note off                0, note 47, velocity 0
+ 20:0   Note off                0, note 60, velocity 0
  20:0   Program change         15, program 31
  20:0   System exclusive           F0 7F 7F 06 01 F7
  20:0   Song position pointer      value 0
  20:0   Start
  20:0   Stop
  20:0   Control change         15, controller 28, value 127
+ 20:0   Control change         15, controller 28, value 0
