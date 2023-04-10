@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 
+# Capture MIDI events and send text or keystrokes back.
 # Please see the config file: capture-midi.yaml in this same directory.
 # Also, you'll need the programs aseqdump and xdotool.
 
