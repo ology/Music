@@ -15,7 +15,7 @@ my @tool_key  = qw(xdotool key);
 
 open(my $midi, "@dump $device |")
     or die "Can't fork: $!";
-warn "$$\n" if $DEBUG;
+warn "PID: $$\n" if $DEBUG;
 
 while (my $line = readline($midi)) {
 #    print $line; next;
