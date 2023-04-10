@@ -2,11 +2,11 @@
 use strict;
 use warnings;
 
-my $input = shift || 'MPK249';
+my $device = shift || 'MPK249';
 
 my $command = 'aseqdump';
 
-open(my $midi, "$command -p $input |")
+open(my $midi, "$command -p $device |")
     or die "Can't fork: $!";
 
 while (my $line = readline($midi)) {
