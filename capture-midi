@@ -17,7 +17,7 @@ my @dump_tool = qw(aseqdump -p);
 my @type_tool = qw(xdotool type);
 my @key_tool  = qw(xdotool key);
 
-open(my $midi, "@dump_tool $device |")
+open(my $midi, '-|', @dump_tool, $device)
     or die "Can't fork: $!";
 warn "PID: $$\n" if $DEBUG;
 
@@ -32,7 +32,7 @@ while (my $line = readline($midi)) {
                   (\w+(?:\s\w+)?(?:\s\w+)?)
                   \s+
                   .+?
-                  $/x
+                  $/ax
     ) {
         my ($source, $event) = ($1, $2);
         warn "S: $source | E: $event\n" if $DEBUG;
@@ -50,7 +50,7 @@ while (my $line = readline($midi)) {
                          (\d+),
                          \s
                          (.+?)
-                         $/x
+                         $/ax
         ) {
             ($channel, $data) = ($1, $2);
             warn "C: $channel | D: $data\n" if $DEBUG;
@@ -86,7 +86,7 @@ while (my $line = readline($midi)) {
                          \w+(?:\s\w+)?(?:\s\w+)?
                          \s+
                          (.+?)
-                         $/x
+                         $/ax
         ) {
             $data = $1;
             warn "D: $data\n" if $DEBUG;
