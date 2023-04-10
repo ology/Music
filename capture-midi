@@ -32,9 +32,9 @@ while (my $line = readline($status)) {
             $data = $1;
             warn "D: $data\n";
         }
-        else {
-            warn "L: $line\n";
-        }
+    }
+    else {
+        warn "L: $line\n";
     }
 }
 
