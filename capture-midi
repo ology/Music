@@ -6,10 +6,10 @@ my $input = shift || 'MPK249';
 
 my $command = 'aseqdump';
 
-open(my $status, "$command -p $input |")
+open(my $midi, "$command -p $input |")
     or die "Can't fork: $!";
 
-while (my $line = readline($status)) {
+while (my $line = readline($midi)) {
     chomp $line;
     if ($line =~ /^\s*([\d:]+)\s+(\w+(?:\s\w+)?(?:\s\w+)?)\s+?.+$/) {
         my $source = $1;
@@ -38,7 +38,7 @@ while (my $line = readline($status)) {
     }
 }
 
-close $status
+close $midi
     or die "Bad $command: $! $?";
 
 __END__
