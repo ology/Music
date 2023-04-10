@@ -4,9 +4,9 @@ use warnings;
 
 my $device = shift || 'MPK249';
 
-my $command = 'aseqdump';
+my $dump = 'aseqdump';
 
-open(my $midi, "$command -p $device |")
+open(my $midi, "$dump -p $device |")
     or die "Can't fork: $!";
 
 while (my $line = readline($midi)) {
@@ -44,7 +44,7 @@ while (my $line = readline($midi)) {
 }
 
 close $midi
-    or die "Bad $command: $! $?";
+    or die "Bad $dump: $! $?";
 
 __END__
 Source  Event                  Ch  Data
