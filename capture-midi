@@ -18,7 +18,7 @@ while (my $line = readline($status)) {
         my $channel;
         my $data;
         if (
-            ($event =~ /^Note \w+$/ || $event eq 'Program change' || $event eq 'Control change' || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
+            ($event =~ /^Note \w+$/ || $event =~ /^\w change$/ || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
             && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(\d+),\s+(.+?)$/
         ) {
             $channel = $1;
