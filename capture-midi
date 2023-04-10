@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Please see the config file: capture-midi.yaml in this same directory
+# Please see the config file: capture-midi.yaml in this same directory.
 # Also, you'll need the programs aseqdump and xdotool.
 
 use strict;
