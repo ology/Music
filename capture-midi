@@ -21,7 +21,8 @@ while (my $line = readline($midi)) {
 #    print $line; next;
     chomp $line;
 
-    if ($line =~ /^\s*
+    if ($line =~ /^
+                  \s*
                   ([\d:]+)
                   \s+
                   (\w+(?:\s\w+)?(?:\s\w+)?)
@@ -36,7 +37,8 @@ while (my $line = readline($midi)) {
 
         if (
             ($event =~ /^Note \w+$/ || $event =~ /^\w+ change$/ || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
-            && $line =~ /^\s*
+            && $line =~ /^
+                         \s*
                          [\d:]+
                          \s+
                          \w+(?:\s\w+)?(?:\s\w+)?
@@ -73,7 +75,8 @@ while (my $line = readline($midi)) {
         }
         elsif (
             ($event eq 'Song position pointer' || $event eq 'System exclusive')
-            && $line =~ /^\s*
+            && $line =~ /^
+                         \s*
                          [\d:]+
                          \s+
                          \w+(?:\s\w+)?(?:\s\w+)?
