@@ -98,7 +98,7 @@ while (my $line = readline($midi)) {
 }
 
 close $midi
-    or die "Bad@dump_tool: $! $?";
+    or die "Bad @dump_tool: $! $?";
 
 __END__
 Source  Event                  Ch  Data
