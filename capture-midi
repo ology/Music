@@ -44,6 +44,7 @@ close $status
 __END__
 Source  Event                  Ch  Data
  20:0   Note on                 0, note 60, velocity 58
+ 20:0   Note off                0, note 47, velocity 0
  20:0   Program change         15, program 31
  20:0   System exclusive           F0 7F 7F 06 01 F7
  20:0   Song position pointer      value 0
