@@ -24,6 +24,11 @@ while (my $line = readline($midi)) {
             $channel = $1;
             $data    = $2;
             warn "C: $channel | D: $data\n";
+            if ($event eq 'Note on') {
+                my @cmd = qw(xdotool type hello);
+                system(@cmd) == 0
+                    or die "system(@cmd) failed: $?";
+            }
         }
         elsif (
             ($event eq 'Song position pointer' || $event eq 'System exclusive')
