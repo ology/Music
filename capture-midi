@@ -4,17 +4,20 @@ use warnings;
 
 my $device = shift || 'MPK249';
 
+my $DEBUG = 1;
+
 my $dump = 'aseqdump';
 
 open(my $midi, "$dump -p $device |")
     or die "Can't fork: $!";
+warn __PACKAGE__,' L',__LINE__,' ',,"$$\n";
 
 while (my $line = readline($midi)) {
     chomp $line;
 
     if ($line =~ /^\s*([\d:]+)\s+(\w+(?:\s\w+)?(?:\s\w+)?)\s+.+?$/) {
         my ($source, $event) = ($1, $2);
-        warn "S: $source | E: $event\n";
+        warn "S: $source | E: $event\n" if $DEBUG;
 
         my ($channel, $data);
 
@@ -23,7 +26,7 @@ while (my $line = readline($midi)) {
             && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(\d+),\s+(.+?)$/
         ) {
             ($channel, $data) = ($1, $2);
-            warn "C: $channel | D: $data\n";
+            warn "C: $channel | D: $data\n" if $DEBUG;
 
             my @cmd;
             if ($event eq 'Note on') {
@@ -42,11 +45,11 @@ while (my $line = readline($midi)) {
             && $line =~ /^\s*[\d:]+\s+\w+(?:\s\w+)?(?:\s\w+)?\s+(.+?)$/
         ) {
             $data = $1;
-            warn "D: $data\n";
+            warn "D: $data\n" if $DEBUG;
         }
     }
     else {
-        warn "L: $line\n";
+        warn "L: $line\n" if $DEBUG;
     }
 }
 
