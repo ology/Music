@@ -1,0 +1,9 @@
+debug: 0
+device: 'MPK249'
+triggers:
+  - event: 'Note on'
+    data: 'note 60, velocity 127'
+    text: 'Abc 123! Xyz 667?' 
+  - event: 'Control change'
+    data: 'controller 28, value 127'
+    key: 'ctrl+w' 
