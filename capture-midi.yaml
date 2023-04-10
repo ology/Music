@@ -23,6 +23,7 @@ triggers:
     channel: 9
     data: 'note 48, velocity [1-9][0-9]+?'
     text: 'Goodbye cruel world...' 
+    # controllers
   - event: 'Control change'
     data: 'controller 28, value 127'
     key: 'ctrl+w' 
