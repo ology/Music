@@ -36,7 +36,9 @@ while (my $line = readline($midi)) {
     warn "E: $event\n" if $DEBUG;
 
     my ($channel, $data);
+    my @cmd;
 
+    # capture the MIDI data
     if ($event =~ /^Note \w+$/a
         || $event =~ /^\w+ change$/a
         || $event eq 'Pitch bend'
@@ -46,27 +48,6 @@ while (my $line = readline($midi)) {
         $data = $parts[3];
         $data .= ", $parts[4]" if defined $parts[4];
         warn "C: $channel | D: $data\n" if $DEBUG;
-
-        my @cmd;
-
-        for my $entry ($config->{triggers}->@*) {
-            if ($event eq $entry->{event} && $data =~ /$entry->{data}/
-                && (!$entry->{channel} || $channel == $entry->{channel})
-            ) {
-                if (exists $entry->{text}) {
-                    @cmd = (@type_tool, $entry->{text});
-                }
-                elsif (exists $entry->{key}) {
-                    @cmd = (@key_tool, $entry->{key});
-                }
-                last;
-            }
-        }
-
-        if (@cmd) {
-            system(@cmd) == 0
-                or die "system(@cmd) failed: $?";
-        }
     }
     elsif (
         $event eq 'Song position pointer'
@@ -74,6 +55,25 @@ while (my $line = readline($midi)) {
     ) {
         $data = $parts[2];
         warn "D: $data\n" if $DEBUG;
+    }
+
+    # execute the text or key if in the triggers
+    for my $entry ($config->{triggers}->@*) {
+        if ($event eq $entry->{event} && $data =~ /$entry->{data}/
+            && (!$entry->{channel} || $channel == $entry->{channel})
+        ) {
+            if (exists $entry->{text}) {
+                @cmd = (@type_tool, $entry->{text});
+            }
+            elsif (exists $entry->{key}) {
+                @cmd = (@key_tool, $entry->{key});
+            }
+            last;
+        }
+    }
+    if (@cmd) {
+        system(@cmd) == 0
+            or die "system(@cmd) failed: $?";
     }
 }
 
