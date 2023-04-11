@@ -9,7 +9,7 @@ use warnings;
 
 use YAML::XS qw(LoadFile);
 
-my $config_file = shift || "$0.yaml";;
+my $config_file = shift || "$0.yaml";
 
 my $config = LoadFile($config_file);
 
