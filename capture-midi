@@ -57,7 +57,7 @@ while (my $line = readline($midi)) {
         warn "D: $data\n" if $DEBUG;
     }
 
-    # find the matching trigger
+    # find a matching trigger
     for my $entry ($config->{triggers}->@*) {
         if ($event eq $entry->{event} && $data =~ /$entry->{data}/
             && (!$entry->{channel} || $channel == $entry->{channel})
