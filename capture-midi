@@ -57,7 +57,7 @@ while (my $line = readline($midi)) {
         warn "D: $data\n" if $DEBUG;
     }
 
-    # execute the text or key if in the triggers
+    # find the matching trigger
     for my $entry ($config->{triggers}->@*) {
         if ($event eq $entry->{event} && $data =~ /$entry->{data}/
             && (!$entry->{channel} || $channel == $entry->{channel})
@@ -71,6 +71,8 @@ while (my $line = readline($midi)) {
             last;
         }
     }
+
+    # execute the trigger
     if (@cmd) {
         system(@cmd) == 0
             or die "system(@cmd) failed: $?";
