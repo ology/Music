@@ -9,10 +9,12 @@ use warnings;
 
 use YAML::XS qw(LoadFile);
 
-my $config = LoadFile("$0.yaml");
+my $config_file = shift || "$0.yaml";;
 
-my $DEBUG  = shift // $config->{debug};
-my $device = shift || $config->{device};
+my $config = LoadFile($config_file);
+
+my $DEBUG  = $config->{debug};
+my $device = $config->{device};
 
 my @dump_tool = qw(aseqdump -p);
 my @type_tool = qw(xdotool type);
