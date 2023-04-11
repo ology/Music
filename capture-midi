@@ -42,7 +42,7 @@ while (my $line = readline($midi)) {
     ) {
         $channel = $parts[2];
         $data = $parts[3];
-        $data .= ", $parts[4]" if defined $parts[4];;
+        $data .= ", $parts[4]" if defined $parts[4];
         warn "C: $channel | D: $data\n" if $DEBUG;
 
         my @cmd;
