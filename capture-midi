@@ -7,6 +7,7 @@
 use strict;
 use warnings;
 
+use Data::Dumper::Compact qw(ddc);
 use YAML::XS qw(LoadFile);
 
 my $config = LoadFile("$0.yaml");
@@ -25,76 +26,48 @@ warn "PID: $$\n" if $DEBUG;
 while (my $line = readline($midi)) {
 #    print $line; next;
     chomp $line;
+    $line =~ s/^\s*//;
+    my @parts = split /(?:\s{2,}|,\s+)/, $line;
+    my $event = $parts[1];
+    warn "E: $event\n" if $DEBUG;
+    my ($channel, $data);
 
-    if ($line =~ /^
-                  \s*
-                  ([\d:]+)
-                  \s+
-                  (\w+(?:\s\w+)?(?:\s\w+)?)
-                  \s+
-                  .+?
-                  $/ax
+    if ($event =~ /^Note \w+$/a
+        || $event =~ /^\w+ change$/a
+        || $event eq 'Pitch bend'
+        || $event eq 'Channel aftertouch'
     ) {
-        my ($source, $event) = ($1, $2);
-        warn "S: $source | E: $event\n" if $DEBUG;
+        ($channel, $data) = ($parts[2], $parts[3]);
+        warn "C: $channel | D: $data\n" if $DEBUG;
 
-        my ($channel, $data);
+        my @cmd;
 
-        if (
-            ($event =~ /^Note \w+$/a || $event =~ /^\w+ change$/a || $event eq 'Pitch bend' || $event eq 'Channel aftertouch')
-            && $line =~ /^
-                         \s*
-                         [\d:]+
-                         \s+
-                         \w+(?:\s\w+)?(?:\s\w+)?
-                         \s+
-                         (\d+),
-                         \s
-                         (.+?)
-                         $/ax
-        ) {
-            ($channel, $data) = ($1, $2);
-            warn "C: $channel | D: $data\n" if $DEBUG;
-
-            my @cmd;
-
-            for my $entry ($config->{triggers}->@*) {
-                if (
-                    $event eq $entry->{event} && $data =~ /$entry->{data}/
-                    && (!$entry->{channel} || $channel == $entry->{channel})
-                ) {
-                    if (exists $entry->{text}) {
-                        @cmd = (@type_tool, $entry->{text});
-                    }
-                    elsif (exists $entry->{key}) {
-                        @cmd = (@key_tool, $entry->{key});
-                    }
-                    last;
+        for my $entry ($config->{triggers}->@*) {
+            if (
+                $event eq $entry->{event} && $data =~ /$entry->{data}/
+                && (!$entry->{channel} || $channel == $entry->{channel})
+            ) {
+                if (exists $entry->{text}) {
+                    @cmd = (@type_tool, $entry->{text});
                 }
-            }
-
-            if (@cmd) {
-                system(@cmd) == 0
-                    or die "system(@cmd) failed: $?";
+                elsif (exists $entry->{key}) {
+                    @cmd = (@key_tool, $entry->{key});
+                }
+                last;
             }
         }
-        elsif (
-            ($event eq 'Song position pointer' || $event eq 'System exclusive')
-            && $line =~ /^
-                         \s*
-                         [\d:]+
-                         \s+
-                         \w+(?:\s\w+)?(?:\s\w+)?
-                         \s+
-                         (.+?)
-                         $/ax
-        ) {
-            $data = $1;
-            warn "D: $data\n" if $DEBUG;
+
+        if (@cmd) {
+            system(@cmd) == 0
+                or die "system(@cmd) failed: $?";
         }
     }
-    else {
-        warn "L: $line\n" if $DEBUG;
+    elsif (
+        $event eq 'Song position pointer'
+        || $event eq 'System exclusive'
+    ) {
+        $data = $parts[2];
+        warn "D: $data\n" if $DEBUG;
     }
 }
 
