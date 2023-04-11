@@ -27,9 +27,12 @@ while (my $line = readline($midi)) {
 #    print $line; next;
     chomp $line;
     $line =~ s/^\s*//;
+
     my @parts = split /(?:\s{2,}|,\s+)/, $line;
+
     my $event = $parts[1];
     warn "E: $event\n" if $DEBUG;
+
     my ($channel, $data);
 
     if ($event =~ /^Note \w+$/a
