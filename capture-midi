@@ -31,6 +31,7 @@ while (my $line = readline($midi)) {
     my @parts = split /(?:\s{2,}|,\s+)/, $line;
 
     my $event = $parts[1];
+    next unless $event;
     warn "E: $event\n" if $DEBUG;
 
     my ($channel, $data);
