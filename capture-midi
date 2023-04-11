@@ -41,7 +41,8 @@ while (my $line = readline($midi)) {
         || $event eq 'Channel aftertouch'
     ) {
         $channel = $parts[2];
-        $data = join ', ', $parts[3], ($parts[4] || '');
+        $data = $parts[3];
+        $data .= $parts[4] if defined $parts[4];;
         warn "C: $channel | D: $data\n" if $DEBUG;
 
         my @cmd;
