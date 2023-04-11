@@ -87,3 +87,6 @@ Source  Event                  Ch  Data
  20:0   Stop
  20:0   Control change         15, controller 28, value 127
  20:0   Control change         15, controller 28, value 0
+ 20:0   Channel aftertouch      9, value 127
+ 20:0   Channel aftertouch      9, value 113
+ 20:0   Channel aftertouch      9, value 0
