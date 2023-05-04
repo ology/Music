@@ -1,20 +1,33 @@
-debug: 1
+debug: 0
 device: 'MPD218'
 triggers:
-    # keys
+    # bank A, row 1 pads
   - event: 'Note on'
     data: 'note 36, velocity [1-9][0-9]+?'
-    text: 0
+    text: '0'
   - event: 'Note on'
     data: 'note 37, velocity [1-9][0-9]+?'
-    text: 'Hello there'
+    text: ':tabnew'
   - event: 'Note on'
     data: 'note 38, velocity [1-9][0-9]+?'
-    text: 'Abc 123! Xyz 667?'
+    text: ':Sex'
   - event: 'Note on'
     data: 'note 39, velocity [1-9][0-9]+?'
-    text: $
-    # controllers
+    text: '$'
+    # bank A, row 4 pads
+  - event: 'Note on'
+    data: 'note 48, velocity [1-9][0-9]+?'
+    text: 'gT' # go to the previous tab
+  - event: 'Note on'
+    data: 'note 49, velocity [1-9][0-9]+?'
+    text: ':tabnew' # open a new tab
+  - event: 'Note on'
+    data: 'note 50, velocity [1-9][0-9]+?'
+    text: ':Explore .' # open a new file
+  - event: 'Note on'
+    data: 'note 51, velocity [1-9][0-9]+?'
+    text: 'gt' # go to the next tab
+    # bank A controllers
   - event: 'Control change'
     data: 'controller 28, value 127'
     key: 'ctrl+w'
