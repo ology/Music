@@ -60,8 +60,9 @@ while (my $line = readline($midi)) {
     # find a matching trigger
     for my $entry ($config->{triggers}->@*) {
         if ($event eq $entry->{event} && $data =~ /$entry->{data}/
-            && (!$entry->{channel} || $channel == $entry->{channel})
+            && (!defined $entry->{channel} || $channel == $entry->{channel})
         ) {
+            warn "Match: $entry->{event}: '$entry->{data}'\n";
             if (exists $entry->{text}) {
                 @cmd = (@type_tool, $entry->{text});
             }
