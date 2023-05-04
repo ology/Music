@@ -64,7 +64,7 @@ while (my $line = readline($midi)) {
         ) {
             warn "Match: $entry->{event}: '$entry->{data}'\n" if $DEBUG;
             if (exists $entry->{text}) {
-                @cmd = (@type_tool, $entry->{text});
+                @cmd = (@type_tool, "$entry->{text}\n");
             }
             elsif (exists $entry->{key}) {
                 @cmd = (@key_tool, $entry->{key});
