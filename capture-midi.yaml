@@ -1,29 +1,24 @@
-debug: 0
-device: 'MPK249'
+debug: 1
+device: 'MPD218'
 triggers:
     # keys
   - event: 'Note on'
-    channel: 0
+    channel: 9
     data: 'note 36, velocity [1-9][0-9]+?'
-    text: '0' 
-  - event: 'Note on'
-    channel: 0
-    data: 'note 59, velocity [1-9][0-9]+?'
-    text: 'Hello there' 
-  - event: 'Note on'
-    channel: 0
-    data: 'note 60, velocity [1-9][0-9]+?'
-    text: 'Abc 123! Xyz 667?' 
-  - event: 'Note on'
-    channel: 0
-    data: 'note 84, velocity [1-9][0-9]+?'
-    text: '$' 
-    # pads
+    text: 0
   - event: 'Note on'
     channel: 9
-    data: 'note 48, velocity [1-9][0-9]+?'
-    text: 'Goodbye cruel world...' 
+    data: 'note 37, velocity [1-9][0-9]+?'
+    text: 'Hello there'
+  - event: 'Note on'
+    channel: 9
+    data: 'note 38, velocity [1-9][0-9]+?'
+    text: 'Abc 123! Xyz 667?'
+  - event: 'Note on'
+    channel: 9
+    data: 'note 39, velocity [1-9][0-9]+?'
+    text: $
     # controllers
   - event: 'Control change'
     data: 'controller 28, value 127'
-    key: 'ctrl+w' 
+    key: 'ctrl+w'
