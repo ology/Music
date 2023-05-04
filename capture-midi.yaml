@@ -3,19 +3,15 @@ device: 'MPD218'
 triggers:
     # keys
   - event: 'Note on'
-    channel: 9
     data: 'note 36, velocity [1-9][0-9]+?'
     text: 0
   - event: 'Note on'
-    channel: 9
     data: 'note 37, velocity [1-9][0-9]+?'
     text: 'Hello there'
   - event: 'Note on'
-    channel: 9
     data: 'note 38, velocity [1-9][0-9]+?'
     text: 'Abc 123! Xyz 667?'
   - event: 'Note on'
-    channel: 9
     data: 'note 39, velocity [1-9][0-9]+?'
     text: $
     # controllers
