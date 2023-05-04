@@ -33,7 +33,7 @@ while (my $line = readline($midi)) {
 
     my $event = $parts[1];
     next unless $event;
-    warn "E: $event\n" if $DEBUG;
+    warn "Ev: $event\n" if $DEBUG;
 
     my ($channel, $data);
     my @cmd;
@@ -47,14 +47,14 @@ while (my $line = readline($midi)) {
         $channel = $parts[2];
         $data = $parts[3];
         $data .= ", $parts[4]" if defined $parts[4];
-        warn "C: $channel | D: $data\n" if $DEBUG;
+        warn "Ch: $channel | Data: $data\n" if $DEBUG;
     }
     elsif (
         $event eq 'Song position pointer'
         || $event eq 'System exclusive'
     ) {
         $data = $parts[2];
-        warn "D: $data\n" if $DEBUG;
+        warn "Data: $data\n" if $DEBUG;
     }
 
     # find a matching trigger
