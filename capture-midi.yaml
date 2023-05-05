@@ -1,4 +1,4 @@
-debug: 0
+debug: 1
 device: 'MPD218'
 triggers:
     # bank A, row 1 pads - EDITOR MOVEMENT
@@ -109,8 +109,10 @@ triggers:
 
     # bank A controllers
   - event: 'Control change'
-    data: 'controller 3, value ([0-9]|[1-5][0-9]|[6][0-4])$'
+    data: 'controller 3, value (\d+)'
+    direction: 'down'
     key: 'ctrl+y'
   - event: 'Control change'
-    data: 'controller 3, value ([6][5-9]|[7-9][0-9]|[1][0-2][0-7])$'
+    data: 'controller 3, value (\d+)'
+    direction: 'up'
     key: 'ctrl+e'
