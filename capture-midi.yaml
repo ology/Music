@@ -96,7 +96,7 @@ triggers:
     # bank B, row 4 pads - BROWSER
   - event: 'Note on'
     data: '^note 64, velocity \d+$'
-    key: 'ctrl+Page_Up' # previous tab
+    key: 'ctrl+b' # bookmarks
   - event: 'Note on'
     data: '^note 65, velocity \d+$'
     key: 'ctrl+l' # address bar
@@ -105,9 +105,9 @@ triggers:
     key: 'ctrl+k' # search bar
   - event: 'Note on'
     data: '^note 67, velocity \d+$'
-    key: 'ctrl+Page_Down' # next tab
+    key: 'ctrl+h' # history
 
-    # bank A controllers
+    # bank A controllers - EDITOR
   - event: 'Control change'
     data: '^controller 3, value (\d+)$'
     down:
@@ -120,3 +120,11 @@ triggers:
       text: '{'
     up:
       text: '}'
+
+    # bank B controllers - BROWSER
+  - event: 'Control change'
+    data: '^controller 16, value (\d+)$'
+    down:
+      key: 'ctrl+Page_Up' # previous tab
+    up:
+      key: 'ctrl+Page_Down' # next tab
