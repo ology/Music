@@ -63,6 +63,7 @@ while (my $line = readline($midi)) {
             && (!defined $entry->{channel} || $channel == $entry->{channel})
         ) {
             warn "Match: $entry->{event}: '$entry->{data}'\n" if $DEBUG;
+            warn "Value: $1\n" if $DEBUG && defined $1;
             if (exists $entry->{text}) {
                 @cmd = (@type_tool, "$entry->{text}\n");
             }
