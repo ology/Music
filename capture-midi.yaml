@@ -1,7 +1,7 @@
 debug: 0
 device: 'MPD218'
 triggers:
-    # bank A, row 1 pads - EDITOR MOVEMENT
+    # bank A, row 1 pads - vim MOVEMENT
   - event: 'Note on'
     data: '^note 36, velocity \d+$'
     text: '0' # head of line
@@ -14,7 +14,7 @@ triggers:
   - event: 'Note on'
     data: '^note 39, velocity \d+$'
     text: '$' # end of line
-    # bank A, row 2 pads - EDITOR BITS
+    # bank A, row 2 pads - vim BITS
   - event: 'Note on'
     data: '^note 40, velocity \d+$'
     text: ' ;ul' # use lib ... sandbox ...
@@ -27,7 +27,7 @@ triggers:
   - event: 'Note on'
     data: '^note 43, velocity \d+$'
     text: ' ;dt' # add done_testing();exit
-    # bank A, row 3 pads - EDITOR git things
+    # bank A, row 3 pads - vim git things
   - event: 'Note on'
     data: '^note 44, velocity \d+$'
     text: ':GitGutterPrevHunk' # previous hunk
@@ -40,7 +40,7 @@ triggers:
   - event: 'Note on'
     data: '^note 47, velocity \d+$'
     text: ':GitGutterNextHunk' # next hunk
-    # bank A, row 4 pads - EDITOR TABS
+    # bank A, row 4 pads - vim TABS
   - event: 'Note on'
     data: '^note 48, velocity \d+$'
     text: 'gT' # go to the previous tab
@@ -54,7 +54,7 @@ triggers:
     data: '^note 51, velocity \d+$'
     text: 'gt' # go to the next tab
 
-    # bank B, row 1 pads - BROWSER
+    # bank B, row 1 pads - Firefox
   - event: 'Note on'
     data: '^note 52, velocity \d+$'
     key: 'alt+1' # 
@@ -67,7 +67,7 @@ triggers:
   - event: 'Note on'
     data: '^note 55, velocity \d+$'
     key: 'alt+4' # 
-    # bank B, row 2 pads - BROWSER
+    # bank B, row 2 pads - Firefox
   - event: 'Note on'
     data: '^note 56, velocity \d+$'
     key: 'alt+5' # 
@@ -80,7 +80,7 @@ triggers:
   - event: 'Note on'
     data: '^note 59, velocity \d+$'
     key: 'alt+8' # 
-    # bank B, row 3 pads - BROWSER
+    # bank B, row 3 pads - Firefox
   - event: 'Note on'
     data: '^note 60, velocity \d+$'
     key: 'alt+9' # 
@@ -93,7 +93,7 @@ triggers:
   - event: 'Note on'
     data: '^note 63, velocity \d+$'
     key: 'ctrl+r' # reload
-    # bank B, row 4 pads - BROWSER
+    # bank B, row 4 pads - Firefox
   - event: 'Note on'
     data: '^note 64, velocity \d+$'
     key: 'ctrl+b' # bookmarks
@@ -107,7 +107,7 @@ triggers:
     data: '^note 67, velocity \d+$'
     key: 'ctrl+h' # history
 
-    # bank A controllers - EDITOR
+    # bank A controllers - vim
   - event: 'Control change'
     data: '^controller 3, value (\d+)$'
     down:
@@ -121,7 +121,7 @@ triggers:
     up:
       text: '}' # next paragraph
 
-    # bank B controllers - BROWSER
+    # bank B controllers - Firefox
   - event: 'Control change'
     data: '^controller 16, value (\d+)$'
     down:
