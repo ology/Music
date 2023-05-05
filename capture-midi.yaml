@@ -1,20 +1,46 @@
 debug: 0
 device: 'MPD218'
 triggers:
-    # bank A, row 1 pads
+    # bank A, row 1 pads - MOVEMENT
   - event: 'Note on'
     data: 'note 36, velocity [1-9][0-9]+?'
-    text: '0'
+    text: '0' # head of line
   - event: 'Note on'
     data: 'note 37, velocity [1-9][0-9]+?'
-    text: ':tabnew'
+    text: '^' # first non-blank char of line
   - event: 'Note on'
     data: 'note 38, velocity [1-9][0-9]+?'
-    text: ':Sex'
+    text: 'g_' # last non-blank char of line
   - event: 'Note on'
     data: 'note 39, velocity [1-9][0-9]+?'
+    text: '$' # end of line
+    # bank A, row 2 pads
+  - event: 'Note on'
+    data: 'note 40, velocity [1-9][0-9]+?'
+    text: '0'
+  - event: 'Note on'
+    data: 'note 41, velocity [1-9][0-9]+?'
+    text: ':tabnew'
+  - event: 'Note on'
+    data: 'note 42, velocity [1-9][0-9]+?'
+    text: ':Sex'
+  - event: 'Note on'
+    data: 'note 42, velocity [1-9][0-9]+?'
     text: '$'
-    # bank A, row 4 pads
+    # bank A, row 3 pads - git
+  - event: 'Note on'
+    data: 'note 44, velocity [1-9][0-9]+?'
+    text: ':GitGutterPrevHunk' # previous hunk
+  - event: 'Note on'
+    data: 'note 45, velocity [1-9][0-9]+?'
+    text: ':GitGutterToggle' # toggle gitgutter
+  - event: 'Note on'
+    data: 'note 46, velocity [1-9][0-9]+?'
+    text: ':!git blame %'
+  - event: 'Note on'
+    data: 'note 47, velocity [1-9][0-9]+?'
+    text: ':GitGutterNextHunk' # next hunk
+    # bank A, row 4 pads - TABS
   - event: 'Note on'
     data: 'note 48, velocity [1-9][0-9]+?'
     text: 'gT' # go to the previous tab
