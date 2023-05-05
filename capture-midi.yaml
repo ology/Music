@@ -17,16 +17,16 @@ triggers:
     # bank A, row 2 pads
   - event: 'Note on'
     data: 'note 40, velocity [1-9][0-9]+?'
-    text: '0'
+    text: ' ;ul' # use lib ... sandbox ...
   - event: 'Note on'
     data: 'note 41, velocity [1-9][0-9]+?'
-    text: ':tabnew'
+    text: ' ;iv' # my $x = shift ...
   - event: 'Note on'
     data: 'note 42, velocity [1-9][0-9]+?'
-    text: ':Sex'
+    text: ' ;my' # add my to beginning of line
   - event: 'Note on'
     data: 'note 42, velocity [1-9][0-9]+?'
-    text: '$'
+    text: ' ;dt' # add done_testing();exit
     # bank A, row 3 pads - git
   - event: 'Note on'
     data: 'note 44, velocity [1-9][0-9]+?'
