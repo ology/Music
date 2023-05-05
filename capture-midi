@@ -70,7 +70,7 @@ while (my $line = readline($midi)) {
             $value = $1;
             my $key;
 
-            if (defined $value && $entry->{event} eq 'Control change') {
+            if (defined $value && exists $entry->{down} && exists $entry->{up}) {
                 $direction = 'down' if $last ne '' && $value < $last;
                 $direction = 'up'   if $last ne '' && $value > $last;
                 $key = $entry->{$direction};
