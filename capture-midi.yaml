@@ -86,26 +86,26 @@ triggers:
     key: 'alt+9' # 
   - event: 'Note on'
     data: 'note 61, velocity [1-9][0-9]+?'
-    key: 'ctrl+t' # 
+    key: 'ctrl+t' # new tab
   - event: 'Note on'
     data: 'note 62, velocity [1-9][0-9]+?'
-    key: 'shift+ctrl+t' # 
+    key: 'shift+ctrl+t' # reopen tab
   - event: 'Note on'
     data: 'note 63, velocity [1-9][0-9]+?'
-    key: 'ctrl+r' # 
+    key: 'ctrl+r' # reload
     # bank B, row 4 pads - BROWSER
   - event: 'Note on'
     data: 'note 64, velocity [1-9][0-9]+?'
-    key: 'ctrl+Page_Up' # 
+    key: 'ctrl+Page_Up' # previous tab
   - event: 'Note on'
     data: 'note 65, velocity [1-9][0-9]+?'
-    key: 'ctrl+Page_Down' # 
+    key: 'ctrl+Page_Down' # next tab
   - event: 'Note on'
     data: 'note 66, velocity [1-9][0-9]+?'
-    key: 'ctrl+l' # 
+    key: 'ctrl+l' # address bar
   - event: 'Note on'
     data: 'note 67, velocity [1-9][0-9]+?'
-    key: 'ctrl+k' # 
+    key: 'ctrl+k' # search bar
 
     # bank A controllers
   - event: 'Control change'
