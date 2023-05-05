@@ -128,6 +128,12 @@ triggers:
       key: 'ctrl+Page_Up' # previous tab
     up:
       key: 'ctrl+Page_Down' # next tab
+  - event: 'Control change'
+    data: '^controller 17, value (\d+)$'
+    down:
+      key: 'ctrl+minus' # zoom out
+    up:
+      key: 'ctrl+plus' # zoom in
 
     # bank C controllers - ?
   - event: 'Control change'
