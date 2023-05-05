@@ -25,7 +25,7 @@ triggers:
     data: 'note 42, velocity [1-9][0-9]+?'
     text: ' ;my' # add my to beginning of line
   - event: 'Note on'
-    data: 'note 42, velocity [1-9][0-9]+?'
+    data: 'note 43, velocity [1-9][0-9]+?'
     text: ' ;dt' # add done_testing();exit
     # bank A, row 3 pads - git
   - event: 'Note on'
