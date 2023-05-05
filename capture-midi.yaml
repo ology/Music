@@ -89,14 +89,14 @@ triggers:
     key: 'ctrl+r' # 
   - event: 'Note on'
     data: 'note 62, velocity [1-9][0-9]+?'
-    key: 'ctrl+r' # 
+    key: 'ctrl+t' # 
   - event: 'Note on'
     data: 'note 63, velocity [1-9][0-9]+?'
-    key: 'ctrl+r' # 
+    key: 'ctrl+Page_Down' # 
     # bank B, row 4 pads - BROWSER
   - event: 'Note on'
     data: 'note 64, velocity [1-9][0-9]+?'
-    key: 'ctrl+r' # 
+    key: 'ctrl+Page_Up' # 
   - event: 'Note on'
     data: 'note 65, velocity [1-9][0-9]+?'
     key: 'ctrl+r' # 
