@@ -20,6 +20,9 @@ my @dump_tool = qw(aseqdump -p);
 my @type_tool = qw(xdotool type);
 my @key_tool  = qw(xdotool key);
 
+my $last = '';
+my $direction = '';
+
 open(my $midi, '-|', @dump_tool, $device)
     or die "Can't fork: $!";
 warn "PID: $$\n" if $DEBUG;
@@ -35,7 +38,7 @@ while (my $line = readline($midi)) {
     next unless $event;
     warn "Ev: $event\n" if $DEBUG;
 
-    my ($channel, $data);
+    my ($channel, $data, $value);
     my @cmd;
 
     # capture the MIDI data
@@ -63,12 +66,25 @@ while (my $line = readline($midi)) {
             && (!defined $entry->{channel} || $channel == $entry->{channel})
         ) {
             warn "Match: $entry->{event}: '$entry->{data}'\n" if $DEBUG;
-            warn "Value: $1\n" if $DEBUG && defined $1;
-            if (exists $entry->{text}) {
-                @cmd = (@type_tool, "$entry->{text}\n");
+
+            $value = $1;
+            my $key;
+
+            if (defined $value && $entry->{event} eq 'Control change') {
+                $direction = 'down' if $last ne '' && $value < $last;
+                $direction = 'up'   if $last ne '' && $value > $last;
+                $key = $entry->{$direction};
+                warn "Value: $1, Last: $last, Direction: $direction\n" if $DEBUG;
+                $last = $value if $last eq '' || $last != $value;
             }
-            elsif (exists $entry->{key}) {
-                @cmd = (@key_tool, $entry->{key});
+            else {
+                $key = $entry->{key};
+            }
+            if (defined $key) {
+                @cmd = (@key_tool, $key);
+            }
+            elsif (exists $entry->{text}) {
+                @cmd = (@type_tool, "$entry->{text}\n");
             }
             last;
         }
