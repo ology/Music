@@ -102,10 +102,10 @@ triggers:
     key: 'ctrl+Page_Down' # 
   - event: 'Note on'
     data: 'note 66, velocity [1-9][0-9]+?'
-    key: 'ctrl+r' # 
+    key: 'ctrl+l' # 
   - event: 'Note on'
     data: 'note 67, velocity [1-9][0-9]+?'
-    key: 'ctrl+r' # 
+    key: 'ctrl+k' # 
 
     # bank A controllers
   - event: 'Control change'
