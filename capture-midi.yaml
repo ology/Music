@@ -1,7 +1,7 @@
 debug: 0
 device: 'MPD218'
 triggers:
-    # bank A, row 1 pads - MOVEMENT
+    # bank A, row 1 pads - EDITOR MOVEMENT
   - event: 'Note on'
     data: 'note 36, velocity [1-9][0-9]+?'
     text: '0' # head of line
@@ -14,7 +14,7 @@ triggers:
   - event: 'Note on'
     data: 'note 39, velocity [1-9][0-9]+?'
     text: '$' # end of line
-    # bank A, row 2 pads
+    # bank A, row 2 pads - EDITOR BITS
   - event: 'Note on'
     data: 'note 40, velocity [1-9][0-9]+?'
     text: ' ;ul' # use lib ... sandbox ...
@@ -27,7 +27,7 @@ triggers:
   - event: 'Note on'
     data: 'note 43, velocity [1-9][0-9]+?'
     text: ' ;dt' # add done_testing();exit
-    # bank A, row 3 pads - git
+    # bank A, row 3 pads - EDITOR git things
   - event: 'Note on'
     data: 'note 44, velocity [1-9][0-9]+?'
     text: ':GitGutterPrevHunk' # previous hunk
@@ -40,7 +40,7 @@ triggers:
   - event: 'Note on'
     data: 'note 47, velocity [1-9][0-9]+?'
     text: ':GitGutterNextHunk' # next hunk
-    # bank A, row 4 pads - TABS
+    # bank A, row 4 pads - EDITOR TABS
   - event: 'Note on'
     data: 'note 48, velocity [1-9][0-9]+?'
     text: 'gT' # go to the previous tab
@@ -53,6 +53,60 @@ triggers:
   - event: 'Note on'
     data: 'note 51, velocity [1-9][0-9]+?'
     text: 'gt' # go to the next tab
+
+    # bank B, row 1 pads - BROWSER
+  - event: 'Note on'
+    data: 'note 52, velocity [1-9][0-9]+?'
+    key: 'alt+1' # 
+  - event: 'Note on'
+    data: 'note 53, velocity [1-9][0-9]+?'
+    key: 'alt+2' # 
+  - event: 'Note on'
+    data: 'note 54, velocity [1-9][0-9]+?'
+    key: 'alt+3' # 
+  - event: 'Note on'
+    data: 'note 55, velocity [1-9][0-9]+?'
+    key: 'alt+4' # 
+    # bank B, row 2 pads - BROWSER
+  - event: 'Note on'
+    data: 'note 56, velocity [1-9][0-9]+?'
+    key: 'alt+5' # 
+  - event: 'Note on'
+    data: 'note 57, velocity [1-9][0-9]+?'
+    key: 'alt+6' # 
+  - event: 'Note on'
+    data: 'note 58, velocity [1-9][0-9]+?'
+    key: 'alt+7' # 
+  - event: 'Note on'
+    data: 'note 59, velocity [1-9][0-9]+?'
+    key: 'alt+8' # 
+    # bank B, row 3 pads - BROWSER
+  - event: 'Note on'
+    data: 'note 60, velocity [1-9][0-9]+?'
+    key: 'alt+9' # 
+  - event: 'Note on'
+    data: 'note 61, velocity [1-9][0-9]+?'
+    key: 'ctrl+r' # 
+  - event: 'Note on'
+    data: 'note 62, velocity [1-9][0-9]+?'
+    key: 'ctrl+r' # 
+  - event: 'Note on'
+    data: 'note 63, velocity [1-9][0-9]+?'
+    key: 'ctrl+r' # 
+    # bank B, row 4 pads - BROWSER
+  - event: 'Note on'
+    data: 'note 64, velocity [1-9][0-9]+?'
+    key: 'ctrl+r' # 
+  - event: 'Note on'
+    data: 'note 65, velocity [1-9][0-9]+?'
+    key: 'ctrl+r' # 
+  - event: 'Note on'
+    data: 'note 66, velocity [1-9][0-9]+?'
+    key: 'ctrl+r' # 
+  - event: 'Note on'
+    data: 'note 67, velocity [1-9][0-9]+?'
+    key: 'ctrl+r' # 
+
     # bank A controllers
   - event: 'Control change'
     data: 'controller 28, value 127'
