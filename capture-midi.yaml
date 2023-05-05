@@ -109,14 +109,12 @@ triggers:
 
     # bank A controllers - vim
   - event: 'Control change'
-    type: 'continuous'
     data: '^controller 3, value (\d+)$'
     down:
       key: 'ctrl+y' # previous line
     up:
       key: 'ctrl+e' # next line
   - event: 'Control change'
-    type: 'continuous'
     data: '^controller 9, value (\d+)$'
     down:
       text: '{' # previous paragraph
@@ -125,7 +123,6 @@ triggers:
 
     # bank B controllers - Firefox
   - event: 'Control change'
-    type: 'continuous'
     data: '^controller 16, value (\d+)$'
     down:
       key: 'ctrl+Page_Up' # previous tab
@@ -134,7 +131,6 @@ triggers:
 
     # bank C controllers - ?
   - event: 'Control change'
-    type: 'discrete'
     data: '^controller 22, value (\d+)$'
     down:
       key: 'ctrl+plus' # zoom in
