@@ -111,15 +111,15 @@ triggers:
   - event: 'Control change'
     data: '^controller 3, value (\d+)$'
     down:
-      key: 'ctrl+y'
+      key: 'ctrl+y' # previous line
     up:
-      key: 'ctrl+e'
+      key: 'ctrl+e' # next line
   - event: 'Control change'
     data: '^controller 9, value (\d+)$'
     down:
-      text: '{'
+      text: '{' # previous paragraph
     up:
-      text: '}'
+      text: '}' # next paragraph
 
     # bank B controllers - BROWSER
   - event: 'Control change'
