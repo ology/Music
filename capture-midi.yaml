@@ -110,5 +110,13 @@ triggers:
     # bank A controllers
   - event: 'Control change'
     data: 'controller 3, value (\d+)'
-    down: 'ctrl+y'
-    up: 'ctrl+e'
+    down:
+      key: 'ctrl+y'
+    up:
+      key: 'ctrl+e'
+  - event: 'Control change'
+    data: 'controller 9, value (\d+)'
+    down:
+      text: '{'
+    up:
+      text: '}'
