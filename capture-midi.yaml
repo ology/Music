@@ -7,10 +7,10 @@ triggers:
     text: '0' # head of line
   - event: 'Note on'
     data: '^note 37, velocity \d+$'
-    text: '^' # first non-blank char of line
+    text: 'g_' # first non-blank char of line
   - event: 'Note on'
     data: '^note 38, velocity \d+$'
-    text: 'g_' # last non-blank char of line
+    text: '^' # last non-blank char of line
   - event: 'Note on'
     data: '^note 39, velocity \d+$'
     text: '$' # end of line
@@ -67,6 +67,18 @@ triggers:
       text: '{' # previous paragraph
     up:
       text: '}' # next paragraph
+  - event: 'Control change'
+    data: '^controller 14, value (\d+)$'
+    down:
+      text: 'h' # previous character
+    up:
+      text: 'l' # next character
+  - event: 'Control change'
+    data: '^controller 15, value (\d+)$'
+    down:
+      text: 'F ' # previous space
+    up:
+      text: 'f ' # next space
 
     # bank B, row 1 pads - Firefox
   - event: 'Note on'
