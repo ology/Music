@@ -1,4 +1,4 @@
-debug: 1
+debug: 0
 device: 'MPD218'
 triggers:
     # bank A, row 1 pads - vim MOVEMENT
@@ -57,27 +57,27 @@ triggers:
     # bank A controllers - vim
   - event: 'Control change'
     data: '^controller 1, value (\d+)$'
-    down:
-      key: 'ctrl+y' # previous line
     up:
+      key: 'ctrl+y' # previous line
+    down:
       key: 'ctrl+e' # next line
   - event: 'Control change'
     data: '^controller 2, value (\d+)$'
-    down:
-      text: '{' # previous paragraph
     up:
+      text: '{' # previous paragraph
+    down:
       text: '}' # next paragraph
   - event: 'Control change'
     data: '^controller 5, value (\d+)$'
-    down:
-      text: 'h' # previous character
     up:
+      text: 'h' # previous character
+    down:
       text: 'l' # next character
   - event: 'Control change'
     data: '^controller 6, value (\d+)$'
-    down:
-      text: 'F ' # previous space
     up:
+      text: 'F ' # previous space
+    down:
       text: 'f ' # next space
 
     # bank B, row 1 pads - Firefox
@@ -136,13 +136,13 @@ triggers:
     # bank B controllers - Firefox
   - event: 'Control change'
     data: '^controller 7, value (\d+)$'
-    down:
-      key: 'ctrl+Page_Up' # previous tab
     up:
+      key: 'ctrl+Page_Up' # previous tab
+    down:
       key: 'ctrl+Page_Down' # next tab
   - event: 'Control change'
     data: '^controller 8, value (\d+)$'
-    down:
-      key: 'ctrl+minus' # zoom out
     up:
+      key: 'ctrl+minus' # zoom out
+    down:
       key: 'ctrl+plus' # zoom in
