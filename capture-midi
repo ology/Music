@@ -73,9 +73,9 @@ while (my $line = readline($midi)) {
             if (defined $value && exists $entry->{down} && exists $entry->{up}) {
                 $direction = 'down' if $last ne '' && $value < $last;
                 $direction = 'up'   if $last ne '' && $value > $last;
+                warn "Value: $value, Last: $last, Direction: $direction\n" if $DEBUG;
                 $key  = $entry->{$direction}{key}  if exists $entry->{$direction}{key};
                 $text = $entry->{$direction}{text} if exists $entry->{$direction}{text};
-                warn "Value: $1, Last: $last, Direction: $direction\n" if $DEBUG;
                 $last = $value if $last eq '' || $last != $value;
             }
             else {
