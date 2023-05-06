@@ -54,6 +54,20 @@ triggers:
     data: '^note 51, velocity \d+$'
     text: 'gt' # go to the next tab
 
+    # bank A controllers - vim
+  - event: 'Control change'
+    data: '^controller 3, value (\d+)$'
+    down:
+      key: 'ctrl+y' # previous line
+    up:
+      key: 'ctrl+e' # next line
+  - event: 'Control change'
+    data: '^controller 9, value (\d+)$'
+    down:
+      text: '{' # previous paragraph
+    up:
+      text: '}' # next paragraph
+
     # bank B, row 1 pads - Firefox
   - event: 'Note on'
     data: '^note 52, velocity \d+$'
@@ -106,20 +120,6 @@ triggers:
   - event: 'Note on'
     data: '^note 67, velocity \d+$'
     key: 'ctrl+h' # history
-
-    # bank A controllers - vim
-  - event: 'Control change'
-    data: '^controller 3, value (\d+)$'
-    down:
-      key: 'ctrl+y' # previous line
-    up:
-      key: 'ctrl+e' # next line
-  - event: 'Control change'
-    data: '^controller 9, value (\d+)$'
-    down:
-      text: '{' # previous paragraph
-    up:
-      text: '}' # next paragraph
 
     # bank B controllers - Firefox
   - event: 'Control change'
