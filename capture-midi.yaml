@@ -4,16 +4,16 @@ triggers:
     # bank A, row 1 pads - vim MOVEMENT
   - event: 'Note on'
     data: '^note 36, velocity \d+$'
-    text: '0' # head of line
+    text: '^' # first non-blank char of line
   - event: 'Note on'
     data: '^note 37, velocity \d+$'
-    text: 'g_' # first non-blank char of line
+    text: ':set spell!' # spell check
   - event: 'Note on'
     data: '^note 38, velocity \d+$'
-    text: '^' # last non-blank char of line
+    key: 'ctrl+l' # show hidden chars
   - event: 'Note on'
     data: '^note 39, velocity \d+$'
-    text: '$' # end of line
+    text: 'g_' # last non-blank char of line
     # bank A, row 2 pads - vim BITS
   - event: 'Note on'
     data: '^note 40, velocity \d+$'
