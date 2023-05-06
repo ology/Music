@@ -10,7 +10,7 @@ triggers:
     text: ':set spell!' # spell check
   - event: 'Note on'
     data: '^note 38, velocity \d+$'
-    key: 'ctrl+l' # show hidden chars
+    text: ':set list!' # show/hide hidden chars
   - event: 'Note on'
     data: '^note 39, velocity \d+$'
     text: 'g_' # last non-blank char of line
