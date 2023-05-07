@@ -14,9 +14,10 @@ my $config_file = shift || "$0.yaml";
 my $config = LoadFile($config_file);
 
 my $DEBUG  = $config->{debug};
+my $os     = $config->{os};
 my $device = $config->{device};
 
-my @dump_tool = qw(aseqdump -p);
+my @dump_tool = $os eq 'mac' ? qw(receivemidi dev) : qw(aseqdump -p);
 my @type_tool = qw(xdotool type);
 my @key_tool  = qw(xdotool key);
 
@@ -28,7 +29,7 @@ open(my $midi, '-|', @dump_tool, $device)
 warn "PID: $$\n" if $DEBUG;
 
 while (my $line = readline($midi)) {
-#    print $line; next;
+    print $line; next;
     chomp $line;
     $line =~ s/^\s*//;
 
@@ -42,20 +43,17 @@ while (my $line = readline($midi)) {
     my @cmd;
 
     # capture the MIDI data
-    if ($event =~ /^Note \w+$/a
-        || $event =~ /^\w+ change$/a
-        || $event eq 'Pitch bend'
-        || $event eq 'Channel aftertouch'
+    if ($event =~ /^Note[ -]on$/i
+        || $event =~ /^\w+[ -]change$/
+        || $event =~ /Pitch[ -]bend/i
+        || $event =~ /Channel[ -]aftertouch/i
     ) {
         $channel = $parts[2];
         $data = $parts[3];
         $data .= ", $parts[4]" if defined $parts[4];
         warn "Ch: $channel | Data: $data\n" if $DEBUG;
     }
-    elsif (
-        $event eq 'Song position pointer'
-        || $event eq 'System exclusive'
-    ) {
+    elsif ($event eq 'System exclusive') {
         $data = $parts[2];
         warn "Data: $data\n" if $DEBUG;
     }
@@ -103,6 +101,7 @@ close $midi
     or die "Bad @dump_tool: $! $?";
 
 __END__
+# aseqdump:
 Source  Event                  Ch  Data
  20:0   Note on                 0, note 60, velocity 58
  20:0   Note off                0, note 60, velocity 0
@@ -116,3 +115,23 @@ Source  Event                  Ch  Data
  20:0   Channel aftertouch      9, value 127
  20:0   Channel aftertouch      9, value 113
  20:0   Channel aftertouch      9, value 0
+
+# receivemidi:
+channel 10   note-on           C1 108
+channel 10   note-off          C1   0
+channel 10   note-on           C1  84
+channel 10   channel-pressure     109
+channel 10   channel-pressure       0
+channel 10   note-off          C1   0
+channel 10   note-on          C#1 111
+channel 10   note-off         C#1   0
+channel 10   note-on           D1 120
+channel 10   note-off          D1   0
+channel  1   control-change     3    43
+channel  1   control-change     3    44
+channel  1   control-change     3    45
+channel  1   control-change     9     2
+channel  1   control-change     9     1
+channel  1   control-change     9     0
+channel  1   control-change    12     1
+channel  1   control-change    12     2

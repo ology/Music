@@ -1,4 +1,5 @@
 debug: 0
+os: 'mac'
 device: 'MPD218'
 triggers:
     # bank A, row 1 pads - vim MOVEMENT
