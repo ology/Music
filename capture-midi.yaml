@@ -17,7 +17,7 @@ triggers:
     # bank A, row 2 pads - vim BITS
   - event: 'Note on'
     data: '^note 40, velocity \d+$'
-    text: 'zm' # collapse all folds
+    text: 'zb' # move the line to the bottom
   - event: 'Note on'
     data: '^note 41, velocity \d+$'
     text: 'zc' # collapse fold
@@ -26,7 +26,7 @@ triggers:
     text: 'zv' # open fold
   - event: 'Note on'
     data: '^note 43, velocity \d+$'
-    text: 'zr' # open all folds
+    text: 'zt' # move the line to the top
     # bank A, row 3 pads - vim git things
   - event: 'Note on'
     data: '^note 44, velocity \d+$'
