@@ -1,4 +1,4 @@
-debug: 0
+debug: 1
 device: 'MPD218'
 triggers:
     # bank A, row 1 pads - vim MOVEMENT
@@ -128,10 +128,10 @@ triggers:
     key: 'ctrl+a' # increment the number under the cursor
   - event: 'Note on'
     data: '^note 66, velocity \d+$'
-    key: ':r !date' # insert the date
+    text: ':r !date' # insert the date
   - event: 'Note on'
     data: '^note 67, velocity \d+$'
-    key: ':digraphs' # show digraphs
+    text: ':digraphs' # show digraphs
 
     # bank B controllers - vim
   - event: 'Control change'
