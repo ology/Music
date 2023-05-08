@@ -17,16 +17,16 @@ triggers:
     # bank A, row 2 pads - vim BITS
   - event: 'Note on'
     data: '^note 40, velocity \d+$'
-    text: ' ;ul' # use lib ... sandbox ...
+    text: 'zm' # collapse all folds
   - event: 'Note on'
     data: '^note 41, velocity \d+$'
-    text: ' ;iv' # my $x = shift ...
+    text: 'zc' # collapse fold
   - event: 'Note on'
     data: '^note 42, velocity \d+$'
-    text: ' ;my' # add my to beginning of line
+    text: 'zv' # open fold
   - event: 'Note on'
     data: '^note 43, velocity \d+$'
-    text: ' ;dt' # add done_testing();exit
+    text: 'zr' # open all folds
     # bank A, row 3 pads - vim git things
   - event: 'Note on'
     data: '^note 44, velocity \d+$'
@@ -80,68 +80,147 @@ triggers:
     down:
       text: 'f ' # next space
 
-    # bank B, row 1 pads - Firefox
+    # bank B, row 1 pads - vim
   - event: 'Note on'
     data: '^note 52, velocity \d+$'
-    key: 'alt+1' # 
+    text: ':tab ball' # turn open buffers into tabs
   - event: 'Note on'
     data: '^note 53, velocity \d+$'
-    key: 'alt+2' # 
+    text: ':S' # split and explore
   - event: 'Note on'
     data: '^note 54, velocity \d+$'
-    key: 'alt+3' # 
+    text: ':echo expand("%:p")' # show absolute path
   - event: 'Note on'
     data: '^note 55, velocity \d+$'
-    key: 'alt+4' # 
-    # bank B, row 2 pads - Firefox
+    text: ':call DoTidy()' # perltidy visual selection
+    # bank B, row 2 pads - vim
   - event: 'Note on'
     data: '^note 56, velocity \d+$'
-    key: 'alt+5' # 
+    text: ' ;ul' # use lib ... sandbox ...
   - event: 'Note on'
     data: '^note 57, velocity \d+$'
-    key: 'alt+6' # 
+    text: ' ;iv' # my $x = shift ...
   - event: 'Note on'
     data: '^note 58, velocity \d+$'
-    key: 'alt+7' # 
+    text: ' ;my' # add my to beginning of line
   - event: 'Note on'
     data: '^note 59, velocity \d+$'
-    key: 'alt+8' # 
-    # bank B, row 3 pads - Firefox
+    text: ' ;dt' # add done_testing();exit
+    # bank B, row 3 pads - vim
   - event: 'Note on'
     data: '^note 60, velocity \d+$'
-    key: 'alt+9' # 
+    text: ':set ft=html' # html colorize
   - event: 'Note on'
     data: '^note 61, velocity \d+$'
-    key: 'ctrl+t' # new tab
+    text: ':set ft=javascript' # js colorize
   - event: 'Note on'
     data: '^note 62, velocity \d+$'
-    key: 'shift+ctrl+t' # reopen tab
+    text: ':w !jshint %' # run jshint
   - event: 'Note on'
     data: '^note 63, velocity \d+$'
-    key: 'ctrl+r' # reload
-    # bank B, row 4 pads - Firefox
+    text: ' ;ll' # add js alert()
+    # bank B, row 4 pads - vim
   - event: 'Note on'
     data: '^note 64, velocity \d+$'
-    key: 'ctrl+b' # bookmarks
+    key: 'ctrl+x' # decrement the number under the cursor
   - event: 'Note on'
     data: '^note 65, velocity \d+$'
-    key: 'ctrl+l' # address bar
+    key: 'ctrl+a' # increment the number under the cursor
   - event: 'Note on'
     data: '^note 66, velocity \d+$'
-    key: 'ctrl+k' # search bar
+    key: ':r !date' # insert the date
   - event: 'Note on'
     data: '^note 67, velocity \d+$'
-    key: 'ctrl+h' # history
+    key: ':digraphs' # show digraphs
 
-    # bank B controllers - Firefox
+    # bank B controllers - vim
   - event: 'Control change'
     data: '^controller 7, value (\d+)$'
+    up:
+      key: 'ctrl+y' # previous line
+    down:
+      key: 'ctrl+e' # next line
+  - event: 'Control change'
+    data: '^controller 8, value (\d+)$'
+    up:
+      text: '{' # previous paragraph
+    down:
+      text: '}' # next paragraph
+  - event: 'Control change'
+    data: '^controller 11, value (\d+)$'
+    up:
+      text: 'h' # previous character
+    down:
+      text: 'l' # next character
+  - event: 'Control change'
+    data: '^controller 12, value (\d+)$'
+    up:
+      text: 'F ' # previous space
+    down:
+      text: 'f ' # next space
+
+    # bank C, row 1 pads - Firefox
+  - event: 'Note on'
+    data: '^note 68, velocity \d+$'
+    key: 'alt+1' # 
+  - event: 'Note on'
+    data: '^note 69, velocity \d+$'
+    key: 'alt+2' # 
+  - event: 'Note on'
+    data: '^note 70, velocity \d+$'
+    key: 'alt+3' # 
+  - event: 'Note on'
+    data: '^note 71, velocity \d+$'
+    key: 'alt+4' # 
+    # bank C, row 2 pads - Firefox
+  - event: 'Note on'
+    data: '^note 72, velocity \d+$'
+    key: 'alt+5' # 
+  - event: 'Note on'
+    data: '^note 73, velocity \d+$'
+    key: 'alt+6' # 
+  - event: 'Note on'
+    data: '^note 74, velocity \d+$'
+    key: 'alt+7' # 
+  - event: 'Note on'
+    data: '^note 75, velocity \d+$'
+    key: 'alt+8' # 
+    # bank C, row 3 pads - Firefox
+  - event: 'Note on'
+    data: '^note 76, velocity \d+$'
+    key: 'alt+9' # 
+  - event: 'Note on'
+    data: '^note 77, velocity \d+$'
+    key: 'ctrl+t' # new tab
+  - event: 'Note on'
+    data: '^note 78, velocity \d+$'
+    key: 'shift+ctrl+t' # reopen tab
+  - event: 'Note on'
+    data: '^note 79, velocity \d+$'
+    key: 'ctrl+r' # reload
+    # bank C, row 4 pads - Firefox
+  - event: 'Note on'
+    data: '^note 80, velocity \d+$'
+    key: 'ctrl+b' # bookmarks
+  - event: 'Note on'
+    data: '^note 81, velocity \d+$'
+    key: 'ctrl+l' # address bar
+  - event: 'Note on'
+    data: '^note 82, velocity \d+$'
+    key: 'ctrl+k' # search bar
+  - event: 'Note on'
+    data: '^note 83, velocity \d+$'
+    key: 'ctrl+h' # history
+
+    # bank C controllers - Firefox
+  - event: 'Control change'
+    data: '^controller 13, value (\d+)$'
     up:
       key: 'ctrl+Page_Up' # previous tab
     down:
       key: 'ctrl+Page_Down' # next tab
   - event: 'Control change'
-    data: '^controller 8, value (\d+)$'
+    data: '^controller 14, value (\d+)$'
     up:
       key: 'ctrl+minus' # zoom out
     down:
