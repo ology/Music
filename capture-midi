@@ -30,13 +30,15 @@ open(my $midi, '-|', @dump_tool, $device)
 warn "PID: $$\n" if $DEBUG;
 
 while (my $line = readline($midi)) {
-    print $line; next;
+    #print $line; next;
     chomp $line;
     $line =~ s/^\s*//;
 
-    my @parts = split /(?:\s{2,}|,\s+)/, $line;
+    my @parts = $os eq 'mac'
+        ? split /\s/, $line
+        : split /(?:\s{2,}|,\s+)/, $line;
 
-    my $event = $parts[1];
+    my $event = $os eq 'mac' ? $parts[2] : $parts[1];
     next unless $event;
     warn "Ev: $event\n" if $DEBUG;
 
@@ -47,15 +49,22 @@ while (my $line = readline($midi)) {
     if ($event =~ /^Note[ -]on$/i
         || $event =~ /^\w+[ -]change$/
         || $event =~ /Pitch[ -]bend/i
-        || $event =~ /Channel[ -]aftertouch/i
+        || $event =~ /Channel[ -](?:aftertouch|pressure)/i
     ) {
-        $channel = $parts[2];
-        $data = $parts[3];
-        $data .= ", $parts[4]" if defined $parts[4];
+        if ($os eq 'mac') {
+            $channel = $parts[1];
+            $data = $parts[-1];
+            $data = "$parts[3] $data" if $event ne 'channel-pressure';
+        }
+        else {
+            $channel = $parts[2];
+            $data = $parts[3];
+            $data .= ", $parts[4]" if defined $parts[4];
+        }
         warn "Ch: $channel | Data: $data\n" if $DEBUG;
     }
-    elsif ($event eq 'System exclusive') {
-        $data = $parts[2];
+    elsif ($event =~ /System[ -]exclusive/i) {
+        $data = $parts[-1];
         warn "Data: $data\n" if $DEBUG;
     }
 
