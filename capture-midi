@@ -35,7 +35,7 @@ while (my $line = readline($midi)) {
     $line =~ s/^\s*//;
 
     my @parts = $os eq 'mac'
-        ? split /\s/, $line
+        ? split /\s+/, $line
         : split /(?:\s{2,}|,\s+)/, $line;
 
     my $event = $os eq 'mac' ? $parts[2] : $parts[1];
