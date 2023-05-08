@@ -15,10 +15,9 @@ my $config_file = shift || "$0.yaml";
 my $config = LoadFile($config_file);
 
 my $DEBUG  = $config->{debug};
-my $os     = $config->{os};
 my $device = $config->{device};
 
-my @dump_tool = $os eq 'mac' ? qw(receivemidi dev) : qw(aseqdump -p);
+my @dump_tool = qw(aseqdump -p);
 my @type_tool = qw(xdotool type);
 my @key_tool  = qw(xdotool key);
 
@@ -34,11 +33,9 @@ while (my $line = readline($midi)) {
     chomp $line;
     $line =~ s/^\s*//;
 
-    my @parts = $os eq 'mac'
-        ? split /\s+/, $line
-        : split /(?:\s{2,}|,\s+)/, $line;
+    my @parts = split /(?:\s{2,}|,\s+)/, $line;
 
-    my $event = $os eq 'mac' ? $parts[2] : $parts[1];
+    my $event = $parts[1];
     next unless $event;
     warn "Ev: $event\n" if $DEBUG;
 
@@ -51,16 +48,9 @@ while (my $line = readline($midi)) {
         || $event =~ /Pitch[ -]bend/i
         || $event =~ /Channel[ -](?:aftertouch|pressure)/i
     ) {
-        if ($os eq 'mac') {
-            $channel = $parts[1];
-            $data = $parts[-1];
-            $data = "$parts[3] $data" if $event ne 'channel-pressure';
-        }
-        else {
-            $channel = $parts[2];
-            $data = $parts[3];
-            $data .= ", $parts[4]" if defined $parts[4];
-        }
+        $channel = $parts[2];
+        $data = $parts[3];
+        $data .= ", $parts[4]" if defined $parts[4];
         warn "Ch: $channel | Data: $data\n" if $DEBUG;
     }
     elsif ($event =~ /System[ -]exclusive/i) {
