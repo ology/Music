@@ -116,23 +116,3 @@ Source  Event                  Ch  Data
  20:0   Channel aftertouch      9, value 127
  20:0   Channel aftertouch      9, value 113
  20:0   Channel aftertouch      9, value 0
-
-# receivemidi:
-channel 10   note-on           C1 108
-channel 10   note-off          C1   0
-channel 10   note-on           C1  84
-channel 10   channel-pressure     109
-channel 10   channel-pressure       0
-channel 10   note-off          C1   0
-channel 10   note-on          C#1 111
-channel 10   note-off         C#1   0
-channel 10   note-on           D1 120
-channel 10   note-off          D1   0
-channel  1   control-change     3    43
-channel  1   control-change     3    44
-channel  1   control-change     3    45
-channel  1   control-change     9     2
-channel  1   control-change     9     1
-channel  1   control-change     9     0
-channel  1   control-change    12     1
-channel  1   control-change    12     2
