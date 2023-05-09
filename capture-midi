@@ -1,6 +1,8 @@
 #!/usr/bin/env perl
 
 # Capture MIDI events and send text or keystrokes to the console.
+# Write-up: https://ology.github.io/2023/05/08/control-linux-with-midi/
+
 # Please see the config file: capture-midi.yaml in this same directory.
 # Also, this program is Linux-only. You'll need aseqdump and xdotool.
 
