@@ -2,7 +2,8 @@
 use strict;
 use warnings;
 
-# Print out every single chromatic note and the modes of each.
+# Print out each chromatic note and its modes.
+# 12 notes x 7 modes = 84
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(midi_format);
@@ -12,6 +13,6 @@ for my $note (get_scale_notes('C', 'chromatic')) {
     for my $mode (qw(ionian dorian phrygian lydian mixolydian aeolian locrian)) {
         my @scale = midi_format(get_scale_notes($note, $mode));
         ($note) = midi_format($note);
-        printf "scale(%s, %s, [%s]).\n", $note, $mode, join(', ', @scale);
+        printf "scale(%s, %s, [%s]).\n", lc($note), lc($mode), join(', ', map { lc } @scale);
     }
 }
