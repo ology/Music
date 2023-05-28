@@ -16,7 +16,7 @@ use Music::Scales qw(get_scale_MIDI);
 my @notes = get_scale_MIDI('C', 4, 'major'); # 60, 62...
 my $base = 60;
 
-my $ga = AI::Genetic::Pro->new(        
+my $ga = AI::Genetic::Pro->new(
     -fitness         => \&fitness,        # fitness function
     -terminate       => \&terminate,      # terminate function
     -type            => 'combination',    # type of chromosomes
@@ -34,40 +34,43 @@ my $ga = AI::Genetic::Pro->new(
 
 $ga->init(\@notes);
 
-$ga->evolve(1000);
+$ga->evolve(0);
 
 # Perform gymnastics with the pitches
 my $pitches = $ga->as_array($ga->getFittest);
 my $altered = [ map { $_ + $base } @{ alteration( [ map { $_ - $base } @$pitches ] ) } ];
 $pitches = [ @$pitches, @$altered ];
 print ddc($pitches);
+#exit;
 
 process_midi($pitches);
 
 sub calc {
     my ($ar) = @_;
-#warn(__PACKAGE__,' ',__LINE__," MARK: @$ar\n");
+warn(__PACKAGE__,' ',__LINE__," MARK: @$ar\n");
     my $calc = 0;
     # Adjacent elements must be within ...
     for my $n ( 0 .. @$ar - 2 ) {
         my $v = abs( $ar->[$n] - $ar->[$n + 1] );
-        $calc++ if $v >= 2 && $v <= 5;
+        $calc++ if $v < 2 || $v > 5;
     }
-#warn "\t = $calc\n";
+warn "\t = $calc\n";
     return $calc;
 }
 
-#my $i = 0;
+my $i = 0;
 sub fitness {
     my ($ga, $chromosome) = @_;
-#    warn(__PACKAGE__,' ',__LINE__," MARK: fitness() ",$i++,"\n");
-    return calc(scalar $ga->as_array($chromosome));
+warn(__PACKAGE__,' ',__LINE__," MARK: fitness() ",$i++,"\n");
+#warn(__PACKAGE__,' ',__LINE__," MARK: ",ddc([$ga->as_array($chromosome)]));
+    return calc([ $ga->as_array($chromosome) ]);
 }
 
 sub terminate {
     my ($ga) = @_;
-    return 1 if $ga->as_value($ga->getFittest) >= 1;
-    return;
+    my $result = calc([ $ga->as_array($ga->getFittest) ]);
+warn(__PACKAGE__,' ',__LINE__," MARK: ",$result,"\n");
+    return $result <= 1 ? 1 : 0;
 }
 
 sub process_midi {

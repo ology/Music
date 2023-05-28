@@ -13,6 +13,7 @@ use strict;
 use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Music-Chord-Progression-Transform Music-Duration-Partition); # local author libs
+use lib "$ENV{HOME}/repos/Music-Chord-Note/lib"; # my fork
 
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
