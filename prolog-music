@@ -1,0 +1,125 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+use AI::Prolog;
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use MIDI::Util qw(midi_format);
+use Music::Note ();
+use Music::Scales qw(get_scale_notes);
+
+my @chromatic = get_scale_notes('c', 'chromatic', 0, 'b');
+#warn __PACKAGE__,' L',__LINE__,' ',,"@chromatic\n";exit;
+
+$/ = undef;
+my $modes = eval <DATA>;
+#warn __PACKAGE__,' L',__LINE__,' ',ddc($modes, {max_width=>128});exit;
+
+my $database = '';
+for my $base (@chromatic) {
+    for my $mode (keys %$modes) {
+        my @pitches;
+        my @notes = get_scale_notes($base, $mode);
+        #warn __PACKAGE__,' L',__LINE__,' ',,"$base $mode @notes\n";
+        for my $note (@notes) {
+            my $n = Music::Note->new($note, 'isobase');
+            $n->en_eq('flat') if $note =~ /#/;
+            push @pitches, map { lc } midi_format($n->format('isobase'));
+        }
+        my ($mode_base) = map { lc } midi_format($base);
+        my $i = 0;
+        for my $pitch (@pitches) {
+            $database .= "chord_key($mode_base, $mode, $pitch, $modes->{$mode}[$i]{chord}, $modes->{$mode}[$i]{function}).\n";
+            $i++;
+        }
+    }
+}
+$database .=<<'RULE';
+pivot_chord_keys(ChordNote, Chord, Key1Note, Key1, Key1Function, Key2Note, Key2, Key2Function) :-
+    chord_key(Key1Note, Key1, ChordNote, Chord, Key1Function),
+    chord_key(Key2Note, Key2, ChordNote, Chord, Key2Function),
+    Key1Function \= Key2Function.
+RULE
+#warn __PACKAGE__,' L',__LINE__,' ',,"$database\n";exit;
+
+my $prolog = AI::Prolog->new($database);
+
+#$prolog->query('chord_key(d, ionian, KeyNote, Key, dominant).');
+#$prolog->query('chord_key(g, ionian, KeyNote, Key, Function).');
+$prolog->query('pivot_chord_keys(g, maj, c, ionian, Key1Function, Key2Note, Key2, Key2Function).');
+#$prolog->query('pivot_chord_keys(ChordNote, Chord, Key1Note, Key1, Key1Function, c, min, Key2Function).');
+#$prolog->query('pivot_chord_keys(ChordNote, Chord, Key1Note, Key1, Key1Function, Key2Note, Key2, dominant).');
+#$prolog->query('pivot_chord_keys(g, maj, c, Key1, Key1Function, Key2Note, Key2, Key2Function).');
+#$prolog->query('pivot_chord_keys(g, maj, c, ionian, Key1Function, c, min, Key2Function).');
+
+while (my $result = $prolog->results) {
+    print ddc($result, {max_width=>128});
+}
+
+__DATA__
+{
+    ionian => [
+        { chord => 'maj', roman => 'r_I',   function => 'tonic' },
+        { chord => 'min', roman => 'r_ii',  function => 'supertonic' },
+        { chord => 'min', roman => 'r_iii', function => 'mediant' },
+        { chord => 'maj', roman => 'r_IV',  function => 'subdominant' },
+        { chord => 'maj', roman => 'r_V',   function => 'dominant' },
+        { chord => 'min', roman => 'r_vi',  function => 'submediant' },
+        { chord => 'dim', roman => 'r_vii', function => 'leading_tone' }
+    ],
+    dorian => [
+        { chord => 'min', roman => 'r_i',   function => 'tonic' },
+        { chord => 'min', roman => 'r_ii',  function => 'supertonic' },
+        { chord => 'maj', roman => 'r_III', function => 'mediant' },
+        { chord => 'maj', roman => 'r_IV',  function => 'subdominant' },
+        { chord => 'min', roman => 'r_v',   function => 'dominant' },
+        { chord => 'dim', roman => 'r_vi',  function => 'submediant' },
+        { chord => 'maj', roman => 'r_VII', function => 'subtonic' }
+    ],
+    phrygian => [
+        { chord => 'min', roman => 'r_i',   function => 'tonic' },
+        { chord => 'maj', roman => 'r_II',  function => 'supertonic' },
+        { chord => 'maj', roman => 'r_III', function => 'mediant' },
+        { chord => 'min', roman => 'r_iv',  function => 'subdominant' },
+        { chord => 'dim', roman => 'r_v',   function => 'dominant' },
+        { chord => 'maj', roman => 'r_VI',  function => 'submediant' },
+        { chord => 'min', roman => 'r_vii', function => 'subtonic' }
+    ],
+    lydian => [
+        { chord => 'maj', roman => 'r_I',   function => 'tonic' },
+        { chord => 'maj', roman => 'r_II',  function => 'supertonic' },
+        { chord => 'min', roman => 'r_iii', function => 'mediant' },
+        { chord => 'dim', roman => 'r_iv',  function => 'subdominant' },
+        { chord => 'maj', roman => 'r_V',   function => 'dominant' },
+        { chord => 'min', roman => 'r_vi',  function => 'submediant' },
+        { chord => 'min', roman => 'r_vii', function => 'leading_tone' }
+    ],
+    mixolydian => [
+        { chord => 'maj', roman => 'r_I',   function => 'tonic' },
+        { chord => 'min', roman => 'r_ii',  function => 'supertonic' },
+        { chord => 'dim', roman => 'r_iii', function => 'mediant' },
+        { chord => 'maj', roman => 'r_IV',  function => 'subdominant' },
+        { chord => 'min', roman => 'r_v',   function => 'dominant' },
+        { chord => 'min', roman => 'r_vi',  function => 'submediant' },
+        { chord => 'maj', roman => 'r_VII', function => 'subtonic' }
+    ],
+    aeolian => [
+        { chord => 'min', roman => 'r_i',   function => 'tonic' },
+        { chord => 'dim', roman => 'r_ii',  function => 'supertonic' },
+        { chord => 'maj', roman => 'r_III', function => 'mediant' },
+        { chord => 'min', roman => 'r_iv',  function => 'subdominant' },
+        { chord => 'min', roman => 'r_v',   function => 'dominant' },
+        { chord => 'maj', roman => 'r_VI',  function => 'submediant' },
+        { chord => 'maj', roman => 'r_VII', function => 'subtonic' }
+    ],
+    locrian => [
+        { chord => 'dim', roman => 'r_i',   function => 'tonic' },
+        { chord => 'maj', roman => 'r_II',  function => 'supertonic' },
+        { chord => 'min', roman => 'r_iii', function => 'mediant' },
+        { chord => 'min', roman => 'r_iv',  function => 'subdominant' },
+        { chord => 'maj', roman => 'r_V',   function => 'dominant' },
+        { chord => 'maj', roman => 'r_VI',  function => 'submediant' },
+        { chord => 'min', roman => 'r_vii', function => 'subtonic' }
+    ]
+}
