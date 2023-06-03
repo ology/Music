@@ -9,13 +9,16 @@ use MIDI::Util qw(midi_format);
 use Music::Note ();
 use Music::Scales qw(get_scale_notes);
 
+# we will loop over every note
 my @chromatic = get_scale_notes('c', 'chromatic', 0, 'b');
 #warn __PACKAGE__,' L',__LINE__,' ',,"@chromatic\n";exit;
 
+# slurp the mode definition hashref
 $/ = undef;
 my $modes = eval <DATA>;
 #warn __PACKAGE__,' L',__LINE__,' ',ddc($modes, {max_width=>128});exit;
 
+# construct the database of key-chord relations
 my $database = '';
 for my $base (@chromatic) {
     my ($mode_base) = map { lc } midi_format($base);
@@ -49,6 +52,7 @@ RULE
 
 my $prolog = AI::Prolog->new($database);
 
+# Query the database:
 # What keys have a Dmaj chord as dominant?
 #$prolog->query('chord_key(d, ionian, KeyNote, Key, dominant).');
 # What keys contain a Gmaj chord?
