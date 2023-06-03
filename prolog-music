@@ -33,6 +33,7 @@ for my $base (@chromatic) {
         }
         my $i = 0;
         for my $pitch (@pitches) {
+            # chord_key(Base, Mode, Note, Chord, Function).
             $database .= "chord_key($mode_base, $mode, $pitch, $modes->{$mode}[$i]{chord}, $modes->{$mode}[$i]{function}).\n";
             $i++;
         }
