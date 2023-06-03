@@ -18,6 +18,7 @@ my $modes = eval <DATA>;
 
 my $database = '';
 for my $base (@chromatic) {
+    my ($mode_base) = map { lc } midi_format($base);
     for my $mode (keys %$modes) {
         my @pitches;
         my @notes = get_scale_notes($base, $mode);
@@ -27,7 +28,6 @@ for my $base (@chromatic) {
             $n->en_eq('flat') if $note =~ /#/;
             push @pitches, map { lc } midi_format($n->format('isobase'));
         }
-        my ($mode_base) = map { lc } midi_format($base);
         my $i = 0;
         for my $pitch (@pitches) {
             $database .= "chord_key($mode_base, $mode, $pitch, $modes->{$mode}[$i]{chord}, $modes->{$mode}[$i]{function}).\n";
