@@ -55,9 +55,9 @@ my $prolog = AI::Prolog->new($database);
 
 # Query the database:
 # What keys have a Dmaj chord as dominant?
-$prolog->query('chord_key(d, ionian, KeyNote, Key, dominant).');
+#$prolog->query('chord_key(d, ionian, KeyNote, Key, dominant).');
 # What keys contain a Gmaj chord?
-#$prolog->query('chord_key(g, ionian, KeyNote, Key, Function).');
+$prolog->query('chord_key(g, ionian, KeyNote, Key, Function).');
 # What key can modulate to, from Cmaj with Gmaj as pivot?
 #$prolog->query('pivot_chord_keys(g, maj, c, ionian, Key1Function, Key2Note, Key2, Key2Function).');
 # What key can modulate to Cmin through a pivot chord?
