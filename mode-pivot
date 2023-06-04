@@ -48,6 +48,8 @@ for my $i (1 .. 4) {
     my $result = $q->[ int rand @$q ];
     $pitch = substr $result->[7], 0, 1;
     (my $accidental = $result->[7]) =~ s/^[a-g]([fs]?)/$1/;
+    $accidental = '#' if $accidental eq 's';
+    $accidental = 'b' if $accidental eq 'f';
     $pitch = uc($pitch) . $accidental;
     $scale = $result->[8];
 }
