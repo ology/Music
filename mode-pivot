@@ -29,8 +29,27 @@ for my $i (1 .. 4) {
         $score->n('wn', midi_format(@$chord));
     }
 
+    my $last_pitch = $pitch;
+    my $last_scale = $scale;
+    ($pitch = $prog->phrase->[-1]) =~ s/^([A-G][b#]?).*?$/$1/;
+    (my $modal_pitch = $pitch) =~ s/#/s/;
+    $modal_pitch =~ s/b/f/;
     $scale = $prog->phrase->[-1] =~ /m/ ? 'aeolian' : 'ionian';
-    ($pitch = $chords->[-1][0]) =~ s/\d$//;
+    my $chord = $scale eq 'ionian' ? 'maj' : 'min';
+
+    my $m = Music::ModalFunction->new(
+        chord_note => lc($modal_pitch),
+        chord      => $chord,
+        mode_note  => $last_pitch,
+        mode       => $last_scale eq 'ionian' ? 'ionian' : 'aeolian',
+    );
+    my $q = $m->pivot_chord_keys;
+    last unless @$q;
+    my $result = $q->[ int rand @$q ];
+    $pitch = substr $result->[7], 0, 1;
+    (my $accidental = $result->[7]) =~ s/^[a-g]([fs]?)/$1/;
+    $pitch = uc($pitch) . $accidental;
+    $scale = $result->[8];
 }
 
 $score->write_score("$0.mid");
