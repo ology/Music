@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+use Data::Dumper::Compact qw(ddc);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Chord-Progression Music-ModalFunction);
+use MIDI::Util qw(setup_score midi_format);
+use Music::Chord::Progression ();
+use Music::ModalFunction ();
+
+my $score = setup_score();
+
+my $pitch = 'C';
+my $scale = 'ionian';
+
+for my $i (1 .. 4) {
+    my $prog = Music::Chord::Progression->new(
+        scale_note => $pitch,
+        scale_name => $scale eq 'ionian' ? 'ionian' : 'aeolian',
+        chord_map  => $scale eq 'ionian' ? ['', 'm', 'm', '', '', 'm', 'dim'] : ['m','dim','','m','m','',''],
+        max        => 4,
+        flat       => 1,
+        resolve    => 0,
+    );
+    my $chords = $prog->generate;
+    warn "$pitch $scale => ", ddc($chords);
+
+    for my $chord (@$chords) {
+        $score->n('wn', midi_format(@$chord));
+    }
+
+    $scale = $prog->phrase->[-1] =~ /m/ ? 'aeolian' : 'ionian';
+    ($pitch = $chords->[-1][0]) =~ s/\d$//;
+}
+
+$score->write_score("$0.mid");
