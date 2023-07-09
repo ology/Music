@@ -194,3 +194,33 @@ sub random_duration {
     my (@duration) = @_;
     return $duration[ int rand @duration ];
 }
+
+__END__
+
+=head1 NAME
+
+lindenmayer-midi - Create a MIDI file of L-system transformations
+
+=head1 SYNOPSIS
+
+  lindenmayer-midi [--options|-o]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<help>
+
+Print a brief help message.
+
+=item B<man>
+
+Print the full help (the "manpage).
+
+=back
+
+=head1 DESCRIPTION
+
+B<lindenmayer-midi> transforms the input into a MIDI file of L-systems!
+
+=cut
