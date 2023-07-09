@@ -4,8 +4,8 @@ use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-ScaleNote); # local author libraries
 use MIDI::Util qw(setup_score set_chan_patch);
-use Music::ScaleNote;
-use Music::Note;
+use Music::ScaleNote ();
+use Music::Note ();
 
 my $rule       = shift || 2;        # Rule number in the list of rules below
 my $iterations = shift || 4;        # Number of iterations of the fractal curve
