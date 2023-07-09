@@ -15,6 +15,30 @@ use Pod::Usage;
 
 pod2usage(1) unless @ARGV;
 
+my %opts = (
+    rule       => 2,        # Rule number in the list of rules below
+    iterations => 4,        # Number of iterations of the fractal curve
+    n_duration => 'qn',     # Space separated list of note durations from which to choose *
+    r_duration => 'qn',     # Space separated list of rest durations from which to choose *
+    midi_note  => 60,       # Initial midinum format note. 60 = Middle C
+    offset     => 1,        # +/- Distance to move in the scale for a new note value
+    scale      => 'major',  # Name of the scale to traverse
+    bpm        => 300,      # Beats per minute of the rendered MIDI
+);
+GetOptions( \%opts,
+    'rule=i',
+    'iterations=i',
+    'n_duration=s',
+    'r_duration=s',
+    'midi_note=i',
+    'offset=i',
+    'scale=i',
+    'bpm=i',
+) or pod2usage(2);
+
+pod2usage(1) if $opts{help};
+pod2usage( -exitval => 0, -verbose => 2 ) if $opts{man};
+
 my $rule       = shift || 2;        # Rule number in the list of rules below
 my $iterations = shift || 4;        # Number of iterations of the fractal curve
 my $n_duration = shift || 'qn';     # Space separated list of note durations from which to choose *
