@@ -39,18 +39,9 @@ GetOptions( \%opts,
 pod2usage(1) if $opts{help};
 pod2usage( -exitval => 0, -verbose => 2 ) if $opts{man};
 
-my $rule       = shift || 2;        # Rule number in the list of rules below
-my $iterations = shift || 4;        # Number of iterations of the fractal curve
-my $n_duration = shift || 'qn';     # Space separated list of note durations from which to choose *
-my $r_duration = shift || 'qn';     # Space separated list of rest durations from which to choose *
-my $midi_note  = shift || 60;       # Initial midinum format note. 60 = Middle C
-my $offset     = shift || 1;        # +/- Distance to move in the scale for a new note value
-my $scale      = shift || 'major';  # Name of the scale to traverse
-my $bpm        = shift || 300;      # Beats per minute of the rendered MIDI
-
 # Split the durations into a list so that they can be randomly selected
-$n_duration = [ split /\s+/, $n_duration ];
-$r_duration = [ split /\s+/, $r_duration ];
+my $n_duration = [ split /\s+/, $opts{n_duration} ];
+my $r_duration = [ split /\s+/, $opts{r_duration} ];
 
 # Default variables
 my $format = 'midinum';
@@ -131,11 +122,13 @@ my %rules = (
     },
 );
 
+my $midi_note = $opts{midi_note};
+
 # Get the axiom to use based on the given rule
-my $string = $rules{$rule}{axiom};
+my $string = $rules{ $opts{rule} }{axiom};
 
 # Prepare to create MIDI
-my $score = setup_score( bpm => $bpm );
+my $score = setup_score( bpm => $opts{bpm} );
 
 # Create a note object for the given start note value
 my $note = Music::Note->new( $midi_note, $format );
@@ -143,7 +136,7 @@ my $note = Music::Note->new( $midi_note, $format );
 # Create a scale-note object to use to traverse the given scale
 my $msn = Music::ScaleNote->new(
     scale_note => $note->format('isobase'),
-    scale_name => $scale,
+    scale_name => $opts{scale},
 #    verbose    => 1,
 );
 
@@ -166,7 +159,7 @@ my %translate = (
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
             note_format => $format,
-            offset      => -$offset,
+            offset      => -$opts{offset},
         )->format($format);
     },
     # Increment the scale-note
@@ -174,14 +167,14 @@ my %translate = (
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
             note_format => $format,
-            offset      => $offset,
+            offset      => $opts{offset},
         )->format($format);
     },
 );
 
 # Apply the string re-writing production rules
-for ( 1 .. $iterations ) {
-    $string =~ s/(.)/defined($rules{$rule}{$1}) ? $rules{$rule}{$1} : $1/eg;
+for ( 1 .. $opts{iterations} ) {
+    $string =~ s/(.)/defined($rules{ $opts{rule} }{$1}) ? $rules{ $opts{rule} }{$1} : $1/eg;
 }
 warn "$string\n";
 
