@@ -89,17 +89,8 @@ CODE
         wn.C4
     );
 
-    # Setup a MIDI score to use for the "plain version"
-    my $melody = setup_score(bpm => 140);
-
-    # Add the notes to the score
-    $melody->n(split /\./, $_) for @notes;
-
-    # Write out the score as a MIDI file
-    $melody->write_score("$0-plain.mid");
-
-    # Setup a new MIDI score for the ornamented version
-    $melody = setup_score(bpm => 140); # start over!
+    # Setup a new MIDI score
+    my $melody = setup_score(bpm => 140); # start over!
 
     # Setup a new ornamenter
     my $ornament = Music::MelodicDevice::Ornamentation->new(
@@ -107,10 +98,10 @@ CODE
         scale_name => 'major',
     );
 
-    # Dazzle them with musical oranmentation
+    # Dazzle them with musical oranmentation (based on beat position)
     my %dazzle = (
-        2 => sub { $ornament->mordent(@_, 1) },
-        7 => sub { $ornament->trill(@_, 2, 1) },
+        2  => sub { $ornament->mordent(@_, 1) },
+        7  => sub { $ornament->trill(@_, 2, 1) },
         10 => sub { $ornament->turn(@_, 1) },
         13 => sub { $ornament->grace_note(@_, -1) },
     );
@@ -134,12 +125,11 @@ CODE
     }
 
     # Write out the new score as a MIDI file
-    $melody->write_score("$0.mid-fancy");
+    $melody->write_score("$0.mid");
 
 SYNOPSIS
       $ perl jingle-bells
-      $ timidity jingle-bells-plain.mid
-      $ timidity jingle-bells-fancy.mid
+      $ timidity jingle-bells.mid
 
 RESULT
     And here is the result:
