@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <title>Jingle Bells</title>
+  <link rel="stylesheet" href="">
+  <script type="text/javascript" src=""></script>
+</head>
+<body>
+<pre>
+NAME
+    jingle-bells
+
+SYNOPSIS
+      $ perl jingle-bells
+      $ timidity jingle-bells.mid
+      # OR
+      $ timidity -c timidity.cfg -A100a jingle-bells.mid
+
+SITUATION
+    Santa was growing tired of the music piped into his workshop.
+
+    For example, Jingle Bells was just too ordinary sounding to his ears. It
+    needed a bit of Christmas cheer to pep up the Elves!
+
+    Here is what it sounded like:
+</pre>
+
+<audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
+
+<pre>
+ASSESSMENT
+    Ordinary to say the least!
+
+    And here is an example of the code that produces part of the Jingle
+    Bells MIDI that plays at the workshop:
+
+    <NOT SHOWN CURRENTLY>
+
+    Santa asked a couple of his more creative elves to come up with a way to
+    brighten things up musically. And they tinkered, the way elves do...
+
+    The cowbell was proposed, but that got shot down quick. Eventually the
+    most musically experienced elf suggested adding "ornamentation" to
+    certain notes. This she said, included commonly heard things like
+    "trills."
+
+    (And it is said that she toured as a roadie, in the 60s with
+    Hendrix and others.)
+
+    After some thinking about how to add ornaments to Christmas tunes, a
+    young guitarist elf pointed to CPAN and the
+    Music::MelodicDevice::Ornamentation module, And that seemed to fit the
+    bill perfectly.
+
+    Then after reading the examples, the team modified the source and added
+    the module to try it out. Also they listened to each of the ornaments
+    and decided to trigger them from a dispatch table, based for the moment,
+    on a loop counter. More sophisticated triggers based on concepts of music
+    theory were considered, but Christmastime was fast approaching!
+
+    Here is the prototype code they came up with for Santa:
+ 
+CODE
+
+    #!/usr/bin/env perl
+    use strict;
+    use warnings;
+
+    use MIDI::Util qw(setup_score);
+    use Music::MelodicDevice::Ornamentation;
+
+    use constant MAX => 16; # number of notes before resetting our counter
+
+    my @notes = qw(
+        qn.E4 qn.E4 hn.E4
+        qn.E4 qn.E4 hn.E4
+        qn.E4 qn.G4 qn.C4 qn.D4
+        wn.E4
+
+        qn.F4 qn.F4 qn.F4 qn.F4
+        qn.F4 qn.E4 qn.E4 qn.E4
+        qn.E4 qn.D4 qn.D4 qn.E4
+        hn.D4       hn.G4
+
+        qn.E4 qn.E4 hn.E4
+        qn.E4 qn.E4 hn.E4
+        qn.E4 qn.G4 qn.C4 qn.D4
+        wn.E4
+
+        qn.F4 qn.F4 qn.F4 qn.F4
+        qn.F4 qn.E4 qn.E4 qn.E4
+        qn.G4 qn.G4 qn.F4 qn.D4
+        wn.C4
+    );
+
+    # Setup a MIDI score to use for the "plain version"
+    my $melody = setup_score(bpm => 140);
+
+    # Add the notes to the score
+    $melody->n(split /\./, $_) for @notes;
+
+    # Write out the score as a MIDI file
+    $melody->write_score("$0-plain.mid");
+
+    # Setup a new MIDI score for the ornamented version
+    $melody = setup_score(bpm => 140); # start over!
+
+    # Setup a new ornamenter
+    my $ornament = Music::MelodicDevice::Ornamentation->new(
+        scale_note => 'C',
+        scale_name => 'major',
+    );
+
+    # Dazzle them with musical oranmentation
+    my %dazzle = (
+        2 => sub { $ornament->mordent(@_, 1) },
+        7 => sub { $ornament->trill(@_, 2, 1) },
+        10 => sub { $ornament->turn(@_, 1) },
+        13 => sub { $ornament->grace_note(@_, -1) },
+    );
+
+    # For each duration.note...
+    my $counter = 0;
+    for my $note (@notes) {
+        my @note = split /\./, $note;
+
+        # Add either an ornamented or a "plain" note to the score
+        if (exists $dazzle{$counter}) {
+            my $fancy = $dazzle{$counter}->(@note);
+            $melody->n(@$_) for @$fancy;
+        }
+        else {
+            $melody->n(@note);
+        }
+
+        # Increment the counter, or start over if we've reached the max
+        $counter = $counter == MAX ? 0 : $counter + 1;
+    }
+
+    # Write out the new score as a MIDI file
+    $melody->write_score("$0.mid-fancy");
+
+RESULT
+    And here is the result:
+</pre>
+
+<audio controls><source src="jingle-bells-fancy.mp3" type="audio/mp3"></audio>
+
+<pre>
+
+    Santa approved the MIDI and the code review, and the team of intrepid
+    elves went to work testefully implementing ornamentation into the rest of
+    the music system - all driven by Perl, of course!
+
+AUTHOR
+    "Gene Boggs" <gene@cpan.org>
+</pre>
+</body>
+</html>
+
