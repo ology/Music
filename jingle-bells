@@ -75,4 +75,4 @@ for my $note (@notes) {
 }
 
 # Write out the new score as a MIDI file
-$melody->write_score("$0.mid");
+$melody->write_score("$0.mid-fancy");
