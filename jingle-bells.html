@@ -12,11 +12,6 @@
 NAME
     jingle-bells
 
-SYNOPSIS
-      $ perl jingle-bells
-      $ timidity jingle-bells-plain.mid
-      $ timidity jingle-bells-fancy.mid
-
 SITUATION
     Santa was growing tired of the music piped into his workshop.
 
@@ -140,6 +135,11 @@ CODE
 
     # Write out the new score as a MIDI file
     $melody->write_score("$0.mid-fancy");
+
+SYNOPSIS
+      $ perl jingle-bells
+      $ timidity jingle-bells-plain.mid
+      $ timidity jingle-bells-fancy.mid
 
 RESULT
     And here is the result:
