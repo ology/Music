@@ -50,10 +50,10 @@ my $ornament = Music::MelodicDevice::Ornamentation->new(
 
 # Dazzle them with musical oranmentation
 my %dazzle = (
-    #1 => sub { $ornament->grace_note(@_, -1) },
-     5 => sub { $ornament->mordent(@_, 1) },
-     9 => sub { $ornament->trill(@_, 2, 1) },
+     2 => sub { $ornament->mordent(@_, 1) },
+     7 => sub { $ornament->trill(@_, 2, 1) },
     10 => sub { $ornament->turn(@_, 1) },
+    13 => sub { $ornament->grace_note(@_, -1) },
 );
 
 # For each duration.note...
@@ -75,4 +75,4 @@ for my $note (@notes) {
 }
 
 # Write out the new score as a MIDI file
-$melody->write_score("$0-fancy.mid");
+$melody->write_score("$0.mid");
