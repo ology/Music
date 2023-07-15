@@ -1,14 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-  <title>Jingle Bells</title>
-  <link rel="stylesheet" href="">
-  <script type="text/javascript" src=""></script>
-</head>
-<body>
-<pre>
 NAME
     jingle-bells
 
@@ -19,18 +8,16 @@ SITUATION
     needed a bit of Christmas cheer to pep up the Elves!
 
     Here is what it sounded like:
-</pre>
 
 <audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
 
-<pre>
 ASSESSMENT
     Ordinary to say the least!
 
     And here is an example of the code that produces part of the Jingle
     Bells MIDI that plays at the workshop:
 
-    <NOT SHOWN CURRENTLY>
+<audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
 
     Santa asked a couple of his more creative elves to come up with a way to
     brighten things up musically. And they tinkered, the way elves do.
@@ -133,11 +120,9 @@ SYNOPSIS
 
 RESULT
     And here is the result:
-</pre>
 
 <audio controls><source src="jingle-bells-fancy.mp3" type="audio/mp3"></audio>
 
-<pre>
 
     Santa approved the MIDI and the code review, and the team of intrepid
     elves went to work tastefully implementing ornamentation into the rest of
@@ -145,7 +130,3 @@ RESULT
 
 AUTHOR
     "Gene Boggs" &lt;gene@cpan.org>
-</pre>
-</body>
-</html>
-
