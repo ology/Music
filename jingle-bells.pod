@@ -64,7 +64,7 @@ Here is the prototype code they came up with for Santa:
 
     use constant MAX => 16; # The number of notes before resetting the note counter
 
-    # Setup four measures of "duration.pitch" notes
+    # Have sixteen measures of "duration.pitch" notes
     my @notes = qw(
         qn.E4 qn.E4 hn.E4
         qn.E4 qn.E4 hn.E4
