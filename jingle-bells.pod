@@ -62,8 +62,9 @@ Here is the prototype code they came up with for Santa:
     use MIDI::Util qw(setup_score);
     use Music::MelodicDevice::Ornamentation;
 
-    use constant MAX => 16; # number of notes before resetting our counter
+    use constant MAX => 16; # The number of notes before resetting the note counter
 
+    # Setup four measures of "duration.pitch" notes
     my @notes = qw(
         qn.E4 qn.E4 hn.E4
         qn.E4 qn.E4 hn.E4
@@ -87,7 +88,7 @@ Here is the prototype code they came up with for Santa:
     );
 
     # Setup a new MIDI score
-    my $melody = setup_score(bpm => 140); # start over!
+    my $melody = setup_score(bpm => 140);
 
     # Setup a new ornamenter
     my $ornament = Music::MelodicDevice::Ornamentation->new(
@@ -97,8 +98,8 @@ Here is the prototype code they came up with for Santa:
 
     # Dazzle them with musical oranmentation (based on beat position)
     my %dazzle = (
-        2  => sub { $ornament->mordent(@_, 1) },
-        7  => sub { $ornament->trill(@_, 2, 1) },
+         2 => sub { $ornament->mordent(@_, 1) },
+         7 => sub { $ornament->trill(@_, 2, 1) },
         10 => sub { $ornament->turn(@_, 1) },
         13 => sub { $ornament->grace_note(@_, -1) },
     );
