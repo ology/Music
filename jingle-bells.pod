@@ -144,6 +144,7 @@ the music system - all driven by Perl, of course!
 =head2 SEE ALSO
 
 =for :list
+* L<The program|https://github.com/ology/Music/blob/master/jingle-bells>
 * L<MIDI::Util>
 * L<Music::MelodicDevice::Inversion>
 * L<Music::MelodicDevice::Transposition>
