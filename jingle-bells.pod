@@ -22,8 +22,8 @@ Here is what it sounded like:
 
 Ordinary to say the least!
 
-And here is an example of the code that produces part of the Jingle
-Bells MIDI that plays at the workshop:
+And here is an example of the Jingle Bells MIDI that plays at the
+workshop:
 
 =for html
   <audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
