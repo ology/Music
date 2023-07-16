@@ -90,13 +90,13 @@ Here is the prototype code they came up with for Santa:
     # Setup a new MIDI score
     my $melody = setup_score(bpm => 140);
 
-    # Setup a new ornamenter
+    # Setup a new musical ornament maker
     my $ornament = Music::MelodicDevice::Ornamentation->new(
         scale_note => 'C',
         scale_name => 'major',
     );
 
-    # Dazzle them with musical oranmentation (based on beat position)
+    # Dazzle them with musical oranmentation (based on beat position for now)
     my %dazzle = (
          2 => sub { $ornament->mordent(@_, 1) },
          7 => sub { $ornament->trill(@_, 2, 1) },
