@@ -13,20 +13,14 @@ Santa was growing tired of the music piped into his workshop.
 For example, Jingle Bells was just too ordinary sounding to his ears. It
 needed a bit of Christmas cheer to pep up the Elves!
 
-Here is what it sounded like:
+And here is a bit of that tune, that plays at the workshop:
 
 =for html
-  <audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
-
-=head2 ASSESSMENT
+  <audio controls><source src="https://github.com/ology/Music/raw/master/jingle-bells-plain.mid" type="audio/mp3"></audio>
 
 Ordinary to say the least!
 
-And here is an example of the Jingle Bells MIDI that plays at the
-workshop:
-
-=for html
-  <audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
+=head2 ASSESSMENT
 
 Santa asked a couple of his more creative elves to come up with a way to
 brighten things up musically. And they tinkered, the way elves do.
@@ -135,7 +129,7 @@ Here is the prototype code they came up with for Santa:
 And here is the result:
 
 =for html
-  <audio controls><source src="jingle-bells-fancy.mp3" type="audio/mp3"></audio>
+  <audio controls><source src="https://github.com/ology/Music/raw/master/jingle-bells-fancy.mid" type="audio/mp3"></audio>
 
 Santa approved the MIDI and the code review, and the team of intrepid
 elves went to work tastefully implementing ornamentation into the rest of
