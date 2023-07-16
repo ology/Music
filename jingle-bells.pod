@@ -51,7 +51,7 @@ the moment, on a loop counter. More sophisticated triggers based on
 concepts of music theory were considered, but Christmastime was fast
 approaching!
 
-=head2 CODE
+=head2 PROTOTYPE
 
 Here is the prototype code they came up with for Santa:
 
