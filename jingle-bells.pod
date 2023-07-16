@@ -1,7 +1,13 @@
-NAME
-    jingle-bells
+Author: Gene Boggs <gene.boggs@gmail.com>
+Title: Ornamenting Jingle Bells
+Topic: Music::MelodicDevice::Ornamentation
 
-SITUATION
+=encoding utf8
+
+=head1 Ornamenting Jingle Bells
+
+=head2 SITUATION
+
     Santa was growing tired of the music piped into his workshop.
 
     For example, Jingle Bells was just too ordinary sounding to his ears. It
@@ -9,15 +15,18 @@ SITUATION
 
     Here is what it sounded like:
 
-<audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
+=for html
+  <audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
 
-ASSESSMENT
+=head2 ASSESSMENT
+
     Ordinary to say the least!
 
     And here is an example of the code that produces part of the Jingle
     Bells MIDI that plays at the workshop:
 
-<audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
+=for html
+  <audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
 
     Santa asked a couple of his more creative elves to come up with a way to
     brighten things up musically. And they tinkered, the way elves do.
@@ -41,9 +50,9 @@ ASSESSMENT
     on a loop counter. More sophisticated triggers based on concepts of music
     theory were considered, but Christmastime was fast approaching!
 
+=head2 CODE
+
     Here is the prototype code they came up with for Santa:
- 
-CODE
 
     #!/usr/bin/env perl
     use strict;
@@ -114,19 +123,23 @@ CODE
     # Write out the fancy new score as a MIDI file
     $melody->write_score("$0.mid");
 
-SYNOPSIS
+=head2 SYNOPSIS
+
       $ perl jingle-bells
       $ timidity jingle-bells.mid
 
-RESULT
+=head2 RESULT
+
     And here is the result:
 
-<audio controls><source src="jingle-bells-fancy.mp3" type="audio/mp3"></audio>
-
+=for html
+  <audio controls><source src="jingle-bells-fancy.mp3" type="audio/mp3"></audio>
 
     Santa approved the MIDI and the code review, and the team of intrepid
     elves went to work tastefully implementing ornamentation into the rest of
     the music system - all driven by Perl, of course!
 
-AUTHOR
-    "Gene Boggs" &lt;gene@cpan.org>
+=head2 SEE ALSO
+
+=for :list
+* L<MIDI::Util>
