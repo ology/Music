@@ -8,51 +8,51 @@ Topic: Music::MelodicDevice::Ornamentation
 
 =head2 SITUATION
 
-    Santa was growing tired of the music piped into his workshop.
+Santa was growing tired of the music piped into his workshop.
 
-    For example, Jingle Bells was just too ordinary sounding to his ears. It
-    needed a bit of Christmas cheer to pep up the Elves!
+For example, Jingle Bells was just too ordinary sounding to his ears. It
+needed a bit of Christmas cheer to pep up the Elves!
 
-    Here is what it sounded like:
+Here is what it sounded like:
 
 =for html
   <audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
 
 =head2 ASSESSMENT
 
-    Ordinary to say the least!
+Ordinary to say the least!
 
-    And here is an example of the code that produces part of the Jingle
-    Bells MIDI that plays at the workshop:
+And here is an example of the code that produces part of the Jingle
+Bells MIDI that plays at the workshop:
 
 =for html
   <audio controls><source src="jingle-bells-plain.mp3" type="audio/mp3"></audio>
 
-    Santa asked a couple of his more creative elves to come up with a way to
-    brighten things up musically. And they tinkered, the way elves do.
+Santa asked a couple of his more creative elves to come up with a way to
+brighten things up musically. And they tinkered, the way elves do.
 
-    The cowbell was proposed, but that got shot down quick. Eventually the
-    most musically experienced elf suggested adding "ornamentation" to
-    certain notes. This she said, included commonly heard things like
-    "trills."
+The cowbell was proposed, but that got shot down quick. Eventually the
+most musically experienced elf suggested adding "ornamentation" to
+certain notes. This she said, included commonly heard things like
+"trills."
 
-    (And it is said that she toured as a roadie, in the 60s with
-    Hendrix and others.)
+(And it is said that she toured as a roadie, in the 60s with
+Hendrix and others.)
 
-    After some thinking about how to add ornaments to Christmas tunes, a
-    young guitarist elf pointed to CPAN and the
-    <a href="https://metacpan.org/pod/Music::MelodicDevice::Ornamentation">Music::MelodicDevice::Ornamentation</a>
-    module, And that seemed to fit the bill perfectly.
+After some thinking about how to add ornaments to Christmas tunes, a
+young guitarist elf pointed to L<CPAN|https://metacpan.org/> and the
+L<Music::MelodicDevice::Ornamentation|https://metacpan.org/pod/Music::MelodicDevice::Ornamentation>
+module, And that seemed to fit the bill perfectly.
 
-    Then after reading the examples, the team modified the source and added
-    the module to try it out. Also they listened to each of the ornaments
-    and decided to trigger them from a dispatch table, based for the moment,
-    on a loop counter. More sophisticated triggers based on concepts of music
-    theory were considered, but Christmastime was fast approaching!
+Then after reading the examples, the team modified the source and added
+the module to try it out. Also they listened to each of the ornaments
+and decided to trigger them from a dispatch table, based for the moment,
+on a loop counter. More sophisticated triggers based on concepts of music
+theory were considered, but Christmastime was fast approaching!
 
 =head2 CODE
 
-    Here is the prototype code they came up with for Santa:
+Here is the prototype code they came up with for Santa:
 
     #!/usr/bin/env perl
     use strict;
@@ -130,14 +130,14 @@ Topic: Music::MelodicDevice::Ornamentation
 
 =head2 RESULT
 
-    And here is the result:
+And here is the result:
 
 =for html
   <audio controls><source src="jingle-bells-fancy.mp3" type="audio/mp3"></audio>
 
-    Santa approved the MIDI and the code review, and the team of intrepid
-    elves went to work tastefully implementing ornamentation into the rest of
-    the music system - all driven by Perl, of course!
+Santa approved the MIDI and the code review, and the team of intrepid
+elves went to work tastefully implementing ornamentation into the rest of
+the music system - all driven by Perl, of course!
 
 =head2 SEE ALSO
 
