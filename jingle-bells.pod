@@ -144,3 +144,5 @@ the music system - all driven by Perl, of course!
 
 =for :list
 * L<MIDI::Util>
+* L<Music::MelodicDevice::Inversion>
+* L<Music::MelodicDevice::Transposition>
