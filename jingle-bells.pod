@@ -47,7 +47,8 @@ approaching!
 
 =head2 PROTOTYPE
 
-Here is the prototype code they came up with for Santa:
+Here is the prototype code they came up with for Santa. On purpose, it
+has too much ornamentation for just 16 bars, for illustration purposes:
 
     #!/usr/bin/env perl
     use strict;
