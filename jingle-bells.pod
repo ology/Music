@@ -36,7 +36,7 @@ Hendrix, CSN, and others.)
 After some thinking about how to add ornaments to Christmas tunes, a
 young guitarist elf pointed to L<CPAN|https://metacpan.org/> and the
 L<Music::MelodicDevice::Ornamentation|https://metacpan.org/pod/Music::MelodicDevice::Ornamentation>
-module, And that seemed to fit the bill perfectly.
+module, that seemed to fit the bill perfectly.
 
 Then after reading the examples, the team added the module and
 modified the source and gave it a try... They listened to each of the
