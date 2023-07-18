@@ -127,7 +127,7 @@ Here is the prototype code they came up with for Santa:
 
 =head2 RESULT
 
-And here is the result:
+And here is what the result sounds like:
 
 =for html
   <audio controls><source src="https://github.com/ology/Music/raw/master/jingle-bells-fancy.mid" type="audio/mp3"></audio>
