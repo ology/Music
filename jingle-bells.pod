@@ -98,7 +98,7 @@ Here is the prototype code they came up with for Santa:
         13 => sub { $ornament->grace_note(@_, -1) },
     );
 
-    # For each duration.note...
+    # For each duration.note pair...
     my $counter = 0;
     for my $note (@notes) {
         my @note = split /\./, $note;
@@ -116,7 +116,7 @@ Here is the prototype code they came up with for Santa:
         $counter = $counter == MAX ? 0 : $counter + 1;
     }
 
-    # Write out the fancy new score as a MIDI file
+    # Write out the fancy score as a MIDI file
     $melody->write_score("$0.mid");
 
 =head2 SYNOPSIS

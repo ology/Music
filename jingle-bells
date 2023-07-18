@@ -6,8 +6,9 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Orn
 use MIDI::Util qw(setup_score);
 use Music::MelodicDevice::Ornamentation ();
 
-use constant MAX => 16; # number of notes before resetting our counter
+use constant MAX => 16; # The number of notes before resetting the note counter
 
+# Sixteen measure fragment of "duration.pitch" notes
 my @notes = qw(
     qn.E4 qn.E4 hn.E4
     qn.E4 qn.E4 hn.E4
@@ -36,19 +37,19 @@ my $melody = setup_score(bpm => 140);
 # Add the notes to the score
 $melody->n(split /\./, $_) for @notes;
 
-# Write out the score as a MIDI file
+# Write out the "plain" score as a MIDI file
 $melody->write_score("$0-plain.mid");
 
 # Setup a new MIDI score for the ornamented version
 $melody = setup_score(bpm => 140); # start over!
 
-# Setup a new ornamenter
+# Setup a new musical ornament maker
 my $ornament = Music::MelodicDevice::Ornamentation->new(
     scale_note => 'C',
     scale_name => 'major',
 );
 
-# Dazzle them with musical oranmentation
+# Dazzle with musical oranmentation (based on beat position for now)
 my %dazzle = (
      2 => sub { $ornament->mordent(@_, 1) },
      7 => sub { $ornament->trill(@_, 2, 1) },
@@ -56,7 +57,7 @@ my %dazzle = (
     13 => sub { $ornament->grace_note(@_, -1) },
 );
 
-# For each duration.note...
+# For each duration.note pair...
 my $counter = 0;
 for my $note (@notes) {
     my @note = split /\./, $note;
@@ -74,5 +75,5 @@ for my $note (@notes) {
     $counter = $counter == MAX ? 0 : $counter + 1;
 }
 
-# Write out the new score as a MIDI file
+# Write out the "fancy" score as a MIDI file
 $melody->write_score("$0-fancy.mid");
