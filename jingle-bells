@@ -4,7 +4,7 @@ use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation); # local author libraries
 use MIDI::Util qw(setup_score);
-use Music::MelodicDevice::Ornamentation;
+use Music::MelodicDevice::Ornamentation ();
 
 use constant MAX => 16; # number of notes before resetting our counter
 
