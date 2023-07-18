@@ -133,8 +133,8 @@ And here is what the result sounds like:
   <audio controls><source src="https://github.com/ology/Music/raw/master/jingle-bells-fancy.mid" type="audio/mp3"></audio>
 
 Santa approved the MIDI and the code review, and the team of intrepid
-elves went to work tastefully implementing ornamentation into the rest of
-the music system - all driven by Perl, of course!
+elves went to work B<tastefully> implementing ornamentation into the
+rest of the music system - all driven by Perl, of course!
 
 =head2 SEE ALSO
 
