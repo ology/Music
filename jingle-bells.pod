@@ -56,7 +56,8 @@ Here is the prototype code they came up with for Santa:
     use MIDI::Util qw(setup_score);
     use Music::MelodicDevice::Ornamentation ();
 
-    use constant MAX => 16; # The number of notes before resetting the note counter
+    # The number of notes before resetting the note counter
+    use constant MAX => 16;
 
     # Sixteen measure fragment of "duration.pitch" notes
     my @notes = qw(
