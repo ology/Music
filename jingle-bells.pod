@@ -16,7 +16,7 @@ needed a bit of Christmas cheer to pep up the Elves!
 And here is a bit of that tune, that plays at the workshop:
 
 =for html
-  <audio controls><source src="https://github.com/ology/Music/raw/master/jingle-bells-plain.mid" type="audio/mp3"></audio>
+  <audio controls><source src="https://github.com/ology/Music/raw/master/jingle-bells-plain.mp3" type="audio/mp3"></audio>
 
 Ordinary to say the least!
 
@@ -130,7 +130,7 @@ Here is the prototype code they came up with for Santa:
 And here is what the result sounds like:
 
 =for html
-  <audio controls><source src="https://github.com/ology/Music/raw/master/jingle-bells-fancy.mid" type="audio/mp3"></audio>
+  <audio controls><source src="https://github.com/ology/Music/raw/master/jingle-bells-fancy.mp3" type="audio/mp3"></audio>
 
 Santa approved the MIDI and the code review, and the team of intrepid
 elves went to work B<tastefully> implementing ornamentation into the
