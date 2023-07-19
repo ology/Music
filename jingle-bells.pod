@@ -93,7 +93,7 @@ purposes.)
         scale_name => 'major',
     );
 
-    # Dazzle with musical oranmentation (based on beat position for now)
+    # Dazzle with musical ornamentation (based on beat position for now)
     my %dazzle = (
          2 => sub { $ornament->mordent(@_, 1) },
          7 => sub { $ornament->trill(@_, 2, 1) },
