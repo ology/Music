@@ -33,8 +33,9 @@ certain notes. This she said, included commonly heard things like
 (And it is said that she toured as a roadie, in the 60s with
 Hendrix, CSN, and others.)
 
-After some thinking about how to add ornaments to Christmas tunes, a
-young guitarist elf pointed to L<CPAN|https://metacpan.org/> and the
+After some thinking about exactly how to add ornaments to Christmas
+tunes, a young guitarist elf pointed to
+L<CPAN|https://metacpan.org/> and the
 L<Music::MelodicDevice::Ornamentation|https://metacpan.org/pod/Music::MelodicDevice::Ornamentation>
 module, that seemed to fit the bill perfectly.
 
