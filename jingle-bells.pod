@@ -129,7 +129,7 @@ purposes.)
 
 =head2 RESULT
 
-And here is what the result sounds like:
+And here is the result:
 
 =for html
   <audio controls><source src="https://github.com/ology/Music/raw/master/jingle-bells-fancy.mp3" type="audio/mp3"></audio>
