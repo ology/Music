@@ -37,6 +37,18 @@ my %opts = (
     text_line  => 'black',
 );
 GetOptions( \%opts,
+    'interval=i',
+    'show_marks=i',
+    'show_inner',
+    'flat',
+    'numeric',
+    'outer_note=s',
+    'inner_note=s',
+    'diameter=i',
+    'fill=s',
+    'outer_line=s',
+    'inner_line=s',
+    'text_line=s',
 ) or die "Can't GetOptions()";
 
 my $min_marks   = 2;            # minimum number of note markers
