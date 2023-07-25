@@ -5,13 +5,14 @@ use warnings;
 # Evenly space a number of named sub-circles around the perimeter a circle.
 # Optionally show another inner circle of offset notes.
 # Examples:
-# Chromatic:      perl circle-intervals 1 24 1 > circle-intervals.svg
-# Circle of 5ths: perl circle-intervals 7 12 1 0 0 C F > circle-intervals.svg
-#    "            perl circle-intervals 5 12 > circle-intervals.svg
-# Numeric:        perl circle-intervals 4 12 1 0 1 > circle-intervals.svg
-#    "            perl circle-intervals 3 16 1 0 1 > circle-intervals.svg
-# Coltrane's wholetone: perl circle-intervals 2 30 1 1 > circle-intervals.svg
+# Chromatic:      perl circle-intervals --show_marks 24 --show_inner 1 > circle-intervals.svg
+# Circle of 5ths: perl circle-intervals --interval 7 --show_inner 1 --inner_note F > circle-intervals.svg
+#    "            perl circle-intervals --interval 5 > circle-intervals.svg
+# Numeric:        perl circle-intervals --interval 4 --show_inner 1 --numeric 1 > circle-intervals.svg
+#    "            perl circle-intervals --interval 3 --show_marks 16 --show_inner 1 --numeric 1 > circle-intervals.svg
+# Coltrane's wholetone: perl circle-intervals --interval 2 --show_marks 30 --show_inner 1 --flat 1 > circle-intervals.svg
 
+use Getopt::Long qw(GetOptions);
 use List::SomeUtils qw(first_index);
 use Math::Trig qw(pi);
 use Music::Scales qw(get_scale_notes);
@@ -21,18 +22,22 @@ use constant HALF   => pi / 2;
 use constant DOUBLE => 2 * pi;
 use constant SCALE  => 'chromatic';
 
-my $interval   = shift || 1;    # default half-step (intervals: 1-11)
-my $show_marks = shift || 12;   # how many circular note marks to display (2-60)
-my $show_inner = shift // 0;    # show the inner ring?
-my $flat       = shift // 0;    # show note names with flats: default sharps
-my $numeric    = shift // 0;    # display notes as pitch numbers
-my $outer_note = shift || 'C';  # starting outer ring note
-my $inner_note = shift || 'C#'; # starting inner ring note
-my $diameter   = shift || 512;  # size of the outer circle
-my $fill       = shift || 'white';
-my $outer_line = shift || 'green';
-my $inner_line = shift || 'gray';
-my $text_line  = shift || 'black';
+my %opts = (
+    interval   => 1,    # default half-step (intervals: 1-11)
+    show_marks => 12,   # how many circular note marks to display (2-60)
+    show_inner => 0,    # show the inner ring?
+    flat       => 0,    # show note names with flats: default sharps
+    numeric    => 0,    # display notes as pitch numbers
+    outer_note => 'C',  # starting outer ring note
+    inner_note => 'C#', # starting inner ring note
+    diameter   => 512,  # size of the outer circle
+    fill       => 'white',
+    outer_line => 'green',
+    inner_line => 'gray',
+    text_line  => 'black',
+);
+GetOptions( \%opts,
+) or die "Can't GetOptions()";
 
 my $min_marks   = 2;            # minimum number of note markers
 my $total_marks = 60;           # maximum number of note markers
@@ -40,8 +45,8 @@ my $font_size   = 20;           # size of the caption font
 # NB: Changing the border_size and sub_radius apparently messes up placement
 my $border_size = 15;           # chart margin
 my $sub_radius  = 11;           # radius for sub-circle markings
-my $radius      = $diameter / 2;
-my $frame_size  = $diameter + 2 * $border_size;
+my $radius      = $opts{diameter} / 2;
+my $frame_size  = $opts{diameter} + 2 * $border_size;
 my %named       = (
     1  => 'halfstep',
     2  => 'wholestep',
@@ -55,9 +60,9 @@ my %named       = (
     10 => 'flat 7',
     11 => 'seventh',
 );
-my $caption = "Interval: $named{$interval}, Notes: $show_marks";
+my $caption = "Interval: $named{ $opts{interval} }, Notes: $opts{show_marks}";
 my $title   = 'Circular Music Intervals';
-my $desc    = "Show $show_marks marks around a note circle for the $named{$interval} interval";
+my $desc    = "Show $opts{show_marks} marks around a note circle for the $named{ $opts{interval} } interval";
 
 my $svg = SVG->new(
     width  => $frame_size,
@@ -71,8 +76,8 @@ $svg->desc(id => 'document-desc')->cdata($desc);
 my $outer_style = $svg->group(
     id    => 'outer-style-group',
     style => {
-        stroke => $outer_line,
-        fill   => $fill,
+        stroke => $opts{outer_line},
+        fill   => $opts{fill},
     },
 );
 
@@ -88,18 +93,18 @@ $outer_style->text(
     x     => $frame_size / 2 - $sub_radius * 10,
     y     => $frame_size / 2,
     style => {
-        stroke      => $text_line,
+        stroke      => $opts{text_line},
         'font-size' => $font_size,
     },
     -cdata => $caption,
-) if !$show_inner;
+) if !$opts{show_inner};
 
-my @outer_scale = get_scale_notes($outer_note, SCALE, undef, $flat ? 'b' : '#');
+my @outer_scale = get_scale_notes($opts{outer_note}, SCALE, undef, $opts{flat} ? 'b' : '#');
 
-my @outer_labels = get_labels(\@outer_scale, $interval, $show_marks);
+my @outer_labels = get_labels(\@outer_scale, $opts{interval}, $opts{show_marks});
 
 # compute the ring positions
-my @marks = map { $_ * $total_marks / $show_marks } 1 .. $show_marks;
+my @marks = map { $_ * $total_marks / $opts{show_marks} } 1 .. $opts{show_marks};
 my $fract = ($marks[1] - $marks[0]) / 2;
 
 my $i = 0;
@@ -118,7 +123,7 @@ for my $mark (@marks) {
     );
 
     my $item = $outer_labels[ $i % @outer_labels ];
-    my $text = $numeric
+    my $text = $opts{numeric}
         ? first_index { $_ eq $item } @outer_scale
         : $item;
     $outer_style->text(
@@ -128,19 +133,19 @@ for my $mark (@marks) {
     )->cdata($text);
 }
 
-if ($show_inner) {
+if ($opts{show_inner}) {
     # generate a group element
     my $inner_style = $svg->group(
         id    => 'inner-style-group',
         style => {
-            stroke => $inner_line,
-            fill   => $fill,
+            stroke => $opts{inner_line},
+            fill   => $opts{fill},
         },
     );
 
-    my @inner_scale = get_scale_notes($inner_note, SCALE, undef, $flat ? 'b' : '#');
+    my @inner_scale = get_scale_notes($opts{inner_note}, SCALE, undef, $opts{flat} ? 'b' : '#');
 
-    my @inner_labels = get_labels(\@inner_scale, $interval, $show_marks);
+    my @inner_labels = get_labels(\@inner_scale, $opts{interval}, $opts{show_marks});
 
     my $inner_radius = $radius - $sub_radius * 3;
 
@@ -156,7 +161,7 @@ if ($show_inner) {
         x     => $frame_size / 2 - $sub_radius * 10,
         y     => $frame_size / 2,
         style => {
-            stroke      => $text_line,
+            stroke      => $opts{text_line},
             'font-size' => $font_size,
         },
     )->cdata($caption);
@@ -180,7 +185,7 @@ if ($show_inner) {
         );
 
         my $item = $inner_labels[ $i % @inner_labels ];
-        my $text = $numeric
+        my $text = $opts{numeric}
             ? first_index { $_ eq $item } @inner_scale
             : $item;
         $inner_style->text(
