@@ -5,7 +5,6 @@ use warnings;
 use Data::Dumper::Compact qw(ddc);
 use Algorithm::Combinatorics qw(combinations);
 use Music::Chord::Namer qw(chordname);
-use Music::Note ();
 use Music::Tension::Cope ();
 use Music::Scales qw(get_scale_notes);
 
