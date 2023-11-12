@@ -4,8 +4,8 @@ use warnings;
 
 use Data::Dumper::Compact qw(ddc);
 use List::Util qw(any);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
-use MIDI::Bassline::Walk;
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Bassline-Generator MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
+use Music::Bassline::Generator;
 use MIDI::Chord::Guitar;
 use MIDI::Drummer::Tiny;
 use MIDI::Util qw(set_chan_patch);
@@ -47,14 +47,14 @@ sub drums {
 sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
-    my $modal = MIDI::Bassline::Walk->new(
+    my $modal = Music::Bassline::Generator->new(
         verbose   => 1,
         guitar    => 1,
         tonic     => 1,
         modal     => 1,
         keycenter => $note,
     );
-    my $tandem = MIDI::Bassline::Walk->new(
+    my $tandem = Music::Bassline::Generator->new(
         verbose => 1,
         guitar  => 1,
         tonic   => 1,
