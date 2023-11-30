@@ -1,4 +1,10 @@
 #!/usr/bin/env perl
+
+# Single track, EZdrummer to general midi converter
+#
+# EZdrummer has more articulations than the limited range of general
+# midi, so information is lost by doing this.
+
 use strict;
 use warnings;
 
