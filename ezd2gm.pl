@@ -7,12 +7,10 @@ use MIDI ();
 my $file = shift || die "Usage: perl $0 /some/midi/file.mid\n";
 
 map_events($file);
-#use Data::Dumper::Compact qw(ddc);
-#print __PACKAGE__,' L',__LINE__,' ',ddc($events, {max_width=>128});
 
 sub map_events {
     my ($file) = @_;
-
+    # EZdrummer midinums => general midi patches
     my %map = (
         # closed hh
          11 => 42,
