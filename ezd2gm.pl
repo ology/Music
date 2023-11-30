@@ -177,7 +177,8 @@ sub map_events {
 
     my $track = MIDI::Track->new;
     $track->events_r($events_r);
-    $opus = MIDI::Opus->new({ ticks => $ticks, tracks => [ $track ] });
 
-    $opus->write_to_file("$0.mid");
+    my $fresh = MIDI::Opus->new({ ticks => $ticks, tracks => [ $track ] });
+
+    $fresh->write_to_file("$0.mid");
 }
