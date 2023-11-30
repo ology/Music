@@ -169,7 +169,7 @@ sub map_events {
             }
             push @events, $event;
         }
-   }
+    }
 
     my $events_r = MIDI::Score::score_r_to_events_r(\@events);
 
