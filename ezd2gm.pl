@@ -164,7 +164,6 @@ my %map = (
 );
 
 my $opus = MIDI::Opus->new({ from_file => $file });
-my $ticks = $opus->ticks;
 
 my @events;
 
@@ -186,6 +185,6 @@ my $events_r = MIDI::Score::score_r_to_events_r(\@events);
 my $track = MIDI::Track->new;
 $track->events_r($events_r);
 
-my $fresh = MIDI::Opus->new({ ticks => $ticks, tracks => [ $track ] });
+my $fresh = MIDI::Opus->new({ ticks => $opus->ticks, tracks => [ $track ] });
 
 $fresh->write_to_file("$0.mid");
