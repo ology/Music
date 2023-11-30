@@ -153,6 +153,8 @@ my %map = (
      3 => 54,
     # maracas
      2 => 70,
+    # hand clap
+     1 => 39,
 );
 
 my $opus = MIDI::Opus->new({ from_file => $file });
