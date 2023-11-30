@@ -156,6 +156,7 @@ sub map_events {
     );
 
     my $opus = MIDI::Opus->new({ from_file => $file });
+    my $ticks = $opus->ticks;
 
     my @events;
 
@@ -170,15 +171,13 @@ sub map_events {
             }
             push @events, $event;
         }
-
-        last; # because I only care about single tracks atm
    }
 
     my $events_r = MIDI::Score::score_r_to_events_r(\@events);
 
     my $track = MIDI::Track->new;
     $track->events_r($events_r);
-    $opus = MIDI::Opus->new({ tracks => [ $track ] });
+    $opus = MIDI::Opus->new({ ticks => $ticks, tracks => [ $track ] });
 
     $opus->write_to_file("$0.mid");
 }
