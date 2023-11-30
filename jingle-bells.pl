@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation); # local author libraries
-use MIDI::Util qw(setup_score);
+use MIDI::Util qw(setup_score midi_format);
 use Music::MelodicDevice::Ornamentation ();
 
 # The number of notes before resetting the note counter
@@ -66,10 +66,11 @@ for my $note (@notes) {
     # Add either an ornamented or a "plain" note to the score
     if (exists $dazzle{$counter}) {
         my $fancy = $dazzle{$counter}->(@note);
-        $melody->n(@$_) for @$fancy;
+        my @fancy = map { [ midi_format(@$_) ] } @$fancy; # turn '#' into 's' and 'b' into 'f'
+        $melody->n(@$_) for @fancy;
     }
     else {
-        $melody->n(@note);
+        $melody->n(midi_format(@note));
     }
 
     # Increment the counter, or start over if we've reached the max
