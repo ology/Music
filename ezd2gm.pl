@@ -157,18 +157,26 @@ sub map_events {
 
     my $opus = MIDI::Opus->new({ from_file => $file });
 
-    for my $t ( $opus->tracks ) {
-        my $score_r = MIDI::Score::events_r_to_score_r( $t->events_r );
-        #MIDI::Score::dump_score($score_r);
+    my @events;
 
-        # Collect the note events
+    for my $t ( $opus->tracks ) {
+        my $score_r = MIDI::Score::events_r_to_score_r($t->events_r);
+
+        # map the note events
         for my $event (@$score_r) {
             # ['note', <start>, <duration>, <channel>, <note>, <velocity>]
             if ($event->[0] eq 'note') {
                 $event->[4] = $map{ $event->[4] } ? $map{ $event->[4] } : $event->[4];
             }
+            push @events, $event;
         }
     }
+
+    my $events_r = MIDI::Score::score_r_to_events_r(\@events);
+
+    my $track = MIDI::Track->new;
+    $track->events_r($events_r);
+    $opus = MIDI::Opus->new({ tracks => [ $track ] });
 
     $opus->write_to_file("$0.mid");
 }
