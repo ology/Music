@@ -6,11 +6,11 @@ use MIDI ();
 
 my $file = shift || die "Usage: perl $0 /some/midi/file.mid\n";
 
-my $events = event_list($file);
+map_events($file);
 #use Data::Dumper::Compact qw(ddc);
 #print __PACKAGE__,' L',__LINE__,' ',ddc($events, {max_width=>128});
 
-sub event_list {
+sub map_events {
     my ($file) = @_;
 
     my %map = (
@@ -155,8 +155,6 @@ sub event_list {
           2 => 70,
     );
 
-    my @events;
-
     my $opus = MIDI::Opus->new({ from_file => $file });
 
     for my $t ( $opus->tracks ) {
@@ -169,11 +167,8 @@ sub event_list {
             if ($event->[0] eq 'note') {
                 $event->[4] = $map{ $event->[4] } ? $map{ $event->[4] } : $event->[4];
             }
-            push @events, $event;
         }
     }
 
     $opus->write_to_file("$0.mid");
-
-    return \@events;
 }
