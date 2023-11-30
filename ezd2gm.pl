@@ -170,6 +170,7 @@ sub map_events {
             }
             push @events, $event;
         }
+
         last; # because I only care about single tracks atm
    }
 
