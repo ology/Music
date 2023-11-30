@@ -149,11 +149,6 @@ my %map = (
      2 => 70,
 );
 
-map_events(\%map, $file);
-
-sub map_events {
-    my ($map, $file) = @_;
-
     my $opus = MIDI::Opus->new({ from_file => $file });
     my $ticks = $opus->ticks;
 
@@ -166,7 +161,7 @@ sub map_events {
         for my $event (@$score_r) {
             # ['note', <start>, <duration>, <channel>, <note>, <velocity>]
             if ($event->[0] eq 'note') {
-                $event->[4] = $map->{ $event->[4] } ? $map->{ $event->[4] } : $event->[4];
+                $event->[4] = $map{ $event->[4] } ? $map{ $event->[4] } : $event->[4];
             }
             push @events, $event;
         }
@@ -180,4 +175,3 @@ sub map_events {
     my $fresh = MIDI::Opus->new({ ticks => $ticks, tracks => [ $track ] });
 
     $fresh->write_to_file("$0.mid");
-}
