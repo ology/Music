@@ -83,8 +83,7 @@ my $fresh = MIDI::Opus->new({ ticks => $opus->ticks, tracks => [ $track ] });
 
 $fresh->write_to_file("$opts{dest}/$0.mid");
 
-my $app = basename($0);
-print "Wrote $opts{dest}/$app.mid\n";
+print "Wrote $opts{dest}/ezd2gm-choose.mid\n";
 
 __DATA__
 # EZdrummer midinums => general midi patches
