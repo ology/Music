@@ -222,4 +222,5 @@ my $fresh = MIDI::Opus->new({ ticks => $opus->ticks, tracks => [ $track ] });
 
 $fresh->write_to_file("$opts{dest}/$0.mid");
 
-print "Wrote $opts{dest}/$0.mid\n";
+my $app = basename($0);
+print "Wrote $opts{dest}/$app.mid\n";
