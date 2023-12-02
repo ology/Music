@@ -7,8 +7,8 @@
 #
 # Examples:
 # perl ezd2gm-choose
-# perl ezd2gm-choose --midi=/some/midi/file.mid
 # perl ezd2gm-choose --source=/some/midi --dest=/my/music
+# perl ezd2gm-choose --midi=/some/midi/file.mid
 
 use strict;
 use warnings;
