@@ -10,14 +10,16 @@ use warnings;
 
 use File::Basename qw(basename);
 use File::Find::Rule ();
+use File::HomeDir ();
 use Getopt::Long qw(GetOptions);
 use MIDI ();
 use Term::Choose qw(choose);
+warn __PACKAGE__,' L',__LINE__,' ',File::HomeDir->my_music,"\n";exit;
 
 my %opts = (
-    path => $ENV{HOME} . '/Music/Logic/Bounces',
+    path => File::HomeDir->my_music . '/Logic/Bounces',
     midi => undef,
-    dest => $ENV{HOME} . '/Music/Logic/Bounces',
+    dest => File::HomeDir->my_music . '/Logic/Bounces',
 );
 GetOptions( \%opts,
     'path=s',
