@@ -52,10 +52,12 @@ while (my $line = readline(DATA)) {
     next if $line =~ /^\s*#/;
     chomp $line;
     $line =~ s/^\s*//;
-    $line =~ s/\s*$//;
+    $line =~ s/\s*(?:#.*)?\s*$//;
     my ($key, $val) = split /\s+=>\s+/, $line;
     $map{$key} = $val;
 }
+use Data::Dumper::Compact qw(ddc);
+warn __PACKAGE__,' L',__LINE__,' ',ddc(\%map, {max_width=>128});exit;
 
 my $opus = MIDI::Opus->new({ from_file => $opts{midi} });
 
@@ -88,9 +90,9 @@ print "Wrote $out\n";
 __DATA__
 # EZdrummer midinums => general midi patches
 # closed hh
-   11 => 42
-   22 => 42
-   61 => 42
+   11 => 42 # TODO which EZd articulation is this?
+   22 => 42 # "
+   61 => 42 # ...
    62 => 42
    63 => 42
    65 => 42
