@@ -40,7 +40,6 @@ unless ($opts{midi}) {
     exit if $choice eq 'Quit';
     $opts{midi} = $files{$choice};
 }
-exit;
 
 # EZdrummer midinums => general midi patches
 my %map = (
