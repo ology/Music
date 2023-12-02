@@ -10,7 +10,8 @@ use warnings;
 
 use MIDI ();
 
-my $file = shift || die "Usage: perl $0 /some/midi/file.mid\n";
+my $file = shift || die "Usage: perl $0 /some/midi/file.mid /some/destination/directory\n";
+my $out  = shift || '.';
 
 # EZdrummer midinums => general midi patches
 my %map = (
@@ -187,4 +188,4 @@ $track->events_r($events_r);
 
 my $fresh = MIDI::Opus->new({ ticks => $opus->ticks, tracks => [ $track ] });
 
-$fresh->write_to_file("$0.mid");
+$fresh->write_to_file("$out/$0.mid");
