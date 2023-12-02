@@ -20,7 +20,7 @@ use Getopt::Long qw(GetOptions);
 use MIDI ();
 use Term::Choose qw(choose);
 
-use constant DIR => '/Logic/Bounces';
+use constant DIR => '/Logic/Bounces'; # nb: personal desired subdirectory - YMMV
 
 my %opts = (
     path => File::HomeDir->my_music . DIR, # source directory for midi files
