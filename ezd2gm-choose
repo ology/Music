@@ -14,7 +14,6 @@ use File::HomeDir ();
 use Getopt::Long qw(GetOptions);
 use MIDI ();
 use Term::Choose qw(choose);
-warn __PACKAGE__,' L',__LINE__,' ',File::HomeDir->my_music,"\n";exit;
 
 my %opts = (
     path => File::HomeDir->my_music . '/Logic/Bounces',
