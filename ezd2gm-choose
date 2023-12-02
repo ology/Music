@@ -33,6 +33,7 @@ if ($opts{midi}) {
     die "No such file: $opts{midi}" unless -e $opts{midi};
 }
 else {
+    # gather the midi files
     my @files = File::Find::Rule->file()
                                 ->name(qr/\.midi?$/)
                                 ->in($opts{path});
@@ -45,6 +46,7 @@ else {
     $opts{midi} = $files{$choice};
 }
 
+# create the patch mapping
 my %map;
 while (my $line = readline(DATA)) {
     next if $line =~ /^\s*#/;
@@ -59,6 +61,7 @@ my $opus = MIDI::Opus->new({ from_file => $opts{midi} });
 
 my @events;
 
+# process the midi
 for my $t ( $opus->tracks ) {
     my $score_r = MIDI::Score::events_r_to_score_r($t->events_r);
 
@@ -72,11 +75,10 @@ for my $t ( $opus->tracks ) {
     }
 }
 
+# convert to a new opus
 my $events_r = MIDI::Score::score_r_to_events_r(\@events);
-
 my $track = MIDI::Track->new;
 $track->events_r($events_r);
-
 my $fresh = MIDI::Opus->new({ ticks => $opus->ticks, tracks => [ $track ] });
 
 $fresh->write_to_file("$opts{dest}/$0.mid");
