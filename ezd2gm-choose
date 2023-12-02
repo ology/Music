@@ -81,9 +81,9 @@ my $track = MIDI::Track->new;
 $track->events_r($events_r);
 my $fresh = MIDI::Opus->new({ ticks => $opus->ticks, tracks => [ $track ] });
 
-$fresh->write_to_file("$opts{dest}/$0.mid");
-
-print "Wrote $opts{dest}/ezd2gm-choose.mid\n";
+my $out = "$opts{dest}/ezd2gm-choose.mid";
+$fresh->write_to_file($out);
+print "Wrote $out\n";
 
 __DATA__
 # EZdrummer midinums => general midi patches
