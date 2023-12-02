@@ -4,6 +4,11 @@
 #
 # EZdrummer has more articulations than the limited range of general
 # midi, so information is lost by doing this.
+#
+# Examples:
+# perl ezd2gm-choose
+# perl ezd2gm-choose --midi=/some/midi/file.mid
+# perl ezd2gm-choose --source=/some/midi --dest=/my/music
 
 use strict;
 use warnings;
