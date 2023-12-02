@@ -15,9 +15,9 @@ use MIDI ();
 use Term::Choose qw(choose);
 
 my %opts = (
-    path => '/Users/gene/Music/Logic/Bounces',
+    path => $ENV{HOME} . '/Music/Logic/Bounces',
     midi => undef,
-    dest => '/Users/gene/Music/Logic/Bounces',
+    dest => $ENV{HOME} . '/Music/Logic/Bounces',
 );
 GetOptions( \%opts,
     'path=s',
