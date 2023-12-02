@@ -16,9 +16,9 @@ use MIDI ();
 use Term::Choose qw(choose);
 
 my %opts = (
-    path => File::HomeDir->my_music . '/Logic/Bounces',
+    path => File::HomeDir->my_music . '/Logic/Bounces', # source directory for midi files
     midi => undef,
-    dest => File::HomeDir->my_music . '/Logic/Bounces',
+    dest => File::HomeDir->my_music . '/Logic/Bounces', # destination directory for processed midi
 );
 GetOptions( \%opts,
     'path=s',
