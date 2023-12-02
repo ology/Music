@@ -53,11 +53,9 @@ while (my $line = readline(DATA)) {
     chomp $line;
     $line =~ s/^\s*//;
     $line =~ s/\s*(?:#.*)?\s*$//;
-    my ($key, $val) = split /\s+=>\s+/, $line;
+    my ($key, $val) = split /\s*=>\s*/, $line;
     $map{$key} = $val;
 }
-use Data::Dumper::Compact qw(ddc);
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\%map, {max_width=>128});exit;
 
 my $opus = MIDI::Opus->new({ from_file => $opts{midi} });
 
