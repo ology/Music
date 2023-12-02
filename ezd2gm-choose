@@ -40,7 +40,7 @@ else {
     my %files;
     my @names = map { basename($_) } @files;
     @files{@names} = @files;
-    my $choice = choose(\@names);
+    my $choice = choose(\@names, { prompt => 'Choose a MIDI file to process:' });
     exit if $choice eq 'Quit';
     $opts{midi} = $files{$choice};
 }
@@ -221,3 +221,5 @@ $track->events_r($events_r);
 my $fresh = MIDI::Opus->new({ ticks => $opus->ticks, tracks => [ $track ] });
 
 $fresh->write_to_file("$opts{dest}/$0.mid");
+
+print "Wrote $opts{dest}/$0.mid\n";
