@@ -5,6 +5,9 @@
 # EZdrummer has more articulations than the limited range of general
 # midi, so information is lost by doing this.
 
+# And for an enhanced version of this program, please see
+# https://github.com/ology/Music/blob/master/ezd2gm-choose
+
 use strict;
 use warnings;
 
