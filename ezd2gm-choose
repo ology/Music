@@ -58,6 +58,7 @@ while (my $line = readline(DATA)) {
     chomp $line;
     $line =~ s/^\s*//;
     $line =~ s/\s*(?:#.*)?\s*$//;
+    next unless $line;
     my ($key, $val) = split /\s*=>\s*/, $line;
     $map{$key} = $val;
 }
