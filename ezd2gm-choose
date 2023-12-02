@@ -28,7 +28,10 @@ GetOptions( \%opts,
 die "No such directory: $opts{path}" unless -d $opts{path};
 die "No such directory: $opts{dest}" unless -d $opts{dest};
 
-unless ($opts{midi}) {
+if ($opts{midi}) {
+    die "No such file: $opts{midi}" unless -e $opts{midi};
+}
+else {
     my @files = File::Find::Rule->file()
                                 ->name(qr/\.midi?$/)
                                 ->in($opts{path});
