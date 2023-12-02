@@ -13,7 +13,7 @@ use MIDI ();
 my $file = shift || die "Usage: perl $0 /some/midi/file.mid /some/destination/directory\n";
 my $out  = shift || '.';
 
-die "$out: No such directory" unless -d $out;
+die "No such directory: $out" unless -d $out;
 
 # EZdrummer midinums => general midi patches
 my %map = (
