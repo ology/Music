@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation); # local author libraries
+#use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation); # local author libraries
 use MIDI::Util qw(setup_score midi_format);
 use Music::MelodicDevice::Ornamentation ();
 
