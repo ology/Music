@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# Write-up: https://perladvent.org/2023/2023-12-01.html
+
 use strict;
 use warnings;
 
