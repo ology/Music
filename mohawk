@@ -6,8 +6,8 @@
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Chord-Guitar Music-Duration MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util); # local author libs
-use MIDI::Bassline::Walk;
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Bassline-Generator MIDI-Chord-Guitar Music-Duration MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util); # local author libs
+use Music::Bassline::Generator;
 use MIDI::Drummer::Tiny;
 use MIDI::Chord::Guitar;
 use MIDI::Praxis::Variation qw(tie_durations);
@@ -85,7 +85,7 @@ sub chords {
 sub bass {
     set_chan_patch($d->score, $channel++, $bass_patch);
 
-    my $bassline = MIDI::Bassline::Walk->new(
+    my $bassline = Music::Bassline::Generator->new(
         verbose   => 0,
         octave    => 2,
         guitar    => 1,

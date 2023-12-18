@@ -12,9 +12,9 @@ use warnings;
 use Music::Chord::Note ();
 use Music::Scales qw(get_scale_notes);
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Data-Dataset-ChordProgressions MIDI-Bassline-Walk MIDI-Util MIDI-Drummer-Tiny Music-Duration Music-Duration-Partition);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Data-Dataset-ChordProgressions Music-Bassline-Generator MIDI-Util MIDI-Drummer-Tiny Music-Duration Music-Duration-Partition);
 use Data::Dataset::ChordProgressions ();
-use MIDI::Bassline::Walk ();
+use Music::Bassline::Generator ();
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(set_chan_patch midi_format);
 use Music::Duration::Partition ();
@@ -121,7 +121,7 @@ sub bass {
     my $motif1 = $mdp->motif;
     my $motif2 = $mdp->motif;
 
-    my $bassline = MIDI::Bassline::Walk->new(
+    my $bassline = Music::Bassline::Generator->new(
         octave  => 2,
         guitar  => 1,
         verbose => 0,

@@ -12,12 +12,12 @@
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Bassline-Walk MIDI-Util Music-Chord-Progression-Transform Music-Duration-Partition); # local author libs
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Bassline-Generator MIDI-Util Music-Chord-Progression-Transform Music-Duration-Partition); # local author libs
 use lib "$ENV{HOME}/repos/Music-Chord-Note/lib"; # my fork
 
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
-use MIDI::Bassline::Walk ();
+use Music::Bassline::Generator ();
 use MIDI::Util qw(setup_score set_chan_patch midi_format);
 use Music::Chord::Progression::Transform ();
 use Music::Duration::Partition ();
@@ -106,7 +106,7 @@ sub chords {
 sub melody {
     set_chan_patch($score, $channel++, $opt{patch_hi});
 
-    my $melody = MIDI::Bassline::Walk->new(
+    my $melody = Music::Bassline::Generator->new(
         octave  => $opt{octave_hi},
         verbose => $opt{verbose},
     );
@@ -122,7 +122,7 @@ sub melody {
 sub bass {
     set_chan_patch($score, $channel++, $opt{patch_low});
 
-    my $bass = MIDI::Bassline::Walk->new(
+    my $bass = Music::Bassline::Generator->new(
         octave  => $opt{octave_low},
         tonic   => 1,
         verbose => $opt{verbose},
