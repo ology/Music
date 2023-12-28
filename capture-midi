@@ -30,7 +30,7 @@ open(my $midi, '-|', @dump_tool, $device)
 warn "PID: $$\n" if $DEBUG;
 
 while (my $line = readline($midi)) {
-    #print $line; next;
+#    print $line; next;
     chomp $line;
     $line =~ s/^\s*//;
 
