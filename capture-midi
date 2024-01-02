@@ -61,14 +61,16 @@ while (my $line = readline($midi)) {
 
     # find a matching trigger
     for my $entry ($config->{triggers}->@*) {
+        # the events are equal, the data matches and either there is no channel or the channels are equal
         if ($event eq $entry->{event} && $data =~ /$entry->{data}/
             && (!defined $entry->{channel} || $channel == $entry->{channel})
         ) {
             warn "Match: $entry->{event}: '$entry->{data}'\n" if $DEBUG;
 
-            $value = $1;
+            $value = $1; # XXX What is $1 here??
             my ($key, $text);
 
+            # handle entry directions
             if (defined $value && exists $entry->{down} && exists $entry->{up}) {
                 $direction = 'down' if $last ne '' && $value < $last;
                 $direction = 'up'   if $last ne '' && $value > $last;
@@ -78,9 +80,11 @@ while (my $line = readline($midi)) {
                 $last = $value if $last eq '' || $last != $value;
             }
             else {
+                # set key (default) & text
                 $key  = $entry->{key}  if exists $entry->{key};
                 $text = $entry->{text} if exists $entry->{text};
             }
+            # build the command
             if (defined $key) {
                 @cmd = (@key_tool, $key);
             }
