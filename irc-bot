@@ -46,7 +46,7 @@ use YAML::XS qw(LoadFile);
 # Number::Fraction          # ⎭
 
 # Use local author libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals);
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals Music-ModalFunction);
 
 use MIDI::Chord::Guitar;
 use MIDI::Drummer::Tiny;
@@ -56,6 +56,7 @@ use Music::Duration::Partition;
 use Music::Intervals;
 use Music::Intervals::Numeric;
 use Music::Intervals::Ratios;
+use Music::ModalFunction ();
 
 use constant OPTIONS         => { max_width => 256 }; # For ddc()
 use constant MIN_BPM         => 60;
@@ -465,7 +466,8 @@ sub process_msg {
     my $note = $1;
     my $chord = $2 // '';
     my $mcg = MIDI::Chord::Guitar->new(
-      voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv" # <- Not needed if module installed
+      # Not needed if module installed:
+      voicing_file => "$ENV{HOME}/sandbox/MIDI-Chord-Guitar/share/midi-guitar-chord-voicings.csv"
     );
     my $fingerings;
     my $result;
@@ -512,6 +514,21 @@ sub process_msg {
     my $range = exists $range{$instrument} ? $range{$instrument} : '?';
     $irc->write(@$to, ":$instrument range: $range");
   }
+  # COMMAND: common
+  elsif ($msg =~ /^common\s+(\w+)\s+(\w+)$/) {
+    my ($mode_note, $mode) = split /[_.-]/, $1;
+    my ($key_note, $key)   = split /[_.-]/, $2;
+    my $m = Music::ModalFunction->new(
+      mode_note    => $mode_note,
+      mode         => $mode,
+      key_note     => $key_note,
+      key          => $key,
+    );
+    my $results = $m->pivot_chord_keys;
+    my $chords = join ', ', map { $_->{chord_note} . '_' . $_->{chord} } @$results;
+    $irc->write(@$to, ":Common chords: $chords");
+  }
+
   # Fallthough
   else {
     $irc->write(@$to, qq|:You said, "$msg" $who|);
