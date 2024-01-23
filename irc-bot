@@ -523,6 +523,7 @@ sub process_msg {
       mode         => $mode,
       key_note     => $key_note,
       key          => $key,
+      hash_results => 1,
     );
     my $results = $m->pivot_chord_keys;
     my $chords = join ', ', map { $_->{chord_note} . '_' . $_->{chord} } @$results;
