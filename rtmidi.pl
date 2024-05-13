@@ -17,6 +17,7 @@ my %opt = (
     port    => 'Logic Pro Virtual In',
 );
 GetOptions(\%opt,
+    'virtual=s',
     'port=s',
 );
 
