@@ -30,13 +30,13 @@ $score->n('qn', 'G4');
 $score->n('qn', 'F4');
 $score->n('qn', 'C4');
 
-my $events_r = MIDI::Score::score_r_to_events_r($score->{Score});
+my $events = MIDI::Score::score_r_to_events_r($score->{Score});
 
 my $device = RtMidiOut->new;
 $device->open_virtual_port($opt{port});
 $device->open_port_by_name(qr/logic.*in$/i);
 
-for my $event (@$events_r) {
+for my $event (@$events) {
     if ($event->[0] =~ /^(note_\w+)$/) {
         #use DDP; p $event;
         my $op = $1;
