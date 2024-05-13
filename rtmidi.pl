@@ -7,7 +7,6 @@ use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
-
 use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::FFI::Device;
 
