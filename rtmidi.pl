@@ -34,7 +34,7 @@ my $events = MIDI::Score::score_r_to_events_r($score->{Score});
 # fire up RT-MIDI!
 my $device = RtMidiOut->new;
 $device->open_virtual_port($opt{virtual});
-$device->open_port_by_name($opt{name Fix option name});
+$device->open_port_by_name($opt{named});
 
 # send the events to the open port
 for my $event (@$events) {
