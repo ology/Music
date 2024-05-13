@@ -13,18 +13,20 @@ use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::FFI::Device;
 
 my %opt = (
-    virtual => 'perl-rtmidi',
-    port    => 'Logic Pro Virtual In',
+    virtual  => 'perl-rtmidi',
+    port     => 'Logic Pro Virtual In',
+    duration => 'qn',
 );
 GetOptions(\%opt,
     'virtual=s',
     'port=s',
+    'duration=s',
 );
 
 my $score = setup_score();
 
 for my $pitch (qw(C5 G4 F4 C4)) {
-    $score->n('qn', $pitch);
+    $score->n($opt{duratiion}, $pitch);
 }
 
 my $events = MIDI::Score::score_r_to_events_r($score->{Score});
