@@ -23,16 +23,20 @@ GetOptions(\%opt,
 
 my $score = setup_score();
 
+# add notes to the score
 for my $pitch (qw(C5 G4 F4 C4)) {
     $score->n($opt{duration}, $pitch);
 }
 
+# convert the score to an event list
 my $events = MIDI::Score::score_r_to_events_r($score->{Score});
 
+# fire up RT-MIDI!
 my $device = RtMidiOut->new;
 $device->open_virtual_port($opt{virtual});
 $device->open_port_by_name($opt{name Fix option name});
 
+# send the events to the open port
 for my $event (@$events) {
     if ($event->[0] =~ /^(note_\w+)$/) {
         my $op = $1;
