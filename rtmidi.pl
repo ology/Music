@@ -23,10 +23,9 @@ GetOptions(\%opt,
 
 my $score = setup_score();
 
-$score->n('qn', 'C5');
-$score->n('qn', 'G4');
-$score->n('qn', 'F4');
-$score->n('qn', 'C4');
+for my $pitch (qw(C5 G4 F4 C4)) {
+    $score->n('qn', $pitch);
+}
 
 my $events = MIDI::Score::score_r_to_events_r($score->{Score});
 
