@@ -13,7 +13,7 @@ use MIDI::RtMidi::FFI::Device;
 
 my %opt = (
     virtual  => 'perl-rtmidi',
-    port     => 'Logic Pro Virtual In',
+    named    => 'Logic Pro Virtual In',
     duration => 'qn',
 );
 GetOptions(\%opt,
@@ -32,7 +32,7 @@ my $events = MIDI::Score::score_r_to_events_r($score->{Score});
 
 my $device = RtMidiOut->new;
 $device->open_virtual_port($opt{virtual});
-$device->open_port_by_name($opt{port});
+$device->open_port_by_name($opt{name Fix option name});
 
 for my $event (@$events) {
     if ($event->[0] =~ /^(note_\w+)$/) {
