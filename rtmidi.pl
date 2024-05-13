@@ -13,7 +13,7 @@ use MIDI::RtMidi::FFI::Device;
 my %opt = (
     virtual  => 'perl-rtmidi',
     named    => 'Logic Pro Virtual In',
-    duration => 'qn',
+    duration => -1, # -1 = random select from pool. 'qn' = quarter-note, etc.
 );
 GetOptions(\%opt,
     'virtual=s',
@@ -21,11 +21,14 @@ GetOptions(\%opt,
     'duration=s',
 );
 
+my @durations = qw(wn hn qn en sn);
+
 my $score = setup_score();
 
 # add notes to the score
 for my $pitch (qw(C5 G4 F4 C4)) {
-    $score->n($opt{duration}, $pitch);
+    my $duration = $opt{duration} eq '-1' ? $durations[int rand @durations] : $opt{duration};
+    $score->n($duration, $pitch);
 }
 
 # convert the score to an event list
