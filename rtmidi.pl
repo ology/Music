@@ -26,7 +26,7 @@ GetOptions(\%opt,
 my $score = setup_score();
 
 for my $pitch (qw(C5 G4 F4 C4)) {
-    $score->n($opt{duratiion}, $pitch);
+    $score->n($opt{duration}, $pitch);
 }
 
 my $events = MIDI::Score::score_r_to_events_r($score->{Score});
