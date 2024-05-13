@@ -8,7 +8,6 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 
-use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::FFI::Device;
 
@@ -37,7 +36,6 @@ $device->open_port_by_name($opt{port});
 
 for my $event (@$events) {
     if ($event->[0] =~ /^(note_\w+)$/) {
-        #use DDP; p $event;
         my $op = $1;
         $device->send_event($op => @{ $event }[ 2 .. 4 ]);
         sleep 1 if $op eq 'note_on';
