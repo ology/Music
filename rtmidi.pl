@@ -13,11 +13,7 @@ use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::FFI::Device;
 
 my %opt = (
-    port => 'foo',
-#    port => 'Logic Pro Virtual In',
-#    port => 'IAC Driver',
-#    port => 'IAC Bus 1',
-#    port => 'Bus 1',
+    port => 'Logic Pro Virtual In',
 );
 GetOptions(\%opt,
     'port=s',
@@ -34,7 +30,7 @@ my $events = MIDI::Score::score_r_to_events_r($score->{Score});
 
 my $device = RtMidiOut->new;
 $device->open_virtual_port($opt{port});
-$device->open_port_by_name(qr/logic.*in$/i);
+$device->open_port_by_name($opt{port});
 
 for my $event (@$events) {
     if ($event->[0] =~ /^(note_\w+)$/) {
