@@ -37,7 +37,6 @@ for my $note (@notes) {
     $score->n($duration, $pitch);
 }
 
-# convert the score to an event list
 my $events = score2events($score);
 
 # fire up RT-MIDI!
@@ -45,7 +44,6 @@ my $device = RtMidiOut->new;
 $device->open_virtual_port($opt{virtual});
 $device->open_port_by_name($opt{named});
 
-# compute the timing
 my $millis = get_milliseconds($score);
 
 # send the events to the open port
