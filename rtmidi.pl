@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# n.b. This works on my mac with Logic Pro X. Untested elsewhere.
+# n.b. This works on my mac with Logic Pro X - which you need to have open. Untested elsewhere.
 
 use strict;
 use warnings;
