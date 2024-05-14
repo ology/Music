@@ -9,7 +9,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score score2events get_milliseconds);
 use Getopt::Long qw(GetOptions);
 use List::Util qw(first);
-use MIDI::RtMidi::FFI::Device;
+use MIDI::RtMidi::FFI::Device ();
 use Time::HiRes qw(usleep);
 
 my %opt = (
