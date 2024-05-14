@@ -15,8 +15,8 @@ use Time::HiRes qw(usleep);
 my %opt = (
     virtual => 'perl-rtmidi',
     named   => 'Logic Pro Virtual In',
-    phrase  => 'C5,sn G4,en F4,qn C5,sn G4,en F4,qn C4,wn',
     bpm     => 100,
+    phrase  => 'C5,sn G4,en F4,qn C5,sn G4,en F4,qn C4,wn',
 );
 GetOptions(\%opt,
     'virtual=s',
