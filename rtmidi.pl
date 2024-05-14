@@ -8,6 +8,7 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 use Getopt::Long qw(GetOptions);
+use List::Util qw(first);
 use MIDI::RtMidi::FFI::Device;
 use Time::HiRes qw(usleep);
 
@@ -15,6 +16,7 @@ my %opt = (
     virtual  => 'perl-rtmidi',
     named    => 'Logic Pro Virtual In',
     duration => -1, # -1 = random select from pool. 'qn' = quarter-note, etc.
+    bpm      => 100,
 );
 GetOptions(\%opt,
     'virtual=s',
@@ -24,7 +26,13 @@ GetOptions(\%opt,
 
 my @durations = qw(wn hn qn en sn);
 
-my $score = setup_score(lead_in => 0);
+my $score = setup_score(
+    lead_in => 0,
+    bpm     => $opt{bpm},
+);
+
+my $tempo = first { $_->[0] eq 'set_tempo' } $score->{Score}->@*;
+my $milliseconds = $tempo->[2] / ($opt{bpm} * $score->{Tempo});
 
 # add notes to the score
 for my $pitch (qw(C5 G4 F4 C4)) {
@@ -45,10 +53,13 @@ sleep 1;
 for my $event (@$events) {
     my $name = $event->[0];
     if ($name =~ /^note_\w+$/) {
+warn "@$event\n";
         $device->send_event($name => @{ $event }[ 2 .. 4 ]);
 
-        sleep 1 if $name eq 'note_on';
-#        usleep($event->[1] * 1000) if $name eq 'note_on';
+        my $useconds = $milliseconds * $event->[1] * 1000;
+
+#        sleep 1 if $name eq 'note_on';
+        usleep($useconds) if $name eq 'note_on';
 #        usleep(1_000_000 - 1) if $name eq 'note_on';
 #        usleep(96000 * 1000) if $name eq 'note_on';
     }
