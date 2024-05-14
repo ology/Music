@@ -32,7 +32,7 @@ my $score = setup_score(
 );
 
 my $tempo = first { $_->[0] eq 'set_tempo' } $score->{Score}->@*;
-my $milliseconds = $tempo->[2] / ($opt{bpm} * $score->{Tempo}->$*);
+my $milliseconds = $tempo->[2] / $score->{Tempo}->$*;
 
 # add notes to the score
 for my $pitch (qw(C5 G4 F4 C4)) {
@@ -53,14 +53,8 @@ sleep 1;
 for my $event (@$events) {
     my $name = $event->[0];
     if ($name =~ /^note_\w+$/) {
-warn "@$event\n";
+        my $useconds = $milliseconds * $event->[1];
+        usleep($useconds) if $name eq 'note_off';
         $device->send_event($name => @{ $event }[ 2 .. 4 ]);
-
-        my $useconds = $milliseconds * $event->[1] * 1000;
-
-#        sleep 1 if $name eq 'note_on';
-#        usleep($useconds) if $name eq 'note_on';
-#        usleep(1_000_000 - 1) if $name eq 'note_on';
-        usleep($milliseconds * 1000) if $name eq 'note_on';
     }
 }
