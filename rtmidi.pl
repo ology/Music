@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
-use MIDI::Util qw(setup_score);
+use MIDI::Util qw(setup_score score2events get_milliseconds);
 use Getopt::Long qw(GetOptions);
 use List::Util qw(first);
 use MIDI::RtMidi::FFI::Device;
@@ -38,7 +38,7 @@ for my $note (@notes) {
 }
 
 # convert the score to an event list
-my $events = MIDI::Score::score_r_to_events_r($score->{Score});
+my $events = score2events($score);
 
 # fire up RT-MIDI!
 my $device = RtMidiOut->new;
@@ -46,15 +46,14 @@ $device->open_virtual_port($opt{virtual});
 $device->open_port_by_name($opt{named});
 
 # compute the timing
-my $tempo = first { $_->[0] eq 'set_tempo' } $score->{Score}->@*;
-my $milliseconds = $tempo->[2] / $score->{Tempo}->$*;
+my $millis = get_milliseconds($score);
 
 # send the events to the open port
 sleep 1;
 for my $event (@$events) {
     my $name = $event->[0];
     if ($name =~ /^note_\w+$/) {
-        my $useconds = $milliseconds * $event->[1];
+        my $useconds = $millis * $event->[1];
         usleep($useconds) if $name eq 'note_off';
         $device->send_event($name => @{ $event }[ 2 .. 4 ]);
     }
