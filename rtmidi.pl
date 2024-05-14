@@ -43,8 +43,8 @@ $device->open_port_by_name($opt{named});
 # send the events to the open port
 sleep 1;
 for my $event (@$events) {
-    if ($event->[0] =~ /^note_\w+$/) {
-        my $name = $event->[0];
+    my $name = $event->[0];
+    if ($name =~ /^note_\w+$/) {
         $device->send_event($name => @{ $event }[ 2 .. 4 ]);
 
         sleep 1 if $name eq 'note_on';
