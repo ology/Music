@@ -9,6 +9,7 @@ use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::FFI::Device;
+use Time::HiRes qw(usleep);
 
 my %opt = (
     virtual  => 'perl-rtmidi',
@@ -23,7 +24,7 @@ GetOptions(\%opt,
 
 my @durations = qw(wn hn qn en sn);
 
-my $score = setup_score();
+my $score = setup_score(lead_in => 0);
 
 # add notes to the score
 for my $pitch (qw(C5 G4 F4 C4)) {
@@ -40,10 +41,16 @@ $device->open_virtual_port($opt{virtual});
 $device->open_port_by_name($opt{named});
 
 # send the events to the open port
-for my $event (@$events) {
-    if ($event->[0] =~ /^(note_\w+)$/) {
+for my $i (0 .. $#$events) {
+    if ($events->[$i][0] =~ /^(note_\w+)$/) {
         my $op = $1;
+        my $event = $events->[ $i ];
+
         $device->send_event($op => @{ $event }[ 2 .. 4 ]);
-        sleep 1 if $op eq 'note_on';
+
+#        sleep 1 if $op eq 'note_on';
+        usleep($event->[1] * 1000) if $op eq 'note_on';
+#        usleep(1_000_000 - 1) if $op eq 'note_on';
+#        usleep(96000 * 1000) if $op eq 'note_on';
     }
 }
