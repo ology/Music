@@ -30,9 +30,6 @@ my $score = setup_score(
     bpm     => $opt{bpm},
 );
 
-my $tempo = first { $_->[0] eq 'set_tempo' } $score->{Score}->@*;
-my $milliseconds = $tempo->[2] / $score->{Tempo}->$*;
-
 # add notes to the score
 my @notes = split /\s+/, $opt{phrase};
 for my $note (@notes) {
@@ -47,6 +44,10 @@ my $events = MIDI::Score::score_r_to_events_r($score->{Score});
 my $device = RtMidiOut->new;
 $device->open_virtual_port($opt{virtual});
 $device->open_port_by_name($opt{named});
+
+# compute the timing
+my $tempo = first { $_->[0] eq 'set_tempo' } $score->{Score}->@*;
+my $milliseconds = $tempo->[2] / $score->{Tempo}->$*;
 
 # send the events to the open port
 sleep 1;
