@@ -47,7 +47,6 @@ $device->open_virtual_port($opt{virtual});
 $device->open_port_by_name($opt{named});
 
 # send the events to the open port
-sleep 1;
 for my $event (@$events) {
     my $name = $event->[0];
     if ($name =~ /^note_\w+$/) {
