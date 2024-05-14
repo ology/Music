@@ -13,18 +13,17 @@ use MIDI::RtMidi::FFI::Device;
 use Time::HiRes qw(usleep);
 
 my %opt = (
-    virtual  => 'perl-rtmidi',
-    named    => 'Logic Pro Virtual In',
-    duration => -1, # -1 = random select from pool. 'qn' = quarter-note, etc.
-    bpm      => 100,
+    virtual => 'perl-rtmidi',
+    named   => 'Logic Pro Virtual In',
+    phrase  => 'C5,hn G4,qn F4,en C4,sn',
+    bpm     => 100,
 );
 GetOptions(\%opt,
     'virtual=s',
-    'port=s',
-    'duration=s',
+    'named=s',
+    'phrase=s',
+    'bpm=i',
 );
-
-my @durations = qw(wn hn qn en sn);
 
 my $score = setup_score(
     lead_in => 0,
@@ -35,8 +34,9 @@ my $tempo = first { $_->[0] eq 'set_tempo' } $score->{Score}->@*;
 my $milliseconds = $tempo->[2] / $score->{Tempo}->$*;
 
 # add notes to the score
-for my $pitch (qw(C5 G4 F4 C4)) {
-    my $duration = $opt{duration} eq '-1' ? $durations[int rand @durations] : $opt{duration};
+my @notes = split /\s+/, $opt{phrase};
+for my $note (@notes) {
+    my ($pitch, $duration) = split /,/, $note;
     $score->n($duration, $pitch);
 }
 
