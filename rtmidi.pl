@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util); # n.b. local author libs. comment this out unless you're me
+# use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util); # n.b. local author libs. comment this out unless you're me
 use Getopt::Long qw(GetOptions);
 use List::Util qw(first);
 use MIDI::RtMidi::FFI::Device ();
