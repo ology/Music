@@ -58,3 +58,5 @@ for my $event (@$events) {
         $device->send_event($name => @{ $event }[ 2 .. 4 ]);
     }
 }
+
+$device->close_port;
