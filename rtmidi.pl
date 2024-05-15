@@ -2,13 +2,16 @@
 
 # n.b. This works on my mac with Logic Pro X - which you need to have open. Untested elsewhere.
 
+# Examples:
+# perl rtmidi.pl --named="Foo Bar In" --bpm=120 --phrase="G4,en G4,en G4,en F4,wn"
+
 use strict;
 use warnings;
 
 # use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util); # n.b. local author libs. comment this out unless you're me
 use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::FFI::Device ();
-use MIDI::Util qw(setup_score score2events get_milliseconds);
+use MIDI::Util qw(setup_score midi_format score2events get_milliseconds);
 use Time::HiRes qw(usleep);
 
 my %opt = (
@@ -33,7 +36,7 @@ my $score = setup_score(
 my @notes = split /\s+/, $opt{phrase};
 for my $note (@notes) {
     my ($pitch, $duration) = split /,/, $note;
-    $score->n($duration, $pitch);
+    $score->n($duration, midi_format($pitch));
 }
 
 my $millis = get_milliseconds($score);
