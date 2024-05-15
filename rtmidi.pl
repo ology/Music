@@ -3,7 +3,7 @@
 # n.b. This works on my mac with Logic Pro X - which you need to have open. Untested elsewhere.
 
 # Examples:
-# perl rtmidi.pl --named="Foo Bar In" --bpm=120 --phrase="G4,en G4,en G4,en F4,wn"
+# perl rtmidi.pl --named="Foo Bar In" --bpm=97 --phrase="G4,en G4,en G4,en F4,wn"
 
 use strict;
 use warnings;
