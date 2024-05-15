@@ -8,7 +8,7 @@
 use strict;
 use warnings;
 
-# use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util); # n.b. local author libs. comment this out unless you're me
+use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util); # n.b. local author libs. comment this out unless you're me
 use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::FFI::Device ();
 use MIDI::Util qw(setup_score midi_format score2events get_milliseconds);
@@ -49,6 +49,7 @@ $device->open_virtual_port($opt{virtual});
 $device->open_port_by_name($opt{named});
 
 # send the events to the open port
+sleep 1;
 for my $event (@$events) {
     my $name = $event->[0];
     if ($name =~ /^note_\w+$/) {
