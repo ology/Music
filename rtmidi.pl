@@ -15,8 +15,8 @@ use MIDI::Util qw(setup_score midi_format score2events get_microseconds);
 use Time::HiRes qw(usleep);
 
 my %opt = (
-    virtual => 'perl-rtmidi',
-    named   => 'Logic Pro Virtual In',
+    virtual => 'foo',#'perl-rtmidi',
+    named   => 'any',#'Logic Pro Virtual In',
     bpm     => 100,
     phrase  => 'C5,sn G4,en F4,qn C5,sn G4,en F4,qn C4,wn',
 );
@@ -45,7 +45,7 @@ my $events = score2events($score);
 
 # fire up RT-MIDI!
 my $device = RtMidiOut->new;
-#for (0 .. 4) { print $device->get_port_name($_), "\n" } exit;
+#for (0 .. $device->get_port_count - 1) { print $device->get_port_name($_), "\n" } exit;
 $device->open_virtual_port($opt{virtual});
 $device->open_port_by_name($opt{named});
 
