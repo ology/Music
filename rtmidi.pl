@@ -15,8 +15,8 @@ use MIDI::Util qw(setup_score midi_format score2events get_microseconds);
 use Time::HiRes qw(usleep);
 
 my %opt = (
-    virtual => 'foo',#'perl-rtmidi',
-    named   => 'any',#'Logic Pro Virtual In',
+    virtual => 'foo', #'perl-rtmidi',
+    named   => 'bar', # or 'IAC Driver IAC Bus 1' or 'Logic Pro Virtual In', or anything?
     bpm     => 100,
     phrase  => 'C5,sn G4,en F4,qn C5,sn G4,en F4,qn C4,wn',
 );
