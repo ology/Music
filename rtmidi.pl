@@ -45,6 +45,7 @@ my $events = score2events($score);
 
 # fire up RT-MIDI!
 my $device = RtMidiOut->new;
+# show open ports and then bail out
 #for (0 .. $device->get_port_count - 1) { print $device->get_port_name($_), "\n" } exit;
 $device->open_virtual_port($opt{virtual});
 $device->open_port_by_name($opt{named});
