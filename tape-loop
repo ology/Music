@@ -4,7 +4,7 @@ use warnings;
 
 ###
 # Attempt at recreating the tape-loop effect of Brain Eno's "Music for Airports" (1978).
-# https://twitter.com/gene_boggs/status/1487815399773196288
+# Write-up: https://ology.github.io/2021/03/20/tape-loop-simulation-with-midi-perl/
 #
 # Examples:
 # perl tape-loop
