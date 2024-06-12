@@ -60,8 +60,8 @@ heart of the program.
   hi_wood_block
   low_wood_block
 
-5. Instantiate a rhythmic phrase generator, with a size of 4 beats,
-and a pool of these (4) possible durations:
+5. Instantiate a rhythmic phrase generator of 4 beats and a pool of
+these possible durations:
 
   quarter note
   dotted eighth note
