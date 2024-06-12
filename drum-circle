@@ -77,7 +77,7 @@ my $bpm = shift || 90;
 # The number of bars to play after all drummers have entered
 my $extend = shift // 4;
 
-my $width = length $max;
+my $width = length $max; # Used in sprintf below
 
 # Setup a drum score
 my $d = MIDI::Drummer::Tiny->new(
