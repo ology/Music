@@ -136,19 +136,24 @@ This is the meat of the program, utilizing all the things we have
 setup. It generates a phrase, which is added to the list of phrases
 that are then played together.
 
-1. Get an unseen drum to use for a player, given the phrase number. This is given by the loop that collects the phrases, above.
+1. Get an unseen drum to use for a player, given the phrase number.
+This is given by the loop that collects the phrases, above.
 
 2. Generate a rhythmic "motif."
 
-3. Create an anonymous subroutine that either rests or plays the motif, given the phrase number.
+3. Create an anonymous subroutine that either rests or plays the
+motif, given the phrase number.
 
-3.1. The resting is done depending on the drummer entry order (into the circle). If we are not up yet, then rest.
+3.1. The resting is done depending on the drummer entry order (into
+the circle). If we are not up yet, then rest.
 
 3.2. If not resting, play the phrase continuously until the end.
 
-3.2.1. For each hit, get a random velocity between C<f> and C<fff>. This gives the sound a bit of dynamic texture.
+3.2.1. For each hit, get a random velocity between soft (C<f>) and
+loud (C<fff>). This gives the sound a bit of dynamic texture.
 
-4. Return this anonymous subroutine to be gathered into a list of all drummer parts.
+4. Return this anonymous subroutine to be gathered into a list of all
+drummer parts.
 
 =cut
 
