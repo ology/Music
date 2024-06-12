@@ -13,6 +13,59 @@ use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
 use Data::Dumper::Compact qw(ddc);
 
+=head1 DESCRIPTION
+
+Ever heard tribal drumming coming from your local park?
+
+Getting closer will reveal a circle of random people playing
+percussion instruments. Some with bongos, maybe congas, shakers and
+rattles, djembes, etc, etc.
+
+This is a "drum circle", which may include friendly hippies.
+
+And speaking of... How do you know if hippies have been in your house?
+...They're still there!
+
+Ok ok. As with other things in my Github Music repo, I decided to
+simulate this organic phenomenon with Perl.
+
+=head1 THE CODE
+
+=head2 Setup
+
+1. Set the user defined number of drummers to play. This is 4 by
+default and 11 max.
+
+2. Set the user defined number of measures to play after all drummers
+have joined the circle. This is 4 by default.
+
+3. Declare a L<MIDI::Drummer::Tiny> instance, that will be the beating
+heart of the program.
+
+4. Declare the known percussion instruments. These (11) are:
+
+  hi_bongo
+  low_bongo
+  mute_hi_conga
+  open_hi_conga
+  low_conga
+  cabasa
+  maracas
+  short_guiro
+  claves
+  hi_wood_block
+  low_wood_block
+
+5. Instantiate a rhythmic phrase generator, with a size of 4 beats,
+and these (4) durations:
+
+  quarter note
+  dotted eighth note
+  eighth note
+  sixteenth note
+
+=cut
+
 # The number of drummers
 my $max = shift || 4;
 # The number of bars to play after all drummers have entered
@@ -48,6 +101,17 @@ my $mdp = Music::Duration::Partition->new(
     pool => [qw(qn den en sn)],
 );
 
+=head2 Phrases
+
+1. Build the phrases to play, one for each drummer.
+
+2. Synchronize the phrase parts, so that they play simultaneously.
+
+3. Finally, write the score to a MIDI file, named after the program
+itself.
+
+=cut
+
 # Build the phrases played by each drummer
 push @phrases, phrase($_)
     for 1 .. $max;
@@ -55,6 +119,28 @@ push @phrases, phrase($_)
 $d->score->synch(@phrases); # Play the phrases simultaneously
 
 $d->write; # Write the score to a MIDI file
+
+=head2 Subroutine
+
+This is the meat of the program, utilizing all the things we have
+setup. It generates a phrase, which is added to the list of phrases
+that are played together.
+
+1. Get an unseen drum to use for a player, given the phrase number. This is given by the loop that collects the phrases, above.
+
+2. Generate a rhythmic "motif."
+
+3. Create an anonymous subroutine that either rests or plays the motif, given the phrase number.
+
+3.1. The resting is done depending on the drummer entry order (into the circle). If we are not up yet, then rest.
+
+3.2. If not resting, play the phrase continuously until the end.
+
+3.2.1. For each hit, get a random velocity between C<f> and C<fff>. This gives the sound a bit of dynamic texture.
+
+4. Return this anonymous subroutine to be gathered into a list of all drummer parts.
+
+=cut
 
 sub phrase {
     my ($p) = @_; # Phrase number
@@ -89,3 +175,4 @@ sub phrase {
 
     return $phrase;
 }
+
