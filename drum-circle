@@ -22,9 +22,9 @@ my $width = length $max;
 
 # Setup a drum score
 my $d = MIDI::Drummer::Tiny->new(
-    file => "$0.mid",
-    bpm  => 90,
-    bars => $max * 4,
+    file   => "$0.mid",
+    bpm    => 90,
+    bars   => $max * 4,
     reverb => 15,
 );
 
