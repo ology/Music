@@ -13,6 +13,10 @@ use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
 use Data::Dumper::Compact qw(ddc);
 
+#use Pod::Usage qw(pod2usage);
+#pod2usage(-verbose => 2); exit;
+# perl drum-circle > ~/Documents/drum-circle.txt
+
 =head1 DESCRIPTION
 
 Ever heard tribal drumming coming from your local park?
