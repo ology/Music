@@ -46,7 +46,7 @@ have joined the circle. This is 4 by default.
 3. Declare a L<MIDI::Drummer::Tiny> instance, that will be the beating
 heart of the program.
 
-4. Declare the known percussion instruments. These (11) are:
+4. Declare the known percussion instruments. These are:
 
   hi_bongo
   low_bongo
