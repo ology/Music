@@ -72,6 +72,8 @@ and a pool of these (4) possible durations:
 
 # The number of drummers
 my $max = shift || 4;
+# Beats per minute
+my $bpm = shift || 90;
 # The number of bars to play after all drummers have entered
 my $extend = shift || 4;
 
@@ -80,7 +82,7 @@ my $width = length $max;
 # Setup a drum score
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
-    bpm    => 90,
+    bpm    => $bpm,
     bars   => $max * 4,
     reverb => 15,
 );
