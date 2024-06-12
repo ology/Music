@@ -103,9 +103,13 @@ my $mdp = Music::Duration::Partition->new(
 
 =head2 Phrases
 
+Gather all the drummer phrases and play them simultaneously. Then
+write the score to a MIDI file.
+
 1. Build the phrases to play, one for each drummer.
 
-2. Synchronize the phrase parts, so that they play simultaneously.
+2. Synchronize the phrase parts, so that they are played
+simultaneously.
 
 3. Finally, write the score to a MIDI file, named after the program
 itself.
