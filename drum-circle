@@ -75,7 +75,7 @@ my $max = shift || 4;
 # Beats per minute
 my $bpm = shift || 90;
 # The number of bars to play after all drummers have entered
-my $extend = shift || 4;
+my $extend = shift // 4;
 
 my $width = length $max;
 
