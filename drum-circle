@@ -6,9 +6,9 @@ use warnings;
 # Use my local CPAN libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
 
-use MIDI::Drummer::Tiny;
+use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(midi_dump);
-use Music::Duration::Partition;
+use Music::Duration::Partition ();
 use Data::Dumper::Compact qw(ddc);
 
 #use Pod::Usage qw(pod2usage);
