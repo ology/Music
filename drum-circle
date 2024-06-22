@@ -69,12 +69,9 @@ these possible durations:
 
 =cut
 
-# The number of drummers
-my $max = shift || 4;
-# Beats per minute
-my $bpm = shift || 90;
-# The number of bars to play after all drummers have entered
-my $extend = shift // 4;
+my $max    = shift || 4;  # The number of drummers
+my $bpm    = shift || 90; # Beats per minute
+my $extend = shift // 4;  # The number of bars to play after all drummers have entered
 
 my $width = length $max; # Used in sprintf below
 
@@ -83,7 +80,7 @@ my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $bpm,
     bars   => $max * 4, # each drummer gets 4 measures before the next enters
-    reverb => 15, # we're outside
+    reverb => 15,       # we're outside
 );
 
 # Collect the available percussion instruments
