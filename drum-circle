@@ -93,7 +93,7 @@ my @DRUMS = (
     $d->cabasa, $d->maracas, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block,
 );
 
-die "Can't have more drummers than drums!"
+die "Can't have more drummers than ", scalar(@DRUMS), " drums!\n"
     if $max > @DRUMS;
 
 my %seen; # Bucket of drums that have been selected
