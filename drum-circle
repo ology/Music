@@ -65,10 +65,9 @@ sub phrase {
     my (%args) = @_;
 
     # Get an unseen drum to use
-    my $drums = $args{drums};
-    my $drum = $drums->[int rand @$drums];
+    my $drum = $args{drums}->[int rand $args{drums}->@*];
     while ($args{seen}->{$drum}++) {
-        $drum = $drums->[int rand @$drums];
+        $drum = $args{drums}->[int rand $args{drums}->@*];
     }
     my $drum_name = midi_dump('notenum2percussion')->{$drum};
 
