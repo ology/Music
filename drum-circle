@@ -48,8 +48,12 @@ my $mdp = Music::Duration::Partition->new(
     pool => [qw(qn den en sn)],
 );
 
+my %common = (
+    drummer => $d, generator => $mdp, drums => \@drums, extend => $extend,
+);
+
 # Build the phrases played by each drummer
-push @phrases, phrase($_)
+push @phrases, phrase(%common, phrase => $_)
     for 1 .. $drummers;
 
 $d->score->synch(@phrases); # Play the phrases simultaneously
@@ -57,33 +61,35 @@ $d->score->synch(@phrases); # Play the phrases simultaneously
 $d->write; # Write the score to a MIDI file
 
 sub phrase {
-    my ($p) = @_; # Phrase number
+    my (%args) = @_;
+
+    my $drums = $args{drums};
 
     # Get an unseen drum to use
-    my $drum = $drums[int rand @drums];
+    my $drum = $drums->[int rand @$drums];
     while ($seen{$drum}++) {
-        $drum = $drums[int rand @drums];
+        $drum = $drums->[int rand @$drums];
     }
     my $drum_name = midi_dump('notenum2percussion')->{$drum};
 
     # Create a rhythmic phrase
-    my $motif = $mdp->motif;
+    my $motif = $args{generator}->motif;
 
-    printf "%*d. %s: %s", $width, $p, $drum_name, ddc($motif);
+    printf "%*d. %s: %s", $width, $args{phrase}, $drum_name, ddc($motif);
 
     # Either rest or play the motif
     my $phrase = sub {
-        for my $n (1 .. $d->bars + $extend) {
+        for my $n (1 .. $args{drummer}->bars + $extend) {
             # If we are not up yet, then rest
-            if ($n < ($p * 4)) {
-                $d->rest($d->whole);
+            if ($n < ($args{phrase} * 4)) {
+                $args{drummer}->rest($args{drummer}->whole);
                 next;
             }
             # Otherwise play the rhythmic phrase!
             for my $dura (@$motif) {
                 # Get a fluctuating velocity between f and fff
                 my $vol = 'v' . (96 + int(rand 32));
-                $d->note($dura, $drum, $vol);
+                $args{drummer}->note($dura, $drum, $vol);
             }
         }
     };
