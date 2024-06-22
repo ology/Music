@@ -19,6 +19,7 @@ use warnings;
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
 
 use MIDI::Drummer::Tiny;
+use MIDI::Util qw(midi_dump);
 use Music::Duration::Partition;
 use Data::Dumper::Compact qw(ddc);
 
@@ -163,11 +164,12 @@ sub phrase {
     while ($seen{$drum}++) {
         $drum = $DRUMS[int rand @DRUMS];
     }
+    my $drum_name = midi_dump('notenum2percussion')->{$drum};
 
     # Create a rhythmic phrase
     my $motif = $mdp->motif;
 
-    printf "%*d. Drum: %s, Motif: %s", $width, $p, $drum, ddc($motif);
+    printf "%*d. %s: Motif: %s", $width, $p, $drum_name, ddc($motif);
 
     # Either rest or play the motif
     my $phrase = sub {
