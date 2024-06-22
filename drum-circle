@@ -31,8 +31,8 @@ my $d = MIDI::Drummer::Tiny->new(
 
 # Collect the percussion instruments
 my @drums = (
-    # $d->mute_hi_conga, $d->cabasa, $d->maracas, $d->hi_bongo, # QUIET ONES
-    $d->low_bongo, $d->open_hi_conga, $d->low_conga, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block,
+    # $d->mute_hi_conga, $d->cabasa, $d->maracas, # QUIET ONES
+    $d->hi_bongo, $d->low_bongo, $d->open_hi_conga, $d->low_conga, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block,
     # $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom,
 );
 
