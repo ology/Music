@@ -1,17 +1,5 @@
 #!/usr/bin/env perl
 
-=head1 NAME
-
-Imitating a Drum Circle
-
-=head1 SYNOPSIS
-
-  $ perl drum-circle 11;
-  $ timidity -c ~/timidity.cfg drum-circle.mid
-  # Windows plays MIDI with the "Legacy Media Player"
-
-=cut
-
 use strict;
 use warnings;
 
@@ -26,6 +14,94 @@ use Data::Dumper::Compact qw(ddc);
 #use Pod::Usage qw(pod2usage);
 #pod2usage(-verbose => 2); exit;
 # perl drum-circle > ~/Documents/drum-circle.txt
+
+my $drummers = shift || 4;  # The number of drummers
+my $bpm      = shift || 90; # Beats per minute
+my $extend   = shift // 4;  # The number of bars to play after all drummers have entered
+
+my $width = length $drummers; # Used in sprintf below
+
+# Setup a drum score
+my $d = MIDI::Drummer::Tiny->new(
+    file   => "$0.mid",
+    bpm    => $bpm,
+    bars   => $drummers * 4, # each drummer gets 4 measures before the next enters
+    reverb => 15,       # we're outside
+);
+
+# Collect the available percussion instruments
+my @DRUMS = (
+#    $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom,
+    $d->hi_bongo, $d->low_bongo, $d->mute_hi_conga, $d->open_hi_conga, $d->low_conga,
+    $d->cabasa, $d->maracas, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block,
+);
+
+die "Can't have more drummers than ", scalar(@DRUMS), " drums!\n"
+    if $drummers > @DRUMS;
+
+my %seen;    # Drums that have been selected
+my @phrases; # List of code-ref MIDI phrases
+
+# Make a phrase generator
+my $mdp = Music::Duration::Partition->new(
+    size => 4,
+    pool => [qw(qn den en sn)],
+);
+
+# Build the phrases played by each drummer
+push @phrases, phrase($_)
+    for 1 .. $drummers;
+
+$d->score->synch(@phrases); # Play the phrases simultaneously
+
+$d->write; # Write the score to a MIDI file
+
+sub phrase {
+    my ($p) = @_; # Phrase number
+
+    # Get an unseen drum to use
+    my $drum = $DRUMS[int rand @DRUMS];
+    while ($seen{$drum}++) {
+        $drum = $DRUMS[int rand @DRUMS];
+    }
+    my $drum_name = midi_dump('notenum2percussion')->{$drum};
+
+    # Create a rhythmic phrase
+    my $motif = $mdp->motif;
+
+    printf "%*d. %s: %s", $width, $p, $drum_name, ddc($motif);
+
+    # Either rest or play the motif
+    my $phrase = sub {
+        for my $n (1 .. $d->bars + $extend) {
+            # If we are not up yet, then rest
+            if ($n < ($p * 4)) {
+                $d->rest($d->whole);
+                next;
+            }
+            # Otherwise play the rhythmic phrase!
+            for my $dura (@$motif) {
+                # Get a fluctuating velocity between f and fff
+                my $vol = 'v' . (96 + int(rand 32));
+                $d->note($dura, $drum, $vol);
+            }
+        }
+    };
+
+    return $phrase;
+}
+
+__END__
+
+=head1 NAME
+
+Imitating a Drum Circle
+
+=head1 SYNOPSIS
+
+  $ perl drum-circle 11;
+  $ timidity -c ~/timidity.cfg drum-circle.mid
+  # Windows plays MIDI with the "Legacy Media Player"
 
 =head1 DESCRIPTION
 
@@ -67,41 +143,6 @@ these possible durations:
   eighth note
   sixteenth note
 
-=cut
-
-my $drummers = shift || 4;  # The number of drummers
-my $bpm      = shift || 90; # Beats per minute
-my $extend   = shift // 4;  # The number of bars to play after all drummers have entered
-
-my $width = length $drummers; # Used in sprintf below
-
-# Setup a drum score
-my $d = MIDI::Drummer::Tiny->new(
-    file   => "$0.mid",
-    bpm    => $bpm,
-    bars   => $drummers * 4, # each drummer gets 4 measures before the next enters
-    reverb => 15,       # we're outside
-);
-
-# Collect the available percussion instruments
-my @DRUMS = (
-#    $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom,
-    $d->hi_bongo, $d->low_bongo, $d->mute_hi_conga, $d->open_hi_conga, $d->low_conga,
-    $d->cabasa, $d->maracas, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block,
-);
-
-die "Can't have more drummers than ", scalar(@DRUMS), " drums!\n"
-    if $drummers > @DRUMS;
-
-my %seen;    # Drums that have been selected
-my @phrases; # List of code-ref MIDI phrases
-
-# Make a phrase generator
-my $mdp = Music::Duration::Partition->new(
-    size => 4,
-    pool => [qw(qn den en sn)],
-);
-
 =head2 Phrases
 
 Gather all the drummer phrases and play them simultaneously. Then
@@ -114,16 +155,6 @@ simultaneously.
 
 3. Finally, write the score to a MIDI file, named after the program
 itself.
-
-=cut
-
-# Build the phrases played by each drummer
-push @phrases, phrase($_)
-    for 1 .. $drummers;
-
-$d->score->synch(@phrases); # Play the phrases simultaneously
-
-$d->write; # Write the score to a MIDI file
 
 =head2 Subroutine
 
@@ -151,39 +182,4 @@ loud (C<fff>). This gives the sound a bit of dynamic texture.
 drummer parts.
 
 =cut
-
-sub phrase {
-    my ($p) = @_; # Phrase number
-
-    # Get an unseen drum to use
-    my $drum = $DRUMS[int rand @DRUMS];
-    while ($seen{$drum}++) {
-        $drum = $DRUMS[int rand @DRUMS];
-    }
-    my $drum_name = midi_dump('notenum2percussion')->{$drum};
-
-    # Create a rhythmic phrase
-    my $motif = $mdp->motif;
-
-    printf "%*d. %s: %s", $width, $p, $drum_name, ddc($motif);
-
-    # Either rest or play the motif
-    my $phrase = sub {
-        for my $n (1 .. $d->bars + $extend) {
-            # If we are not up yet, then rest
-            if ($n < ($p * 4)) {
-                $d->rest($d->whole);
-                next;
-            }
-            # Otherwise play the rhythmic phrase!
-            for my $dura (@$motif) {
-                # Get a fluctuating velocity between f and fff
-                my $vol = 'v' . (96 + int(rand 32));
-                $d->note($dura, $drum, $vol);
-            }
-        }
-    };
-
-    return $phrase;
-}
 
