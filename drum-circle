@@ -1,7 +1,16 @@
 #!/usr/bin/env perl
 
-# Ex:
-# $ perl drum-circle 11; timidity -c ~/timidity.cfg drum-circle.mid
+=head1 NAME
+
+Imitating a Drum Circle
+
+=head1 SYNOPSIS
+
+  $ perl drum-circle 11;
+  $ timidity -c ~/timidity.cfg drum-circle.mid
+  # Windows plays MIDI with the "Legacy Media Player"
+
+=cut
 
 use strict;
 use warnings;
