@@ -131,11 +131,11 @@ heart of the program.
 
   hi_bongo
   low_bongo
-  mute_hi_conga
+  mute_hi_conga (quiet)
   open_hi_conga
   low_conga
-  cabasa
-  maracas
+  cabasa (quiet)
+  maracas (quiet)
   short_guiro
   claves
   hi_wood_block
