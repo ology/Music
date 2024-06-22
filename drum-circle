@@ -29,7 +29,7 @@ my $d = MIDI::Drummer::Tiny->new(
     reverb => 15,       # we're outside
 );
 
-# Collect the available percussion instruments
+# Collect the percussion instruments
 my @drums = (
 #    $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom,
     $d->hi_bongo, $d->low_bongo, $d->mute_hi_conga, $d->open_hi_conga, $d->low_conga,
