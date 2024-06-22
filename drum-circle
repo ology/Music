@@ -69,17 +69,17 @@ these possible durations:
 
 =cut
 
-my $max    = shift || 4;  # The number of drummers
-my $bpm    = shift || 90; # Beats per minute
-my $extend = shift // 4;  # The number of bars to play after all drummers have entered
+my $drummers = shift || 4;  # The number of drummers
+my $bpm      = shift || 90; # Beats per minute
+my $extend   = shift // 4;  # The number of bars to play after all drummers have entered
 
-my $width = length $max; # Used in sprintf below
+my $width = length $drummers; # Used in sprintf below
 
 # Setup a drum score
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $bpm,
-    bars   => $max * 4, # each drummer gets 4 measures before the next enters
+    bars   => $drummers * 4, # each drummer gets 4 measures before the next enters
     reverb => 15,       # we're outside
 );
 
@@ -91,7 +91,7 @@ my @DRUMS = (
 );
 
 die "Can't have more drummers than ", scalar(@DRUMS), " drums!\n"
-    if $max > @DRUMS;
+    if $drummers > @DRUMS;
 
 my %seen; # Drums that have been selected
 
@@ -120,7 +120,7 @@ itself.
 
 # Build the phrases played by each drummer
 push @phrases, phrase($_)
-    for 1 .. $max;
+    for 1 .. $drummers;
 
 $d->score->synch(@phrases); # Play the phrases simultaneously
 
