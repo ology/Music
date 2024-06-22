@@ -83,7 +83,7 @@ my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $bpm,
     bars   => $max * 4, # each drummer gets 4 measures before the next enters
-    reverb => 15,
+    reverb => 15, # we're outside
 );
 
 # Collect the available percussion instruments
