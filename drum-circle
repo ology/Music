@@ -40,7 +40,7 @@ die "Can't have more drummers than ", scalar(@drums), " drums!\n"
     if $drummers > @drums;
 
 # Make a phrase generator
-my $mdp = Music::Duration::Partition->new(
+my $generator = Music::Duration::Partition->new(
     size => 4,
     pool => [qw(qn den en sn)],
 );
@@ -49,7 +49,7 @@ my %seen; # Drums that have been selected
 
 # Common phrase() arguments
 my %common = (
-    drummer => $d, drums => \@drums, extend => $extend, generator => $mdp, seen => \%seen, width => $width,
+    drummer => $d, drums => \@drums, extend => $extend, generator => $generator, seen => \%seen, width => $width,
 );
 
 # Build the code-ref MIDI phrases played by each drummer
