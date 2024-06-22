@@ -30,14 +30,14 @@ my $d = MIDI::Drummer::Tiny->new(
 );
 
 # Collect the available percussion instruments
-my @DRUMS = (
+my @drums = (
 #    $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom,
     $d->hi_bongo, $d->low_bongo, $d->mute_hi_conga, $d->open_hi_conga, $d->low_conga,
     $d->cabasa, $d->maracas, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block,
 );
 
-die "Can't have more drummers than ", scalar(@DRUMS), " drums!\n"
-    if $drummers > @DRUMS;
+die "Can't have more drummers than ", scalar(@drums), " drums!\n"
+    if $drummers > @drums;
 
 my %seen;    # Drums that have been selected
 my @phrases; # List of code-ref MIDI phrases
@@ -60,9 +60,9 @@ sub phrase {
     my ($p) = @_; # Phrase number
 
     # Get an unseen drum to use
-    my $drum = $DRUMS[int rand @DRUMS];
+    my $drum = $drums[int rand @drums];
     while ($seen{$drum}++) {
-        $drum = $DRUMS[int rand @DRUMS];
+        $drum = $drums[int rand @drums];
     }
     my $drum_name = midi_dump('notenum2percussion')->{$drum};
 
