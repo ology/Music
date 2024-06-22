@@ -87,8 +87,8 @@ sub phrase {
             # Otherwise play the rhythmic phrase!
             for my $dura (@$motif) {
                 # Get a fluctuating velocity between f and fff
-                my $vol = 'v' . (96 + int(rand 32));
-                $args{drummer}->note($dura, $drum, $vol);
+                my $vel = 'v' . (96 + int(rand 32));
+                $args{drummer}->note($dura, $drum, $vel);
             }
         }
     };
