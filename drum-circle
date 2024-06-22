@@ -39,20 +39,20 @@ my @drums = (
 die "Can't have more drummers than ", scalar(@drums), " drums!\n"
     if $drummers > @drums;
 
-my %seen;    # Drums that have been selected
-my @phrases; # List of code-ref MIDI phrases
-
 # Make a phrase generator
 my $mdp = Music::Duration::Partition->new(
     size => 4,
     pool => [qw(qn den en sn)],
 );
 
+my %seen; # Drums that have been selected
+
 my %common = (
-    drummer => $d, generator => $mdp, drums => \@drums, extend => $extend,
+    drummer => $d, drums => \@drums, extend => $extend, generator => $mdp, seen => \%seen,
 );
 
-# Build the phrases played by each drummer
+# Build the code-ref MIDI phrases played by each drummer
+my @phrases;
 push @phrases, phrase(%common, phrase => $_)
     for 1 .. $drummers;
 
@@ -67,7 +67,7 @@ sub phrase {
 
     # Get an unseen drum to use
     my $drum = $drums->[int rand @$drums];
-    while ($seen{$drum}++) {
+    while ($args{seen}->{$drum}++) {
         $drum = $drums->[int rand @$drums];
     }
     my $drum_name = midi_dump('notenum2percussion')->{$drum};
@@ -79,7 +79,7 @@ sub phrase {
 
     # Either rest or play the motif
     my $phrase = sub {
-        for my $n (1 .. $args{drummer}->bars + $extend) {
+        for my $n (1 .. $args{drummer}->bars + $args{extend}) {
             # If we are not up yet, then rest
             if ($n < ($args{phrase} * 4)) {
                 $args{drummer}->rest($args{drummer}->whole);
