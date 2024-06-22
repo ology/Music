@@ -128,7 +128,7 @@ heart of the program.
 
 4. Declare the known percussion instruments. These are:
 
-  hi_bongo
+  hi_bongo (quiet)
   low_bongo
   mute_hi_conga (quiet)
   open_hi_conga
