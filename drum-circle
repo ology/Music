@@ -93,8 +93,7 @@ my @DRUMS = (
 die "Can't have more drummers than ", scalar(@DRUMS), " drums!\n"
     if $drummers > @DRUMS;
 
-my %seen; # Drums that have been selected
-
+my %seen;    # Drums that have been selected
 my @phrases; # List of code-ref MIDI phrases
 
 # Make a phrase generator
