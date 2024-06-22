@@ -105,7 +105,7 @@ Imitating a Drum Circle
 
 =head1 SYNOPSIS
 
-  $ perl drum-circle 7;
+  $ perl drum-circle 8;
   $ timidity -c ~/timidity.cfg drum-circle.mid
   # Windows plays MIDI with the "Legacy Media Player"
 
@@ -119,7 +119,7 @@ hippies.
 =head2 Setup
 
 1. Set the user defined number of drummers to play. This is 4 by
-default and 7 max.
+default and 8 max.
 
 2. Set the user defined number of measures to play after all drummers
 have joined the circle. This is 4 by default.
