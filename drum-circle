@@ -118,7 +118,7 @@ hippies.
 =head2 Setup
 
 1. Set the user defined number of drummers to play. This is 4 by
-default and 8 max (11 if the quiet ones are uncommented).
+default and 7 max (12 if the quiet ones are uncommented).
 
 2. Set the user defined number of measures to play after all drummers
 have joined the circle. This is 4 by default.
