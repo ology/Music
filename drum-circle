@@ -187,5 +187,11 @@ loud (C<fff>). This gives the sound a bit of dynamic texture.
 4. Return this anonymous subroutine to be gathered into a list of all
 drummer parts.
 
+=head1 REFERENCES
+
+The code: https://github.com/ology/Music/blob/master/drum-circle
+
+The writeup: https://ology.github.io/2020/11/01/imitating-a-drum-circle/
+
 =cut
 
