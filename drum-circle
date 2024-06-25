@@ -86,10 +86,10 @@ sub phrase {
                 next;
             }
             # Otherwise play the rhythmic phrase!
-            for my $dura (@$motif) {
+            for my $duration (@$motif) {
                 # Get a fluctuating velocity between f and fff
-                my $vol = 'v' . (96 + int(rand 32));
-                $args{drummer}->note($dura, $drum, $vol);
+                my $velocity = 'v' . (96 + int(rand 32));
+                $args{drummer}->note($duration, $drum, $velocity);
             }
         }
     };
@@ -119,7 +119,7 @@ hippies.
 =head2 Setup
 
 1. Set the user defined number of drummers to play. This is 4 by
-default and 8 max (11 if the quiet ones are uncommented).
+default and 7 max (11 if the quiet ones are uncommented).
 
 2. Set the user defined number of measures to play after all drummers
 have joined the circle. This is 4 by default.
@@ -129,7 +129,7 @@ heart of the program.
 
 4. Declare the known percussion instruments. These are:
 
-  hi_bongo
+  hi_bongo (quiet)
   low_bongo
   mute_hi_conga (quiet)
   open_hi_conga
