@@ -68,7 +68,7 @@ sub phrase {
     }
     my $drum_name = midi_dump('notenum2percussion')->{$drum};
 
-    # Create a rhythmic phrase generator
+    # Create a rhythmic phrase
     my $motif = $args{generator}->motif;
 
     printf "%*d. %s: %s", $args{width}, $args{phrase}, $drum_name, ddc($motif);
