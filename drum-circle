@@ -10,10 +10,6 @@ use MIDI::Util qw(midi_dump);
 use Music::Duration::Partition ();
 use Data::Dumper::Compact qw(ddc);
 
-#use Pod::Usage qw(pod2usage);
-#pod2usage(-verbose => 2); exit;
-# perl drum-circle > ~/Documents/drum-circle.txt
-
 my $drummers = shift || 4;  # The number of drummers
 my $bpm      = shift || 90; # Beats per minute
 my $extend   = shift // 4;  # The number of bars to play after all drummers have entered
