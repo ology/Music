@@ -2,8 +2,6 @@
 use strict;
 use warnings;
 
-# https://github.com/ology/Music - "drum-circle"
-
 # Use my local CPAN libraries
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
 
