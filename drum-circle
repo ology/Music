@@ -17,12 +17,16 @@ my %opts = (
     bpm      => 90, # Beats per minute
     extend   => 4,  # Bars to play after all drummers have entered
     measures => 4,  # Number of bars each drummer plays alone
+    size     => 4,  # Number of beats that a drummer plays
+    pool     => 'qn den en sn', # Pool of possible phrase durations
 );
 GetOptions( \%opts,
     'drummers=i',
     'bpm=i',
     'extend=i',
     'measures=i',
+    'size=i',
+    'pool=i',
     'help|?',     # Call as --help or -?
     'man',        # Call as --man
 ) or pod2usage(2);
@@ -51,10 +55,12 @@ print 'There are ', scalar(@drums), " known percussion instruments.\n";
 die "Can't have more drummers ($opts{drummers}) than instruments!\n"
     if $opts{drummers} > @drums;
 
+my $pool = [ split /\s+/, $opts{pool} ];
+
 # Make a phrase generator
 my $generator = Music::Duration::Partition->new(
-    size => 4,                  # We are in 4/4 time
-    pool => [qw(qn den en sn)], # Pool of possible durations
+    size => $opts{size}, # We are usually in 4/4 time
+    pool => $pool,
 );
 
 my %seen; # Drums that have been selected
