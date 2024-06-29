@@ -184,9 +184,11 @@ drummer parts.
 
 =head1 REFERENCES
 
-This code: https://github.com/ology/Music/blob/master/drum-circle
+This code: L<https://github.com/ology/Music/blob/master/drum-circle>
 
-The writeup: https://ology.github.io/2020/11/01/imitating-a-drum-circle/
+The writeup: L<https://ology.github.io/2020/11/01/imitating-a-drum-circle/>
+
+The Wikipedia entry: L<https://en.wikipedia.org/wiki/Drum_circle>
 
 =cut
 
