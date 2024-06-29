@@ -55,6 +55,7 @@ print 'There are ', scalar(@drums), " known percussion instruments.\n";
 die "Can't have more drummers ($opts{drummers}) than instruments!\n"
     if $opts{drummers} > @drums;
 
+# Split the given space-separated string of durations into a list
 my $pool = [ split /\s+/, $opts{pool} ];
 
 # Make a phrase generator
