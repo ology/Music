@@ -13,8 +13,8 @@ use Data::Dumper::Compact qw(ddc);
 my $drummers = shift || 4;  # The number of drummers
 my $bpm      = shift || 90; # Beats per minute
 my $extend   = shift // 4;  # Bars to play after all drummers have entered
+my $measures = shift || 4;  # Number of bars each drummer plays alone
 
-my $measures = 4; # Number of bars each drummer plays alone
 my $width    = length $drummers; # Used in sprintf below
 
 # Setup a drum score, etc
