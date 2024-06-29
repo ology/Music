@@ -156,9 +156,6 @@ in 4/4 time) and a pool of possible durations. (Use the source again.)
 
 =head2 Phrases
 
-Gather all the drummer phrases, play them simultaneously, and then
-write the score to a MIDI file.
-
 1. Build the phrases to play, one for each drummer.
 
 2. Synchronize the phrase parts, so that they are played
