@@ -29,8 +29,6 @@ GetOptions( \%opts,
 pod2usage(1) if $opts{help};
 pod2usage(-exitval => 0, -verbose => 2) if $opts{man};
 
-my $width = length $opts{drummers}; # Used in sprintf below
-
 # Setup a drum score, etc
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
@@ -61,7 +59,13 @@ my %seen; # Drums that have been selected
 
 # Common phrase() arguments
 my %common = (
-    drummer => $d, drums => \@drums, extend => $opts{extend}, generator => $generator, measures => $opts{measures}, seen => \%seen, width => $width,
+    drummer   => $d,
+    drums     => \@drums,
+    extend    => $opts{extend},
+    generator => $generator,
+    measures  => $opts{measures},
+    seen      => \%seen,
+    width     => length($opts{drummers}),
 );
 
 # Build the code-ref MIDI phrases played by each drummer
