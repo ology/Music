@@ -71,9 +71,9 @@ my %common = (
     drummer   => $d,
     generator => $generator,
     drums     => \@drums,
+    seen      => \%seen,
     extend    => $opts{extend},
     measures  => $opts{measures},
-    seen      => \%seen,
     width     => length($opts{drummers}),
 );
 
