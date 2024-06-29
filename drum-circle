@@ -60,7 +60,7 @@ my $pool = [ split /\s+/, $opts{pool} ];
 
 # Make a phrase generator
 my $generator = Music::Duration::Partition->new(
-    size => $opts{beats}, # We are in 4/4 time by default
+    size => $opts{beats},
     pool => $pool,
 );
 
