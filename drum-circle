@@ -66,6 +66,9 @@ my $generator = Music::Duration::Partition->new(
 
 my %seen; # Drums that have been selected
 
+# Get the amount of time to rest = beats * 96
+my $rest = 'd' . ($opts{beats} * ticks($d->score));
+
 # Common phrase() arguments
 my %common = (
     drummer   => $d,
@@ -75,6 +78,7 @@ my %common = (
     beats     => $opts{beats},
     extend    => $opts{extend},
     measures  => $opts{measures},
+    rest      => $rest,
     width     => length($opts{drummers}),
 );
 
@@ -97,9 +101,6 @@ sub phrase {
     }
     my $drum_name = midi_dump('notenum2percussion')->{$drum};
 
-    # Get the amount of time to rest = beats * 96
-    my $rest = 'd' . ($args{beats} * ticks($args{drummer}->score));
-
     # Create a rhythmic phrase
     my $motif = $args{generator}->motif;
 
@@ -110,7 +111,7 @@ sub phrase {
         for my $n (1 .. $args{drummer}->bars + $args{extend}) {
             # If we are not up yet, then rest
             if ($n < ($args{phrase} * $args{measures})) {
-                $args{drummer}->rest($rest);
+                $args{drummer}->rest($args{rest});
                 next;
             }
             # Otherwise play a rhythmic phrase!
