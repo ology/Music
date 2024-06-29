@@ -80,7 +80,7 @@ sub phrase {
                 $args{drummer}->rest($args{drummer}->whole);
                 next;
             }
-            # Otherwise play the entire rhythmic phrase!
+            # Otherwise play a rhythmic phrase!
             for my $duration (@$motif) {
                 # Get a fluctuating velocity between f and fff
                 my $velocity = 'v' . (96 + int(rand 32));
