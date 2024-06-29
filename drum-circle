@@ -37,7 +37,7 @@ my $d = MIDI::Drummer::Tiny->new(
     reverb => 15, # We're outside
 );
 
-# Collect the percussion instruments
+# Collect the percussion instruments you wish to hear
 my @drums = (
     # $d->mute_hi_conga, $d->cabasa, $d->maracas, $d->hi_bongo, $d->mute_triangle, # 5 QUIET ONES
     $d->low_bongo, $d->open_hi_conga, $d->low_conga, $d->short_guiro, $d->claves, $d->hi_wood_block, $d->low_wood_block, # 7
