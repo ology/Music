@@ -26,7 +26,7 @@ GetOptions( \%opts,
     'extend=i',
     'measures=i',
     'size=i',
-    'pool=i',
+    'pool=s',
     'help|?',     # Call as --help or -?
     'man',        # Call as --man
 ) or pod2usage(2);
