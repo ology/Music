@@ -122,7 +122,7 @@ Imitating a Drum Circle
 
 =head1 SYNOPSIS
 
-  $ perl drum-circle --help # ? or --man
+  $ perl drum-circle --help # -? or --man
   $ perl drum-circle # use defaults
   $ perl drum-circle --drummers=11 --bpm=120 --extend=2 --measures=3
   # Then:
