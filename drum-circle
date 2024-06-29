@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # nb: Comment this line out, if you're not me:
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
+#use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
 
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(midi_dump);
