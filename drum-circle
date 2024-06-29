@@ -94,7 +94,7 @@ $d->write; # Write the score to a MIDI file
 sub phrase {
     my (%args) = @_;
 
-    # Get an unseen drum to use
+    # Get an unseen drum to play
     my $drum = $args{drums}->[ int rand $args{drums}->@* ];
     while ($args{seen}->{$drum}++) {
         $drum = $args{drums}->[ int rand $args{drums}->@* ];
