@@ -132,6 +132,7 @@ Imitating a Drum Circle
   $ perl drum-circle --help # -? or --man
   $ perl drum-circle # use defaults
   $ perl drum-circle --drummers=11 --bpm=120 --extend=2 --measures=3
+  $ perl drum-circle --beats=5 --pool='thn tqn ten tsn' # 5/4 triplets? YMMV
   # Then:
   $ timidity -c ~/timidity.cfg drum-circle.mid  # On *nix
   # Windows plays MIDI with the "Legacy Media Player"
