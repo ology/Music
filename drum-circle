@@ -6,7 +6,7 @@ use warnings;
 use if $ENV{USER} eq 'gene', lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
 
 use MIDI::Drummer::Tiny ();
-use MIDI::Util qw(midi_dump);
+use MIDI::Util qw(midi_dump ticks);
 use Music::Duration::Partition ();
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
@@ -15,7 +15,7 @@ use Pod::Usage qw(pod2usage);
 my %opts = (
     drummers => 4,  # The number of drummers
     bpm      => 90, # Beats per minute
-    extend   => 4,  # Bars to play after all drummers have entered
+    extend   => 4,  # Number of beats to play after all drummers have entered
     measures => 4,  # Number of bars each drummer plays alone
     beats    => 4,  # Number of beats that a drummer plays
     pool     => 'qn den en sn', # Pool of possible phrase durations
@@ -72,6 +72,7 @@ my %common = (
     generator => $generator,
     drums     => \@drums,
     seen      => \%seen,
+    beats     => $opts{beats},
     extend    => $opts{extend},
     measures  => $opts{measures},
     width     => length($opts{drummers}),
@@ -96,6 +97,8 @@ sub phrase {
     }
     my $drum_name = midi_dump('notenum2percussion')->{$drum};
 
+    my $rest = 'd' . ($args{beats} * ticks($args{drummer}->score));
+
     # Create a rhythmic phrase
     my $motif = $args{generator}->motif;
 
@@ -106,7 +109,7 @@ sub phrase {
         for my $n (1 .. $args{drummer}->bars + $args{extend}) {
             # If we are not up yet, then rest
             if ($n < ($args{phrase} * $args{measures})) {
-                $args{drummer}->rest($args{drummer}->whole);
+                $args{drummer}->rest($rest);
                 next;
             }
             # Otherwise play a rhythmic phrase!
