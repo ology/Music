@@ -170,8 +170,7 @@ This is the meat of the program, utilizing all the things we have
 setup. It generates a phrase (a C<CODE> reference), which is added to
 the list of phrases that are then played together.
 
-1. Get an unseen drum to use for a player, given the phrase number.
-This is given by the loop that collects the phrases, above.
+1. Get an unseen drum to use for a player.
 
 2. Generate a rhythmic "motif."
 
