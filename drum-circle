@@ -102,7 +102,7 @@ Imitating a Drum Circle
 
 =head1 SYNOPSIS
 
-  $ perl drum-circle 8;
+  $ perl drum-circle 7;
   $ timidity -c ~/timidity.cfg drum-circle.mid
   # Windows plays MIDI with the "Legacy Media Player"
 
