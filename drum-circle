@@ -149,7 +149,7 @@ drummers have joined the circle. This is C<4> by default.
 heart of the program. This uses the beats per minute (B<bpm> default
 C<90>) and the number of B<measures> each drummer plays.
 
-4. Declare the known percussion instruments. (Use the source, Luke.).
+4. Declare the known percussion instruments. (Use the source, Luke.)
 
 5. Instantiate a rhythmic phrase generator of 4 beats (because we are
 in 4/4 time) and a pool of possible durations. (Use the source again.)
