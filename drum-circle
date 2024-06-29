@@ -9,19 +9,33 @@ use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(midi_dump);
 use Music::Duration::Partition ();
 use Data::Dumper::Compact qw(ddc);
+use Getopt::Long qw(GetOptions);
+use Pod::Usage;
 
-my $drummers = shift || 4;  # The number of drummers
-my $bpm      = shift || 90; # Beats per minute
-my $extend   = shift // 4;  # Bars to play after all drummers have entered
-my $measures = shift || 4;  # Number of bars each drummer plays alone
+my %opts = (
+    drummers => 4,  # The number of drummers
+    bpm      => 90, # Beats per minute
+    extend   => 4,  # Bars to play after all drummers have entered
+    measures => 4,  # Number of bars each drummer plays alone
+);
+GetOptions( \%opts,
+    'drummers=i',
+    'bpm=i',
+    'extend=i',
+    'measures=i',
+    'help|?', # Call as --help or -?
+    'man',    # Call as --man
+) or pod2usage(2);
+pod2usage(1) if $opts{help};
+pod2usage(-exitval => 0, -verbose => 2) if $opts{man};
 
-my $width = length $drummers; # Used in sprintf below
+my $width = length $opts{drummers}; # Used in sprintf below
 
 # Setup a drum score, etc
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
-    bpm    => $bpm,
-    bars   => $drummers * $measures,
+    bpm    => $opts{bpm},
+    bars   => $opts{drummers} * $opts{measures},
     reverb => 15, # we're outside
 );
 
@@ -33,25 +47,25 @@ my @drums = (
 );
 
 die "Can't have more drummers than ", scalar(@drums), " drums!\n"
-    if $drummers > @drums;
+    if $opts{drummers} > @drums;
 
 # Make a phrase generator
 my $generator = Music::Duration::Partition->new(
-    size => 4,
-    pool => [qw(qn den en sn)],
+    size => 4,                  # We are in 4/4 time
+    pool => [qw(qn den en sn)], # Pool of possible durations
 );
 
 my %seen; # Drums that have been selected
 
 # Common phrase() arguments
 my %common = (
-    drummer => $d, drums => \@drums, extend => $extend, generator => $generator, seen => \%seen, width => $width,
+    drummer => $d, drums => \@drums, extend => $opts{extend}, generator => $generator, measures => $opts{measures}, seen => \%seen, width => $width,
 );
 
 # Build the code-ref MIDI phrases played by each drummer
 my @phrases;
 push @phrases, phrase(%common, phrase => $_)
-    for 1 .. $drummers;
+    for 1 .. $opts{drummers};
 
 $d->score->synch(@phrases); # Play the phrases simultaneously
 
@@ -76,7 +90,7 @@ sub phrase {
     my $phrase = sub {
         for my $n (1 .. $args{drummer}->bars + $args{extend}) {
             # If we are not up yet, then rest
-            if ($n < ($args{phrase} * $measures)) {
+            if ($n < ($args{phrase} * $args{measures})) {
                 $args{drummer}->rest($args{drummer}->whole);
                 next;
             }
@@ -100,8 +114,11 @@ Imitating a Drum Circle
 
 =head1 SYNOPSIS
 
-  $ perl drum-circle 7;
-  $ timidity -c ~/timidity.cfg drum-circle.mid
+  $ perl drum-circle --help # or --man
+  $ perl drum-circle --drummers=7
+  $ perl drum-circle --drummers=11 --bpm=120 --extend=8 --measures=3
+  # Then:
+  $ timidity -c ~/timidity.cfg drum-circle.mid  # On *nix
   # Windows plays MIDI with the "Legacy Media Player"
 
 =head1 DESCRIPTION
@@ -113,14 +130,15 @@ hippies.
 
 =head2 Setup
 
-1. Set the user defined number of drummers to play. This is C<4> by
+1. Set the user defined number of B<drummers> to play. This is C<4> by
 default and 11 if the quiet ones are uncommented.
 
-2. Set the user defined number of measures to play after all drummers
-have joined the circle. This is C<4> by default.
+2. Set the user defined number of B<extend> measures to play after all
+drummers have joined the circle. This is C<4> by default.
 
 3. Declare a L<MIDI::Drummer::Tiny> instance, that will be the beating
-heart of the program.
+heart of the program. This uses the beats per minute (B<bpm>) and the
+number of B<measures> each drummer plays.
 
 4. Declare the known percussion instruments. These are:
 
