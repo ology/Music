@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Use my local CPAN libraries
+# nb: Comment this line out, unless you are me:
 use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
 
 use MIDI::Drummer::Tiny ();
