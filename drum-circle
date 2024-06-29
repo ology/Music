@@ -10,7 +10,7 @@ use MIDI::Util qw(midi_dump);
 use Music::Duration::Partition ();
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
-use Pod::Usage;
+use Pod::Usage qw(pod2usage);
 
 my %opts = (
     drummers => 4,  # The number of drummers
@@ -49,7 +49,7 @@ my @drums = (
 die "Can't have more drummers than ", scalar(@drums), " drums!\n"
     if $opts{drummers} > @drums;
 
-print 'There are ', scalar(@drums), " known drums.\n";
+print 'There are ', scalar(@drums), " known percussion instruments.\n";
 
 # Make a phrase generator
 my $generator = Music::Duration::Partition->new(
