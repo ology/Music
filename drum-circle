@@ -17,7 +17,7 @@ my %opts = (
     bpm      => 90, # Beats per minute
     extend   => 4,  # Bars to play after all drummers have entered
     measures => 4,  # Number of bars each drummer plays alone
-    size     => 4,  # Number of beats that a drummer plays
+    beats    => 4,  # Number of beats that a drummer plays
     pool     => 'qn den en sn', # Pool of possible phrase durations
 );
 GetOptions( \%opts,
@@ -25,7 +25,7 @@ GetOptions( \%opts,
     'bpm=i',
     'extend=i',
     'measures=i',
-    'size=i',
+    'beats=i',
     'pool=s',
     'help|?',     # Call as --help or -?
     'man',        # Call as --man
@@ -60,7 +60,7 @@ my $pool = [ split /\s+/, $opts{pool} ];
 
 # Make a phrase generator
 my $generator = Music::Duration::Partition->new(
-    size => $opts{size}, # We are in 4/4 time by default
+    size => $opts{beats}, # We are in 4/4 time by default
     pool => $pool,
 );
 
