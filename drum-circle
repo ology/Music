@@ -137,8 +137,8 @@ default and 11 if the quiet ones are uncommented.
 drummers have joined the circle. This is C<4> by default.
 
 3. Declare a L<MIDI::Drummer::Tiny> instance, that will be the beating
-heart of the program. This uses the beats per minute (B<bpm>) and the
-number of B<measures> each drummer plays.
+heart of the program. This uses the beats per minute (B<bpm> default
+C<90>) and the number of B<measures> each drummer plays.
 
 4. Declare the known percussion instruments. These are:
 
