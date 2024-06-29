@@ -23,6 +23,8 @@ my $max = shift || 8; # How many phrase loops to render
 my $patch = shift // 73; # 49=Strings, 73=Flute, 95=Synth, etc.
 
 my @notes = @ARGV ? @ARGV : qw/F3 Gs3 C4 Cs4 Ds4 F4 Gs4/; # s=sharp. Key of Ab
+#                              vi  I iii  IV  V  vi' I'
+#                              G3 Bf3 D4 Ds4 F4  G4 Bf4
 
 die "Not enough MIDI channels for the notes!\n" if @notes > 15;
 
