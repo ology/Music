@@ -97,6 +97,7 @@ sub phrase {
     }
     my $drum_name = midi_dump('notenum2percussion')->{$drum};
 
+    # Get the amount of time to rest = beats * 96
     my $rest = 'd' . ($args{beats} * ticks($args{drummer}->score));
 
     # Create a rhythmic phrase
