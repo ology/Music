@@ -60,9 +60,9 @@ my %seen; # Drums that have been selected
 # Common phrase() arguments
 my %common = (
     drummer   => $d,
+    generator => $generator,
     drums     => \@drums,
     extend    => $opts{extend},
-    generator => $generator,
     measures  => $opts{measures},
     seen      => \%seen,
     width     => length($opts{drummers}),
