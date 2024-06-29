@@ -45,8 +45,7 @@ my %seen; # Drums that have been selected
 
 # Common phrase() arguments
 my %common = (
-    drummer => $d, drums => \@drums, extend => $extend,
-    generator => $generator, seen => \%seen, width => $width,
+    drummer => $d, drums => \@drums, extend => $extend, generator => $generator, seen => \%seen, width => $width,
 );
 
 # Build the code-ref MIDI phrases played by each drummer
