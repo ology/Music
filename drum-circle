@@ -102,7 +102,7 @@ sub phrase {
     # Create a rhythmic phrase
     my $motif = $args{generator}->motif;
 
-    printf "%*d. %s: %s", $args{width}, $args{phrase}, $drum_name, ddc($motif);
+    printf "%*d. %-15s: %s", $args{width}, $args{phrase}, $drum_name, ddc($motif);
 
     # Either rest or play the motif
     my $phrase = sub {
