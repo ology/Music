@@ -47,10 +47,9 @@ my @drums = (
     # $d->vibraslap, $d->high_timbale, $d->low_timbale, $d->mute_cuica, $d->open_cuica, # 5
 );
 
-die "Can't have more drummers than ", scalar(@drums), " drums!\n"
-    if $opts{drummers} > @drums;
-
 print 'There are ', scalar(@drums), " known percussion instruments.\n";
+die "Can't have more drummers ($opts{drummers}) than instruments!\n"
+    if $opts{drummers} > @drums;
 
 # Make a phrase generator
 my $generator = Music::Duration::Partition->new(
