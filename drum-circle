@@ -17,7 +17,7 @@ my %opts = (
     bpm      => 90, # Beats per minute
     extend   => 4,  # Number of beats to play after all drummers have entered
     measures => 4,  # Number of bars each drummer plays alone
-    beats    => 4,  # Number of beats that a drummer plays
+    beats    => 4,  # Number of beats that a drummer plays per phrase motif
     pool     => 'qn den en sn', # Pool of possible phrase durations
 );
 GetOptions( \%opts,
