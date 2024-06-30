@@ -8,7 +8,7 @@ use warnings;
 
 # My write-up is: https://ology.github.io/2022/11/25/twelve-bar-jazz-practice/
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Cadence Music-MelodicDevice-Transposition); # local author libs
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Cadence Music-MelodicDevice-Transposition); # local author libs
 
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);

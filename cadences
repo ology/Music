@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToRoman);
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Cadence Music-ToRoman);
 use Music::Cadence; # https://metacpan.org/release/Music-Cadence
 use MIDI::Util qw(midi_format setup_score); # https://metacpan.org/release/MIDI-Util
 use Music::Chord::Note;

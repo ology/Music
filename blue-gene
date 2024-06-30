@@ -4,7 +4,7 @@ use warnings;
 
 use Data::Dumper::Compact qw(ddc);
 use List::Util qw(any);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Bassline-Generator MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Bassline-Generator MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
 use Music::Bassline::Generator;
 use MIDI::Chord::Guitar;
 use MIDI::Drummer::Tiny;

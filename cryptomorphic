@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # Prefer my local libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition);
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration-Partition);
 
 use List::Util qw/ shuffle /;
 use MIDI::Drummer::Tiny; # https://metacpan.org/pod/MIDI::Drummer::Tiny

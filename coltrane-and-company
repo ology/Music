@@ -7,7 +7,7 @@ use strict;
 use warnings;
 
 use List::SomeUtils qw(first_index);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Bassline-Generator MIDI-Chord-Guitar MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(Music-Bassline-Generator MIDI-Chord-Guitar MIDI-Drummer-Tiny Music-Duration-Partition Music-ScaleNote);
 use Music::Bassline::Generator;
 use MIDI::Chord::Guitar;
 use MIDI::Drummer::Tiny;

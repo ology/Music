@@ -16,7 +16,7 @@ use strict;
 use warnings;
 
 # use my local author libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-CreatingRhythms Music-Duration Music-Duration-Partition);
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-CreatingRhythms Music-Duration Music-Duration-Partition);
 
 use Getopt::Long qw(GetOptions);
 use Data::Dumper::Compact qw(ddc);

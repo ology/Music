@@ -13,7 +13,7 @@ use strict;
 use warnings;
 
 # Use local libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 
 use MIDI::Util qw(setup_score);
 use Music::Scales qw(get_scale_MIDI);

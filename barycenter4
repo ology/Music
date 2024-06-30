@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # Use local libraries
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partition Music-Interval-Barycentric);
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Duration-Partition Music-Interval-Barycentric);
 
 use AI::Genetic;
 use List::Util qw/ uniq /;

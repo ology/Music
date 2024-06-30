@@ -7,7 +7,7 @@ use warnings;
 # and the results are appended to this "melody."
 
 use Data::Dumper::Compact qw(ddc);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 use AI::Genetic::Pro ();
 use Music::AtonalUtil ();

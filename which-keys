@@ -7,7 +7,7 @@ use warnings;
 
 use Set::Tiny ();
 use Data::Dumper::Compact qw(ddc);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util); # author local directory
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util); # author local directory
 use MIDI::Util qw(midi_format);
 use Music::Chord::Note ();
 use Music::Note ();

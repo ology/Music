@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Data::Dumper::Compact qw(ddc);
-use lib map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Duration Music-Duration-Partition);
+use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Duration Music-Duration-Partition);
 use MIDI::Drummer::Tiny;
 use MIDI::Praxis::Variation 'diminution';
 use MIDI::Util qw(set_chan_patch);
