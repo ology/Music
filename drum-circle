@@ -181,8 +181,8 @@ itself.
 =head2 Phrase
 
 This is the meat of the program, utilizing all the things we have
-setup. It generates a phrase (a C<CODE> reference), which is added to
-the list of phrases that are then played together.
+setup. The subroutine generates a phrase (a C<CODE> reference), which
+is added to the list of phrases that are then played together.
 
 1. Get an unseen instrument to use for a player.
 
