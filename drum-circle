@@ -171,12 +171,11 @@ B<beats> and a B<pool> of possible durations. (Use the source again.)
 
 =head2 Sync
 
-1. Synchronize the phrase parts, so that they are played
-simultaneously.
+Synchronize the phrase parts, so that they are played simultaneously.
 
 =head2 Write
 
-1. Finally, write the score to a MIDI file, named after the program
+Finally, write the score to a MIDI file, named after the program
 itself.
 
 =head2 Subroutine
