@@ -163,7 +163,7 @@ C<90>) and the number of B<measures> each drummer plays.
 4. Declare the known percussion instruments. (Use the source, Luke.)
 
 5. Instantiate a rhythmic phrase generator with the given number of
-B<beats> and a B<pool> of possible durations. (Use the source again.)
+B<beats> and a B<pool> of possible durations.
 
 6. Build the phrases to play, one for each drummer.
 
