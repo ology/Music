@@ -167,11 +167,11 @@ C<90>) and the number of B<measures> each drummer plays.
 5. Instantiate a rhythmic phrase generator with the given number of
 B<beats> and a B<pool> of possible durations. (Use the source again.)
 
+6. Build the phrases to play, one for each drummer.
+
 =head2 Sync
 
-1. Build the phrases to play, one for each drummer.
-
-2. Synchronize the phrase parts, so that they are played
+1. Synchronize the phrase parts, so that they are played
 simultaneously.
 
 =head2 Write
