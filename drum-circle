@@ -152,8 +152,8 @@ hippies.
 1. Set the number of B<drummers> to play. This is C<4> by default and
 up to C<30> if all percussion instruments are uncommented in the code.
 
-2. Set the number of B<extend> measures to play after all drummers
-have joined the circle. This is C<4> by default.
+2. Set the number of B<extend> beats to play after all drummers have
+joined the circle. This is C<4> by default.
 
 3. Declare a L<MIDI::Drummer::Tiny> instance, that will be the beating
 heart of the program. This uses the beats per minute (B<bpm> default
