@@ -71,13 +71,11 @@ my $rest = 'd' . ($opts{beats} * ticks($d->score));
 
 # Common phrase() arguments
 my %common = (
+    options   => \%opts,
     drummer   => $d,
     generator => $generator,
     drums     => \@drums,
     seen      => \%seen,
-    beats     => $opts{beats},
-    extend    => $opts{extend},
-    measures  => $opts{measures},
     rest      => $rest,
     width     => length($opts{drummers}),
 );
@@ -108,9 +106,9 @@ sub phrase {
 
     # Either rest or play the motif
     my $phrase = sub {
-        for my $n (1 .. $args{drummer}->bars + $args{extend}) {
+        for my $n (1 .. $args{drummer}->bars + $args{options}->{extend}) {
             # If we are not up yet, then rest
-            if ($n < ($args{phrase} * $args{measures})) {
+            if ($n < ($args{phrase} * $args{options}->{measures})) {
                 $args{drummer}->rest($args{rest});
                 next;
             }
