@@ -185,7 +185,7 @@ the list of phrases that are then played together.
 
 1. Get an unseen instrument to use for a player.
 
-2. Generate a rhythmic "motif."
+2. Generate a rhythmic phrase (A.K.A. "motif").
 
 3. Create an anonymous subroutine that either rests or plays the
 motif for the number of beats.
