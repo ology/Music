@@ -5,11 +5,11 @@ use warnings;
 # For local development:
 use if $ENV{USER} eq 'gene', lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition);
 
+use Data::Dumper::Compact qw(ddc);
+use Getopt::Long qw(GetOptions);
 use MIDI::Drummer::Tiny ();
 use MIDI::Util qw(midi_dump ticks);
 use Music::Duration::Partition ();
-use Data::Dumper::Compact qw(ddc);
-use Getopt::Long qw(GetOptions);
 use Pod::Usage qw(pod2usage);
 
 my %opts = (
