@@ -188,7 +188,7 @@ the list of phrases that are then played together.
 2. Generate a rhythmic phrase (A.K.A. "motif").
 
 3. Create an anonymous subroutine that either rests or plays the
-motif for the number of beats.
+motif for the number of total beats of all phrases.
 
 3.1. The resting is done depending on the drummer entry order (into
 the circle). If we are not up yet, then rest.
