@@ -164,8 +164,8 @@ C<90>) and the number of B<measures> each drummer plays.
 
 4. Declare the known percussion instruments. (Use the source, Luke.)
 
-5. Instantiate a rhythmic phrase generator of 4 beats (because we are
-in 4/4 time) and a pool of possible durations. (Use the source again.)
+5. Instantiate a rhythmic phrase generator with the given number of
+B<beats> and a B<pool> of possible durations. (Use the source again.)
 
 =head2 Phrases
 
