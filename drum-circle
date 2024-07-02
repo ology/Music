@@ -48,7 +48,7 @@ my @drums = (
     $d->high_agogo, $d->low_agogo, $d->tambourine, $d->cowbell, $d->open_triangle, # 5
     # $d->vibraslap, $d->high_timbale, $d->low_timbale, $d->mute_cuica, $d->open_cuica, # 5
     # $d->hi_tom, $d->hi_mid_tom, $d->low_mid_tom, $d->low_tom, $d->hi_floor_tom, $d->low_floor_tom, # 6 drum kit toms
-    # $d->kick, $d->snare, # 2 Western backbeat
+    # $d->kick, $d->snare, $d->open_hh, $d->pedal_hh, # 4 Western backbeat
 );
 
 print 'There are ', scalar(@drums), " known percussion instruments.\n";
