@@ -6,10 +6,11 @@ use warnings;
 # These pitches are then fed into contrapuntal transformations
 # and the results are appended to this "melody."
 
-use Data::Dumper::Compact qw(ddc);
 use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
-use MIDI::Util qw(setup_score);
+
 use AI::Genetic::Pro ();
+use Data::Dumper::Compact qw(ddc);
+use MIDI::Util qw(setup_score);
 use Music::AtonalUtil ();
 use Music::Scales qw(get_scale_MIDI);
 
