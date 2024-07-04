@@ -11,12 +11,11 @@ use MIDI::Util qw(dura_size);
 
 my %opt = (
     size => 4, # number of beats
-    pool => 'dqn qn den en dsn sn', # possible phrase durations
+    pool => 'dqn qn tqn den en dsn sn', # possible phrase durations
 );
 GetOptions(\%opt,
     'size=i',
     'pool=s',
-    'grain=i',
 );
 
 $opt{pool} = [ split /\s+/, $opt{pool} ];
