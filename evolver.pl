@@ -59,7 +59,7 @@ $ga->init([
 ]);
 # warn __PACKAGE__,' L',__LINE__,' ',ddc($ga->people);
 
-# $ga->evolve('rouletteTwoPoint', 1);
+$ga->evolve('rouletteTwoPoint', 1);
 # warn __PACKAGE__,' L',__LINE__,' ',ddc($ga->people);
 
 # print 'Fittest: ', ddc($ga->getFittest, {max_width=>128});
