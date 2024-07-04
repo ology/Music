@@ -4,14 +4,14 @@ use warnings;
 
 use if $ENV{USER} eq 'gene', lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 
-use Algorithm::Combinatorics qw(combinations_with_repetition);
+use Algorithm::Combinatorics qw(variations_with_repetition);
 use Getopt::Long qw(GetOptions);
 use List::Util qw(min sum0);
 use MIDI::Util qw(dura_size);
 
 my %opt = (
     size => 4, # number of beats
-    pool => 'dqn qn tqn den en dsn sn', # possible phrase durations
+    pool => 'dqn qn den en dsn sn', # possible phrase durations
 );
 GetOptions(\%opt,
     'size=i',
@@ -24,7 +24,7 @@ my $grain = $opt{size} / min(@durations);
 
 my $n = 1;
 for my $take (1 .. $grain) {
-    my $i = combinations_with_repetition($opt{pool}, $take);
+    my $i = variations_with_repetition($opt{pool}, $take);
     while (my $c = $i->next) {
         my @durations = map { dura_size($_) } @$c;
         my $sum = sum0(@durations);
