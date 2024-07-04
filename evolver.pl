@@ -57,37 +57,11 @@ my $ga = AI::Genetic->new(
 $ga->init([
     map { [qw(hn dqn qn den en 0)], [qw(C4 D4 E4 F4 G4 A4 B4 0)] } 1 .. 8
 ]);
-# use Data::Dumper::Compact qw(ddc);
 # warn __PACKAGE__,' L',__LINE__,' ',ddc($ga->people);
 
-$ga->evolve('rouletteTwoPoint', 1);
+# $ga->evolve('rouletteTwoPoint', 1);
 # warn __PACKAGE__,' L',__LINE__,' ',ddc($ga->people);
 
 # print 'Fittest: ', ddc($ga->getFittest, {max_width=>128});
 
 __END__
-
-=head1 NAME
-
-Evolver
-
-=head1 SYNOPSIS
-
-  my $first_gen = initialize();
-  # { id => 'ABCD-1234-EFGH-0000', value => [qw(qn qn hn)] }
-
-  my $second_gen = mutate(parent => $first_gen, children => 2);
-  # { id => 'ABCD-1234-EFGH-1000', value => [qw(qn hn qn)], parent => 'ABCD-1234-EFGH-0000' }
-  # { id => 'ABCD-1234-EFGH-2000', value => [qw(hn qn qn)], parent => 'ABCD-1234-EFGH-0000' }
-  # Parent: { id => 'ABCD-1234-EFGH-0000', value => [qw(qn qn hn)], children => ['ABCD-1234-EFGH-0001', 'ABCD-1234-EFGH-0002'] }
-
-  my $third_gen = mutate(parent => $second_gen->[0], children => 3);
-  # { id => 'ABCD-1234-EFGH-3000', value => [qw(qn hn qn)], parent => 'ABCD-1234-EFGH-0000' }
-  # { id => 'ABCD-1234-EFGH-4000', value => [qw(hn qn qn)], parent => 'ABCD-1234-EFGH-0000' }
-  # { id => 'ABCD-1234-EFGH-5000', value => [qw(hn qn qn)], parent => 'ABCD-1234-EFGH-0000' }
-  # Parent: { id => 'ABCD-1234-EFGH-1000', value => [qw(qn qn qn qn)], parent => 'ABCD-1234-EFGH-0000', children => ['ABCD-1234-EFGH-3000', 'ABCD-1234-EFGH-4000', 'ABCD-1234-EFGH-5000'] }
-
-=head1 DESCRIPTION
-
-
-=cut
