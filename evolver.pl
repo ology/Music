@@ -4,62 +4,33 @@ use warnings;
 
 use if $ENV{USER} eq 'gene', lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 
-use AI::Genetic ();
-use Data::Dumper::Compact qw(ddc);
+use Algorithm::Combinatorics qw(combinations_with_repetition);
 use Getopt::Long qw(GetOptions);
-use List::Util qw(pairs);
+use List::Util qw(min sum0);
 use MIDI::Util qw(dura_size);
 
 my %opt = (
-    type       => 'listvector',
-    population => 500,
-    crossover  => 0.9,  # probability of crossover
-    mutation   => 0.01, # probability of mutation
+    size => 4, # number of beats
+    pool => 'dqn qn den en dsn sn', # possible phrase durations
 );
 GetOptions(\%opt,
-    'population=i',
-    'crossover=i',
-    'mutation=i',
+    'size=i',
+    'pool=s',
+    'grain=i',
 );
 
-sub fitness {
-    my ($chromosome) = @_;
-# warn __PACKAGE__,' L',__LINE__,' ',ddc($chromosome, {max_width=>128});
-    my $sum = 0;
-    for my $pair (pairs @$chromosome) {
-        next if $pair->[0] eq '0' || $pair->[1] eq '0';
-        $sum += dura_size($pair->[0]);
+$opt{pool} = [ split /\s+/, $opt{pool} ];
+my @durations = map { dura_size($_) } $opt{pool}->@*;
+my $grain = $opt{size} / min(@durations);
+
+my $n = 1;
+for my $take (1 .. $grain) {
+    my $i = combinations_with_repetition($opt{pool}, $take);
+    while (my $c = $i->next) {
+        my @durations = map { dura_size($_) } @$c;
+        my $sum = sum0(@durations);
+        next unless $sum == $opt{size};
+        print "$n. @$c\n";
+        $n++;
     }
-# warn __PACKAGE__,' L',__LINE__,' ',,"S: $sum\n";
-    return $sum;
 }
-
-sub terminate {
-    my ($ga) = @_;
-# warn __PACKAGE__,' L',__LINE__,' ',ddc($ga->people, {max_width=>128});exit;
-# warn __PACKAGE__,' L',__LINE__,' ',$ga->getFittest->score,"\n";
-    my $threshold = 4;
-    return $ga->getFittest->score == $threshold ? 1 : 0;
-}
-
-my $ga = AI::Genetic->new(
-    -type       => $opt{type},       # type of chromosomes
-    -population => $opt{population}, # population
-    -crossover  => $opt{crossover},  # probab. of crossover
-    -mutation   => $opt{mutation},   # probab. of mutation
-    -fitness    => \&fitness,        # fitness function
-    -terminate  => \&terminate,      # terminate function
-);
-
-# init population of listvectors
-$ga->init([
-    map { [qw(hn dqn qn den en 0)], [qw(C4 D4 E4 F4 G4 A4 B4 0)] } 1 .. 8
-]);
-# warn __PACKAGE__,' L',__LINE__,' ',ddc($ga->people);
-
-$ga->evolve('rouletteTwoPoint', 100);
-# warn __PACKAGE__,' L',__LINE__,' ',ddc($ga->people);
-
-print 'Fittest: ', ddc($ga->getFittest, {max_width=>128});
-
-__END__
