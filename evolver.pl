@@ -30,7 +30,6 @@ my %rules = (
     ],
     en => [ 'en' ],
 );
-use Data::Dumper::Compact qw(ddc);
 # warn __PACKAGE__,' L',__LINE__,' ',ddc(\%rules);exit;
 
 my $mother = [ split /\s+/, $opt{mother} ];
@@ -76,7 +75,7 @@ warn __PACKAGE__,' L',__LINE__,' ',,"Is: @$items\n";
         my $item = $items->[ rand @$items ];
 warn __PACKAGE__,' L',__LINE__,' ',,"I: $item\n";
         my @parts = split /\s+/, $item;
-        if (my $subseqs = botje(\@ns, $source)) {
+        if (my $subseqs = contiguous_subsequences(\@ns, $source)) {
             my $seq_num = $subseqs->[ rand @$subseqs ];
 warn __PACKAGE__,' L',__LINE__,' S: ',,"[@$subseqs] => $seq_num\n";
             splice @mutation, $seq_num, scalar(@ns), @parts
@@ -104,37 +103,6 @@ sub rand_elem {
 }
 
 sub contiguous_subsequences {
-    my ($little_set, $big_set) = @_;
-    my $little_set_size = @$little_set;
-    my $big_set_size    = @$big_set;
-    my @matches;
-    my $i = 0; # little set index
-    my $j = 0; # big set index
-    my $k = 0; # matches found
-    my $p = 0; # initial big set position
-    my $f = 0; # failed to find match
-    while ($i < $little_set_size && $j < $big_set_size) {
-        if ($little_set->[$i] eq $big_set->[$j]) {
-            $k++;   # We match
-            $j++;   # Move to the next element in the big_set
-            $f = 0; # failed to find match
-        }
-        else {
-            $f++;
-        }
-        $i++;  # Move to the next element in the little_set
-        if ($f || $i >= $little_set_size) {
-            push @matches, $p if $k == $little_set_size;
-            $p++;    # increment the big set position
-            $i = 0;  # reset the little set position
-            $j = $p; # set the big set index to the big set position
-            $k = 0;  # no matches seen
-        }
-    }
-    return \@matches;
-}
-
-sub tirnanog {
     my ($needles, $haystack) = @_;
     my @indices;
     my $length = $needles->@*;
@@ -149,15 +117,5 @@ sub tirnanog {
         }
     }
     return \@indices;
-}
-
-sub botje {
-    my ($needles, $haystack) = @_;
-    return () unless $needles->@*;
-    my @results = grep {
-        my $i = $_;
-        $needles->@* == grep { $needles->[$_] eq $haystack->[$i + $_] } keys $needles->@*;
-    } 0 .. $haystack->$#* - $needles->$#*;
-    return \@results;
 }
 
