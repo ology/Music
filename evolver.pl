@@ -30,7 +30,7 @@ my %rules = (
     ],
     en => [ 'en' ],
 );
-warn __PACKAGE__,' L',__LINE__,' R: ',ddc(\%rules);
+warn __PACKAGE__,' L',__LINE__,' Rules: ',ddc(\%rules);
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
@@ -40,7 +40,7 @@ my $child = mutate_down(\%rules, $mother, $opt{mutate});
 warn __PACKAGE__,' L',__LINE__,' C: ',ddc($child);
 
 my %inverted = invert_rules(\%rules);
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\%inverted);
+warn __PACKAGE__,' L',__LINE__,' Invert: ',ddc(\%inverted);
 
 $child = mutate_up(\%inverted, $child, $opt{mutate});
 warn __PACKAGE__,' L',__LINE__,' I: ',ddc($child);
