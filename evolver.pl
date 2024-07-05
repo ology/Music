@@ -31,7 +31,7 @@ my %rules = (
     en => [ 'en' ],
 );
 use Data::Dumper::Compact qw(ddc);
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\%rules);exit;
+# warn __PACKAGE__,' L',__LINE__,' ',ddc(\%rules);exit;
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
