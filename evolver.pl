@@ -64,7 +64,6 @@ sub mutate_up {
     my @mutation = $source->@*;
     if (rand() <= $probability) {
         my @keys = keys %$rules;
-warn __PACKAGE__,' L',__LINE__,' K: ',ddc(\@keys);
         my $n = @keys[ rand @keys ];
         my @ns = split /\s+/, $n;
 warn __PACKAGE__,' L',__LINE__,' Ns: ',,"@ns\n";
