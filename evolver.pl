@@ -28,7 +28,6 @@ my %rules = (
     qn => [
       'en en',
     ],
-    en => [ 'en' ],
 );
 warn __PACKAGE__,' L',__LINE__,' Rules: ',ddc(\%rules);
 
@@ -74,7 +73,7 @@ warn __PACKAGE__,' L',__LINE__,' ',,"I: $item\n";
         my @parts = split /\s+/, $item;
         if (my $subseqs = subsequences(\@ns, $source)) {
             my $seq_num = $subseqs->[ rand @$subseqs ];
-warn __PACKAGE__,' L',__LINE__,' S: ',,"[@$subseqs] => $seq_num\n";
+# warn __PACKAGE__,' L',__LINE__,' S: ',,"[@$subseqs] => $seq_num\n";
             splice @mutation, $seq_num, scalar(@ns), @parts
                 if defined $seq_num;
         }
