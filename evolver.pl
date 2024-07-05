@@ -8,7 +8,7 @@ use List::Util qw(all);
 
 my %opt = (
     mother => 'qn qn qn',
-    father => 'hn qn qn qn qn hn',
+    father => 'qn hn qn qn qn hn',
     mutate => 0.6,
 );
 GetOptions(\%opt,
