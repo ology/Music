@@ -32,17 +32,17 @@ my %rules = (
 warn __PACKAGE__,' L',__LINE__,' Rules: ',ddc(\%rules);
 
 my %inverted = invert_rules(\%rules);
-warn __PACKAGE__,' L',__LINE__,' Invert: ',ddc(\%inverted);
+warn __PACKAGE__,' L',__LINE__,' Inverted: ',ddc(\%inverted);
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
-warn __PACKAGE__,' L',__LINE__,' M: ',ddc($mother);
+warn __PACKAGE__,' L',__LINE__,' 1st: ',ddc($mother);
 
 my $child = mutate_down(\%rules, $mother, $opt{mutate});
-warn __PACKAGE__,' L',__LINE__,' C: ',ddc($child);
+warn __PACKAGE__,' L',__LINE__,' 2nd: ',ddc($child);
 
 $child = mutate_up(\%inverted, $child, $opt{mutate});
-warn __PACKAGE__,' L',__LINE__,' I: ',ddc($child);
+warn __PACKAGE__,' L',__LINE__,' 3rd: ',ddc($child);
 
 # my $matches = subsequences($mother, $father);
 # warn __PACKAGE__,' L',__LINE__,' ',ddc($matches, {max_width=>128});
