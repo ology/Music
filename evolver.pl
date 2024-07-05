@@ -62,20 +62,31 @@ sub mutate_up {
     my ($rules, $source, $probability) = @_;
     my @mutation = $source->@*;
     if (rand() <= $probability) {
+        my $matched = 0;
+        my %seen;
         my @keys = keys %$rules;
         my $n = @keys[ rand @keys ];
-        my @ns = split /\s+/, $n;
+        while (!$matched && (keys %seen <= @keys)) {
+            $seen{$n}++;
+            my @ns = split /\s+/, $n;
 warn __PACKAGE__,' L',__LINE__,' Ns: ',,"@ns\n";
-        if (my $subseqs = subsequences(\@ns, $source)) {
-            my $seq_num = $subseqs->[ rand @$subseqs ];
-            if (defined $seq_num) {
-                my $items = $rules->{$n};
+            if (my $subseqs = subsequences(\@ns, $source)) {
+                my $seq_num = $subseqs->[ rand @$subseqs ];
+                if (defined $seq_num) {
+                    $matched = 1;
+                    my $items = $rules->{$n};
 warn __PACKAGE__,' L',__LINE__,' ',,"Is: @$items\n";
-                my $item = $items->[ rand @$items ];
+                    my $item = $items->[ rand @$items ];
 warn __PACKAGE__,' L',__LINE__,' ',,"I: $item\n";
-                my @parts = split /\s+/, $item;
+                    my @parts = split /\s+/, $item;
 # warn __PACKAGE__,' L',__LINE__,' S: ',,"[@$subseqs] => $seq_num\n";
-                splice @mutation, $seq_num, scalar(@ns), @parts;
+                    splice @mutation, $seq_num, scalar(@ns), @parts;
+                    last;
+                }
+            }
+            $n = @keys[ rand @keys ];
+            while ((keys %seen < @keys) && $seen{$n}) {
+                $n = @keys[ rand @keys ];
             }
         }
     }
