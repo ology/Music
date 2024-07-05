@@ -66,16 +66,17 @@ sub mutate_up {
         my $n = @keys[ rand @keys ];
         my @ns = split /\s+/, $n;
 warn __PACKAGE__,' L',__LINE__,' Ns: ',,"@ns\n";
-        my $items = $rules->{$n};
-warn __PACKAGE__,' L',__LINE__,' ',,"Is: @$items\n";
-        my $item = $items->[ rand @$items ];
-warn __PACKAGE__,' L',__LINE__,' ',,"I: $item\n";
-        my @parts = split /\s+/, $item;
         if (my $subseqs = subsequences(\@ns, $source)) {
             my $seq_num = $subseqs->[ rand @$subseqs ];
+            if (defined $seq_num) {
+            my $items = $rules->{$n};
+warn __PACKAGE__,' L',__LINE__,' ',,"Is: @$items\n";
+            my $item = $items->[ rand @$items ];
+warn __PACKAGE__,' L',__LINE__,' ',,"I: $item\n";
+            my @parts = split /\s+/, $item;
 # warn __PACKAGE__,' L',__LINE__,' S: ',,"[@$subseqs] => $seq_num\n";
-            splice @mutation, $seq_num, scalar(@ns), @parts
-                if defined $seq_num;
+            splice @mutation, $seq_num, scalar(@ns), @parts;
+            }
         }
     }
     return \@mutation;
