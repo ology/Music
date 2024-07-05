@@ -29,23 +29,23 @@ my %rules = (
       'en en',
     ],
 );
-warn __PACKAGE__,' L',__LINE__,' Rules: ',ddc(\%rules);
+warn 'Rules: ',ddc(\%rules);
 
 my %inverted = invert_rules(\%rules);
-warn __PACKAGE__,' L',__LINE__,' Inverted: ',ddc(\%inverted);
+warn 'Inverted: ',ddc(\%inverted);
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
-warn __PACKAGE__,' L',__LINE__,' 1st: ',ddc($mother);
+warn '1st: ',ddc($mother);
 
 my $child = mutate_down(\%rules, $mother, $opt{mutate});
-warn __PACKAGE__,' L',__LINE__,' 2nd: ',ddc($child);
+warn '2nd: ',ddc($child);
 
 $child = mutate_up(\%inverted, $child, $opt{mutate});
-warn __PACKAGE__,' L',__LINE__,' 3rd: ',ddc($child);
+warn '3rd: ',ddc($child);
 
 # my $matches = subsequences($mother, $father);
-# warn __PACKAGE__,' L',__LINE__,' ',ddc($matches, {max_width=>128});
+# warn 'Father: ',ddc($matches);
 
 sub invert_rules {
     my ($rules) = @_;
@@ -69,17 +69,17 @@ sub mutate_up {
         while (!$matched && (keys %seen <= @keys)) {
             $seen{$n}++;
             my @ns = split /\s+/, $n;
-warn __PACKAGE__,' L',__LINE__,' Ns: ',,"@ns\n";
+warn ' Ns: ',,"@ns\n";
             if (my $subseqs = subsequences(\@ns, $source)) {
                 my $seq_num = $subseqs->[ rand @$subseqs ];
                 if (defined $seq_num) {
                     $matched = 1;
                     my $items = $rules->{$n};
-warn __PACKAGE__,' L',__LINE__,' ',,"Is: @$items\n";
+warn "Is: @$items\n";
                     my $item = $items->[ rand @$items ];
-warn __PACKAGE__,' L',__LINE__,' ',,"I: $item\n";
+warn "I: $item\n";
                     my @parts = split /\s+/, $item;
-# warn __PACKAGE__,' L',__LINE__,' S: ',,"[@$subseqs] => $seq_num\n";
+# warn ' S: ',,"[@$subseqs] => $seq_num\n";
                     splice @mutation, $seq_num, scalar(@ns), @parts;
                     last;
                 }
