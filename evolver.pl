@@ -45,9 +45,7 @@ warn __PACKAGE__,' L',__LINE__,' ',ddc(\%inverted, {max_width=>128});
 $child = mutate_up(\%inverted, $child, $opt{mutate});
 warn __PACKAGE__,' L',__LINE__,' I: ',ddc($child, {max_width=>128});
 
-# my $matches = contiguous_subsequences($mother, $father);
-# my $matches = tirnanog($mother, $father);
-# my $matches = botje($mother, $father);
+# my $matches = subsequences($mother, $father);
 # warn __PACKAGE__,' L',__LINE__,' ',ddc($matches, {max_width=>128});
 
 sub invert_rules {
