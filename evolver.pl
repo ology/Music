@@ -75,7 +75,7 @@ warn __PACKAGE__,' L',__LINE__,' ',,"Is: @$items\n";
         my $item = $items->[ rand @$items ];
 warn __PACKAGE__,' L',__LINE__,' ',,"I: $item\n";
         my @parts = split /\s+/, $item;
-        if (my $subseqs = contiguous_subsequences(\@ns, $source)) {
+        if (my $subseqs = subsequences(\@ns, $source)) {
             my $seq_num = $subseqs->[ rand @$subseqs ];
 warn __PACKAGE__,' L',__LINE__,' S: ',,"[@$subseqs] => $seq_num\n";
             splice @mutation, $seq_num, scalar(@ns), @parts
@@ -102,7 +102,7 @@ sub rand_elem {
     return $elem;
 }
 
-sub contiguous_subsequences {
+sub subsequences {
     my ($needles, $haystack) = @_;
     my @indices;
     my $length = $needles->@*;
