@@ -34,16 +34,16 @@ my %rules = (
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
-warn __PACKAGE__,' L',__LINE__,' M: ',ddc($mother, {max_width=>128});
+warn __PACKAGE__,' L',__LINE__,' M: ',ddc($mother);
 
 my $child = mutate_down(\%rules, $mother, $opt{mutate});
-warn __PACKAGE__,' L',__LINE__,' C: ',ddc($child, {max_width=>128});
+warn __PACKAGE__,' L',__LINE__,' C: ',ddc($child);
 
 my %inverted = invert_rules(\%rules);
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\%inverted, {max_width=>128});
+warn __PACKAGE__,' L',__LINE__,' ',ddc(\%inverted);
 
 $child = mutate_up(\%inverted, $child, $opt{mutate});
-warn __PACKAGE__,' L',__LINE__,' I: ',ddc($child, {max_width=>128});
+warn __PACKAGE__,' L',__LINE__,' I: ',ddc($child);
 
 # my $matches = subsequences($mother, $father);
 # warn __PACKAGE__,' L',__LINE__,' ',ddc($matches, {max_width=>128});
@@ -64,7 +64,7 @@ sub mutate_up {
     my @mutation = $source->@*;
     if (rand() <= $probability) {
         my @keys = keys %$rules;
-warn __PACKAGE__,' L',__LINE__,' K: ',ddc(\@keys, {max_width=>128});
+warn __PACKAGE__,' L',__LINE__,' K: ',ddc(\@keys);
         my $n = @keys[ rand @keys ];
         my @ns = split /\s+/, $n;
 warn __PACKAGE__,' L',__LINE__,' Ns: ',,"@ns\n";
