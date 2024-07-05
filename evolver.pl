@@ -30,7 +30,7 @@ my %rules = (
     ],
     en => [ 'en' ],
 );
-# warn __PACKAGE__,' L',__LINE__,' ',ddc(\%rules);exit;
+warn __PACKAGE__,' L',__LINE__,' R: ',ddc(\%rules);
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
