@@ -38,13 +38,13 @@ warn 'Inverted: ',ddc(\%inverted) if $opt{verbose};
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
-warn '1st: ',ddc($mother);
+print '1st: ',ddc($mother);
 
 my $child = mutate_down(\%rules, $mother, $opt{mutate});
-warn '2nd: ',ddc($child);
+print '2nd: ',ddc($child);
 
 $child = mutate_up(\%inverted, $child, $opt{mutate});
-warn '3rd: ',ddc($child);
+print '3rd: ',ddc($child);
 
 # my $matches = subsequences($mother, $father);
 # warn 'Father: ',ddc($matches) if $opt{verbose};
