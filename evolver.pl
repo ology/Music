@@ -25,9 +25,10 @@ GetOptions(\%opt,
 );
 
 my $factor = 1;
+
+# build rules
 my %rules;
 my %seen;
-
 for my $dura (qw(dhn hn qn)) {
     my $ip = Integer::Partition->new(dura_size($dura) * $factor);
     my @parts;
@@ -59,11 +60,9 @@ for my $dura (qw(dhn hn qn)) {
     $rules{$dura} = \@durations if @durations;
 }
 warn 'Rules: ',ddc(\%rules) if $opt{verbse} || $opt{dump};
-# exit;
-
 my %inverted = invert_rules(\%rules);
 warn 'Inverted: ',ddc(\%inverted) if $opt{verbose} || $opt{dump};
- exit if $opt{dump};
+exit if $opt{dump};
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
@@ -71,11 +70,12 @@ print '1st mother: ',ddc($mother);
 print '1st father: ',ddc($father);
 
 my @mother_dura = map { dura_size($_) } @$mother;
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\@mother_dura);
+warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\@father_dura);
+warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
 my $x = int(rand 8) + 1;
-warn __PACKAGE__,' L',__LINE__,' ',,"X: $x\n";
+warn "Chosen beat crossover point: $x\n";
+# compute the mother iterator
 my $i = 0;
 my $sum = 0;
 for my $n (@mother_dura) {
@@ -86,6 +86,7 @@ for my $n (@mother_dura) {
     }
     $i++;
 }
+# compute the father iterator
 my $j = 0;
 $sum = 0;
 for my $n (@father_dura) {
