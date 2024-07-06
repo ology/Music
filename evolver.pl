@@ -97,6 +97,7 @@ for my $n (@father_dura) {
     }
     $j++;
 }
+# mother substitution
 $sum = 0;
 for my $n (@mother_dura) {
     $sum += $n;
@@ -110,7 +111,8 @@ for my $n (@mother_dura) {
         last;
     }
 }
-warn 'Mother: ',ddc($mother) if $opt{verbose};
+warn 'Mother substituted: ',ddc($mother) if $opt{verbose};
+# father substitution
 $sum = 0;
 for my $n (@father_dura) {
     $sum += $n;
@@ -124,7 +126,7 @@ for my $n (@father_dura) {
         last;
     }
 }
-warn 'Father: ',ddc($father) if $opt{verbose};
+warn 'Father substituted: ',ddc($father) if $opt{verbose};
 # exit;
 
 # my $matches = subsequences($mother, $father);
