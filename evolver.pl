@@ -39,7 +39,7 @@ warn 'Inverted: ',ddc(\%inverted) if $opt{verbose};
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
 print '1st mother: ',ddc($mother);
-print '1st father ',ddc($father);
+print '1st father: ',ddc($father);
 
 # my $matches = subsequences($mother, $father);
 # warn 'Matches: ',ddc($matches) if $opt{verbose};
