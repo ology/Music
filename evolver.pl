@@ -98,35 +98,22 @@ for my $n (@father_dura) {
     }
     $j++;
 }
-# mother substitution
-$sum = 0;
-for my $n (@mother_dura) {
-    $sum += $n;
-    if ($x <= $sum && $mother->[$i] ne $father->[$j]) {
-        if ($n == 2) {
-            splice @$mother, $i, 1, qw(qn qn);
-        }
-        elsif ($n == 3) {
-            splice @$mother, $i, 1, qw(qn qn qn);
-        }
-        last;
+# substitution
+if ($mother->[$i] ne $father->[$j]) {
+    if ($mother->[$i] eq 'hn') {
+        splice @$mother, $i, 1, qw(qn qn);
+    }
+    elsif ($mother->[$i] eq 'dhn') {
+        splice @$mother, $i, 1, qw(qn qn qn);
+    }
+    if ($father->[$j] eq 'hn') {
+        splice @$father, $j, 1, qw(qn qn);
+    }
+    elsif ($father->[$j] eq 'dhn') {
+        splice @$father, $j, 1, qw(qn qn qn);
     }
 }
 warn 'Mother substituted: ',ddc($mother) if $opt{verbose};
-# father substitution
-$sum = 0;
-for my $n (@father_dura) {
-    $sum += $n;
-    if ($x <= $sum && $mother->[$i] ne $father->[$j]) {
-        if ($n == 2) {
-            splice @$father, $j, 1, qw(qn qn);
-        }
-        elsif ($n == 3) {
-            splice @$father, $j, 1, qw(qn qn qn);
-        }
-        last;
-    }
-}
 warn 'Father substituted: ',ddc($father) if $opt{verbose};
 # exit;
 
