@@ -215,7 +215,7 @@ sub subsequences {
 
 sub crossover {
     my ($mother, $father, $m_point, $f_point) = @_;
-    warn "P: $m_point, $f_point\n" if $opt{verbose};
+    warn "Crossover point: $m_point, $f_point\n" if $opt{verbose};
     my @mother = ( @$mother[ 0 .. $m_point - 1 ], @$father[ $f_point .. $#$father ] );
     my @father = ( @$father[ 0 .. $f_point - 1 ], @$mother[ $m_point .. $#$mother ] );
     return \@mother, \@father;
