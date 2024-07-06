@@ -27,7 +27,7 @@ my $factor = 2;
 my %rules;
 my %seen;
 
-for my $dura (qw(dhn hn)) {
+for my $dura (qw(dhn hn dqn qn)) {
     my $ip = Integer::Partition->new(dura_size($dura) * $factor);
     my @parts;
     while (my $p = $ip->next) {
