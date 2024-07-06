@@ -82,7 +82,7 @@ my $sum = 0;
 for my $n (@mother_dura) {
     $sum += $n;
     if ($x <= $sum) {
-        warn "$i: $sum, $n\n";
+        warn "Index: $i: Sum: $sum, N: $n\n";
         last;
     }
     $i++;
@@ -93,7 +93,7 @@ $sum = 0;
 for my $n (@father_dura) {
     $sum += $n;
     if ($x <= $sum) {
-        warn "$j: $sum, $n\n";
+        warn "Index: $j: Sum: $sum, N: $n\n";
         last;
     }
     $j++;
