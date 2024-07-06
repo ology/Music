@@ -45,14 +45,14 @@ for my $dura (qw(dhn hn dqn qn)) {
     my $rev = reverse_dump('length');
     my @durations;
     for my $p (@parts) {
-        my @temp;
+        my @named;
         for (@$p) {
             my $x = $_ / $factor;
             my $name = $rev->{$x};
-            push @temp, $name;
+            push @named, $name;
         }
-        next if grep { !defined } @temp;
-        push @durations, join ' ', @temp;
+        next if grep { !defined } @named;
+        push @durations, join ' ', @named;
     }
     $rules{$dura} = \@durations;
 }
