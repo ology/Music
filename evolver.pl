@@ -4,10 +4,10 @@ use warnings;
 
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
-use List::Util qw(all);
+use List::Util qw(all min);
 
 my %opt = (
-    mother  => 'qn qn qn',
+    mother  => 'qn hn hn qn hn',
     father  => 'qn hn qn qn qn hn',
     mutate  => 0.6,
     verbose => 1,
@@ -38,16 +38,23 @@ warn 'Inverted: ',ddc(\%inverted) if $opt{verbose};
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
-print '1st: ',ddc($mother);
-
-my $child = mutate_down(\%rules, $mother, $opt{mutate});
-print '2nd: ',ddc($child);
-
-$child = mutate_up(\%inverted, $child, $opt{mutate});
-print '3rd: ',ddc($child);
+print '1st mother: ',ddc($mother);
+print '1st father ',ddc($father);
 
 # my $matches = subsequences($mother, $father);
 # warn 'Matches: ',ddc($matches) if $opt{verbose};
+
+# my $child = mutate_down(\%rules, $mother, $opt{mutate});
+# print '2nd: ',ddc($child);
+# $child = mutate_up(\%inverted, $child, $opt{mutate});
+# print '3rd: ',ddc($child);
+
+my @mother_list = (1, 2, 3, 4, 5);
+my @father_list = (6, 7, 8, 9, 10);
+my ($child_mother, $child_father) = crossover($mother, $father);
+print "Mother's child: ", ddc($child_mother);
+print "Father's child: ", ddc($child_father);
+
 
 sub invert_rules {
     my ($rules) = @_;
@@ -129,3 +136,20 @@ sub subsequences {
     return \@indices;
 }
 
+sub crossover {
+    my ($mother, $father) = @_;
+    my @mother = @$mother;
+    my @father = @$father;
+    my $mother_size = @mother;
+    my $father_size = @father;
+    my $minimum = min($mother_size, $father_size);
+    my $point = int rand $minimum;
+warn __PACKAGE__,' L',__LINE__,' ',,"P: $point\n";
+    # Swap elements beyond the crossover point
+    for my $i ($point .. $minimum - 1) {
+        ($mother[$i], $father[$i]) = ($father[$i], $mother[$i]);
+    }
+    @mother = grep { defined } @mother;
+    @father = grep { defined } @father;
+    return \@mother, \@father;
+}
