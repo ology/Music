@@ -240,7 +240,7 @@ warn __PACKAGE__,' L',__LINE__,' ',,"P: $m_point, $f_point\n";
             pop @father;
             push @mother, $father[$f_point];
         }
-        if ($mother[$f_point] eq 'hn' && $father[$m_point] eq 'qn' && $f_point + 1 < $father_size && $father[$f_point + 1] eq 'qn') {
+        elsif ($mother[$f_point] eq 'hn' && $father[$m_point] eq 'qn' && $f_point + 1 < $father_size && $father[$f_point + 1] eq 'qn') {
             splice @mother, $m_point, 1, qw(qn qn);
             splice @father, $f_point, 2, qw(hn);
         }
