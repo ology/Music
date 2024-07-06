@@ -227,7 +227,7 @@ warn __PACKAGE__,' L',__LINE__,' ',,"P: $m_point, $f_point\n";
     my $mother_size = @mother;
     my $father_size = @father;
     my $min_size = min($mother_size, $father_size);
-    # Swap elements beyond the crossover point
+    # "Swap" elements beyond the crossover point
     while ($m_point < $mother_size && $f_point < $father_size) {
         if ($mother[$m_point] eq $father[$f_point]) {
             $m_point++;
