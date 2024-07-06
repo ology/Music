@@ -15,6 +15,7 @@ my %opt = (
 GetOptions(\%opt,
     'mother=s',
     'father=s',
+    'verbose!',
 );
 
 my %rules = (
