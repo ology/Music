@@ -23,7 +23,6 @@ GetOptions(\%opt,
 );
 
 my $factor = 2;
-
 my %rules;
 my %seen;
 
