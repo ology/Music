@@ -42,10 +42,8 @@ for my $dura (qw(dhn hn)) {
             push @parts, $p unless $seen{"@$p"}++;
         }
     }
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\@parts);
     # print "$dura: ",ddc(\@parts);
     my $rev = reverse_dump('length');
-    # $rules{$dura} = [ map { join(' ', map { $rev->{ $_ / $factor } } @$_) } @parts ];
     my @z;
     for my $x (@parts) {
         my @temp;
@@ -61,26 +59,6 @@ warn __PACKAGE__,' L',__LINE__,' ',ddc(\@parts);
 }
 warn __PACKAGE__,' L',__LINE__,' ',ddc(\%rules);
 exit;
-
-my %rulesX = (
-    dhn => [
-      'hn qn',
-      'qn hn',
-      'qn qn qn',
-    ],
-    hn => [
-      'dqn qn',
-      'qn dqn',
-      'qn qn',
-      'qn en en',
-      'en qn en',
-      'en en qn',
-    ],
-    qn => [
-      'en en',
-    ],
-);
-warn 'Rules: ',ddc(\%rules) if $opt{verbose};
 
 my %inverted = invert_rules(\%rules);
 warn 'Inverted: ',ddc(\%inverted) if $opt{verbose};
