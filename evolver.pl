@@ -64,6 +64,7 @@ my %inverted = invert_rules(\%rules);
 warn 'Inverted: ',ddc(\%inverted) if $opt{verbose} || $opt{dump};
 exit if $opt{dump};
 
+ # compute mother and father
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
 print '1st mother: ',ddc($mother);
