@@ -142,11 +142,11 @@ sub crossover {
     my @father = @$father;
     my $mother_size = @mother;
     my $father_size = @father;
-    my $minimum = min($mother_size, $father_size);
-    my $point = int rand $minimum;
+    my $min_size = min($mother_size, $father_size);
+    my $point = int rand $min_size;
 warn __PACKAGE__,' L',__LINE__,' ',,"P: $point\n";
     # Swap elements beyond the crossover point
-    for my $i ($point .. $minimum - 1) {
+    for my $i ($point .. $min_size - 1) {
         ($mother[$i], $father[$i]) = ($father[$i], $mother[$i]);
     }
     @mother = grep { defined } @mother;
