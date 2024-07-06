@@ -221,7 +221,7 @@ sub subsequences {
 
 sub crossover {
     my ($mother, $father, $m_point, $f_point) = @_;
-warn __PACKAGE__,' L',__LINE__,' ',,"P: $m_point, $f_point\n";
+    warn "P: $m_point, $f_point\n" if $opt{verbose};
     my @mother = @$mother;
     my @father = @$father;
     my $mother_size = @mother;
