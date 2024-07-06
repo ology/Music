@@ -59,9 +59,9 @@ for my $dura (qw(dhn hn qn)) {
     }
     $rules{$dura} = \@durations if @durations;
 }
-warn 'Rules: ',ddc(\%rules) if $opt{verbse} || $opt{dump};
+warn 'Rules: ',ddc(\%rules) if $opt{dump};
 my %inverted = invert_rules(\%rules);
-warn 'Inverted: ',ddc(\%inverted) if $opt{verbose} || $opt{dump};
+warn 'Inverted: ',ddc(\%inverted) if $opt{dump};
 exit if $opt{dump};
 
  # compute mother and father
@@ -100,6 +100,9 @@ for my $n (@father_dura) {
 }
 # substitution
 if ($mother->[$i] ne $father->[$j]) {
+warn __PACKAGE__,' L',__LINE__,' ',,"Whoa!\n";
+}
+else {
     if ($mother->[$i] eq 'hn') {
         splice @$mother, $i, 1, qw(qn qn);
     }
