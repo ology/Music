@@ -107,7 +107,7 @@ for my $n (@mother_dura) {
         last;
     }
 }
-warn __PACKAGE__,' L',__LINE__," M ($i): ",ddc($mother);
+warn __PACKAGE__,' L',__LINE__,' Mother: ',ddc($mother);
 $sum = 0;
 for my $n (@father_dura) {
     $sum += $n;
@@ -121,7 +121,7 @@ for my $n (@father_dura) {
         last;
     }
 }
-warn __PACKAGE__,' L',__LINE__," F ($j): ",ddc($father);
+warn __PACKAGE__,' L',__LINE__,' Father: ',ddc($father);
 # exit;
 
 # my $matches = subsequences($mother, $father);
