@@ -242,27 +242,35 @@ warn __PACKAGE__,' L',__LINE__,' ',,"P: $m_point, $f_point\n";
             pop @father;
             push @mother, $father[$f_point];
         }
-        elsif ($mother[$f_point] eq 'hn' && $father[$m_point] eq 'qn' && $f_point + 1 < $father_size && $father[$f_point + 1] eq 'qn') {
+        elsif ($mother[$f_point] eq 'hn' && $f_point + 1 < $father_size && $father[$m_point] eq 'qn' && $father[$f_point + 1] eq 'qn') {
             splice @mother, $m_point, 1, qw(qn qn);
             splice @father, $f_point, 2, qw(hn);
         }
-        elsif ($father[$f_point] eq 'hn' && $mother[$m_point] eq 'qn' && $m_point + 1 < $mother_size && $mother[$m_point + 1] eq 'qn') {
+        elsif ($father[$f_point] eq 'hn' && $m_point + 1 < $mother_size && $mother[$m_point] eq 'qn' && $mother[$m_point + 1] eq 'qn') {
             splice @father, $f_point, 1, qw(qn qn);
             splice @mother, $m_point, 2, qw(hn);
         }
-        elsif ($mother[$m_point] eq 'dhn' && $father[$f_point] eq 'hn' && $f_point + 1 < $father_size && $father[$f_point + 1] eq 'qn') {
-            splice @mother, $m_point, 1, qw(hn qn);
-            splice @father, $f_point, 2, qw(dhn);
-        }
-        elsif ($father[$f_point] eq 'dhn' && $mother[$m_point] eq 'hn' && $m_point + 1 < $mother_size && $mother[$m_point + 1] eq 'qn') {
-            splice @father, $f_point, 1, qw(hn qn);
-            splice @mother, $m_point, 1, qw(dhn);
-        }
-        elsif ($mother[$m_point] eq 'dhn' && $father[$f_point] eq 'qn' && $f_point + 1 < $father_size && $father[$f_point + 1] eq 'hn') {
+        elsif ($mother[$m_point] eq 'dhn' && $f_point + 2 < $father_size && $father[$f_point] eq 'qn' && $father[$f_point + 1] eq 'qn' && $father[$f_point + 1] eq 'qn') {
             splice @mother, $m_point, 1, qw(qn hn);
             splice @father, $f_point, 2, qw(dhn);
         }
-        elsif ($father[$f_point] eq 'dhn' && $mother[$m_point] eq 'qn' && $m_point + 1 < $mother_size && $mother[$m_point + 1] eq 'hn') {
+        elsif ($father[$f_point] eq 'dhn' && $m_point + 2 < $mother_size && $mother[$m_point] eq 'qn' && $mother[$m_point + 1] eq 'qn' && $father[$f_point + 1] eq 'qn') {
+            splice @father, $f_point, 1, qw(qn hn);
+            splice @mother, $m_point, 1, qw(dhn);
+        }
+        elsif ($mother[$m_point] eq 'dhn' && $f_point + 1 < $father_size && $father[$f_point] eq 'hn' && $father[$f_point + 1] eq 'qn') {
+            splice @mother, $m_point, 1, qw(hn qn);
+            splice @father, $f_point, 2, qw(dhn);
+        }
+        elsif ($father[$f_point] eq 'dhn' && $m_point + 1 < $mother_size && $mother[$m_point] eq 'hn' && $mother[$m_point + 1] eq 'qn') {
+            splice @father, $f_point, 1, qw(hn qn);
+            splice @mother, $m_point, 1, qw(dhn);
+        }
+        elsif ($mother[$m_point] eq 'dhn' && $f_point + 1 < $father_size && $father[$f_point] eq 'qn' && $father[$f_point + 1] eq 'hn') {
+            splice @mother, $m_point, 1, qw(qn hn);
+            splice @father, $f_point, 2, qw(dhn);
+        }
+        elsif ($father[$f_point] eq 'dhn' && $m_point + 1 < $mother_size && $mother[$m_point] eq 'qn' && $mother[$m_point + 1] eq 'hn') {
             splice @father, $f_point, 1, qw(qn hn);
             splice @mother, $m_point, 1, qw(dhn);
         }
