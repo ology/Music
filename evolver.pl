@@ -14,11 +14,13 @@ my %opt = (
     mother  => 'qn hn hn dhn',
     father  => 'qn hn dhn hn',
     mutate  => 0.6,
+    dump    => 0, # show rules and exi
     verbose => 1,
 );
 GetOptions(\%opt,
     'mother=s',
     'father=s',
+    'dump',
     'verbose!',
 );
 
@@ -56,12 +58,12 @@ for my $dura (qw(dhn hn qn)) {
     }
     $rules{$dura} = \@durations if @durations;
 }
-# warn __PACKAGE__,' L',__LINE__,' ',ddc(\%rules);
+warn 'Rules: ',ddc(\%rules) if $opt{verbse} || $opt{dump};
 # exit;
 
 my %inverted = invert_rules(\%rules);
-# warn 'Inverted: ',ddc(\%inverted) if $opt{verbose};
-# exit;
+warn 'Inverted: ',ddc(\%inverted) if $opt{verbose} || $opt{dump};
+ exit if $opt{dump};
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
