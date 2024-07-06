@@ -43,18 +43,18 @@ for my $dura (qw(dhn hn dqn qn)) {
     }
     # print "$dura: ",ddc(\@parts);
     my $rev = reverse_dump('length');
-    my @z;
-    for my $x (@parts) {
+    my @durations;
+    for my $p (@parts) {
         my @temp;
-        for (@$x) {
-            my $f = $_ / $factor;
-            my $y = $rev->{$f};
-            push @temp, $y;
+        for (@$p) {
+            my $x = $_ / $factor;
+            my $name = $rev->{$x};
+            push @temp, $name;
         }
         next if grep { !defined } @temp;
-        push @z, join ' ', @temp;
+        push @durations, join ' ', @temp;
     }
-    $rules{$dura} = \@z;
+    $rules{$dura} = \@durations;
 }
 warn __PACKAGE__,' L',__LINE__,' ',ddc(\%rules);
 exit;
