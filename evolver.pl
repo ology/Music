@@ -11,8 +11,8 @@ use List::Util qw(all min uniq);
 use MIDI::Util qw(dura_size reverse_dump);
 
 my %opt = (
-    mother  => 'qn hn hn qn hn',
-    father  => 'qn hn qn qn qn hn',
+    mother  => 'qn hn hn dhn',
+    father  => 'qn hn dhn hn',
     mutate  => 0.6,
     verbose => 1,
 );
@@ -22,11 +22,11 @@ GetOptions(\%opt,
     'verbose!',
 );
 
-my $factor = 2;
+my $factor = 1;
 my %rules;
 my %seen;
 
-for my $dura (qw(dhn hn dqn qn)) {
+for my $dura (qw(dhn hn qn)) {
     my $ip = Integer::Partition->new(dura_size($dura) * $factor);
     my @parts;
     while (my $p = $ip->next) {
@@ -54,13 +54,14 @@ for my $dura (qw(dhn hn dqn qn)) {
         next if grep { !defined } @named;
         push @durations, join ' ', @named;
     }
-    $rules{$dura} = \@durations;
+    $rules{$dura} = \@durations if @durations;
 }
-warn __PACKAGE__,' L',__LINE__,' ',ddc(\%rules);
-exit;
+# warn __PACKAGE__,' L',__LINE__,' ',ddc(\%rules);
+# exit;
 
 my %inverted = invert_rules(\%rules);
-warn 'Inverted: ',ddc(\%inverted) if $opt{verbose};
+# warn 'Inverted: ',ddc(\%inverted) if $opt{verbose};
+# exit;
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
@@ -71,38 +72,57 @@ my @mother_dura = map { dura_size($_) } @$mother;
 warn __PACKAGE__,' L',__LINE__,' ',ddc(\@mother_dura);
 my @father_dura = map { dura_size($_) } @$father;
 warn __PACKAGE__,' L',__LINE__,' ',ddc(\@father_dura);
-my $x = int rand 8;
+my $x = int rand 9;
 warn __PACKAGE__,' L',__LINE__,' ',,"X: $x\n";
-my $sum = 0;
 my $i = 0;
+my $sum = 0;
 for my $n (@mother_dura) {
     $sum += $n;
     if ($x <= $sum) {
-        if ($n == 2) {
-            splice @$mother, $i, 1, qw(qn qn);
-            $i++ if $x == $sum;
-        }
         warn "$i: $sum, $n\n";
         last;
     }
     $i++;
 }
-warn __PACKAGE__,' L',__LINE__,' M: ',ddc($mother);
-$sum = 0;
 my $j = 0;
+$sum = 0;
 for my $n (@father_dura) {
     $sum += $n;
     if ($x <= $sum) {
-        if ($n == 2) {
-            splice @$father, $j, 1, qw(qn qn);
-            $j++ if $x == $sum;
-        }
         warn "$j: $sum, $n\n";
         last;
     }
     $j++;
 }
-warn __PACKAGE__,' L',__LINE__,' F: ',ddc($father);
+$sum = 0;
+for my $n (@mother_dura) {
+    $sum += $n;
+    if ($x <= $sum) {
+        if ($n == 2) {
+            splice @$mother, $i, 1, qw(qn qn);
+        }
+        elsif ($n == 3) {
+            splice @$mother, $i, 1, qw(qn qn qn);
+        }
+        last;
+    }
+}
+warn __PACKAGE__,' L',__LINE__," M ($i): ",ddc($mother);
+$sum = 0;
+for my $n (@father_dura) {
+    $sum += $n;
+    if ($x <= $sum) {
+        if ($n == 2) {
+            splice @$father, $j, 1, qw(qn qn);
+        }
+        elsif ($n == 3) {
+            splice @$father, $j, 1, qw(qn qn qn);
+        }
+        last;
+    }
+}
+warn __PACKAGE__,' L',__LINE__," F ($j): ",ddc($father);
+# exit;
 
 # my $matches = subsequences($mother, $father);
 # warn 'Matches: ',ddc($matches) if $opt{verbose};
@@ -212,13 +232,40 @@ warn __PACKAGE__,' L',__LINE__,' ',,"P: $m_point, $f_point\n";
             $f_point++;
             next;
         }
-        if ($mother[$m_point] eq 'hn' && $father[$f_point] eq 'qn' && $father[$f_point + 1] eq 'qn') {
+        if (defined $mother[$m_point] && !defined $father[$f_point]) {
+            pop @mother;
+            push @father, $mother[$m_point];
+        }
+        elsif (defined $father[$f_point] && !defined $mother[$m_point]) {
+            pop @father;
+            push @mother, $father[$f_point];
+        }
+        if ($mother[$f_point] eq 'hn' && $father[$m_point] eq 'qn' && $f_point + 1 < $father_size && $father[$f_point + 1] eq 'qn') {
             splice @mother, $m_point, 1, qw(qn qn);
             splice @father, $f_point, 2, qw(hn);
         }
-        elsif ($father[$f_point] eq 'hn' && $mother[$m_point] eq 'qn' && $mother[$m_point + 1] eq 'qn') {
+        elsif ($father[$f_point] eq 'hn' && $mother[$m_point] eq 'qn' && $m_point + 1 < $mother_size && $mother[$m_point + 1] eq 'qn') {
             splice @father, $f_point, 1, qw(qn qn);
             splice @mother, $m_point, 2, qw(hn);
+        }
+        elsif ($mother[$m_point] eq 'dhn' && $father[$f_point] eq 'hn' && $f_point + 1 < $father_size && $father[$f_point + 1] eq 'qn') {
+            splice @mother, $m_point, 1, qw(hn qn);
+            splice @father, $f_point, 2, qw(dhn);
+        }
+        elsif ($father[$f_point] eq 'dhn' && $mother[$m_point] eq 'hn' && $m_point + 1 < $mother_size && $mother[$m_point + 1] eq 'qn') {
+            splice @father, $f_point, 1, qw(hn qn);
+            splice @mother, $m_point, 1, qw(dhn);
+        }
+        elsif ($mother[$m_point] eq 'dhn' && $father[$f_point] eq 'qn' && $f_point + 1 < $father_size && $father[$f_point + 1] eq 'hn') {
+            splice @mother, $m_point, 1, qw(qn hn);
+            splice @father, $f_point, 2, qw(dhn);
+        }
+        elsif ($father[$f_point] eq 'dhn' && $mother[$m_point] eq 'qn' && $m_point + 1 < $mother_size && $mother[$m_point + 1] eq 'hn') {
+            splice @father, $f_point, 1, qw(qn hn);
+            splice @mother, $m_point, 1, qw(dhn);
+        }
+        else {
+            ($mother[$m_point], $father[$f_point]) = ($father[$f_point], $mother[$m_point]);
         }
         $m_point++;
         $f_point++;
