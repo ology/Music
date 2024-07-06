@@ -47,7 +47,7 @@ $child = mutate_up(\%inverted, $child, $opt{mutate});
 print '3rd: ',ddc($child);
 
 # my $matches = subsequences($mother, $father);
-# warn 'Father: ',ddc($matches) if $opt{verbose};
+# warn 'Matches: ',ddc($matches) if $opt{verbose};
 
 sub invert_rules {
     my ($rules) = @_;
