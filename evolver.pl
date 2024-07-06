@@ -7,9 +7,10 @@ use Getopt::Long qw(GetOptions);
 use List::Util qw(all);
 
 my %opt = (
-    mother => 'qn qn qn',
-    father => 'qn hn qn qn qn hn',
-    mutate => 0.6,
+    mother  => 'qn qn qn',
+    father  => 'qn hn qn qn qn hn',
+    mutate  => 0.6,
+    verbose => 1,
 );
 GetOptions(\%opt,
     'mother=s',
@@ -29,10 +30,10 @@ my %rules = (
       'en en',
     ],
 );
-warn 'Rules: ',ddc(\%rules);
+warn 'Rules: ',ddc(\%rules) if $opt{verbose};
 
 my %inverted = invert_rules(\%rules);
-warn 'Inverted: ',ddc(\%inverted);
+warn 'Inverted: ',ddc(\%inverted) if $opt{verbose};
 
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
@@ -45,7 +46,7 @@ $child = mutate_up(\%inverted, $child, $opt{mutate});
 warn '3rd: ',ddc($child);
 
 # my $matches = subsequences($mother, $father);
-# warn 'Father: ',ddc($matches);
+# warn 'Father: ',ddc($matches) if $opt{verbose};
 
 sub invert_rules {
     my ($rules) = @_;
@@ -69,17 +70,17 @@ sub mutate_up {
         while (!$matched && (keys %seen <= @keys)) {
             $seen{$n}++;
             my @ns = split /\s+/, $n;
-warn ' Ns: ',,"@ns\n";
+            warn ' Ns: ',,"@ns\n" if $opt{verbose};
             if (my $subseqs = subsequences(\@ns, $source)) {
                 my $seq_num = $subseqs->[ rand @$subseqs ];
                 if (defined $seq_num) {
                     $matched = 1;
                     my $items = $rules->{$n};
-warn "Is: @$items\n";
+                    warn "Is: @$items\n" if $opt{verbose};
                     my $item = $items->[ rand @$items ];
-warn "I: $item\n";
+                    warn "I: $item\n" if $opt{verbose};
                     my @parts = split /\s+/, $item;
-# warn ' S: ',,"[@$subseqs] => $seq_num\n";
+                    warn 'S: ',,"[@$subseqs] => $seq_num\n" if $opt{verbose};
                     splice @mutation, $seq_num, scalar(@ns), @parts;
                     last;
                 }
