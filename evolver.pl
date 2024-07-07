@@ -75,6 +75,7 @@ my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
 print '1st mother: ',ddc($mother);
 print '1st father: ',ddc($father);
+ s cciWIP
 my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
