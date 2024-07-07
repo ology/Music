@@ -92,21 +92,9 @@ my $m_size = $mother_dura[$i] - $m_div;
 my $f_size = $father_dura[$j] - $f_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
 warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
-my $m_sub = #$mother_dura[$i] % 2 && ceil($mother_dura[$i] / 2) == $m_size
-    # ? [ (reverse_dump('length')->{1}) x $mother_dura[$i] ]
-    $m_div && $m_size
-        ? [ reverse_dump('length')->{$m_size}, reverse_dump('length')->{$m_div} ]
-        : $m_div
-            ? [ reverse_dump('length')->{$m_div} ]
-            : [ $mother->[$i] ];
+my $m_sub = gen_sub($m_div, $m_size, $mother, $i);
 warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
-my $f_sub = #$father_dura[$j] % 2 && ceil($father_dura[$j] / 2) == $f_size
-    # ? [ (reverse_dump('length')->{1}) x $father_dura[$j] ]
-    $f_div && $f_size
-        ? [ reverse_dump('length')->{$f_size}, reverse_dump('length')->{$f_div} ]
-        : $f_div
-              ? [ reverse_dump('length')->{$f_div} ]
-              : [ $father->[$j] ];
+my $f_sub = gen_sub($f_div, $f_size, $father, $j);
 warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
 # substitution
 splice @$mother, $i, 1, @$m_sub;
@@ -126,6 +114,15 @@ warn 'Father substituted: ',ddc($father) if $opt{verbose};
 my ($child_mother, $child_father) = crossover($mother, $father, $i, $j);
 print "Mother's child: ", ddc($child_mother);
 print "Father's child: ", ddc($child_father);
+
+sub gen_sub {
+    my ($div, $size, $list, $n) = @_;
+    return $div && $size
+        ? [ reverse_dump('length')->{$size}, reverse_dump('length')->{$div} ]
+        : $div
+            ? [ reverse_dump('length')->{$div} ]
+            : [ $list->[$n] ];
+}
 
 sub iter {
     my ($point, $dura) = @_;
