@@ -108,8 +108,8 @@ my $f_sub = gen_sub($f_div, $f_size, $father, \@father_dura, $j, $f_incd);
 # substitution
 splice @$mother, $i, 1, @$m_sub;
 splice @$father, $j, 1, @$f_sub;
-warn 'Mother substituted: ',ddc($mother) if $opt{verbose};
-warn 'Father substituted: ',ddc($father) if $opt{verbose};
+warn 'Mother substituted: ',ddc($mother);# if $opt{verbose};
+warn 'Father substituted: ',ddc($father);# if $opt{verbose};
 
 # recompute indices
 @mother_dura = map { dura_size($_) } @$mother;
@@ -133,7 +133,7 @@ print "Father's child: ", ddc($child_father);
 
 sub gen_sub {
     my ($div, $size, $list, $duras, $n, $incd) = @_;
-warn __PACKAGE__,' L',__LINE__,' ',,"$n, $duras->[$n], $size, $incd\n";
+# warn __PACKAGE__,' L',__LINE__,' ',,"$n, $duras->[$n], $size, $incd\n";
     return $duras->[$n] % 2 && $size == 2 && !$incd
         ? [ (reverse_dump('length')->{1}) x $duras->[$n] ]
         : $div && $size
