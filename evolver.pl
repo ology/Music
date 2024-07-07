@@ -77,7 +77,7 @@ my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
 warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
-my $x = int(rand 8) + 1;
+my $x = 6;#int(rand 8) + 1;
 warn "Chosen beat crossover point: $x\n";
 # compute the mother iterator and division
 my $i = 0;
@@ -105,11 +105,10 @@ for my $n (@father_dura) {
 my $f_div = $sum - $x;
 warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
 $m_div++ if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
-# $m_div-- if $beat_value - $x == 1;
 my $m_size = $mother_dura[$i] - $m_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
-my $m_sub = #$m_div && $m_size && 
-    # ? [ reverse_dump('length')->{$m_div}, reverse_dump('length')->{$m_div}, reverse_dump('length')->{$m_div} ]
+my $m_sub = #$mother_dura[$i] % 2 && ceil($mother_dura[$i] / 2) == $m_size
+    # ? [ (reverse_dump('length')->{1}) x $mother_dura[$i] ]
     $m_div && $m_size
         ? [ reverse_dump('length')->{$m_size}, reverse_dump('length')->{$m_div} ]
         : $m_div
@@ -117,11 +116,10 @@ my $m_sub = #$m_div && $m_size &&
             : [ $mother->[$i] ];
 warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
 $f_div++ if ($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i]);
-# $f_div-- if $beat_value - $x == 1;
 my $f_size = $father_dura[$j] - $f_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
-my $f_sub = #$f_div && $f_size && $father_dura[$j] % 2 && ceil($father_dura[$j] / 2) == $f_div
-    # ? [ reverse_dump('length')->{$f_div}, reverse_dump('length')->{$f_div}, reverse_dump('length')->{$f_div} ]
+my $f_sub = #$father_dura[$j] % 2 && ceil($father_dura[$j] / 2) == $f_size
+    # ? [ (reverse_dump('length')->{1}) x $father_dura[$j] ]
     $f_div && $f_size
         ? [ reverse_dump('length')->{$f_size}, reverse_dump('length')->{$f_div} ]
         : $f_div
