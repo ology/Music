@@ -77,7 +77,8 @@ my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
 warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
-die "Parents must be the same beat value\n" unless sum0(@mother_dura) == sum0(@father_dura);
+die "Parents must be the same beat value\n"
+    unless sum0(@mother_dura) == sum0(@father_dura);
 my $x = 7;#int(rand 8) + 1;
 warn "Beat crossover point: $x\n";
 # compute the mother iterator and division
