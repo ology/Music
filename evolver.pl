@@ -78,6 +78,7 @@ warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
 die "Parents must be the same beat value\n"
     unless sum0(@mother_dura) == sum0(@father_dura);
 
+# compute the initial substitutions
 my $x = 7;#int(rand 8) + 1;
 warn "Beat crossover point: $x\n";
 # compute the mother iterator and division
