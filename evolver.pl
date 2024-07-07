@@ -31,10 +31,7 @@ GetOptions(\%opt,
 my ($rules, $inverted) = build_rules([qw(wn dhn hn qn)]);
 
  # compute mother and father
-my $mother = [ split /\s+/, $opt{mother} ];
-my $father = [ split /\s+/, $opt{father} ];
-print '1st mother: ',ddc($mother);
-print '1st father: ',ddc($father);
+my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
 my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
@@ -95,6 +92,15 @@ warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
 my ($child_mother, $child_father) = crossover($mother, $father, $i, $j);
 print "Mother's child: ", ddc($child_mother);
 print "Father's child: ", ddc($child_father);
+
+sub get_parents {
+    my ($m, $f) = @_;
+    my $mother = [ split /\s+/, $opt{mother} ];
+    my $father = [ split /\s+/, $opt{father} ];
+    print '1st mother: ',ddc($mother);
+    print '1st father: ',ddc($father);
+    return $mother, $father;
+}
 
 sub build_rules {
     my ($knowns) = @_;
