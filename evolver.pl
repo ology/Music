@@ -77,31 +77,13 @@ my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
 warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
-my $x = 8;#int(rand 8) + 1;
+my $x = 7;#int(rand 8) + 1;
 warn "Chosen beat crossover point: $x\n";
 # compute the mother iterator and division
-my $i = 0;
-my $sum = 0;
-for my $n (@mother_dura) {
-    $sum += $n;
-    if ($x <= $sum) {
-        warn "Index: $i: Sum: $sum, N: $n\n";
-        last;
-    }
-    $i++;
-}
+my ($i, $sum) = iter($x, \@mother_dura);
 my $m_div = $sum - $x;
 # compute the father iterator and division
-my $j = 0;
-$sum = 0;
-for my $n (@father_dura) {
-    $sum += $n;
-    if ($x <= $sum) {
-        warn "Index: $j: Sum: $sum, N: $n\n";
-        last;
-    }
-    $j++;
-}
+(my $j, $sum) = iter($x, \@mother_dura);
 my $f_div = $sum - $x;
 warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
 $m_div++ if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
@@ -145,6 +127,19 @@ my ($child_mother, $child_father) = crossover($mother, $father, $i, $j);
 print "Mother's child: ", ddc($child_mother);
 print "Father's child: ", ddc($child_father);
 
+sub iter {
+    my ($point, $dura) = @_;
+    my ($i, $sum) = (0, 0);
+    for my $n (@$dura) {
+        $sum += $n;
+        if ($point <= $sum) {
+            warn "Index: $i: Sum: $sum, N: $n\n";
+            last;
+        }
+        $i++;
+    }
+    return $i, $sum;
+}
 
 sub invert_rules {
     my ($rules) = @_;
