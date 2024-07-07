@@ -17,7 +17,7 @@ my %opt = (
     mutate  => 0.6,
     factor  => 1, # scale durations
     dump    => 0, # show rules and exit
-    verbose => 1,
+    verbose => 0.5,
 );
 GetOptions(\%opt,
     'mother=s',
@@ -32,7 +32,7 @@ GetOptions(\%opt,
 my %rules;
 my %seen;
 for my $dura (qw(dhn hn qn)) {
-    my $ip = Integer::Partition->new(dura_size($dura) * $factor);
+    my $ip = Integer::Partition->new(dura_size($dura) * $opt{factor});
     my @parts;
     while (my $p = $ip->next) {
         next if @$p <= 1;
@@ -52,7 +52,7 @@ for my $dura (qw(dhn hn qn)) {
     for my $p (@parts) {
         my @named;
         for (@$p) {
-            my $x = $_ / $factor;
+            my $x = $_ / $opt{factor};
             my $name = $rev->{$x};
             push @named, $name;
         }
