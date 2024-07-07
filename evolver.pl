@@ -77,13 +77,13 @@ my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
 warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
-my $x = 7;#int(rand 8) + 1;
+my $x = 4;#int(rand 8) + 1;
 warn "Chosen beat crossover point: $x\n";
 # compute the mother iterator and division
 my ($i, $sum) = iter($x, \@mother_dura);
 my $m_div = $sum - $x;
 # compute the father iterator and division
-(my $j, $sum) = iter($x, \@mother_dura);
+(my $j, $sum) = iter($x, \@father_dura);
 my $f_div = $sum - $x;
 warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
 $m_div++ if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
