@@ -40,7 +40,7 @@ my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
 # my $child = mutate_down($rules, $mother, $opt{mutate});
 # print '2nd: ',ddc($child);
-# $child = mutate_up(\%inverted, $child, $opt{mutate});
+# $child = mutate_up($inverted, $child, $opt{mutate});
 # print '3rd: ',ddc($child);
 
 my ($mother_dura, $father_dura) = get_durations($mother, $father);
