@@ -73,6 +73,7 @@ my $beat_value = @$mother;
 print '1st mother: ',ddc($mother);
 print '1st father: ',ddc($father);
 
+# compute initial substitutions
 my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
