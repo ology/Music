@@ -31,7 +31,11 @@ my ($rules, $inverted) = build_rules([qw(wn dhn hn qn)]);
 
 my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
-my ($m_point, $f_point) = substitution($mother, $father);
+# compute the initial substitutions
+my $crossover = int(rand 8) + 1;
+warn "Beat crossover point: $crossover\n";
+
+my ($m_point, $f_point) = substitution($mother, $father, $crossover);
 
 # my $matches = subsequences($mother, $father);
 # warn 'Matches: ',ddc($matches) if $opt{verbose};
@@ -46,7 +50,7 @@ print "Mother's child: ", ddc($child_mother);
 print "Father's child: ", ddc($child_father);
 
 sub substitution {
-    my ($mother, $father) = @_;
+    my ($mother, $father, $x) = @_;
 
     my @mother_dura = map { dura_size($_) } @$mother;
     warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
@@ -55,9 +59,6 @@ sub substitution {
     die "Parents must be the same beat value\n"
         unless sum0(@mother_dura) == sum0(@father_dura);
 
-    # compute the initial substitutions
-    my $x = int(rand 8) + 1;
-    warn "Beat crossover point: $x\n";
     # compute the mother iterator and division
     my ($i, $sum) = iter($x, \@mother_dura);
     my $m_div = $sum - $x;
