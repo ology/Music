@@ -11,11 +11,11 @@ use List::Util qw(all min sum0 uniq);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
 
 my %opt = (
+    factor  => 1, # scale durations
     pool    => 'wn dhn hn',
     mother  => 'qn dhn',
     father  => 'dhn qn',
     mutate  => 0.6,
-    factor  => 1, # scale durations
     dump    => 0, # show rules and exit
     verbose => 1,
 );
