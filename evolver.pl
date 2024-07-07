@@ -35,6 +35,14 @@ my ($rules, $inverted) = build_rules($opt{pool}, $opt{factor});
 
 my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
+# my $matches = subsequences($mother, $father);
+# warn 'Matches: ',ddc($matches) if $opt{verbose};
+
+# my $child = mutate_down($rules, $mother, $opt{mutate});
+# print '2nd: ',ddc($child);
+# $child = mutate_up(\%inverted, $child, $opt{mutate});
+# print '3rd: ',ddc($child);
+
 my ($mother_dura, $father_dura) = get_durations($mother, $father);
 
 my $crossover = int(rand sum0(@$mother_dura)) + 1;
@@ -45,14 +53,6 @@ unless ($mother->[$m_point] eq 'qn' && $father->[$f_point] eq 'qn') {
     ($mother_dura, $father_dura) = get_durations($mother, $father);
     ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
 }
-
-# my $matches = subsequences($mother, $father);
-# warn 'Matches: ',ddc($matches) if $opt{verbose};
-
-# my $child = mutate_down($rules, $mother, $opt{mutate});
-# print '2nd: ',ddc($child);
-# $child = mutate_up(\%inverted, $child, $opt{mutate});
-# print '3rd: ',ddc($child);
 
 my ($child_mother, $child_father) = crossover($mother, $father, $m_point, $f_point);
 print "Mother's child: ", ddc($child_mother);
