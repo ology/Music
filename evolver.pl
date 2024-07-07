@@ -12,7 +12,7 @@ use MIDI::Util qw(dura_size midi_dump reverse_dump);
 
 my %opt = (
     factor  => 1, # ?
-    pool    => 'wn dhn hn',
+    pool    => 'wn dhn hn qn',
     mother  => 'qn dhn',
     father  => 'dhn qn',
     mutate  => 0.6,
@@ -20,11 +20,11 @@ my %opt = (
     verbose => 1,
 );
 GetOptions(\%opt,
+    'factor=i',
     'pool=s',
     'mother=s',
     'father=s',
     'mutate=i',
-    'factor=i',
     'dump',
     'verbose!',
 );
