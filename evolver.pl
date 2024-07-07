@@ -27,7 +27,7 @@ GetOptions(\%opt,
     'verbose!',
 );
 
-my ($rules, $inverted) = build_rules([qw(wn dhn hn qn)]);
+my ($rules, $inverted) = build_rules([qw(wn dhn hn qn)], $opt{factor});
 
 my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
@@ -119,10 +119,10 @@ sub get_parents {
 }
 
 sub build_rules {
-    my ($knowns) = @_;
+    my ($knowns, $factor) = @_;
     my (%rules, %seen);
     for my $dura (@$knowns) {
-        my $ip = Integer::Partition->new(dura_size($dura) * $opt{factor});
+        my $ip = Integer::Partition->new(dura_size($dura) * $factor);
         my @parts;
         while (my $p = $ip->next) {
             next if @$p <= 1; # skip single sets
@@ -145,7 +145,7 @@ sub build_rules {
         for my $p (@parts) {
             my @named;
             for (@$p) {
-                my $x = $_ / $opt{factor};
+                my $x = $_ / $factor;
                 my $name = $rev->{$x};
                 push @named, $name;
             }
