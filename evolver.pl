@@ -11,7 +11,7 @@ use List::Util qw(all min sum0 uniq);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
 
 my %opt = (
-    pool    => 'wn dhn hn qn',
+    pool    => 'wn dhn hn',
     mother  => 'qn dhn',
     father  => 'dhn qn',
     mutate  => 0.6,
