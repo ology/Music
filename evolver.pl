@@ -8,6 +8,7 @@ use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use Integer::Partition ();
 use List::Util qw(all min sum0 uniq);
+use Math::Round qw(nearest);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
 
 my %opt = (
@@ -45,11 +46,14 @@ my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
 my ($mother_dura, $father_dura) = get_durations($mother, $father);
 
-my $crossover = 0.5;#int(rand sum0(@$mother_dura)) + 1 / $opt{factor};
+my $grain = min(@$mother_dura, @$father_dura);
+
+my $crossover = nearest($grain, rand sum0(@$mother_dura));
 warn "Beat crossover point: $crossover\n" if $opt{verbose};
 
 my ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
-unless ($mother->[$m_point] eq 'qn' && $father->[$f_point] eq 'qn') {
+exit;
+unless ($mother->[$m_point] eq reverse_dump('length')->{ 1 / $opt{factor} } && $father->[$f_point] eq reverse_dump('length')->{ 1 / $opt{factor} }) {
     ($mother_dura, $father_dura) = get_durations($mother, $father);
     ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
 }
@@ -61,8 +65,8 @@ print "Father's child: ", ddc($child_father);
 sub substitution {
     my ($mother, $father, $mother_dura, $father_dura, $x) = @_;
 
-    $x *= $opt{factor};
-warn __PACKAGE__,' L',__LINE__,' ',,"Factored crossover: $x\n";
+    # $x *= $opt{factor};
+# warn __PACKAGE__,' L',__LINE__,' ',,"Factored crossover: $x\n";
 
     # compute the mother iterator and division
     my ($i, $sum) = iter($x, $mother_dura);
@@ -83,7 +87,7 @@ warn __PACKAGE__,' L',__LINE__,' ',,"Factored crossover: $x\n";
     my $m_size = $mother_dura->[$i] - $m_div;
     my $f_size = $father_dura->[$j] - $f_div;
     warn __PACKAGE__,' L',__LINE__,' ',,"Mdura - Mdiv = Msize: $mother_dura->[$i] - $m_div = $m_size\n";
-    warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura->[$j] - $f_div = $f_size\n";
+    warn __PACKAGE__,' L',__LINE__,' ',,"Fdura - Fdiv = Fsize: $father_dura->[$j] - $f_div = $f_size\n";
     my $m_sub = gen_sub($m_div, $m_size, $mother, $mother_dura, $i, $m_incd);
     warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
     my $f_sub = gen_sub($f_div, $f_size, $father, $father_dura, $j, $f_incd);
@@ -107,9 +111,9 @@ warn __PACKAGE__,' L',__LINE__,' ',,"Factored crossover: $x\n";
 
 sub get_durations {
     my ($mother, $father) = @_;
-    my @mother_dura = map { dura_size($_) * $opt{factor} } @$mother;
+    my @mother_dura = map { dura_size($_) } @$mother;
     warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbose};
-    my @father_dura = map { dura_size($_) * $opt{factor} } @$father;
+    my @father_dura = map { dura_size($_) } @$father;
     warn 'Father durations: ',ddc(\@father_dura) if $opt{verbose};
     die "Parents must be the same beat value\n"
         unless sum0(@mother_dura) == sum0(@father_dura);
@@ -127,13 +131,13 @@ sub get_parents {
 
 sub gen_sub {
     my ($div, $size, $list, $duras, $n, $incd) = @_;
-# warn __PACKAGE__,' L',__LINE__,' ',,"$n, $duras->[$n], $size, $incd\n";
+warn __PACKAGE__,' L',__LINE__,' ',,"$duras->[$n], $div, $size, $n, $incd\n";
     return $duras->[$n] % 2 && $size == 2 && !$incd
-        ? [ (reverse_dump('length')->{1}) x $duras->[$n] ]
+        ? [ (reverse_dump('length')->{ 1 / $opt{factor} }) x $duras->[$n] ]
         : $div && $size
-        ? [ reverse_dump('length')->{$size}, reverse_dump('length')->{$div} ]
+        ? [ reverse_dump('length')->{ $size / $opt{factor} }, reverse_dump('length')->{ $div / $opt{factor} } ]
         : $div
-            ? [ reverse_dump('length')->{$div} ]
+            ? [ reverse_dump('length')->{ $div / $opt{factor} } ]
             : [ $list->[$n] ];
 }
 
@@ -141,7 +145,7 @@ sub iter {
     my ($point, $dura) = @_;
     my ($i, $sum) = (0, 0);
     for my $n (@$dura) {
-        $sum += $n * $opt{factor};
+        $sum += $n;
         if ($point <= $sum) {
             warn "Index: $i: Sum: $sum, N: $n\n";
             last;
