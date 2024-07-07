@@ -11,6 +11,7 @@ use List::Util qw(all min sum0 uniq);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
 
 my %opt = (
+    pool    => 'wn dhn hn qn',
     mother  => 'qn dhn',
     father  => 'dhn qn',
     mutate  => 0.6,
@@ -19,6 +20,7 @@ my %opt = (
     verbose => 1,
 );
 GetOptions(\%opt,
+    'pool=s',
     'mother=s',
     'father=s',
     'mutate=i',
@@ -27,7 +29,9 @@ GetOptions(\%opt,
     'verbose!',
 );
 
-my ($rules, $inverted) = build_rules([qw(wn dhn hn qn)], $opt{factor});
+$opt{pool} = [ split /\s+/, $opt{pool} ];
+
+my ($rules, $inverted) = build_rules($opt{pool}, $opt{factor});
 
 my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
