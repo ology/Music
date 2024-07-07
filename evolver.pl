@@ -108,7 +108,7 @@ $m_div++ if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
 # $m_div-- if $beat_value - $x == 1;
 my $m_size = $mother_dura[$i] - $m_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
-my $m_sub = $m_div && $m_size && 
+my $m_sub = #$m_div && $m_size && 
     # ? [ reverse_dump('length')->{$m_div}, reverse_dump('length')->{$m_div}, reverse_dump('length')->{$m_div} ]
     $m_div && $m_size
         ? [ reverse_dump('length')->{$m_size}, reverse_dump('length')->{$m_div} ]
