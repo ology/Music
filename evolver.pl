@@ -12,7 +12,7 @@ use MIDI::Util qw(dura_size midi_dump reverse_dump);
 use POSIX;
 
 my %opt = (
-    mother  => 'qn hn dhn hn',
+    mother  => 'qn hn hn dhn',
     father  => 'qn hn dhn hn',
     mutate  => 0.6,
     factor  => 1, # scale durations
@@ -79,7 +79,7 @@ die "Parents must be the same beat value\n"
     unless sum0(@mother_dura) == sum0(@father_dura);
 
 # compute the initial substitutions
-my $x = 7;#int(rand 8) + 1;
+my $x = 8;#int(rand 8) + 1;
 warn "Beat crossover point: $x\n";
 # compute the mother iterator and division
 my ($i, $sum) = iter($x, \@mother_dura);
@@ -103,6 +103,14 @@ splice @$mother, $i, 1, @$m_sub;
 splice @$father, $j, 1, @$f_sub;
 warn 'Mother substituted: ',ddc($mother) if $opt{verbose};
 warn 'Father substituted: ',ddc($father) if $opt{verbose};
+
+# recompute indices
+@mother_dura = map { dura_size($_) } @$mother;
+warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
+@father_dura = map { dura_size($_) } @$father;
+warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
+($i) = iter($x, \@mother_dura);
+($j) = iter($x, \@father_dura);
 
 # my $matches = subsequences($mother, $father);
 # warn 'Matches: ',ddc($matches) if $opt{verbose};
