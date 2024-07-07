@@ -11,7 +11,7 @@ use List::Util qw(all min sum0 uniq);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
 
 my %opt = (
-    factor  => 2, # 1=quarter note granularity, 2=eighth note, ...
+    factor  => 1, # 1=quarter note granularity, 2=eighth note, ...
     pool    => 'wn dhn hn',
     mother  => 'qn dhn',
     father  => 'dhn qn',
