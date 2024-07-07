@@ -176,7 +176,7 @@ sub iter {
     for my $n (@$dura) {
         $sum += $n;
         if ($point <= $sum) {
-            warn "Index: $i: Sum: $sum, N: $n\n" if $opt{verbose};
+            # warn "Index: $i: Sum: $sum, N: $n\n";
             last;
         }
         $i++;
