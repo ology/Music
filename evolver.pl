@@ -11,8 +11,8 @@ use List::Util qw(all min sum0 uniq);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
 
 my %opt = (
-    mother  => 'qn hn wn dhn hn',
-    father  => 'qn hn dhn wn hn',
+    mother  => 'dhn',
+    father  => 'qn hn',
     mutate  => 0.6,
     factor  => 1, # scale durations
     dump    => 0, # show rules and exit
@@ -31,11 +31,13 @@ my ($rules, $inverted) = build_rules([qw(wn dhn hn qn)]);
 
 my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
-my $crossover = int(rand 8) + 1;
+my ($mother_dura, $father_dura) = get_durations($mother, $father);
+
+my $crossover = int(rand sum0(@$mother_dura)) + 1;
 warn "Beat crossover point: $crossover\n" if $opt{verbose};
 
-my ($m_point, $f_point) = substitution($mother, $father, $crossover);
-($m_point, $f_point) = substitution($mother, $father, $crossover);
+my ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
+($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
 
 # my $matches = subsequences($mother, $father);
 # warn 'Matches: ',ddc($matches) if $opt{verbose};
@@ -50,38 +52,31 @@ print "Mother's child: ", ddc($child_mother);
 print "Father's child: ", ddc($child_father);
 
 sub substitution {
-    my ($mother, $father, $x) = @_;
-
-    my @mother_dura = map { dura_size($_) } @$mother;
-    warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
-    my @father_dura = map { dura_size($_) } @$father;
-    warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
-    die "Parents must be the same beat value\n"
-        unless sum0(@mother_dura) == sum0(@father_dura);
+    my ($mother, $father, $mother_dura, $father_dura, $x) = @_;
 
     # compute the mother iterator and division
-    my ($i, $sum) = iter($x, \@mother_dura);
+    my ($i, $sum) = iter($x, $mother_dura);
     my $m_div = $sum - $x;
     # compute the father iterator and division
-    (my $j, $sum) = iter($x, \@father_dura);
+    (my $j, $sum) = iter($x, $father_dura);
     my $f_div = $sum - $x;
     # warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
     my ($m_incd, $f_incd) = (0, 0);
-    if (($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j])) {
+    if (($m_div <= 0) || ($i != $j && $mother_dura->[$i] != $father_dura->[$j])) {
         $m_div++;
         $m_incd++;
     }
-    if (($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i])) {
+    if (($f_div <= 0) || ($i != $j && $father_dura->[$j] != $mother_dura->[$i])) {
         $f_div++;
         $f_incd++;
     }
-    my $m_size = $mother_dura[$i] - $m_div;
-    my $f_size = $father_dura[$j] - $f_div;
-    # warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
-    # warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
-    my $m_sub = gen_sub($m_div, $m_size, $mother, \@mother_dura, $i, $m_incd);
+    my $m_size = $mother_dura->[$i] - $m_div;
+    my $f_size = $father_dura->[$j] - $f_div;
+    # warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura->[$i] - $m_div = $m_size\n";
+    # warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura->[$j] - $f_div = $f_size\n";
+    my $m_sub = gen_sub($m_div, $m_size, $mother, $mother_dura, $i, $m_incd);
     # warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
-    my $f_sub = gen_sub($f_div, $f_size, $father, \@father_dura, $j, $f_incd);
+    my $f_sub = gen_sub($f_div, $f_size, $father, $father_dura, $j, $f_incd);
     # warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
     # substitution
     splice @$mother, $i, 1, @$m_sub;
@@ -90,14 +85,25 @@ sub substitution {
     warn 'Father substituted: ',ddc($father);# if $opt{verbose};
 
     # recompute indices
-    @mother_dura = map { dura_size($_) } @$mother;
-    warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
-    @father_dura = map { dura_size($_) } @$father;
-    warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
-    ($i) = iter($x, \@mother_dura);
-    ($j) = iter($x, \@father_dura);
+    $mother_dura = [ map { dura_size($_) } @$mother ];
+    warn 'Mother durations: ',ddc($mother_dura) if $opt{verbse};
+    $father_dura = [ map { dura_size($_) } @$father ];
+    warn 'Father durations: ',ddc($father_dura) if $opt{verbse};
+    ($i) = iter($x, $mother_dura);
+    ($j) = iter($x, $father_dura);
 
     return $i, $j;
+}
+
+sub get_durations {
+    my ($mother, $father) = @_;
+    my @mother_dura = map { dura_size($_) } @$mother;
+    warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
+    my @father_dura = map { dura_size($_) } @$father;
+    warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
+    die "Parents must be the same beat value\n"
+        unless sum0(@mother_dura) == sum0(@father_dura);
+    return \@mother_dura, \@father_dura;
 }
 
 sub get_parents {
