@@ -88,15 +88,22 @@ my $m_div = $sum - $x;
 (my $j, $sum) = iter($x, \@father_dura);
 my $f_div = $sum - $x;
 warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
-$m_div++ if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
-$f_div++ if ($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i]);
+my ($m_incd, $f_incd) = (0, 0);
+if (($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j])) {
+    $m_div++;# if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
+    $m_incd++;
+}
+if (($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i])) {
+    $f_div++;# if ($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i]);
+    $f_incd++;
+}
 my $m_size = $mother_dura[$i] - $m_div;
 my $f_size = $father_dura[$j] - $f_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
 warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
-my $m_sub = gen_sub($m_div, $m_size, $mother, $i);
+my $m_sub = gen_sub($m_div, $m_size, $mother, \@mother_dura, $i, $m_incd);
 warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
-my $f_sub = gen_sub($f_div, $f_size, $father, $j);
+my $f_sub = gen_sub($f_div, $f_size, $father, \@father_dura, $j, $f_incd);
 warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
 # substitution
 splice @$mother, $i, 1, @$m_sub;
@@ -125,8 +132,11 @@ print "Mother's child: ", ddc($child_mother);
 print "Father's child: ", ddc($child_father);
 
 sub gen_sub {
-    my ($div, $size, $list, $n) = @_;
-    return $div && $size
+    my ($div, $size, $list, $duras, $n, $incd) = @_;
+warn __PACKAGE__,' L',__LINE__,' ',,"$n, $duras->[$n], $size, $incd\n";
+    return $duras->[$n] % 2 && $size == 2 && !$incd
+        ? [ (reverse_dump('length')->{1}) x $duras->[$n] ]
+        : $div && $size
         ? [ reverse_dump('length')->{$size}, reverse_dump('length')->{$div} ]
         : $div
             ? [ reverse_dump('length')->{$div} ]
