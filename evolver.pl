@@ -79,7 +79,7 @@ die "Parents must be the same beat value\n"
     unless sum0(@mother_dura) == sum0(@father_dura);
 
 # compute the initial substitutions
-my $x = 8;#int(rand 8) + 1;
+my $x = int(rand 8) + 1;
 warn "Beat crossover point: $x\n";
 # compute the mother iterator and division
 my ($i, $sum) = iter($x, \@mother_dura);
@@ -87,7 +87,7 @@ my $m_div = $sum - $x;
 # compute the father iterator and division
 (my $j, $sum) = iter($x, \@father_dura);
 my $f_div = $sum - $x;
-warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
+# warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
 my ($m_incd, $f_incd) = (0, 0);
 if (($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j])) {
     $m_div++;# if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
@@ -99,12 +99,12 @@ if (($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i])) {
 }
 my $m_size = $mother_dura[$i] - $m_div;
 my $f_size = $father_dura[$j] - $f_div;
-warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
-warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
+# warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
+# warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
 my $m_sub = gen_sub($m_div, $m_size, $mother, \@mother_dura, $i, $m_incd);
-warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
+# warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
 my $f_sub = gen_sub($f_div, $f_size, $father, \@father_dura, $j, $f_incd);
-warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
+# warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
 # substitution
 splice @$mother, $i, 1, @$m_sub;
 splice @$father, $j, 1, @$f_sub;
