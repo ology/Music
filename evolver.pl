@@ -37,8 +37,10 @@ my $crossover = int(rand sum0(@$mother_dura)) + 1;
 warn "Beat crossover point: $crossover\n" if $opt{verbose};
 
 my ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
-($mother_dura, $father_dura) = get_durations($mother, $father);
-($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
+unless ($mother->[$m_point] eq 'qn' && $father->[$f_point] eq 'qn') {
+    ($mother_dura, $father_dura) = get_durations($mother, $father);
+    ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
+}
 
 # my $matches = subsequences($mother, $father);
 # warn 'Matches: ',ddc($matches) if $opt{verbose};
