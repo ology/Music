@@ -17,7 +17,7 @@ my %opt = (
     mutate  => 0.6,
     factor  => 1, # scale durations
     dump    => 0, # show rules and exit
-    verbose => 1,
+    verbose => 0,
 );
 GetOptions(\%opt,
     'mother=s',
