@@ -27,10 +27,8 @@ GetOptions(\%opt,
     'verbose!',
 );
 
-# build rules
 my ($rules, $inverted) = build_rules([qw(wn dhn hn qn)]);
 
- # compute mother and father
 my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
 my @mother_dura = map { dura_size($_) } @$mother;
