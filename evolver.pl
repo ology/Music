@@ -15,17 +15,18 @@ my %opt = (
     mother  => 'qn hn hn dhn',
     father  => 'qn hn dhn hn',
     mutate  => 0.6,
+    factor  => 1, # scale durations
     dump    => 0, # show rules and exi
     verbose => 1,
 );
 GetOptions(\%opt,
     'mother=s',
     'father=s',
+    'mutate=i',
+    'factor=i',
     'dump',
     'verbose!',
 );
-
-my $factor = 1;
 
 # build rules
 my %rules;
