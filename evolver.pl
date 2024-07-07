@@ -31,7 +31,7 @@ GetOptions(\%opt,
 # build rules
 my %rules;
 my %seen;
-for my $dura (qw(dhn hn qn)) {
+for my $dura (qw(wn dhn hn qn)) {
     my $ip = Integer::Partition->new(dura_size($dura) * $opt{factor});
     my @parts;
     while (my $p = $ip->next) {
