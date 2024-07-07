@@ -31,7 +31,6 @@ my ($rules, $inverted) = build_rules([qw(wn dhn hn qn)]);
 
 my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
-# compute the initial substitutions
 my $crossover = int(rand 8) + 1;
 warn "Beat crossover point: $crossover\n";
 
