@@ -12,8 +12,8 @@ use MIDI::Util qw(dura_size midi_dump reverse_dump);
 use POSIX;
 
 my %opt = (
-    mother  => 'qn hn hn dhn',
-    father  => 'qn hn dhn hn',
+    mother  => 'qn hn wn dhn hn',
+    father  => 'qn hn dhn wn hn',
     mutate  => 0.6,
     factor  => 1, # scale durations
     dump    => 0, # show rules and exit
