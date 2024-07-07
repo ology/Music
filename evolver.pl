@@ -121,22 +121,25 @@ sub get_parents {
 sub build_rules {
     my ($knowns) = @_;
     my (%rules, %seen);
-    for my $dura (qw(wn dhn hn qn)) {
+    for my $dura (@$knowns) {
         my $ip = Integer::Partition->new(dura_size($dura) * $opt{factor});
         my @parts;
         while (my $p = $ip->next) {
-            next if @$p <= 1;
+            next if @$p <= 1; # skip single sets
+            # if there s more than one unique member...
             if (uniq(@$p) > 1) {
+                # add all the permutations
                 my $iter = permutations($p);
                 while (my $perm = $iter->next) {
                     push @parts, $perm unless $seen{"@$perm"}++;
                 }
             }
+            # add the single partition
             else {
                 push @parts, $p unless $seen{"@$p"}++;
             }
         }
-        # print "$dura: ",ddc(\@parts);
+        # collect the named durations for the 
         my $rev = reverse_dump('length');
         my @durations;
         for my $p (@parts) {
