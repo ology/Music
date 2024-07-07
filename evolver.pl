@@ -9,6 +9,7 @@ use Getopt::Long qw(GetOptions);
 use Integer::Partition ();
 use List::Util qw(all min uniq);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
+use POSIX;
 
 my %opt = (
     mother  => 'qn hn hn dhn',
@@ -67,6 +68,8 @@ exit if $opt{dump};
  # compute mother and father
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
+die "Parents must be the same beat value\n" unless @$mother == @$father;
+my $beat_value = @$mother;
 print '1st mother: ',ddc($mother);
 print '1st father: ',ddc($father);
 
@@ -76,7 +79,7 @@ my @father_dura = map { dura_size($_) } @$father;
 warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
 my $x = int(rand 8) + 1;
 warn "Chosen beat crossover point: $x\n";
-# compute the mother iterator
+# compute the mother iterator and division
 my $i = 0;
 my $sum = 0;
 for my $n (@mother_dura) {
@@ -88,7 +91,7 @@ for my $n (@mother_dura) {
     $i++;
 }
 my $m_div = $sum - $x;
-# compute the father iterator
+# compute the father iterator and division
 my $j = 0;
 $sum = 0;
 for my $n (@father_dura) {
@@ -100,15 +103,30 @@ for my $n (@father_dura) {
     $j++;
 }
 my $f_div = $sum - $x;
-$m_div++ if $m_div <= 0 && ($i != $j || $mother_dura[$i] != $father_dura[$j]);
+warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
+$m_div++ if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
+# $m_div-- if $beat_value - $x == 1;
 my $m_size = $mother_dura[$i] - $m_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
-my $m_sub = $m_div ? [ reverse_dump('length')->{$m_size}, reverse_dump('length')->{$m_div} ] : [ $mother->[$i] ];
+my $m_sub = $m_div && $m_size && 
+    # ? [ reverse_dump('length')->{$m_div}, reverse_dump('length')->{$m_div}, reverse_dump('length')->{$m_div} ]
+    $m_div && $m_size
+        ? [ reverse_dump('length')->{$m_size}, reverse_dump('length')->{$m_div} ]
+        : $m_div
+            ? [ reverse_dump('length')->{$m_div} ]
+            : [ $mother->[$i] ];
 warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
-$f_div++ if $f_div <= 0 && ($i != $j || $father_dura[$j] != $mother_dura[$i]);
+$f_div++ if ($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i]);
+# $f_div-- if $beat_value - $x == 1;
 my $f_size = $father_dura[$j] - $f_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
-my $f_sub = $f_div ? [ reverse_dump('length')->{$f_size}, reverse_dump('length')->{$f_div} ] : [ $father->[$j] ];
+my $f_sub = #$f_div && $f_size && $father_dura[$j] % 2 && ceil($father_dura[$j] / 2) == $f_div
+    # ? [ reverse_dump('length')->{$f_div}, reverse_dump('length')->{$f_div}, reverse_dump('length')->{$f_div} ]
+    $f_div && $f_size
+        ? [ reverse_dump('length')->{$f_size}, reverse_dump('length')->{$f_div} ]
+        : $f_div
+              ? [ reverse_dump('length')->{$f_div} ]
+              : [ $father->[$j] ];
 warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
 # substitution
 splice @$mother, $i, 1, @$m_sub;
