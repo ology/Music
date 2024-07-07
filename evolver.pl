@@ -16,7 +16,7 @@ my %opt = (
     mutate  => 0.6,
     factor  => 1, # scale durations
     dump    => 0, # show rules and exit
-    verbose => 0,
+    verbose => 1,
 );
 GetOptions(\%opt,
     'mother=s',
@@ -28,42 +28,47 @@ GetOptions(\%opt,
 );
 
 # build rules
-my %rules;
-my %seen;
-for my $dura (qw(wn dhn hn qn)) {
-    my $ip = Integer::Partition->new(dura_size($dura) * $opt{factor});
-    my @parts;
-    while (my $p = $ip->next) {
-        next if @$p <= 1;
-        if (uniq(@$p) > 1) {
-            my $iter = permutations($p);
-            while (my $perm = $iter->next) {
-                push @parts, $perm unless $seen{"@$perm"}++;
+my ($rules, $inverted) = build_rules([qw(wn dhn hn qn)]);
+
+sub build_rules {
+    my ($knowns) = @_;
+    my (%rules, %seen);
+    for my $dura (qw(wn dhn hn qn)) {
+        my $ip = Integer::Partition->new(dura_size($dura) * $opt{factor});
+        my @parts;
+        while (my $p = $ip->next) {
+            next if @$p <= 1;
+            if (uniq(@$p) > 1) {
+                my $iter = permutations($p);
+                while (my $perm = $iter->next) {
+                    push @parts, $perm unless $seen{"@$perm"}++;
+                }
+            }
+            else {
+                push @parts, $p unless $seen{"@$p"}++;
             }
         }
-        else {
-            push @parts, $p unless $seen{"@$p"}++;
+        # print "$dura: ",ddc(\@parts);
+        my $rev = reverse_dump('length');
+        my @durations;
+        for my $p (@parts) {
+            my @named;
+            for (@$p) {
+                my $x = $_ / $opt{factor};
+                my $name = $rev->{$x};
+                push @named, $name;
+            }
+            next if grep { !defined } @named;
+            push @durations, join ' ', @named;
         }
+        $rules{$dura} = \@durations if @durations;
     }
-    # print "$dura: ",ddc(\@parts);
-    my $rev = reverse_dump('length');
-    my @durations;
-    for my $p (@parts) {
-        my @named;
-        for (@$p) {
-            my $x = $_ / $opt{factor};
-            my $name = $rev->{$x};
-            push @named, $name;
-        }
-        next if grep { !defined } @named;
-        push @durations, join ' ', @named;
-    }
-    $rules{$dura} = \@durations if @durations;
+    warn 'Rules: ',ddc(\%rules) if $opt{dump};
+    my %inverted = invert_rules(\%rules);
+    warn 'Inverted: ',ddc(\%inverted) if $opt{dump};
+    exit if $opt{dump};
+    return \%rules, \%inverted;
 }
-warn 'Rules: ',ddc(\%rules) if $opt{dump};
-my %inverted = invert_rules(\%rules);
-warn 'Inverted: ',ddc(\%inverted) if $opt{dump};
-exit if $opt{dump};
 
  # compute mother and father
 my $mother = [ split /\s+/, $opt{mother} ];
@@ -121,7 +126,7 @@ warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
 # my $matches = subsequences($mother, $father);
 # warn 'Matches: ',ddc($matches) if $opt{verbose};
 
-# my $child = mutate_down(\%rules, $mother, $opt{mutate});
+# my $child = mutate_down($rules, $mother, $opt{mutate});
 # print '2nd: ',ddc($child);
 # $child = mutate_up(\%inverted, $child, $opt{mutate});
 # print '3rd: ',ddc($child);
