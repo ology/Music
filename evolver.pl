@@ -16,7 +16,7 @@ my %opt = (
     father  => 'qn hn dhn hn',
     mutate  => 0.6,
     factor  => 1, # scale durations
-    dump    => 0, # show rules and exi
+    dump    => 0, # show rules and exit
     verbose => 1,
 );
 GetOptions(\%opt,
