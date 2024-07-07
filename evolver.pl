@@ -69,16 +69,15 @@ exit if $opt{dump};
  # compute mother and father
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
-print '1st mother: ',ddc($mother);
-print '1st father: ',ddc($father);
-
-# compute initial substitutions
 my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
 warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
 die "Parents must be the same beat value\n"
     unless sum0(@mother_dura) == sum0(@father_dura);
+print '1st mother: ',ddc($mother);
+print '1st father: ',ddc($father);
+
 my $x = 7;#int(rand 8) + 1;
 warn "Beat crossover point: $x\n";
 # compute the mother iterator and division
