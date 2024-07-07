@@ -48,10 +48,10 @@ my ($mother_dura, $father_dura) = get_durations($mother, $father);
 my $crossover = int(rand sum0(@$mother_dura)) + 1;
 warn "Beat crossover point: $crossover\n" if $opt{verbose};
 
-my ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
+my ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover, $opt{factor});
 unless ($mother->[$m_point] eq 'qn' && $father->[$f_point] eq 'qn') {
     ($mother_dura, $father_dura) = get_durations($mother, $father);
-    ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
+    ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover, $opt{factor});
 }
 
 my ($child_mother, $child_father) = crossover($mother, $father, $m_point, $f_point);
@@ -59,7 +59,7 @@ print "Mother's child: ", ddc($child_mother);
 print "Father's child: ", ddc($child_father);
 
 sub substitution {
-    my ($mother, $father, $mother_dura, $father_dura, $x) = @_;
+    my ($mother, $father, $mother_dura, $father_dura, $x, $factor) = @_;
 
     # compute the mother iterator and division
     my ($i, $sum) = iter($x, $mother_dura);
@@ -81,9 +81,9 @@ sub substitution {
     my $f_size = $father_dura->[$j] - $f_div;
     # warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura->[$i] - $m_div = $m_size\n";
     # warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura->[$j] - $f_div = $f_size\n";
-    my $m_sub = gen_sub($m_div, $m_size, $mother, $mother_dura, $i, $m_incd);
+    my $m_sub = gen_sub($m_div, $m_size, $mother, $mother_dura, $i, $m_incd, $factor);
     # warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
-    my $f_sub = gen_sub($f_div, $f_size, $father, $father_dura, $j, $f_incd);
+    my $f_sub = gen_sub($f_div, $f_size, $father, $father_dura, $j, $f_incd, $factor);
     # warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
     # substitution
     splice @$mother, $i, 1, @$m_sub;
@@ -166,10 +166,10 @@ sub build_rules {
 }
 
 sub gen_sub {
-    my ($div, $size, $list, $duras, $n, $incd) = @_;
+    my ($div, $size, $list, $duras, $n, $incd, $factor) = @_;
 # warn __PACKAGE__,' L',__LINE__,' ',,"$n, $duras->[$n], $size, $incd\n";
     return $duras->[$n] % 2 && $size == 2 && !$incd
-        ? [ (reverse_dump('length')->{1}) x $duras->[$n] ]
+        ? [ (reverse_dump('length')->{ 1 / $factor }) x $duras->[$n] ]
         : $div && $size
         ? [ reverse_dump('length')->{$size}, reverse_dump('length')->{$div} ]
         : $div
