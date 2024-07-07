@@ -143,7 +143,7 @@ sub build_rules {
                 push @parts, $p unless $seen{"@$p"}++;
             }
         }
-        # collect the named durations for the 
+        # collect the named durations
         my $rev = reverse_dump('length');
         my @durations;
         for my $p (@parts) {
