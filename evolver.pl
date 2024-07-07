@@ -45,7 +45,7 @@ my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
 my ($mother_dura, $father_dura) = get_durations($mother, $father);
 
-my $crossover = int(rand sum0(@$mother_dura)) + 1 / $opt{factor};
+my $crossover = 0.5;#int(rand sum0(@$mother_dura)) + 1 / $opt{factor};
 warn "Beat crossover point: $crossover\n" if $opt{verbose};
 
 my ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
@@ -60,6 +60,9 @@ print "Father's child: ", ddc($child_father);
 
 sub substitution {
     my ($mother, $father, $mother_dura, $father_dura, $x) = @_;
+
+    $x *= $opt{factor};
+warn __PACKAGE__,' L',__LINE__,' ',,"Factored crossover: $x\n";
 
     # compute the mother iterator and division
     my ($i, $sum) = iter($x, $mother_dura);
@@ -93,9 +96,9 @@ sub substitution {
 
     # recompute indices
     $mother_dura = [ map { dura_size($_) } @$mother ];
-    warn 'Mother durations: ',ddc($mother_dura) if $opt{verbse};
+    warn 'Mother durations: ',ddc($mother_dura) if $opt{verbose};
     $father_dura = [ map { dura_size($_) } @$father ];
-    warn 'Father durations: ',ddc($father_dura) if $opt{verbse};
+    warn 'Father durations: ',ddc($father_dura) if $opt{verbose};
     ($i) = iter($x, $mother_dura);
     ($j) = iter($x, $father_dura);
 
@@ -104,10 +107,10 @@ sub substitution {
 
 sub get_durations {
     my ($mother, $father) = @_;
-    my @mother_dura = map { dura_size($_) } @$mother;
-    warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
-    my @father_dura = map { dura_size($_) } @$father;
-    warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
+    my @mother_dura = map { dura_size($_) * $opt{factor} } @$mother;
+    warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbose};
+    my @father_dura = map { dura_size($_) * $opt{factor} } @$father;
+    warn 'Father durations: ',ddc(\@father_dura) if $opt{verbose};
     die "Parents must be the same beat value\n"
         unless sum0(@mother_dura) == sum0(@father_dura);
     return \@mother_dura, \@father_dura;
@@ -138,9 +141,9 @@ sub iter {
     my ($point, $dura) = @_;
     my ($i, $sum) = (0, 0);
     for my $n (@$dura) {
-        $sum += $n;
+        $sum += $n * $opt{factor};
         if ($point <= $sum) {
-            # warn "Index: $i: Sum: $sum, N: $n\n";
+            warn "Index: $i: Sum: $sum, N: $n\n";
             last;
         }
         $i++;
