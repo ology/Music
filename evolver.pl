@@ -90,11 +90,11 @@ my $f_div = $sum - $x;
 # warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
 my ($m_incd, $f_incd) = (0, 0);
 if (($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j])) {
-    $m_div++;# if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
+    $m_div++;
     $m_incd++;
 }
 if (($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i])) {
-    $f_div++;# if ($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i]);
+    $f_div++;
     $f_incd++;
 }
 my $m_size = $mother_dura[$i] - $m_div;
