@@ -77,7 +77,7 @@ my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
 warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
-my $x = 6;#int(rand 8) + 1;
+my $x = 8;#int(rand 8) + 1;
 warn "Chosen beat crossover point: $x\n";
 # compute the mother iterator and division
 my $i = 0;
@@ -105,6 +105,7 @@ for my $n (@father_dura) {
 my $f_div = $sum - $x;
 warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
 $m_div++ if ($m_div <= 0) || ($i != $j && $mother_dura[$i] != $father_dura[$j]);
+$f_div++ if ($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i]);
 my $m_size = $mother_dura[$i] - $m_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
 my $m_sub = #$mother_dura[$i] % 2 && ceil($mother_dura[$i] / 2) == $m_size
@@ -115,7 +116,6 @@ my $m_sub = #$mother_dura[$i] % 2 && ceil($mother_dura[$i] / 2) == $m_size
             ? [ reverse_dump('length')->{$m_div} ]
             : [ $mother->[$i] ];
 warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
-$f_div++ if ($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i]);
 my $f_size = $father_dura[$j] - $f_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
 my $f_sub = #$father_dura[$j] % 2 && ceil($father_dura[$j] / 2) == $f_size
