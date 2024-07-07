@@ -9,7 +9,6 @@ use Getopt::Long qw(GetOptions);
 use Integer::Partition ();
 use List::Util qw(all min sum0 uniq);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
-use POSIX;
 
 my %opt = (
     mother  => 'qn hn wn dhn hn',
