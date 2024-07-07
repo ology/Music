@@ -77,8 +77,8 @@ my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
 warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
-my $x = 4;#int(rand 8) + 1;
-warn "Chosen beat crossover point: $x\n";
+my $x = 8;#int(rand 8) + 1;
+warn "Beat crossover point: $x\n";
 # compute the mother iterator and division
 my ($i, $sum) = iter($x, \@mother_dura);
 my $m_div = $sum - $x;
