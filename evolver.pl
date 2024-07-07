@@ -8,7 +8,7 @@ use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use Integer::Partition ();
 use List::Util qw(all min uniq);
-use MIDI::Util qw(dura_size reverse_dump);
+use MIDI::Util qw(dura_size midi_dump reverse_dump);
 
 my %opt = (
     mother  => 'qn hn hn dhn',
@@ -87,6 +87,7 @@ for my $n (@mother_dura) {
     }
     $i++;
 }
+my $m_div = $sum - $x;
 # compute the father iterator
 my $j = 0;
 $sum = 0;
@@ -98,24 +99,20 @@ for my $n (@father_dura) {
     }
     $j++;
 }
+my $f_div = $sum - $x;
+$m_div++ if $m_div <= 0 && ($i != $j || $mother_dura[$i] != $father_dura[$j]);
+my $m_size = $mother_dura[$i] - $m_div;
+warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
+my $m_sub = $m_div ? [ reverse_dump('length')->{$m_size}, reverse_dump('length')->{$m_div} ] : [ $mother->[$i] ];
+warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
+$f_div++ if $f_div <= 0 && ($i != $j || $father_dura[$j] != $mother_dura[$i]);
+my $f_size = $father_dura[$j] - $f_div;
+warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
+my $f_sub = $f_div ? [ reverse_dump('length')->{$f_size}, reverse_dump('length')->{$f_div} ] : [ $father->[$j] ];
+warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
 # substitution
-if ($mother->[$i] ne $father->[$j]) {
-warn __PACKAGE__,' L',__LINE__,' ',,"Whoa!\n";
-}
-else {
-    if ($mother->[$i] eq 'hn') {
-        splice @$mother, $i, 1, qw(qn qn);
-    }
-    elsif ($mother->[$i] eq 'dhn') {
-        splice @$mother, $i, 1, qw(qn qn qn);
-    }
-    if ($father->[$j] eq 'hn') {
-        splice @$father, $j, 1, qw(qn qn);
-    }
-    elsif ($father->[$j] eq 'dhn') {
-        splice @$father, $j, 1, qw(qn qn qn);
-    }
-}
+splice @$mother, $i, 1, @$m_sub;
+splice @$father, $j, 1, @$f_sub;
 warn 'Mother substituted: ',ddc($mother) if $opt{verbose};
 warn 'Father substituted: ',ddc($father) if $opt{verbose};
 # exit;
