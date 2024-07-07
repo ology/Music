@@ -101,7 +101,6 @@ splice @$mother, $i, 1, @$m_sub;
 splice @$father, $j, 1, @$f_sub;
 warn 'Mother substituted: ',ddc($mother) if $opt{verbose};
 warn 'Father substituted: ',ddc($father) if $opt{verbose};
-# exit;
 
 # my $matches = subsequences($mother, $father);
 # warn 'Matches: ',ddc($matches) if $opt{verbose};
