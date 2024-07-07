@@ -109,6 +109,7 @@ $f_div++ if ($f_div <= 0) || ($i != $j && $father_dura[$j] != $mother_dura[$i]);
 my $m_size = $mother_dura[$i] - $m_div;
 my $f_size = $father_dura[$j] - $f_div;
 warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura[$i] - $m_div = $m_size\n";
+warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
 my $m_sub = #$mother_dura[$i] % 2 && ceil($mother_dura[$i] / 2) == $m_size
     # ? [ (reverse_dump('length')->{1}) x $mother_dura[$i] ]
     $m_div && $m_size
@@ -117,7 +118,6 @@ my $m_sub = #$mother_dura[$i] % 2 && ceil($mother_dura[$i] / 2) == $m_size
             ? [ reverse_dump('length')->{$m_div} ]
             : [ $mother->[$i] ];
 warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
-warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura[$j] - $f_div = $f_size\n";
 my $f_sub = #$father_dura[$j] % 2 && ceil($father_dura[$j] / 2) == $f_size
     # ? [ (reverse_dump('length')->{1}) x $father_dura[$j] ]
     $f_div && $f_size
