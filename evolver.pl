@@ -7,12 +7,12 @@ use Algorithm::Combinatorics qw(permutations);
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use Integer::Partition ();
-use List::Util qw(all min uniq);
+use List::Util qw(all min sum0 uniq);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
 use POSIX;
 
 my %opt = (
-    mother  => 'qn hn hn dhn',
+    mother  => 'qn hn dhn hn',
     father  => 'qn hn dhn hn',
     mutate  => 0.6,
     factor  => 1, # scale durations
@@ -69,8 +69,6 @@ exit if $opt{dump};
  # compute mother and father
 my $mother = [ split /\s+/, $opt{mother} ];
 my $father = [ split /\s+/, $opt{father} ];
-die "Parents must be the same beat value\n" unless @$mother == @$father;
-my $beat_value = @$mother;
 print '1st mother: ',ddc($mother);
 print '1st father: ',ddc($father);
 
@@ -79,7 +77,8 @@ my @mother_dura = map { dura_size($_) } @$mother;
 warn 'Mother durations: ',ddc(\@mother_dura) if $opt{verbse};
 my @father_dura = map { dura_size($_) } @$father;
 warn 'Father durations: ',ddc(\@father_dura) if $opt{verbse};
-my $x = 8;#int(rand 8) + 1;
+die "Parents must be the same beat value\n" unless sum0(@mother_dura) == sum0(@father_dura);
+my $x = 7;#int(rand 8) + 1;
 warn "Beat crossover point: $x\n";
 # compute the mother iterator and division
 my ($i, $sum) = iter($x, \@mother_dura);
