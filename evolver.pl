@@ -11,9 +11,9 @@ use List::Util qw(all min sum0 uniq);
 use MIDI::Util qw(dura_size midi_dump reverse_dump);
 
 my %opt = (
-    factor  => 1, # ?
+    factor  => 2, # ?
     pool    => 'wn dhn hn qn',
-    mother  => 'qn dhn',
+    mother  => 'en en dhn',
     father  => 'dhn qn',
     mutate  => 0.6,
     dump    => 0, # show rules and exit
@@ -45,7 +45,7 @@ my ($mother, $father) = get_parents($opt{mother}, $opt{father});
 
 my ($mother_dura, $father_dura) = get_durations($mother, $father);
 
-my $crossover = int(rand sum0(@$mother_dura)) + 1;
+my $crossover = int(rand sum0(@$mother_dura)) + 1 / $opt{factor};
 warn "Beat crossover point: $crossover\n" if $opt{verbose};
 
 my ($m_point, $f_point) = substitution($mother, $father, $mother_dura, $father_dura, $crossover);
@@ -67,7 +67,7 @@ sub substitution {
     # compute the father iterator and division
     (my $j, $sum) = iter($x, $father_dura);
     my $f_div = $sum - $x;
-    # warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
+    warn __PACKAGE__,' L',__LINE__,' ',,"M/F divs: $m_div, $f_div\n";
     my ($m_incd, $f_incd) = (0, 0);
     if (($m_div <= 0) || ($i != $j && $mother_dura->[$i] != $father_dura->[$j])) {
         $m_div++;
@@ -79,12 +79,12 @@ sub substitution {
     }
     my $m_size = $mother_dura->[$i] - $m_div;
     my $f_size = $father_dura->[$j] - $f_div;
-    # warn __PACKAGE__,' L',__LINE__,' ',,"Msize: $mother_dura->[$i] - $m_div = $m_size\n";
-    # warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura->[$j] - $f_div = $f_size\n";
+    warn __PACKAGE__,' L',__LINE__,' ',,"Mdura - Mdiv = Msize: $mother_dura->[$i] - $m_div = $m_size\n";
+    warn __PACKAGE__,' L',__LINE__,' ',,"Fsize: $father_dura->[$j] - $f_div = $f_size\n";
     my $m_sub = gen_sub($m_div, $m_size, $mother, $mother_dura, $i, $m_incd);
-    # warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
+    warn __PACKAGE__,' L',__LINE__,' ',,"Msub: @$m_sub\n";
     my $f_sub = gen_sub($f_div, $f_size, $father, $father_dura, $j, $f_incd);
-    # warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
+    warn __PACKAGE__,' L',__LINE__,' ',,"Fsub: @$f_sub\n";
     # substitution
     splice @$mother, $i, 1, @$m_sub;
     splice @$father, $j, 1, @$f_sub;
@@ -122,49 +122,6 @@ sub get_parents {
     return $mother, $father;
 }
 
-sub build_rules {
-    my ($knowns, $factor) = @_;
-    my (%rules, %seen);
-    for my $dura (@$knowns) {
-        my $ip = Integer::Partition->new(dura_size($dura) * $factor);
-        my @parts;
-        while (my $p = $ip->next) {
-            next if @$p <= 1; # skip single sets
-            # if there s more than one unique member...
-            if (uniq(@$p) > 1) {
-                # add all the permutations
-                my $iter = permutations($p);
-                while (my $perm = $iter->next) {
-                    push @parts, $perm unless $seen{"@$perm"}++;
-                }
-            }
-            # add the single partition
-            else {
-                push @parts, $p unless $seen{"@$p"}++;
-            }
-        }
-        # collect the named durations
-        my $rev = reverse_dump('length');
-        my @durations;
-        for my $p (@parts) {
-            my @named;
-            for (@$p) {
-                my $x = $_ / $factor;
-                my $name = $rev->{$x};
-                push @named, $name;
-            }
-            next if grep { !defined } @named;
-            push @durations, join ' ', @named;
-        }
-        $rules{$dura} = \@durations if @durations;
-    }
-    warn 'Rules: ',ddc(\%rules) if $opt{dump};
-    my %inverted = invert_rules(\%rules);
-    warn 'Inverted: ',ddc(\%inverted) if $opt{dump};
-    exit if $opt{dump};
-    return \%rules, \%inverted;
-}
-
 sub gen_sub {
     my ($div, $size, $list, $duras, $n, $incd) = @_;
 # warn __PACKAGE__,' L',__LINE__,' ',,"$n, $duras->[$n], $size, $incd\n";
@@ -189,17 +146,6 @@ sub iter {
         $i++;
     }
     return $i, $sum;
-}
-
-sub invert_rules {
-    my ($rules) = @_;
-    my %invert;
-    for my $rule (keys %$rules) {
-        for my $item ($rules->{$rule}->@*) {
-            $invert{$item} = [ $rule ];
-        } 
-    }
-    return %invert;
 }
 
 sub mutate_up {
@@ -277,4 +223,58 @@ sub crossover {
     my @mother = ( @$mother[ 0 .. $m_point - 1 ], @$father[ $f_point .. $#$father ] );
     my @father = ( @$father[ 0 .. $f_point - 1 ], @$mother[ $m_point .. $#$mother ] );
     return \@mother, \@father;
+}
+
+sub build_rules {
+    my ($knowns, $factor) = @_;
+    my (%rules, %seen);
+    for my $dura (@$knowns) {
+        my $ip = Integer::Partition->new(dura_size($dura) * $factor);
+        my @parts;
+        while (my $p = $ip->next) {
+            next if @$p <= 1; # skip single sets
+            # if there s more than one unique member...
+            if (uniq(@$p) > 1) {
+                # add all the permutations
+                my $iter = permutations($p);
+                while (my $perm = $iter->next) {
+                    push @parts, $perm unless $seen{"@$perm"}++;
+                }
+            }
+            # add the single partition
+            else {
+                push @parts, $p unless $seen{"@$p"}++;
+            }
+        }
+        # collect the named durations
+        my $rev = reverse_dump('length');
+        my @durations;
+        for my $p (@parts) {
+            my @named;
+            for (@$p) {
+                my $x = $_ / $factor;
+                my $name = $rev->{$x};
+                push @named, $name;
+            }
+            next if grep { !defined } @named;
+            push @durations, join ' ', @named;
+        }
+        $rules{$dura} = \@durations if @durations;
+    }
+    warn 'Rules: ',ddc(\%rules) if $opt{dump};
+    my %inverted = invert_rules(\%rules);
+    warn 'Inverted: ',ddc(\%inverted) if $opt{dump};
+    exit if $opt{dump};
+    return \%rules, \%inverted;
+}
+
+sub invert_rules {
+    my ($rules) = @_;
+    my %invert;
+    for my $rule (keys %$rules) {
+        for my $item ($rules->{$rule}->@*) {
+            $invert{$item} = [ $rule ];
+        } 
+    }
+    return %invert;
 }
