@@ -39,21 +39,21 @@ use Syntax::Keyword::Try;
 use Text::Unidecode qw(unidecode);
 use YAML::XS qw(LoadFile);
 
-# App::MusicTools           # } Needed for `vov`
-# Algorithm::Combinatorics  # ⎫
-# Math::Factor::XS          # ⎬ Needed for Music::Intervals
-# MIDI::Pitch               # ⎪
-# Number::Fraction          # ⎭
-# Text::CSV_XS is needed for local modules
-# strictures
-# Math::Bezier
-# File::Slurper
-# Music::RhythmSet::Util
-# Math::Random::Discrete
-# AI::Prolog
+# App::MusicTools           } Needed for `vov`
+# Algorithm::Combinatorics  ⎫
+# Math::Factor::XS          ⎬ Needed for local modules
+# MIDI::Pitch               ⎪
+# Number::Fraction          |
+# Text::CSV_XS              |
+# strictures                |
+# Math::Bezier              ⎪
+# File::Slurper             ⎪
+# Music::RhythmSet::Util    ⎪
+# Math::Random::Discrete    ⎪
+# AI::Prolog                ⎭
 
 # Use local author libraries
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals Music-ModalFunction);
+use if exists $ENV{USER} && $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals Music-ModalFunction);
 
 use MIDI::Chord::Guitar;
 use MIDI::Drummer::Tiny;
