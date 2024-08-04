@@ -44,6 +44,13 @@ use YAML::XS qw(LoadFile);
 # Math::Factor::XS          # ⎬ Needed for Music::Intervals
 # MIDI::Pitch               # ⎪
 # Number::Fraction          # ⎭
+# Text::CSV_XS is needed for local modules
+# strictures
+# Math::Bezier
+# File::Slurper
+# Music::RhythmSet::Util
+# Math::Random::Discrete
+# AI::Prolog
 
 # Use local author libraries
 use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Chord-Guitar MIDI-Drummer-Tiny MIDI-Util Music-Duration Music-Duration-Partition Music-Intervals Music-ModalFunction);
