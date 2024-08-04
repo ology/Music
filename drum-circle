@@ -27,8 +27,8 @@ GetOptions( \%opts,
     'measures=i',
     'beats=i',
     'pool=s',
-    'help|?',     # Call as --help or -?
-    'man',        # Call as --man
+    'help|?',
+    'man',
 ) or pod2usage(2);
 pod2usage(1) if $opts{help};
 pod2usage(-exitval => 0, -verbose => 2) if $opts{man};
