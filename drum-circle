@@ -135,7 +135,6 @@ drum-circle
   $ perl drum-circle --help                             # -? or --man
   $ perl drum-circle                                    # use defaults
   $ perl drum-circle --drummers=11 --bpm=120 --extend=2 --measures=3
-  $ perl drum-circle --pool='hn dqn qn en'
   $ perl drum-circle --beats=5 --pool='thn tqn ten tsn' # 5/4 triplets? YMMV
   # Then for instance:
   $ timidity -c ~/timidity.cfg drum-circle.mid          # On *nix
