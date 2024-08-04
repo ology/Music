@@ -206,6 +206,11 @@ The writeup: L<https://ology.github.io/2020/11/01/imitating-a-drum-circle/>
 
 The Wikipedia entry: L<https://en.wikipedia.org/wiki/Drum_circle>
 
+=head1 SEE ALSO
+
+A real-time implementation: F<drum-circle.pl> in the
+L<MIDI::RtMidi::ScorePlayer|https://metacpan.org/dist/MIDI-RtMidi-ScorePlayer> distribution.
+
 =head1 AUTHOR
 
 Gene Boggs <gene.boggs@gmail.com>
