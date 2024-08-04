@@ -282,7 +282,7 @@ sub process_msg {
       $vov =~ s/IS/#/g;
       push @parts, $vov;
     }
-    my $flattened = join '|', @parts;
+    my $flattened = join ' | ', @parts;
     $irc->write(@$to, ":$flattened");
   }
   # COMMAND: chord
