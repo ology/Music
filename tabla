@@ -11,7 +11,6 @@ use warnings;
 # $ perl tabla 8 100 1
 # $ timidity -c ~/timidity.cfg tabla.mid
 
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny Music-Duration-Partition); # local author libraries
 use MIDI::Drummer::Tiny;
 use Music::Duration::Partition;
 

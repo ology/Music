@@ -4,7 +4,6 @@ use warnings;
 
 # https://www.youtube.com/watch?v=_WviF3f1VLM
 
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-Chord-Progression Music-Duration-Partition);
 use MIDI::Util qw(setup_score set_chan_patch midi_format);
 use Music::Chord::Progression ();
 use Music::Duration::Partition ();

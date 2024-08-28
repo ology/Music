@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use if $ENV{USER} eq 'gene', lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 
 use Algorithm::Combinatorics qw(permutations);
 use Data::Dumper::Compact qw(ddc);

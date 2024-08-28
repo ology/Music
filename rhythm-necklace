@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny);
 use MIDI::Drummer::Tiny ();
 use Math::Trig qw(pi);
 use SVG qw(title);

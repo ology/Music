@@ -5,7 +5,6 @@
 use strict;
 use warnings;
 
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 use MIDI::Util qw(setup_score);
 use Math::BaseConvert;
 use Math::Fibonacci 'series';

@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-use if $ENV{USER} eq 'gene', lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util);
 
 use Algorithm::Combinatorics qw(variations_with_repetition);
 use Getopt::Long qw(GetOptions);

@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use Data::Dumper::Compact qw(ddc);
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Drummer-Tiny MIDI-Praxis-Variation MIDI-Util Music-Cadence Music-Chord-Progression Music-Duration Music-Duration-Partition Music-ToRoman);
 use MIDI::Drummer::Tiny;
 use MIDI::Praxis::Variation qw(transposition);
 use MIDI::Util qw(set_chan_patch midi_format);

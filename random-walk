@@ -5,7 +5,6 @@ use warnings;
 # Write-up:
 # http://techn.ology.net/musical-random-walks-over-weighted-graphs
 
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(Graph-Weighted MIDI-Util);
 use Graph::Weighted;
 use List::Util::WeightedChoice qw( choose_weighted );
 use MIDI::Util qw(setup_score);

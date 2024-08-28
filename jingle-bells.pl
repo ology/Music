@@ -5,8 +5,7 @@
 use strict;
 use warnings;
 
-#use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-MelodicDevice-Ornamentation); # local author libraries
-use MIDI::Util qw(setup_score midi_format);
+#use MIDI::Util qw(setup_score midi_format);
 use Music::MelodicDevice::Ornamentation ();
 
 # The number of notes before resetting the note counter

@@ -8,7 +8,6 @@
 use strict;
 use warnings;
 
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util); # n.b. local author libs. comment this out unless you're me
 use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::FFI::Device ();
 use MIDI::Util qw(setup_score midi_format score2events get_microseconds);

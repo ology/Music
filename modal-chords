@@ -5,7 +5,6 @@ use warnings;
 # Play the chords of the given scale mode.
 
 use Data::Dumper::Compact qw(ddc);
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-ToRoman);
 use MIDI::Util qw(setup_score midi_format);
 use Music::Chord::Note ();
 use Music::Scales qw(get_scale_notes);

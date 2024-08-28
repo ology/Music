@@ -5,7 +5,6 @@
 use strict;
 use warnings;
 
-use if $ENV{USER} eq "gene", lib => map { "$ENV{HOME}/sandbox/$_/lib" } qw(MIDI-Util Music-ScaleNote); # local author libraries
 
 use Getopt::Long qw(GetOptions);
 use MIDI::Util qw(setup_score set_chan_patch);
