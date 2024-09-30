@@ -193,7 +193,7 @@ $score->write_score( $0 . '.mid' );
 
 # Return a random duration.  * A set of durations makes things disjointed and strange. YMMV
 sub random_duration {
-    my (@duration) = @_;
+    my ( @duration ) = @_;
     return $duration[ int rand @duration ];
 }
 
