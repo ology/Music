@@ -23,6 +23,9 @@ my %opts = (
     offset     => 1,        # +/- Distance to move in the scale for a new note value
     scale      => 'major',  # Name of the scale to traverse
     bpm        => 300,      # Beats per minute of the rendered MIDI
+    format     => 'midinum',
+    fpatch     => 0,
+    gpatch     => 13,
 );
 GetOptions( \%opts,
     'rule=i',
@@ -33,6 +36,9 @@ GetOptions( \%opts,
     'offset=i',
     'scale=i',
     'bpm=i',
+    'format=s',
+    'fpatch=i',
+    'gpatch=i',
     'help|?',
     'man',
 ) or pod2usage(2);
@@ -43,11 +49,6 @@ pod2usage( -exitval => 0, -verbose => 2 ) if $opts{man};
 # Split the durations into a list so that they can be randomly selected
 my $n_duration = [ split /\s+/, $opts{n_duration} ];
 my $r_duration = [ split /\s+/, $opts{r_duration} ];
-
-# Default variables
-my $format = 'midinum';
-my $patchf = 0;
-my $patchg = 13;
 
 # The master list of fractals by rule number, their axioms and production rules
 my %rules = (
@@ -132,7 +133,7 @@ my $string = $rules{ $opts{rule} }{axiom};
 my $score = setup_score( bpm => $opts{bpm} );
 
 # Create a note object for the given start note value
-my $note = Music::Note->new( $midi_note, $format );
+my $note = Music::Note->new( $midi_note, $opts{format} );
 
 # Create a scale-note object to use to traverse the given scale
 my $msn = Music::ScaleNote->new(
@@ -147,29 +148,29 @@ my %translate = (
     'f' => sub { $score->r( random_duration( @$r_duration ) ) },
     # Add a note to the score
     'F' => sub {
-        set_chan_patch( $score, 0, $patchf );
+        set_chan_patch( $score, 0, $opts{fpatch} );
         $score->n( random_duration( @$n_duration ), $midi_note );
     },
     # Add a note to the score
     'G' => sub {
-        set_chan_patch( $score, 1, $patchg );
+        set_chan_patch( $score, 1, $opts{gpatch} );
         $score->n( random_duration( @$n_duration ), $midi_note );
     },
     # Decrement the scale-note
     '-' => sub {
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
-            note_format => $format,
+            note_format => $opts{format},
             offset      => -$opts{offset},
-        )->format($format);
+        )->format($opts{format});
     },
     # Increment the scale-note
     '+' => sub {
         $midi_note = $msn->get_offset(
             note_name   => $midi_note,
-            note_format => $format,
+            note_format => $opts{format},
             offset      => $opts{offset},
-        )->format($format);
+        )->format($opts{format});
     },
 );
 
