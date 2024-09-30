@@ -164,7 +164,7 @@ my %translate = (
             note_name   => $midi_note,
             note_format => $opts{format},
             offset      => -$opts{offset},
-        )->format($opts{format});
+        )->format( $opts{format} );
     },
     # Increment the scale-note
     '+' => sub {
@@ -172,7 +172,7 @@ my %translate = (
             note_name   => $midi_note,
             note_format => $opts{format},
             offset      => $opts{offset},
-        )->format($opts{format});
+        )->format( $opts{format} );
     },
 );
 
