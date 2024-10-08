@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 # Create a MIDI file of various L-systems
-# Example:
+# Examples:
 # perl lindenmayer-midi --rule=6 --bpm=100 # a Sierpiński triangle 
 
 use strict;
