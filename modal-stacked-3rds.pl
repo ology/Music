@@ -12,13 +12,19 @@ my $score = setup_score(patch => 4);
 for my $mode (qw(ionian dorian phrygian lydian mixolydian aeolian locrian)) {
     my @scale = get_scale_notes($root, $mode);
     print "$mode: @scale\n";
+
     my @thirds;
+
     for my $n (0 .. $#scale) {
         push @thirds, $scale[ (2 * $n) % @scale ];
-        $score->n('wn', @thirds);
+        $score->n('hn', @thirds);
     }
+
     print "\t@thirds\n";
+
+    $score->r('wn');
 }
+
 $score->write_score("$0.mid");
 
 __END__
