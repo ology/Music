@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use MIDI::Util qw(setup_score);
+use MIDI::Util qw(setup_score midi_format);
 use Music::Scales qw(get_scale_notes);
 
 my $root = 'C';
@@ -14,10 +14,12 @@ for my $mode (qw(ionian dorian phrygian lydian mixolydian aeolian locrian)) {
     print "$mode: @scale\n";
 
     my @thirds;
+    my $octave = 4;
 
     for my $n (0 .. $#scale) {
-        push @thirds, $scale[ (2 * $n) % @scale ];
-        $score->n('hn', @thirds);
+        push @thirds, $scale[ (2 * $n) % @scale ] . $octave;
+        $octave++ if (@thirds % 5) == 4;
+        $score->n('hn', midi_format(@thirds));
     }
 
     print "\t@thirds\n";
