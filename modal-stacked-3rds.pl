@@ -13,15 +13,14 @@ for my $mode (qw(ionian dorian phrygian lydian mixolydian aeolian locrian)) {
     my @scale = get_scale_notes($root, $mode);
     print "$mode: @scale\n";
 
-    my @thirds;
     my $octave = 4;
 
+    my @thirds;
     for my $n (0 .. $#scale) {
         push @thirds, $scale[ (2 * $n) % @scale ] . $octave;
         $octave++ if (@thirds % 5) == 4;
         $score->n('hn', midi_format(@thirds));
     }
-
     print "\t@thirds\n";
 
     $score->r('wn');
