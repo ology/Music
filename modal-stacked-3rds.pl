@@ -2,9 +2,12 @@
 use strict;
 use warnings;
 
+use MIDI::Util qw(setup_score);
 use Music::Scales qw(get_scale_notes);
 
 my $root = 'C';
+
+my $score = setup_score(patch => 4);
 
 for my $mode (qw(ionian dorian phrygian lydian mixolydian aeolian locrian)) {
     my @scale = get_scale_notes($root, $mode);
@@ -12,9 +15,11 @@ for my $mode (qw(ionian dorian phrygian lydian mixolydian aeolian locrian)) {
     my @thirds;
     for my $n (0 .. $#scale) {
         push @thirds, $scale[ (2 * $n) % @scale ];
+        $score->n('wn', @thirds);
     }
     print "\t@thirds\n";
 }
+$score->write_score("$0.mid");
 
 __END__
 ionian:  C E  G  B  D  F  A  = Cmaj13
