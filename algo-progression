@@ -24,7 +24,7 @@ my $reps  = shift || 1;                 # The number of times to repeat an indiv
 my $multi = shift || 1;                 # The number of times the phrases are repeated
 
 my $chords_patch = shift || 89;
-my $bass_patch   = shift || 73;
+my $bass_patch   = shift || 35;
 
 my @parts = split /-/, $parts;
 
