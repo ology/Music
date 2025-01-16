@@ -6,9 +6,9 @@
 use strict;
 use warnings;
 
-use Music::Bassline::Generator;
-use MIDI::Drummer::Tiny;
-use MIDI::Chord::Guitar;
+use Music::Bassline::Generator ();
+use MIDI::Drummer::Tiny ();
+use MIDI::Chord::Guitar ();
 use MIDI::Praxis::Variation qw(tie_durations);
 use MIDI::Util qw(set_chan_patch);
 
