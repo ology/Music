@@ -149,6 +149,6 @@ sub top {
 
 sub drums {
     $count = $d->bars * $d->beats;
-    $d->metronome54;
+    $d->metronome5;
     $d->note($d->whole, $d->crash1, $d->kick);
 }
