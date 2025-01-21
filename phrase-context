@@ -137,16 +137,16 @@ sub top {
 sub drums {
     my $x = $d->bars * 4;
     if ($beats == 3) {
-        $d->metronome34($x);
+        $d->metronome3($x);
     }
     elsif ($beats == 4) {
-        $d->metronome44($x);
+        $d->metronome4($x);
     }
     elsif ($beats == 5) {
-        $d->metronome54($x);
+        $d->metronome5($x);
     }
     elsif ($beats == 7) {
-        $d->metronome74($x);
+        $d->metronome7($x);
     }
     else {
         die 'Invalid beats';
