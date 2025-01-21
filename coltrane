@@ -143,7 +143,7 @@ $d->sync(
 $d->write;
 
 sub drums {
-    $d->metronome44swing; # swing for the number of bars
+    $d->metronome4($d->bars, $d->ride2, $d->quarter, 67);
     $d->note($d->quarter, $d->ride1, $d->kick);
 }
 
