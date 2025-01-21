@@ -56,7 +56,7 @@ $d->write;
 
 sub drums {
     $d->count_in($bars * 2);
-#    $d->metronome44($bars * 2);
+#    $d->metronome4($bars * 2);
     $d->note($d->whole, $d->crash1, $d->kick);
 }
 
