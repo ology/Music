@@ -129,16 +129,16 @@ sub top {
 
 sub drums {
     if ($beats == 3) {
-        $d->metronome34;
+        $d->metronome3;
     }
     elsif ($beats == 4) {
-        $d->metronome44;
+        $d->metronome4;
     }
     elsif ($beats == 5) {
-        $d->metronome54;
+        $d->metronome5;
     }
     elsif ($beats == 7) {
-        $d->metronome74;
+        $d->metronome7;
     }
     else {
         warn "Unknown beat number\n";
