@@ -170,6 +170,6 @@ sub dyads {
 sub drums {
     $count = $d->bars * $d->beats;
     $d->count_in;
-#    $d->metronome44;
+#    $d->metronome4;
     $d->note($d->whole, $d->crash1, $d->kick);
 }
