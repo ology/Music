@@ -66,7 +66,7 @@ $d->write;
 
 sub drums {
     if ($opts{drums}) {
-        $d->metronome44swing($d->bars * $opts{repeat});
+        $d->metronome4($d->bars * $opts{repeat}, $d->ride2, $d->quarter, 67);
         $d->note($d->whole, $d->kick, $d->ride1);
     }
     else {
