@@ -40,7 +40,7 @@ $d->write;
 
 sub drums {
     $d->count_in(1);
-    $d->metronome44swing($d->bars * $d->bars);
+    $d->metronome4($d->bars * $d->bars, $d->ride2, $d->quarter, 67);
 }
 
 sub bass {
