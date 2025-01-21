@@ -49,7 +49,7 @@ $d->sync(
 $d->write;
 
 sub drums {
-    $d->metronome44($multi * $d->bars, 1);
+    $d->metronome4($multi * $d->bars, 1);
 }
 
 sub chords {
