@@ -39,8 +39,7 @@ $d->sync(
 $d->write;
 
 sub drums {
-#    $d->metronome44($d->bars, 1);
-    $d->metronome44swing($d->bars);
+    $d->metronome4($d->bars, $d->ride2, $d->quarter, 67);
 }
 
 sub chords {
