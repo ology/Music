@@ -45,7 +45,7 @@ my $d = MIDI::Drummer::Tiny->new(
 # play the parts simultaneously
 $d->sync(
     \&drums,
-    \&bass,
+    # \&bass,
     # \&harmony,
     \&coltrane,
 );
