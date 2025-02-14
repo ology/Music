@@ -18,19 +18,20 @@ $d->play_with_timidity;
 
 sub row {
     my ($n) = @_;
-    my $bpm = random_item([70 .. 100]);
-    my $reverb = 15 + $n;
-    my $volume = 100 - $n;
-    my $mdt = MIDI::Drummer::Tiny->new(
-        bpm    => $bpm,
-        reverb => $reverb,
-        volume => $volume,
-    );
-    my @row;
-    for my $i (1 .. $x) {
-        push @row, sub { $mdt->count_in({ bars => 4, patch => $d->snare }) }
-    }
-    return \@row;
+    my $sub = sub {
+        my $bpm = random_item([70 .. 100]);
+        my $reverb = 15 + $n;
+        my $volume = 100 - $n;
+        my $mdt = MIDI::Drummer::Tiny->new(
+            bpm    => $bpm,
+            reverb => $reverb,
+            volume => $volume,
+        );
+        for my $i (1 .. $x) {
+            $mdt->count_in({ bars => 4, patch => $d->snare });
+        }
+    };
+    return $sub;
 }
 
 sub random_item {
