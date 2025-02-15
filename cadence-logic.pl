@@ -18,6 +18,8 @@ my $leads  = shift || '1 2 4 7';
 my @leaders = split /\s+/, $leads;
 my @leads   = map { Math::Logic->new(-value => $_, -degree => 100) } @leaders;
 
+my @cadences = qw(half imperfect);
+
 my $quarter = 'qn';
 my $half    = 'hn';
 
@@ -42,12 +44,24 @@ for my $i (1 .. $max) {
     $score->n($quarter, $_) for @notes;
 
     if ($i % 4 == 0) {
-        my @chosen = map { $leads[ int rand @leads ] } 1 .. 2;
-        my $result = $chosen[0] & $chosen[1];
-        my $chords = $mc->cadence(
-            type    => 'half',
-            leading => $result->as_string,
-        );
+        print "Half\n";
+        my $chords;
+        my $cadence = $cadences[ int rand @cadences ];
+        if ($cadence eq 'half') {
+            my @chosen = map { $leads[ int rand @leads ] } 1 .. 2;
+            my $result = $chosen[0] & $chosen[1];
+            $chords = $mc->cadence(
+                type    => $cadence,
+                leading => $result->as_string,
+            );
+        }
+        elsif ($cadence eq 'imperfect') { 
+        print "Imperfect\n";
+            $chords = $mc->cadence(
+                type      => $cadence,
+                variation => 1 + int rand 2,
+            );
+        }
         # $chords = clip($mc, $chords); # Remove a random note from the chord
         $score->n($half, @$_) for @$chords;
     }
