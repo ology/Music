@@ -16,8 +16,7 @@ my $bpm    = shift || 100;
 my $leads  = shift || '1 2 4 7';
 
 my @leaders = split /\s+/, $leads;
-my $true    = 100;
-my @leads   = map { Math::Logic->new(-value => $_, -degree => $true) } @leaders;
+my @leads   = map { Math::Logic->new(-value => $_, -degree => 100) } @leaders;
 
 my $quarter = 'qn';
 my $half    = 'hn';
