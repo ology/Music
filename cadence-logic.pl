@@ -44,10 +44,10 @@ for my $i (1 .. $max) {
     $score->n($quarter, $_) for @notes;
 
     if ($i % 4 == 0) {
-        print "Half\n";
         my $chords;
         my $cadence = $cadences[ int rand @cadences ];
         if ($cadence eq 'half') {
+            print "Half\n";
             my @chosen = map { $leads[ int rand @leads ] } 1 .. 2;
             my $result = $chosen[0] & $chosen[1];
             $chords = $mc->cadence(
@@ -56,7 +56,7 @@ for my $i (1 .. $max) {
             );
         }
         elsif ($cadence eq 'imperfect') { 
-        print "Imperfect\n";
+            print "Imperfect\n";
             $chords = $mc->cadence(
                 type      => $cadence,
                 variation => 1 + int rand 2,
