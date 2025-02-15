@@ -10,8 +10,7 @@ use Music::VoiceGen;
 
 my $max    = shift || 16;
 my $note   = shift || 'C';
-my $type   = shift || 'major';
-my $scale  = shift || 'pentatonic';
+my $scale  = shift || 'major';
 my $octave = shift || 4;
 my $bpm    = shift || 100;
 my $leads  = shift || '1 2 4 7';
@@ -29,7 +28,7 @@ my $score = setup_score(bpm => $bpm);
 
 my $mc = Music::Cadence->new(
     key    => $note,
-    scale  => $type,
+    scale  => $scale,
     octave => $octave,
     format => 'midinum',
 );
