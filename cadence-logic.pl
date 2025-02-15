@@ -44,7 +44,7 @@ for my $i (1 .. $max) {
     $score->n($quarter, $_) for @notes;
 
     if ($i % 4 == 0) {
-        my @chosen = map { $leaders[ int rand @leaders ] } 1 .. 2;
+        my @chosen = map { $leads[ int rand @leads ] } 1 .. 2;
         my $result = $chosen[0] & $chosen[1];
         my $chords = $mc->cadence(
             type    => 'half',
