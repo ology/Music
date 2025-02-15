@@ -50,7 +50,7 @@ for my $i (1 .. $max) {
             type    => 'half',
             leading => $result->as_string,
         );
-        $chords = clip($mc, $chords); # Remove a random note from the chord
+        # $chords = clip($mc, $chords); # Remove a random note from the chord
         $score->n($half, @$_) for @$chords;
     }
 }
