@@ -47,19 +47,20 @@ for my $i (1 .. $max) {
         my $chords;
         my $cadence = $cadences[ int rand @cadences ];
         if ($cadence eq 'half') {
-            print "Half\n";
             my @chosen = map { $leads[ int rand @leads ] } 1 .. 2;
             my $result = $chosen[0] & $chosen[1];
+            print 'Half: ', $result->as_string, "\n";
             $chords = $mc->cadence(
                 type    => $cadence,
                 leading => $result->as_string,
             );
         }
         elsif ($cadence eq 'imperfect') { 
-            print "Imperfect\n";
+            my $var = 1 + int rand 2;
+            print "Imperfect: $var\n";
             $chords = $mc->cadence(
                 type      => $cadence,
-                variation => 1 + int rand 2,
+                variation => $var,
             );
         }
         # $chords = clip($mc, $chords); # Remove a random note from the chord
