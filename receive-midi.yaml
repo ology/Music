@@ -54,25 +54,25 @@ triggers:
     data: 'D#2'
     text: 'gt' # go to the next tab
 
-  - event: 'Control change'
+  - event: 'note-on'
     data: '^controller 1, value (\d+)$'
     up:
       key: 'ctrl+y' # previous line
     down:
       key: 'ctrl+e' # next line
-  - event: 'Control change'
+  - event: 'note-on'
     data: '^controller 2, value (\d+)$'
     up:
       text: '{' # previous paragraph
     down:
       text: '}' # next paragraph
-  - event: 'Control change'
+  - event: 'note-on'
     data: '^controller 5, value (\d+)$'
     up:
       text: 'h' # previous character
     down:
       text: 'l' # next character
-  - event: 'Control change'
+  - event: 'note-on'
     data: '^controller 6, value (\d+)$'
     up:
       text: 'F ' # previous space
@@ -128,25 +128,25 @@ triggers:
     data: '^note 67, velocity \d+$'
     text: ':digraphs' # show digraphs
 
-  - event: 'Control change'
+  - event: 'note-on'
     data: '^controller 7, value (\d+)$'
     up:
       key: 'ctrl+y' # previous line
     down:
       key: 'ctrl+e' # next line
-  - event: 'Control change'
+  - event: 'note-on'
     data: '^controller 8, value (\d+)$'
     up:
       text: '{' # previous paragraph
     down:
       text: '}' # next paragraph
-  - event: 'Control change'
+  - event: 'note-on'
     data: '^controller 11, value (\d+)$'
     up:
       text: 'h' # previous character
     down:
       text: 'l' # next character
-  - event: 'Control change'
+  - event: 'note-on'
     data: '^controller 12, value (\d+)$'
     up:
       text: 'F ' # previous space
