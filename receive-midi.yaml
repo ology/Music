@@ -55,29 +55,29 @@ triggers:
     text: 'gt' # go to the next tab
 
   - event: 'note-on'
-    data: '^controller 1, value (\d+)$'
-    up:
-      key: 'ctrl+y' # previous line
-    down:
-      key: 'ctrl+e' # next line
+    data: 'E2'
+    key: 'ctrl+y' # previous line
   - event: 'note-on'
-    data: '^controller 2, value (\d+)$'
-    up:
-      text: '{' # previous paragraph
-    down:
-      text: '}' # next paragraph
+    data: 'F2'
+    key: 'ctrl+e' # next line
   - event: 'note-on'
-    data: '^controller 5, value (\d+)$'
-    up:
-      text: 'h' # previous character
-    down:
-      text: 'l' # next character
+    data: 'F#2'
+    text: '{' # previous paragraph
   - event: 'note-on'
-    data: '^controller 6, value (\d+)$'
-    up:
-      text: 'F ' # previous space
-    down:
-      text: 'f ' # next space
+    data: 'G2'
+    text: '}' # next paragraph
+  - event: 'note-on'
+    data: 'G#2'
+    text: 'h' # previous character
+  - event: 'note-on'
+    data: 'A2'
+    text: 'l' # next character
+  - event: 'note-on'
+    data: 'A#2'
+    text: 'F ' # previous space
+  - event: 'note-on'
+    data: 'B2'
+    text: 'f ' # next space
 
   - event: 'note-on'
     data: '^note 52, velocity \d+$'
