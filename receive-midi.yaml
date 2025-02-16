@@ -16,42 +16,42 @@ triggers:
     text: 'g_' # last non-blank char of line
     # vim BITS
   - event: 'note-on'
-    data: '^note 40, velocity \d+$'
+    data: 'E1'
     text: 'zb' # move the line to the bottom
   - event: 'note-on'
-    data: '^note 41, velocity \d+$'
+    data: 'F1'
     text: 'zc' # collapse fold
   - event: 'note-on'
-    data: '^note 42, velocity \d+$'
+    data: 'F#1'
     text: 'zv' # open fold
   - event: 'note-on'
-    data: '^note 43, velocity \d+$'
+    data: 'G1'
     text: 'zt' # move the line to the top
     # vim git things
   - event: 'note-on'
-    data: '^note 44, velocity \d+$'
+    data: 'G#1'
     text: ':GitGutterPrevHunk' # previous hunk
   - event: 'note-on'
-    data: '^note 45, velocity \d+$'
+    data: 'A1'
     text: ':GitGutterToggle' # toggle gitgutter
   - event: 'note-on'
-    data: '^note 46, velocity \d+$'
+    data: 'A#1'
     text: ':!git blame %'
   - event: 'note-on'
-    data: '^note 47, velocity \d+$'
+    data: 'B1'
     text: ':GitGutterNextHunk' # next hunk
     # vim TABS
   - event: 'note-on'
-    data: '^note 48, velocity \d+$'
+    data: 'C2'
     text: 'gT' # go to the previous tab
   - event: 'note-on'
-    data: '^note 49, velocity \d+$'
+    data: 'C#2'
     text: ':tabnew' # open a new tab
   - event: 'note-on'
-    data: '^note 50, velocity \d+$'
+    data: 'D2'
     text: ':Explore .' # open a new file
   - event: 'note-on'
-    data: '^note 51, velocity \d+$'
+    data: 'D#2'
     text: 'gt' # go to the next tab
 
   - event: 'Control change'
