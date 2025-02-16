@@ -4,9 +4,6 @@ use warnings;
 
 use YAML::XS qw(LoadFile);
 
-$ENV{XAUTHORITY} = '~gene/.Xauthority';
-$ENV{DISPLAY} = 'DISPLAY=:0.0';
-
 my $config_file = shift || 'receive-midi.yaml';
 
 my $config = LoadFile($config_file);
