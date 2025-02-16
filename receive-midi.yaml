@@ -1,0 +1,155 @@
+debug: 1
+device: 'Synido TempoPAD Z-1'
+triggers:
+    # vim MOVEMENT
+  - event: 'note-on'
+    data: 'C1'
+    text: '^' # first non-blank char of line
+  - event: 'note-on'
+    data: 'C#1'
+    text: ':set spell!' # spell check
+  - event: 'note-on'
+    data: 'D1'
+    text: ':set list!' # show/hide hidden chars
+  - event: 'note-on'
+    data: 'D#1'
+    text: 'g_' # last non-blank char of line
+    # vim BITS
+  - event: 'note-on'
+    data: '^note 40, velocity \d+$'
+    text: 'zb' # move the line to the bottom
+  - event: 'note-on'
+    data: '^note 41, velocity \d+$'
+    text: 'zc' # collapse fold
+  - event: 'note-on'
+    data: '^note 42, velocity \d+$'
+    text: 'zv' # open fold
+  - event: 'note-on'
+    data: '^note 43, velocity \d+$'
+    text: 'zt' # move the line to the top
+    # vim git things
+  - event: 'note-on'
+    data: '^note 44, velocity \d+$'
+    text: ':GitGutterPrevHunk' # previous hunk
+  - event: 'note-on'
+    data: '^note 45, velocity \d+$'
+    text: ':GitGutterToggle' # toggle gitgutter
+  - event: 'note-on'
+    data: '^note 46, velocity \d+$'
+    text: ':!git blame %'
+  - event: 'note-on'
+    data: '^note 47, velocity \d+$'
+    text: ':GitGutterNextHunk' # next hunk
+    # vim TABS
+  - event: 'note-on'
+    data: '^note 48, velocity \d+$'
+    text: 'gT' # go to the previous tab
+  - event: 'note-on'
+    data: '^note 49, velocity \d+$'
+    text: ':tabnew' # open a new tab
+  - event: 'note-on'
+    data: '^note 50, velocity \d+$'
+    text: ':Explore .' # open a new file
+  - event: 'note-on'
+    data: '^note 51, velocity \d+$'
+    text: 'gt' # go to the next tab
+
+  - event: 'Control change'
+    data: '^controller 1, value (\d+)$'
+    up:
+      key: 'ctrl+y' # previous line
+    down:
+      key: 'ctrl+e' # next line
+  - event: 'Control change'
+    data: '^controller 2, value (\d+)$'
+    up:
+      text: '{' # previous paragraph
+    down:
+      text: '}' # next paragraph
+  - event: 'Control change'
+    data: '^controller 5, value (\d+)$'
+    up:
+      text: 'h' # previous character
+    down:
+      text: 'l' # next character
+  - event: 'Control change'
+    data: '^controller 6, value (\d+)$'
+    up:
+      text: 'F ' # previous space
+    down:
+      text: 'f ' # next space
+
+  - event: 'note-on'
+    data: '^note 52, velocity \d+$'
+    text: ':tab ball' # turn open buffers into tabs
+  - event: 'note-on'
+    data: '^note 53, velocity \d+$'
+    text: ':S' # split and explore
+  - event: 'note-on'
+    data: '^note 54, velocity \d+$'
+    text: ':echo expand("%:p")' # show absolute path
+  - event: 'note-on'
+    data: '^note 55, velocity \d+$'
+    text: ':call DoTidy()' # perltidy visual selection
+  - event: 'note-on'
+    data: '^note 56, velocity \d+$'
+    text: ' ;ul' # use lib ... sandbox ...
+  - event: 'note-on'
+    data: '^note 57, velocity \d+$'
+    text: ' ;iv' # my $x = shift ...
+  - event: 'note-on'
+    data: '^note 58, velocity \d+$'
+    text: ' ;my' # add my to beginning of line
+  - event: 'note-on'
+    data: '^note 59, velocity \d+$'
+    text: ' ;dt' # add done_testing();exit
+  - event: 'note-on'
+    data: '^note 60, velocity \d+$'
+    text: ':set ft=html' # html colorize
+  - event: 'note-on'
+    data: '^note 61, velocity \d+$'
+    text: ':set ft=javascript' # js colorize
+  - event: 'note-on'
+    data: '^note 62, velocity \d+$'
+    text: ':w !jshint %' # run jshint
+  - event: 'note-on'
+    data: '^note 63, velocity \d+$'
+    text: ' ;ll' # add js alert()
+  - event: 'note-on'
+    data: '^note 64, velocity \d+$'
+    key: 'ctrl+x' # decrement the number under the cursor
+  - event: 'note-on'
+    data: '^note 65, velocity \d+$'
+    key: 'ctrl+a' # increment the number under the cursor
+  - event: 'note-on'
+    data: '^note 66, velocity \d+$'
+    text: ':r !date' # insert the date
+  - event: 'note-on'
+    data: '^note 67, velocity \d+$'
+    text: ':digraphs' # show digraphs
+
+  - event: 'Control change'
+    data: '^controller 7, value (\d+)$'
+    up:
+      key: 'ctrl+y' # previous line
+    down:
+      key: 'ctrl+e' # next line
+  - event: 'Control change'
+    data: '^controller 8, value (\d+)$'
+    up:
+      text: '{' # previous paragraph
+    down:
+      text: '}' # next paragraph
+  - event: 'Control change'
+    data: '^controller 11, value (\d+)$'
+    up:
+      text: 'h' # previous character
+    down:
+      text: 'l' # next character
+  - event: 'Control change'
+    data: '^controller 12, value (\d+)$'
+    up:
+      text: 'F ' # previous space
+    down:
+      text: 'f ' # next space
+
