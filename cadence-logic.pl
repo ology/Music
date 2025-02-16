@@ -4,9 +4,9 @@ use warnings;
 
 use Math::Logic qw(:NUM);
 use MIDI::Util qw(setup_score);
-use Music::Cadence;
-use Music::Scales;
-use Music::VoiceGen;
+use Music::Cadence ();
+use Music::Scales ();
+use Music::VoiceGen ();
 
 my $max    = shift || 16;
 my $note   = shift || 'C';
