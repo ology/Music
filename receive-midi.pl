@@ -30,7 +30,7 @@ while (my $line = readline($midi)) {
     my $event   = $parts[2];
     my $data    = $parts[3]; # named note-octave
     my $value   = $parts[4]; # velocity
-    # warn "Ev: $event, Ch: $channel, Data: $data => $value\n" if $DEBUG;
+    warn "Ev: $event, Ch: $channel, Data: $data => $value\n" if $DEBUG;
 
     my @cmd;
 
