@@ -25,11 +25,8 @@ warn "PID: $$\n" if $DEBUG;
 while (my $line = readline($midi)) {
     # warn $line; next;
     chomp $line;
-    my @parts   = split /\s+/, $line;
-    my $channel = $parts[1];
-    my $event   = $parts[2];
-    my $data    = $parts[3]; # named note-octave
-    my $value   = $parts[4]; # velocity
+    # data  = named note-octave, value = velocity
+    my ($channel, $event, $data, $value) = split /\s+/, $line;
     warn "Ev: $event, Ch: $channel, Data: $data => $value\n" if $DEBUG;
 
     my @cmd;
