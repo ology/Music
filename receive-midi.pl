@@ -12,7 +12,7 @@ my $DEBUG  = $config->{debug};
 my $device = $config->{device};
 
 my @dump_tool = qw(receivemidi dev);
-my @type_tool = qw(xdotool type);
+my @type_tool = qw(xdotool type); # nb: X11 systems only
 my @key_tool  = qw(xdotool key);
 
 my $last = '';
