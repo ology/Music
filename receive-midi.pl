@@ -60,7 +60,7 @@ while (my $line = readline($midi)) {
 }
 
 close $midi
-    or die "Bad @dump_tool: $! $?";
+    or die "Bad @dump_tool: $!";
 
 __END__
 > receivemidi dev "Synido TempoPAD Z-1"
