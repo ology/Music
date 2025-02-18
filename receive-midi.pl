@@ -15,9 +15,6 @@ my @dump_tool = qw(receivemidi dev);
 my @type_tool = qw(xdotool type); # nb: X11 systems only
 my @key_tool  = qw(xdotool key);
 
-my $last = '';
-my $direction = '';
-
 open(my $midi, '-|', @dump_tool, $device)
     or die "Can't fork: $!";
 warn "PID: $$\n" if $DEBUG;
