@@ -1,155 +1,195 @@
 debug: 1
-device: 'Synido TempoPAD Z-1'
+device: Synido TempoPAD Z-1
 triggers:
-    # vim MOVEMENT
   - event: 'note-on'
     data: 'C1'
-    text: '^' # first non-blank char of line
+    text: '^'
   - event: 'note-on'
     data: 'C#1'
-    text: ':set spell!' # spell check
+    text: 'g_'
   - event: 'note-on'
     data: 'D1'
-    text: ':set list!' # show/hide hidden chars
+    text: ':set spell!'
   - event: 'note-on'
     data: 'D#1'
-    text: 'g_' # last non-blank char of line
-    # vim BITS
+    text: ':set list!'
   - event: 'note-on'
     data: 'E1'
-    text: 'zb' # move the line to the bottom
+    text: 'zb'
   - event: 'note-on'
     data: 'F1'
-    text: 'zc' # collapse fold
+    text: 'zt'
   - event: 'note-on'
     data: 'F#1'
-    text: 'zv' # open fold
+    text: 'zc'
   - event: 'note-on'
     data: 'G1'
-    text: 'zt' # move the line to the top
-    # vim git things
+    text: 'zv'
   - event: 'note-on'
     data: 'G#1'
-    text: ':GitGutterPrevHunk' # previous hunk
+    key: 'ctrl+g'
   - event: 'note-on'
     data: 'A1'
-    text: ':GitGutterToggle' # toggle gitgutter
+    key: 'ctrl+p'
   - event: 'note-on'
     data: 'A#1'
-    text: ':!git blame %'
+    key: 'ctrl+n'
   - event: 'note-on'
     data: 'B1'
-    text: ':GitGutterNextHunk' # next hunk
-    # vim TABS
+    text: ':!git blame %'
   - event: 'note-on'
     data: 'C2'
-    text: 'gT' # go to the previous tab
+    text: 'gT'
   - event: 'note-on'
     data: 'C#2'
-    text: ':tabnew' # open a new tab
+    text: 'gt'
   - event: 'note-on'
     data: 'D2'
-    text: ':Explore .' # open a new file
+    text: ':tabnew'
   - event: 'note-on'
     data: 'D#2'
-    text: 'gt' # go to the next tab
-
+    text: ':Explore .'
   - event: 'note-on'
     data: 'E2'
-    key: 'ctrl+y' # previous line
+    key: 'ctrl+y'
   - event: 'note-on'
     data: 'F2'
-    key: 'ctrl+e' # next line
+    key: 'ctrl+e'
   - event: 'note-on'
     data: 'F#2'
-    text: '{' # previous paragraph
+    text: '{'
   - event: 'note-on'
     data: 'G2'
-    text: '}' # next paragraph
+    text: '}'
   - event: 'note-on'
     data: 'G#2'
-    text: 'h' # previous character
+    text: 'b'
   - event: 'note-on'
     data: 'A2'
-    text: 'l' # next character
+    text: 'w'
   - event: 'note-on'
     data: 'A#2'
-    text: 'F ' # previous space
+    text: 'F '
   - event: 'note-on'
     data: 'B2'
-    text: 'f ' # next space
-
+    text: 'f '
   - event: 'note-on'
-    data: '^note 52, velocity \d+$'
-    text: ':tab ball' # turn open buffers into tabs
+    data: 'C3'
+    text: ':tab ball'
   - event: 'note-on'
-    data: '^note 53, velocity \d+$'
-    text: ':S' # split and explore
+    data: 'C#3'
+    text: ':S'
   - event: 'note-on'
-    data: '^note 54, velocity \d+$'
-    text: ':echo expand("%:p")' # show absolute path
+    data: 'D3'
+    text: ':echo expand("%:p")'
   - event: 'note-on'
-    data: '^note 55, velocity \d+$'
-    text: ':call DoTidy()' # perltidy visual selection
+    data: 'D#3'
+    text: ':call DoTidy()'
   - event: 'note-on'
-    data: '^note 56, velocity \d+$'
-    text: ' ;ul' # use lib ... sandbox ...
+    data: 'E3'
+    text: ' ;ul'
   - event: 'note-on'
-    data: '^note 57, velocity \d+$'
-    text: ' ;iv' # my $x = shift ...
+    data: 'F3'
+    text: ' ;iv'
   - event: 'note-on'
-    data: '^note 58, velocity \d+$'
-    text: ' ;my' # add my to beginning of line
+    data: 'F#3'
+    text: ' ;my'
   - event: 'note-on'
-    data: '^note 59, velocity \d+$'
-    text: ' ;dt' # add done_testing();exit
+    data: 'G3'
+    text: ' ;dt'
   - event: 'note-on'
-    data: '^note 60, velocity \d+$'
-    text: ':set ft=html' # html colorize
+    data: 'G#3'
+    text: ':set ft=perl'
   - event: 'note-on'
-    data: '^note 61, velocity \d+$'
-    text: ':set ft=javascript' # js colorize
+    data: 'A3'
+    text: ':set ft=html'
   - event: 'note-on'
-    data: '^note 62, velocity \d+$'
-    text: ':w !jshint %' # run jshint
+    data: 'A#3'
+    text: ':set ft=javascript'
   - event: 'note-on'
-    data: '^note 63, velocity \d+$'
-    text: ' ;ll' # add js alert()
+    data: 'B3'
+    text: ':w !jshint %'
   - event: 'note-on'
-    data: '^note 64, velocity \d+$'
-    key: 'ctrl+x' # decrement the number under the cursor
+    data: 'C4'
+    text: ' ;ww'
   - event: 'note-on'
-    data: '^note 65, velocity \d+$'
-    key: 'ctrl+a' # increment the number under the cursor
+    data: 'C#4'
+    text: ' ;dd'
   - event: 'note-on'
-    data: '^note 66, velocity \d+$'
-    text: ':r !date' # insert the date
+    data: 'D4'
+    text: ' ;ll'
   - event: 'note-on'
-    data: '^note 67, velocity \d+$'
-    text: ':digraphs' # show digraphs
-
+    data: 'D#4'
+    text: ':r !date'
   - event: 'note-on'
-    data: '^controller 7, value (\d+)$'
-    up:
-      key: 'ctrl+y' # previous line
-    down:
-      key: 'ctrl+e' # next line
+    data: 'E4'
+    text: ':w'
   - event: 'note-on'
-    data: '^controller 8, value (\d+)$'
-    up:
-      text: '{' # previous paragraph
-    down:
-      text: '}' # next paragraph
+    data: 'F4'
+    text: ':qa'
   - event: 'note-on'
-    data: '^controller 11, value (\d+)$'
-    up:
-      text: 'h' # previous character
-    down:
-      text: 'l' # next character
+    data: 'F#4'
+    text: ':qa!'
   - event: 'note-on'
-    data: '^controller 12, value (\d+)$'
-    up:
-      text: 'F ' # previous space
-    down:
-      text: 'f ' # next space
-
+    data: 'G4'
+    text: ':digraphs'
+  - event: 'note-on'
+    data: 'G#4'
+    text: ' cd'
+  - event: 'note-on'
+    data: 'A4'
+    text: ' cl'
+  - event: 'note-on'
+    data: 'A#4'
+    text: ' cc'
+  - event: 'note-on'
+    data: 'B4'
+    text: ' cp'
+  - event: 'note-on'
+    data: 'C5'
+    text: ' ps'
+  - event: 'note-on'
+    data: 'C#5'
+    text: ' pr'
+  - event: 'note-on'
+    data: 'D5'
+    text: ' pc'
+  - event: 'note-on'
+    data: 'D#5'
+    text: ' ;s'
+  - event: 'note-on'
+    data: 'E5'
+    key: 'ctrl+h'
+  - event: 'note-on'
+    data: 'F5'
+    key: 'ctrl+l'
+  - event: 'note-on'
+    data: 'F#5'
+    key: 'ctrl+j'
+  - event: 'note-on'
+    data: 'G5'
+    key: 'ctrl+k'
+  - event: 'note-on'
+    data: 'G#5'
+    key: 'ctrl+m'
+  - event: 'note-on'
+    data: 'A5'
+    key: 'ctrl+n'
+  - event: 'note-on'
+    data: 'A#5'
+    key: 'ctrl+x'
+  - event: 'note-on'
+    data: 'B5'
+    key: 'ctrl+a'
+  - event: 'note-on'
+    data: 'C6'
+    key: 'ctrl+w'
+  - event: 'note-on'
+    data: 'C#6'
+    text: '~'
+  - event: 'note-on'
+    data: 'D6'
+    text: 'u'
+  - event: 'note-on'
+    data: 'D#6'
+    key: 'ctrl+r'
