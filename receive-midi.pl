@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-use Capture::Tiny qw(capture_stdout);
 use YAML::XS qw(LoadFile);
 
 my $config_file = shift || 'receive-midi.yaml';
@@ -55,7 +54,8 @@ while (my $line = readline($midi)) {
 
     # execute the trigger
     if (@cmd) {
-        my $stdout = capture_stdout { system(@cmd) };
+        system(@cmd) == 0
+            or die "system(@cmd) failed: $?";
     }
 }
 
