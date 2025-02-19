@@ -16,7 +16,23 @@ while (1) {
     my $msg = $midi_in->get_message_decoded;
     if ($msg && $msg->[0] eq 'note_on') {
         warn ddc($msg);
-        $midi_out->note_on(@$msg[1 .. 3]);
-        $midi_out->note_off(@$msg[1,2]);
+        if ($msg->[2] == 55) {
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+        }
+        elsif ($msg->[2] == 84) {
+            $midi_out->note_on($msg->[1], 64, $msg->[3]);
+        }
+        elsif ($msg->[2] == 80) {
+            $midi_out->note_on($msg->[1], 67, $msg->[3]);
+        }
+        elsif ($msg->[2] == 51) {
+            $midi_out->note_on($msg->[1], 71, $msg->[3]);
+        }
     }
 }
+
+__END__
+[ 'note_on', 0, 55, 112 ]
+[ 'note_on', 0, 84, 116 ]
+[ 'note_on', 0, 80, 111 ]
+[ 'note_on', 0, 51, 115 ]
