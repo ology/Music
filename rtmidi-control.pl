@@ -18,46 +18,72 @@ while (1) {
     if ($msg && $msg->[0] eq 'note_on') {
         warn ddc($msg);
         if ($msg->[2] == 55) {
-            delay_effect($midi_out, $msg, 60, 0, 1);
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, 0, 1);
         }
         elsif ($msg->[2] == 54 || $msg->[2] == 59) {
-            delay_effect($midi_out, $msg, 60, 500_000, 2);
+            my $sleep = 500_000;
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 2);
         }
         elsif ($msg->[2] == 53 || $msg->[2] == 58 || $msg->[2] == 63) {
-            delay_effect($midi_out, $msg, 60, 300_000, 3);
+            my $sleep = 300_000;
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 3);
         }
         elsif ($msg->[2] == 52 || $msg->[2] == 57 || $msg->[2] == 62 || $msg->[2] == 67) {
-            delay_effect($midi_out, $msg, 60, 200_000, 4);
+            my $sleep = 100_000;
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 4);
         }
         elsif ($msg->[2] == 56 || $msg->[2] == 61 || $msg->[2] == 66) {
-            delay_effect($midi_out, $msg, 60, 100_000, 5);
+            my $sleep = 80_000;
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 5);
         }
         elsif ($msg->[2] == 60 || $msg->[2] == 65) {
-            delay_effect($midi_out, $msg, 60, 80_000, 6);
+            my $sleep = 60_000;
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 6);
         }
         elsif ($msg->[2] == 64) {
-            delay_effect($midi_out, $msg, 60, 60_000, 7);
+            my $sleep = 40_000;
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 7);
         }
         elsif ($msg->[2] == 84) {
-            delay_effect($midi_out, $msg, 64, 0, 1);
+            my $pitch = 64;
+            delay_effect($midi_out, $msg, $pitch, 0, 1);
         }
         elsif ($msg->[2] == 88 || $msg->[2] == 85) {
-            delay_effect($midi_out, $msg, 64, 500_000, 2);
+            my $sleep = 500_000;
+            my $pitch = 64;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 2);
         }
         elsif ($msg->[2] == 92 || $msg->[2] == 89 || $msg->[2] == 86) {
-            delay_effect($midi_out, $msg, 64, 300_000, 3);
+            my $sleep = 300_000;
+            my $pitch = 64;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 3);
         }
         elsif ($msg->[2] == 96 || $msg->[2] == 93 || $msg->[2] == 90 || $msg->[2] == 87) {
-            delay_effect($midi_out, $msg, 64, 200_000, 4);
+            my $sleep = 100_000;
+            my $pitch = 64;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 4);
         }
         elsif ($msg->[2] == 97 || $msg->[2] == 94 || $msg->[2] == 91) {
-            delay_effect($midi_out, $msg, 64, 100_000, 5);
+            my $sleep = 80_000;
+            my $pitch = 64;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 5);
         }
         elsif ($msg->[2] == 98 || $msg->[2] == 95) {
-            delay_effect($midi_out, $msg, 64, 80_000, 6);
+            my $sleep = 60_000;
+            my $pitch = 64;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 6);
         }
         elsif ($msg->[2] == 99) {
-            delay_effect($midi_out, $msg, 64, 60_000, 7);
+            my $sleep = 40_000;
+            my $pitch = 64;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 7);
         }
         elsif ($msg->[2] == 80) {
             $midi_out->note_on($msg->[1], 67, $msg->[3]);
