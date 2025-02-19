@@ -18,7 +18,6 @@ while (1) {
     if ($msg && $msg->[0] eq 'note_on') {
         warn ddc($msg);
         if ($msg->[2] == 55) {
-            my $sleep = 500_000;
             my $pitch = 60;
             delay_effect($midi_out, $msg, $pitch, 0, 1);
         }
