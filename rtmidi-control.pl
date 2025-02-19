@@ -5,7 +5,7 @@ use warnings;
 use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::FFI::Device ();
 
-my $midi_in  = RtMidiIn->new;
+my $midi_in = RtMidiIn->new;
 $midi_in->open_port_by_name(qr/tempopad/i);
 
 my $midi_out = RtMidiOut->new;
