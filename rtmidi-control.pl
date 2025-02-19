@@ -18,13 +18,56 @@ while (1) {
     if ($msg && $msg->[0] eq 'note_on') {
         warn ddc($msg);
         if ($msg->[2] == 55) {
+            my $sleep = 500000;
             $midi_out->note_on($msg->[1], 60, $msg->[3]);
-            usleep(100000);
+            usleep($sleep);
             $midi_out->note_off(@$msg[1], 60);
-            usleep(100000);
+            usleep($sleep);
+        }
+        elsif ($msg->[2] == 54 || $msg->[2] == 59) {
+            my $sleep = 300000;
             $midi_out->note_on($msg->[1], 60, $msg->[3]);
-            usleep(100000);
+            usleep($sleep);
             $midi_out->note_off(@$msg[1], 60);
+            usleep($sleep);
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep($sleep);
+            $midi_out->note_off(@$msg[1], 60);
+            usleep($sleep);
+        }
+        elsif ($msg->[2] == 53 || $msg->[2] == 58 || $msg->[2] == 63) {
+            my $sleep = 100000;
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep($sleep);
+            $midi_out->note_off(@$msg[1], 60);
+            usleep($sleep);
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep($sleep);
+            $midi_out->note_off(@$msg[1], 60);
+            usleep($sleep);
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep($sleep);
+            $midi_out->note_off(@$msg[1], 60);
+            usleep($sleep);
+        }
+        elsif ($msg->[2] == 52 || $msg->[2] == 57 || $msg->[2] == 62 || $msg->[2] == 67) {
+            my $sleep = 50000;
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep($sleep);
+            $midi_out->note_off(@$msg[1], 60);
+            usleep($sleep);
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep($sleep);
+            $midi_out->note_off(@$msg[1], 60);
+            usleep($sleep);
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep($sleep);
+            $midi_out->note_off(@$msg[1], 60);
+            usleep($sleep);
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep($sleep);
+            $midi_out->note_off(@$msg[1], 60);
+            usleep($sleep);
         }
         elsif ($msg->[2] == 84) {
             $midi_out->note_on($msg->[1], 64, $msg->[3]);
@@ -39,3 +82,16 @@ while (1) {
 }
 
 __END__
+[ 'note_on', 0, 52, 78 ]
+[ 'note_on', 0, 57, 101 ]
+[ 'note_on', 0, 62, 101 ]
+[ 'note_on', 0, 67, 106 ]
+
+[ 'note_on', 0, 56, 99 ]
+[ 'note_on', 0, 61, 92 ]
+[ 'note_on', 0, 66, 108 ]
+
+[ 'note_on', 0, 60, 105 ]
+[ 'note_on', 0, 65, 110 ]
+
+[ 'note_on', 0, 64, 107 ]
