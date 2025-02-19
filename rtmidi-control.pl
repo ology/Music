@@ -78,5 +78,3 @@ sub delay_effect {
         single_note($out, $message, $note, $t);
     }
 }
-
-__END__
