@@ -20,7 +20,7 @@ while (1) {
         if ($msg->[2] == 55) {
             my $sleep = 500_000;
             my $pitch = 60;
-            delay_effect($midi_out, $msg, $pitch, $sleep, 1);
+            delay_effect($midi_out, $msg, $pitch, 0, 1);
         }
         elsif ($msg->[2] == 54 || $msg->[2] == 59) {
             my $sleep = 300_000;
@@ -67,8 +67,10 @@ while (1) {
 sub single_note {
     my ($out, $message, $note, $t) = @_;
     $out->note_on($message->[1], $note, $message->[3]);
-    usleep($t);
-    $out->note_off(@$message[1], $note);
+    if ($t) {
+        usleep($t);
+        $out->note_off(@$message[1], $note);
+    }
 }
 
 sub delay_effect {
