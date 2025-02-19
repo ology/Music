@@ -4,6 +4,7 @@ use warnings;
 
 use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::FFI::Device ();
+use Time::HiRes qw(usleep);
 
 my $midi_in = RtMidiIn->new;
 $midi_in->open_port_by_name(qr/tempopad/i);
@@ -18,6 +19,12 @@ while (1) {
         warn ddc($msg);
         if ($msg->[2] == 55) {
             $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep(100000);
+            $midi_out->note_off(@$msg[1], 60);
+            usleep(100000);
+            $midi_out->note_on($msg->[1], 60, $msg->[3]);
+            usleep(100000);
+            $midi_out->note_off(@$msg[1], 60);
         }
         elsif ($msg->[2] == 84) {
             $midi_out->note_on($msg->[1], 64, $msg->[3]);
