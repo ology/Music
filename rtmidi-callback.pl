@@ -39,7 +39,7 @@ $SIG{TERM} = sub { $midi_rtn->kill('TERM') };
 async sub process_midi_events {
     while ( my $event = await $midi_ch->recv ) {
         # warn ddc $event;
-        single_note($midi_out, $event, 100_000);
+        single_note($midi_out, $event, 500_000);
         # $midi_out->note_on(@$event[1 .. 3]);
         # usleep(100_000);
         # $midi_out->note_off($event->[1], $event->[3]);
