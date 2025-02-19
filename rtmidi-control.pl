@@ -16,10 +16,10 @@ while (1) {
     my $msg = $midi_in->get_message_decoded;
     if ($msg && $msg->[0] eq 'note_on') {
         warn ddc($msg);
-        my @spec = map { sprintf('%X', $_) } @$msg[1 .. 3];
-        warn ddc(\@spec);
-        $midi_out->note_on(@spec);
+        # my @spec = map { sprintf('%X', $_) } @$msg[1 .. 3];
+        # warn ddc(\@spec);
+        $midi_out->note_on(@$msg[1 .. 3]);
         sleep 1;
-        $midi_out->note_off(@spec[1,2]);
+        $midi_out->note_off(@$msg[1,2]);
     }
 }
