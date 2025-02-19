@@ -49,12 +49,14 @@ async sub process_midi_events {
 }
 
 my $tick = 0;
-$loop->add( IO::Async::Timer::Periodic->new(
-    interval => 1,
-    on_tick => sub { say "Tick " . $tick++; },
-)->start );
+$loop->add(
+    IO::Async::Timer::Periodic->new(
+        interval => 1,
+        on_tick => sub { say "Tick " . $tick++; },
+    )->start
+);
 
-$loop->await( process_midi_events );
+$loop->await(process_midi_events);
 
 sub single_note {
     my ($out, $message, $t) = @_;
