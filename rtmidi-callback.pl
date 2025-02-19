@@ -37,7 +37,7 @@ $midi_out->open_port_by_name(qr/fluid/i);
 $SIG{TERM} = sub { $midi_rtn->kill('TERM') };
 
 async sub process_midi_events {
-    while ( my $event = await $midi_ch->recv ) {
+    while (my $event = await $midi_ch->recv) {
         # warn ddc $event;
         single_note($midi_out, $event, 500_000);
         # $midi_out->note_on(@$event[1 .. 3]);
