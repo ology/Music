@@ -37,6 +37,21 @@ while (1) {
             my $pitch = 60;
             delay_effect($midi_out, $msg, $pitch, $sleep, 4);
         }
+        elsif ($msg->[2] == 56 || $msg->[2] == 61 || $msg->[2] == 66) {
+            my $sleep = 40000;
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 5);
+        }
+        elsif ($msg->[2] == 60 || $msg->[2] == 65) {
+            my $sleep = 30000;
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 6);
+        }
+        elsif ($msg->[2] == 64) {
+            my $sleep = 20000;
+            my $pitch = 60;
+            delay_effect($midi_out, $msg, $pitch, $sleep, 7);
+        }
         elsif ($msg->[2] == 84) {
             $midi_out->note_on($msg->[1], 64, $msg->[3]);
         }
