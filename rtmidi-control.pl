@@ -14,11 +14,9 @@ $midi_out->open_port_by_name(qr/fluid/i);
 
 while (1) {
     my $msg = $midi_in->get_message_decoded;
-    if ($msg) {
+    if ($msg && $msg->[0] eq 'note_on') {
         warn ddc($msg);
         $midi_out->note_on(0x00, 0x3C, 0x7A);
-        sleep 1;
         $midi_out->note_off(0x00, 0x3C);
-        sleep 1;
     }
 }
