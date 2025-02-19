@@ -32,22 +32,22 @@ while (1) {
             delay_effect($midi_out, $msg, $pitch, $sleep, 3);
         }
         elsif ($msg->[2] == 52 || $msg->[2] == 57 || $msg->[2] == 62 || $msg->[2] == 67) {
-            my $sleep = 100_000;
+            my $sleep = 200_000;
             my $pitch = 60;
             delay_effect($midi_out, $msg, $pitch, $sleep, 4);
         }
         elsif ($msg->[2] == 56 || $msg->[2] == 61 || $msg->[2] == 66) {
-            my $sleep = 80_000;
+            my $sleep = 100_000;
             my $pitch = 60;
             delay_effect($midi_out, $msg, $pitch, $sleep, 5);
         }
         elsif ($msg->[2] == 60 || $msg->[2] == 65) {
-            my $sleep = 60_000;
+            my $sleep = 80_000;
             my $pitch = 60;
             delay_effect($midi_out, $msg, $pitch, $sleep, 6);
         }
         elsif ($msg->[2] == 64) {
-            my $sleep = 40_000;
+            my $sleep = 60_000;
             my $pitch = 60;
             delay_effect($midi_out, $msg, $pitch, $sleep, 7);
         }
