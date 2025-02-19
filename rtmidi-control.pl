@@ -69,7 +69,6 @@ sub single_note {
     $out->note_on($message->[1], $note, $message->[3]);
     usleep($t);
     $out->note_off(@$message[1], $note);
-    usleep($t);
 }
 
 sub delay_effect {
