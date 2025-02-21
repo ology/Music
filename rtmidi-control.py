@@ -17,7 +17,8 @@ async def main():
                 midiout.send_message(msg.bytes())
                 await asyncio.sleep(0.5)
                 midiout.send_message(msg.bytes())
-    output_port.close()
+    # input_port.close()
+    # midiout.close()
 
 if __name__ == "__main__":
     try:
