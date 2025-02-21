@@ -15,9 +15,6 @@ async def main():
             for msg in input_port.iter_pending():
                 await play(output_port, msg)
 
-    # input_port.close()
-    # output_port.close()
-
 async def play(midi_port, message):
     print(f"Received MIDI message: {message}")
     midi_port.send_message(message.bytes())
