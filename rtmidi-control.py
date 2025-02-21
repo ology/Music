@@ -13,10 +13,13 @@ async def main():
         while True:
             await asyncio.sleep(0.01)
             for msg in input_port.iter_pending():
-                await play(output_port, msg)
+                if msg.type == 'note_on':
+                    await play(output_port, msg)
 
 async def play(midi_port, message):
-    print(f"Received MIDI message: {message}")
+    # print(message)
+    # note_on = [0x90, 60, 112]
+    # midi_port.send_message(note_on)
     midi_port.send_message(message.bytes())
     await asyncio.sleep(0.5)
     midi_port.send_message(message.bytes())
