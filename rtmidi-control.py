@@ -17,7 +17,6 @@ async def main():
                 print(f"Received MIDI message: {msg}")
                 midiout.send_message(msg.bytes())
 
-
 if __name__ == "__main__":
     try:
         asyncio.run(main())
