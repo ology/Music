@@ -2,7 +2,6 @@ import asyncio
 import mido
 import sys
 import os
-import time
 import rtmidi
 
 async def main():
@@ -16,6 +15,9 @@ async def main():
             for msg in input_port.iter_pending():
                 print(f"Received MIDI message: {msg}")
                 midiout.send_message(msg.bytes())
+                await asyncio.sleep(0.5)
+                midiout.send_message(msg.bytes())
+    output_port.close()
 
 if __name__ == "__main__":
     try:
