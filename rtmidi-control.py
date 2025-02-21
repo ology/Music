@@ -18,11 +18,11 @@ async def main():
     # input_port.close()
     # output_port.close()
 
-async def play(midiout, message):
+async def play(midi_port, message):
     print(f"Received MIDI message: {message}")
-    midiout.send_message(message.bytes())
+    midi_port.send_message(message.bytes())
     await asyncio.sleep(0.5)
-    midiout.send_message(message.bytes())
+    midi_port.send_message(message.bytes())
 
 if __name__ == "__main__":
     try:
