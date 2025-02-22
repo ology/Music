@@ -100,6 +100,7 @@ sub pedal_notes {
     my ($note) = @_;
     return PEDAL, $note, $note + 7;
 }
+
 sub pedal_tone {
     my ($event) = @_;
     my ($ev, $channel, $note, $vel) = $event->@*;
