@@ -12,7 +12,7 @@ use MIDI::RtMidi::FFI::Device;
 # use MIDI::Util qw(setup_score);
 
 use constant PEDAL => 55; # G below middle C
-use constant STRUM_DELAY => 0.05; # seconds
+use constant STRUM_DELAY => 0.09; # seconds
 
 my $input_name  = shift || 'tempopad'; # my midi controller device
 my $output_name = shift || 'fluid';    # fluid synth
@@ -25,8 +25,11 @@ my $midi_ch = IO::Async::Channel->new;
 my $filters = {};
 my $stash   = {};
 
-add_filter(note_on => \&pedal_tone);
-add_filter(note_off => \&pedal_tone);
+# add_filter(note_on => \&pedal_tone);
+# add_filter(note_off => \&pedal_tone);
+
+add_filter(note_on => \&chord_tone);
+add_filter(note_off => \&chord_tone);
 
 my $midi_rtn = IO::Async::Routine->new(
     channels_out => [ $midi_ch ],
@@ -98,6 +101,22 @@ async sub _process_midi_events {
     while (my $event = await $midi_ch->recv) {
         _filter_and_forward($event);
     }
+}
+
+sub chord_notes ($note) {
+    my @notes;
+    push @notes, $note, $note + 4, $note + 7;
+    return @notes;
+}
+sub chord_tone ($event) {
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    my @notes = chord_notes($note);
+    my $dt = 0;
+    for my $note (@notes) {
+        $dt += STRUM_DELAY;
+        delay_send($dt, [ $ev, $channel, $note, $vel ]);
+    }
+    return 1;
 }
 
 sub pedal_notes ($note) {
