@@ -60,7 +60,7 @@ my $tick = 0;
 $loop->add(
     IO::Async::Timer::Periodic->new(
         interval => 1,
-        on_tick  => sub { say "Tick " . $tick++ },
+        on_tick  => sub { say 'Tick ' . $tick++ },
     )->start
 );
 
