@@ -25,11 +25,11 @@ my $midi_ch = IO::Async::Channel->new;
 my $filters = {};
 my $stash   = {};
 
-# add_filter(note_on => \&pedal_tone);
-# add_filter(note_off => \&pedal_tone);
-
 add_filter(note_on => \&chord_tone);
 add_filter(note_off => \&chord_tone);
+
+# add_filter(note_on => \&pedal_tone);
+# add_filter(note_off => \&pedal_tone);
 
 my $midi_rtn = IO::Async::Routine->new(
     channels_out => [ $midi_ch ],
