@@ -15,10 +15,12 @@ use Music::Note ();
 use Music::ToRoman ();
 use Music::Scales qw(get_scale_notes);
 
-use constant PEDAL       => 55;      # G below middle C
-use constant STRUM_DELAY => 0.09;    # seconds
-use constant NOTE        => 'C';     # for the chord filter
-use constant SCALE       => 'major'; # "
+# for the pedal-tone filter:
+use constant PEDAL       => 55;   # G below middle C
+use constant STRUM_DELAY => 0.09; # seconds
+# for the chord filter:
+use constant NOTE  => 'C';     # key
+use constant SCALE => 'major'; # mode
 
 my $input_name  = shift || 'tempopad'; # my midi controller device
 my $output_name = shift || 'fluid';    # fluidsynth
