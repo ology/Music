@@ -9,6 +9,7 @@ use IO::Async::Routine;
 use IO::Async::Timer::Countdown;
 use IO::Async::Timer::Periodic;
 use MIDI::RtMidi::FFI::Device;
+# use MIDI::Util qw(setup_score);
 
 use constant PEDAL => 55; # G below middle C
 use constant STRUM_DELAY => 0.05; # seconds
@@ -18,6 +19,8 @@ my $output_name = shift || 'fluid';    # fluid synth
 
 my $loop = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
+
+# my $score = setup_score();
 
 my $filters = {};
 my $stash   = {};
@@ -36,7 +39,7 @@ my $midi_rtn = IO::Async::Routine->new(
         );
 
         sleep;
-    }
+    },
 );
 $loop->add($midi_rtn);
 
@@ -44,7 +47,10 @@ my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('foo');
 $midi_out->open_port_by_name(qr/\Q$output_name/i);
 
-$SIG{TERM} = sub { $midi_rtn->kill('TERM') };
+$SIG{TERM} = sub {
+#    $score->write_score("$0.mid");
+    $midi_rtn->kill('TERM');
+};
 
 my $tick = 0;
 $loop->add(
@@ -67,6 +73,7 @@ sub stash ($key, $value) {
 
 sub send_it ($event) {
     $midi_out->send_event($event->@*);
+    # $score->n(@$event[1 .. 3]);
 }
 
 sub delay_send ($delay_time, $event) {
