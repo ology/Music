@@ -2,7 +2,6 @@
 use v5.36;
 
 use Data::Dumper::Compact qw(ddc);
-# use Future::IO;
 use Future::AsyncAwait;
 use IO::Async::Timer::Periodic;
 use IO::Async::Routine;
