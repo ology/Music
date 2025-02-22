@@ -122,7 +122,6 @@ sub chord_tone ($event) {
 sub pedal_notes ($note) {
     return PEDAL, $note, $note + 7;
 }
-
 sub pedal_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = pedal_notes($note);
