@@ -2,6 +2,7 @@
 use v5.36;
 
 use Data::Dumper::Compact qw(ddc);
+use Future::IO;
 use Future::AsyncAwait;
 use IO::Async::Timer::Periodic;
 use IO::Async::Routine;
@@ -39,7 +40,7 @@ $SIG{TERM} = sub { $midi_rtn->kill('TERM') };
 async sub process_midi_events {
     while (my $event = await $midi_ch->recv) {
         # warn ddc $event;
-        single_note($midi_out, $event, 500_000);
+        await single_note($midi_out, $event, 500_000);
         # $midi_out->note_on(@$event[1 .. 3]);
         # usleep(100_000);
         # $midi_out->note_off($event->[1], $event->[3]);
@@ -58,15 +59,17 @@ $loop->add(
 
 $loop->await(process_midi_events);
 
-sub single_note {
+async sub single_note {
     my ($out, $message, $t) = @_;
     $out->note_on(@$message[1 .. 3]);
     if ($t) {
         usleep($t);
-        $out->note_off($message->[1], $message->[3]);
+        wait Future::IO->sleep(0.2);
+        # $out->note_off($message->[1], $message->[3]);
     }
 }
 
+__END__
 sub delay_effect {
     my ($out, $message, $t, $feedback) = @_;
     for my $f (1 .. $feedback) {

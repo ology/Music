@@ -12,17 +12,16 @@ async def main():
         print(f"Connected to MIDI input port: {port_name}")
         while True:
             await asyncio.sleep(0.01)
-            for msg in input_port.iter_pending():
-                if msg.type == 'note_on':
-                    await play(output_port, msg)
-
-async def play(midi_port, message):
-    # print(message)
-    # note_on = [0x90, 60, 112]
-    # midi_port.send_message(note_on)
-    midi_port.send_message(message.bytes())
-    await asyncio.sleep(0.5)
-    midi_port.send_message(message.bytes())
+            msgs = input_port.iter_pending()
+            # for msg in input_port.iter_pending():
+            for msg in msgs:
+                # if msg.type == 'note_on':
+                output_port.send_message(msg.bytes())
+                await asyncio.sleep(0.2)
+                # output_port.send_message(msg.bytes())
+                # input_port.send_message(
+                m = mido.Message('note_on', note=60, velocity=100, time=6.2)
+                input_port._messages.append(m)
 
 if __name__ == "__main__":
     try:
