@@ -22,7 +22,7 @@ use constant DELAY => 0.09; # seconds
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
 
-my $input_name  = shift || 'tempopad'; # my midi controller device
+my $input_name  = shift || 'tempopad'; # midi controller device
 my $output_name = shift || 'fluid';    # fluidsynth
 
 my $loop    = IO::Async::Loop->new;
