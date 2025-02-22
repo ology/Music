@@ -7,6 +7,7 @@ use IO::Async::Timer::Periodic;
 use IO::Async::Routine;
 use IO::Async::Channel;
 use IO::Async::Loop;
+use IO::Async::Timer::Periodic;
 use MIDI::RtMidi::FFI::Device;
 
 use constant PEDAL       => 55;   # G below middle C
