@@ -96,13 +96,11 @@ async sub _process_midi_events {
     }
 }
 
-sub pedal_notes {
-    my ($note) = @_;
+sub pedal_notes ($note) {
     return PEDAL, $note, $note + 7;
 }
 
-sub pedal_tone {
-    my ($event) = @_;
+sub pedal_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     send_it([ $ev, $channel, $_, $vel ]) for pedal_notes($note);
     return 1;
