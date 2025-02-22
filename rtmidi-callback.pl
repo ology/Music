@@ -25,7 +25,7 @@ use constant SCALE => 'major'; # mode
 my $input_name  = shift || 'tempopad'; # my midi controller device
 my $output_name = shift || 'fluid';    # fluidsynth
 
-my $loop = IO::Async::Loop->new;
+my $loop    = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
 
 my $filters = {};
