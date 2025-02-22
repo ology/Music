@@ -35,10 +35,7 @@ my $midi_rtn = IO::Async::Routine->new(
         $midi_in->open_port_by_name(qr/\Q$input_name/i);
 
         $midi_in->set_callback_decoded(
-            sub {
-warn __PACKAGE__,' L',__LINE__,' ',join(', ', $_[2]->@*),"\n";
-$midi_ch->send($_[2])
-            }
+            sub { $midi_ch->send($_[2]) }
         );
 
         sleep;
