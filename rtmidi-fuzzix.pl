@@ -17,7 +17,7 @@ my $input_name = shift || 'tempopad';
 my $loop = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
 
-add_filter(note_on  => \&pedal_tone);
+add_filter(note_on => \&pedal_tone);
 add_filter(note_off => \&pedal_tone);
 
 my $midi_rtn = IO::Async::Routine->new(
@@ -83,6 +83,7 @@ sub delay_send {
 sub _filter_and_forward {
     my ($event) = @_;
     my $event_filters = $filters->{ $event->[0] } // [];
+warn __PACKAGE__,' L',__LINE__,' ',ddc($event_filters, {max_width=>128});
 
     for my $filter ($event_filters->@*) {
         return if $filter->($event);
