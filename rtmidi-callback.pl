@@ -18,7 +18,7 @@ use Music::Scales qw(get_scale_notes);
 # for the pedal-tone filter:
 use constant PEDAL       => 55;   # G below middle C
 use constant STRUM_DELAY => 0.09; # seconds
-# for the chord filter:
+# for the modal chord filter:
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
 
