@@ -3,16 +3,16 @@ use v5.36;
 
 use Data::Dumper::Compact qw(ddc);
 use Future::AsyncAwait;
-use IO::Async::Channel;
-use IO::Async::Loop;
-use IO::Async::Routine;
-use IO::Async::Timer::Countdown;
-use IO::Async::Timer::Periodic;
+use IO::Async::Channel ();
+use IO::Async::Loop ();
+use IO::Async::Routine ();
+use IO::Async::Timer::Countdown ();
+use IO::Async::Timer::Periodic ();
 use List::SomeUtils qw(first_index);
-use MIDI::RtMidi::FFI::Device;
-use Music::Chord::Note;
-use Music::Note;
-use Music::ToRoman;
+use MIDI::RtMidi::FFI::Device ();
+use Music::Chord::Note ();
+use Music::Note ();
+use Music::ToRoman ();
 use Music::Scales qw(get_scale_notes);
 
 use constant PEDAL => 55; # G below middle C
