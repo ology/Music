@@ -38,7 +38,7 @@ my $midi_rtn = IO::Async::Routine->new(
         sleep;
     }
 );
-$loop->add( $midi_rtn );
+$loop->add($midi_rtn);
 
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('foo');
