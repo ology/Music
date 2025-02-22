@@ -2,25 +2,34 @@
 use v5.36;
 
 use Data::Dumper::Compact qw(ddc);
-use Future::IO;
 use Future::AsyncAwait;
-use IO::Async::Timer::Periodic;
-use IO::Async::Routine;
 use IO::Async::Channel;
 use IO::Async::Loop;
+use IO::Async::Routine;
+use IO::Async::Timer::Countdown;
+use IO::Async::Timer::Periodic;
 use MIDI::RtMidi::FFI::Device;
-use Time::HiRes qw(usleep);
 
-my $port = shift || 'tempopad';
+use constant PEDAL => 55; # G below middle C
+use constant STRUM_DELAY => 0.05; # seconds
+
+my $input_name  = shift || 'tempopad'; # my midi controller device
+my $output_name = shift || 'fluid';    # fluid synth
 
 my $loop = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
 
+my $filters = {};
+my $stash   = {};
+
+add_filter(note_on => \&pedal_tone);
+add_filter(note_off => \&pedal_tone);
+
 my $midi_rtn = IO::Async::Routine->new(
     channels_out => [ $midi_ch ],
     code => sub {
-        my $midi_in = MIDI::RtMidi::FFI::Device->new( type => 'in' );
-        $midi_in->open_port_by_name(qr/\Q$port/i);
+        my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
+        $midi_in->open_port_by_name(qr/\Q$input_name/i);
 
         $midi_in->set_callback_decoded(
             sub { $midi_ch->send($_[2]) }
@@ -33,21 +42,9 @@ $loop->add( $midi_rtn );
 
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('foo');
-$midi_out->open_port_by_name(qr/fluid/i);
+$midi_out->open_port_by_name(qr/\Q$output_name/i);
 
 $SIG{TERM} = sub { $midi_rtn->kill('TERM') };
-
-async sub process_midi_events {
-    while (my $event = await $midi_ch->recv) {
-        # warn ddc $event;
-        await single_note($midi_out, $event, 500_000);
-        # $midi_out->note_on(@$event[1 .. 3]);
-        # usleep(100_000);
-        # $midi_out->note_off($event->[1], $event->[3]);
-        $midi_out->note_on(@$event[1 .. 3]);
-        # delay_effect($midi_out, $event, 500_000, 3);
-    }
-}
 
 my $tick = 0;
 $loop->add(
@@ -57,22 +54,58 @@ $loop->add(
     )->start
 );
 
-$loop->await(process_midi_events);
+$loop->await(_process_midi_events());
 
-async sub single_note {
-    my ($out, $message, $t) = @_;
-    $out->note_on(@$message[1 .. 3]);
-    if ($t) {
-        usleep($t);
-        wait Future::IO->sleep(0.2);
-        # $out->note_off($message->[1], $message->[3]);
+sub add_filter ($event_type, $action) {
+    push $filters->{$event_type}->@*, $action;
+}
+
+sub stash ($key, $value) {
+    $stash->{$key} = $value if defined $value;
+    $stash->{$key};
+}
+
+sub send_it ($event) {
+    $midi_out->send_event($event->@*);
+}
+
+sub delay_send ($delay_time, $event) {
+    $loop->add(
+        IO::Async::Timer::Countdown->new(
+            delay     => $delay_time,
+            on_expire => sub { send_it($event) }
+        )->start
+    )
+}
+
+sub _filter_and_forward ($event) {
+    my $event_filters = $filters->{ $event->[0] } // [];
+
+    for my $filter ($event_filters->@*) {
+        return if $filter->($event);
+    }
+
+    send_it($event);
+}
+
+async sub _process_midi_events {
+    while (my $event = await $midi_ch->recv) {
+        _filter_and_forward($event);
     }
 }
 
-__END__
-sub delay_effect {
-    my ($out, $message, $t, $feedback) = @_;
-    for my $f (1 .. $feedback) {
-        single_note($out, $message, $t);
+sub pedal_notes ($note) {
+    return PEDAL, $note, $note + 7;
+}
+
+sub pedal_tone ($event) {
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    # send_it([ $ev, $channel, $_, $vel ]) for pedal_notes($note);
+    my @notes = pedal_notes($note);
+    my $dt = 0;
+    for my $note (@notes) {
+        $dt += STRUM_DELAY;
+        delay_send($dt, [ $ev, $channel, $note, $vel ]);
     }
+    return 1;
 }
