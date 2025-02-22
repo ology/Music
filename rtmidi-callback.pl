@@ -107,7 +107,7 @@ sub chord_notes ($note) {
     my $mn = Music::Note->new($note, 'midinum');
     my $base = uc($mn->format('isobase'));
     my $index = first_index { $_ eq $base } @scale;
-    return ($note) if $index == -1;
+    return $note if $index == -1;
     my $mtr = Music::ToRoman->new(scale_note => $base);
     my @chords = $mtr->get_scale_chords;
     my $chord = $scale[$index] . $chords[$index];
