@@ -48,6 +48,7 @@ $midi_out->open_virtual_port('foo');
 $midi_out->open_port_by_name(qr/\Q$output_name/i);
 
 $SIG{TERM} = sub {
+# print "HELLO?\n";
 #    $score->write_score("$0.mid");
     $midi_rtn->kill('TERM');
 };
