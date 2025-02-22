@@ -19,7 +19,7 @@ use constant PEDAL => 55; # G below middle C
 use constant STRUM_DELAY => 0.09; # seconds
 
 my $input_name  = shift || 'tempopad'; # my midi controller device
-my $output_name = shift || 'fluid';    # fluid synth
+my $output_name = shift || 'fluid';    # fluidsynth
 
 my $loop = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
