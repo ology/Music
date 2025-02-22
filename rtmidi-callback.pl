@@ -101,7 +101,7 @@ async sub _process_midi_events {
 }
 
 sub chord_notes ($note) {
-    my @scale = get_scale_notes('C', 'major');
+    my @scale = get_scale_notes(NOTE, SCALE);
     my $mn = Music::Note->new($note, 'midinum');
     my $base = uc($mn->format('isobase'));
     my $index = first_index { $_ eq $base } @scale;
