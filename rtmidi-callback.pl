@@ -98,7 +98,7 @@ async sub _process_midi_events {
 
 sub chord_notes ($note) {
     my @notes;
-    push @notes, $note, $note + 4, $note + 7;
+    push @notes, $note, $note + 4, $note + 7; # TODO use modal chords
     return @notes;
 }
 sub chord_tone ($event) {
