@@ -8,7 +8,12 @@ use IO::Async::Loop;
 use IO::Async::Routine;
 use IO::Async::Timer::Countdown;
 use IO::Async::Timer::Periodic;
+use List::SomeUtils qw(first_index);
 use MIDI::RtMidi::FFI::Device;
+use Music::Chord::Note;
+use Music::Note;
+use Music::ToRoman;
+use Music::Scales qw(get_scale_notes);
 
 use constant PEDAL => 55; # G below middle C
 use constant STRUM_DELAY => 0.09; # seconds
@@ -94,8 +99,17 @@ async sub _process_midi_events {
 }
 
 sub chord_notes ($note) {
-    my @notes;
-    push @notes, $note, $note + 4, $note + 7; # TODO use modal chords
+    my @scale = get_scale_notes('C', 'major');
+    my $mn = Music::Note->new($note, 'midinum');
+    my $base = uc($mn->format('isobase'));
+    my $index = first_index { $_ eq $base } @scale;
+    return () if $index == -1;
+    my $mtr = Music::ToRoman->new(scale_note => $base);
+    my @chords = $mtr->get_scale_chords;
+    my $chord = $scale[$index] . $chords[$index];
+    my $cn = Music::Chord::Note->new;
+    my @notes = $cn->chord_with_octave($chord, $mn->octave);
+    @notes = map { Music::Note->new($_, 'ISO')->format('midinum') } @notes;
     return @notes;
 }
 sub chord_tone ($event) {
