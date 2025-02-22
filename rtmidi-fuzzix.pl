@@ -10,10 +10,15 @@ use IO::Async::Channel;
 use IO::Async::Loop;
 use MIDI::RtMidi::FFI::Device;
 
+use constant PEDAL => 55; # G below middle C
+
 my $input_name = shift || 'tempopad';
 
 my $loop = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
+
+add_filter(note_on  => \&pedal_tone);
+add_filter(note_off => \&pedal_tone);
 
 my $midi_rtn = IO::Async::Routine->new(
     channels_out => [ $midi_ch ],
@@ -69,8 +74,8 @@ sub delay_send {
     my ($delay_time, $event) = @_;
     $loop->add(
         IO::Async::Timer::Countdown->new(
-            delay => $delay_time,
-            on_expire => sub { send_it( $event ) }
+            delay     => $delay_time,
+            on_expire => sub { send_it($event) }
         )->start
     )
 }
@@ -90,4 +95,15 @@ async sub _process_midi_events {
     while (my $event = await $midi_ch->recv) {
         _filter_and_forward($event);
     }
+}
+
+sub pedal_notes {
+    my ($note) = @_;
+    return PEDAL, $note, $note + 7;
+}
+sub pedal_tone {
+    my ($event) = @_;
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    send_it([ $ev, $channel, $_, $vel ]) for pedal_notes($note);
+    return 1;
 }
