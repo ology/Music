@@ -3,13 +3,15 @@ use v5.36;
 
 use Data::Dumper::Compact qw(ddc);
 use Future::AsyncAwait;
-use IO::Async::Timer::Periodic;
-use IO::Async::Routine;
 use IO::Async::Channel;
 use IO::Async::Loop;
+use IO::Async::Routine;
+use IO::Async::Timer::Countdown;
+use IO::Async::Timer::Periodic;
 use MIDI::RtMidi::FFI::Device;
 
 use constant PEDAL => 55; # G below middle C
+use constant STRUM_DELAY => 0.05; # seconds
 
 my $input_name = shift || 'tempopad';
 
@@ -97,6 +99,12 @@ sub pedal_notes ($note) {
 
 sub pedal_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    send_it([ $ev, $channel, $_, $vel ]) for pedal_notes($note);
+    # send_it([ $ev, $channel, $_, $vel ]) for pedal_notes($note);
+    my @notes = pedal_notes($note);
+    my $dt = 0;
+    for my $note (@notes) {
+        $dt += STRUM_DELAY;
+        delay_send($dt, [ $ev, $channel, $note, $vel ]);
+    }
     return 1;
 }
