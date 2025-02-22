@@ -13,7 +13,8 @@ use MIDI::RtMidi::FFI::Device;
 use constant PEDAL => 55; # G below middle C
 use constant STRUM_DELAY => 0.05; # seconds
 
-my $input_name = shift || 'tempopad';
+my $input_name  = shift || 'tempopad'; # my midi controller device
+my $output_name = shift || 'fluid';    # fluid synth
 
 my $loop = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
@@ -41,7 +42,7 @@ $loop->add( $midi_rtn );
 
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('foo');
-$midi_out->open_port_by_name(qr/fluid/i);
+$midi_out->open_port_by_name(qr/\Q$output_name/i);
 
 $SIG{TERM} = sub { $midi_rtn->kill('TERM') };
 
