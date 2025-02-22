@@ -100,7 +100,6 @@ sub pedal_notes ($note) {
 
 sub pedal_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    # send_it([ $ev, $channel, $_, $vel ]) for pedal_notes($note);
     my @notes = pedal_notes($note);
     my $dt = 0;
     for my $note (@notes) {
