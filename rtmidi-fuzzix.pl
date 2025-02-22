@@ -17,6 +17,9 @@ my $input_name = shift || 'tempopad';
 my $loop = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
 
+my $filters = {};
+my $stash   = {};
+
 add_filter(note_on => \&pedal_tone);
 add_filter(note_off => \&pedal_tone);
 
@@ -38,9 +41,6 @@ $loop->add( $midi_rtn );
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('foo');
 $midi_out->open_port_by_name(qr/fluid/i);
-
-my $filters = {};
-my $stash   = {};
 
 $SIG{TERM} = sub { $midi_rtn->kill('TERM') };
 
@@ -83,7 +83,6 @@ sub delay_send {
 sub _filter_and_forward {
     my ($event) = @_;
     my $event_filters = $filters->{ $event->[0] } // [];
-warn __PACKAGE__,' L',__LINE__,' ',ddc($event_filters, {max_width=>128});
 
     for my $filter ($event_filters->@*) {
         return if $filter->($event);
