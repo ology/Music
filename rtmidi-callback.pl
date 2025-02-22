@@ -35,7 +35,10 @@ my $midi_rtn = IO::Async::Routine->new(
         $midi_in->open_port_by_name(qr/\Q$input_name/i);
 
         $midi_in->set_callback_decoded(
-            sub { $midi_ch->send($_[2]) }
+            sub {
+warn __PACKAGE__,' L',__LINE__,' ',join(', ', $_[2]->@*),"\n";
+$midi_ch->send($_[2])
+            }
         );
 
         sleep;
@@ -101,10 +104,8 @@ sub chord_notes ($note) {
 sub chord_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = chord_notes($note);
-    my $dt = 0;
     for my $note (@notes) {
-        $dt += STRUM_DELAY;
-        delay_send($dt, [ $ev, $channel, $note, $vel ]);
+        send_it([ $ev, $channel, $note, $vel ]);
     }
     return 1;
 }
