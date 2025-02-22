@@ -9,7 +9,8 @@ use IO::Async::Channel;
 use IO::Async::Loop;
 use MIDI::RtMidi::FFI::Device;
 
-use constant PEDAL => 55; # G below middle C
+use constant PEDAL       => 55;   # G below middle C
+use constant STRUM_DELAY => 0.05; # seconds
 
 my $input_name = shift || 'tempopad';
 
@@ -97,6 +98,12 @@ sub pedal_notes ($note) {
 
 sub pedal_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    send_it([ $ev, $channel, $_, $vel ]) for pedal_notes($note);
+    my @notes = pedal_notes($note);
+    send_it([ $ev, $channel, shift @notes, $vel ]);
+    my $delay_time = 0;
+    for my $note (@notes) {
+        $delay_time += STRUM_DELAY;
+        # delay_send($delay_time, [ $ev, $channel, $note, $vel ]);
+    }
     return 1;
 }
