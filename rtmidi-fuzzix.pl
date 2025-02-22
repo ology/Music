@@ -53,24 +53,20 @@ $loop->add(
 
 $loop->await(_process_midi_events());
 
-sub add_filter {
-    my ($event_type, $action) = @_;
+sub add_filter ($event_type, $action) {
     push $filters->{$event_type}->@*, $action;
 }
 
-sub stash {
-    my ($key, $value) = @_;
+sub stash ($key, $value) {
     $stash->{$key} = $value if defined $value;
     $stash->{$key};
 }
 
-sub send_it {
-    my ($event) = @_;
+sub send_it ($event) {
     $midi_out->send_event($event->@*);
 }
 
-sub delay_send {
-    my ($delay_time, $event) = @_;
+sub delay_send ($delay_time, $event) {
     $loop->add(
         IO::Async::Timer::Countdown->new(
             delay     => $delay_time,
@@ -79,8 +75,7 @@ sub delay_send {
     )
 }
 
-sub _filter_and_forward {
-    my ($event) = @_;
+sub _filter_and_forward ($event) {
     my $event_filters = $filters->{ $event->[0] } // [];
 
     for my $filter ($event_filters->@*) {
