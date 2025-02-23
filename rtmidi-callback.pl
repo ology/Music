@@ -31,15 +31,9 @@ my $filter_names = shift || '';         # chord,delay,pedal
 my @filter_names = split /\s*,\s*/, $filter_names;
 
 my %dispatch = (
-    chord => sub {
-        add_filter($_ => \&chord_tone) for qw(note_on note_off);
-    },
-    pedal => sub {
-        add_filter($_ => \&pedal_tone) for qw(note_on note_off);
-    },
-    delay => sub {
-        add_filter($_ => \&multi_delay) for qw(note_on note_off);
-    },
+    chord => sub { add_filters(\&chord_tone) },
+    pedal => sub { add_filters(\&pedal_tone) },
+    delay => sub { add_filters(\&multi_delay) },
 );
 
 my $filters = {};
@@ -100,6 +94,10 @@ $loop->add(
 );
 
 $loop->await(_process_midi_events());
+
+sub add_filters ($coderef) {
+    add_filter($_ => $coderef) for qw(note_on note_off);
+}
 
 sub add_filter ($event_type, $action) {
     push $filters->{$event_type}->@*, $action;
