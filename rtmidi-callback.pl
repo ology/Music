@@ -14,6 +14,7 @@ use Music::Chord::Note ();
 use Music::Note ();
 use Music::ToRoman ();
 use Music::Scales qw(get_scale_notes);
+# use Term::ReadKey;
 
 # for the pedal-tone filter:
 use constant PEDAL => 55;   # G below middle C
@@ -64,7 +65,13 @@ my $tick = 0;
 $loop->add(
     IO::Async::Timer::Periodic->new(
         interval => 1,
-        on_tick  => sub { say 'Tick ' . $tick++ },
+        on_tick  => sub {
+            say 'Tick ' . $tick++;
+            # if (defined (my $key = ReadKey(-1))) {
+                # print "Got key: $key\n";
+                # exit;
+            # }
+        },
     )->start
 );
 
