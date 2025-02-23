@@ -75,7 +75,10 @@ $loop->add(
             if (defined (my $key = ReadKey(-1))) {
                 chomp $key;
                 # say "Got key: $key";
-                if ($key eq '2') {
+                if ($key eq '1') {
+                    $feedback = 1;
+                }
+                elsif ($key eq '2') {
                     $feedback = 2;
                 }
                 elsif ($key eq '3') {
