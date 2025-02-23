@@ -209,7 +209,7 @@ sub arp_notes ($note) {
         @notes = sort { $b <=> $a } @$arp;
     }
     elsif ($arp_type eq 'random') {
-        @notes = map { $_, $_ } shuffle @$arp;
+        @notes = shuffle @$arp;
     }
     else {
         @notes = @$arp;
