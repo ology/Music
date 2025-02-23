@@ -35,10 +35,12 @@ my %dispatch = (
     chord => sub { add_filters(\&chord_tone) },
     pedal => sub { add_filters(\&pedal_tone) },
     delay => sub { add_filters(\&delay_tone) },
+    arp   => sub { add_filters(\&arp_tone) },
 );
 
 my $filters = {};
 my $stash   = {};
+my $arp     = [];
 
 my $feedback = 1;
 my $delay    = 0.1; # seconds
@@ -69,6 +71,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
+        elsif ($pressed eq 'a') { $dispatch{arp}->() }
         elsif ($pressed eq 'c') { $dispatch{chord}->() }
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
@@ -182,6 +185,26 @@ sub delay_tone ($event) {
         $delay_time += $delay;
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
         $vel -= VELO_INC;
+    }
+    return 1;
+}
+
+sub arp_notes {
+    return map { $_->[2] } @$arp;
+}
+sub arp_tone ($event) {
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    if (@$arp >= 6) {
+        shift @$arp;
+        shift @$arp;
+    }
+    push @$arp, $event;
+    my @notes = arp_notes();
+    return 1 if @notes < 3;
+    my $delay_time = 0;
+    for my $n (@notes) {
+        $delay_time += $delay;
+        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 1;
 }
