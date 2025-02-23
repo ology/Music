@@ -202,7 +202,6 @@ sub arp_tone ($event) {
     }
     push @$arp, $event;
     my @notes = arp_notes();
-    return 1 if @notes < 3;
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
