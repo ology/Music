@@ -36,6 +36,9 @@ my %dispatch = (
     pedal => sub {
         add_filter($_ => \&pedal_tone) for qw(note_on note_off);
     },
+    delay => sub {
+        add_filter($_ => \&multi_delay) for qw(note_on note_off);
+    },
 );
 
 my $filters = {};
@@ -75,6 +78,9 @@ $loop->add(
                 }
                 elsif ($key eq 'p') {
                     $dispatch{pedal}->();
+                }
+                elsif ($key eq 'd') {
+                    $dispatch{delay}->();
                 }
                 elsif ($key eq 'x') {
                     $filters = {};
@@ -149,6 +155,18 @@ sub pedal_notes ($note) {
 sub pedal_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = pedal_notes($note);
+    my $delay = 0;
+    for my $n (@notes) {
+        $delay += DELAY;
+        delay_send($delay, [ $ev, $channel, $n, $vel ]);
+    }
+    return 1;
+}
+
+sub multi_delay ($event) {
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    my $feedback = 3; # TODO compute
+    my @notes = ($note) x $feedback;
     my $delay = 0;
     for my $n (@notes) {
         $delay += DELAY;
