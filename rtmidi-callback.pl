@@ -42,7 +42,7 @@ my %dispatch = (
 my $filters  = {};
 my $stash    = {};
 my $arp      = [];
-my $arp_type = 'up';
+my $arp_type = '';
 my $feedback = 1;
 my $delay    = 0.1; # seconds
 
