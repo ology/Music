@@ -22,8 +22,22 @@ use constant DELAY => 0.09; # seconds
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
 
-my $input_name  = shift || 'tempopad'; # midi controller device
-my $output_name = shift || 'fluid';    # fluidsynth
+my $input_name   = shift || 'tempopad'; # midi controller device
+my $output_name  = shift || 'fluid';    # fluidsynth
+my $filter_names = shift || '';        # chord, pedal, etc.
+
+my @filter_names = split /\s*,\s*/, $filter_names;
+
+my %dispatch = (
+    chord => sub {
+        add_filter(note_on => \&chord_tone);
+        add_filter(note_off => \&chord_tone);
+    },
+    pedal => sub {
+        add_filter(note_on => \&pedal_tone);
+        add_filter(note_off => \&pedal_tone);
+    },
+);
 
 my $loop    = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
@@ -31,11 +45,7 @@ my $midi_ch = IO::Async::Channel->new;
 my $filters = {};
 my $stash   = {};
 
-add_filter(note_on => \&chord_tone);
-add_filter(note_off => \&chord_tone);
-
-# add_filter(note_on => \&pedal_tone);
-# add_filter(note_off => \&pedal_tone);
+$dispatch{$_}->() for @filter_names;
 
 my $midi_rtn = IO::Async::Routine->new(
     channels_out => [ $midi_ch ],
