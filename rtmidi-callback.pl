@@ -33,7 +33,7 @@ my @filter_names = split /\s*,\s*/, $filter_names;
 my %dispatch = (
     chord => sub { add_filters(\&chord_tone) },
     pedal => sub { add_filters(\&pedal_tone) },
-    delay => sub { add_filters(\&multi_delay) },
+    delay => sub { add_filters(\&delay_tone) },
 );
 
 my $filters = {};
@@ -171,7 +171,7 @@ sub pedal_tone ($event) {
     return 1;
 }
 
-sub multi_delay ($event) {
+sub delay_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = ($note) x $feedback;
     my $delay_time = 0;
