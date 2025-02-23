@@ -18,6 +18,8 @@ use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
 # for the pedal-tone filter:
 use constant PEDAL => 55; # G below middle C
+# for the pedal-tone and delay filters:
+use constant DELAY_INC => 0.1;
 # for the modal chord filter:
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
@@ -70,6 +72,8 @@ my $tka = Term::TermKey::Async->new(
         # say "Got key: $pressed";
         if ($pressed eq '?') { say 'Haha!' }
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
+        elsif ($pressed eq '<') { $delay -= DELAY_INC }
+        elsif ($pressed eq '>') { $delay += DELAY_INC }
         elsif ($pressed eq 'c') { $dispatch{chord}->() }
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
@@ -163,6 +167,7 @@ sub pedal_tone ($event) {
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
+        last if $delay_time <= 0;
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 1;
@@ -174,6 +179,7 @@ sub multi_delay ($event) {
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
+        last if $delay_time <= 0;
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 1;
