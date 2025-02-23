@@ -66,36 +66,36 @@ my $tka = Term::TermKey::Async->new(
     term   => \*STDIN,
     on_key => sub {
         my ($self, $key) = @_;
-        my $key = $self->format_key($key, FORMAT_VIM);
+        my $pressed = $self->format_key($key, FORMAT_VIM);
         # say "Got key: $pressed";
-        if ($key eq '?') {
+        if ($pressed eq '?') {
             say 'Haha!';
         }
-        elsif ($key eq '1') {
+        elsif ($pressed eq '1') {
             $feedback = 1;
         }
-        elsif ($key eq '2') {
+        elsif ($pressed eq '2') {
             $feedback = 2;
         }
-        elsif ($key eq '3') {
+        elsif ($pressed eq '3') {
             $feedback = 3;
         }
-        elsif ($key eq '4') {
+        elsif ($pressed eq '4') {
             $feedback = 4;
         }
-        elsif ($key eq '5') {
+        elsif ($pressed eq '5') {
             $feedback = 5;
         }
-        elsif ($key eq 'c') {
+        elsif ($pressed eq 'c') {
             $dispatch{chord}->();
         }
-        elsif ($key eq 'p') {
+        elsif ($pressed eq 'p') {
             $dispatch{pedal}->();
         }
-        elsif ($key eq 'd') {
+        elsif ($pressed eq 'd') {
             $dispatch{delay}->();
         }
-        elsif ($key eq 'x') {
+        elsif ($pressed eq 'x') {
             $filters = {};
         }
         $loop->loop_stop if $key->type_is_unicode and
