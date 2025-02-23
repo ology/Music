@@ -79,7 +79,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
         elsif ($pressed eq 'x') { $filters = {} }
         $loop->loop_stop if $key->type_is_unicode and
-                            $key->utf8 eq "C" and
+                            $key->utf8 eq 'C' and
                             $key->modifiers & KEYMOD_CTRL;
     },
 );
