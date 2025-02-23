@@ -24,7 +24,7 @@ use constant SCALE => 'major'; # mode
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth
-my $filter_names = shift || '';        # chord, pedal, etc.
+my $filter_names = shift || '';         # chord, pedal, etc.
 
 my @filter_names = split /\s*,\s*/, $filter_names;
 
