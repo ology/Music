@@ -192,7 +192,7 @@ sub delay_tone ($event) {
 }
 
 sub arp_notes {
-    return map { $_->[2] } @$arp;
+    return @$arp;
 }
 sub arp_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
@@ -200,7 +200,7 @@ sub arp_tone ($event) {
         shift @$arp;
         shift @$arp;
     }
-    push @$arp, $event;
+    push @$arp, $event->[2];
     my @notes = arp_notes();
     my $delay_time = 0;
     for my $n (@notes) {
