@@ -67,7 +67,7 @@ my $tka = Term::TermKey::Async->new(
   on_key => sub {
     my ($self, $key) = @_;
     my $pressed = $self->format_key($key, FORMAT_VIM);
-    # print "Got key: $pressed\n" if $verbose;
+    # say "Got key: $pressed";
     if ($pressed eq '?') {
       say 'Haha!';
     }
