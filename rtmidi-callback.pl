@@ -17,8 +17,7 @@ use Music::Scales qw(get_scale_notes);
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
 # for the pedal-tone filter:
-use constant PEDAL => 55;   # G below middle C
-use constant DELAY => 0.09; # seconds
+use constant PEDAL => 55; # G below middle C
 # for the modal chord filter:
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
@@ -45,6 +44,7 @@ my $filters = {};
 my $stash   = {};
 
 my $feedback = 1;
+my $delay    = 0.09; # seconds
 
 $dispatch{$_}->() for @filter_names;
 
@@ -162,7 +162,7 @@ sub pedal_tone ($event) {
     my @notes = pedal_notes($note);
     my $delay = 0;
     for my $n (@notes) {
-        $delay += DELAY;
+        $delay += $delay;
         delay_send($delay, [ $ev, $channel, $n, $vel ]);
     }
     return 1;
@@ -171,10 +171,10 @@ sub pedal_tone ($event) {
 sub multi_delay ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = ($note) x $feedback;
-    my $delay = 0;
+    my $delay_time = 0;
     for my $n (@notes) {
-        $delay += DELAY;
-        delay_send($delay, [ $ev, $channel, $n, $vel ]);
+        $delay_time += $delay;
+        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 1;
 }
