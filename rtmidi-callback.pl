@@ -132,10 +132,14 @@ sub delay_send ($delay_time, $event) {
 
 sub _filter_and_forward ($event) {
     my $event_filters = $filters->{ $event->[0] } // [];
-    for my $filter ($event_filters->@*) {
-        return if $filter->($event);
+    if ($event_filters->@*) {
+        for my $filter ($event_filters->@*) {
+            return if $filter->($event);
+        }
     }
-    send_it($event);
+    else {
+        send_it($event);
+    }
 }
 
 async sub _process_midi_events {
