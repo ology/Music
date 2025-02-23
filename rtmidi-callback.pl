@@ -14,7 +14,7 @@ use Music::Chord::Note ();
 use Music::Note ();
 use Music::ToRoman ();
 use Music::Scales qw(get_scale_notes);
-use Term::ReadKey;
+use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
 # for the pedal-tone filter:
 use constant PEDAL => 55;   # G below middle C
@@ -62,6 +62,22 @@ my $midi_rtn = IO::Async::Routine->new(
 );
 $loop->add($midi_rtn);
 
+my $tka = Term::TermKey::Async->new(
+  term   => \*STDIN,
+  on_key => sub {
+    my ($self, $key) = @_;
+    my $pressed = $self->format_key($key, FORMAT_VIM);
+    # print "Got key: $pressed\n" if $verbose;
+    if ($pressed eq '?') {
+      say 'Haha!';
+    }
+    $loop->loop_stop if $key->type_is_unicode and
+                        $key->utf8 eq "C" and
+                        $key->modifiers & KEYMOD_CTRL;
+  },
+);
+$loop->add($tka);
+
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('foo');
 $midi_out->open_port_by_name(qr/\Q$output_name/i);
@@ -72,37 +88,37 @@ $loop->add(
         interval => 1,
         on_tick  => sub {
             # say 'Tick ' . $tick++;
-            if (defined (my $key = ReadKey(-1))) {
-                chomp $key;
-                # say "Got key: $key";
-                if ($key eq '1') {
-                    $feedback = 1;
-                }
-                elsif ($key eq '2') {
-                    $feedback = 2;
-                }
-                elsif ($key eq '3') {
-                    $feedback = 3;
-                }
-                elsif ($key eq '4') {
-                    $feedback = 4;
-                }
-                elsif ($key eq '5') {
-                    $feedback = 5;
-                }
-                elsif ($key eq 'c') {
-                    $dispatch{chord}->();
-                }
-                elsif ($key eq 'p') {
-                    $dispatch{pedal}->();
-                }
-                elsif ($key eq 'd') {
-                    $dispatch{delay}->();
-                }
-                elsif ($key eq 'x') {
-                    $filters = {};
-                }
-            }
+#            if (defined (my $key = ReadKey(-1))) {
+#                chomp $key;
+#                # say "Got key: $key";
+#                if ($key eq '1') {
+#                    $feedback = 1;
+#                }
+#                elsif ($key eq '2') {
+#                    $feedback = 2;
+#                }
+#                elsif ($key eq '3') {
+#                    $feedback = 3;
+#                }
+#                elsif ($key eq '4') {
+#                    $feedback = 4;
+#                }
+#                elsif ($key eq '5') {
+#                    $feedback = 5;
+#                }
+#                elsif ($key eq 'c') {
+#                    $dispatch{chord}->();
+#                }
+#                elsif ($key eq 'p') {
+#                    $dispatch{pedal}->();
+#                }
+#                elsif ($key eq 'd') {
+#                    $dispatch{delay}->();
+#                }
+#                elsif ($key eq 'x') {
+#                    $filters = {};
+#                }
+#            }
         },
     )->start
 );
