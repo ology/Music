@@ -44,6 +44,8 @@ my %dispatch = (
 my $filters = {};
 my $stash   = {};
 
+my $feedback = 1;
+
 $dispatch{$_}->() for @filter_names;
 
 my $loop    = IO::Async::Loop->new;
@@ -73,7 +75,19 @@ $loop->add(
             if (defined (my $key = ReadKey(-1))) {
                 chomp $key;
                 # say "Got key: $key";
-                if ($key eq 'c') {
+                if ($key eq '2') {
+                    $feedback = 2;
+                }
+                elsif ($key eq '3') {
+                    $feedback = 3;
+                }
+                elsif ($key eq '4') {
+                    $feedback = 4;
+                }
+                elsif ($key eq '5') {
+                    $feedback = 5;
+                }
+                elsif ($key eq 'c') {
                     $dispatch{chord}->();
                 }
                 elsif ($key eq 'p') {
@@ -165,7 +179,6 @@ sub pedal_tone ($event) {
 
 sub multi_delay ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    my $feedback = 3; # TODO compute
     my @notes = ($note) x $feedback;
     my $delay = 0;
     for my $n (@notes) {
