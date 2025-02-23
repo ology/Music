@@ -9,6 +9,7 @@ use IO::Async::Routine ();
 use IO::Async::Timer::Countdown ();
 use IO::Async::Timer::Periodic ();
 use List::SomeUtils qw(first_index);
+use List::Util qw(shuffle uniq);
 use MIDI::RtMidi::FFI::Device ();
 use Music::Chord::Note ();
 use Music::Note ();
@@ -38,10 +39,10 @@ my %dispatch = (
     arp   => sub { add_filters(\&arp_tone) },
 );
 
-my $filters = {};
-my $stash   = {};
-my $arp     = [];
-
+my $filters  = {};
+my $stash    = {};
+my $arp      = [];
+my $arp_type = 'up';
 my $feedback = 1;
 my $delay    = 0.1; # seconds
 
@@ -76,6 +77,9 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
         elsif ($pressed eq 'x') { $filters = {}; $arp = [] }
+        elsif ($pressed eq 'e') { $arp_type = 'down' }
+        elsif ($pressed eq 'r') { $arp_type = 'random' }
+        elsif ($pressed eq 't') { $arp_type = 'up' }
         $loop->loop_stop if $key->type_is_unicode and
                             $key->utf8 eq 'C' and
                             $key->modifiers & KEYMOD_CTRL;
@@ -197,7 +201,21 @@ sub arp_notes ($note) {
         shift @$arp;
     }
     push @$arp, $note;
-    return @$arp;
+    my @notes;
+    if ($arp_type eq 'up') {
+        @notes = sort { $a <=> $b } @$arp;
+    }
+    elsif ($arp_type eq 'down') {
+        @notes = sort { $b <=> $a } @$arp;
+    }
+    elsif ($arp_type eq 'random') {
+        my @unique = uniq @$arp;
+        @notes = map { $_, $_ } shuffle @unique;
+    }
+    else {
+        @notes = @$arp;
+    }
+    return @notes;
 }
 sub arp_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
