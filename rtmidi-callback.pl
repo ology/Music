@@ -37,13 +37,13 @@ my %dispatch = (
     },
 );
 
-my $loop    = IO::Async::Loop->new;
-my $midi_ch = IO::Async::Channel->new;
-
 my $filters = {};
 my $stash   = {};
 
 $dispatch{$_}->() for @filter_names;
+
+my $loop    = IO::Async::Loop->new;
+my $midi_ch = IO::Async::Channel->new;
 
 my $midi_rtn = IO::Async::Routine->new(
     channels_out => [ $midi_ch ],
