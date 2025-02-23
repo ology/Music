@@ -66,10 +66,10 @@ $loop->add(
     IO::Async::Timer::Periodic->new(
         interval => 1,
         on_tick  => sub {
-            say 'Tick ' . $tick++;
+            # say 'Tick ' . $tick++;
             if (defined (my $key = ReadKey(-1))) {
                 chomp $key;
-                # print "Got key: $key\n";
+                # say "Got key: $key";
                 if ($key eq 'c') {
                     $dispatch{chord}->();
                 }
