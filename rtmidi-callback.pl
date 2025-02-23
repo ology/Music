@@ -46,7 +46,7 @@ my $filters = {};
 my $stash   = {};
 
 my $feedback = 1;
-my $delay    = 0.09; # seconds
+my $delay    = 0.1; # seconds
 
 $dispatch{$_}->() for @filter_names;
 
