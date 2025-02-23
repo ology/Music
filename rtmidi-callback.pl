@@ -30,12 +30,10 @@ my @filter_names = split /\s*,\s*/, $filter_names;
 
 my %dispatch = (
     chord => sub {
-        add_filter(note_on => \&chord_tone);
-        add_filter(note_off => \&chord_tone);
+        add_filter($_ => \&chord_tone) for qw(note_on note_off);
     },
     pedal => sub {
-        add_filter(note_on => \&pedal_tone);
-        add_filter(note_off => \&pedal_tone);
+        add_filter($_ => \&pedal_tone) for qw(note_on note_off);
     },
 );
 
