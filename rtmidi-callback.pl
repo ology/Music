@@ -71,6 +71,9 @@ my $tka = Term::TermKey::Async->new(
         if ($pressed eq '?') {
             say 'Haha!';
         }
+        elsif ($pressed eq '0') {
+            $feedback = 0;
+        }
         elsif ($pressed eq '1') {
             $feedback = 1;
         }
