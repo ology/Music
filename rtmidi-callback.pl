@@ -96,10 +96,6 @@ $loop->add(
         interval => 1,
         on_tick  => sub {
             # say 'Tick ' . $tick++;
-#            if (defined (my $key = ReadKey(-1))) {
-#                chomp $key;
-#                # say "Got key: $key";
-#            }
         },
     )->start
 );
