@@ -202,18 +202,15 @@ sub arp_notes ($note) {
         shift @$arp;
     }
     push @$arp, $note;
-    my @notes;
+    my @notes = uniq @$arp;
     if ($arp_type eq 'up') {
-        @notes = sort { $a <=> $b } uniq @$arp;
+        @notes = sort { $a <=> $b } @notes;
     }
     elsif ($arp_type eq 'down') {
-        @notes = sort { $b <=> $a } uniq @$arp;
+        @notes = sort { $b <=> $a } @notes;
     }
     elsif ($arp_type eq 'random') {
-        @notes = shuffle uniq @$arp;
-    }
-    else {
-        @notes = uniq @$arp;
+        @notes = shuffle @notes;
     }
     return @notes;
 }
