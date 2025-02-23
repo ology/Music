@@ -176,9 +176,9 @@ sub delay_tone ($event) {
     my @notes = ($note) x $feedback;
     my $delay_time = 0;
     for my $n (@notes) {
-        $vel -= VELO_INC;
         $delay_time += $delay;
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+        $vel -= VELO_INC;
     }
     return 1;
 }
