@@ -127,7 +127,9 @@ sub delay_send ($delay_time, $event) {
 
 sub _filter_and_forward ($event) {
     my $event_filters = $filters->{ $event->[0] } // [];
-    $_->($event) for $event_filters->@*;
+    for my $filter ($event_filters->@*) {
+        return if $filter->($event);
+    }
     send_it($event);
 }
 
@@ -157,7 +159,7 @@ sub chord_tone ($event) {
     for my $n (@notes) {
         send_it([ $ev, $channel, $n, $vel ]);
     }
-    return 1;
+    return 0;
 }
 
 sub pedal_notes ($note) {
@@ -171,7 +173,7 @@ sub pedal_tone ($event) {
         $delay_time += $delay;
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
-    return 1;
+    return 0;
 }
 
 sub delay_notes ($note) {
@@ -186,7 +188,7 @@ sub delay_tone ($event) {
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
         $vel -= VELO_INC;
     }
-    return 1;
+    return 0;
 }
 
 sub arp_notes {
@@ -206,5 +208,5 @@ sub arp_tone ($event) {
         $delay_time += $delay;
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
-    return 1;
+    return 0;
 }
