@@ -50,11 +50,7 @@ my $midi_rtn = IO::Async::Routine->new(
     code => sub {
         my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
         $midi_in->open_port_by_name(qr/\Q$input_name/i);
-
-        $midi_in->set_callback_decoded(
-            sub { $midi_ch->send($_[2]) }
-        );
-
+        $midi_in->set_callback_decoded(sub { $midi_ch->send($_[2]) });
         sleep;
     },
 );
