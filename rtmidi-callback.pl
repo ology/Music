@@ -66,10 +66,37 @@ my $tka = Term::TermKey::Async->new(
     term   => \*STDIN,
     on_key => sub {
         my ($self, $key) = @_;
-        my $pressed = $self->format_key($key, FORMAT_VIM);
+        my $key = $self->format_key($key, FORMAT_VIM);
         # say "Got key: $pressed";
-        if ($pressed eq '?') {
+        if ($key eq '?') {
             say 'Haha!';
+        }
+        elsif ($key eq '1') {
+            $feedback = 1;
+        }
+        elsif ($key eq '2') {
+            $feedback = 2;
+        }
+        elsif ($key eq '3') {
+            $feedback = 3;
+        }
+        elsif ($key eq '4') {
+            $feedback = 4;
+        }
+        elsif ($key eq '5') {
+            $feedback = 5;
+        }
+        elsif ($key eq 'c') {
+            $dispatch{chord}->();
+        }
+        elsif ($key eq 'p') {
+            $dispatch{pedal}->();
+        }
+        elsif ($key eq 'd') {
+            $dispatch{delay}->();
+        }
+        elsif ($key eq 'x') {
+            $filters = {};
         }
         $loop->loop_stop if $key->type_is_unicode and
                             $key->utf8 eq "C" and
@@ -91,33 +118,6 @@ $loop->add(
 #            if (defined (my $key = ReadKey(-1))) {
 #                chomp $key;
 #                # say "Got key: $key";
-#                if ($key eq '1') {
-#                    $feedback = 1;
-#                }
-#                elsif ($key eq '2') {
-#                    $feedback = 2;
-#                }
-#                elsif ($key eq '3') {
-#                    $feedback = 3;
-#                }
-#                elsif ($key eq '4') {
-#                    $feedback = 4;
-#                }
-#                elsif ($key eq '5') {
-#                    $feedback = 5;
-#                }
-#                elsif ($key eq 'c') {
-#                    $dispatch{chord}->();
-#                }
-#                elsif ($key eq 'p') {
-#                    $dispatch{pedal}->();
-#                }
-#                elsif ($key eq 'd') {
-#                    $dispatch{delay}->();
-#                }
-#                elsif ($key eq 'x') {
-#                    $filters = {};
-#                }
 #            }
         },
     )->start
