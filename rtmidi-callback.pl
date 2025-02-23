@@ -165,7 +165,6 @@ sub pedal_tone ($event) {
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
-        last if $delay_time <= 0;
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 1;
@@ -177,7 +176,6 @@ sub delay_tone ($event) {
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
-        last if $delay_time <= 0;
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 1;
