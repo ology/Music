@@ -77,6 +77,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
         elsif ($pressed eq 'x') { $filters = {}; $arp = [] }
+        elsif ($pressed eq 'w') { $arp_type = '' }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
