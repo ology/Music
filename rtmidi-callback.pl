@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# PERL_FUTURE_DEBUG=1 perl rtmidi-callback.pl
+
 use v5.36;
 
 use Data::Dumper::Compact qw(ddc);
