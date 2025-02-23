@@ -201,7 +201,7 @@ sub arp_notes ($note) {
 }
 sub arp_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    my @notes = arp_notes($event->[2]);
+    my @notes = arp_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
