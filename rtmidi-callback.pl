@@ -72,7 +72,7 @@ my $tka = Term::TermKey::Async->new(
         # say "Got key: $pressed";
         if ($pressed eq '?') { say 'Haha!' }
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
-        elsif ($pressed eq '<') { $delay -= DELAY_INC }
+        elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
         elsif ($pressed eq 'c') { $dispatch{chord}->() }
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
