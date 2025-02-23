@@ -63,18 +63,18 @@ my $midi_rtn = IO::Async::Routine->new(
 $loop->add($midi_rtn);
 
 my $tka = Term::TermKey::Async->new(
-  term   => \*STDIN,
-  on_key => sub {
-    my ($self, $key) = @_;
-    my $pressed = $self->format_key($key, FORMAT_VIM);
-    # say "Got key: $pressed";
-    if ($pressed eq '?') {
-      say 'Haha!';
-    }
-    $loop->loop_stop if $key->type_is_unicode and
-                        $key->utf8 eq "C" and
-                        $key->modifiers & KEYMOD_CTRL;
-  },
+    term   => \*STDIN,
+    on_key => sub {
+        my ($self, $key) = @_;
+        my $pressed = $self->format_key($key, FORMAT_VIM);
+        # say "Got key: $pressed";
+        if ($pressed eq '?') {
+            say 'Haha!';
+        }
+        $loop->loop_stop if $key->type_is_unicode and
+                            $key->utf8 eq "C" and
+                            $key->modifiers & KEYMOD_CTRL;
+    },
 );
 $loop->add($tka);
 
