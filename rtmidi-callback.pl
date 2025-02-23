@@ -138,9 +138,9 @@ sub pedal_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = pedal_notes($note);
     my $dt = 0;
-    for my $note (@notes) {
+    for my $n (@notes) {
         $dt += DELAY;
-        delay_send($dt, [ $ev, $channel, $note, $vel ]);
+        delay_send($dt, [ $ev, $channel, $n, $vel ]);
     }
     return 1;
 }
