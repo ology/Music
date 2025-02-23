@@ -75,7 +75,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'c') { $dispatch{chord}->() }
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
-        elsif ($pressed eq 'x') { $filters = {} }
+        elsif ($pressed eq 'x') { $filters = {}; $arp = [] }
         $loop->loop_stop if $key->type_is_unicode and
                             $key->utf8 eq 'C' and
                             $key->modifiers & KEYMOD_CTRL;
