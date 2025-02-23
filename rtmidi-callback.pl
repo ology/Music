@@ -9,7 +9,7 @@ use IO::Async::Routine ();
 use IO::Async::Timer::Countdown ();
 use IO::Async::Timer::Periodic ();
 use List::SomeUtils qw(first_index);
-use List::Util qw(shuffle);
+use List::Util qw(shuffle uniq);
 use MIDI::RtMidi::FFI::Device ();
 use Music::Chord::Note ();
 use Music::Note ();
@@ -204,16 +204,16 @@ sub arp_notes ($note) {
     push @$arp, $note;
     my @notes;
     if ($arp_type eq 'up') {
-        @notes = sort { $a <=> $b } @$arp;
+        @notes = sort { $a <=> $b } uniq @$arp;
     }
     elsif ($arp_type eq 'down') {
-        @notes = sort { $b <=> $a } @$arp;
+        @notes = sort { $b <=> $a } uniq @$arp;
     }
     elsif ($arp_type eq 'random') {
-        @notes = shuffle @$arp;
+        @notes = shuffle uniq @$arp;
     }
     else {
-        @notes = @$arp;
+        @notes = uniq @$arp;
     }
     return @notes;
 }
