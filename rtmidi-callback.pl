@@ -69,12 +69,7 @@ my $tka = Term::TermKey::Async->new(
         my $pressed = $self->format_key($key, FORMAT_VIM);
         # say "Got key: $pressed";
         if ($pressed eq '?') { say 'Haha!' }
-        elsif ($pressed eq '0') { $feedback = 0 }
-        elsif ($pressed eq '1') { $feedback = 1 }
-        elsif ($pressed eq '2') { $feedback = 2 }
-        elsif ($pressed eq '3') { $feedback = 3 }
-        elsif ($pressed eq '4') { $feedback = 4 }
-        elsif ($pressed eq '5') { $feedback = 5 }
+        elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq 'c') { $dispatch{chord}->() }
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
