@@ -222,8 +222,8 @@ sub arp_tone ($event) {
     my @notes = arp_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
-        $delay_time += $delay;
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+        $delay_time += $delay;
     }
-    return 0;
+    return 1;
 }
