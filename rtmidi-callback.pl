@@ -19,7 +19,7 @@ use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 # for the pedal-tone filter:
 use constant PEDAL => 55; # G below middle C
 # for the pedal-tone and delay filters:
-use constant DELAY_INC => 0.1;
+use constant DELAY_INC => 0.05;
 # for the modal chord filter:
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
