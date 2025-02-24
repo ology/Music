@@ -47,7 +47,7 @@ my %dispatch = (
 my $filters   = {};
 my $stash     = {};
 my $arp       = [];
-my $arp_type  = '';
+my $arp_type  = 'u';
 my $feedback  = 1;
 my $delay     = 0.1; # seconds
 my $offset    = OFFSET;
@@ -86,7 +86,6 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
         elsif ($pressed eq 'o') { $dispatch{offset}->() }
         elsif ($pressed eq 'x') { $filters = {}; $arp = []; $offset = OFFSET }
-        elsif ($pressed eq 'w') { $arp_type = '' }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
@@ -111,13 +110,11 @@ $midi_out->open_port_by_name(qr/\Q$output_name/i);
 $loop->await(_process_midi_events());
 
 sub status {
-    print join("/n", 
-        "Arp type: $arp_type",
-        "Delay: $delay",
-        "Feedback: $feedback",
-        "Offset distance: $offset",
-        'Offset direction: ' . $direction ? 'up' : 'down',
-    ), "\n";
+    print "Arp type: $arp_type\n";
+    print "Delay: $delay\n";
+    print "Feedback: $feedback\n";
+    print "Offset distance: $offset\n";
+    print 'Offset direction: ' . $direction ? 'up' : 'down' . "\n";
 }
 
 sub add_filters ($coderef) {
