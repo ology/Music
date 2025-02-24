@@ -76,6 +76,7 @@ my $tka = Term::TermKey::Async->new(
         my $pressed = $self->format_key($key, FORMAT_VIM);
         # say "Got key: $pressed";
         if ($pressed eq '?') { say 'Haha!' }
+        elsif ($pressed eq 's') { status() }
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
@@ -108,6 +109,16 @@ $midi_out->open_virtual_port('foo');
 $midi_out->open_port_by_name(qr/\Q$output_name/i);
 
 $loop->await(_process_midi_events());
+
+sub add_filters ($coderef) {
+    print join("/n", 
+        "Arp type: $arp_type",
+        "Delay: $delay",
+        "Feedback: $feedback",
+        "Offset distance: $offset",
+        'Offset direction: ' . $direction ? 'up' : 'down',
+    ), "\n";
+}
 
 sub add_filters ($coderef) {
     add_filter($_ => $coderef) for qw(note_on note_off);
