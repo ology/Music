@@ -153,9 +153,7 @@ sub chord_notes ($note) {
 sub chord_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = chord_notes($note);
-    for my $n (@notes) {
-        send_it([ $ev, $channel, $n, $vel ]);
-    }
+    send_it([ $ev, $channel, $_, $vel ]) for @notes;
     return 0;
 }
 
