@@ -75,7 +75,7 @@ my $tka = Term::TermKey::Async->new(
         my ($self, $key) = @_;
         my $pressed = $self->format_key($key, FORMAT_VIM);
         # say "Got key: $pressed";
-        if ($pressed eq '?') { say 'Haha!' }
+        if ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
@@ -127,6 +127,10 @@ sub status {
     print "Offset distance: $offset\n";
     print 'Offset direction: ' . ($direction ? 'up' : 'down') . "\n";
     print "\n";
+}
+
+sub help {
+    say 'Haha!';
 }
 
 sub add_filters ($coderef) {
