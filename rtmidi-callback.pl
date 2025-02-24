@@ -10,7 +10,6 @@ use IO::Async::Channel ();
 use IO::Async::Loop ();
 use IO::Async::Routine ();
 use IO::Async::Timer::Countdown ();
-use IO::Async::Timer::Periodic ();
 use List::SomeUtils qw(first_index);
 use List::Util qw(shuffle uniq);
 use MIDI::RtMidi::FFI::Device ();
