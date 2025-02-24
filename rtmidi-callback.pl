@@ -79,8 +79,6 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
-        elsif ($pressed eq '-') { $direction = 0 }
-        elsif ($pressed eq '+') { $direction = 1 }
         elsif ($pressed eq 'a') { $dispatch{arp}->() }
         elsif ($pressed eq 'c') { $dispatch{chord}->() }
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
@@ -91,6 +89,8 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
+        elsif ($pressed eq '-') { $direction = 0 }
+        elsif ($pressed eq '+') { $direction = 1 }
         elsif ($pressed eq '@') { $offset += $direction ? 2 : -10 }
         elsif ($pressed eq '#') { $offset += $direction ? 4 : -8 }
         elsif ($pressed eq '$') { $offset += $direction ? 5 : -7 }
