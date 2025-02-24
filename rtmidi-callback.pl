@@ -110,7 +110,7 @@ $midi_out->open_port_by_name(qr/\Q$output_name/i);
 
 $loop->await(_process_midi_events());
 
-sub status ($coderef) {
+sub status {
     print join("/n", 
         "Arp type: $arp_type",
         "Delay: $delay",
