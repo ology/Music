@@ -85,7 +85,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
         elsif ($pressed eq 'o') { $dispatch{offset}->() }
-        elsif ($pressed eq 'x') { $filters = {}; $arp = []; $offset = OFFSET }
+        elsif ($pressed eq 'x') { clear() }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
@@ -108,6 +108,12 @@ $midi_out->open_virtual_port('foo');
 $midi_out->open_port_by_name(qr/\Q$output_name/i);
 
 $loop->await(_process_midi_events());
+
+sub clear {
+    $filters = {};
+    $arp     = [];
+    $offset  = OFFSET;
+}
 
 sub status {
     print "Arp type: $arp_type\n";
