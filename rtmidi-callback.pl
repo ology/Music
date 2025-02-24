@@ -51,7 +51,7 @@ my $arp_type  = 'up';
 my $delay     = 0.1; # seconds
 my $feedback  = 1;
 my $offset    = OFFSET;
-my $direction = 0; # offset 0=below, 1=above
+my $direction = 1; # offset 0=below, 1=above
 
 $dispatch{$_}->() for @filter_names;
 
