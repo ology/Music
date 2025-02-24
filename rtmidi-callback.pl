@@ -137,9 +137,9 @@ async sub _process_midi_events {
 }
 
 sub chord_notes ($note) {
-    my @scale = get_scale_notes(NOTE, SCALE);
     my $mn = Music::Note->new($note, 'midinum');
     my $base = uc($mn->format('isobase'));
+    my @scale = get_scale_notes(NOTE, SCALE);
     my $index = first_index { $_ eq $base } @scale;
     return $note if $index == -1;
     my $mtr = Music::ToRoman->new(scale_note => $base);
