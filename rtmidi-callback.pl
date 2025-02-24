@@ -98,6 +98,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '^') { $offset += $direction ? 9 : -3 }
         elsif ($pressed eq '&') { $offset += $direction ? 11 : -1 }
         elsif ($pressed eq '*') { $offset += $direction ? 12 : -12 }
+        elsif ($pressed eq ')') { $offset = 0 }
         $loop->loop_stop if $key->type_is_unicode and
                             $key->utf8 eq 'C' and
                             $key->modifiers & KEYMOD_CTRL;
