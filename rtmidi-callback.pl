@@ -114,7 +114,8 @@ sub status {
     print "Delay: $delay\n";
     print "Feedback: $feedback\n";
     print "Offset distance: $offset\n";
-    print 'Offset direction: ' . $direction ? 'up' : 'down' . "\n";
+    print 'Offset direction: ' . ($direction ? 'up' : 'down') . "\n";
+    print "\n";
 }
 
 sub add_filters ($coderef) {
