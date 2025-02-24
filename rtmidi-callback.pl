@@ -110,9 +110,14 @@ $midi_out->open_port_by_name(qr/\Q$output_name/i);
 $loop->await(_process_midi_events());
 
 sub clear {
-    $filters = {};
-    $arp     = [];
-    $offset  = OFFSET;
+    $filters   = {};
+    $stash     = {};
+    $arp       = [];
+    $arp_type  = 'up';
+    $delay     = 0.1; # seconds
+    $feedback  = 1;
+    $offset    = OFFSET;
+    $direction = 1; # offset 0=below, 1=above
 }
 
 sub status {
