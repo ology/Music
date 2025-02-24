@@ -91,12 +91,12 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
-        elsif ($pressed eq '@') { $offset += $direction ? 2 : -2 }
-        elsif ($pressed eq '#') { $offset += $direction ? 4 : -4 }
-        elsif ($pressed eq '$') { $offset += $direction ? 5 : -5 }
-        elsif ($pressed eq '%') { $offset += $direction ? 7 : -7 }
-        elsif ($pressed eq '^') { $offset += $direction ? 9 : -9 }
-        elsif ($pressed eq '&') { $offset += $direction ? 11 : -11 }
+        elsif ($pressed eq '@') { $offset += $direction ? 2 : -10 }
+        elsif ($pressed eq '#') { $offset += $direction ? 4 : -8 }
+        elsif ($pressed eq '$') { $offset += $direction ? 5 : -7 }
+        elsif ($pressed eq '%') { $offset += $direction ? 7 : -5 }
+        elsif ($pressed eq '^') { $offset += $direction ? 9 : -3 }
+        elsif ($pressed eq '&') { $offset += $direction ? 11 : -1 }
         elsif ($pressed eq '*') { $offset += $direction ? 12 : -12 }
         $loop->loop_stop if $key->type_is_unicode and
                             $key->utf8 eq 'C' and
