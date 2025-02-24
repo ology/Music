@@ -91,14 +91,15 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 't') { $arp_type = 'up' }
         elsif ($pressed eq '-') { $direction = 0 }
         elsif ($pressed eq '+') { $direction = 1 }
-        elsif ($pressed eq '!') { $offset += $direction ? 1 : -11 }
-        elsif ($pressed eq '@') { $offset += $direction ? 2 : -10 }
-        elsif ($pressed eq '#') { $offset += $direction ? 4 : -8 }
-        elsif ($pressed eq '$') { $offset += $direction ? 5 : -7 }
-        elsif ($pressed eq '%') { $offset += $direction ? 7 : -5 }
-        elsif ($pressed eq '^') { $offset += $direction ? 9 : -3 }
-        elsif ($pressed eq '&') { $offset += $direction ? 11 : -1 }
-        elsif ($pressed eq '*') { $offset += $direction ? 12 : -12 }
+        elsif ($pressed eq '!') { $offset += $direction ? 1 : -1 }
+        elsif ($pressed eq '@') { $offset += $direction ? 2 : -2 }
+        elsif ($pressed eq '#') { $offset += $direction ? 3 : -3 }
+        elsif ($pressed eq '$') { $offset += $direction ? 4 : -4 }
+        elsif ($pressed eq '%') { $offset += $direction ? 5 : -5 }
+        elsif ($pressed eq '^') { $offset += $direction ? 6 : -6 }
+        elsif ($pressed eq '&') { $offset += $direction ? 7 : -7 }
+        elsif ($pressed eq '*') { $offset += $direction ? 8 : -8 }
+        elsif ($pressed eq '(') { $offset += $direction ? 9 : -9 }
         elsif ($pressed eq ')') { $offset = 0 }
         $loop->loop_stop if $key->type_is_unicode and
                             $key->utf8 eq 'C' and
