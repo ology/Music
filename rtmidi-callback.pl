@@ -27,6 +27,8 @@ use constant VELO_INC  => 10; # volume change offset
 # for the modal chord filter:
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
+# for the offset filter:
+use constant OFFSET  => 12; # octave
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth
@@ -35,10 +37,11 @@ my $filter_names = shift || '';         # chord,delay,pedal
 my @filter_names = split /\s*,\s*/, $filter_names;
 
 my %dispatch = (
-    chord => sub { add_filters(\&chord_tone) },
-    pedal => sub { add_filters(\&pedal_tone) },
-    delay => sub { add_filters(\&delay_tone) },
-    arp   => sub { add_filters(\&arp_tone) },
+    chord  => sub { add_filters(\&chord_tone) },
+    pedal  => sub { add_filters(\&pedal_tone) },
+    delay  => sub { add_filters(\&delay_tone) },
+    arp    => sub { add_filters(\&arp_tone) },
+    offset => sub { add_filters(\&offset_tone) },
 );
 
 my $filters  = {};
@@ -78,6 +81,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'c') { $dispatch{chord}->() }
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
+        elsif ($pressed eq 'o') { $dispatch{offset}->() }
         elsif ($pressed eq 'x') { $filters = {}; $arp = [] }
         elsif ($pressed eq 'w') { $arp_type = '' }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
@@ -213,4 +217,14 @@ sub arp_tone ($event) {
         $delay_time += $delay;
     }
     return 1;
+}
+
+sub offset_notes ($note) {
+    return $note, $note + OFFSET;
+}
+sub offset_tone ($event) {
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    my @notes = offset_notes($note);
+    send_it([ $ev, $channel, $_, $vel ]) for @notes;
+    return 0;
 }
