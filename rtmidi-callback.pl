@@ -190,7 +190,7 @@ sub delay_tone ($event) {
 }
 
 sub arp_notes ($note) {
-    if (@$arp >= 6) {
+    if (@$arp >= 6) { # double, on/off notes
         shift @$arp;
         shift @$arp;
     }
