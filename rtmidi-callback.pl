@@ -95,15 +95,15 @@ my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('foo');
 $midi_out->open_port_by_name(qr/\Q$output_name/i);
 
-my $tick = 0;
-$loop->add(
-    IO::Async::Timer::Periodic->new(
-        interval => 1,
-        on_tick  => sub {
-            # say 'Tick ' . $tick++;
-        },
-    )->start
-);
+#my $tick = 0;
+#$loop->add(
+#    IO::Async::Timer::Periodic->new(
+#        interval => 1,
+#        on_tick  => sub {
+#            # say 'Tick ' . $tick++;
+#        },
+#    )->start
+#);
 
 $loop->await(_process_midi_events());
 
