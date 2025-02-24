@@ -91,6 +91,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 't') { $arp_type = 'up' }
         elsif ($pressed eq '-') { $direction = 0 }
         elsif ($pressed eq '+') { $direction = 1 }
+        elsif ($pressed eq '!') { $offset += $direction ? 1 : -11 }
         elsif ($pressed eq '@') { $offset += $direction ? 2 : -10 }
         elsif ($pressed eq '#') { $offset += $direction ? 4 : -8 }
         elsif ($pressed eq '$') { $offset += $direction ? 5 : -7 }
