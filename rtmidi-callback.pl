@@ -48,8 +48,8 @@ my $filters   = {};
 my $stash     = {};
 my $arp       = [];
 my $arp_type  = 'up';
-my $feedback  = 1;
 my $delay     = 0.1; # seconds
+my $feedback  = 1;
 my $offset    = OFFSET;
 my $direction = 0; # offset 0=below, 1=above
 
