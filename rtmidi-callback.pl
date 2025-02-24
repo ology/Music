@@ -27,12 +27,10 @@ use constant VELO_INC  => 10; # volume change offset
 # for the modal chord filter:
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
-# for the offset filter:
-use constant OFFSET => -12; # octave
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth
-my $filter_names = shift || '';         # chord,delay,pedal
+my $filter_names = shift || '';         # chord,delay,pedal,offset
 
 my @filter_names = split /\s*,\s*/, $filter_names;
 
@@ -44,12 +42,14 @@ my %dispatch = (
     offset => sub { add_filters(\&offset_tone) },
 );
 
-my $filters  = {};
-my $stash    = {};
-my $arp      = [];
-my $arp_type = '';
-my $feedback = 1;
-my $delay    = 0.1; # seconds
+my $filters   = {};
+my $stash     = {};
+my $arp       = [];
+my $arp_type  = '';
+my $feedback  = 1;
+my $delay     = 0.1; # seconds
+my $offset    = -12; # octave below
+my $direction = 0;   # offset 0=below, 1=above
 
 $dispatch{$_}->() for @filter_names;
 
@@ -77,6 +77,8 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
+        elsif ($pressed eq '-') { $direction = 0 }
+        elsif ($pressed eq '+') { $direction = 1 }
         elsif ($pressed eq 'a') { $dispatch{arp}->() }
         elsif ($pressed eq 'c') { $dispatch{chord}->() }
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
@@ -87,6 +89,13 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
+        elsif ($pressed eq '@') { $offset = $direction ? 2 : -2 }
+        elsif ($pressed eq '#') { $offset = $direction ? 4 : -4 }
+        elsif ($pressed eq '$') { $offset = $direction ? 5 : -5 }
+        elsif ($pressed eq '%') { $offset = $direction ? 7 : -7 }
+        elsif ($pressed eq '^') { $offset = $direction ? 9 : -9 }
+        elsif ($pressed eq '&') { $offset = $direction ? 11 : -11 }
+        elsif ($pressed eq '*') { $offset = $direction ? 12 : -12 }
         $loop->loop_stop if $key->type_is_unicode and
                             $key->utf8 eq 'C' and
                             $key->modifiers & KEYMOD_CTRL;
@@ -220,7 +229,7 @@ sub arp_tone ($event) {
 }
 
 sub offset_notes ($note) {
-    return $note, $note + OFFSET;
+    return $note, $note + $offset;
 }
 sub offset_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
