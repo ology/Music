@@ -27,6 +27,8 @@ use constant VELO_INC  => 10; # volume change offset
 # for the modal chord filter:
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
+# for the offset filter:
+use constant OFFSET => -12;    # octave below
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth
@@ -48,8 +50,8 @@ my $arp       = [];
 my $arp_type  = '';
 my $feedback  = 1;
 my $delay     = 0.1; # seconds
-my $offset    = -12; # octave below
-my $direction = 0;   # offset 0=below, 1=above
+my $offset    = OFFSET;
+my $direction = 0; # offset 0=below, 1=above
 
 $dispatch{$_}->() for @filter_names;
 
@@ -84,7 +86,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
         elsif ($pressed eq 'o') { $dispatch{offset}->() }
-        elsif ($pressed eq 'x') { $filters = {}; $arp = []; $offset = -12 }
+        elsif ($pressed eq 'x') { $filters = {}; $arp = []; $offset = OFFSET }
         elsif ($pressed eq 'w') { $arp_type = '' }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
