@@ -84,18 +84,19 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
         elsif ($pressed eq 'o') { $dispatch{offset}->() }
-        elsif ($pressed eq 'x') { $filters = {}; $arp = [] }
+        elsif ($pressed eq 'x') { $filters = {}; $arp = []; $offset = -12 }
         elsif ($pressed eq 'w') { $arp_type = '' }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
-        elsif ($pressed eq '@') { $offset = $direction ? 2 : -2 }
-        elsif ($pressed eq '#') { $offset = $direction ? 4 : -4 }
-        elsif ($pressed eq '$') { $offset = $direction ? 5 : -5 }
-        elsif ($pressed eq '%') { $offset = $direction ? 7 : -7 }
-        elsif ($pressed eq '^') { $offset = $direction ? 9 : -9 }
-        elsif ($pressed eq '&') { $offset = $direction ? 11 : -11 }
-        elsif ($pressed eq '*') { $offset = $direction ? 12 : -12 }
+        elsif ($pressed eq '@') { $offset += $direction ? 2 : -2 }
+        elsif ($pressed eq '#') { $offset += $direction ? 4 : -4 }
+        elsif ($pressed eq '$') { $offset += $direction ? 5 : -5 }
+        elsif ($pressed eq '%') { $offset += $direction ? 7 : -7 }
+        elsif ($pressed eq '^') { $offset += $direction ? 9 : -9 }
+        elsif ($pressed eq '&') { $offset += $direction ? 11 : -11 }
+        elsif ($pressed eq '*') { $offset += $direction ? 12 : -12 }
+        elsif ($pressed eq ')') { $offset = 0 }
         $loop->loop_stop if $key->type_is_unicode and
                             $key->utf8 eq 'C' and
                             $key->modifiers & KEYMOD_CTRL;
@@ -229,7 +230,9 @@ sub arp_tone ($event) {
 }
 
 sub offset_notes ($note) {
-    return $note, $note + $offset;
+    my @notes = ($note);
+    push @notes, $note + $offset if $offset;
+    return @notes;
 }
 sub offset_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
