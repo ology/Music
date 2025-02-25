@@ -139,7 +139,31 @@ sub status {
 }
 
 sub help {
-    say 'Haha!';
+    print join "\n",
+        '? : show this program help!',
+        's : show the program state',
+        '0-9 : set the feedback',
+        '< : delay decrement by ' . DELAY_INC,
+        '> : delay increment by ' . DELAY_INC,
+        'a : arpeggiate filter',
+        'c : modal chord filter',
+        'p : pedal-tone filter = ' . PEDAL,
+        'd : delay filter',
+        'o : offset filter',
+        'w : walk filter',
+        'x : reset to inial state',
+        'e : arpeggiate down',
+        'r : arpeggiate random',
+        't : arpeggiate up',
+        'm : toggle major/minor',
+        '- : toggle offset direction',
+        '! : increment or decrement the offset by 1',
+        '@ : increment or decrement the offset by 2',
+        '# : increment or decrement the offset by 3',
+        ') : increment or decrement the offset by 12',
+        '( : set the offset to 0',
+        'Ctrl+C : stop the program',
+    ;
 }
 
 sub add_filters ($name, $coderef) {
