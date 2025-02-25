@@ -197,7 +197,7 @@ sub chord_notes ($note) {
 }
 sub chord_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    push @filter_names, 'chord';
+    push @filter_names, 'chord' unless grep { 'chord' eq $_ } @filter_names;
     my @notes = chord_notes($note);
     send_it([ $ev, $channel, $_, $vel ]) for @notes;
     return 0;
@@ -208,7 +208,7 @@ sub pedal_notes ($note) {
 }
 sub pedal_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    push @filter_names, 'pedal';
+    push @filter_names, 'pedal' unless grep { 'pedal' eq $_ } @filter_names;
     my @notes = pedal_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -223,7 +223,7 @@ sub delay_notes ($note) {
 }
 sub delay_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    push @filter_names, 'delay';
+    push @filter_names, 'delay' unless grep { 'delay' eq $_ } @filter_names;
     my @notes = delay_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -254,7 +254,7 @@ sub arp_notes ($note) {
 }
 sub arp_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    push @filter_names, 'arp';
+    push @filter_names, 'arp' unless grep { 'arop' eq $_ } @filter_names;
     my @notes = arp_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -271,7 +271,7 @@ sub offset_notes ($note) {
 }
 sub offset_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    push @filter_names, 'offset';
+    push @filter_names, 'offset' unless grep { 'offset' eq $_ } @filter_names;
     my @notes = offset_notes($note);
     send_it([ $ev, $channel, $_, $vel ]) for @notes;
     return 0;
@@ -292,7 +292,7 @@ sub walk_notes ($note) {
 }
 sub walk_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
-    push @filter_names, 'walk';
+    push @filter_names, 'walk' unless grep { 'walk' eq $_ } @filter_names;
     my @notes = walk_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
