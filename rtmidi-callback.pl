@@ -32,7 +32,7 @@ use constant SCALE => 'major'; # mode
 use constant OFFSET => -12; # octave below
 
 my $input_name   = shift || 'tempopad'; # midi controller device
-my $output_name  = shift || 'fluid';    # fluidsynth
+my $output_name  = shift || 'fluid';    # fluidsynth output
 my $filter_names = shift || '';         # chord,delay,pedal,offset,walk
 
 my @filter_names = split /\s*,\s*/, $filter_names;
