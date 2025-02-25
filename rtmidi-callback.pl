@@ -164,6 +164,7 @@ sub help {
         '( : set the offset to 0',
         'Ctrl+C : stop the program',
     ;
+    print "\n";
 }
 
 sub add_filters ($name, $coderef) {
