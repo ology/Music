@@ -114,18 +114,20 @@ $midi_out->open_port_by_name(qr/\Q$output_name/i);
 $loop->await(_process_midi_events());
 
 sub clear {
-    $filters    = {};
-    $stash      = {};
-    $arp        = [];
-    $arp_type   = 'up';
-    $delay      = 0.1; # seconds
-    $feedback   = 1;
-    $offset     = OFFSET;
-    $direction  = 1; # offset 0=below, 1=above
-    $scale_name = SCALE;
+    @filter_names = ();
+    $filters      = {};
+    $stash        = {};
+    $arp          = [];
+    $arp_type     = 'up';
+    $delay        = 0.1; # seconds
+    $feedback     = 1;
+    $offset       = OFFSET;
+    $direction    = 1; # offset 0=below, 1=above
+    $scale_name   = SCALE;
 }
 
 sub status {
+    print "Filter(s): @filter_names\n";
     print "Arp type: $arp_type\n";
     print "Delay: $delay\n";
     print "Feedback: $feedback\n";
@@ -195,6 +197,7 @@ sub chord_notes ($note) {
 }
 sub chord_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
+    push @filter_names, 'chord';
     my @notes = chord_notes($note);
     send_it([ $ev, $channel, $_, $vel ]) for @notes;
     return 0;
@@ -205,6 +208,7 @@ sub pedal_notes ($note) {
 }
 sub pedal_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
+    push @filter_names, 'pedal';
     my @notes = pedal_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -219,6 +223,7 @@ sub delay_notes ($note) {
 }
 sub delay_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
+    push @filter_names, 'delay';
     my @notes = delay_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -249,6 +254,7 @@ sub arp_notes ($note) {
 }
 sub arp_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
+    push @filter_names, 'arp';
     my @notes = arp_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -265,6 +271,7 @@ sub offset_notes ($note) {
 }
 sub offset_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
+    push @filter_names, 'offset';
     my @notes = offset_notes($note);
     send_it([ $ev, $channel, $_, $vel ]) for @notes;
     return 0;
@@ -285,6 +292,7 @@ sub walk_notes ($note) {
 }
 sub walk_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
+    push @filter_names, 'walk';
     my @notes = walk_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
