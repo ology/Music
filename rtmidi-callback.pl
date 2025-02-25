@@ -37,7 +37,7 @@ my $filter_names = shift || '';         # chord,delay,pedal,offset
 
 my @filter_names = split /\s*,\s*/, $filter_names;
 
-my %filters = (
+my %filter = (
     chord  => sub { add_filters(\&chord_tone) },
     pedal  => sub { add_filters(\&pedal_tone) },
     delay  => sub { add_filters(\&delay_tone) },
@@ -56,7 +56,7 @@ my $offset     = OFFSET;
 my $direction  = 1; # offset 0=below, 1=above
 my $scale_name = SCALE;
 
-$filters{$_}->() for @filter_names;
+$filter{$_}->() for @filter_names;
 
 my $loop    = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
@@ -83,12 +83,12 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
-        elsif ($pressed eq 'a') { $filters{arp}->() }
-        elsif ($pressed eq 'c') { $filters{chord}->() }
-        elsif ($pressed eq 'p') { $filters{pedal}->() }
-        elsif ($pressed eq 'd') { $filters{delay}->() }
-        elsif ($pressed eq 'o') { $filters{offset}->() }
-        elsif ($pressed eq 'w') { $filters{walk}->() }
+        elsif ($pressed eq 'a') { $filter{arp}->() }
+        elsif ($pressed eq 'c') { $filter{chord}->() }
+        elsif ($pressed eq 'p') { $filter{pedal}->() }
+        elsif ($pressed eq 'd') { $filter{delay}->() }
+        elsif ($pressed eq 'o') { $filter{offset}->() }
+        elsif ($pressed eq 'w') { $filter{walk}->() }
         elsif ($pressed eq 'x') { clear() }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
