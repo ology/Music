@@ -54,7 +54,7 @@ my $delay      = 0.1; # seconds
 my $feedback   = 1;
 my $offset     = OFFSET;
 my $direction  = 1; # offset 0=below, 1=above
-my $scale_name = 'major';
+my $scale_name = SCALE;
 
 $dispatch{$_}->() for @filter_names;
 
@@ -93,7 +93,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
-        elsif ($pressed eq 'm') { $scale_name = $scale_name eq 'major' ? 'minor' : 'major' }
+        elsif ($pressed eq 'm') { $scale_name = $scale_name eq SCALE ? 'minor' : SCALE }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1 }
         elsif ($pressed eq '!') { $offset += $direction ? 1 : -1 }
         elsif ($pressed eq '@') { $offset += $direction ? 2 : -2 }
@@ -122,7 +122,7 @@ sub clear {
     $feedback   = 1;
     $offset     = OFFSET;
     $direction  = 1; # offset 0=below, 1=above
-    $scale_name = 'major';
+    $scale_name = SCALE;
 }
 
 sub status {
@@ -273,8 +273,8 @@ sub offset_tone ($event) {
 sub walk_notes ($note) {
     my $mn = Music::Note->new($note, 'midinum');
     my @pitches = (
-        get_scale_MIDI('C', $mn->octave, $scale_name),
-        get_scale_MIDI('C', $mn->octave + 1, $scale_name),
+        get_scale_MIDI(NOTE, $mn->octave, $scale_name),
+        get_scale_MIDI(NOTE, $mn->octave + 1, $scale_name),
     );
     my @intervals = qw(-3 -2 -1 1 2 3);
     my $voice = Music::VoiceGen->new(
