@@ -46,14 +46,15 @@ my %dispatch = (
     walk   => sub { add_filters(\&walk_tone) },
 );
 
-my $filters   = {};
-my $stash     = {};
-my $arp       = [];
-my $arp_type  = 'up';
-my $delay     = 0.1; # seconds
-my $feedback  = 1;
-my $offset    = OFFSET;
-my $direction = 1; # offset 0=below, 1=above
+my $filters    = {};
+my $stash      = {};
+my $arp        = [];
+my $arp_type   = 'up';
+my $delay      = 0.1; # seconds
+my $feedback   = 1;
+my $offset     = OFFSET;
+my $direction  = 1; # offset 0=below, 1=above
+my $scale_name = 'major';
 
 $dispatch{$_}->() for @filter_names;
 
@@ -92,8 +93,8 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
-        elsif ($pressed eq '-') { $direction = 0 }
-        elsif ($pressed eq '+') { $direction = 1 }
+        elsif ($pressed eq 'm') { $scale_name = $scale_name eq 'major' ? 'minor' : 'major' }
+        elsif ($pressed eq '-') { $direction = $direction ? 0 : 1 }
         elsif ($pressed eq '!') { $offset += $direction ? 1 : -1 }
         elsif ($pressed eq '@') { $offset += $direction ? 2 : -2 }
         elsif ($pressed eq '#') { $offset += $direction ? 3 : -3 }
@@ -113,14 +114,15 @@ $midi_out->open_port_by_name(qr/\Q$output_name/i);
 $loop->await(_process_midi_events());
 
 sub clear {
-    $filters   = {};
-    $stash     = {};
-    $arp       = [];
-    $arp_type  = 'up';
-    $delay     = 0.1; # seconds
-    $feedback  = 1;
-    $offset    = OFFSET;
-    $direction = 1; # offset 0=below, 1=above
+    $filters    = {};
+    $stash      = {};
+    $arp        = [];
+    $arp_type   = 'up';
+    $delay      = 0.1; # seconds
+    $feedback   = 1;
+    $offset     = OFFSET;
+    $direction  = 1; # offset 0=below, 1=above
+    $scale_name = 'major';
 }
 
 sub status {
@@ -129,6 +131,7 @@ sub status {
     print "Feedback: $feedback\n";
     print "Offset distance: $offset\n";
     print 'Offset direction: ' . ($direction ? 'up' : 'down') . "\n";
+    print "Scale name: $scale_name\n";
     print "\n";
 }
 
@@ -270,8 +273,8 @@ sub offset_tone ($event) {
 sub walk_notes ($note) {
     my $mn = Music::Note->new($note, 'midinum');
     my @pitches = (
-        get_scale_MIDI('C', $mn->octave, 'major'),
-        get_scale_MIDI('C', $mn->octave + 1, 'major'),
+        get_scale_MIDI('C', $mn->octave, $scale_name),
+        get_scale_MIDI('C', $mn->octave + 1, $scale_name),
     );
     my @intervals = qw(-3 -2 -1 1 2 3);
     my $voice = Music::VoiceGen->new(
