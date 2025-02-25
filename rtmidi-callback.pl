@@ -151,7 +151,7 @@ sub help {
         'd : delay filter',
         'o : offset filter',
         'w : walk filter',
-        'x : reset to inial state',
+        'x : reset to initial state',
         'e : arpeggiate down',
         'r : arpeggiate random',
         't : arpeggiate up',
@@ -164,7 +164,7 @@ sub help {
         '( : set the offset to 0',
         'Ctrl+C : stop the program',
     ;
-    print "\n";
+    print "\n\n";
 }
 
 sub add_filters ($name, $coderef) {
