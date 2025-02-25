@@ -33,7 +33,7 @@ use constant OFFSET => -12; # octave below
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth
-my $filter_names = shift || '';         # chord,delay,pedal,offset
+my $filter_names = shift || '';         # chord,delay,pedal,offset,walk
 
 my @filter_names = split /\s*,\s*/, $filter_names;
 
