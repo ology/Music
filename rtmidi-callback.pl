@@ -128,14 +128,16 @@ sub clear {
 }
 
 sub status {
-    print "Filter(s): @filter_names\n";
-    print "Arp type: $arp_type\n";
-    print "Delay: $delay\n";
-    print "Feedback: $feedback\n";
-    print "Offset distance: $offset\n";
-    print 'Offset direction: ' . ($direction ? 'up' : 'down') . "\n";
-    print "Scale name: $scale_name\n";
-    print "\n";
+    print join "\n",
+        "Filter(s): @filter_names",
+        "Arp type: $arp_type",
+        "Delay: $delay",
+        "Feedback: $feedback",
+        "Offset distance: $offset",
+        'Offset direction: ' . ($direction ? 'up' : 'down'),
+        "Scale name: $scale_name",
+    ;
+    print "\n\n";
 }
 
 sub help {
