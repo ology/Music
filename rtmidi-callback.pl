@@ -83,12 +83,12 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
-        elsif ($pressed eq 'a') { $filter{arp}->() }
-        elsif ($pressed eq 'c') { $filter{chord}->() }
-        elsif ($pressed eq 'p') { $filter{pedal}->() }
-        elsif ($pressed eq 'd') { $filter{delay}->() }
-        elsif ($pressed eq 'o') { $filter{offset}->() }
-        elsif ($pressed eq 'w') { $filter{walk}->() }
+        elsif ($pressed eq 'a') { $filter{arp}->() unless grep { 'arp' eq $_ } @filter_names }
+        elsif ($pressed eq 'c') { $filter{chord}->() unless grep { 'chord' eq $_ } @filter_names }
+        elsif ($pressed eq 'p') { $filter{pedal}->() unless grep { 'pedal' eq $_ } @filter_names }
+        elsif ($pressed eq 'd') { $filter{delay}->() unless grep { 'delay' eq $_ } @filter_names }
+        elsif ($pressed eq 'o') { $filter{offset}->() unless grep { 'offset' eq $_ } @filter_names }
+        elsif ($pressed eq 'w') { $filter{walk}->() unless grep { 'walk' eq $_ } @filter_names }
         elsif ($pressed eq 'x') { clear() }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
