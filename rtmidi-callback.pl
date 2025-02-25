@@ -16,7 +16,8 @@ use MIDI::RtMidi::FFI::Device ();
 use Music::Chord::Note ();
 use Music::Note ();
 use Music::ToRoman ();
-use Music::Scales qw(get_scale_notes);
+use Music::Scales qw(get_scale_MIDI get_scale_notes);
+use Music::VoiceGen ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
 # for the pedal-tone filter:
@@ -42,6 +43,7 @@ my %dispatch = (
     delay  => sub { add_filters(\&delay_tone) },
     arp    => sub { add_filters(\&arp_tone) },
     offset => sub { add_filters(\&offset_tone) },
+    walk   => sub { add_filters(\&walk_tone) },
 );
 
 my $filters   = {};
@@ -85,6 +87,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
         elsif ($pressed eq 'o') { $dispatch{offset}->() }
+        elsif ($pressed eq 'w') { $dispatch{walk}->() }
         elsif ($pressed eq 'x') { clear() }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
@@ -261,5 +264,29 @@ sub offset_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = offset_notes($note);
     send_it([ $ev, $channel, $_, $vel ]) for @notes;
+    return 0;
+}
+
+sub walk_notes ($note) {
+    my $mn = Music::Note->new($note, 'midinum');
+    my @pitches = (
+        get_scale_MIDI('C', $mn->octave, 'major'),
+        get_scale_MIDI('C', $mn->octave + 1, 'major'),
+    );
+    my @intervals = qw(-3 -2 -1 1 2 3);
+    my $voice = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@intervals,
+    );
+    return $note, map { $voice->rand } 1 .. 4;
+}
+sub walk_tone ($event) {
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    my @notes = walk_notes($note);
+    my $delay_time = 0;
+    for my $n (@notes) {
+        $delay_time += $delay;
+        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+    }
     return 0;
 }
