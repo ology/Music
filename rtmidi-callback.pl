@@ -281,7 +281,7 @@ sub walk_notes ($note) {
         pitches   => \@pitches,
         intervals => \@intervals,
     );
-    return $note, map { $voice->rand } 1 .. $feedback;
+    return map { $voice->rand } 1 .. $feedback;
 }
 sub walk_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
