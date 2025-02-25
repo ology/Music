@@ -29,7 +29,7 @@ use constant VELO_INC  => 10; # volume change offset
 use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
 # for the offset filter:
-use constant OFFSET => -12;    # octave below
+use constant OFFSET => -12; # octave below
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth
