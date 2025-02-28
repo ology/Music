@@ -130,6 +130,7 @@ sub clear {
 sub status {
     print join "\n",
         "Filter(s): @filter_names",
+        'Pedal-tome: ' . PEDAL,
         "Arp type: $arp_type",
         "Delay: $delay",
         "Feedback: $feedback",
@@ -149,7 +150,7 @@ sub help {
         '> : delay increment by ' . DELAY_INC,
         'a : arpeggiate filter',
         'c : modal chord filter',
-        'p : pedal-tone filter = ' . PEDAL,
+        'p : pedal-tone filter',
         'd : delay filter',
         'o : offset filter',
         'w : walk filter',
