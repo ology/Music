@@ -210,6 +210,8 @@ async sub _process_midi_events {
     }
 }
 
+#--- FILTERS ---#
+
 sub chord_notes ($note) {
     my $mn = Music::Note->new($note, 'midinum');
     my $base = uc($mn->format('isobase'));
