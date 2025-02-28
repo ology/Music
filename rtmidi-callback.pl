@@ -130,7 +130,7 @@ sub clear {
 sub status {
     print join "\n",
         "Filter(s): @filter_names",
-        'Pedal-tome: ' . PEDAL,
+        'Pedal-tone: ' . PEDAL,
         "Arp type: $arp_type",
         "Delay: $delay",
         "Feedback: $feedback",
