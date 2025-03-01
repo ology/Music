@@ -22,6 +22,7 @@ use Music::VoiceGen ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
 use constant CHANNEL => 0;
+use constant DRUMS   => 9;
 # for the pedal-tone filter:
 use constant PEDAL => 55; # G below middle C
 # for the pedal-tone, delay and arp filters:
@@ -83,7 +84,7 @@ my $tka = Term::TermKey::Async->new(
         # say "Got key: $pressed";
         if ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
-        elsif ($pressed eq 'u') { $channel = $channel ? 0 : 9 }
+        elsif ($pressed eq 'u') { $channel = $channel ? CHANNEL : DRUMS }
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
