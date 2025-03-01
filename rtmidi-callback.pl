@@ -21,6 +21,7 @@ use Music::Scales qw(get_scale_MIDI get_scale_notes);
 use Music::VoiceGen ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
+use constant CHANNEL => 0;
 # for the pedal-tone filter:
 use constant PEDAL => 55; # G below middle C
 # for the pedal-tone, delay and arp filters:
@@ -47,6 +48,7 @@ my %filter = (
     walk   => sub { add_filters(walk   => \&walk_tone) },
 );
 
+my $channel    = CHANNEL;
 my $filters    = {};
 my $stash      = {};
 my $arp        = [];
@@ -81,6 +83,7 @@ my $tka = Term::TermKey::Async->new(
         # say "Got key: $pressed";
         if ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
+        elsif ($pressed eq 'u') { $channel = $channel ? 0 : 9 }
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
@@ -115,6 +118,7 @@ $midi_out->open_port_by_name(qr/\Q$output_name/i);
 $loop->await(_process_midi_events());
 
 sub clear {
+    $channel      = CHANNEL;
     @filter_names = ();
     $filters      = {};
     $stash        = {};
@@ -185,6 +189,7 @@ sub stash ($key, $value) {
 }
 
 sub send_it ($event) {
+    $event->[1] = $channel;
     $midi_out->send_event($event->@*);
 }
 
@@ -265,7 +270,7 @@ sub delay_tone ($event) {
 
 sub arp_notes ($note) {
     $feedback = 2 if $feedback < 2;;
-    if (@$arp >= 2 * $feedback) { # double, on/off note events
+    if (@$arp >= 2 * $feedback) { # double, on/off note event
         shift @$arp;
         shift @$arp;
     }
