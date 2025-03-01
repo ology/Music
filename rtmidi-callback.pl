@@ -150,6 +150,7 @@ sub help {
     print join "\n",
         '? : show this program help!',
         's : show the program state',
+        'u : toggle the drum channel',
         '0-9 : set the feedback',
         '< : delay decrement by ' . DELAY_INC,
         '> : delay increment by ' . DELAY_INC,
