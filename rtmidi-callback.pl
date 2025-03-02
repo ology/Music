@@ -354,7 +354,7 @@ sub drum_parts ($note) {
     else {
         $part = sub {
             my (%args) = @_;
-            $args{drummer}->note($args{drummer}->sixteenth, $note);
+            $args{drummer}->note($args{drummer}->sixtyfourth, $note);
         };
     }
     return [ $part ];
