@@ -343,7 +343,7 @@ sub walk_tone ($event) {
 }
 
 sub drum_parts ($note) {
-warn __PACKAGE__,' L',__LINE__,' ',,"N: $note\n";
+# warn __PACKAGE__,' L',__LINE__,' ',,"N: $note\n";
     my $part;
     if ($note == 68) {
         $part = sub {
@@ -354,13 +354,14 @@ warn __PACKAGE__,' L',__LINE__,' ',,"N: $note\n";
     else {
         $part = sub {
             my (%args) = @_;
-            $args{drummer}->note($args{drummer}->quarter, $note);
+            $args{drummer}->note($args{drummer}->sixteenth, $note);
         };
     }
     return [ $part ];
 }
 sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
+    return 1 unless $ev eq 'note_on';
     my $parts = drum_parts($note);
     my $d = MIDI::Drummer::Tiny->new(bpm => 100);
     MIDI::RtMidi::ScorePlayer->new(
