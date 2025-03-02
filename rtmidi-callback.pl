@@ -357,18 +357,18 @@ sub drum_parts ($note) {
             $args{drummer}->note($args{drummer}->sixtyfourth, $note);
         };
     }
-    return [ $part ];
+    return $part;
 }
 sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
-    my $parts = drum_parts($note);
+    my $part = drum_part($note);
     my $d = MIDI::Drummer::Tiny->new(bpm => 100);
     MIDI::RtMidi::ScorePlayer->new(
       device   => $midi_out,
       score    => $d->score,
       common   => { drummer => $d },
-      parts    => $parts,
+      parts    => [ $part ],
       sleep    => 0,
       infinite => 0,
       # dump     => 1,
