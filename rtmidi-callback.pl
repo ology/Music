@@ -343,10 +343,20 @@ sub walk_tone ($event) {
 }
 
 sub drum_parts ($note) {
-    my $part = sub {
-        my (%args) = @_;
-        $args{drummer}->metronome4;
-    };
+warn __PACKAGE__,' L',__LINE__,' ',,"N: $note\n";
+    my $part;
+    if ($note == 68) {
+        $part = sub {
+            my (%args) = @_;
+            $args{drummer}->metronome4;
+        };
+    }
+    else {
+        $part = sub {
+            my (%args) = @_;
+            $args{drummer}->note($args{drummer}->quarter, $note);
+        };
+    }
     return [ $part ];
 }
 sub drums ($event) {
