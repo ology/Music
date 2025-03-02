@@ -342,7 +342,7 @@ sub walk_tone ($event) {
     return 0;
 }
 
-sub drum_parts ($note) {
+sub drum_part ($note) {
     # warn __PACKAGE__,' L',__LINE__,' ',,"N: $note\n";
     my $part;
     if ($note == 99) {
