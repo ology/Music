@@ -13,7 +13,9 @@ use IO::Async::Routine ();
 use IO::Async::Timer::Countdown ();
 use List::SomeUtils qw(first_index);
 use List::Util qw(shuffle uniq);
+use MIDI::Drummer::Tiny ();
 use MIDI::RtMidi::FFI::Device ();
+use MIDI::RtMidi::ScorePlayer ();
 use Music::Chord::Note ();
 use Music::Note ();
 use Music::ToRoman ();
@@ -47,6 +49,7 @@ my %filter = (
     arp    => sub { add_filters(arp    => \&arp_tone) },
     offset => sub { add_filters(offset => \&offset_tone) },
     walk   => sub { add_filters(walk   => \&walk_tone) },
+    drums  => sub { add_filters(drums  => \&drums) },
 );
 
 my $channel    = CHANNEL;
@@ -94,6 +97,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'd') { $filter{delay}->() unless grep { 'delay' eq $_ } @filter_names }
         elsif ($pressed eq 'o') { $filter{offset}->() unless grep { 'offset' eq $_ } @filter_names }
         elsif ($pressed eq 'w') { $filter{walk}->() unless grep { 'walk' eq $_ } @filter_names }
+        elsif ($pressed eq 'y') { $filter{drums}->() unless grep { 'drums' eq $_ } @filter_names }
         elsif ($pressed eq 'x') { clear() }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
@@ -135,6 +139,7 @@ sub clear {
 sub status {
     print join "\n",
         "Filter(s): @filter_names",
+        "Channel: $channel",
         'Pedal-tone: ' . PEDAL,
         "Arp type: $arp_type",
         "Delay: $delay",
@@ -160,6 +165,7 @@ sub help {
         'd : delay filter',
         'o : offset filter',
         'w : walk filter',
+        'y : drums filter',
         'x : reset to initial state',
         'e : arpeggiate down',
         'r : arpeggiate random',
@@ -334,4 +340,27 @@ sub walk_tone ($event) {
         delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 0;
+}
+
+sub drum_parts ($note) {
+    my $part = sub {
+        my (%args) = @_;
+        $args{drummer}->metronome4;
+    };
+    return [ $part ];
+}
+sub drums ($event) {
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    my $parts = drum_parts($note);
+    my $d = MIDI::Drummer::Tiny->new(bpm => 100);
+    MIDI::RtMidi::ScorePlayer->new(
+      device   => $midi_out,
+      score    => $d->score,
+      common   => { drummer => $d },
+      parts    => $parts,
+      sleep    => 0,
+      infinite => 0,
+      # dump     => 1,
+    )->play;
+    return 1;
 }
