@@ -372,6 +372,6 @@ sub drums ($event) {
       sleep    => 0,
       infinite => 0,
       # dump     => 1,
-    )->play->await;
+    )->play;
     return 1;
 }
