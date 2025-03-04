@@ -363,7 +363,7 @@ sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
     my $part = drum_parts($note);
-    my $d = MIDI::Drummer::Tiny->new(bpm => 100);
+    my $d = MIDI::Drummer::Tiny->new(bpm => 120);
     MIDI::RtMidi::ScorePlayer->new(
       device   => $midi_out,
       score    => $d->score,
@@ -372,6 +372,6 @@ sub drums ($event) {
       sleep    => 0,
       infinite => 0,
       # dump     => 1,
-    )->play;
+    )->play->await;
     return 1;
 }
