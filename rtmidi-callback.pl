@@ -210,17 +210,17 @@ sub delay_send ($delay_time, $event) {
     )
 }
 
-async sub _filter_and_forward ($event) {
+sub _filter_and_forward ($event) {
     my $event_filters = $filters->{ $event->[0] } // [];
     for my $filter ($event_filters->@*) {
-        return if await $filter->($event);
+        return if $filter->($event);
     }
     send_it($event);
 }
 
 async sub _process_midi_events {
     while (my $event = await $midi_ch->recv) {
-        await _filter_and_forward($event);
+        _filter_and_forward($event);
     }
 }
 
@@ -359,11 +359,11 @@ sub drum_parts ($note) {
     }
     return $part;
 }
-async sub drums ($event) {
+sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
     my $part = drum_parts($note);
-    my $d = MIDI::Drummer::Tiny->new(bpm => 120);
+    my $d = MIDI::Drummer::Tiny->new(bpm => 100);
     MIDI::RtMidi::ScorePlayer->new(
       device   => $midi_out,
       score    => $d->score,
@@ -372,6 +372,6 @@ async sub drums ($event) {
       sleep    => 0,
       infinite => 0,
       # dump     => 1,
-    )->play->retain;
+    )->play;
     return 1;
 }
