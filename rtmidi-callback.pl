@@ -67,19 +67,10 @@ my $offset     = OFFSET;
 my $direction  = 1; # offset 0=below, 1=above
 my $scale_name = SCALE;
 
-my $loop    = IO::Async::Loop->new;
-my $midi_ch = IO::Async::Channel->new;
-
-my $midi_rtn = IO::Async::Routine->new(
-    channels_out => [ $midi_ch ],
-    code => sub {
-        my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
-        $midi_in->open_port_by_name(qr/\Q$input_name/i);
-        $midi_in->set_callback_decoded(sub { $midi_ch->send($_[2]) });
-        sleep;
-    },
+my $rtc = MIDI::RtController->new(
+    input  => $input_name,
+    output => $output_name,
 );
-$loop->add($midi_rtn);
 
 my $tka = Term::TermKey::Async->new(
     term   => \*STDIN,
@@ -111,18 +102,14 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '#') { $offset += $direction ? 3 : -3 }
         elsif ($pressed eq ')') { $offset += $direction ? 12 : -12 }
         elsif ($pressed eq '(') { $offset = 0 }
-        $loop->loop_stop if $key->type_is_unicode and
-                            $key->utf8 eq 'C' and
-                            $key->modifiers & KEYMOD_CTRL;
+        $rtc->_loop->loop_stop if $key->type_is_unicode and
+                                  $key->utf8 eq 'C' and
+                                  $key->modifiers & KEYMOD_CTRL;
     },
 );
-$loop->add($tka);
+$rtc->_loop->add($tka);
 
-my $midi_out = RtMidiOut->new;
-$midi_out->open_virtual_port('foo');
-$midi_out->open_port_by_name(qr/\Q$output_name/i);
-
-$loop->await(_process_midi_events());
+$rtc->run;
 
 sub clear {
     $channel      = CHANNEL;
@@ -196,34 +183,6 @@ sub add_filter ($event_type, $action) {
 sub stash ($key, $value) {
     $stash->{$key} = $value if defined $value;
     $stash->{$key};
-}
-
-sub send_it ($event) {
-    $event->[1] = $channel;
-    $midi_out->send_event($event->@*);
-}
-
-sub delay_send ($delay_time, $event) {
-    $loop->add(
-        IO::Async::Timer::Countdown->new(
-            delay     => $delay_time,
-            on_expire => sub { send_it($event) }
-        )->start
-    )
-}
-
-async sub _filter_and_forward ($event) {
-    my $event_filters = $filters->{ $event->[0] } // [];
-    for my $filter ($event_filters->@*) {
-        return if await $filter->($event);
-    }
-    send_it($event);
-}
-
-async sub _process_midi_events {
-    while (my $event = await $midi_ch->recv) {
-        await _filter_and_forward($event);
-    }
 }
 
 #--- FILTERS ---#
