@@ -177,7 +177,7 @@ sub add_filters ($name, $coderef) {
 }
 
 sub add_filter ($event_type, $action) {
-    push $filters->{$event_type}->@*, $action;
+    push $rtc->_filters->{$event_type}->@*, $action;
 }
 
 sub stash ($key, $value) {
@@ -217,7 +217,7 @@ sub pedal_tone ($event) {
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
-        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 0;
 }
@@ -231,7 +231,7 @@ sub delay_tone ($event) {
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
-        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
         $vel -= VELO_INC;
     }
     return 0;
@@ -261,7 +261,7 @@ sub arp_tone ($event) {
     my @notes = arp_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
-        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
         $delay_time += $delay;
     }
     return 1;
@@ -298,7 +298,7 @@ sub walk_tone ($event) {
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
-        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 0;
 }
