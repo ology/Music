@@ -7,6 +7,7 @@ use v5.36;
 
 use Data::Dumper::Compact qw(ddc);
 use Future::AsyncAwait;
+use Future::IO::Impl::IOAsync;
 use IO::Async::Channel ();
 use IO::Async::Loop ();
 use IO::Async::Routine ();
@@ -210,17 +211,17 @@ sub delay_send ($delay_time, $event) {
     )
 }
 
-sub _filter_and_forward ($event) {
+async sub _filter_and_forward ($event) {
     my $event_filters = $filters->{ $event->[0] } // [];
     for my $filter ($event_filters->@*) {
-        return if $filter->($event);
+        return if await $filter->($event);
     }
     send_it($event);
 }
 
 async sub _process_midi_events {
     while (my $event = await $midi_ch->recv) {
-        _filter_and_forward($event);
+        await _filter_and_forward($event);
     }
 }
 
@@ -359,19 +360,25 @@ sub drum_parts ($note) {
     }
     return $part;
 }
-sub drums ($event) {
+async sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
-    my $part = drum_parts($note);
-    my $d = MIDI::Drummer::Tiny->new(bpm => 100);
-    MIDI::RtMidi::ScorePlayer->new(
-      device   => $midi_out,
-      score    => $d->score,
-      common   => { drummer => $d },
-      parts    => [ $part ],
-      sleep    => 0,
-      infinite => 0,
+    my @notes = (PEDAL, $note, $note + 7);
+    my $delay_time = 0;
+    for my $n (@notes) {
+        $delay_time += $delay;
+        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+    }
+    # my $part = drum_parts($note);
+    # my $d = MIDI::Drummer::Tiny->new(bpm => 100);
+    # MIDI::RtMidi::ScorePlayer->new(
+      # device   => $midi_out,
+      # score    => $d->score,
+      # common   => { drummer => $d },
+      # parts    => [ $part ],
+      # sleep    => 0,
+      # infinite => 0,
       # dump     => 1,
-    )->play;
+    # )->play_async->retain;
     return 1;
 }
