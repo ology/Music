@@ -15,6 +15,7 @@ use IO::Async::Timer::Countdown ();
 use List::SomeUtils qw(first_index);
 use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
+use MIDI::RtController ();
 use MIDI::RtMidi::FFI::Device ();
 use MIDI::RtMidi::ScorePlayer ();
 use Music::Chord::Note ();
@@ -53,6 +54,8 @@ my %filter = (
     drums  => sub { add_filters(drums  => \&drums) },
 );
 
+$filter{$_}->() for @filter_names;
+
 my $channel    = CHANNEL;
 my $filters    = {};
 my $stash      = {};
@@ -63,8 +66,6 @@ my $feedback   = 1;
 my $offset     = OFFSET;
 my $direction  = 1; # offset 0=below, 1=above
 my $scale_name = SCALE;
-
-$filter{$_}->() for @filter_names;
 
 my $loop    = IO::Async::Loop->new;
 my $midi_ch = IO::Async::Channel->new;
