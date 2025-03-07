@@ -326,7 +326,7 @@ async sub drums ($event) {
     my $part = drum_parts($note);
     my $d = MIDI::Drummer::Tiny->new(bpm => 100);
     MIDI::RtMidi::ScorePlayer->new(
-      device   => $midi_out,
+      device   => $rtc->_midi_out,
       score    => $d->score,
       common   => { drummer => $d },
       parts    => [ $part ],
