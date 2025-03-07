@@ -363,22 +363,16 @@ sub drum_parts ($note) {
 async sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
-    my @notes = (PEDAL, $note, $note + 7);
-    my $delay_time = 0;
-    for my $n (@notes) {
-        $delay_time += $delay;
-        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
-    }
-    # my $part = drum_parts($note);
-    # my $d = MIDI::Drummer::Tiny->new(bpm => 100);
-    # MIDI::RtMidi::ScorePlayer->new(
-      # device   => $midi_out,
-      # score    => $d->score,
-      # common   => { drummer => $d },
-      # parts    => [ $part ],
-      # sleep    => 0,
-      # infinite => 0,
+    my $part = drum_parts($note);
+    my $d = MIDI::Drummer::Tiny->new(bpm => 100);
+    MIDI::RtMidi::ScorePlayer->new(
+      device   => $midi_out,
+      score    => $d->score,
+      common   => { drummer => $d },
+      parts    => [ $part ],
+      sleep    => 0,
+      infinite => 0,
       # dump     => 1,
-    # )->play_async->retain;
+    )->play_async->retain;
     return 1;
 }
