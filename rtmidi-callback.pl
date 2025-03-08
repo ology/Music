@@ -102,12 +102,12 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '#') { $offset += $direction ? 3 : -3 }
         elsif ($pressed eq ')') { $offset += $direction ? 12 : -12 }
         elsif ($pressed eq '(') { $offset = 0 }
-        $rtc->_loop->loop_stop if $key->type_is_unicode and
+        $rtc->loop->loop_stop if $key->type_is_unicode and
                                   $key->utf8 eq 'C' and
                                   $key->modifiers & KEYMOD_CTRL;
     },
 );
-$rtc->_loop->add($tka);
+$rtc->loop->add($tka);
 
 $rtc->run;
 
@@ -320,7 +320,7 @@ sub drum_parts ($note) {
     }
     return $part;
 }
-async sub drums ($event) {
+sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
     my $part = drum_parts($note);
