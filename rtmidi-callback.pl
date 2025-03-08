@@ -101,7 +101,6 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1 }
         elsif ($pressed eq '!') { $offset += $direction ? 1 : -1 }
         elsif ($pressed eq '@') { $offset += $direction ? 2 : -2 }
-        elsif ($pressed eq '#') { $offset += $direction ? 3 : -3 }
         elsif ($pressed eq ')') { $offset += $direction ? 12 : -12 }
         elsif ($pressed eq '(') { $offset = 0 }
         elsif ($pressed eq ',') { $bpm -= $direction ? 1 : -1 }
@@ -175,7 +174,6 @@ sub help {
         '- : toggle offset direction',
         '! : increment or decrement the offset by 1',
         '@ : increment or decrement the offset by 2',
-        '# : increment or decrement the offset by 3',
         ') : increment or decrement the offset by 12',
         '( : set the offset to 0',
         '. : increment or decrement the BPM by 1',
