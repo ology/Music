@@ -82,6 +82,7 @@ my $tka = Term::TermKey::Async->new(
         # say "Got key: $pressed";
         if ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
+        elsif ($pressed eq 'x') { clear() }
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
@@ -92,7 +93,6 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'o') { $filter{offset}->() unless is_member('offset', \@filter_names) }
         elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member('walk', \@filter_names) }
         elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member('drums', \@filter_names) }
-        elsif ($pressed eq 'x') { clear() }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
         elsif ($pressed eq 't') { $arp_type = 'up' }
