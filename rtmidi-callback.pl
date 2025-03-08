@@ -84,13 +84,13 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
-        elsif ($pressed eq 'a') { $filter{arp}->() unless is_member('arp', \@filter_names) }
-        elsif ($pressed eq 'c') { $filter{chord}->() unless is_member('chord', \@filter_names) }
-        elsif ($pressed eq 'p') { $filter{pedal}->() unless is_member('pedal', \@filter_names) }
-        elsif ($pressed eq 'd') { $filter{delay}->() unless is_member('delay', \@filter_names) }
+        elsif ($pressed eq 'a') { $filter{arp}->()    unless is_member('arp', \@filter_names) }
+        elsif ($pressed eq 'c') { $filter{chord}->()  unless is_member('chord', \@filter_names) }
+        elsif ($pressed eq 'p') { $filter{pedal}->()  unless is_member('pedal', \@filter_names) }
+        elsif ($pressed eq 'd') { $filter{delay}->()  unless is_member('delay', \@filter_names) }
         elsif ($pressed eq 'o') { $filter{offset}->() unless is_member('offset', \@filter_names) }
-        elsif ($pressed eq 'w') { $filter{walk}->() unless is_member('walk', \@filter_names) }
-        elsif ($pressed eq 'y') { $filter{drums}->() unless is_member('drums', \@filter_names) }
+        elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member('walk', \@filter_names) }
+        elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member('drums', \@filter_names) }
         elsif ($pressed eq 'x') { clear() }
         elsif ($pressed eq 'e') { $arp_type = 'down' }
         elsif ($pressed eq 'r') { $arp_type = 'random' }
