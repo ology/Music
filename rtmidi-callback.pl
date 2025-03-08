@@ -37,6 +37,7 @@ use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
 # for the offset filter:
 use constant OFFSET => -12; # octave below
+use constant BPM => 120; # beats per minute
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth output
@@ -66,6 +67,7 @@ my $feedback   = 1;
 my $offset     = OFFSET;
 my $direction  = 1; # offset 0=below, 1=above
 my $scale_name = SCALE;
+my $bpm        = BPM;
 
 my $rtc = MIDI::RtController->new(
     input  => $input_name,
@@ -102,6 +104,10 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '#') { $offset += $direction ? 3 : -3 }
         elsif ($pressed eq ')') { $offset += $direction ? 12 : -12 }
         elsif ($pressed eq '(') { $offset = 0 }
+        elsif ($pressed eq ',') { $bpm -= $direction ? 1 : -1 }
+        elsif ($pressed eq '.') { $bpm += $direction ? 2 : -2 }
+        elsif ($pressed eq '.') { $bpm += $direction ? 2 : -2 }
+        elsif ($pressed eq '/') { $bpm += $direction ? 10 : -10 }
         $rtc->loop->loop_stop if $key->type_is_unicode and
                                  $key->utf8 eq 'C' and
                                  $key->modifiers & KEYMOD_CTRL;
@@ -127,6 +133,7 @@ sub clear {
     $offset       = OFFSET;
     $direction    = 1; # offset 0=below, 1=above
     $scale_name   = SCALE;
+    $bpm          = BPM;
 }
 
 sub status {
@@ -140,6 +147,7 @@ sub status {
         "Offset distance: $offset",
         'Offset direction: ' . ($direction ? 'up' : 'down'),
         "Scale name: $scale_name",
+        "BPM: $bpm",
     ;
     print "\n\n";
 }
@@ -170,6 +178,9 @@ sub help {
         '# : increment or decrement the offset by 3',
         ') : increment or decrement the offset by 12',
         '( : set the offset to 0',
+        '. : increment or decrement the BPM by 1',
+        '. : increment or decrement the BPM by 2',
+        '/ : increment or decrement the BPM by 10',
         'Ctrl+C : stop the program',
     ;
     print "\n\n";
@@ -328,7 +339,7 @@ sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
     my $part = drum_parts($note);
-    my $d = MIDI::Drummer::Tiny->new(bpm => 100);
+    my $d = MIDI::Drummer::Tiny->new(bpm => $bpm);
     MIDI::RtMidi::ScorePlayer->new(
       device   => $rtc->_midi_out,
       score    => $d->score,
