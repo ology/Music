@@ -105,7 +105,6 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '(') { $offset = 0 }
         elsif ($pressed eq ',') { $bpm += $direction ? 1 : -1 }
         elsif ($pressed eq '.') { $bpm += $direction ? 2 : -2 }
-        elsif ($pressed eq '.') { $bpm += $direction ? 2 : -2 }
         elsif ($pressed eq '/') { $bpm += $direction ? 10 : -10 }
         $rtc->loop->loop_stop if $key->type_is_unicode and
                                  $key->utf8 eq 'C' and
