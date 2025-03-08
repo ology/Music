@@ -189,7 +189,7 @@ sub add_filters ($name, $coderef) {
 }
 
 sub add_filter ($event_type, $action) {
-    push $rtc->_filters->{$event_type}->@*, $action;
+    push $rtc->filters->{$event_type}->@*, $action;
 }
 
 sub stash ($key, $value) {
