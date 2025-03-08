@@ -103,8 +103,8 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq ')') { $offset += $direction ? 12 : -12 }
         elsif ($pressed eq '(') { $offset = 0 }
         $rtc->loop->loop_stop if $key->type_is_unicode and
-                                  $key->utf8 eq 'C' and
-                                  $key->modifiers & KEYMOD_CTRL;
+                                 $key->utf8 eq 'C' and
+                                 $key->modifiers & KEYMOD_CTRL;
     },
 );
 $rtc->loop->add($tka);
