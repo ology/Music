@@ -5,7 +5,6 @@
 
 use v5.36;
 
-use Data::Dumper::Compact qw(ddc);
 use Future::IO::Impl::IOAsync;
 use List::SomeUtils qw(first_index);
 use List::Util qw(shuffle uniq);
