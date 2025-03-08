@@ -337,7 +337,10 @@ sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
     my $part = drum_parts($note);
-    my $d = MIDI::Drummer::Tiny->new(bpm => $bpm);
+    my $d = MIDI::Drummer::Tiny->new(
+        bpm  => $bpm,
+        bars => $feedback,
+    );
     MIDI::RtMidi::ScorePlayer->new(
       device   => $rtc->_midi_out,
       score    => $d->score,
