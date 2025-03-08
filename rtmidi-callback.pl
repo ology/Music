@@ -6,17 +6,11 @@
 use v5.36;
 
 use Data::Dumper::Compact qw(ddc);
-use Future::AsyncAwait;
 use Future::IO::Impl::IOAsync;
-use IO::Async::Channel ();
-use IO::Async::Loop ();
-use IO::Async::Routine ();
-use IO::Async::Timer::Countdown ();
 use List::SomeUtils qw(first_index);
 use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
-use MIDI::RtMidi::FFI::Device ();
 use MIDI::RtMidi::ScorePlayer ();
 use Music::Chord::Note ();
 use Music::Note ();
