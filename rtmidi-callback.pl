@@ -325,7 +325,7 @@ sub drum_parts ($note) {
     return $part;
 }
 sub drums ($event) {
-    print "Event: $event\n" if $rtc->verbose;
+    print "Event: @$event\n" if $rtc->verbose;
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
     my $part = drum_parts($note);
