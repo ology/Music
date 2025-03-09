@@ -51,15 +51,16 @@ my %filter = (
 
 $filter{$_}->() for @filter_names;
 
-my $channel    = CHANNEL;
-my $arp        = [];
-my $arp_types  = Array::Circular->new(qw/up down random/);
-my $arp_type   = 'up';
-my $delay      = 0.1; # seconds
-my $feedback   = 1;
-my $offset     = OFFSET;
-my $direction  = 1; # offset 0=below, 1=above
-my $scale_name = SCALE;
+my $channel     = CHANNEL;
+my $arp         = [];
+my $arp_types   = Array::Circular->new(qw/up down random/);
+my $arp_type    = 'up';
+my $delay       = 0.1; # seconds
+my $feedback    = 1;
+my $offset      = OFFSET;
+my $direction   = 1; # offset 0=below, 1=above
+my $scale_name  = SCALE;
+my $scale_names = Array::Circular->new(qw/major minor/);
 my $bpm        = BPM;
 
 my $rtc = MIDI::RtController->new(
@@ -87,7 +88,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member(walk => \@filter_names);   log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member(drums => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'r') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
-        elsif ($pressed eq 'm') { $scale_name = $scale_name eq SCALE ? 'minor' : SCALE; log_it(scale_name => $scale_name) }
+        elsif ($pressed eq 'm') { $scale_name = $scale_names->next; log_it(scale_name => $scale_name) }
         elsif ($pressed eq 'u') { $channel = $channel ? CHANNEL : DRUMS; log_it(channel => $channel) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
         elsif ($pressed eq '!') { $offset += $direction ? 1  : -1;  log_it(offset => $offset) }
