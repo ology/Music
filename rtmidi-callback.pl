@@ -78,13 +78,13 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed; log_it(feedback => $feedback) }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0; log_it(delay => $delay) }
         elsif ($pressed eq '>') { $delay += DELAY_INC; log_it(delay => $delay) }
-        elsif ($pressed eq 'a') { $filter{arp}->()    unless is_member('arp', \@filter_names) }
-        elsif ($pressed eq 'c') { $filter{chord}->()  unless is_member('chord', \@filter_names) }
-        elsif ($pressed eq 'p') { $filter{pedal}->()  unless is_member('pedal', \@filter_names) }
-        elsif ($pressed eq 'd') { $filter{delay}->()  unless is_member('delay', \@filter_names) }
-        elsif ($pressed eq 'o') { $filter{offset}->() unless is_member('offset', \@filter_names) }
-        elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member('walk', \@filter_names) }
-        elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member('drums', \@filter_names) }
+        elsif ($pressed eq 'a') { $filter{arp}->() && log_it(filter => 'arp') unless is_member('arp', \@filter_names) }
+        elsif ($pressed eq 'c') { $filter{chord}->() && log_it(filter => 'arp') unless is_member('chord', \@filter_names) }
+        elsif ($pressed eq 'p') { $filter{pedal}->() && log_it(filter => 'pedal') unless is_member('pedal', \@filter_names) }
+        elsif ($pressed eq 'd') { $filter{delay}->() && log_it(filter => 'delay') unless is_member('delay', \@filter_names) }
+        elsif ($pressed eq 'o') { $filter{offset}->() && log_it(filter => 'offset') unless is_member('offset', \@filter_names) }
+        elsif ($pressed eq 'w') { $filter{walk}->() && log_it(filter => 'walk') unless is_member('walk', \@filter_names) }
+        elsif ($pressed eq 'y') { $filter{drums}->() && log_it(filter => 'drums') unless is_member('drums', \@filter_names) }
         elsif ($pressed eq 'e') { $arp_type = 'down'; log_it(arp_type => $arp_type) }
         elsif ($pressed eq 'r') { $arp_type = 'random'; log_it(arp_type => $arp_type) }
         elsif ($pressed eq 't') { $arp_type = 'up'; log_it(arp_type => $arp_type) }
