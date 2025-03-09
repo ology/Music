@@ -5,6 +5,7 @@
 
 use v5.36;
 
+use Array::Circular ();
 use Future::IO::Impl::IOAsync;
 use List::SomeUtils qw(first_index);
 use List::Util qw(shuffle uniq);
@@ -52,6 +53,7 @@ $filter{$_}->() for @filter_names;
 
 my $channel    = CHANNEL;
 my $arp        = [];
+my $arp_types  = Array::Circular->new(qw/up down random/);
 my $arp_type   = 'up';
 my $delay      = 0.1; # seconds
 my $feedback   = 1;
@@ -84,9 +86,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'o') { $filter{offset}->() unless is_member('offset', \@filter_names) }
         elsif ($pressed eq 'w') { $filter{walk}->() unless is_member('walk', \@filter_names) }
         elsif ($pressed eq 'y') { $filter{drums}->() unless is_member('drums', \@filter_names) }
-        elsif ($pressed eq 'e') { $arp_type = 'down'; log_it(arp_type => $arp_type) }
-        elsif ($pressed eq 'r') { $arp_type = 'random'; log_it(arp_type => $arp_type) }
-        elsif ($pressed eq 't') { $arp_type = 'up'; log_it(arp_type => $arp_type) }
+        elsif ($pressed eq 'r') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
         elsif ($pressed eq 'm') { $scale_name = $scale_name eq SCALE ? 'minor' : SCALE; log_it(scale_name => $scale_name) }
         elsif ($pressed eq 'u') { $channel = $channel ? CHANNEL : DRUMS; log_it(channel => $channel) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
@@ -160,9 +160,7 @@ sub help {
         'w : walk filter',
         'y : drums filter',
         'x : reset to initial state',
-        'e : arpeggiate down',
         'r : arpeggiate random',
-        't : arpeggiate up',
         'm : toggle major/minor',
         '- : toggle offset direction',
         '! : increment or decrement the offset by 1',
