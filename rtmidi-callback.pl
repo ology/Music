@@ -160,7 +160,7 @@ sub help {
         'w : walk filter',
         'y : drums filter',
         'x : reset to initial state',
-        'r : arpeggiate random',
+        'r : toggle arpeggiation type',
         'm : toggle major/minor',
         '- : toggle offset direction',
         '! : increment or decrement the offset by 1',
