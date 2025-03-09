@@ -51,7 +51,6 @@ my %filter = (
 $filter{$_}->() for @filter_names;
 
 my $channel    = CHANNEL;
-my $stash      = {};
 my $arp        = [];
 my $arp_type   = 'up';
 my $delay      = 0.1; # seconds
@@ -119,7 +118,6 @@ sub clear {
     $rtc->filters({});
     $channel      = CHANNEL;
     @filter_names = ();
-    $stash        = {};
     $arp          = [];
     $arp_type     = 'up';
     $delay        = 0.1; # seconds
@@ -183,11 +181,6 @@ sub add_filters ($name, $coderef) {
     push @filter_names, $name;
     $rtc->add_filter($name, $_ => $coderef)
         for qw(note_on note_off);
-}
-
-sub stash ($key, $value) {
-    $stash->{$key} = $value if defined $value;
-    $stash->{$key};
 }
 
 #--- FILTERS ---#
