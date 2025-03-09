@@ -200,7 +200,7 @@ sub chord_notes ($note) {
     return @notes;
 }
 sub chord_tone ($event) {
-    my ($ev, $channel, $note, $vel) = $event->@*;
+    my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = chord_notes($note);
     $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
     return 0;
@@ -210,7 +210,7 @@ sub pedal_notes ($note) {
     return PEDAL, $note, $note + 7;
 }
 sub pedal_tone ($event) {
-    my ($ev, $channel, $note, $vel) = $event->@*;
+    my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = pedal_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -224,7 +224,7 @@ sub delay_notes ($note) {
     return ($note) x $feedback;
 }
 sub delay_tone ($event) {
-    my ($ev, $channel, $note, $vel) = $event->@*;
+    my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = delay_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -255,7 +255,7 @@ sub arp_notes ($note) {
     return @notes;
 }
 sub arp_tone ($event) {
-    my ($ev, $channel, $note, $vel) = $event->@*;
+    my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = arp_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -271,7 +271,7 @@ sub offset_notes ($note) {
     return @notes;
 }
 sub offset_tone ($event) {
-    my ($ev, $channel, $note, $vel) = $event->@*;
+    my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = offset_notes($note);
     $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
     return 0;
@@ -291,7 +291,7 @@ sub walk_notes ($note) {
     return map { $voice->rand } 1 .. $feedback;
 }
 sub walk_tone ($event) {
-    my ($ev, $channel, $note, $vel) = $event->@*;
+    my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = walk_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -319,7 +319,7 @@ sub drum_parts ($note) {
 }
 sub drums ($event) {
     print "Event: @$event\n" if $rtc->verbose;
-    my ($ev, $channel, $note, $vel) = $event->@*;
+    my ($ev, $chan, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
     my $part = drum_parts($note);
     my $d = MIDI::Drummer::Tiny->new(
