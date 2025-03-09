@@ -181,11 +181,8 @@ sub help {
 
 sub add_filters ($name, $coderef) {
     push @filter_names, $name;
-    add_filter($_ => $coderef) for qw(note_on note_off);
-}
-
-sub add_filter ($event_type, $action) {
-    push $rtc->filters->{$event_type}->@*, $action;
+    $rtc->add_filter($name, $_ => $coderef)
+        for qw(note_on note_off);
 }
 
 sub stash ($key, $value) {
