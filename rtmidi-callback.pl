@@ -199,7 +199,7 @@ sub chord_notes ($note) {
     @notes = map { Music::Note->new($_, 'ISO')->format('midinum') } @notes;
     return @notes;
 }
-sub chord_tone ($event) {
+sub chord_tone ($dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = chord_notes($note);
     $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
@@ -209,7 +209,7 @@ sub chord_tone ($event) {
 sub pedal_notes ($note) {
     return PEDAL, $note, $note + 7;
 }
-sub pedal_tone ($event) {
+sub pedal_tone ($dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = pedal_notes($note);
     my $delay_time = 0;
@@ -223,7 +223,7 @@ sub pedal_tone ($event) {
 sub delay_notes ($note) {
     return ($note) x $feedback;
 }
-sub delay_tone ($event) {
+sub delay_tone ($dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = delay_notes($note);
     my $delay_time = 0;
@@ -254,7 +254,7 @@ sub arp_notes ($note) {
     }
     return @notes;
 }
-sub arp_tone ($event) {
+sub arp_tone ($dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = arp_notes($note);
     my $delay_time = 0;
@@ -270,7 +270,7 @@ sub offset_notes ($note) {
     push @notes, $note + $offset if $offset;
     return @notes;
 }
-sub offset_tone ($event) {
+sub offset_tone ($dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = offset_notes($note);
     $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
@@ -290,7 +290,7 @@ sub walk_notes ($note) {
     );
     return map { $voice->rand } 1 .. $feedback;
 }
-sub walk_tone ($event) {
+sub walk_tone ($dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = walk_notes($note);
     my $delay_time = 0;
@@ -317,7 +317,7 @@ sub drum_parts ($note) {
     }
     return $part;
 }
-sub drums ($event) {
+sub drums ($dt, $event) {
     print "Event: @$event\n" if $rtc->verbose;
     my ($ev, $chan, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
