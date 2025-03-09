@@ -52,6 +52,7 @@ my %filter = (
 $filter{$_}->() for @filter_names;
 
 my $channel     = CHANNEL;
+my $channels    = Array::Circular->new(SCALE, DRUMS);
 my $arp         = [];
 my $arp_types   = Array::Circular->new(qw/up down random/);
 my $arp_type    = 'up';
@@ -89,7 +90,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member(drums => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'r') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
         elsif ($pressed eq 'm') { $scale_name = $scale_names->next; log_it(scale_name => $scale_name) }
-        elsif ($pressed eq 'u') { $channel = $channel ? CHANNEL : DRUMS; log_it(channel => $channel) }
+        elsif ($pressed eq 'u') { $channel = $channels->next; log_it(channel => $channel) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
         elsif ($pressed eq '!') { $offset += $direction ? 1  : -1;  log_it(offset => $offset) }
         elsif ($pressed eq '@') { $offset += $direction ? 2  : -2;  log_it(offset => $offset) }
