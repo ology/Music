@@ -212,7 +212,7 @@ sub chord_notes ($note) {
 sub chord_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = chord_notes($note);
-    send_it([ $ev, $channel, $_, $vel ]) for @notes;
+    $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
     return 0;
 }
 
@@ -283,7 +283,7 @@ sub offset_notes ($note) {
 sub offset_tone ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = offset_notes($note);
-    send_it([ $ev, $channel, $_, $vel ]) for @notes;
+    $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
     return 0;
 }
 
