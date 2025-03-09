@@ -75,9 +75,9 @@ my $tka = Term::TermKey::Async->new(
         if ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
         elsif ($pressed eq 'x') { clear() }
-        elsif ($pressed =~ /^\d$/) { $feedback = $pressed }
-        elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
-        elsif ($pressed eq '>') { $delay += DELAY_INC }
+        elsif ($pressed =~ /^\d$/) { $feedback = $pressed; log_it(feedback => $feedback) }
+        elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0; log_it(delay => $delay) }
+        elsif ($pressed eq '>') { $delay += DELAY_INC; log_it(delay => $delay) }
         elsif ($pressed eq 'a') { $filter{arp}->()    unless is_member('arp', \@filter_names) }
         elsif ($pressed eq 'c') { $filter{chord}->()  unless is_member('chord', \@filter_names) }
         elsif ($pressed eq 'p') { $filter{pedal}->()  unless is_member('pedal', \@filter_names) }
@@ -85,19 +85,19 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'o') { $filter{offset}->() unless is_member('offset', \@filter_names) }
         elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member('walk', \@filter_names) }
         elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member('drums', \@filter_names) }
-        elsif ($pressed eq 'e') { $arp_type = 'down' }
-        elsif ($pressed eq 'r') { $arp_type = 'random' }
-        elsif ($pressed eq 't') { $arp_type = 'up' }
-        elsif ($pressed eq 'm') { $scale_name = $scale_name eq SCALE ? 'minor' : SCALE }
-        elsif ($pressed eq 'u') { $channel = $channel ? CHANNEL : DRUMS }
-        elsif ($pressed eq '-') { $direction = $direction ? 0 : 1 }
-        elsif ($pressed eq '!') { $offset += $direction ? 1 : -1 }
-        elsif ($pressed eq '@') { $offset += $direction ? 2 : -2 }
-        elsif ($pressed eq ')') { $offset += $direction ? 12 : -12 }
-        elsif ($pressed eq '(') { $offset = 0 }
-        elsif ($pressed eq ',') { $bpm += $direction ? 1 : -1 }
-        elsif ($pressed eq '.') { $bpm += $direction ? 2 : -2 }
-        elsif ($pressed eq '/') { $bpm += $direction ? 10 : -10 }
+        elsif ($pressed eq 'e') { $arp_type = 'down'; log_it(arp_type => $arp_type) }
+        elsif ($pressed eq 'r') { $arp_type = 'random'; log_it(arp_type => $arp_type) }
+        elsif ($pressed eq 't') { $arp_type = 'up'; log_it(arp_type => $arp_type) }
+        elsif ($pressed eq 'm') { $scale_name = $scale_name eq SCALE ? 'minor' : SCALE; log_it(scale_name => $scale_name) }
+        elsif ($pressed eq 'u') { $channel = $channel ? CHANNEL : DRUMS; log_it(channel => $channel) }
+        elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
+        elsif ($pressed eq '!') { $offset += $direction ? 1 : -1; log_it(offset => $offset) }
+        elsif ($pressed eq '@') { $offset += $direction ? 2 : -2; log_it(offset => $offset) }
+        elsif ($pressed eq ')') { $offset += $direction ? 12 : -12; log_it(offset => $offset) }
+        elsif ($pressed eq '(') { $offset = 0; log_it(offset => $offset) }
+        elsif ($pressed eq ',') { $bpm += $direction ? 1 : -1; log_it(bpm => $bpm) }
+        elsif ($pressed eq '.') { $bpm += $direction ? 2 : -2; log_it(bpm => $bpm) }
+        elsif ($pressed eq '/') { $bpm += $direction ? 10 : -10; log_it(bpm => $bpm) }
         $rtc->loop->loop_stop if $key->type_is_unicode and
                                  $key->utf8 eq 'C' and
                                  $key->modifiers & KEYMOD_CTRL;
@@ -106,6 +106,10 @@ my $tka = Term::TermKey::Async->new(
 $rtc->loop->add($tka);
 
 $rtc->run;
+
+sub log_it ($name, $value) {
+    print "$name => $value\n";
+}
 
 sub is_member ($name, $items) {
     return grep { $name eq $_ } @$items;
