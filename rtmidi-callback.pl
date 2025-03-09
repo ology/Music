@@ -309,7 +309,6 @@ sub walk_tone ($event) {
 }
 
 sub drum_parts ($note) {
-    # warn __PACKAGE__,' L',__LINE__,' ',,"N: $note\n";
     my $part;
     if ($note == 99) {
         $part = sub {
@@ -326,6 +325,7 @@ sub drum_parts ($note) {
     return $part;
 }
 sub drums ($event) {
+    print "Event: $event\n" if $rtc->verbose;
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
     my $part = drum_parts($note);
