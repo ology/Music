@@ -113,9 +113,9 @@ sub is_member ($name, $items) {
 }
 
 sub clear {
+    $rtc->filters({});
     $channel      = CHANNEL;
     @filter_names = ();
-    $filters      = {};
     $stash        = {};
     $arp          = [];
     $arp_type     = 'up';
