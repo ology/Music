@@ -51,7 +51,6 @@ my %filter = (
 $filter{$_}->() for @filter_names;
 
 my $channel    = CHANNEL;
-my $filters    = {};
 my $stash      = {};
 my $arp        = [];
 my $arp_type   = 'up';
