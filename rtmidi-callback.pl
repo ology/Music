@@ -61,7 +61,7 @@ my $feedback    = 1;
 my $offset      = OFFSET;
 my $direction   = 1; # offset 0=below, 1=above
 my $scale_name  = SCALE;
-my $scale_names = Array::Circular->new(qw/major minor/);
+my $scale_names = Array::Circular->new(SCALE, 'minor');
 my $bpm        = BPM;
 
 my $rtc = MIDI::RtController->new(
