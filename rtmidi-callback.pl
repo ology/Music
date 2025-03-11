@@ -365,19 +365,19 @@ sub score ($dt, $event) {
             $playing = 1;
             my $part = sub {
                 my (%args) = @_;
+                $args{score}->n('qn', $_->{note}) for @$events;
                 # my $t = $args{bpm} / 60; # beats per second
-                my $dura = 'd' . TICKS;
-                $args{score}->n($dura, $_) for $args{events}->@*;
-                # my $dura = $args{delta}
-                    # ? sprintf '%d', $args{delta} * TICKS
-                    # : TICKS / 2 / 2 / 2 / 2; # 64th
-                # $args{score}->n('d' . $dura, $_) for $args{events}->@*;
+                # for my $e ($args{events}->@*) {
+                    # my $x = $e->{dt} ? $t / $e->{dt} : 1;
+                    # my $dura = 'd' . (TICKS * $x);
+                    # $args{score}->n($dura, $e->{note});
+                # }
             };
             my $score = setup_score(lead_in => 0, bpm => $bpm);
             MIDI::RtMidi::ScorePlayer->new(
               device   => $rtc->_midi_out,
               score    => $score,
-              common   => { score => $score, events => $events },
+              common   => { score => $score, events => $events, bpm => $bpm },
               parts    => [ $part ],
               sleep    => 0,
               infinite => 0,
@@ -393,7 +393,7 @@ sub score ($dt, $event) {
     }
 
     if ($ev eq 'note_on' && $recording) {
-        push @$events, $note;
+        push @$events, { dt => $dt, note => $note };
     }
     return 0;
 }
