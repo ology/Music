@@ -364,7 +364,7 @@ sub score ($dt, $event) {
             my $part = sub {
                 my (%args) = @_;
                 # my $t = $args{bpm} / 60; # beats per second
-                my $dura = TICKS;
+                my $dura = 'd' . TICKS;
                 $args{score}->n($dura, $_) for $args{events}->@*;
                 # my $dura = $args{delta}
                     # ? sprintf '%d', $args{delta} * TICKS
