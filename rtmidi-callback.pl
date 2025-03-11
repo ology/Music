@@ -402,6 +402,7 @@ sub score ($dt, $event) {
                     else {
                         $dura = sprintf 'd%d', $x * TICKS;
                     }
+                    log_it(dura => $dura);
                     $args{score}->n($dura, $args{events}[$i]{note});
                 }
             };
