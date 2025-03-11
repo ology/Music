@@ -366,7 +366,7 @@ sub score ($dt, $event) {
                 my (%args) = @_;
                 my $dura = $args{delta}
                     ? sprintf '%d', $args{delta} * TICKS
-                    : TICKS / 2 / 2 /2 / 2; # 64th
+                    : TICKS / 2 / 2 / 2 / 2; # 64th
                 $args{score}->n('d' . $dura, $_) for $args{events}->@*;
             };
             MIDI::RtMidi::ScorePlayer->new(
