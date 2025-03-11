@@ -381,13 +381,15 @@ sub score ($dt, $event) {
             $playing = 1;
             my $part = sub {
                 my (%args) = @_;
-                $args{score}->n('qn', $_->{note}) for $args{events}->@*;
-                # my $t = $args{bpm} / 60; # beats per second
-                # for my $e ($args{events}->@*) {
-                    # my $x = $e->{dt} ? $t / $e->{dt} : 1;
-                    # my $dura = 'd' . (TICKS * $x);
-                    # $args{score}->n($dura, $e->{note});
-                # }
+                my $t = $args{bpm} / 60; # beats per second
+                for my $i (0 .. $args{events}->$#*) {
+                    my $x = 1;
+                    if ($i <= $args{events}->$#*) {
+                        $x = $args{events}->[ $i + 1 ]{dt} * $t;
+                    }
+                    my $dura = 'd' . sprintf('%d', $x * TICKS);
+                    $args{score}->n($dura, $args{events}[$i]{note});
+                }
             };
             my $score = setup_score(lead_in => 0, bpm => $bpm);
             MIDI::RtMidi::ScorePlayer->new(
