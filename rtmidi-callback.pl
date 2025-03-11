@@ -375,9 +375,9 @@ sub score ($dt, $event) {
     }
     elsif ($ev eq 'control_change' && $note == 25 && $vel == 127) { # play
         log_it(recording => 'off');
-        log_it(playing => 'on');
         $recording = 0;
         if (!$playing && @$events) {
+          log_it(playing => 'on');
             $playing = 1;
             my $part = sub {
                 my (%args) = @_;
