@@ -14,6 +14,7 @@ use MIDI::RtController ();
 use MIDI::RtMidi::ScorePlayer ();
 use MIDI::Util qw(setup_score reverse_dump);
 use Music::Chord::Note ();
+use Music::Duration;
 use Music::Note ();
 use Music::ToRoman ();
 use Music::Scales qw(get_scale_MIDI get_scale_notes);
@@ -70,6 +71,7 @@ my $bpm         = BPM;
 my $recording   = 0;
 my $playing     = 0;
 my $events      = [];
+my $quantize    = 0;
 
 my $rtc = MIDI::RtController->new(
     input  => $input_name,
@@ -99,6 +101,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 't') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
         elsif ($pressed eq 'm') { $scale_name = $scale_names->next; log_it(scale_name => $scale_name) }
         elsif ($pressed eq 'u') { $channel = $channels->next; log_it(channel => $channel) }
+        elsif ($pressed eq 'q') { $quantize = $quantize ? 0 : 1; log_it(quantize => $quantize) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
         elsif ($pressed eq '!') { $offset += $direction ? 1  : -1;  log_it(offset => $offset) }
         elsif ($pressed eq '@') { $offset += $direction ? 2  : -2;  log_it(offset => $offset) }
@@ -137,10 +140,11 @@ sub clear {
     $scale_name   = SCALE;
     $bpm          = BPM;
     $events       = [];
+    $quantize     = 0;
 }
 
 sub status {
-    print join "\n",
+    print "\n", join "\n",
         "Filter(s): @filter_names",
         "Channel: $channel",
         'Pedal-tone: ' . PEDAL,
@@ -153,6 +157,7 @@ sub status {
         "BPM: $bpm",
         "Playing: $playing",
         "Recording: $recording",
+        "Quantize: $quantize",
     ;
 # use Data::Dumper::Compact qw(ddc);
 # print "\n", ddc($events);
@@ -388,11 +393,15 @@ sub score ($dt, $event) {
                     if ($i < $args{events}->$#*) {
                         $x = $args{events}->[ $i + 1 ]{dt} * $t;
                     }
-                    # my $nc = Number::Closest->new(number => $x, numbers => $args{lengths}) ;
-                    # my $closest = $nc->find;
-                    # my $abbrev = $args{lengths}{$closest};
-# print __PACKAGE__,' L',__LINE__,' ',,"A: $abbrev\n";
-                    my $dura = sprintf 'd%d', $x * TICKS;
+                    my $dura;
+                    if ($quantize) {
+                        my $nc = Number::Closest->new(number => $x, numbers => [ keys $args{lengths}->%* ]);
+                        my $closest = $nc->find;
+                        $dura = $args{lengths}{$closest};
+                    }
+                    else {
+                        $dura = sprintf 'd%d', $x * TICKS;
+                    }
                     $args{score}->n($dura, $args{events}[$i]{note});
                 }
             };
