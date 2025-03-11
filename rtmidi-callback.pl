@@ -362,6 +362,7 @@ sub score ($dt, $event) {
     elsif ($ev eq 'control_change' && $note == 25 && $vel == 127) { # play
         log_it(playing => 'on');
         if (!$playing && @$events) {
+            $playing = 1;
             my $part = sub {
                 my (%args) = @_;
                 my $dura = $args{delta}
@@ -377,9 +378,8 @@ sub score ($dt, $event) {
               sleep    => 0,
               infinite => 0,
             )->play_async->retain;
+            $playing = 0;
         }
-
-        $playing = 1;
     }
     elsif ($ev eq 'control_change' && $note == 24 && $vel == 127) { # stop
         log_it(recording => 'off');
