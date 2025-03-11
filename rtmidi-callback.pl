@@ -20,6 +20,7 @@ use Music::Scales qw(get_scale_MIDI get_scale_notes);
 use Music::VoiceGen ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
+use constant TICKS => 96; # MIDI-Perl default
 use constant CHANNEL => 0;
 use constant DRUMS   => 9;
 # for the pedal-tone filter:
@@ -363,7 +364,10 @@ sub score ($dt, $event) {
         if (!$playing && @$events) {
             my $part = sub {
                 my (%args) = @_;
-                $args{score}->n('qn', $_) for $args{events}->@*;
+                my $dura = $args{delta}
+                    ? sprintf '%d', $args{delta} * TICKS
+                    : TICKS / 2 / 2 /2 / 2; # 64th
+                $args{score}->n('d' . $dura, $_) for $args{events}->@*;
             };
             MIDI::RtMidi::ScorePlayer->new(
               device   => $rtc->_midi_out,
