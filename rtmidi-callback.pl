@@ -72,6 +72,7 @@ my $recording   = 0;
 my $playing     = 0;
 my $events      = [];
 my $quantize    = 0;
+my $triplets    = 0;
 
 my $rtc = MIDI::RtController->new(
     input  => $input_name,
@@ -102,6 +103,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'm') { $scale_name = $scale_names->next; log_it(scale_name => $scale_name) }
         elsif ($pressed eq 'u') { $channel = $channels->next; log_it(channel => $channel) }
         elsif ($pressed eq 'q') { $quantize = $quantize ? 0 : 1; log_it(quantize => $quantize) }
+        elsif ($pressed eq 'i') { $triplets = $triplets ? 0 : 1; log_it(triplets => $triplets) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
         elsif ($pressed eq '!') { $offset += $direction ? 1  : -1;  log_it(offset => $offset) }
         elsif ($pressed eq '@') { $offset += $direction ? 2  : -2;  log_it(offset => $offset) }
@@ -141,6 +143,7 @@ sub clear {
     $bpm          = BPM;
     $events       = [];
     $quantize     = 0;
+    $triplets     = 0;
 }
 
 sub status {
@@ -158,6 +161,7 @@ sub status {
         "Playing: $playing",
         "Recording: $recording",
         "Quantize: $quantize",
+        "Use triplets: $triplets",
     ;
 # use Data::Dumper::Compact qw(ddc);
 # print "\n", ddc($events);
@@ -181,6 +185,8 @@ sub help {
         'y : drums filter',
         'r : score recording',
         'x : reset to initial state',
+        'q : toggle quantization',
+        'i : toggle triplets',
         't : toggle arpeggiation type',
         'm : toggle major/minor',
         '- : toggle offset direction',
@@ -408,6 +414,7 @@ sub score ($dt, $event) {
             };
             my $score = setup_score(lead_in => 0, bpm => $bpm);
             my $lengths = reverse_dump('length');
+            $lengths = [ map { $_ => $lengths->{$_} } grep { $_ !~ /^t/ } keys %$lengths ] if !$triplets;
             my $common = { score => $score, events => $events, bpm => $bpm, lengths => $lengths };
             MIDI::RtMidi::ScorePlayer->new(
               device   => $rtc->_midi_out,
