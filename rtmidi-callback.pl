@@ -363,7 +363,7 @@ sub score ($dt, $event) {
         if (!$playing && @$events) {
             my $part = sub {
                 my (%args) = @_;
-                $args{score}->n('qn', $_) for @{ $args{events} };
+                $args{score}->n('qn', $_) for $args{events}->@*;
             };
             MIDI::RtMidi::ScorePlayer->new(
               device   => $rtc->_midi_out,
