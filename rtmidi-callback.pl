@@ -387,7 +387,7 @@ sub score ($dt, $event) {
                     if ($i <= $args{events}->$#*) {
                         $x = $args{events}->[ $i + 1 ]{dt} * $t;
                     }
-                    my $dura = sprintf('d%d', $x * TICKS);
+                    my $dura = sprintf 'd%d', $x * TICKS;
                     $args{score}->n($dura, $args{events}[$i]{note});
                 }
             };
