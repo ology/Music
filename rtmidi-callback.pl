@@ -163,6 +163,7 @@ sub help {
         'o : offset filter',
         'w : walk filter',
         'y : drums filter',
+        'e : score recording',
         'x : reset to initial state',
         'r : toggle arpeggiation type',
         'm : toggle major/minor',
