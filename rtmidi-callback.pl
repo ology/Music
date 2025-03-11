@@ -346,7 +346,6 @@ sub drums ($dt, $event) {
       parts    => [ $part ],
       sleep    => 0,
       infinite => 0,
-      # dump     => 1,
     )->play_async->retain;
     return 1;
 }
@@ -356,6 +355,23 @@ sub score ($dt, $event) {
     if ($ev eq 'control_change' && $note == 26 && $vel == 127) { # record
         $recording = 1;
         log_it(recording => 'on');
+        my $d = MIDI::Drummer::Tiny->new(
+            bpm  => $bpm,
+            bars => $feedback,
+        );
+        my $part = sub {
+            my (%args) = @_;
+            $args{drummer}->count_in($feedback);
+        };
+        MIDI::RtMidi::ScorePlayer->new(
+          device   => $rtc->_midi_out,
+          score    => $d->score,
+          common   => { drummer => $d },
+          parts    => [ $part ],
+          sleep    => 0,
+          infinite => 0,
+        )->play_async->retain;
+        $playing = 0;
     }
     elsif ($ev eq 'control_change' && $note == 25 && $vel == 127) { # play
         log_it(recording => 'off');
