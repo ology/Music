@@ -12,7 +12,7 @@ use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
 use MIDI::RtMidi::ScorePlayer ();
-use MIDI::Util qw(setup_score);
+use MIDI::Util qw(setup_score reverse_dump);
 use Music::Chord::Note ();
 use Music::Note ();
 use Music::ToRoman ();
@@ -392,10 +392,12 @@ sub score ($dt, $event) {
                 }
             };
             my $score = setup_score(lead_in => 0, bpm => $bpm);
+            my $lengths = reverse_dump('length');
+            my $common = { score => $score, events => $events, bpm => $bpm, lengths => $lengths };
             MIDI::RtMidi::ScorePlayer->new(
               device   => $rtc->_midi_out,
               score    => $score,
-              common   => { score => $score, events => $events, bpm => $bpm },
+              common   => $common,
               parts    => [ $part ],
               sleep    => 0,
               infinite => 0,
