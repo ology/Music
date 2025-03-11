@@ -377,7 +377,7 @@ sub score ($dt, $event) {
         log_it(recording => 'off');
         $recording = 0;
         if (!$playing && @$events) {
-          log_it(playing => 'on');
+            log_it(playing => 'on');
             $playing = 1;
             my $part = sub {
                 my (%args) = @_;
