@@ -89,7 +89,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'o') { $filter{offset}->() unless is_member(offset => \@filter_names); log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member(walk => \@filter_names);   log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member(drums => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed eq 'e') { $filter{score}->()  unless is_member(score => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
+        elsif ($pressed eq 'r') { $filter{score}->()  unless is_member(score => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 't') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
         elsif ($pressed eq 'm') { $scale_name = $scale_names->next; log_it(scale_name => $scale_name) }
         elsif ($pressed eq 'u') { $channel = $channels->next; log_it(channel => $channel) }
@@ -163,7 +163,7 @@ sub help {
         'o : offset filter',
         'w : walk filter',
         'y : drums filter',
-        'e : score recording',
+        'r : score recording',
         'x : reset to initial state',
         't : toggle arpeggiation type',
         'm : toggle major/minor',
