@@ -381,7 +381,7 @@ sub score ($dt, $event) {
             $playing = 1;
             my $part = sub {
                 my (%args) = @_;
-                $args{score}->n('qn', $_->{note}) for @$events;
+                $args{score}->n('qn', $_->{note}) for $args{events}->@*;
                 # my $t = $args{bpm} / 60; # beats per second
                 # for my $e ($args{events}->@*) {
                     # my $x = $e->{dt} ? $t / $e->{dt} : 1;
