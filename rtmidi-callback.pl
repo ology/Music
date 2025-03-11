@@ -384,7 +384,7 @@ sub score ($dt, $event) {
                 my $t = $args{bpm} / 60; # beats per second
                 for my $i (0 .. $args{events}->$#*) {
                     my $x = 1;
-                    if ($i <= $args{events}->$#*) {
+                    if ($i < $args{events}->$#*) {
                         $x = $args{events}->[ $i + 1 ]{dt} * $t;
                     }
                     my $dura = sprintf 'd%d', $x * TICKS;
