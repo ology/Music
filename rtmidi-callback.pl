@@ -361,7 +361,6 @@ sub score ($dt, $event) {
     elsif ($ev eq 'control_change' && $note == 25 && $vel == 127) { # play
         log_it(playing => 'on');
         if (!$playing && @$events) {
-warn __PACKAGE__,' L',__LINE__,' ',,"HELLO?\n";
             my $part = sub {
                 my (%args) = @_;
                 $args{score}->n('qn', $_) for @{ $args{events} };
@@ -375,7 +374,6 @@ warn __PACKAGE__,' L',__LINE__,' ',,"HELLO?\n";
               infinite => 0,
               # dump     => 1,
             )->play_async->retain;
-warn __PACKAGE__,' L',__LINE__,' ',,"WTF?\n";
         }
 
         $playing = 1;
