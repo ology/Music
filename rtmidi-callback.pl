@@ -12,6 +12,7 @@ use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
 use MIDI::RtMidi::ScorePlayer ();
+use MIDI::Util qw(setup_score);
 use Music::Chord::Note ();
 use Music::Note ();
 use Music::ToRoman ();
@@ -63,7 +64,11 @@ my $offset      = OFFSET;
 my $direction   = 1; # offset 0=below, 1=above
 my $scale_name  = SCALE;
 my $scale_names = Array::Circular->new(SCALE, 'minor');
-my $bpm        = BPM;
+my $bpm         = BPM;
+my $recording   = 0;
+my $playing     = 0;
+
+my $score = setup_score(lead_in => 0);
 
 my $rtc = MIDI::RtController->new(
     input  => $input_name,
@@ -342,4 +347,18 @@ sub drums ($dt, $event) {
 }
 
 sub score ($dt, $event) {
+    my ($ev, $chan, $note, $vel) = $event->@*;
+    if ($ev eq 'control_change' && $note == 26 && $vel == 127) { # record
+        $recording = 1;
+    }
+    elsif ($ev eq 'control_change' && $note == 25 && $vel == 127) { # play
+        $playing = 1;
+    }
+    elsif ($ev eq 'control_change' && $note == 24 && $vel == 127) { # stop
+        $recording = 0;
+        $playing   = 0;
+    }
+    elsif ($ev eq 'note_on') {
+    }
+    return 0;
 }
