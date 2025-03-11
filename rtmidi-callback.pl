@@ -67,6 +67,7 @@ my $scale_names = Array::Circular->new(SCALE, 'minor');
 my $bpm         = BPM;
 my $recording   = 0;
 my $playing     = 0;
+my $events      = [];
 
 my $score = setup_score(lead_in => 0);
 
@@ -135,6 +136,7 @@ sub clear {
     $direction    = 1; # offset 0=below, 1=above
     $scale_name   = SCALE;
     $bpm          = BPM;
+    $events       = [];
 }
 
 sub status {
@@ -149,7 +151,11 @@ sub status {
         'Offset direction: ' . ($direction ? 'up' : 'down'),
         "Scale name: $scale_name",
         "BPM: $bpm",
+        "Playing: $playing",
+        "Recording: $recording",
     ;
+# use Data::Dumper::Compact qw(ddc);
+# print "\n", ddc($events);
     print "\n\n";
 }
 
@@ -350,15 +356,39 @@ sub score ($dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
     if ($ev eq 'control_change' && $note == 26 && $vel == 127) { # record
         $recording = 1;
+        log_it(recording => 'on');
     }
     elsif ($ev eq 'control_change' && $note == 25 && $vel == 127) { # play
+        log_it(playing => 'on');
+        if (!$playing && @$events) {
+warn __PACKAGE__,' L',__LINE__,' ',,"HELLO?\n";
+            my $part = sub {
+                my (%args) = @_;
+                $args{score}->n('qn', $_) for @{ $args{events} };
+            };
+            MIDI::RtMidi::ScorePlayer->new(
+              device   => $rtc->_midi_out,
+              score    => $score,
+              common   => { score => $score, events => $events },
+              parts    => [ $part ],
+              sleep    => 0,
+              infinite => 0,
+              # dump     => 1,
+            )->play_async->retain;
+warn __PACKAGE__,' L',__LINE__,' ',,"WTF?\n";
+        }
+
         $playing = 1;
     }
     elsif ($ev eq 'control_change' && $note == 24 && $vel == 127) { # stop
+        log_it(recording => 'off');
+        log_it(playing => 'off');
         $recording = 0;
         $playing   = 0;
     }
-    elsif ($ev eq 'note_on') {
+
+    if ($ev eq 'note_on' && $recording) {
+        push @$events, $note;
     }
     return 0;
 }
