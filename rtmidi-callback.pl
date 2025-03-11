@@ -90,7 +90,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member(walk => \@filter_names);   log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member(drums => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'e') { $filter{score}->()  unless is_member(score => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed eq 'r') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
+        elsif ($pressed eq 't') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
         elsif ($pressed eq 'm') { $scale_name = $scale_names->next; log_it(scale_name => $scale_name) }
         elsif ($pressed eq 'u') { $channel = $channels->next; log_it(channel => $channel) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
@@ -165,7 +165,7 @@ sub help {
         'y : drums filter',
         'e : score recording',
         'x : reset to initial state',
-        'r : toggle arpeggiation type',
+        't : toggle arpeggiation type',
         'm : toggle major/minor',
         '- : toggle offset direction',
         '! : increment or decrement the offset by 1',
