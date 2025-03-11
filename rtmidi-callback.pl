@@ -398,6 +398,7 @@ sub score ($dt, $event) {
               sleep    => 0,
               infinite => 0,
             )->play_async->retain;
+            log_it(playing => 'off');
             $playing = 0;
         }
     }
