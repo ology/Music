@@ -372,7 +372,6 @@ sub score ($dt, $event) {
               parts    => [ $part ],
               sleep    => 0,
               infinite => 0,
-              # dump     => 1,
             )->play_async->retain;
         }
 
