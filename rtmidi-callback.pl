@@ -18,6 +18,7 @@ use Music::Note ();
 use Music::ToRoman ();
 use Music::Scales qw(get_scale_MIDI get_scale_notes);
 use Music::VoiceGen ();
+use Number::Closest ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
 use constant TICKS => 96; # MIDI-Perl default
@@ -387,6 +388,10 @@ sub score ($dt, $event) {
                     if ($i < $args{events}->$#*) {
                         $x = $args{events}->[ $i + 1 ]{dt} * $t;
                     }
+                    # my $nc = Number::Closest->new(number => $x, numbers => $args{lengths}) ;
+                    # my $closest = $nc->find;
+                    # my $abbrev = $args{lengths}{$closest};
+# print __PACKAGE__,' L',__LINE__,' ',,"A: $abbrev\n";
                     my $dura = sprintf 'd%d', $x * TICKS;
                     $args{score}->n($dura, $args{events}[$i]{note});
                 }
