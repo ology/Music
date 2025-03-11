@@ -70,8 +70,6 @@ my $recording   = 0;
 my $playing     = 0;
 my $events      = [];
 
-my $score = setup_score(lead_in => 0);
-
 my $rtc = MIDI::RtController->new(
     input  => $input_name,
     output => $output_name,
@@ -365,6 +363,7 @@ sub score ($dt, $event) {
             $playing = 1;
             my $part = sub {
                 my (%args) = @_;
+                # my $t = $args{bpm} / 60; # beats per second
                 my $dura = TICKS;
                 $args{score}->n($dura, $_) for $args{events}->@*;
                 # my $dura = $args{delta}
@@ -372,6 +371,7 @@ sub score ($dt, $event) {
                     # : TICKS / 2 / 2 / 2 / 2; # 64th
                 # $args{score}->n('d' . $dura, $_) for $args{events}->@*;
             };
+            my $score = setup_score(lead_in => 0, bpm => $bpm);
             MIDI::RtMidi::ScorePlayer->new(
               device   => $rtc->_midi_out,
               score    => $score,
