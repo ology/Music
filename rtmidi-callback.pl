@@ -40,13 +40,14 @@ my $filter_names = shift || '';         # chord,delay,pedal,offset,walk
 my @filter_names = split /\s*,\s*/, $filter_names;
 
 my %filter = (
-    chord  => sub { add_filters(chord  => \&chord_tone) },
-    pedal  => sub { add_filters(pedal  => \&pedal_tone) },
-    delay  => sub { add_filters(delay  => \&delay_tone) },
-    arp    => sub { add_filters(arp    => \&arp_tone) },
-    offset => sub { add_filters(offset => \&offset_tone) },
-    walk   => sub { add_filters(walk   => \&walk_tone) },
-    drums  => sub { add_filters(drums  => \&drums) },
+    chord  => sub { add_filters(chord  => \&chord_tone, 0) },
+    pedal  => sub { add_filters(pedal  => \&pedal_tone, 0) },
+    delay  => sub { add_filters(delay  => \&delay_tone, 0) },
+    arp    => sub { add_filters(arp    => \&arp_tone, 0) },
+    offset => sub { add_filters(offset => \&offset_tone, 0) },
+    walk   => sub { add_filters(walk   => \&walk_tone, 0) },
+    drums  => sub { add_filters(drums  => \&drums, 0) },
+    score  => sub { add_filters(score  => \&score, ['all']) },
 );
 
 $filter{$_}->() for @filter_names;
@@ -88,6 +89,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'o') { $filter{offset}->() unless is_member(offset => \@filter_names); log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member(walk => \@filter_names);   log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member(drums => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
+        elsif ($pressed eq 'e') { $filter{score}->()  unless is_member(score => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'r') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
         elsif ($pressed eq 'm') { $scale_name = $scale_names->next; log_it(scale_name => $scale_name) }
         elsif ($pressed eq 'u') { $channel = $channels->next; log_it(channel => $channel) }
@@ -177,10 +179,10 @@ sub help {
     print "\n\n";
 }
 
-sub add_filters ($name, $coderef) {
+sub add_filters ($name, $coderef, $types) {
+    $types ||= [qw(note_on note_off)];
     push @filter_names, $name;
-    $rtc->add_filter($name, $_ => $coderef)
-        for qw(note_on note_off);
+    $rtc->add_filter($name, $types, $coderef);
 }
 
 #--- FILTERS ---#
@@ -336,4 +338,7 @@ sub drums ($dt, $event) {
       # dump     => 1,
     )->play_async->retain;
     return 1;
+}
+
+sub score ($dt, $event) {
 }
