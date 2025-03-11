@@ -361,12 +361,12 @@ sub score ($dt, $event) {
         );
         my $part = sub {
             my (%args) = @_;
-            $args{drummer}->count_in($feedback);
+            $args{drummer}->count_in($args{feedback});
         };
         MIDI::RtMidi::ScorePlayer->new(
           device   => $rtc->_midi_out,
           score    => $d->score,
-          common   => { drummer => $d },
+          common   => { drummer => $d, feedback => $feedback },
           parts    => [ $part ],
           sleep    => 0,
           infinite => 0,
