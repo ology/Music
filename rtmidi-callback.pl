@@ -8,18 +8,14 @@ use v5.36;
 use curry;
 use Array::Circular ();
 use Future::IO::Impl::IOAsync;
-use List::SomeUtils qw(first_index);
 use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
 use MIDI::RtController::Filter::Gene ();
 use MIDI::RtMidi::ScorePlayer ();
 use MIDI::Util qw(setup_score reverse_dump);
-use Music::Chord::Note ();
 use Music::Duration;
-use Music::Note ();
-use Music::ToRoman ();
-use Music::Scales qw(get_scale_MIDI get_scale_notes);
+use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen ();
 use Number::Closest ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
@@ -55,11 +51,11 @@ my %filter = (
     chord  => sub { add_filters('chord', $rtf->curry::chord_tone, 0) },
     pedal  => sub { add_filters('pedal', $rtf->curry::pedal_tone, 0) },
     delay  => sub { add_filters('delay', $rtf->curry::delay_tone, 0) },
-    arp    => sub { add_filters('arp', $rtf->curry::arp_tone, 0) },
     offset => sub { add_filters('offset', $rtf->curry::offset_tone, 0) },
-    walk   => sub { add_filters('walk', $rtf->curry::walk_tone, 0) },
-    drums  => sub { add_filters('drums', $rtf->curry::drums, 0) },
-    score  => sub { add_filters('score', $rtf->curry::score, ['all']) },
+    arp    => sub { add_filters('arp', \&arp_tone, 0) },
+    walk   => sub { add_filters('walk', \&walk_tone, 0) },
+    drums  => sub { add_filters('drums', \&drums, 0) },
+    score  => sub { add_filters('score', \&score, ['all']) },
 );
 
 $filter{$_}->() for @filter_names;
