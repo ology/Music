@@ -416,6 +416,7 @@ sub score ($dt, $event) {
             my $lengths = reverse_dump('length');
             %$lengths = map { $_ => $lengths->{$_} } grep { $lengths->{$_} !~ /^t/ } keys %$lengths
                 unless $triplets;
+            %$lengths = map { $_ => $lengths->{$_} } grep { $lengths->{$_} !~ /(?:x|y|z)/ } keys %$lengths; # UGH
             my $common = { score => $score, events => $events, bpm => $bpm, lengths => $lengths };
             MIDI::RtMidi::ScorePlayer->new(
               device   => $rtc->_midi_out,
