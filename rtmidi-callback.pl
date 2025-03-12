@@ -401,7 +401,10 @@ sub score ($dt, $event) {
                     }
                     my $dura;
                     if ($quantize) {
-                        my $nc = Number::Closest->new(number => $x, numbers => [ sort keys $args{lengths}->%* ]);
+                        my $nc = Number::Closest->new(
+                            number  => $x,
+                            numbers => [ sort keys $args{lengths}->%* ],
+                        );
                         my $closest = $nc->find;
                         $dura = $args{lengths}{$closest};
                     }
