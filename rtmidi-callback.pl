@@ -5,12 +5,14 @@
 
 use v5.36;
 
+use curry;
 use Array::Circular ();
 use Future::IO::Impl::IOAsync;
 use List::SomeUtils qw(first_index);
 use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
+use MIDI::RtController::Filter::Gene ();
 use MIDI::RtMidi::ScorePlayer ();
 use MIDI::Util qw(setup_score reverse_dump);
 use Music::Chord::Note ();
@@ -43,15 +45,21 @@ my $filter_names = shift || '';         # chord,delay,pedal,offset,walk
 
 my @filter_names = split /\s*,\s*/, $filter_names;
 
+my $rtc = MIDI::RtController->new(
+    input  => $input_name,
+    output => $output_name,
+);
+my $rtf = MIDI::RtController::Filter::Gene->new(rtc => $rtc);
+
 my %filter = (
-    chord  => sub { add_filters(chord  => \&chord_tone, 0) },
-    pedal  => sub { add_filters(pedal  => \&pedal_tone, 0) },
-    delay  => sub { add_filters(delay  => \&delay_tone, 0) },
-    arp    => sub { add_filters(arp    => \&arp_tone, 0) },
-    offset => sub { add_filters(offset => \&offset_tone, 0) },
-    walk   => sub { add_filters(walk   => \&walk_tone, 0) },
-    drums  => sub { add_filters(drums  => \&drums, 0) },
-    score  => sub { add_filters(score  => \&score, ['all']) },
+    chord  => sub { add_filters('chord', $rtf->curry::chord_tone, 0) },
+    pedal  => sub { add_filters('pedal', $rtf->curry::pedal_tone, 0) },
+    delay  => sub { add_filters('delay', $rtf->curry::delay_tone, 0) },
+    arp    => sub { add_filters('arp', $rtf->curry::arp_tone, 0) },
+    offset => sub { add_filters('offset', $rtf->curry::offset_tone, 0) },
+    walk   => sub { add_filters('walk', $rtf->curry::walk_tone, 0) },
+    drums  => sub { add_filters('drums', $rtf->curry::drums, 0) },
+    score  => sub { add_filters('score', $rtf->curry::score, ['all']) },
 );
 
 $filter{$_}->() for @filter_names;
@@ -73,11 +81,6 @@ my $playing     = 0;
 my $events      = [];
 my $quantize    = 0;
 my $triplets    = 0;
-
-my $rtc = MIDI::RtController->new(
-    input  => $input_name,
-    output => $output_name,
-);
 
 my $tka = Term::TermKey::Async->new(
     term   => \*STDIN,
@@ -210,56 +213,6 @@ sub add_filters ($name, $coderef, $types) {
 
 #--- FILTERS ---#
 
-sub chord_notes ($note) {
-    my $mn = Music::Note->new($note, 'midinum');
-    my $base = uc($mn->format('isobase'));
-    my @scale = get_scale_notes(NOTE, SCALE);
-    my $index = first_index { $_ eq $base } @scale;
-    return $note if $index == -1;
-    my $mtr = Music::ToRoman->new(scale_note => $base);
-    my @chords = $mtr->get_scale_chords;
-    my $chord = $scale[$index] . $chords[$index];
-    my $cn = Music::Chord::Note->new;
-    my @notes = $cn->chord_with_octave($chord, $mn->octave);
-    @notes = map { Music::Note->new($_, 'ISO')->format('midinum') } @notes;
-    return @notes;
-}
-sub chord_tone ($dt, $event) {
-    my ($ev, $chan, $note, $vel) = $event->@*;
-    my @notes = chord_notes($note);
-    $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
-    return 0;
-}
-
-sub pedal_notes ($note) {
-    return PEDAL, $note, $note + 7;
-}
-sub pedal_tone ($dt, $event) {
-    my ($ev, $chan, $note, $vel) = $event->@*;
-    my @notes = pedal_notes($note);
-    my $delay_time = 0;
-    for my $n (@notes) {
-        $delay_time += $delay;
-        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
-    }
-    return 0;
-}
-
-sub delay_notes ($note) {
-    return ($note) x $feedback;
-}
-sub delay_tone ($dt, $event) {
-    my ($ev, $chan, $note, $vel) = $event->@*;
-    my @notes = delay_notes($note);
-    my $delay_time = 0;
-    for my $n (@notes) {
-        $delay_time += $delay;
-        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
-        $vel -= VELO_INC;
-    }
-    return 0;
-}
-
 sub arp_notes ($note) {
     $feedback = 2 if $feedback < 2;;
     if (@$arp >= 2 * $feedback) { # double, on/off note event
@@ -288,18 +241,6 @@ sub arp_tone ($dt, $event) {
         $delay_time += $delay;
     }
     return 1;
-}
-
-sub offset_notes ($note) {
-    my @notes = ($note);
-    push @notes, $note + $offset if $offset;
-    return @notes;
-}
-sub offset_tone ($dt, $event) {
-    my ($ev, $chan, $note, $vel) = $event->@*;
-    my @notes = offset_notes($note);
-    $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
-    return 0;
 }
 
 sub walk_notes ($note) {
