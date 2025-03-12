@@ -16,7 +16,6 @@ use MIDI::RtMidi::ScorePlayer ();
 use MIDI::Util qw(setup_score reverse_dump);
 use Music::Duration;
 use Music::Scales qw(get_scale_MIDI);
-use Music::VoiceGen ();
 use Number::Closest ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
@@ -52,8 +51,8 @@ my %filter = (
     pedal  => sub { add_filters('pedal', $rtf->curry::pedal_tone, 0) },
     delay  => sub { add_filters('delay', $rtf->curry::delay_tone, 0) },
     offset => sub { add_filters('offset', $rtf->curry::offset_tone, 0) },
+    walk   => sub { add_filters('walk', $rtf->curry::walk_tone, 0) },
     arp    => sub { add_filters('arp', \&arp_tone, 0) },
-    walk   => sub { add_filters('walk', \&walk_tone, 0) },
     drums  => sub { add_filters('drums', \&drums, 0) },
     score  => sub { add_filters('score', \&score, ['all']) },
 );
@@ -88,8 +87,8 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 's') { status() }
         elsif ($pressed eq 'x') { clear() }
         elsif ($pressed =~ /^\d$/) { $feedback = $pressed; log_it(feedback => $feedback) }
-        elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0; log_it(delay => $delay) }
-        elsif ($pressed eq '>') { $delay += DELAY_INC; log_it(delay => $delay) }
+        elsif ($pressed eq '<') { $rtf->delay($rtf->delay - DELAY_INC) unless $rtf->delay <= 0; log_it(delay => $rtf->delay) }
+        elsif ($pressed eq '>') { $rtf->delay($rtf->delay + DELAY_INC); log_it(delay => $rtf->delay) }
         elsif ($pressed eq 'a') { $filter{arp}->()    unless is_member(arp => \@filter_names);    log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'c') { $filter{chord}->()  unless is_member(chord => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'p') { $filter{pedal}->()  unless is_member(pedal => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
@@ -237,30 +236,6 @@ sub arp_tone ($dt, $event) {
         $delay_time += $delay;
     }
     return 1;
-}
-
-sub walk_notes ($note) {
-    my $mn = Music::Note->new($note, 'midinum');
-    my @pitches = (
-        get_scale_MIDI(NOTE, $mn->octave, $scale_name),
-        get_scale_MIDI(NOTE, $mn->octave + 1, $scale_name),
-    );
-    my @intervals = qw(-3 -2 -1 1 2 3);
-    my $voice = Music::VoiceGen->new(
-        pitches   => \@pitches,
-        intervals => \@intervals,
-    );
-    return map { $voice->rand } 1 .. $feedback;
-}
-sub walk_tone ($dt, $event) {
-    my ($ev, $chan, $note, $vel) = $event->@*;
-    my @notes = walk_notes($note);
-    my $delay_time = 0;
-    for my $n (@notes) {
-        $delay_time += $delay;
-        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
-    }
-    return 0;
 }
 
 sub drum_parts ($note) {
