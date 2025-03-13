@@ -61,9 +61,9 @@ my $scales    = Array::Circular->new(SCALE, 'minor');
 my $direction = 1; # offset 0=below, 1=above
 my $recording = 0;
 my $playing   = 0;
-my $events    = [];
 my $quantize  = 0;
 my $triplets  = 0;
+my $events    = [];
 
 my $tka = Term::TermKey::Async->new(
     term   => \*STDIN,
