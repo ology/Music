@@ -98,15 +98,15 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '<') { $rtf->delay($rtf->delay - DELAY_INC) unless $rtf->delay <= 0; log_it(delay => $rtf->delay) }
         elsif ($pressed eq '>') { $rtf->delay($rtf->delay + DELAY_INC); log_it(delay => $rtf->delay) }
         elsif ($pressed eq 't') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
-        elsif ($pressed eq 'm') { $scale_name = $scale_names->next; log_it(scale_name => $scale_name) }
-        elsif ($pressed eq 'u') { $channel = $channels->next; log_it(channel => $channel) }
+        elsif ($pressed eq 'm') { $rtf->scale($scale_names->next); log_it(scale_name => $rtf->scale) }
+        elsif ($pressed eq 'u') { $rtf->channel($channels->next); log_it(channel => $rtf->channel) }
         elsif ($pressed eq 'q') { $quantize = $quantize ? 0 : 1; log_it(quantize => $quantize) }
         elsif ($pressed eq 'i') { $triplets = $triplets ? 0 : 1; log_it(triplets => $triplets) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
-        elsif ($pressed eq '!') { $offset += $direction ? 1  : -1;  log_it(offset => $offset) }
-        elsif ($pressed eq '@') { $offset += $direction ? 2  : -2;  log_it(offset => $offset) }
-        elsif ($pressed eq ')') { $offset += $direction ? 12 : -12; log_it(offset => $offset) }
-        elsif ($pressed eq '(') { $offset = 0; log_it(offset => $offset) }
+        elsif ($pressed eq '!') { $rtf->offset($rtf->offset + ($direction ? 1 : -1)); log_it(offset => $rtf->offset) }
+        elsif ($pressed eq '@') { $rtf->offset($rtf->offset + ($direction ? 2 : -2)); log_it(offset => $rtf->offset) }
+        elsif ($pressed eq ')') { $rtf->offset($rtf->offset + ($direction ? 12 : -12)); log_it(offset => $rtf->offset) }
+        elsif ($pressed eq '(') { $rtf->offset(0); log_it(offset => $offset) }
         elsif ($pressed eq ',') { $bpm += $direction ? 1  : -1;  log_it(bpm => $bpm) }
         elsif ($pressed eq '.') { $bpm += $direction ? 2  : -2;  log_it(bpm => $bpm) }
         elsif ($pressed eq '/') { $bpm += $direction ? 10 : -10; log_it(bpm => $bpm) }
