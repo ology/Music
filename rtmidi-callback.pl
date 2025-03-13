@@ -33,7 +33,7 @@ use constant BPM => 120; # beats per minute
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth output
-my $filter_names = shift || '';         # chord,delay,pedal,offset,walk
+my $filter_names = shift || '';         # chord,delay,pedal,offset,walk,etc.
 
 my @filter_names = split /\s*,\s*/, $filter_names;
 
