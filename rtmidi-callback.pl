@@ -130,10 +130,10 @@ sub clear {
     $rtfg->scale(SCALE);
     $rtfg->bpm(BPM);
     $rtfd->bpm(BPM);
-    $direction    = 1; # offset 0=below, 1=above
-    $quantize     = 0;
-    $triplets     = 0;
-    $events       = [];
+    $direction = 1; # offset 0=below, 1=above
+    $quantize  = 0;
+    $triplets  = 0;
+    $events    = [];
 }
 
 sub status {
