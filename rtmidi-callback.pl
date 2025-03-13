@@ -133,12 +133,13 @@ sub clear {
     $rtfg->feedback(1);
     $rtfd->feedback(1);
     $rtfg->offset(OFFSET);
-    $direction    = 1; # offset 0=below, 1=above
     $rtfg->scale(SCALE);
-    $bpm          = BPM;
-    $events       = [];
+    $rtfg->bpm(BPM);
+    $rtfd->bpm(BPM);
+    $direction    = 1; # offset 0=below, 1=above
     $quantize     = 0;
     $triplets     = 0;
+    $events       = [];
 }
 
 sub status {
@@ -152,7 +153,7 @@ sub status {
         'Offset distance: ' . $rtfg->offset,
         'Offset direction: ' . ($direction ? 'up' : 'down'),
         'Scale name: ' . $rtfg->scale,
-        "BPM: $bpm",
+        'BPM: ' . $rtfg->bpm,
         "Playing: $playing",
         "Recording: $recording",
         "Quantize: $quantize",
@@ -211,8 +212,8 @@ sub score ($dt, $event) {
         $recording = 1;
         log_it(recording => 'on');
         my $d = MIDI::Drummer::Tiny->new(
-            bpm  => $bpm,
-            bars => $feedback,
+            bpm  => $rtfg->bpm,
+            bars => $rtfg->feedback,
         );
         my $part = sub {
             my (%args) = @_;
@@ -221,7 +222,7 @@ sub score ($dt, $event) {
         MIDI::RtMidi::ScorePlayer->new(
           device   => $rtc->_midi_out,
           score    => $d->score,
-          common   => { drummer => $d, feedback => $feedback },
+          common   => { drummer => $d, feedback => $rtfg->feedback },
           parts    => [ $part ],
           sleep    => 0,
           infinite => 0,
@@ -258,12 +259,12 @@ sub score ($dt, $event) {
                     $args{score}->n($dura, $args{events}[$i]{note});
                 }
             };
-            my $score = setup_score(lead_in => 0, bpm => $bpm);
+            my $score = setup_score(lead_in => 0, bpm => $rtfg->bpm);
             my $lengths = reverse_dump('length');
             %$lengths = map { $_ => $lengths->{$_} } grep { $lengths->{$_} !~ /^t/ } keys %$lengths
                 unless $triplets;
             %$lengths = map { $_ => $lengths->{$_} } grep { $lengths->{$_} !~ /[xyz]/ } keys %$lengths; # UGH
-            my $common = { score => $score, events => $events, bpm => $bpm, lengths => $lengths };
+            my $common = { score => $score, events => $events, bpm => $rtfg->bpm, lengths => $lengths };
             MIDI::RtMidi::ScorePlayer->new(
               device   => $rtc->_midi_out,
               score    => $score,
