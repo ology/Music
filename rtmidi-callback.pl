@@ -127,13 +127,13 @@ sub clear {
     $rtc->filters({});
     $rtf->channel(CHANNEL);
     @filter_names = ();
-    $arp          = [];
-    $arp_type     = 'up';
-    $delay        = 0.1; # seconds
-    $feedback     = 1;
-    $offset       = OFFSET;
+    $rtf->arp([]);
+    $rtf->arp_type('up');
+    $rtf->delay(0.1); # seconds
+    $rtf->feedback(1);
+    $rtf->offset(OFFSET);
     $direction    = 1; # offset 0=below, 1=above
-    $scale_name   = SCALE;
+    $rtf->scale(SCALE);
     $bpm          = BPM;
     $events       = [];
     $quantize     = 0;
