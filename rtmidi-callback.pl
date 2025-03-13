@@ -106,7 +106,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '!') { $rtf->offset($rtf->offset + ($direction ? 1 : -1)); log_it(offset => $rtf->offset) }
         elsif ($pressed eq '@') { $rtf->offset($rtf->offset + ($direction ? 2 : -2)); log_it(offset => $rtf->offset) }
         elsif ($pressed eq ')') { $rtf->offset($rtf->offset + ($direction ? 12 : -12)); log_it(offset => $rtf->offset) }
-        elsif ($pressed eq '(') { $rtf->offset(0); log_it(offset => $offset) }
+        elsif ($pressed eq '(') { $rtf->offset(0); log_it(offset => $rtf->offset) }
         elsif ($pressed eq ',') { $bpm += $direction ? 1  : -1;  log_it(bpm => $bpm) }
         elsif ($pressed eq '.') { $bpm += $direction ? 2  : -2;  log_it(bpm => $bpm) }
         elsif ($pressed eq '/') { $bpm += $direction ? 10 : -10; log_it(bpm => $bpm) }
