@@ -57,7 +57,6 @@ my %filter = (
 $filter{$_}->() for @filter_names;
 
 my $channels  = Array::Circular->new(SCALE, DRUMS);
-my $arp_types = Array::Circular->new(qw/up down random/);
 my $scales    = Array::Circular->new(SCALE, 'minor');
 my $direction = 1; # offset 0=below, 1=above
 my $recording = 0;
@@ -86,7 +85,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed =~ /^\d$/) { $rtfg->feedback($pressed); $rtfd->feedback($pressed); log_it(feedback => $rtfg->feedback) }
         elsif ($pressed eq '<') { $rtfg->delay($rtfg->delay - DELAY_INC) unless $rtfg->delay <= 0; log_it(delay => $rtfg->delay) }
         elsif ($pressed eq '>') { $rtfg->delay($rtfg->delay + DELAY_INC); log_it(delay => $rtfg->delay) }
-        elsif ($pressed eq 't') { $rtfg->arp_type($arp_types->next); log_it(arp_type => $rtfg->arp_type) }
+        elsif ($pressed eq 't') { $rtfg->arp_type($rtfg->arp_types->next); log_it(arp_type => $rtfg->arp_type) }
         elsif ($pressed eq 'm') { $rtfg->scale($scales->next); log_it(scales => $rtfg->scale) }
         elsif ($pressed eq 'u') { $rtfg->channel($channels->next); log_it(channel => $rtfg->channel) }
         elsif ($pressed eq '!') { $rtfg->offset($rtfg->offset + ($direction ? 1 : -1)); log_it(offset => $rtfg->offset) }
