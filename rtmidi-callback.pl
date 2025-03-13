@@ -12,6 +12,7 @@ use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
 use MIDI::RtController::Filter::Gene ();
+use MIDI::RtController::Filter::Drums ();
 use MIDI::RtMidi::ScorePlayer ();
 use MIDI::Util qw(setup_score reverse_dump);
 use Music::Duration;
@@ -39,16 +40,17 @@ my $rtc = MIDI::RtController->new(
     input  => $input_name,
     output => $output_name,
 );
-my $rtf = MIDI::RtController::Filter::Gene->new(rtc => $rtc);
+my $rtfg = MIDI::RtController::Filter::Gene->new(rtc => $rtc);
+my $rtfd = MIDI::RtController::Filter::Drums->new(rtc => $rtc);
 
 my %filter = (
-    chord  => sub { add_filters('chord', $rtf->curry::chord_tone, 0) },
-    pedal  => sub { add_filters('pedal', $rtf->curry::pedal_tone, 0) },
-    delay  => sub { add_filters('delay', $rtf->curry::delay_tone, 0) },
-    offset => sub { add_filters('offset', $rtf->curry::offset_tone, 0) },
-    walk   => sub { add_filters('walk', $rtf->curry::walk_tone, 0) },
-    arp    => sub { add_filters('arp', $rtf->curry::arp_tone, 0) },
-    drums  => sub { add_filters('drums', \&drums, 0) },
+    chord  => sub { add_filters('chord', $rtfg->curry::chord_tone, 0) },
+    pedal  => sub { add_filters('pedal', $rtfg->curry::pedal_tone, 0) },
+    delay  => sub { add_filters('delay', $rtfg->curry::delay_tone, 0) },
+    offset => sub { add_filters('offset', $rtfg->curry::offset_tone, 0) },
+    walk   => sub { add_filters('walk', $rtfg->curry::walk_tone, 0) },
+    arp    => sub { add_filters('arp', $rtfg->curry::arp_tone, 0) },
+    drums  => sub { add_filters('drums', $rtfd->curry::drums, 0) },
     score  => sub { add_filters('score', \&score, ['all']) },
 );
 
@@ -88,19 +90,19 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member(walk => \@filter_names);   log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member(drums => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'r') { $filter{score}->()  unless is_member(score => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed =~ /^\d$/) { $rtf->feedback($pressed); log_it(feedback => $rtf->feedback) }
-        elsif ($pressed eq '<') { $rtf->delay($rtf->delay - DELAY_INC) unless $rtf->delay <= 0; log_it(delay => $rtf->delay) }
-        elsif ($pressed eq '>') { $rtf->delay($rtf->delay + DELAY_INC); log_it(delay => $rtf->delay) }
+        elsif ($pressed =~ /^\d$/) { $rtfg->feedback($pressed); log_it(feedback => $rtfg->feedback) }
+        elsif ($pressed eq '<') { $rtfg->delay($rtfg->delay - DELAY_INC) unless $rtfg->delay <= 0; log_it(delay => $rtfg->delay) }
+        elsif ($pressed eq '>') { $rtfg->delay($rtfg->delay + DELAY_INC); log_it(delay => $rtfg->delay) }
         elsif ($pressed eq 't') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
-        elsif ($pressed eq 'm') { $rtf->scale($scale_names->next); log_it(scale_name => $rtf->scale) }
-        elsif ($pressed eq 'u') { $rtf->channel($channels->next); log_it(channel => $rtf->channel) }
+        elsif ($pressed eq 'm') { $rtfg->scale($scale_names->next); log_it(scale_name => $rtfg->scale) }
+        elsif ($pressed eq 'u') { $rtfg->channel($channels->next); log_it(channel => $rtfg->channel) }
         elsif ($pressed eq 'q') { $quantize = $quantize ? 0 : 1; log_it(quantize => $quantize) }
         elsif ($pressed eq 'i') { $triplets = $triplets ? 0 : 1; log_it(triplets => $triplets) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
-        elsif ($pressed eq '!') { $rtf->offset($rtf->offset + ($direction ? 1 : -1)); log_it(offset => $rtf->offset) }
-        elsif ($pressed eq '@') { $rtf->offset($rtf->offset + ($direction ? 2 : -2)); log_it(offset => $rtf->offset) }
-        elsif ($pressed eq ')') { $rtf->offset($rtf->offset + ($direction ? 12 : -12)); log_it(offset => $rtf->offset) }
-        elsif ($pressed eq '(') { $rtf->offset(0); log_it(offset => $rtf->offset) }
+        elsif ($pressed eq '!') { $rtfg->offset($rtfg->offset + ($direction ? 1 : -1)); log_it(offset => $rtfg->offset) }
+        elsif ($pressed eq '@') { $rtfg->offset($rtfg->offset + ($direction ? 2 : -2)); log_it(offset => $rtfg->offset) }
+        elsif ($pressed eq ')') { $rtfg->offset($rtfg->offset + ($direction ? 12 : -12)); log_it(offset => $rtfg->offset) }
+        elsif ($pressed eq '(') { $rtfg->offset(0); log_it(offset => $rtfg->offset) }
         elsif ($pressed eq ',') { $bpm += $direction ? 1  : -1;  log_it(bpm => $bpm) }
         elsif ($pressed eq '.') { $bpm += $direction ? 2  : -2;  log_it(bpm => $bpm) }
         elsif ($pressed eq '/') { $bpm += $direction ? 10 : -10; log_it(bpm => $bpm) }
@@ -123,15 +125,15 @@ sub is_member ($name, $items) {
 
 sub clear {
     $rtc->filters({});
-    $rtf->channel(CHANNEL);
+    $rtfg->channel(CHANNEL);
     @filter_names = ();
-    $rtf->arp([]);
-    $rtf->arp_type('up');
-    $rtf->delay(0.1); # seconds
-    $rtf->feedback(1);
-    $rtf->offset(OFFSET);
+    $rtfg->arp([]);
+    $rtfg->arp_type('up');
+    $rtfg->delay(0.1); # seconds
+    $rtfg->feedback(1);
+    $rtfg->offset(OFFSET);
     $direction    = 1; # offset 0=below, 1=above
-    $rtf->scale(SCALE);
+    $rtfg->scale(SCALE);
     $bpm          = BPM;
     $events       = [];
     $quantize     = 0;
@@ -141,14 +143,14 @@ sub clear {
 sub status {
     print "\n", join "\n",
         "Filter(s): @filter_names",
-        'Channel: ' . $rtf->channel,
-        'Pedal-tone: ' . $rtf->pedal,
-        'Arp type: ' . $rtf->arp_type,
-        'Delay: ' . $rtf->delay,
-        'Feedback: ' . $rtf->feedback,
-        'Offset distance: ' . $rtf->offset,
+        'Channel: ' . $rtfg->channel,
+        'Pedal-tone: ' . $rtfg->pedal,
+        'Arp type: ' . $rtfg->arp_type,
+        'Delay: ' . $rtfg->delay,
+        'Feedback: ' . $rtfg->feedback,
+        'Offset distance: ' . $rtfg->offset,
         'Offset direction: ' . ($direction ? 'up' : 'down'),
-        'Scale name: ' . $rtf->scale,
+        'Scale name: ' . $rtfg->scale,
         "BPM: $bpm",
         "Playing: $playing",
         "Recording: $recording",
@@ -201,42 +203,6 @@ sub add_filters ($name, $coderef, $types) {
 }
 
 #--- FILTERS ---#
-
-sub drum_parts ($note) {
-    my $part;
-    if ($note == 99) {
-        $part = sub {
-            my (%args) = @_;
-            $args{drummer}->metronome4;
-        };
-    }
-    else {
-        $part = sub {
-            my (%args) = @_;
-            $args{drummer}->note($args{drummer}->sixtyfourth, $note);
-        };
-    }
-    return $part;
-}
-sub drums ($dt, $event) {
-    print "Event: @$event\n" if $rtc->verbose;
-    my ($ev, $chan, $note, $vel) = $event->@*;
-    return 1 unless $ev eq 'note_on';
-    my $part = drum_parts($note);
-    my $d = MIDI::Drummer::Tiny->new(
-        bpm  => $bpm,
-        bars => $feedback,
-    );
-    MIDI::RtMidi::ScorePlayer->new(
-      device   => $rtc->_midi_out,
-      score    => $d->score,
-      common   => { drummer => $d },
-      parts    => [ $part ],
-      sleep    => 0,
-      infinite => 0,
-    )->play_async->retain;
-    return 1;
-}
 
 sub score ($dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
