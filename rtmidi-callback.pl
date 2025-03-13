@@ -50,7 +50,7 @@ my %filter = (
     delay  => sub { add_filters('delay', $rtf->curry::delay_tone, 0) },
     offset => sub { add_filters('offset', $rtf->curry::offset_tone, 0) },
     walk   => sub { add_filters('walk', $rtf->curry::walk_tone, 0) },
-    arp    => sub { add_filters('arp', \&arp_tone, 0) },
+    arp    => sub { add_filters('arp', $rtf->curry::arp_tone, 0) },
     drums  => sub { add_filters('drums', \&drums, 0) },
     score  => sub { add_filters('score', \&score, ['all']) },
 );
@@ -205,36 +205,6 @@ sub add_filters ($name, $coderef, $types) {
 }
 
 #--- FILTERS ---#
-
-sub arp_notes ($note) {
-    $feedback = 2 if $feedback < 2;;
-    if (@$arp >= 2 * $feedback) { # double, on/off note event
-        shift @$arp;
-        shift @$arp;
-    }
-    push @$arp, $note;
-    my @notes = uniq @$arp;
-    if ($arp_type eq 'up') {
-        @notes = sort { $a <=> $b } @notes;
-    }
-    elsif ($arp_type eq 'down') {
-        @notes = sort { $b <=> $a } @notes;
-    }
-    elsif ($arp_type eq 'random') {
-        @notes = shuffle @notes;
-    }
-    return @notes;
-}
-sub arp_tone ($dt, $event) {
-    my ($ev, $chan, $note, $vel) = $event->@*;
-    my @notes = arp_notes($note);
-    my $delay_time = 0;
-    for my $n (@notes) {
-        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
-        $delay_time += $delay;
-    }
-    return 1;
-}
 
 sub drum_parts ($note) {
     my $part;
