@@ -86,9 +86,6 @@ my $tka = Term::TermKey::Async->new(
         if ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
         elsif ($pressed eq 'x') { clear() }
-        elsif ($pressed =~ /^\d$/) { $feedback = $pressed; log_it(feedback => $feedback) }
-        elsif ($pressed eq '<') { $rtf->delay($rtf->delay - DELAY_INC) unless $rtf->delay <= 0; log_it(delay => $rtf->delay) }
-        elsif ($pressed eq '>') { $rtf->delay($rtf->delay + DELAY_INC); log_it(delay => $rtf->delay) }
         elsif ($pressed eq 'a') { $filter{arp}->()    unless is_member(arp => \@filter_names);    log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'c') { $filter{chord}->()  unless is_member(chord => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'p') { $filter{pedal}->()  unless is_member(pedal => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
@@ -97,6 +94,9 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member(walk => \@filter_names);   log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member(drums => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
         elsif ($pressed eq 'r') { $filter{score}->()  unless is_member(score => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
+        elsif ($pressed =~ /^\d$/) { $rtf->feedback($pressed); log_it(feedback => $rtf->feedback) }
+        elsif ($pressed eq '<') { $rtf->delay($rtf->delay - DELAY_INC) unless $rtf->delay <= 0; log_it(delay => $rtf->delay) }
+        elsif ($pressed eq '>') { $rtf->delay($rtf->delay + DELAY_INC); log_it(delay => $rtf->delay) }
         elsif ($pressed eq 't') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
         elsif ($pressed eq 'm') { $scale_name = $scale_names->next; log_it(scale_name => $scale_name) }
         elsif ($pressed eq 'u') { $channel = $channels->next; log_it(channel => $channel) }
