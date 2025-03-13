@@ -60,7 +60,6 @@ my $channels    = Array::Circular->new(SCALE, DRUMS);
 my $arp_types   = Array::Circular->new(qw/up down random/);
 my $scale_names = Array::Circular->new(SCALE, 'minor');
 my $direction   = 1; # offset 0=below, 1=above
-my $bpm         = BPM;
 my $recording   = 0;
 my $playing     = 0;
 my $events      = [];
@@ -97,9 +96,9 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'q') { $quantize = $quantize ? 0 : 1; log_it(quantize => $quantize) }
         elsif ($pressed eq 'i') { $triplets = $triplets ? 0 : 1; log_it(triplets => $triplets) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
-        elsif ($pressed eq ',') { $bpm += $direction ? 1  : -1;  log_it(bpm => $bpm) }
-        elsif ($pressed eq '.') { $bpm += $direction ? 2  : -2;  log_it(bpm => $bpm) }
-        elsif ($pressed eq '/') { $bpm += $direction ? 10 : -10; log_it(bpm => $bpm) }
+        elsif ($pressed eq ',') { $rtfd->bpm($rtfd->bpm + ($direction ? 1 : -1)); log_it(bpm => $rtfd->bpm) }
+        elsif ($pressed eq '.') { $rtfd->bpm($rtfd->bpm + ($direction ? 2 : -2)); log_it(bpm => $rtfd->bpm) }
+        elsif ($pressed eq '/') { $rtfd->bpm($rtfd->bpm + ($direction ? 10 : -10)); log_it(bpm => $rtfd->bpm) }
         $rtc->loop->loop_stop if $key->type_is_unicode and
                                  $key->utf8 eq 'C' and
                                  $key->modifiers & KEYMOD_CTRL;
@@ -128,7 +127,6 @@ sub clear {
     $rtfd->feedback(1);
     $rtfg->offset(OFFSET);
     $rtfg->scale(SCALE);
-    $rtfg->bpm(BPM);
     $rtfd->bpm(BPM);
     $direction = 1; # offset 0=below, 1=above
     $quantize  = 0;
@@ -147,7 +145,7 @@ sub status {
         'Offset distance: ' . $rtfg->offset,
         'Offset direction: ' . ($direction ? 'up' : 'down'),
         'Scale name: ' . $rtfg->scale,
-        'BPM: ' . $rtfg->bpm,
+        'BPM: ' . $rtfd->bpm,
         "Playing: $playing",
         "Recording: $recording",
         "Quantize: $quantize",
@@ -206,8 +204,8 @@ sub score ($dt, $event) {
         $recording = 1;
         log_it(recording => 'on');
         my $d = MIDI::Drummer::Tiny->new(
-            bpm  => $rtfg->bpm,
-            bars => $rtfg->feedback,
+            bpm  => $rtfd->bpm,
+            bars => $rtfd->feedback,
         );
         my $part = sub {
             my (%args) = @_;
@@ -253,12 +251,12 @@ sub score ($dt, $event) {
                     $args{score}->n($dura, $args{events}[$i]{note});
                 }
             };
-            my $score = setup_score(lead_in => 0, bpm => $rtfg->bpm);
+            my $score = setup_score(lead_in => 0, bpm => $rtfd->bpm);
             my $lengths = reverse_dump('length');
             %$lengths = map { $_ => $lengths->{$_} } grep { $lengths->{$_} !~ /^t/ } keys %$lengths
                 unless $triplets;
             %$lengths = map { $_ => $lengths->{$_} } grep { $lengths->{$_} !~ /[xyz]/ } keys %$lengths; # UGH
-            my $common = { score => $score, events => $events, bpm => $rtfg->bpm, lengths => $lengths };
+            my $common = { score => $score, events => $events, bpm => $rtfd->bpm, lengths => $lengths };
             MIDI::RtMidi::ScorePlayer->new(
               device   => $rtc->_midi_out,
               score    => $score,
