@@ -15,7 +15,6 @@ use MIDI::RtController::Filter::Gene ();
 use MIDI::RtMidi::ScorePlayer ();
 use MIDI::Util qw(setup_score reverse_dump);
 use Music::Duration;
-use Music::Scales qw(get_scale_MIDI);
 use Number::Closest ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
