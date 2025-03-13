@@ -22,8 +22,6 @@ use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 use constant TICKS => 96; # MIDI-Perl default
 use constant CHANNEL => 0;
 use constant DRUMS   => 9;
-# for the pedal-tone filter:
-use constant PEDAL => 55; # G below middle C
 # for the pedal-tone, delay and arp filters:
 use constant DELAY_INC => 0.01;
 use constant VELO_INC  => 10; # volume change offset
@@ -147,14 +145,14 @@ sub clear {
 sub status {
     print "\n", join "\n",
         "Filter(s): @filter_names",
-        "Channel: $channel",
-        'Pedal-tone: ' . PEDAL,
+        "Channel: $rtf->channel",
+        'Pedal-tone: ' . $rtf->pedal,
         "Arp type: $arp_type",
-        "Delay: $delay",
-        "Feedback: $feedback",
-        "Offset distance: $offset",
+        "Delay: $rtf->delay",
+        "Feedback: $rtf->feedback",
+        "Offset distance: $rtf->offset",
         'Offset direction: ' . ($direction ? 'up' : 'down'),
-        "Scale name: $scale_name",
+        "Scale name: $rtf->scale",
         "BPM: $bpm",
         "Playing: $playing",
         "Recording: $recording",
