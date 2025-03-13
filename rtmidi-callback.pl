@@ -75,13 +75,13 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 's') { status() }
         elsif ($pressed eq 'x') { clear() }
         elsif ($pressed eq 'a') { engage('arp') }
-        elsif ($pressed eq 'c') { engage('chord' ) }
-        elsif ($pressed eq 'p') { engage('pedal' ) }
-        elsif ($pressed eq 'd') { engage('delay' ) }
-        elsif ($pressed eq 'o') { engage('offset' ) }
-        elsif ($pressed eq 'w') { engage('walk' ) }
-        elsif ($pressed eq 'y') { engage('drums' ) }
-        elsif ($pressed eq 'r') { engage('score' ) }
+        elsif ($pressed eq 'c') { engage('chord') }
+        elsif ($pressed eq 'p') { engage('pedal') }
+        elsif ($pressed eq 'd') { engage('delay') }
+        elsif ($pressed eq 'o') { engage('offset') }
+        elsif ($pressed eq 'w') { engage('walk') }
+        elsif ($pressed eq 'y') { engage('drums') }
+        elsif ($pressed eq 'r') { engage('score') }
         elsif ($pressed =~ /^\d$/) { $rtfg->feedback($pressed); $rtfd->feedback($pressed); log_it(feedback => $rtfg->feedback) }
         elsif ($pressed eq '<') { $rtfg->delay($rtfg->delay - DELAY_INC) unless $rtfg->delay <= 0; log_it(delay => $rtfg->delay) }
         elsif ($pressed eq '>') { $rtfg->delay($rtfg->delay + DELAY_INC); log_it(delay => $rtfg->delay) }
