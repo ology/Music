@@ -82,7 +82,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'w') { engage('walk') }
         elsif ($pressed eq 'y') { engage('drums') }
         elsif ($pressed eq 'r') { engage('score') }
-        elsif ($pressed =~ /^\d$/) { $rtfg->feedback($pressed); $rtfd->feedback($pressed); log_it(feedback => $rtfg->feedback) }
+        elsif ($pressed =~ /^\d$/) { $rtfg->feedback($pressed); $rtfd->bars($pressed); log_it(feedback => $rtfg->feedback) }
         elsif ($pressed eq '<') { $rtfg->delay($rtfg->delay - DELAY_INC) unless $rtfg->delay <= 0; log_it(delay => $rtfg->delay) }
         elsif ($pressed eq '>') { $rtfg->delay($rtfg->delay + DELAY_INC); log_it(delay => $rtfg->delay) }
         elsif ($pressed eq 't') { $rtfg->arp_type($rtfg->arp_types->next); log_it(arp_type => $rtfg->arp_type) }
@@ -123,7 +123,7 @@ sub clear {
     $rtfg->arp_type('up');
     $rtfg->delay(0.1); # seconds
     $rtfg->feedback(1);
-    $rtfd->feedback(1);
+    $rtfd->bars(1);
     $rtfg->offset(OFFSET);
     $rtfg->scale(SCALE);
     $rtfd->bpm(BPM);
@@ -208,22 +208,20 @@ sub score ($dt, $event) {
         $recording = 1;
         log_it(recording => 'on');
         my $d = MIDI::Drummer::Tiny->new(
-            bpm  => $rtfd->bpm,
-            bars => $rtfd->feedback,
+            bpm => $rtfd->bpm,
         );
         my $part = sub {
             my (%args) = @_;
-            $args{drummer}->count_in($args{feedback});
+            $args{drummer}->count_in($args{bars});
         };
         MIDI::RtMidi::ScorePlayer->new(
           device   => $rtc->_midi_out,
           score    => $d->score,
-          common   => { drummer => $d, feedback => $rtfg->feedback },
+          common   => { drummer => $d, bars => $rtfd->bars },
           parts    => [ $part ],
           sleep    => 0,
           infinite => 0,
         )->play_async->retain;
-        $playing = 0;
     }
     elsif ($ev eq 'control_change' && $note == 25 && $vel == 127) { # play
         log_it(recording => 'off');
