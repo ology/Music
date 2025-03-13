@@ -131,6 +131,7 @@ sub clear {
     $rtfg->arp_type('up');
     $rtfg->delay(0.1); # seconds
     $rtfg->feedback(1);
+    $rtfd->feedback(1);
     $rtfg->offset(OFFSET);
     $direction    = 1; # offset 0=below, 1=above
     $rtfg->scale(SCALE);
