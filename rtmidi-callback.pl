@@ -57,9 +57,7 @@ my %filter = (
 $filter{$_}->() for @filter_names;
 
 my $channels    = Array::Circular->new(SCALE, DRUMS);
-my $arp         = [];
 my $arp_types   = Array::Circular->new(qw/up down random/);
-my $arp_type    = 'up';
 my $delay       = 0.1; # seconds
 my $feedback    = 1;
 my $offset      = OFFSET;
