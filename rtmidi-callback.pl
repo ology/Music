@@ -74,14 +74,14 @@ my $tka = Term::TermKey::Async->new(
         if ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
         elsif ($pressed eq 'x') { clear() }
-        elsif ($pressed eq 'a') { $filter{arp}->()    unless is_member(arp => \@filter_names);    log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed eq 'c') { $filter{chord}->()  unless is_member(chord => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed eq 'p') { $filter{pedal}->()  unless is_member(pedal => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed eq 'd') { $filter{delay}->()  unless is_member(delay => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed eq 'o') { $filter{offset}->() unless is_member(offset => \@filter_names); log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed eq 'w') { $filter{walk}->()   unless is_member(walk => \@filter_names);   log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed eq 'y') { $filter{drums}->()  unless is_member(drums => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
-        elsif ($pressed eq 'r') { $filter{score}->()  unless is_member(score => \@filter_names);  log_it(filters => join(', ', @filter_names)) }
+        elsif ($pressed eq 'a') { engage('arp') }
+        elsif ($pressed eq 'c') { engage('chord' ) }
+        elsif ($pressed eq 'p') { engage('pedal' ) }
+        elsif ($pressed eq 'd') { engage('delay' ) }
+        elsif ($pressed eq 'o') { engage('offset' ) }
+        elsif ($pressed eq 'w') { engage('walk' ) }
+        elsif ($pressed eq 'y') { engage('drums' ) }
+        elsif ($pressed eq 'r') { engage('score' ) }
         elsif ($pressed =~ /^\d$/) { $rtfg->feedback($pressed); $rtfd->feedback($pressed); log_it(feedback => $rtfg->feedback) }
         elsif ($pressed eq '<') { $rtfg->delay($rtfg->delay - DELAY_INC) unless $rtfg->delay <= 0; log_it(delay => $rtfg->delay) }
         elsif ($pressed eq '>') { $rtfg->delay($rtfg->delay + DELAY_INC); log_it(delay => $rtfg->delay) }
@@ -187,6 +187,11 @@ sub help {
         'Ctrl+C : stop the program',
     ;
     print "\n\n";
+}
+
+sub engage ($name) {
+    $filter{$name}->() unless is_member($name => \@filter_names);
+    log_it(filters => join(', ', @filter_names));
 }
 
 sub add_filters ($name, $coderef, $types) {
