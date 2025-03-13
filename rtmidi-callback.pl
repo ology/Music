@@ -23,9 +23,7 @@ use constant CHANNEL => 0;
 use constant DRUMS   => 9;
 # for the pedal-tone, delay and arp filters:
 use constant DELAY_INC => 0.01;
-use constant VELO_INC  => 10; # volume change offset
 # for the modal chord filter:
-use constant NOTE  => 'C';     # key
 use constant SCALE => 'major'; # mode
 # for the offset filter:
 use constant OFFSET => -12; # octave below
