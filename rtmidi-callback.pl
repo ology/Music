@@ -58,11 +58,7 @@ $filter{$_}->() for @filter_names;
 
 my $channels    = Array::Circular->new(SCALE, DRUMS);
 my $arp_types   = Array::Circular->new(qw/up down random/);
-my $delay       = 0.1; # seconds
-my $feedback    = 1;
-my $offset      = OFFSET;
 my $direction   = 1; # offset 0=below, 1=above
-my $scale_name  = SCALE;
 my $scale_names = Array::Circular->new(SCALE, 'minor');
 my $bpm         = BPM;
 my $recording   = 0;
