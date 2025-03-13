@@ -56,7 +56,6 @@ my %filter = (
 
 $filter{$_}->() for @filter_names;
 
-my $channel     = CHANNEL;
 my $channels    = Array::Circular->new(SCALE, DRUMS);
 my $arp         = [];
 my $arp_types   = Array::Circular->new(qw/up down random/);
@@ -126,7 +125,7 @@ sub is_member ($name, $items) {
 
 sub clear {
     $rtc->filters({});
-    $channel      = CHANNEL;
+    $rtf->channel(CHANNEL);
     @filter_names = ();
     $arp          = [];
     $arp_type     = 'up';
@@ -144,14 +143,14 @@ sub clear {
 sub status {
     print "\n", join "\n",
         "Filter(s): @filter_names",
-        "Channel: $rtf->channel",
+        'Channel: ' . $rtf->channel,
         'Pedal-tone: ' . $rtf->pedal,
-        "Arp type: $arp_type",
-        "Delay: $rtf->delay",
-        "Feedback: $rtf->feedback",
-        "Offset distance: $rtf->offset",
+        'Arp type: ' . $rtf->arp_type,
+        'Delay: ' . $rtf->delay,
+        'Feedback: ' . $rtf->feedback,
+        'Offset distance: ' . $rtf->offset,
         'Offset direction: ' . ($direction ? 'up' : 'down'),
-        "Scale name: $rtf->scale",
+        'Scale name: ' . $rtf->scale,
         "BPM: $bpm",
         "Playing: $playing",
         "Recording: $recording",
