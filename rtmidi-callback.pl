@@ -93,7 +93,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed =~ /^\d$/) { $rtfg->feedback($pressed); $rtfd->feedback($pressed); log_it(feedback => $rtfg->feedback) }
         elsif ($pressed eq '<') { $rtfg->delay($rtfg->delay - DELAY_INC) unless $rtfg->delay <= 0; log_it(delay => $rtfg->delay) }
         elsif ($pressed eq '>') { $rtfg->delay($rtfg->delay + DELAY_INC); log_it(delay => $rtfg->delay) }
-        elsif ($pressed eq 't') { $arp_type = $arp_types->next; log_it(arp_type => $arp_type) }
+        elsif ($pressed eq 't') { $rtfg->arp_type($arp_types->next); log_it(arp_type => $arp_type) }
         elsif ($pressed eq 'm') { $rtfg->scale($scale_names->next); log_it(scale_name => $rtfg->scale) }
         elsif ($pressed eq 'u') { $rtfg->channel($channels->next); log_it(channel => $rtfg->channel) }
         elsif ($pressed eq 'q') { $quantize = $quantize ? 0 : 1; log_it(quantize => $quantize) }
