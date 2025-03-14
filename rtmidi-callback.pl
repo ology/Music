@@ -19,16 +19,13 @@ use Music::Duration;
 use Number::Closest ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
-use constant TICKS => 96; # MIDI-Perl default
-use constant CHANNEL => 0;
-use constant DRUMS   => 9;
-# for the pedal-tone, delay and arp filters:
+use constant TICKS     => 96; # MIDI-Perl default
+use constant CHANNEL   => 0;
+use constant DRUMS     => 9;
 use constant DELAY_INC => 0.01;
-# for the modal chord filter:
-use constant SCALE => 'major'; # mode
-# for the offset filter:
-use constant OFFSET => -12; # octave below
-use constant BPM => 120; # beats per minute
+use constant SCALE     => 'major'; # mode
+use constant OFFSET    => -12; # octave below
+use constant BPM       => 120; # beats per minute
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth output
