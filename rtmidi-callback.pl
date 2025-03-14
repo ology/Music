@@ -86,9 +86,9 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'r') { engage('score') }
         elsif ($pressed eq '<') { delay('<') }
         elsif ($pressed eq '>') { delay('>') }
+        elsif ($pressed eq 'u') { channel() }
         elsif ($pressed eq 't') { $rtft->arp_type($rtft->arp_types->next); log_it(arp_type => $rtft->arp_type) }
         elsif ($pressed eq 'm') { $rtft->scale($scales->next); log_it(scales => $rtft->scale) }
-        elsif ($pressed eq 'u') { channel() }
         elsif ($pressed eq '!') { $rtft->offset($rtft->offset + ($direction ? 1 : -1)); log_it(offset => $rtft->offset) }
         elsif ($pressed eq '@') { $rtft->offset($rtft->offset + ($direction ? 2 : -2)); log_it(offset => $rtft->offset) }
         elsif ($pressed eq ')') { $rtft->offset($rtft->offset + ($direction ? 12 : -12)); log_it(offset => $rtft->offset) }
