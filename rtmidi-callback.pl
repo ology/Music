@@ -170,6 +170,7 @@ sub help {
         'd : delay filter',
         'o : offset filter',
         'w : walk filter',
+        't : stair-step filter',
         'y : drums filter',
         'r : score recording',
         'x : reset to initial state',
