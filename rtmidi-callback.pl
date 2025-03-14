@@ -11,8 +11,9 @@ use Future::IO::Impl::IOAsync;
 use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
-use MIDI::RtController::Filter::Tonal ();
 use MIDI::RtController::Filter::Drums ();
+use MIDI::RtController::Filter::Math ();
+use MIDI::RtController::Filter::Tonal ();
 use MIDI::RtMidi::ScorePlayer ();
 use MIDI::Util qw(setup_score reverse_dump);
 use Music::Duration;
@@ -37,8 +38,9 @@ my $rtc = MIDI::RtController->new(
     input  => $input_name,
     output => $output_name,
 );
-my $rtft = MIDI::RtController::Filter::Tonal->new(rtc => $rtc);
 my $rtfd = MIDI::RtController::Filter::Drums->new(rtc => $rtc);
+my $rtfm = MIDI::RtController::Filter::Math->new(rtc => $rtc);
+my $rtft = MIDI::RtController::Filter::Tonal->new(rtc => $rtc);
 
 my %filter = (
     chord  => sub { add_filters('chord', $rtft->curry::chord_tone, 0) },
@@ -47,6 +49,7 @@ my %filter = (
     offset => sub { add_filters('offset', $rtft->curry::offset_tone, 0) },
     walk   => sub { add_filters('walk', $rtft->curry::walk_tone, 0) },
     arp    => sub { add_filters('arp', $rtft->curry::arp_tone, 0) },
+    stairs => sub { add_filters('stairs', $rtfm->curry::stair_step, 0) },
     drums  => sub { add_filters('drums', $rtfd->curry::drums, 0) },
     score  => sub { add_filters('score', \&score, ['all']) },
 );
@@ -77,9 +80,10 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'd') { engage('delay') }
         elsif ($pressed eq 'o') { engage('offset') }
         elsif ($pressed eq 'w') { engage('walk') }
+        elsif ($pressed eq 't') { engage('stairs') }
         elsif ($pressed eq 'y') { engage('drums') }
         elsif ($pressed eq 'r') { engage('score') }
-        elsif ($pressed =~ /^\d$/) { $rtft->feedback($pressed); $rtfd->bars($pressed); log_it(feedback => $rtft->feedback) }
+        elsif ($pressed =~ /^\d$/) { feeback($pressed) }
         elsif ($pressed eq '<') { $rtft->delay($rtft->delay - DELAY_INC) unless $rtft->delay <= 0; log_it(delay => $rtft->delay) }
         elsif ($pressed eq '>') { $rtft->delay($rtft->delay + DELAY_INC); log_it(delay => $rtft->delay) }
         elsif ($pressed eq 't') { $rtft->arp_type($rtft->arp_types->next); log_it(arp_type => $rtft->arp_type) }
@@ -184,6 +188,13 @@ sub help {
         'Ctrl+C : stop the program',
     ;
     print "\n\n";
+}
+
+sub feedback ($key) {
+    $rtft->feedback($key);
+    $rtfm->feedback($key);
+    $rtfd->bars($key);
+    log_it(feedback => $rtft->feedback) 
 }
 
 sub engage ($name) {
