@@ -71,7 +71,8 @@ my $tka = Term::TermKey::Async->new(
         my ($self, $key) = @_;
         my $pressed = $self->format_key($key, FORMAT_VIM);
         # say "Got key: $pressed";
-        if ($pressed eq '?') { help() }
+        if ($pressed =~ /^\d$/) { feeback($pressed) }
+        elsif ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
         elsif ($pressed eq 'x') { clear() }
         elsif ($pressed eq 'a') { engage('arp') }
@@ -83,7 +84,6 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 't') { engage('stairs') }
         elsif ($pressed eq 'y') { engage('drums') }
         elsif ($pressed eq 'r') { engage('score') }
-        elsif ($pressed =~ /^\d$/) { feeback($pressed) }
         elsif ($pressed eq '<') { $rtft->delay($rtft->delay - DELAY_INC) unless $rtft->delay <= 0; log_it(delay => $rtft->delay) }
         elsif ($pressed eq '>') { $rtft->delay($rtft->delay + DELAY_INC); log_it(delay => $rtft->delay) }
         elsif ($pressed eq 't') { $rtft->arp_type($rtft->arp_types->next); log_it(arp_type => $rtft->arp_type) }
