@@ -81,7 +81,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'd') { engage('delay') }
         elsif ($pressed eq 'o') { engage('offset') }
         elsif ($pressed eq 'w') { engage('walk') }
-        elsif ($pressed eq 't') { engage('stairs') }
+        elsif ($pressed eq 'z') { engage('stairs') }
         elsif ($pressed eq 'y') { engage('drums') }
         elsif ($pressed eq 'r') { engage('score') }
         elsif ($pressed eq '<') { delay($pressed) }
@@ -173,7 +173,7 @@ sub help {
         'd : delay filter',
         'o : offset filter',
         'w : walk filter',
-        't : stair-step filter',
+        'z : stair-step filter',
         'y : drums filter',
         'r : score recording',
         'x : reset to initial state',
