@@ -124,6 +124,7 @@ sub clear {
     $rtft->arp_type('up');
     $rtft->delay(0.1); # seconds
     $rtft->feedback(1);
+    $rtfm->feedback(1);
     $rtfd->bars(1);
     $rtft->offset(OFFSET);
     $rtft->scale(SCALE);
