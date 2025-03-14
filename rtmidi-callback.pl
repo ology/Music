@@ -84,8 +84,8 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 't') { engage('stairs') }
         elsif ($pressed eq 'y') { engage('drums') }
         elsif ($pressed eq 'r') { engage('score') }
-        elsif ($pressed eq '<') { $rtft->delay($rtft->delay - DELAY_INC) unless $rtft->delay <= 0; log_it(delay => $rtft->delay) }
-        elsif ($pressed eq '>') { $rtft->delay($rtft->delay + DELAY_INC); log_it(delay => $rtft->delay) }
+        elsif ($pressed eq '<') { delay('<') }
+        elsif ($pressed eq '>') { delay('>') }
         elsif ($pressed eq 't') { $rtft->arp_type($rtft->arp_types->next); log_it(arp_type => $rtft->arp_type) }
         elsif ($pressed eq 'm') { $rtft->scale($scales->next); log_it(scales => $rtft->scale) }
         elsif ($pressed eq 'u') { $rtft->channel($channels->next); log_it(channel => $rtft->channel) }
@@ -199,6 +199,20 @@ sub feedback ($key) {
     $rtfm->feedback($key);
     $rtfd->bars($key);
     log_it(feedback => $rtft->feedback) 
+}
+
+sub delay ($key) {
+    if ($key eq '<') {
+        unless ($rtft->delay <= 0) {
+            $rtft->delay($rtft->delay - DELAY_INC);
+            $rtfm->delay($rtfm->delay - DELAY_INC);
+        }
+    }
+    else {
+        $rtft->delay($rtft->delay + DELAY_INC);
+        $rtfm->delay($rtft->delay + DELAY_INC);
+    }
+    log_it(delay => $rtft->delay);
 }
 
 sub engage ($name) {
