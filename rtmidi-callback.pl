@@ -117,10 +117,10 @@ sub is_member ($name, $items) {
 }
 
 sub clear {
+    @filter_names = ();
     $rtc->filters({});
     $rtft->channel(CHANNEL);
     $rtfm->channel(CHANNEL);
-    @filter_names = ();
     $rtft->arp([]);
     $rtft->arp_type('up');
     $rtft->delay(0.1); # seconds
