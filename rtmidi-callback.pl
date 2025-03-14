@@ -11,7 +11,7 @@ use Future::IO::Impl::IOAsync;
 use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
-use MIDI::RtController::Filter::Gene ();
+use MIDI::RtController::Filter::Tonal ();
 use MIDI::RtController::Filter::Drums ();
 use MIDI::RtMidi::ScorePlayer ();
 use MIDI::Util qw(setup_score reverse_dump);
@@ -37,16 +37,16 @@ my $rtc = MIDI::RtController->new(
     input  => $input_name,
     output => $output_name,
 );
-my $rtfg = MIDI::RtController::Filter::Gene->new(rtc => $rtc);
+my $rtft = MIDI::RtController::Filter::Tonal->new(rtc => $rtc);
 my $rtfd = MIDI::RtController::Filter::Drums->new(rtc => $rtc);
 
 my %filter = (
-    chord  => sub { add_filters('chord', $rtfg->curry::chord_tone, 0) },
-    pedal  => sub { add_filters('pedal', $rtfg->curry::pedal_tone, 0) },
-    delay  => sub { add_filters('delay', $rtfg->curry::delay_tone, 0) },
-    offset => sub { add_filters('offset', $rtfg->curry::offset_tone, 0) },
-    walk   => sub { add_filters('walk', $rtfg->curry::walk_tone, 0) },
-    arp    => sub { add_filters('arp', $rtfg->curry::arp_tone, 0) },
+    chord  => sub { add_filters('chord', $rtft->curry::chord_tone, 0) },
+    pedal  => sub { add_filters('pedal', $rtft->curry::pedal_tone, 0) },
+    delay  => sub { add_filters('delay', $rtft->curry::delay_tone, 0) },
+    offset => sub { add_filters('offset', $rtft->curry::offset_tone, 0) },
+    walk   => sub { add_filters('walk', $rtft->curry::walk_tone, 0) },
+    arp    => sub { add_filters('arp', $rtft->curry::arp_tone, 0) },
     drums  => sub { add_filters('drums', $rtfd->curry::drums, 0) },
     score  => sub { add_filters('score', \&score, ['all']) },
 );
@@ -79,16 +79,16 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'w') { engage('walk') }
         elsif ($pressed eq 'y') { engage('drums') }
         elsif ($pressed eq 'r') { engage('score') }
-        elsif ($pressed =~ /^\d$/) { $rtfg->feedback($pressed); $rtfd->bars($pressed); log_it(feedback => $rtfg->feedback) }
-        elsif ($pressed eq '<') { $rtfg->delay($rtfg->delay - DELAY_INC) unless $rtfg->delay <= 0; log_it(delay => $rtfg->delay) }
-        elsif ($pressed eq '>') { $rtfg->delay($rtfg->delay + DELAY_INC); log_it(delay => $rtfg->delay) }
-        elsif ($pressed eq 't') { $rtfg->arp_type($rtfg->arp_types->next); log_it(arp_type => $rtfg->arp_type) }
-        elsif ($pressed eq 'm') { $rtfg->scale($scales->next); log_it(scales => $rtfg->scale) }
-        elsif ($pressed eq 'u') { $rtfg->channel($channels->next); log_it(channel => $rtfg->channel) }
-        elsif ($pressed eq '!') { $rtfg->offset($rtfg->offset + ($direction ? 1 : -1)); log_it(offset => $rtfg->offset) }
-        elsif ($pressed eq '@') { $rtfg->offset($rtfg->offset + ($direction ? 2 : -2)); log_it(offset => $rtfg->offset) }
-        elsif ($pressed eq ')') { $rtfg->offset($rtfg->offset + ($direction ? 12 : -12)); log_it(offset => $rtfg->offset) }
-        elsif ($pressed eq '(') { $rtfg->offset(0); log_it(offset => $rtfg->offset) }
+        elsif ($pressed =~ /^\d$/) { $rtft->feedback($pressed); $rtfd->bars($pressed); log_it(feedback => $rtft->feedback) }
+        elsif ($pressed eq '<') { $rtft->delay($rtft->delay - DELAY_INC) unless $rtft->delay <= 0; log_it(delay => $rtft->delay) }
+        elsif ($pressed eq '>') { $rtft->delay($rtft->delay + DELAY_INC); log_it(delay => $rtft->delay) }
+        elsif ($pressed eq 't') { $rtft->arp_type($rtft->arp_types->next); log_it(arp_type => $rtft->arp_type) }
+        elsif ($pressed eq 'm') { $rtft->scale($scales->next); log_it(scales => $rtft->scale) }
+        elsif ($pressed eq 'u') { $rtft->channel($channels->next); log_it(channel => $rtft->channel) }
+        elsif ($pressed eq '!') { $rtft->offset($rtft->offset + ($direction ? 1 : -1)); log_it(offset => $rtft->offset) }
+        elsif ($pressed eq '@') { $rtft->offset($rtft->offset + ($direction ? 2 : -2)); log_it(offset => $rtft->offset) }
+        elsif ($pressed eq ')') { $rtft->offset($rtft->offset + ($direction ? 12 : -12)); log_it(offset => $rtft->offset) }
+        elsif ($pressed eq '(') { $rtft->offset(0); log_it(offset => $rtft->offset) }
         elsif ($pressed eq 'q') { $quantize = $quantize ? 0 : 1; log_it(quantize => $quantize) }
         elsif ($pressed eq 'i') { $triplets = $triplets ? 0 : 1; log_it(triplets => $triplets) }
         elsif ($pressed eq '-') { $direction = $direction ? 0 : 1; log_it(direction => $direction) }
@@ -114,15 +114,15 @@ sub is_member ($name, $items) {
 
 sub clear {
     $rtc->filters({});
-    $rtfg->channel(CHANNEL);
+    $rtft->channel(CHANNEL);
     @filter_names = ();
-    $rtfg->arp([]);
-    $rtfg->arp_type('up');
-    $rtfg->delay(0.1); # seconds
-    $rtfg->feedback(1);
+    $rtft->arp([]);
+    $rtft->arp_type('up');
+    $rtft->delay(0.1); # seconds
+    $rtft->feedback(1);
     $rtfd->bars(1);
-    $rtfg->offset(OFFSET);
-    $rtfg->scale(SCALE);
+    $rtft->offset(OFFSET);
+    $rtft->scale(SCALE);
     $rtfd->bpm(BPM);
     $direction = 1; # offset 0=below, 1=above
     $quantize  = 0;
@@ -133,14 +133,14 @@ sub clear {
 sub status {
     print "\n", join "\n",
         "Filter(s): @filter_names",
-        'Channel: ' . $rtfg->channel,
-        'Pedal-tone: ' . $rtfg->pedal,
-        'Arp type: ' . $rtfg->arp_type,
-        'Delay: ' . $rtfg->delay,
-        'Feedback: ' . $rtfg->feedback,
-        'Offset distance: ' . $rtfg->offset,
+        'Channel: ' . $rtft->channel,
+        'Pedal-tone: ' . $rtft->pedal,
+        'Arp type: ' . $rtft->arp_type,
+        'Delay: ' . $rtft->delay,
+        'Feedback: ' . $rtft->feedback,
+        'Offset distance: ' . $rtft->offset,
         'Offset direction: ' . ($direction ? 'up' : 'down'),
-        'Scale name: ' . $rtfg->scale,
+        'Scale name: ' . $rtft->scale,
         'BPM: ' . $rtfd->bpm,
         "Playing: $playing",
         "Recording: $recording",
