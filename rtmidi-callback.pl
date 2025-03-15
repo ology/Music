@@ -56,7 +56,7 @@ my %filter = (
 
 $filter{$_}->() for @filter_names;
 
-my $channels  = Array::Circular->new(SCALE, DRUMS);
+my $channels  = Array::Circular->new(CHANNEL, DRUMS);
 my $scales    = Array::Circular->new(SCALE, 'minor');
 my $direction = 1; # offset 0=below, 1=above
 my $recording = 0;
