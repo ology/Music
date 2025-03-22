@@ -248,7 +248,7 @@ sub score ($dt, $event) {
             $args{drummer}->count_in($args{bars});
         };
         MIDI::RtMidi::ScorePlayer->new(
-          device   => $rtc->_midi_out,
+          device   => $rtc->midi_out,
           score    => $d->score,
           common   => { drummer => $d, bars => $rtfd->bars },
           parts    => [ $part ],
@@ -293,7 +293,7 @@ sub score ($dt, $event) {
             %$lengths = map { $_ => $lengths->{$_} } grep { $lengths->{$_} !~ /[xyz]/ } keys %$lengths; # UGH
             my $common = { score => $score, events => $events, bpm => $rtfd->bpm, lengths => $lengths };
             MIDI::RtMidi::ScorePlayer->new(
-              device   => $rtc->_midi_out,
+              device   => $rtc->midi_out,
               score    => $score,
               common   => $common,
               parts    => [ $part ],
