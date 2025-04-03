@@ -237,6 +237,16 @@ sub add_filters ($name, $coderef, $types) {
 
 #--- FILTERS ---#
 
+sub cc ($port, $dt, $event) {
+    my ($ev, $chan, $note, $vel) = $event->@*;
+    if ($ev eq 'note_on' && $note == 36) {
+        $rtc->send_it([ 'control_change', 0, 77, 0 ]);
+    }
+    elsif ($ev eq 'note_on' && $note == 38) {
+        $rtc->send_it([ 'control_change', 0, 77, 111 ]);
+    }
+}
+
 sub score ($port, $dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
     if ($ev eq 'control_change' && $note == 26 && $vel == 127) { # record
