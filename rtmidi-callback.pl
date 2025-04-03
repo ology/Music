@@ -52,6 +52,7 @@ my %filter = (
     stairs => sub { add_filters('stairs', $rtfm->curry::stair_step, 0) },
     drums  => sub { add_filters('drums', $rtfd->curry::drums, 0) },
     score  => sub { add_filters('score', \&score, ['all']) },
+    cc     => sub { add_filters('cc', \&cc, ['all']) },
 );
 
 $filter{$_}->() for @filter_names;
@@ -84,6 +85,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'z') { engage('stairs') }
         elsif ($pressed eq 'y') { engage('drums') }
         elsif ($pressed eq 'r') { engage('score') }
+        elsif ($pressed eq '#') { engage('cc') }
         elsif ($pressed eq '<') { delay($pressed) }
         elsif ($pressed eq '>') { delay($pressed) }
         elsif ($pressed eq 'u') { channel() }
@@ -235,7 +237,7 @@ sub add_filters ($name, $coderef, $types) {
 
 #--- FILTERS ---#
 
-sub score ($dt, $event) {
+sub score ($port, $dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
     if ($ev eq 'control_change' && $note == 26 && $vel == 127) { # record
         $recording = 1;
