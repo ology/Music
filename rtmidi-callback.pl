@@ -29,17 +29,17 @@ use constant SCALE     => 'major'; # mode
 use constant OFFSET    => -12; # octave below
 use constant BPM       => 120; # beats per minute
 
-my $input_name   = shift || 'tempopad'; # midi controller device
+my $input_names  = shift || 'keyboard,pad,joystick'; # midi controller devices
 my $output_name  = shift || 'fluid';    # fluidsynth output
 my $filter_names = shift || '';         # chord,delay,pedal,offset,walk,etc.
 
+my @inputs = split /,/, $input_names;
+my $first  = $inputs[0];
+
 my @filter_names = split /\s*,\s*/, $filter_names;
 
-my $rtc = MIDI::RtController->new(
-    input  => $input_name,
-    output => $output_name,
-    verbose => 1,
-);
+my $controllers = MIDI::RtController::open_controllers(\@inputs, $output_name, 1);
+my $rtc = $controllers->{$first};
 my $rtfc = MIDI::RtController::Filter::CC->new(rtc => $rtc);
 my $rtfd = MIDI::RtController::Filter::Drums->new(rtc => $rtc);
 my $rtfm = MIDI::RtController::Filter::Math->new(rtc => $rtc);
@@ -79,6 +79,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
         elsif ($pressed eq 'x') { clear() }
+        elsif ($pressed eq 'h') { $rtfc->halt(1) }
         elsif ($pressed eq 'a') { engage('arp') }
         elsif ($pressed eq 'c') { engage('chord') }
         elsif ($pressed eq 'p') { engage('pedal') }
@@ -140,6 +141,7 @@ sub clear {
     $quantize  = 0;
     $triplets  = 0;
     $events    = [];
+    $rtfc->halt(0);
 }
 
 sub status {
@@ -170,7 +172,6 @@ sub help {
         's : show the program state',
         'u : toggle the drum channel',
         '0-9 : set the feedback',
-        '# : engage the breathe cc filter',
         '< : delay decrement by ' . DELAY_INC,
         '> : delay increment by ' . DELAY_INC,
         'a : arpeggiate filter',
@@ -181,6 +182,8 @@ sub help {
         'w : walk filter',
         'z : stair-step filter',
         'y : drums filter',
+        '# : engage the breathe cc filter',
+        'h : halt the cc filter',
         'r : score recording',
         'x : reset to initial state',
         'q : toggle quantization',
