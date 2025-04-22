@@ -46,16 +46,16 @@ my $rtfm = MIDI::RtController::Filter::Math->new(rtc => $rtc);
 my $rtft = MIDI::RtController::Filter::Tonal->new(rtc => $rtc);
 
 my %filter = (
-    chord  => sub { add_filters('chord', $rtft->curry::chord_tone, 0) },
-    pedal  => sub { add_filters('pedal', $rtft->curry::pedal_tone, 0) },
-    delay  => sub { add_filters('delay', $rtft->curry::delay_tone, 0) },
-    offset => sub { add_filters('offset', $rtft->curry::offset_tone, 0) },
-    walk   => sub { add_filters('walk', $rtft->curry::walk_tone, 0) },
-    arp    => sub { add_filters('arp', $rtft->curry::arp_tone, 0) },
-    stairs => sub { add_filters('stairs', $rtfm->curry::stair_step, 0) },
-    drums  => sub { add_filters('drums', $rtfd->curry::drums, 0) },
+    chord   => sub { add_filters('chord', $rtft->curry::chord_tone, 0) },
+    pedal   => sub { add_filters('pedal', $rtft->curry::pedal_tone, 0) },
+    delay   => sub { add_filters('delay', $rtft->curry::delay_tone, 0) },
+    offset  => sub { add_filters('offset', $rtft->curry::offset_tone, 0) },
+    walk    => sub { add_filters('walk', $rtft->curry::walk_tone, 0) },
+    arp     => sub { add_filters('arp', $rtft->curry::arp_tone, 0) },
+    stairs  => sub { add_filters('stairs', $rtfm->curry::stair_step, 0) },
+    drums   => sub { add_filters('drums', $rtfd->curry::drums, 0) },
     breathe => sub { add_filters('breathe', $rtfc->curry::breathe, ['all']) },
-    score  => sub { add_filters('score', \&score, ['all']) },
+    score   => sub { add_filters('score', \&score, ['all']) },
 );
 
 $filter{$_}->() for @filter_names;
