@@ -11,6 +11,7 @@ use Future::IO::Impl::IOAsync;
 use List::Util qw(shuffle uniq);
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
+use MIDI::RtController::Filter::CC ();
 use MIDI::RtController::Filter::Drums ();
 use MIDI::RtController::Filter::Math ();
 use MIDI::RtController::Filter::Tonal ();
@@ -39,6 +40,7 @@ my $rtc = MIDI::RtController->new(
     output => $output_name,
     verbose => 1,
 );
+my $rtfc = MIDI::RtController::Filter::CC->new(rtc => $rtc);
 my $rtfd = MIDI::RtController::Filter::Drums->new(rtc => $rtc);
 my $rtfm = MIDI::RtController::Filter::Math->new(rtc => $rtc);
 my $rtft = MIDI::RtController::Filter::Tonal->new(rtc => $rtc);
@@ -52,8 +54,8 @@ my %filter = (
     arp    => sub { add_filters('arp', $rtft->curry::arp_tone, 0) },
     stairs => sub { add_filters('stairs', $rtfm->curry::stair_step, 0) },
     drums  => sub { add_filters('drums', $rtfd->curry::drums, 0) },
+    breathe => sub { add_filters('breathe', $rtfc->curry::breathe, ['all']) },
     score  => sub { add_filters('score', \&score, ['all']) },
-    cc     => sub { add_filters('cc', \&cc, ['all']) },
 );
 
 $filter{$_}->() for @filter_names;
@@ -86,7 +88,7 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'z') { engage('stairs') }
         elsif ($pressed eq 'y') { engage('drums') }
         elsif ($pressed eq 'r') { engage('score') }
-        elsif ($pressed eq '#') { engage('cc') }
+        elsif ($pressed eq '#') { engage('breathe') }
         elsif ($pressed eq '<') { delay($pressed) }
         elsif ($pressed eq '>') { delay($pressed) }
         elsif ($pressed eq 'u') { channel() }
@@ -168,6 +170,7 @@ sub help {
         's : show the program state',
         'u : toggle the drum channel',
         '0-9 : set the feedback',
+        '# : engage the breathe cc filter',
         '< : delay decrement by ' . DELAY_INC,
         '> : delay increment by ' . DELAY_INC,
         'a : arpeggiate filter',
@@ -199,6 +202,7 @@ sub help {
 
 sub channel {
     my $chan = $channels->next;
+    $rtfc->channel($chan);
     $rtft->channel($chan);
     $rtfm->channel($chan);
     log_it(channel => $rtft->channel) 
@@ -237,16 +241,6 @@ sub add_filters ($name, $coderef, $types) {
 }
 
 #--- FILTERS ---#
-
-sub cc ($port, $dt, $event) {
-    my ($ev, $chan, $note, $vel) = $event->@*;
-    if ($ev eq 'note_on' && $note == 36) {
-        $rtc->send_it([ 'control_change', 0, 77, 0 ]);
-    }
-    elsif ($ev eq 'note_on' && $note == 38) {
-        $rtc->send_it([ 'control_change', 0, 77, 111 ]);
-    }
-}
 
 sub score ($port, $dt, $event) {
     my ($ev, $chan, $note, $vel) = $event->@*;
