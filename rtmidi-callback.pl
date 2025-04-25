@@ -75,7 +75,7 @@ my $tka = Term::TermKey::Async->new(
         my ($self, $key) = @_;
         my $pressed = $self->format_key($key, FORMAT_VIM);
         # say "Got key: $pressed";
-        if ($pressed =~ /^\d$/) { feedback($pressed) }
+        if ($pressed =~ /^[1-8]$/) { feedback($pressed) }
         elsif ($pressed eq '?') { help() }
         elsif ($pressed eq 's') { status() }
         elsif ($pressed eq 'x') { clear() }
