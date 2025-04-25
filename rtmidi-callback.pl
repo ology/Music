@@ -171,7 +171,7 @@ sub help {
         '? : show this program help!',
         's : show the program state',
         'u : toggle the drum channel',
-        '0-9 : set the feedback',
+        '1-8 : set the feedback',
         '< : delay decrement by ' . DELAY_INC,
         '> : delay increment by ' . DELAY_INC,
         'a : arpeggiate filter',
