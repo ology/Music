@@ -195,7 +195,7 @@ sub help {
         '@ : increment or decrement the offset by 2',
         ') : increment or decrement the offset by 12',
         '( : set the offset to 0',
-        '. : increment or decrement the BPM by 1',
+        ', : increment or decrement the BPM by 1',
         '. : increment or decrement the BPM by 2',
         '/ : increment or decrement the BPM by 10',
         'Ctrl+C : stop the program',
