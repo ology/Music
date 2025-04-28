@@ -21,6 +21,7 @@ my @filters = get_filters(
 # open the input
 my $controllers = MIDI::RtController::open_controllers([$input_name], $output_name, 1);
 
+# add the filters
 MIDI::RtController::Filter::CC::add_filters(\@filters, $controllers);
 
 $controllers->{$input_name}->run; # and now trigger a MIDI message!
