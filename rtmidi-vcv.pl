@@ -14,7 +14,7 @@ my @filters = get_filters(
     trigger   => [ (25) x $n ],
     filters   => [ ('scatter') x ($n / 2), ('breathe') x ($n / 2 - 1), 'flicker' ],
     init_time => 1,
-    time_incr => 0.25,
+    time_incr => 0.2,
 );
 
 # open the input
