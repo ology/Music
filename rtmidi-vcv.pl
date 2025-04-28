@@ -12,7 +12,7 @@ my @filters = get_filters(
     port      => $input_name,
     event     => [ ('control_change') x $n ],
     trigger   => [ (25) x $n ],
-    filters   => [ ('scatter') x ($n / 2), ('breathe') x ($n / 2 - 1), 'flicker' ],
+    filters   => [ ('scatter') x int($n / 2), ('breathe') x int($n / 2 - 1), 'flicker' ],
     init_time => 1,
     time_incr => 0.2,
 );
