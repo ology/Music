@@ -6,8 +6,7 @@ use Object::Destroyer ();
 
 my $input_name  = shift || 'keyboard'; # midi controller device
 my $output_name = shift || 'usb'; # midi output
-
-my $n = 5; # number of filters
+my $n           = shift || 5; # number of filters
 
 my @filters = get_filters(
     port      => $input_name,
