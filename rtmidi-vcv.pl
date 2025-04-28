@@ -6,13 +6,13 @@ use Object::Destroyer ();
 
 my $input_name  = shift || 'keyboard'; # midi controller device
 my $output_name = shift || 'usb'; # midi output
-my $n           = shift || 5; # number of filters
+my $n           = shift || 8; # number of filters
 
 my @filters = get_filters(
     port      => $input_name,
     event     => [ ('control_change') x $n ],
     trigger   => [ (25) x $n ],
-    filters   => [ ('scatter') x ($n - 1), 'flicker' ],
+    filters   => [ ('scatter') x ($n / 2), ('breathe') x ($n / 2 - 1), 'flicker' ],
     init_time => 1,
     time_incr => 0.25,
 );
