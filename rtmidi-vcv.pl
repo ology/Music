@@ -40,9 +40,9 @@ sub get_filters {
         push @filters, {
             control   => $i,
             port      => $args{port},
-            event     => $args{event}->[$i],
-            trigger   => $args{trigger}->[$i],
-            type      => $args{filters}->[$i],
+            event     => $args{event}->[$i - 1],
+            trigger   => $args{trigger}->[$i - 1],
+            type      => $args{filters}->[$i - 1],
             time_step => $t,
         };
         $t += $args{time_incr};
