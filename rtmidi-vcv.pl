@@ -13,7 +13,7 @@ my @filters = get_filters(
     event     => [ ('control_change') x $n ],
     trigger   => [ (25) x $n ],
     filters   => [ ('scatter') x ($n / 2), ('breathe') x ($n / 2 - 1), 'flicker' ],
-    init_time => 0.6,
+    init_time => 2,
     time_incr => 0.2,
 );
 
@@ -36,7 +36,7 @@ sub get_filters {
     my (%args) = @_;
     my @filters;
     my $t = $args{init_time};
-    for my $i (0 .. $args{filters}->$#*) {
+    for my $i (1 .. $args{filters}->@*) {
         push @filters, {
             control   => $i,
             port      => $args{port},
