@@ -18,7 +18,7 @@ my @filters = get_filters(
     time_incr => 0.25,
 );
 
-# open the inputs
+# open the input
 my $controllers = MIDI::RtController::open_controllers([$input_name], $output_name, 1);
 
 MIDI::RtController::Filter::CC::add_filters(\@filters, $controllers);
