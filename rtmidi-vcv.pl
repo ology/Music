@@ -10,10 +10,10 @@ my $output_name = shift || 'usb'; # midi output
 my $n = 5; # number of filters
 
 my @filters = get_filters(
-    port    => $input_name,
-    event   => [ ('control_change') x $n ],
-    trigger => [ (25) x $n ],
-    filters => [ ('scatter') x ($n - 1), 'flicker' ],
+    port      => $input_name,
+    event     => [ ('control_change') x $n ],
+    trigger   => [ (25) x $n ],
+    filters   => [ ('scatter') x ($n - 1), 'flicker' ],
     init_time => 1,
     time_incr => 0.25,
 );
