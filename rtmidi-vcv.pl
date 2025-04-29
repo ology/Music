@@ -9,16 +9,45 @@ my $output_name = shift || 'usb'; # midi output
 
 my $inputs = [ split /,/, $input_names ];
 
-my $n = 8; # number of filters
-
-my @filters = get_filters(
-    port      => [ ($inputs->[0]) x $n ],
-    event     => [ ('control_change') x $n ],
-    trigger   => [ (25) x $n ],
-    filters   => [ ('scatter') x int($n / 2), ('breathe') x int($n / 2 - 1), 'flicker' ],
+my $n = 4;
+my @filters;
+push @filters, get_filters(
+    start     => 1,
+    end       => 4,
+    port      => $inputs->[0],
+    event     => 'control_change',
+    trigger   => 25,
+    filter    => 'scatter',
     init_time => 1,
     time_incr => 0.2,
 );
+if (defined $inputs->[1]) {
+    push @filters, get_filters(
+        start     => 5,
+        end       => 8,
+        port      => $inputs->[1],
+        event     => 'control_change',
+        trigger   => 26,
+        filter    => 'breathe',
+        init_time => 1,
+        time_incr => 0.2,
+    );
+}
+if (defined $inputs->[2]) {
+    $n = 2;
+    push @filters, get_filters(
+        start     => 9,
+        end       => 12,
+        port      => $inputs->[2],
+        event     => 'control_change',
+        trigger   => 27,
+        filter    => 'flicker',
+        init_time => 1,
+        time_incr => 0.2,
+    );
+}
+use Data::Dumper::Compact qw(ddc);
+warn __PACKAGE__,' L',__LINE__,' ',ddc(\@filters, {max_width=>128});
 
 # open the input
 my $controllers = MIDI::RtController::open_controllers($inputs, $output_name, 1);
@@ -39,13 +68,13 @@ sub get_filters {
     my (%args) = @_;
     my @filters;
     my $t = $args{init_time};
-    for my $i (1 .. $args{filters}->@*) {
+    for my $i ($args{start} .. $args{end}) {
         push @filters, {
             control   => $i,
             port      => $args{port},
-            event     => $args{event}->[$i - 1],
-            trigger   => $args{trigger}->[$i - 1],
-            type      => $args{filters}->[$i - 1],
+            event     => $args{event},
+            trigger   => $args{trigger},
+            type      => $args{filter},
             time_step => $t,
         };
         $t += $args{time_incr};
