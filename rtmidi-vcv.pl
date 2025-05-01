@@ -9,7 +9,6 @@ my $output_name = shift || 'usb'; # midi output
 
 my $inputs = [ split /,/, $input_names ];
 
-my $n = 4;
 my @filters;
 push @filters, get_filters(
     start     => 1,
@@ -34,7 +33,6 @@ if (defined $inputs->[1]) {
     );
 }
 if (defined $inputs->[2]) {
-    $n = 2;
     push @filters, get_filters(
         start     => 9,
         end       => 12,
