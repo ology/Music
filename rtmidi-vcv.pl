@@ -11,8 +11,7 @@ my $inputs = [ split /,/, $input_names ];
 
 my @filters;
 push @filters, get_filters(
-    start     => 1,
-    end       => 4,
+    range     => [1 .. 4],
     port      => $inputs->[0],
     event     => 'control_change',
     trigger   => 25,
@@ -22,8 +21,7 @@ push @filters, get_filters(
 );
 if (defined $inputs->[1]) {
     push @filters, get_filters(
-        start     => 5,
-        end       => 8,
+        range     => [5 .. 8],
         port      => $inputs->[1],
         event     => 'control_change',
         trigger   => 26,
@@ -34,8 +32,7 @@ if (defined $inputs->[1]) {
 }
 if (defined $inputs->[2]) {
     push @filters, get_filters(
-        start     => 9,
-        end       => 12,
+        range     => [9 .. 12],
         port      => $inputs->[2],
         event     => 'control_change',
         trigger   => 27,
@@ -66,7 +63,7 @@ sub get_filters {
     my (%args) = @_;
     my @filters;
     my $t = $args{init_time};
-    for my $i ($args{start} .. $args{end}) {
+    for my $i ($args{range}->@*) {
         push @filters, {
             control   => $i,
             port      => $args{port},
