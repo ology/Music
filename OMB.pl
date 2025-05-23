@@ -40,12 +40,11 @@ sub kick {
 }
 
 sub snare {
-    for my $n (1 .. $d->bars) {
-        my $roll = int rand 2; # "roll" as in dice
+    for (1 .. $d->bars) {
+        my $roll = int rand 3; # "roll" as in dice
         print "Snare: $roll\n";
-        for my $n (1 .. $d->bars - 1) {
+        for (1 .. $d->bars - 1) {
             for my $n (1 .. $size) {
-                # Either play on 2 & 4 or just 3
                 if ($roll) {
                     if ($n % 2 == 0) {
                         $d->note('qn', $d->snare);
