@@ -38,7 +38,7 @@ sub hihat {
 
 sub kick {
     my $roll = int rand 2; # "roll" as in dice
-    my $pool = $roll ? [qw(hn dqn qn en)] : [qw(hn dqn qn)];
+    my $pool = $roll ? [qw(qn en)] : [qw(hn dqn qn)];
     _part('Kick', $d->kick, $pool)
         for 1 .. $d->bars;
 }
