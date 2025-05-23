@@ -26,7 +26,6 @@ $d->score->synch(
     \&snare,
 ) for 1 .. $max;
 
-# Write the MIDI to a file
 $d->write;
 
 sub hihat {
