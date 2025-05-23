@@ -69,46 +69,6 @@ sub snare {
     }
 }
 
-sub hihat2 {
-    _part('Hihat', $d->closed_hh, [qw(qn en)])
-        for 1 .. $d->bars;
-}
-
-sub kick2 {
-    _part('Kick', $d->kick, [qw(hn dqn qn en)])
-        for 1 .. $d->bars;
-}
-
-sub snare2 {
-    for my $n (1 .. $d->bars) {
-        my $roll = int rand 2; # "roll" as in dice
-        print "Snare: $roll\n";
-        for my $n (1 .. $d->bars - 1) {
-            for my $n (1 .. $size) {
-                # Either play on 2 & 4 or just 3
-                if ($roll) {
-                    if ($n % 2 == 0) {
-                        $d->note('qn', $d->snare);
-                    }
-                    else {
-                        $d->rest('qn');
-                    }
-                }
-                else {
-                    if ($n % 3 == 0) {
-                        $d->note('qn', $d->snare);
-                    }
-                    else {
-                        $d->rest('qn');
-                    }
-                }
-            }
-        }
-        # Fill for a bar!
-        fill();
-    }
-}
-
 sub fill {
     my $mdp = Music::Duration::Partition->new(
         size    => $size,
