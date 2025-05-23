@@ -31,7 +31,7 @@ $d->write;
 
 sub hihat {
     my $roll = int rand 2; # "roll" as in dice
-    my $pool = $roll ? [qw(qn en sn)] : [qw(qn en)];
+    my $pool = $roll ? [qw(tqn ten)] : [qw(qn en)];
     _part('Hihat', $d->closed_hh, $pool)
         for 1 .. $d->bars;
 }
