@@ -57,12 +57,12 @@ sub snare {
                     }
                 }
                 else {
-                    if ($n % 3 == 0) {
-                        $d->note('qn', $d->snare);
-                    }
-                    else {
+                    # if ($n % 3 == 0) {
+                        # $d->note('qn', $d->snare);
+                    # }
+                    # else {
                         $d->rest('qn');
-                    }
+                    # }
                 }
             }
         }
