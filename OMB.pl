@@ -41,7 +41,7 @@ sub kick {
 
 sub snare {
     for (1 .. $d->bars) {
-        my $roll = int rand 3; # "roll" as in dice
+        my $roll = int rand 2; # "roll" as in dice
         print "Snare: $roll\n";
         for (1 .. $d->bars - 1) {
             for my $n (1 .. $size) {
