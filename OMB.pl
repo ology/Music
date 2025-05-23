@@ -24,13 +24,7 @@ $d->score->synch(
     \&hihat,
     \&kick,
     \&snare,
-) for 1 .. $max / 2;
-
-$d->score->synch(
-    \&hihat2,
-    \&kick2,
-    \&snare2,
-) for 1 .. $max / 2;
+) for 1 .. $max;
 
 # Write the MIDI to a file
 $d->write;
