@@ -30,12 +30,16 @@ $d->score->synch(
 $d->write;
 
 sub hihat {
-    _part('Hihat', $d->closed_hh, [qw(qn en)])
+    my $roll = int rand 2; # "roll" as in dice
+    my $pool = $roll ? [qw(qn en sn)] : [qw(qn en)];
+    _part('Hihat', $d->closed_hh, $pool)
         for 1 .. $d->bars;
 }
 
 sub kick {
-    _part('Kick', $d->kick, [qw(hn dqn qn en)])
+    my $roll = int rand 2; # "roll" as in dice
+    my $pool = $roll ? [qw(hn dqn qn en)] : [qw(hn dqn qn)];
+    _part('Kick', $d->kick, $pool)
         for 1 .. $d->bars;
 }
 
