@@ -6,7 +6,7 @@ use Data::Dumper::Compact qw(ddc);
 use MIDI::Drummer::Tiny ();
 use Music::Duration::Partition ();
 
-my $bpm = shift || 120; # Beats per minute
+my $bpm = shift || 70; # Beats per minute
 
 my $size = shift || 4; # Motif duration in quarter-notes
 my $max  = shift || 4; # Repeats
@@ -30,7 +30,7 @@ $d->write;
 
 sub hihat {
     my $roll = int rand 2; # "roll" as in dice
-    my $pool = $roll ? [qw(tqn ten)] : [qw(qn en)];
+    my $pool = $roll ? [qw(qn en sn)] : [qw(qn en)];
     _part('Hihat', $d->closed_hh, $pool)
         for 1 .. $d->bars;
 }
