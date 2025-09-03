@@ -32,14 +32,14 @@ group_num = 0
 group_item = 0
 
 while sum < size:
-    d = random.choices(durations, weights=weights, k=1)[0]
+    dura = random.choices(durations, weights=weights, k=1)[0]
     if group_num:
         group_num -= 1
-        d = group_item
+        dura = group_item
     else:
-        if d in groups:
-            group_num = groups[d] - 1
-            group_item = d
+        if dura in groups:
+            group_num = groups[dura] - 1
+            group_item = dura
         else:
             group_num = 0
             group_item = 0
@@ -48,21 +48,21 @@ while sum < size:
         if diff >= 1/128:
             motif.append(diff)
         break
-    if d > diff:
+    if dura > diff:
         continue
-    sum += d
+    sum += dura
     if sum <= size:
-        motif.append(d)
+        motif.append(dura)
 
 print(motif)
 
 s = stream.Stream()
 s.append(meter.TimeSignature(sig))
 
-for d in motif:
+for dura in motif:
     k = random.choice(sc1.pitches)
     n = note.Note(k)
-    n.duration = duration.Duration(d)
+    n.duration = duration.Duration(dura)
     # print(n.duration.type)
     s.append(n)
 
