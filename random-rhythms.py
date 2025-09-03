@@ -19,7 +19,7 @@ size = 5 # beats per measure
 # 16th to whole: .25 .5 1 2 4
 # durations = [ 2**x for x in range(-2, 3) ]
 # Added triplet-eighth
-durations = [ .25, .5, 1/3, 1, 2, 4 ]
+durations = [ 1/4, 1/2, 1/3, 1, 2, 4 ]
 # print(durations)
 smallest = sorted(durations)[0]
 
@@ -44,7 +44,7 @@ while sum < size:
             group_item = 0
     diff = size - sum
     if diff < smallest:
-        if diff >= 0.03125:
+        if diff >=  0.03125:
             motif.append(diff)
         break
     if d > diff:
