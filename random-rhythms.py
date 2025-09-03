@@ -17,16 +17,36 @@ size = 5 # beats per measure
 # Double dotted: .4375 .875 1.75 3.5 7
 # durations = [2**x+2**x/2+2**x/4 for x in range(-2, 3)]
 # 16th to whole: .25 .5 1 2 4
-durations = [ 2**x for x in range(-2, 3) ]
+# durations = [ 2**x for x in range(-2, 3) ]
+# Added triplet-eighth
+durations = [ .25, .5, 1/3, 1, 2, 4 ]
 # print(durations)
 smallest = sorted(durations)[0]
 
+groups = {1/3: 3}
+
 sum = 0
 motif = []
+group_num = 0
+group_item = 0
 
 while sum < size:
     d = random.choice(durations)
     # print(f"d: {d}")
+    # Compute grouping
+    if group_num:
+        print(f"g1: {group_num}")
+        group_num -= 1
+        d = group_item
+    else:
+        if d in groups:
+            print(f"g2: {group_num}")
+            group_num = groups[d] - 1
+            group_item = d
+        else:
+            print(f"g3")
+            group_num = 0
+            group_item = 0
     diff = size - sum
     # print(f"diff: {diff}")
     if diff < smallest:
