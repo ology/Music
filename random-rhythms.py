@@ -44,7 +44,8 @@ while sum < size:
             group_item = 0
     diff = size - sum
     if diff < smallest:
-        motif.append(diff)
+        if diff >= 0.03125:
+            motif.append(diff)
         break
     if d > diff:
         continue
