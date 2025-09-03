@@ -57,7 +57,6 @@ print(motif)
 s = stream.Stream()
 s.append(meter.TimeSignature(sig))
 
-notes = []
 for d in motif:
     k = random.choice(sc1.pitches)
     n = note.Note(k)
