@@ -32,30 +32,23 @@ group_item = 0
 
 while sum < size:
     d = random.choice(durations)
-    # print(f"d: {d}")
-    # Compute grouping
     if group_num:
-        print(f"g1: {group_num}")
         group_num -= 1
         d = group_item
     else:
         if d in groups:
-            print(f"g2: {group_num}")
             group_num = groups[d] - 1
             group_item = d
         else:
-            print(f"g3")
             group_num = 0
             group_item = 0
     diff = size - sum
-    # print(f"diff: {diff}")
     if diff < smallest:
         motif.append(diff)
         break
     if d > diff:
         continue
     sum += d
-    # print(f"sum: {sum}")
     if sum <= size:
         motif.append(d)
 
