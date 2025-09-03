@@ -23,7 +23,7 @@ durations = [ .25, .5, 1/3, 1, 2, 4 ]
 # print(durations)
 smallest = sorted(durations)[0]
 
-groups = {1/3: 3}
+groups = { 1/3: 3 }
 
 sum = 0
 motif = []
