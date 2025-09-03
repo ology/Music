@@ -42,8 +42,7 @@ while sum < size:
 print(motif)
 
 s = stream.Stream()
-ts = meter.TimeSignature(sig)
-s.append(ts)
+s.append(meter.TimeSignature(sig))
 
 notes = []
 for d in motif:
