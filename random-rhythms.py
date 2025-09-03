@@ -2,6 +2,7 @@ from music21 import *
 import random
 
 sc1 = scale.WholeToneScale('C4')
+# print(sc1.pitches)
 sig = '7/8' # time signature
 size = 3.5 # beats per measure
 
