@@ -1,10 +1,6 @@
 from music21 import *
 import random
-
-sc1 = scale.WholeToneScale('C4')
-# print(sc1.pitches)
-sig = '5/4' # time signature
-size = 5 # beats per measure
+from random_rhythms import Rhythm
 
 # 128th to 128: .03125 .0625 .125 .25 .5 1 2 4 8 16 32 64 128
 # durations = [2**x for x in range(-5, 8)]
@@ -18,43 +14,14 @@ size = 5 # beats per measure
 # durations = [2**x+2**x/2+2**x/4 for x in range(-2, 3)]
 # 16th to whole: .25 .5 1 2 4
 # durations = [ 2**x for x in range(-2, 3) ]
-# weights = [ 1 for x in durations ]
-durations = [ 1/4, 1/2, 1/3, 1, 2, 4 ]
-weights = [ 1, 2, 1, 1, 1, 1 ]
-# print(durations)
-smallest = sorted(durations)[0]
 
-groups = { 1/3: 3 }
-
-sum = 0
-motif = []
-group_num = 0
-group_item = 0
-
-while sum < size:
-    dura = random.choices(durations, weights=weights, k=1)[0]
-    if group_num:
-        group_num -= 1
-        dura = group_item
-    else:
-        if dura in groups:
-            group_num = groups[dura] - 1
-            group_item = dura
-        else:
-            group_num = 0
-            group_item = 0
-    diff = size - sum
-    if diff < smallest:
-        if diff >= 1/128:
-            motif.append(diff)
-        break
-    if dura > diff:
-        continue
-    sum += dura
-    if sum <= size:
-        motif.append(dura)
-
+rr = Rhythm()
+motif = rr.motif()
 print(motif)
+
+sc1 = scale.WholeToneScale('C4')
+# print(sc1.pitches)
+sig = '5/4' # time signature
 
 s = stream.Stream()
 s.append(meter.TimeSignature(sig))
