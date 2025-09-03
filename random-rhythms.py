@@ -18,7 +18,6 @@ size = 5 # beats per measure
 # durations = [2**x+2**x/2+2**x/4 for x in range(-2, 3)]
 # 16th to whole: .25 .5 1 2 4
 # durations = [ 2**x for x in range(-2, 3) ]
-# Added triplet-eighth
 durations = [ 1/4, 1/2, 1/3, 1, 2, 4 ]
 # print(durations)
 smallest = sorted(durations)[0]
