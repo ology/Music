@@ -3,8 +3,8 @@ import random
 
 sc1 = scale.WholeToneScale('C4')
 # print(sc1.pitches)
-sig = '7/8' # time signature
-size = 3.5 # beats per measure
+sig = '5/4' # time signature
+size = 5 # beats per measure
 
 # 128th to 128: .03125 .0625 .125 .25 .5 1 2 4 8 16 32 64 128
 # durations = [2**x for x in range(-5, 8)]
