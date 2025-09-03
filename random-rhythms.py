@@ -1,7 +1,7 @@
 from music21 import *
 import random
 
-scale = ['C','D','E','F','G','A','B']
+sc1 = scale.WholeToneScale('C4')
 octave = 4
 sig = '7/8' # time signature
 size = 3.5 # beats per measure
@@ -47,7 +47,7 @@ s1.append(ts1)
 
 notes = []
 for d in motif:
-    k = random.choice(scale)
+    k = random.choice(sc1.pitches)
     n = note.Note(k, octave=octave)
     n.duration = duration.Duration(d)
     # print(n.duration.type)
