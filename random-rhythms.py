@@ -52,4 +52,4 @@ for d in motif:
     # print(n.duration.type)
     s.append(n)
 
-s.show()
+s.show() # 'midi' opens Logic
