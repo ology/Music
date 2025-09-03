@@ -31,8 +31,7 @@ group_num = 0
 group_item = 0
 
 while sum < size:
-    d = random.choices(durations, weights=weights, k=1)
-    d = d[0]
+    d = random.choices(durations, weights=weights, k=1)[0]
     if group_num:
         group_num -= 1
         d = group_item
