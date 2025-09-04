@@ -7,7 +7,7 @@ r = Rhythm(
     groups={1/3: 3},
 )
 motifs = [ r.motif() for x in range(4) ]
-print(motifs)
+# print(motifs)
 
 sc = scale.WholeToneScale('C4')
 # print(sc1.pitches)
