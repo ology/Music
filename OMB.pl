@@ -46,7 +46,7 @@ sub snare {
     for (1 .. $d->bars) {
         my $roll = int rand 2; # "roll" as in dice
         print "Snare: $roll\n";
-        for (1 .. $d->bars - 1) {
+        for (1 .. $d->bars * 2 - 1) {
             for my $n (1 .. $size) {
                 if ($roll) {
                     if ($n % 2 == 0) {
@@ -179,7 +179,7 @@ sub _part {
         my $motif = $mdp->motif;
         print "$name: ", ddc($motif);
         # Play the phrase for the number of bars less one
-        for my $n (1 .. $d->bars - 1) {
+        for my $n (1 .. $d->bars * 2 - 1) {
             for my $duration (@$motif) {
                 $d->note($duration, $note);
             }
