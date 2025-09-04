@@ -1,5 +1,4 @@
 from music21 import *
-import random
 from random_rhythms import Rhythm
 
 r = Rhythm(
