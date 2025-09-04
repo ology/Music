@@ -25,8 +25,4 @@ my $voice = Music::VoiceGen->new(
 
 my @voices = map { $voice->rand } 1 .. $n;
 
-for my $voice (@voices) {
-    my $mn = Music::Note->new($_, 'midinum');
-}
-
 print join ',', map { Music::Note->new($_, 'midinum')->format('ISO') } @voices;
