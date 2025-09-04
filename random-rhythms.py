@@ -20,10 +20,8 @@ s = stream.Stream()
 s.append(meter.TimeSignature('5/4'))
 
 for m in motifs:
-    length=len(m)
-    p = [ voice.rand() for i in range(length) ]
     for i, d in enumerate(m):
-        n = note.Note(p[i])
+        n = note.Note(voice.rand())
         n.duration = duration.Duration(d)
         # print(n.duration.type)
         s.append(n)
