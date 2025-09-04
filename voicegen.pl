@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# THIS IS CALLED BY random-rhythms.py !!
+
 use strict;
 use warnings;
 
