@@ -6,7 +6,7 @@ import subprocess
 def pitch_phrase(n, pitches, intervals=[-4,-3,-2,-1,1,2,3,4]):
     try:
         result = subprocess.run(['perl', 'voicegen.pl', str(n), str(pitches), str(intervals)], capture_output=True, text=True, check=True)
-        print(result.stdout)
+        # print(result.stdout)
         if result.stderr:
             print(f"Error output: {result.stderr}")
         else:
