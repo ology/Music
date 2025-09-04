@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-# use Data::Dumper::Compact qw(ddc);
 use Music::Note ();
 use Music::VoiceGen ();
 
@@ -10,10 +9,8 @@ my $n         = shift || die "Usage: perl $0 n pitches intervals";
 my $pitches   = shift || die "Usage: perl $0 n pitches intervals";
 my $intervals = shift || die "Usage: perl $0 n pitches intervals";
 
-$pitches =~ s/[\[\]]//g;
+$pitches   =~ s/[\[\]]//g;
 $intervals =~ s/[\[\]]//g;
-# print ddc($pitches);
-# print ddc($intervals);
 
 my @pitches   = split /,/, $pitches;
 my @intervals = split /,/, $intervals;
