@@ -21,7 +21,7 @@ s = stream.Stream()
 s.append(meter.TimeSignature('5/4'))
 
 for m in motifs:
-    for i, d in enumerate(m):
+    for d in m:
         # chance = random.random()
         # if chance < 0.3:
             # n = note.Rest()
