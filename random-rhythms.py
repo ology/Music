@@ -1,4 +1,4 @@
-import random
+# import random
 from music21 import *
 from random_rhythms import Rhythm
 from music_voicegen import MusicVoiceGen
@@ -22,11 +22,11 @@ s.append(meter.TimeSignature('5/4'))
 
 for m in motifs:
     for i, d in enumerate(m):
-        chance = random.random()
-        if chance < 0.3:
-            n = note.Rest()
-        else:
-            n = note.Note(voice.rand())
+        # chance = random.random()
+        # if chance < 0.3:
+            # n = note.Rest()
+        # else:
+        n = note.Note(voice.rand())
         n.duration = duration.Duration(d)
         # print(n.duration.type)
         s.append(n)
