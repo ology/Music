@@ -1,7 +1,6 @@
 from music_drummer import Drummer
 from music21 import instrument
 
-
 d = Drummer()
 
 d.set_instrument('kick', 36) # change the kick patch
