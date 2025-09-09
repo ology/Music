@@ -17,7 +17,7 @@ d.rest('crash', duration=4)
 for _ in range(4):
     d.pattern(
         patterns={
-            'kick': '1000000010000000',
+            'kick':  '1000000010000000',
             'snare': '0000100000001000',
             'hihat': '0111111111111111',
             'crash': '1000000000000000',
