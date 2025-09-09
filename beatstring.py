@@ -1,5 +1,4 @@
 from music_drummer import Drummer
-from music21 import instrument
 
 d = Drummer()
 
