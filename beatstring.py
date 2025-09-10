@@ -9,9 +9,7 @@ d.set_ts()
 d.set_bpm(60)
 
 d.count_in()
-d.rest('kick', duration=4)
-d.rest('snare', duration=4)
-d.rest('crash1', duration=4)
+d.rest(['kick', 'snare', 'cymbals'], duration=4)
 
 for _ in range(4):
     d.pattern(
