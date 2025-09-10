@@ -9,7 +9,13 @@ d.set_ts()
 d.set_bpm(60)
 
 d.count_in()
-d.rest(['kick', 'snare', 'cymbals'], duration=4)
+d.rest(['kick', 'snare', 'crash1'], duration=4)
+
+d.note('closed', duration=1/2)
+d.note('open', duration=1/2)
+d.note('pedal', duration=1/2)
+d.note('closed', duration=1/2)
+d.rest(['snare', 'kick', 'crash1'], duration=2)
 
 for _ in range(4):
     d.pattern(
