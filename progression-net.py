@@ -9,15 +9,16 @@ s = stream.Score()
 p = stream.Part()
 
 g = Generator(
+    scale_name='whole-tone scale',
     net={
-        1: [2,3],
-        2: [1,3,4],
-        3: [2,4,5],
-        4: [3,5,6],
-        5: [4,6,7],
-        6: [5,7],
-        7: [6],
+        1: [2,3,4,5,6],
+        2: [1,3,4,5,6],
+        3: [1,2,4,5,6],
+        4: [1,2,3,5,6],
+        5: [1,2,3,4,6],
+        6: [1,2,3,4,5],
     },
+    chord_map=['m'] * 6,
 )
 
 for m in motifs:
@@ -30,4 +31,4 @@ for m in motifs:
 
 s.append(p)
 
-s.show('midi')
+s.show()#'midi')
