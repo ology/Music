@@ -5,9 +5,9 @@ import random
 
 r = Rhythms()
 beats = 16
-kick1  = ''.join([str(n) for n in r.euclid(2, beats)])
-snare1 = ''.join([str(n) for n in r.rotate_n(4, r.euclid(2, beats))])
-hihat1 = ''.join([str(n) for n in r.euclid(11, beats)])
+kick  = ''.join([str(n) for n in r.euclid(2, beats)])
+snare = ''.join([str(n) for n in r.rotate_n(4, r.euclid(2, beats))])
+hihat = ''.join([str(n) for n in r.euclid(11, beats)])
 
 primes = all_primes(beats, 'list')
 
