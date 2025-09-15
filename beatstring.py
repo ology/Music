@@ -3,9 +3,9 @@ from music_drummer import Drummer
 
 r = Rhythms()
 beats = 16
-kick =  ''.join([str(num) for num in r.euclid(2, beats)])
-snare = ''.join([str(num) for num in r.rotate_n(4, r.euclid(2, beats))])
-hihat = ''.join([str(num) for num in r.euclid(11, beats)])
+kick =  ''.join([str(n) for n in r.euclid(2, beats)])
+snare = ''.join([str(n) for n in r.rotate_n(4, r.euclid(2, beats))])
+hihat = ''.join([str(n) for n in r.euclid(11, beats)])
 
 d = Drummer()
 
