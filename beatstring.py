@@ -1,4 +1,11 @@
+from music_creatingrhythms import Rhythms
 from music_drummer import Drummer
+
+r = Rhythms()
+beats = 16
+kick = r.euclid(5, beats)
+snare = r.euclid(7, beats)
+hihat = r.euclid(11, beats)
 
 d = Drummer()
 
@@ -14,9 +21,9 @@ d.rest(['kick', 'snare'], duration=4)
 for _ in range(4):
     d.pattern(
         patterns={
-            'kick':  '1000000010000000',
-            'snare': '0000100000001000',
-            'hihat': '2310101010101010',
+            'kick': kick,
+            'snare': snare,
+            'hihat': hihat,
         }
     )
 
