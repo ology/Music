@@ -3,6 +3,16 @@ from music_drummer import Drummer
 from find_primes import all_primes
 import random
 
+def pattern(n=8):
+    for _ in range(n):
+        d.pattern(
+            patterns={
+                'kick': kick,
+                'snare': snare,
+                'hihat': hihat,
+            }
+        )
+
 r = Rhythms()
 beats = 16
 kick  = ''.join([str(n) for n in r.euclid(2, beats)])
@@ -22,16 +32,9 @@ d.set_bpm(100)
 d.count_in()
 d.rest(['kick', 'snare'], duration=4)
 
-for _ in range(8):
-    d.pattern(
-        patterns={
-            'kick': kick,
-            'snare': snare,
-            'hihat': hihat,
-        }
-    )
+pattern()
 
-for _ in range(8):
+for _ in range(4):
     d.pattern(
         patterns={
             'kick':  ''.join([str(n) for n in r.euclid(random.choice(primes), beats)]),
@@ -40,14 +43,7 @@ for _ in range(8):
         }
     )
 
-for _ in range(8):
-    d.pattern(
-        patterns={
-            'kick': kick,
-            'snare': snare,
-            'hihat': hihat,
-        }
-    )
+pattern()
 
 d.sync_parts()
 
