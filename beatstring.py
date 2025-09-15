@@ -40,6 +40,15 @@ for _ in range(8):
         }
     )
 
+for _ in range(8):
+    d.pattern(
+        patterns={
+            'kick': kick,
+            'snare': snare,
+            'hihat': hihat,
+        }
+    )
+
 d.sync_parts()
 
 d.score.show('midi')
