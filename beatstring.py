@@ -3,9 +3,9 @@ from music_drummer import Drummer
 
 r = Rhythms()
 beats = 16
-kick = r.euclid(5, beats)
-snare = r.euclid(7, beats)
-hihat = r.euclid(11, beats)
+kick =  ''.join([str(num) for num in r.euclid(4, beats)])
+snare = ''.join([str(num) for num in r.euclid(3, beats)])
+hihat = ''.join([str(num) for num in r.euclid(11, beats)])
 
 d = Drummer()
 
@@ -18,7 +18,7 @@ d.set_bpm(60)
 d.count_in()
 d.rest(['kick', 'snare'], duration=4)
 
-for _ in range(4):
+for _ in range(8):
     d.pattern(
         patterns={
             'kick': kick,
