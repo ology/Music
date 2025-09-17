@@ -2,16 +2,30 @@ from music21 import duration, note, stream
 from music_melodicdevice import Device
 
 # default scale: chromatic
-device = Device(notes=['C4', 'E4', 'D4', 'G4'])
-notes = device.transpose(2) # ['D4', 'F#4', 'E4', 'A4', 'D5']
-notes = device.invert('C5')
+notes = ['C4', 'E4', 'D4', 'G4']
+
+device = Device(scale_name='major')
+device.notes = notes
+device.notes = device.invert('C5')
+device.notes = device.transpose(-5)
 
 s = stream.Stream()
 p = stream.Part()
-for i in device.notes + notes:
-    n = note.Note(i)
-    n.duration = duration.Duration(1)
-    p.append(n)
+
+length = len(notes) + len(device.notes)
+
+for i,j in enumerate(notes + device.notes):
+    if (i + 1) % 4 == 0:
+        turn = device.turn(1, j)
+        for t in turn:
+            m = note.Note(t[1])
+            m.duration = duration.Duration(t[0])
+            p.append(m)
+    else:
+        n = note.Note(j)
+        n.duration = duration.Duration(1)
+        p.append(n)
+
 s.append(p)
 s.show()
 
