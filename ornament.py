@@ -1,9 +1,21 @@
+from music21 import duration, note, stream
 from music_melodicdevice import Device
 
 # default scale: chromatic
 device = Device(notes=['C4', 'E4', 'D4', 'G4', 'C5'])
 notes = device.transpose(2) # ['D4', 'F#4', 'E4', 'A4', 'D5']
-notes = device.invert('C4') # ['C4', 'G#3', 'A#3', 'F3', 'C3']
+notes = device.invert('C5') # ['C4', 'G#3', 'A#3', 'F3', 'C3']
+
+s = stream.Stream()
+p = stream.Part()
+for i in device.notes + notes:
+    n = note.Note(i)
+    n.duration = duration.Duration(1)
+    p.append(n)
+s.append(p)
+s.show()
+
+"""
 
 # diatonic transformation:
 device = Device(scale_name='major', verbose=False)
@@ -57,4 +69,4 @@ notes = device.trill(1, 'D5', number=2, offset=-1) # [[1/4,'D5'], [1/4,'C5'], [1
 
 notes = device.mordent(1, 'D5', offset=1) # [[1/4,'D5'], [1/4,'E5'], [1/2,'D5']])
 notes = device.mordent(1, 'D5', offset=-1) # [[1/4,'D5'], [1/4,'C5'], [1/2,'D5']])
-
+"""
