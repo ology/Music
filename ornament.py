@@ -28,7 +28,6 @@ s.append(p)
 s.show()
 
 """
-
 # diatonic transformation:
 device = Device(scale_name='major', verbose=False)
 device.notes = ['C4', 'E4', 'D4', 'G4', 'C5']
