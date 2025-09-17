@@ -2,7 +2,7 @@ from music21 import duration, note, stream
 from music_melodicdevice import Device
 
 # default scale: chromatic
-device = Device(notes=['C4', 'E4', 'D4', 'G4', 'C5'])
+device = Device(notes=['C4', 'E4', 'D4', 'G4'])
 notes = device.transpose(2) # ['D4', 'F#4', 'E4', 'A4', 'D5']
 notes = device.invert('C5')
 
