@@ -12,8 +12,6 @@ device.notes = device.transpose(-5)
 s = stream.Stream()
 p = stream.Part()
 
-length = len(notes) + len(device.notes)
-
 for i,j in enumerate(notes + device.notes):
     if (i + 1) % 4 == 0:
         turn = device.turn(1, j)
