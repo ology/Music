@@ -4,7 +4,7 @@ from music_melodicdevice import Device
 # default scale: chromatic
 device = Device(notes=['C4', 'E4', 'D4', 'G4', 'C5'])
 notes = device.transpose(2) # ['D4', 'F#4', 'E4', 'A4', 'D5']
-notes = device.invert('C5') # ['C4', 'G#3', 'A#3', 'F3', 'C3']
+notes = device.invert('C5')
 
 s = stream.Stream()
 p = stream.Part()
