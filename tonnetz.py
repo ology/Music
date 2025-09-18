@@ -9,7 +9,7 @@ p = stream.Part()
 r = Rhythm(durations=[1, 3/2, 2])
 motifs = [ r.motif() for _ in range(3) ]
 
-t = Transform(max=len(motifs[0]))
+t = Transform(max=len(motifs[0]), verbose=True)
 generated = t.circular()[0]
 
 g = Generator()
