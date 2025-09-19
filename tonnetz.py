@@ -15,8 +15,8 @@ generated = t.circular()[0]
 g = Generator(
     net={
         1: [3,4,5,6],
-        2: [1,4,5,6],
-        3: [1,2,4,5,6],
+        2: [4,5,6],
+        3: [2,4,5,6],
         4: [1,5,6],
         5: [2,3,4,7],
         6: [3,4,5],
@@ -24,26 +24,27 @@ g = Generator(
     }
 )
 
-for motif in motifs:
-    g.max = len(motif)
-    phrase = g.generate()
-    for i,dura in enumerate(motif):
-        c = chord.Chord(phrase[i])
+for _ in range(2):
+    for motif in motifs:
+        g.max = len(motif)
+        phrase = g.generate()
+        for i,dura in enumerate(motif):
+            c = chord.Chord(phrase[i])
+            c.duration = duration.Duration(dura)
+            p.append(c)
+
+    for i,dura in enumerate(motifs[0]):
+        c = chord.Chord(generated[i])
         c.duration = duration.Duration(dura)
         p.append(c)
 
-for i,dura in enumerate(motifs[0]):
-    c = chord.Chord(generated[i])
-    c.duration = duration.Duration(dura)
-    p.append(c)
-
-for motif in motifs + [motifs[0]]:
-    g.max = len(motif)
-    phrase = g.generate()
-    for i,dura in enumerate(motif):
-        c = chord.Chord(phrase[i])
-        c.duration = duration.Duration(dura)
-        p.append(c)
+    for motif in motifs + [motifs[0]]:
+        g.max = len(motif)
+        phrase = g.generate()
+        for i,dura in enumerate(motif):
+            c = chord.Chord(phrase[i])
+            c.duration = duration.Duration(dura)
+            p.append(c)
 
 s.append(p)
 s.show()
