@@ -23,7 +23,7 @@ g = Generator(
     }
 )
 
-for _ in range(8):
+for _ in range(4):
     for m in motifs:
         t.max = len(m)
         generated = t.circular()[0]
