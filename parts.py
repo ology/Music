@@ -10,6 +10,10 @@ melody_part = stream.Part()
 
 r = Rhythm(durations=[1, 2, 3])
 chord_motifs = [ r.motif() for _ in range(3) ]
+r = Rhythm(
+    durations=[1/2, 1/3, 1, 3/2, 2],
+    groups={1/3: 3},
+)
 melody_motifs = [ r.motif() for _ in range(3) ]
 
 g = Generator(
