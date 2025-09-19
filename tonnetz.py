@@ -6,7 +6,7 @@ from random_rhythms import Rhythm
 s = stream.Stream()
 p = stream.Part()
 
-r = Rhythm(durations=[1, 2, 3, 4])
+r = Rhythm(durations=[1, 2, 3])
 motifs = [ r.motif() for _ in range(3) ]
 
 g = Generator(
