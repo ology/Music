@@ -67,7 +67,7 @@ v = MusicVoiceGen(
 for _ in range(2):
     for motif in melody_motifs:
         for dura in motif:
-            if random.random() < 0.3:
+            if random.random() < 0.2:
                 n = note.Rest()
             else:
                 n = note.Note(v.rand())
@@ -77,7 +77,7 @@ for _ in range(2):
     melody_part.append(n)
     for motif in melody_motifs + [melody_motifs[0]]:
         for dura in motif:
-            if random.random() < 0.3:
+            if random.random() < 0.2:
                 n = note.Rest()
             else:
                 n = note.Note(v.rand())
