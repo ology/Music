@@ -37,5 +37,13 @@ for i,dura in enumerate(motifs[0]):
     c.duration = duration.Duration(dura)
     p.append(c)
 
+for motif in motifs + [motifs[0]]:
+    g.max = len(motif)
+    phrase = g.generate()
+    for i,dura in enumerate(motif):
+        c = chord.Chord(phrase[i])
+        c.duration = duration.Duration(dura)
+        p.append(c)
+
 s.append(p)
 s.show()
