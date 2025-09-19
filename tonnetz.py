@@ -12,7 +12,17 @@ motifs = [ r.motif() for _ in range(3) ]
 t = Transform(max=len(motifs[0]), verbose=True)
 generated = t.circular()[0]
 
-g = Generator()
+g = Generator(
+    net={
+        1: [3,4,5,6],
+        2: [1,4,5,6],
+        3: [1,2,4,5,6],
+        4: [1,5,6],
+        5: [2,3,4,7],
+        6: [3,4,5],
+        7: [3,5],
+    }
+)
 
 for motif in motifs:
     g.max = len(motif)
