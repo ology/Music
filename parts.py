@@ -70,7 +70,7 @@ for _ in range(2):
             melody_part.append(n)
     n = note.Rest(type='whole')
     melody_part.append(n)
-    for motif in melody_motifs + melody_motifs[0]:
+    for motif in melody_motifs + [melody_motifs[0]]:
         for dura in motif:
             n = note.Note(v.rand())
             n.duration = duration.Duration(dura)
