@@ -3,6 +3,7 @@ from chord_progression_network import Generator
 from music_tonnetztransform import Transform
 from music_voicegen import MusicVoiceGen
 from random_rhythms import Rhythm
+import random
 
 s = stream.Stream()
 chord_part = stream.Part()
@@ -66,14 +67,20 @@ v = MusicVoiceGen(
 for _ in range(2):
     for motif in melody_motifs:
         for dura in motif:
-            n = note.Note(v.rand())
+            if random.random() < 0.3:
+                n = note.Rest()
+            else:
+                n = note.Note(v.rand())
             n.duration = duration.Duration(dura)
             melody_part.append(n)
     n = note.Rest(type='whole')
     melody_part.append(n)
     for motif in melody_motifs + [melody_motifs[0]]:
         for dura in motif:
-            n = note.Note(v.rand())
+            if random.random() < 0.3:
+                n = note.Rest()
+            else:
+                n = note.Note(v.rand())
             n.duration = duration.Duration(dura)
             melody_part.append(n)
 
