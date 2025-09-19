@@ -25,8 +25,10 @@ g = Generator(
 )
 
 for _ in range(2):
-    for motif in motifs:
+    for i,motif in enumerate(motifs):
         g.max = len(motif)
+        g.tonic = i == 0
+        g.resolve = i == len(motif) - 1
         phrase = g.generate()
         for i,dura in enumerate(motif):
             c = chord.Chord(phrase[i])
