@@ -9,9 +9,6 @@ p = stream.Part()
 r = Rhythm(durations=[1, 3/2, 2])
 motifs = [ r.motif() for _ in range(3) ]
 
-t = Transform(max=len(motifs[0]), verbose=True)
-generated = t.circular()[0]
-
 g = Generator(
     net={
         1: [3,4,5,6],
@@ -34,6 +31,14 @@ for _ in range(2):
             c = chord.Chord(phrase[i])
             c.duration = duration.Duration(dura)
             p.append(c)
+
+    t = Transform(
+        format='ISO',
+        base_chord=phrase[-1],
+        max=len(motifs[0]),
+        verbose=True,
+    )
+    generated = t.circular()[0]
 
     for i,dura in enumerate(motifs[0]):
         c = chord.Chord(generated[i])
