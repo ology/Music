@@ -40,17 +40,17 @@ for _ in range(2):
             c = chord.Chord(phrase[j])
             c.duration = duration.Duration(dura)
             chord_part.append(c)
-    t = Transform(
-        format='ISO',
-        base_chord=phrase[-1],
-        max=len(chord_motifs[0]),
-        verbose=True,
-    )
-    generated = t.circular()[0]
-    for i,dura in enumerate(chord_motifs[0]):
-        c = chord.Chord(generated[i])
-        c.duration = duration.Duration(dura)
-        chord_part.append(c)
+#    t = Transform(
+#        format='ISO',
+#        base_chord=phrase[-1],
+#        max=len(chord_motifs[0]),
+#        verbose=True,
+#    )
+#    generated = t.circular()[0]
+#    for i,dura in enumerate(chord_motifs[0]):
+#        c = chord.Chord(generated[i])
+#        c.duration = duration.Duration(dura)
+#        chord_part.append(c)
     for motif in chord_motifs + [chord_motifs[0]]:
         g.max = len(motif)
         phrase = g.generate()
@@ -60,7 +60,7 @@ for _ in range(2):
             chord_part.append(c)
 
 v = MusicVoiceGen(
-    pitches=[ p.midi for p in scale.MajorScale('C').getPitches() ],
+    pitches=[ p.midi + 12 for p in scale.MajorScale('C').getPitches() ],
     intervals=[-3,-2,-1,1,2,3]
 )
 
@@ -73,8 +73,8 @@ for _ in range(2):
                 n = note.Note(v.rand())
             n.duration = duration.Duration(dura)
             melody_part.append(n)
-    n = note.Rest(type='whole')
-    melody_part.append(n)
+#    n = note.Rest(type='whole')
+#    melody_part.append(n)
     for motif in melody_motifs + [melody_motifs[0]]:
         for dura in motif:
             if random.random() < 0.2:
