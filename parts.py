@@ -88,6 +88,7 @@ for _ in range(2):
             melody_part.append(n)
 
 bass = Bassline(
+    octave=3,
     verbose=True,
 )
 notes = bass.generate('C', 14)
