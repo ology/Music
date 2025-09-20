@@ -1,10 +1,11 @@
 from music21 import note, stream
 from music_bassline_generator import Bassline
 
-def add_notes(s, notes):
+def add_notes(p, notes):
+    print(notes)
     for n in notes:
         n = note.Note(n, type='quarter')
-    bass_part.append(n)
+        p.append(n)
 
 s = stream.Stream()
 bass_part = stream.Part()
@@ -20,7 +21,7 @@ for chord in ['Am7','D7','GM7','CM7','F#m7b5','B7','Em','Em']:
 
 s.insert(0, bass_part)
 
-# s.show()
+s.show()
 
 """
 bass = Bassline(
