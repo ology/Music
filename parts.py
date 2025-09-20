@@ -1,4 +1,5 @@
 from music21 import duration, chord, note, scale, stream
+from music_bassline_generator import Bassline
 from chord_progression_network import Generator
 from music_tonnetztransform import Transform
 from music_voicegen import MusicVoiceGen
@@ -8,6 +9,7 @@ import random
 s = stream.Stream()
 chord_part = stream.Part()
 melody_part = stream.Part()
+bass_part = stream.Part()
 
 r = Rhythm(durations=[1, 2, 3])
 chord_motifs = [ r.motif() for _ in range(3) ]
@@ -15,6 +17,7 @@ r = Rhythm(
     durations=[1/2, 1/3, 1, 3/2, 2],
     weights=[2, 1, 3, 2, 2],
     groups={1/3: 3},
+    smallest=1/4,
 )
 melody_motifs = [ r.motif() for _ in range(3) ]
 
@@ -84,7 +87,18 @@ for _ in range(2):
             n.duration = duration.Duration(dura)
             melody_part.append(n)
 
+bass = Bassline(
+    verbose=True,
+)
+notes = bass.generate('C', 14)
+
+for _ in range(2):
+    for n in notes:
+        n = note.Note(n, type='half')
+        bass_part.append(n)
+
 s.insert(0, chord_part)
 s.insert(0, melody_part)
+s.insert(0, bass_part)
 
 s.show()
