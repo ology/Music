@@ -1,9 +1,9 @@
 from music21 import chord, note, stream
 from music_bassline_generator import Bassline
-from pychord import pyChord
+from pychord import Chord as pyChord
 
 def add_notes(p, notes):
-    print(notes)
+    # print(notes)
     for n in notes:
         n = note.Note(n, type='quarter')
         p.append(n)
@@ -17,11 +17,11 @@ bass = Bassline(octave=2)
 num = 4
 
 # Autumn Leaves verse
-for chord in ['Am7','D7','GM7','CM7','F#m7b5','B7','Em','Em']:
-    notes = pyChord(chord)
-    c = chord.Chord(notes)
+for my_chord in ['Am7','D7','GM7','CM7','F#m7b5','B7','Em','Em']:
+    c = pyChord(my_chord)
+    c = chord.Chord(c.components())
     chord_part.append(c)
-    notes = bass.generate(chord, num)
+    notes = bass.generate(my_chord, num)
     add_notes(bass_part, notes)
 
 s.insert(0, bass_part)
