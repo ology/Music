@@ -9,7 +9,7 @@ def add_notes(s, notes):
 s = stream.Stream()
 bass_part = stream.Part()
 
-bass = Bassline()
+bass = Bassline(octave=2)
 
 num = 4
 
