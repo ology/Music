@@ -19,7 +19,7 @@ num = 4
 # Autumn Leaves
 for my_chord in ['Dm7','G7','CM7','FM7','Bm7b5','E7#9','Am7','D7']:
     c = pyChord(my_chord)
-    c = chord.Chord(c.components(), type="whole")
+    c = chord.Chord(c.components(), type='whole')
     chord_part.append(c)
     notes = bass.generate(my_chord, num)
     add_notes(bass_part, notes)
