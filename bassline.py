@@ -19,13 +19,13 @@ num = 4
 # Autumn Leaves verse
 for my_chord in ['Am7','D7','GM7','CM7','F#m7b5','B7','Em','Em']:
     c = pyChord(my_chord)
-    c = chord.Chord(c.components())
+    c = chord.Chord(c.components(), type="whole")
     chord_part.append(c)
     notes = bass.generate(my_chord, num)
     add_notes(bass_part, notes)
 
-s.insert(0, bass_part)
 s.insert(0, chord_part)
+s.insert(0, bass_part)
 
 s.show()
 
