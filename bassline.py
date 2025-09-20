@@ -12,7 +12,7 @@ s = stream.Stream()
 bass_part = stream.Part()
 chord_part = stream.Part()
 
-bass = Bassline(modal=True, octave=2)
+bass = Bassline(modal=True, keycenter='E', octave=2)
 
 num = 4
 
