@@ -17,7 +17,11 @@ def autumn_leaves():
 
 def add_notes(p=melody_part, notes=[], type='quarter'):
     for n in notes:
-        n = note.Note(n, type=type)
+        if type == 'dotted_half':
+            n = note.Note(n)
+            n.quarterLength = 1.5
+        else:
+            n = note.Note(n, type=type)
         p.append(n)
 
 bass = Bassline(modal=True, octave=2, tonic=True, resolve=False)
@@ -65,6 +69,16 @@ add_notes(notes=['D4','G3','G4','F4'])
 add_notes(notes=['E4'], type='whole')
 add_notes(notes=['E4'], type='half')
 add_notes(notes=['D#4','E4','F4','F4','D4','D4'])
+add_notes(notes=['B3'], type='dotted_half')
+add_notes(notes=['F4'])
+add_notes(notes=['E4','E4'], type='half')
+add_notes(notes=['E4'], type='dotted_half')
+add_notes(notes=['A3'])
+add_notes(notes=['D4'], type='dotted_half')
+add_notes(notes=['C4'])
+add_notes(notes=['B3'], type='half')
+add_notes(notes=['C4','C4'])
+add_notes(notes=['A3','A3'], type='whole')
 
 s.insert(0, melody_part)
 s.insert(0, chord_part)
