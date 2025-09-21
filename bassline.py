@@ -24,7 +24,13 @@ def add_notes(p=melody_part, notes=[], type='quarter'):
             n = note.Note(n, type=type)
         p.append(n)
 
-bass = Bassline(modal=True, octave=2, tonic=True, resolve=False, guitar=True)
+bass = Bassline(
+    modal=True,
+    octave=2,
+    tonic=True,
+    resolve=False,
+    guitar=True,
+)
 
 num = 4
 
