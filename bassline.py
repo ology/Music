@@ -10,15 +10,15 @@ def autumn_leaves():
         ['Bm7b5','E7b9','Am7','Gm7','FM7','Bm7b5','Am7','Am7']
     ]
 
-def add_notes(p, notes, type='quarter'):
-    for n in notes:
-        n = note.Note(n, type=type)
-        p.append(n)
-
 s = stream.Stream()
 bass_part = stream.Part()
 chord_part = stream.Part()
 melody_part = stream.Part()
+
+def add_notes(p=melody_part, notes=[], type='quarter'):
+    for n in notes:
+        n = note.Note(n, type=type)
+        p.append(n)
 
 bass = Bassline(modal=True, octave=2, tonic=True, resolve=False)
 
@@ -38,11 +38,19 @@ for my_chord in autumn_leaves()[0]:
 # melody:
 m = note.Rest(type='quarter')
 melody_part.append(m)
-add_notes(melody_part, ['A3','B3','C4'])
-add_notes(melody_part, ['F4'], 'whole')
-add_notes(melody_part, ['F4','G3','A3','B3'])
-add_notes(melody_part, ['E4','E4'], 'half')
-add_notes(melody_part, ['E4','F3','G3','A3'])
+add_notes(notes=['A3','B3','C4'])
+add_notes(notes=['F4'], type='whole')
+add_notes(notes=['F4','G3','A3','B3'])
+add_notes(notes=['E4','E4'], type='half')
+add_notes(notes=['E4','F3','G3','A3'])
+add_notes(notes=['D4'], type='whole')
+add_notes(notes=['D4','E3','F#3','G#3'])
+add_notes(notes=['C4'], type='whole')
+add_notes(notes=['C4','A3','B3','C4'])
+add_notes(notes=['F4'], type='whole')
+add_notes(notes=['F4','G3','A3','B3'])
+add_notes(notes=['E4','E4'], type='half')
+add_notes(notes=['E4','F3','G3','A3']) # 12
 
 s.insert(0, melody_part)
 s.insert(0, chord_part)
