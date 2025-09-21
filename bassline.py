@@ -19,7 +19,7 @@ def add_notes(p=melody_part, notes=[], type='quarter'):
     for n in notes:
         if type == 'dotted_half':
             n = note.Note(n)
-            n.quarterLength = 1.5
+            n.quarterLength = 3
         else:
             n = note.Note(n, type=type)
         p.append(n)
