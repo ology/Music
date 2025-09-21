@@ -2,6 +2,11 @@ from music21 import chord, note, stream
 from music_bassline_generator import Bassline
 from pychord import Chord as pyChord
 
+s = stream.Stream()
+bass_part = stream.Part()
+chord_part = stream.Part()
+melody_part = stream.Part()
+
 def autumn_leaves():
     return [
         ['Dm7','G7','CM7','FM7','Bm7b5','E7','Am7','Am7'] +
@@ -9,11 +14,6 @@ def autumn_leaves():
         ['Bm7b5','E7b9','Am7','Am7','Dm7','G7','CM7','FM7'] +
         ['Bm7b5','E7b9','Am7','Gm7','FM7','Bm7b5','Am7','Am7']
     ]
-
-s = stream.Stream()
-bass_part = stream.Part()
-chord_part = stream.Part()
-melody_part = stream.Part()
 
 def add_notes(p=melody_part, notes=[], type='quarter'):
     for n in notes:
@@ -51,6 +51,20 @@ add_notes(notes=['F4'], type='whole')
 add_notes(notes=['F4','G3','A3','B3'])
 add_notes(notes=['E4','E4'], type='half')
 add_notes(notes=['E4','F3','G3','A3']) # 12
+add_notes(notes=['D4'], type='whole')
+add_notes(notes=['D4','B3','D4','C4'])
+add_notes(notes=['A3'], type='whole')
+add_notes(notes=['A3'], type='half')
+add_notes(notes=['G#3','A3','B3','E3'])
+add_notes(notes=['B3'], type='half')
+add_notes(notes=['B3','B3','A3','B3'])
+add_notes(notes=['C4'], type='whole')
+add_notes(notes=['C4','C4','B3','C4'])
+add_notes(notes=['D4'], type='whole')
+add_notes(notes=['D4','G3','G4','F4'])
+add_notes(notes=['E4'], type='whole')
+add_notes(notes=['E4'], type='half')
+add_notes(notes=['D#4','E4','F4','F4','D4','D4'])
 
 s.insert(0, melody_part)
 s.insert(0, chord_part)
