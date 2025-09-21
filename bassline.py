@@ -16,11 +16,15 @@ bass = Bassline(modal=True, octave=2, tonic=True, resolve=False)
 
 num = 4
 
-# Autumn Leaves
-for my_chord in ['Dm7','G7','CM7','FM7','Bm7b5','E7','Am7','Am7'] +
-                ['Dm7','G7','CM7','FM7','Bm7b5','E7','Am7','Am7'] +
-                ['Bm7b5','E7b9','Am7','Am7','Dm7','G7','CM7','FM7'] +
-                ['Bm7b5','E7b9','Am7','Gm7','FM7','Bm7b5','Am7','Am7']:
+def autumn_leaves():
+    return [
+        ['Dm7','G7','CM7','FM7','Bm7b5','E7','Am7','Am7'] +
+        ['Dm7','G7','CM7','FM7','Bm7b5','E7','Am7','Am7'] +
+        ['Bm7b5','E7b9','Am7','Am7','Dm7','G7','CM7','FM7'] +
+        ['Bm7b5','E7b9','Am7','Gm7','FM7','Bm7b5','Am7','Am7']
+    ]
+
+for my_chord in autumn_leaves()[0]:
     c = pyChord(my_chord)
     c = chord.Chord(c.components(), type='whole')
     chord_part.append(c)
