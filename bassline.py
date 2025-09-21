@@ -1,4 +1,4 @@
-from music21 import chord, note, stream
+from music21 import chord, note, stream, tempo
 from music_bassline_generator import Bassline
 from pychord import Chord as pyChord
 
@@ -86,7 +86,8 @@ add_notes(notes=['B4'], type='half')
 add_notes(notes=['C5','C5'])
 add_notes(notes=['A4','A4'], type='whole')
 
+s.append(tempo.MetronomeMark(number=90))
 s.insert(0, melody_part)
 s.insert(0, chord_part)
 s.insert(0, bass_part)
-s.show()
+s.show('midi')
