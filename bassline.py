@@ -24,7 +24,7 @@ def add_notes(p=melody_part, notes=[], type='quarter'):
             n = note.Note(n, type=type)
         p.append(n)
 
-bass = Bassline(modal=True, octave=2, tonic=True, resolve=False)
+bass = Bassline(modal=True, octave=2, tonic=True, resolve=False, guitar=True)
 
 num = 4
 
@@ -54,7 +54,7 @@ add_notes(notes=['C5','A4','B4','C5'])
 add_notes(notes=['F5'], type='whole')
 add_notes(notes=['F5','G4','A4','B4'])
 add_notes(notes=['E5','E5'], type='half')
-add_notes(notes=['E5','F4','G4','A4']) # 12
+add_notes(notes=['E5','F4','G4','A4'])
 add_notes(notes=['D5'], type='whole')
 add_notes(notes=['D5','B4','D5','C5'])
 add_notes(notes=['A4'], type='whole')
@@ -83,4 +83,4 @@ add_notes(notes=['A4','A4'], type='whole')
 s.insert(0, melody_part)
 s.insert(0, chord_part)
 s.insert(0, bass_part)
-s.show()
+s.show('midi')
