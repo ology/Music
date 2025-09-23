@@ -19,7 +19,7 @@ g = Generator(
     },
     chord_map=['m'] * 6,
     substitute=True,
-    verbose=False,
+    verbose=True,
 )
 phrase = g.generate()
 
@@ -27,19 +27,12 @@ device = Device(verbose=False)
 
 for i, ph in enumerate(phrase):
     arp_type = 'up' if i % 2 == 0 else 'down'
-    for notes in ph:
-        m = re.search(r'^[A-G][#b]?(\d)$', notes)
-        if m:
-            octave = int(m.group(1))
-        else:
-            octave = 0
-        ch = Chord(notes)
-        components = ch.components_with_pitch(octave)
-        arped = device.arp(components, duration=1, arp_type=arp_type)
-        for a in arped:
-            n = note.Note(a[1])
-            n.duration = duration.Duration(a[0])
-            p.append(n)
+    arped = device.arp(ph, duration=1, arp_type=arp_type)
+    for a in arped:
+        print(a)
+        n = note.Note(a[1])
+        n.duration = duration.Duration(a[0])
+        p.append(n)
 
 s.append(p)
 s.show()
