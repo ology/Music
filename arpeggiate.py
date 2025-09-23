@@ -19,11 +19,11 @@ g = Generator(
     },
     chord_map=['m'] * 6,
     substitute=True,
-    # verbose=True,
+    verbose=False,
 )
 phrase = g.generate()
 
-device = Device(verbose=True)
+device = Device(verbose=False)
 
 for i, ph in enumerate(phrase):
     arp_type = 'up' if i % 2 == 0 else 'down'
