@@ -26,7 +26,8 @@ phrase = g.generate()
 
 device = Device(verbose=True)
 
-for ph in phrase:
+for i, ph in enumerate(phrase):
+    arp_type = 'up' if i % 2 == 0 else 'down'
     for c in ph:
         m = re.search(r'^[A-G][#b]?(\d)$', c)
         if m:
@@ -35,7 +36,7 @@ for ph in phrase:
             octave = 0
         ch = Chord(c)
         components = ch.components_with_pitch(octave)
-        arped = device.arp(components, duration=1, arp_type='down')
+        arped = device.arp(components, duration=1, arp_type=arp_type)
         for a in arped:
             n = note.Note(a[1])
             n.duration = duration.Duration(a[0])
