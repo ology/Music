@@ -1,8 +1,6 @@
 from chord_progression_network import Generator
 from music_melodicdevice import Device
 from music21 import duration, note, stream
-from pychord import Chord
-import re
 
 s = stream.Score()
 p = stream.Part()
