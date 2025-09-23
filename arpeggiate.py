@@ -27,13 +27,13 @@ device = Device(verbose=False)
 
 for i, ph in enumerate(phrase):
     arp_type = 'up' if i % 2 == 0 else 'down'
-    for c in ph:
-        m = re.search(r'^[A-G][#b]?(\d)$', c)
+    for notes in ph:
+        m = re.search(r'^[A-G][#b]?(\d)$', notes)
         if m:
             octave = int(m.group(1))
         else:
             octave = 0
-        ch = Chord(c)
+        ch = Chord(notes)
         components = ch.components_with_pitch(octave)
         arped = device.arp(components, duration=1, arp_type=arp_type)
         for a in arped:
