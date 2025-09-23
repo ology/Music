@@ -35,7 +35,7 @@ for ph in phrase:
             octave = 0
         ch = Chord(c)
         components = ch.components_with_pitch(octave)
-        arped = device.arp(components, duration=1, arp_type='up')
+        arped = device.arp(components, duration=1, arp_type='down')
         for a in arped:
             n = note.Note(a[1])
             n.duration = duration.Duration(a[0])
