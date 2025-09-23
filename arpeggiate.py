@@ -15,7 +15,7 @@ g = Generator(
         5: [1,2,3,4,6],
         6: [1,2,3,4,5],
     },
-    chord_map=['m'] * 6,
+    chord_map=[''] * 6, # every chord is the same flavor
     substitute=True,
     verbose=False,
 )
