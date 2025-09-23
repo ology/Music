@@ -21,7 +21,6 @@ g = Generator(
     substitute=True,
     # verbose=True,
 )
-
 phrase = g.generate()
 
 device = Device(verbose=True)
@@ -43,5 +42,4 @@ for i, ph in enumerate(phrase):
             p.append(n)
 
 s.append(p)
-
 s.show()
