@@ -38,6 +38,7 @@ g = Generator(
     verbose=False,
 )
 
+# chords
 for _ in range(2):
     for i,motif in enumerate(chord_motifs):
         g.max = len(motif)
@@ -75,6 +76,7 @@ v = MusicVoiceGen(
     intervals=[-3,-2,-1,1,2,3]
 )
 
+# "melody"
 for _ in range(2):
     for motif in melody_motifs:
         for dura in motif:
@@ -95,6 +97,7 @@ for _ in range(2):
             n.duration = duration.Duration(dura)
             melody_part.append(n)
 
+# bass
 for n in bass_notes:
     if n == 'rest':
         n = note.Rest(type='whole')
