@@ -8,7 +8,7 @@ import random
 
 s = stream.Stream()
 chord_part = stream.Part()
-# melody_part = stream.Part()
+melody_part = stream.Part()
 # bass_part = stream.Part()
 
 r = Rhythm(durations=[1, 2, 3])
@@ -19,7 +19,7 @@ r = Rhythm(
     groups={1/3: 3},
     smallest=1/4,
 )
-# melody_motifs = [ r.motif() for _ in range(3) ]
+melody_motifs = [ r.motif() for _ in range(3) ]
 
 g = Generator(
     scale_name='whole-tone scale',
@@ -65,30 +65,30 @@ for _ in range(2):
             c.duration = duration.Duration(dura)
             chord_part.append(c)
 
-# v = MusicVoiceGen(
-#     pitches=[ p.midi + 12 for p in scale.MajorScale('C').getPitches() ],
-#     intervals=[-3,-2,-1,1,2,3]
-# )
+v = MusicVoiceGen(
+    pitches=[ p.midi + 12 for p in scale.WholeToneScale('C').getPitches() ],
+    intervals=[-3,-2,-1,1,2,3]
+)
 
-# for _ in range(2):
-#     for motif in melody_motifs:
-#         for dura in motif:
-#             if random.random() < 0.2:
-#                 n = note.Rest()
-#             else:
-#                 n = note.Note(v.rand())
-#             n.duration = duration.Duration(dura)
-#             melody_part.append(n)
-# #    n = note.Rest(type='whole')
-# #    melody_part.append(n)
-#     for motif in melody_motifs + [melody_motifs[0]]:
-#         for dura in motif:
-#             if random.random() < 0.2:
-#                 n = note.Rest()
-#             else:
-#                 n = note.Note(v.rand())
-#             n.duration = duration.Duration(dura)
-#             melody_part.append(n)
+for _ in range(2):
+    for motif in melody_motifs:
+        for dura in motif:
+            if random.random() < 0.2:
+                n = note.Rest()
+            else:
+                n = note.Note(v.rand())
+            n.duration = duration.Duration(dura)
+            melody_part.append(n)
+    n = note.Rest(type='whole')
+    melody_part.append(n)
+    for motif in melody_motifs + [melody_motifs[0]]:
+        for dura in motif:
+            if random.random() < 0.2:
+                n = note.Rest()
+            else:
+                n = note.Note(v.rand())
+            n.duration = duration.Duration(dura)
+            melody_part.append(n)
 
 # bass = Bassline(
 #     octave=3,
@@ -102,7 +102,7 @@ for _ in range(2):
 #         bass_part.append(n)
 
 s.insert(0, chord_part)
-# s.insert(0, melody_part)
+s.insert(0, melody_part)
 # s.insert(0, bass_part)
 
 s.show()
