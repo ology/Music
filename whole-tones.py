@@ -1,7 +1,7 @@
 from music21 import duration, chord, note, scale, stream
 from music_bassline_generator import Bassline
 from chord_progression_network import Generator
-# from music_tonnetztransform import Transform
+from music_tonnetztransform import Transform
 from music_voicegen import MusicVoiceGen
 from random_rhythms import Rhythm
 import random
@@ -46,17 +46,17 @@ for _ in range(2):
             c = chord.Chord(phrase[j])
             c.duration = duration.Duration(dura)
             chord_part.append(c)
-#    t = Transform(
-#        format='ISO',
-#        base_chord=phrase[-1],
-#        max=len(chord_motifs[0]),
-#        verbose=True,
-#    )
-#    generated = t.circular()[0]
-#    for i,dura in enumerate(chord_motifs[0]):
-#        c = chord.Chord(generated[i])
-#        c.duration = duration.Duration(dura)
-#        chord_part.append(c)
+    t = Transform(
+        format='ISO',
+        base_chord=phrase[-1],
+        max=len(chord_motifs[0]),
+        verbose=False,
+    )
+    generated = t.circular()[0]
+    for i,dura in enumerate(chord_motifs[0]):
+        c = chord.Chord(generated[i])
+        c.duration = duration.Duration(dura)
+        chord_part.append(c)
     for motif in chord_motifs + [chord_motifs[0]]:
         g.max = len(motif)
         phrase = g.generate()
