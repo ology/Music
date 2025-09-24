@@ -10,7 +10,7 @@ chord_part = stream.Part()
 melody_part = stream.Part()
 bass_part = stream.Part()
 
-bass_notes = [] # accumulated by the note of a chord progression measure
+bass_notes = [] # accumulated by the first note of a chord progression measure
 
 r = Rhythm(durations=[1, 2, 3])
 chord_motifs = [ r.motif() for _ in range(3) ]
