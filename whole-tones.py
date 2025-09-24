@@ -1,5 +1,4 @@
 from music21 import duration, chord, note, scale, stream
-# from music_bassline_generator import Bassline
 from chord_progression_network import Generator
 from music_tonnetztransform import Transform
 from music_voicegen import MusicVoiceGen
@@ -94,13 +93,6 @@ for _ in range(2):
                 n = note.Note(v.rand())
             n.duration = duration.Duration(dura)
             melody_part.append(n)
-
-# bass = Bassline(
-#     octave=3,
-#     verbose=False,
-# )
-# notes = bass.generate('C', 14)
-
 
 for n in bass_notes:
     if n == 'rest':
