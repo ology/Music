@@ -89,7 +89,7 @@ for _ in range(2):
 
 bass = Bassline(
     octave=3,
-    verbose=True,
+    verbose=False,
 )
 notes = bass.generate('C', 14)
 
