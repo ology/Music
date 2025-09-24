@@ -44,6 +44,7 @@ for _ in range(2):
         base_chord=phrase[-1],
         max=len(chord_motifs[0]),
         verbose=False,
+        transforms=['P','L','R'],
     )
     generated = t.circular()[0]
     bass_notes.append('rest')
