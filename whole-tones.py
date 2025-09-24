@@ -112,6 +112,6 @@ for n in bass_notes:
 # finalize
 s.insert(0, chord_part)
 s.insert(0, melody_part)
-s.insert(0, bass_part.transpose(-(12 * 2)))
+s.insert(0, bass_part.transpose(-12 * 2))
 
 s.show() # 'midi' to open in a music app
