@@ -42,7 +42,7 @@ g = Generator(
 
 # chords
 for _ in range(2):
-    # section A
+    # section A1
     for i,motif in enumerate(chord_motifs):
         g.max = len(motif)
         g.tonic = i == 0
@@ -53,7 +53,7 @@ for _ in range(2):
             c = chord.Chord(phrase[j])
             c.duration = duration.Duration(dura)
             chord_part.append(c)
-    # section B
+    # section B1
     t = Transform(
         format='ISO',
         base_chord=phrase[-1],
@@ -62,11 +62,11 @@ for _ in range(2):
     )
     generated = t.circular()[0]
     bass_notes.append('rest')
-    # section A
     for i,dura in enumerate(chord_motifs[0]):
         c = chord.Chord(generated[i])
         c.duration = duration.Duration(dura)
         chord_part.append(c)
+    # section A2
     for motif in chord_motifs + [chord_motifs[0]]:
         g.max = len(motif)
         phrase = g.generate()
