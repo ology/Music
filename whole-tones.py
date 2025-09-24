@@ -14,6 +14,7 @@ bass_notes = [] # accumulated by the note of a chord progression measure
 
 r = Rhythm(durations=[1, 2, 3])
 chord_motifs = [ r.motif() for _ in range(3) ]
+
 r = Rhythm(
     durations=[1/2, 1/3, 1, 3/2],
     weights=[2, 1, 3, 2],
