@@ -32,10 +32,12 @@ phrase = g.generate()
 
 device = Device(verbose=False)
 
+bpm = 100
+
 with mido.open_output(output_port_name) as outport:
+    outport.send(mido.Message('start'))
     velocity = 100
     channel = 0
-
     for i, ph in enumerate(phrase):
         arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
         for a in arped:
