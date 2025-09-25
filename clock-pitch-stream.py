@@ -56,12 +56,12 @@ def note_stream_thread():
             # time.sleep(0.1) # delay between notes
 
 if __name__ == "__main__":
-    clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # Daemon so it stops when main thread exits
+    clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
     note_thread = threading.Thread(target=note_stream_thread)
 
     clock_thread.start()
     note_thread.start()
 
-    note_thread.join() # Wait for the note stream to finish
+    note_thread.join() # wait for the note stream to finish
 
     outport.close()
