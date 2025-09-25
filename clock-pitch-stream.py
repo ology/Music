@@ -43,4 +43,12 @@ if __name__ == "__main__":
     clock_thread.start()
     note_thread.start()
     note_thread.join() # wait for the note stream to finish
+
+    # none of these work:
+    # outport.reset()
+    # msg_all_notes_off = mido.Message('control_change', channel=0, control=123, value=0)
+    # outport.send(msg_all_notes_off)
+    # msg_reset_controllers = mido.Message('control_change', channel=0, control=121, value=0)
+    # outport.send(msg_reset_controllers)
+
     outport.close()
