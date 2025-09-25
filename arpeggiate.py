@@ -19,7 +19,7 @@ g = Generator(
         6: [1,2,3,4,5],
     },
     weights={ i: weights for i in range(1,7) },
-    chord_map=[''] * 6, # every chord is the same flavor
+    chord_map=[''] * 6, # every chord is the same flavor, like '', 'm', '7'
     resolve=False,
     substitute=True,
     verbose=False,
