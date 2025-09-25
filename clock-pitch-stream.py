@@ -12,7 +12,7 @@ CLOCK_DELAY = (60 / BPM) / 24
 
 try:
     outport = mido.open_output(MIDI_PORT_NAME)
-    print(f"Opened MIDI port: {MIDI_PORT_NAME}")
+    # print(f"Opened MIDI port: {MIDI_PORT_NAME}")
 except Exception as e:
     print(f"Error opening MIDI port: {e}")
     exit()
