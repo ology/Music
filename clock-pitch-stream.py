@@ -6,9 +6,7 @@ MIDI_PORT_NAME = 'USB MIDI Interface'
 BPM = 100
 NOTE_DURATION_SECONDS = 0.5
 NOTE_VELOCITY = 100
-
-# Calculate delay for MIDI clock (24 clock messages per quarter note)
-CLOCK_DELAY = (60 / BPM) / 24
+CLOCK_DELAY = (60 / BPM) / 24 # 24 clock messages per quarter note
 
 try:
     outport = mido.open_output(MIDI_PORT_NAME)
