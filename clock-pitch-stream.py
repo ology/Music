@@ -22,7 +22,6 @@ def midi_clock_thread():
         time.sleep(interval)
 
 def note_stream_thread():
-    # weights = [ 1 for _ in range(1,6) ] # equal probability
     g = Generator(
         max=4 * 8, # beats x measures
     )
