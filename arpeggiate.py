@@ -8,7 +8,7 @@ p = stream.Part()
 weights = [ 1 for _ in range(1,6) ]
 
 g = Generator(
-    max=16,
+    max=4 * 6, # beats x measures
     scale_name='whole-tone scale',
     net={
         1: [2,3,4,5,6],
