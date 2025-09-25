@@ -5,6 +5,8 @@ from music21 import duration, note, stream
 s = stream.Score()
 p = stream.Part()
 
+weights = [ 1 for _ in range(1,6) ]
+
 g = Generator(
     max=16,
     scale_name='whole-tone scale',
@@ -16,7 +18,17 @@ g = Generator(
         5: [1,2,3,4,6],
         6: [1,2,3,4,5],
     },
+    # weights={ i: weights for i in range(1,6) },
+    weights={
+        1: weights,
+        2: weights,
+        3: weights,
+        4: weights,
+        5: weights,
+        6: weights,
+    },
     chord_map=['7'] * 6, # every chord is the same flavor
+    resolve=False,
     substitute=True,
     verbose=False,
 )
