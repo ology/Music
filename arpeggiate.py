@@ -5,7 +5,7 @@ from music21 import duration, note, stream
 s = stream.Score()
 p = stream.Part()
 
-weights = [ 1 for _ in range(1,6) ]
+weights = [ 1 for _ in range(1,6) ] # equal probability
 
 g = Generator(
     max=4 * 6, # beats x measures
@@ -19,7 +19,7 @@ g = Generator(
         6: [1,2,3,4,5],
     },
     weights={ i: weights for i in range(1,7) },
-    chord_map=['7'] * 6, # every chord is the same flavor
+    chord_map=[''] * 6, # every chord is the same flavor
     resolve=False,
     substitute=True,
     verbose=False,
