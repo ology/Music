@@ -7,29 +7,8 @@ from music_melodicdevice import Device
 
 midi_port = 'USB MIDI Interface'
 bpm = 100
-velocity = 100
+velocity = 120
 interval = (60 / bpm) / 24 # 24 clock messages per quarter note
-
-weights = [ 1 for _ in range(1,6) ] # equal probability
-g = Generator(
-    max=4 * 6, # beats x measures
-    scale_name='whole-tone scale',
-    net={
-        1: [2,3,4,5,6],
-        2: [1,3,4,5,6],
-        3: [1,2,4,5,6],
-        4: [1,2,3,5,6],
-        5: [1,2,3,4,6],
-        6: [1,2,3,4,5],
-    },
-    weights={ i: weights for i in range(1,7) },
-    chord_map=['7'] * 6, # set every chord to the same flavor (like '', 'm', '7')
-    resolve=False,
-    substitute=True,
-    verbose=False,
-)
-phrase = g.generate()
-device = Device(verbose=False)
 
 try:
     outport = mido.open_output(midi_port)
@@ -43,6 +22,26 @@ def midi_clock_thread():
         time.sleep(interval)
 
 def note_stream_thread():
+    # weights = [ 1 for _ in range(1,6) ] # equal probability
+    g = Generator(
+        max=4 * 8, # beats x measures
+        # scale_name='whole-tone scale',
+        # net={
+        #     1: [2,3,4,5,6],
+        #     2: [1,3,4,5,6],
+        #     3: [1,2,4,5,6],
+        #     4: [1,2,3,5,6],
+        #     5: [1,2,3,4,6],
+        #     6: [1,2,3,4,5],
+        # },
+        # weights={ i: weights for i in range(1,7) },
+        # chord_map=[''] * 6, # set every chord to the same flavor (like '', 'm', '7')
+        # resolve=False,
+        # substitute=True,
+        # verbose=False,
+    )
+    phrase = g.generate()
+    device = Device(verbose=False)
     for ph in phrase:
         arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
         for a in arped:
