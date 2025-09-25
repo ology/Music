@@ -25,20 +25,6 @@ def note_stream_thread():
     # weights = [ 1 for _ in range(1,6) ] # equal probability
     g = Generator(
         max=4 * 8, # beats x measures
-        # scale_name='whole-tone scale',
-        # net={
-        #     1: [2,3,4,5,6],
-        #     2: [1,3,4,5,6],
-        #     3: [1,2,4,5,6],
-        #     4: [1,2,3,5,6],
-        #     5: [1,2,3,4,6],
-        #     6: [1,2,3,4,5],
-        # },
-        # weights={ i: weights for i in range(1,7) },
-        # chord_map=[''] * 6, # set every chord to the same flavor (like '', 'm', '7')
-        # resolve=False,
-        # substitute=True,
-        # verbose=False,
     )
     phrase = g.generate()
     device = Device(verbose=False)
@@ -51,7 +37,6 @@ def note_stream_thread():
             time.sleep(a[0])
             msg_off = mido.Message('note_off', note=p, velocity=velocity)
             outport.send(msg_off)
-            # time.sleep(0.1) # delay between notes
 
 if __name__ == "__main__":
     clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
