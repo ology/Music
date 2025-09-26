@@ -9,11 +9,11 @@ bpm = 100
 velocity = 100
 transitions = [ 1 for _ in range(1, 7) ] + [0] # anything but the 7th
 g = Generator(
+    # scale_name='minor',
     max=4 * 1, # beats x measures
     tonic=False,
     resolve=False,
     chord_map=[''] * 7, # or '', 'm', '7', etc.
-    verbose=False,
     weights={
             1: transitions,
             2: transitions,
@@ -22,7 +22,8 @@ g = Generator(
             5: transitions,
             6: transitions,
             7: transitions,
-        },
+    },
+    verbose=False,
 )
 device = Device(verbose=False)
 # signal the note_stream thread on each clock tick
