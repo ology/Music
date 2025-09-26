@@ -12,7 +12,10 @@ velocity = 100
 interval = 60 / (bpm * 24)
 g = Generator(
     max=4 * 1, # beats x measures
+    tonic=False,
+    resolve=False,
 )
+device = Device(verbose=False)
 # signal the note_stream thread on each clock tick
 clock_tick_event = threading.Event()
 # counter to track clock ticks (24 per beat)
@@ -31,13 +34,12 @@ def midi_clock_thread():
         time.sleep(interval)
 
 def note_stream_thread():
-    global g, velocity, stop_threads, clock_tick_event
+    global g, device, velocity, stop_threads, clock_tick_event
     while not stop_threads:
         # wait for the next beat (PLL sync)
         clock_tick_event.wait()
         clock_tick_event.clear()
         phrase = g.generate()
-        device = Device(verbose=False)
         for ph in phrase:
             arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
             for a in arped:
