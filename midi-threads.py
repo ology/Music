@@ -8,7 +8,7 @@ from music_melodicdevice import Device
 stop_threads = False
 bpm = 200
 velocity = 100
-# Calculate the time between clock messages (24 PPQN per beat)
+# time between clock messages (24 PPQN per beat)
 interval = 60 / (bpm * 24)
 g = Generator(
     max=4 * 1, # beats x measures
