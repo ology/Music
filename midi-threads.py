@@ -5,6 +5,7 @@ from music21 import pitch
 from chord_progression_network import Generator
 from music_melodicdevice import Device
 
+stop_threads = False
 bpm = 100
 velocity = 100
 # Calculate the time between clock messages (24 PPQN per beat)
@@ -14,12 +15,14 @@ g = Generator(
 )
 
 def midi_clock_thread():
-    while True:
+    global stop_threads
+    while not stop_threads:
         outport.send(mido.Message('clock'))
         time.sleep(interval)
 
 def note_stream_thread():
-    while True:
+    global stop_threads
+    while not stop_threads:
         phrase = g.generate()
         device = Device(verbose=False)
         for ph in phrase:
@@ -44,12 +47,13 @@ if __name__ == "__main__":
                 time.sleep(0.5) # keep main thread alive and respond to interrupts
         except KeyboardInterrupt:
             print("\nKeyboardInterrupt detected. Signaling threads to stop...")
-            try:
-                note_thread.join()
-                clock_thread.join()
-                print("All threads stopped.")
-            except KeyboardInterrupt:
-                print("Main program exiting.")
+            stop_threads = True
+            # try:
+            note_thread.join()
+            clock_thread.join()
+            print("All threads stopped.")
+            # except KeyboardInterrupt:
+            #     print("Main program exiting.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
         finally:
