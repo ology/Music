@@ -35,16 +35,17 @@ def note_stream_thread():
 if __name__ == "__main__":
     with mido.open_output('USB MIDI Interface') as outport:
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
-        # note_thread = threading.Thread(target=note_stream_thread)
+        note_thread = threading.Thread(target=note_stream_thread, daemon=True)
         clock_thread.start()
-        # note_thread.start()
+        note_thread.start()
         outport.send(mido.Message('start'))
         try:
             while True:
                 time.sleep(0.5) # keep main thread alive and respond to interrupts
         except KeyboardInterrupt:
             print("\nKeyboardInterrupt detected. Signaling threads to stop...")
-            # note_thread.join()
+            note_thread.join()
+            clock_thread.join()
             print("All threads stopped. Main program exiting.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
