@@ -49,7 +49,7 @@ if __name__ == "__main__":
             while True:
                 time.sleep(0.5) # keep main thread alive and respond to interrupts
         except KeyboardInterrupt:
-            print("\nKeyboardInterrupt detected. Signaling threads to stop...")
+            print("\nSignaling threads to stop...")
             stop_threads = True
             note_thread.join()
             clock_thread.join()
