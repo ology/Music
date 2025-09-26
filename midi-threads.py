@@ -49,6 +49,7 @@ if __name__ == "__main__":
             while True:
                 time.sleep(0.5) # keep main thread alive and respond to interrupts
         except KeyboardInterrupt:
+            outport.send(mido.Message('stop'))
             print("\nSignaling threads to stop...")
             stop_threads = True
             note_thread.join()
@@ -57,5 +58,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
         finally:
-            outport.send(mido.Message('stop'))
             outport.close()
