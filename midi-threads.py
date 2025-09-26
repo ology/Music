@@ -15,6 +15,7 @@ g = Generator(
     tonic=False,
     resolve=False,
     chord_map=[''] * 7, # or '', 'm', '7', etc.
+    verbose=False,
 )
 device = Device(verbose=False)
 # signal the note_stream thread on each clock tick
