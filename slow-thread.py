@@ -15,20 +15,8 @@ g = Generator(
     resolve=False,
     scale=['C','E','F','G','A'],
     chord_map=['','m','','','m'],
-    net={
-            1: transitions,
-            2: transitions,
-            3: transitions,
-            4: transitions,
-            5: transitions,
-    },
-    weights={
-            1: weights,
-            2: weights,
-            3: weights,
-            4: weights,
-            5: weights,
-    },
+    net={ i: transitions for i in range(1, 6) },
+    weights={ i: weights for i in range(1, 6) },
     verbose=False,
 )
 device = Device(verbose=False)
