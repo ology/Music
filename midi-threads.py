@@ -52,8 +52,8 @@ if __name__ == "__main__":
             outport.send(mido.Message('stop'))
             print("\nSignaling threads to stop...")
             stop_threads = True
-            note_thread.join()
             clock_thread.join()
+            note_thread.join()
             print("All threads stopped.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
