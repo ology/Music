@@ -44,9 +44,12 @@ if __name__ == "__main__":
                 time.sleep(0.5) # keep main thread alive and respond to interrupts
         except KeyboardInterrupt:
             print("\nKeyboardInterrupt detected. Signaling threads to stop...")
-            note_thread.join()
-            clock_thread.join()
-            print("All threads stopped. Main program exiting.")
+            try:
+                note_thread.join()
+                clock_thread.join()
+                print("All threads stopped.")
+            except KeyboardInterrupt:
+                print("Main program exiting.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
         finally:
