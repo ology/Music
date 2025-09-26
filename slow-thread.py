@@ -5,7 +5,7 @@ from music21 import pitch
 from chord_progression_network import Generator
 from music_melodicdevice import Device
 
-bpm = 10
+bpm = 100
 velocity = 100
 transitions = [ i for i in range(1, 6) ]
 weights = [ 1 for _ in range(1, 6) ]
