@@ -52,6 +52,7 @@ def note_stream_thread():
 
 if __name__ == "__main__":
     with mido.open_output('USB MIDI Interface') as outport:
+        print("Opened MIDI output port:", outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
         note_thread = threading.Thread(target=note_stream_thread, daemon=True)
         clock_thread.start()
