@@ -5,11 +5,8 @@ from music21 import pitch
 from chord_progression_network import Generator
 from music_melodicdevice import Device
 
-stop_threads = False
 bpm = 100
 velocity = 100
-# time between clock messages at 24 PPQN per beat
-interval = 60 / (bpm * 24)
 g = Generator(
     max=4 * 1, # beats x measures
     tonic=False,
@@ -24,6 +21,9 @@ clock_tick_event = threading.Event()
 clock_tick_count = 0
 # number of clock ticks per beat
 CLOCKS_PER_BEAT = 24
+stop_threads = False
+# time between clock messages at 24 PPQN per beat
+interval = 60 / (bpm * 24)
 
 def midi_clock_thread():
     global interval, stop_threads, clock_tick_event, clock_tick_count
