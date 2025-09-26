@@ -6,23 +6,36 @@ from chord_progression_network import Generator
 from music_melodicdevice import Device
 
 stop_threads = False
-bpm = 200
+bpm = 100
 velocity = 100
 # time between clock messages at 24 PPQN per beat
 interval = 60 / (bpm * 24)
 g = Generator(
     max=4 * 1, # beats x measures
 )
+# signal the note_stream thread on each clock tick
+clock_tick_event = threading.Event()
+# counter to track clock ticks (24 per beat)
+clock_tick_count = 0
+# number of clock ticks per beat
+CLOCKS_PER_BEAT = 24
 
 def midi_clock_thread():
-    global interval, stop_threads
+    global interval, stop_threads, clock_tick_event, clock_tick_count
     while not stop_threads:
         outport.send(mido.Message('clock'))
+        clock_tick_count += 1
+        # signal note_stream thread every beat
+        if clock_tick_count % CLOCKS_PER_BEAT == 0:
+            clock_tick_event.set()
         time.sleep(interval)
 
 def note_stream_thread():
-    global g, velocity, stop_threads
+    global g, velocity, stop_threads, clock_tick_event
     while not stop_threads:
+        # wait for the next beat (PLL sync)
+        clock_tick_event.wait()
+        clock_tick_event.clear()
         phrase = g.generate()
         device = Device(verbose=False)
         for ph in phrase:
