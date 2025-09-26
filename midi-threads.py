@@ -15,16 +15,16 @@ g = Generator(
 )
 
 def midi_clock_thread():
-    global stop_threads
     global interval
+    global stop_threads
     while not stop_threads:
         outport.send(mido.Message('clock'))
         time.sleep(interval)
 
 def note_stream_thread():
-    global stop_threads
     global g
     global velocity
+    global stop_threads
     while not stop_threads:
         phrase = g.generate()
         device = Device(verbose=False)
