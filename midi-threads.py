@@ -6,7 +6,7 @@ from chord_progression_network import Generator
 from music_melodicdevice import Device
 
 stop_threads = False
-bpm = 100
+bpm = 200
 velocity = 100
 # Calculate the time between clock messages (24 PPQN per beat)
 interval = 60 / (bpm * 24)
@@ -15,16 +15,13 @@ g = Generator(
 )
 
 def midi_clock_thread():
-    global interval
-    global stop_threads
+    global interval, stop_threads
     while not stop_threads:
         outport.send(mido.Message('clock'))
         time.sleep(interval)
 
 def note_stream_thread():
-    global g
-    global velocity
-    global stop_threads
+    global g, velocity, stop_threads
     while not stop_threads:
         phrase = g.generate()
         device = Device(verbose=False)
