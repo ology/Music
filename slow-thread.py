@@ -22,9 +22,9 @@ g = Generator(
 device = Device(verbose=False)
 # signal the note_stream thread on each clock tick
 clock_tick_event = threading.Event()
-# counter to track clock ticks (24 per beat)
+# clock tick counter
 clock_tick_count = 0
-# number of clock ticks per beat
+# clock ticks per beat
 CLOCKS_PER_BEAT = 24
 stop_threads = False
 # time between clock messages at 24 PPQN per beat
