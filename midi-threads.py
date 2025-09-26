@@ -14,6 +14,7 @@ g = Generator(
     max=4 * 1, # beats x measures
     tonic=False,
     resolve=False,
+    chord_map=['7'] * 7,
 )
 device = Device(verbose=False)
 # signal the note_stream thread on each clock tick
