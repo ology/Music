@@ -8,16 +8,24 @@ from music_melodicdevice import Device
 
 bpm = 100
 velocity = 100
-transitions = [ i for i in range(1, 6) ]
-weights = [ 1 for _ in range(1, 6) ]
+scale_map = {
+    'C': '',
+    'E': 'm',
+    'F': '',
+    'G': '',
+    'A': 'm',
+}
+size = len(scale_map) + 1
+transitions = [ i for i in range(1, size) ]
+weights = [ 1 for _ in range(1, size) ]
 g = Generator(
     max=4 * 1, # beats x measures
     tonic=False,
     resolve=False,
-    scale=['C','E','F','G','A'],
-    chord_map=['','m','','','m'],
-    net={ i: transitions for i in range(1, 6) },
-    weights={ i: weights for i in range(1, 6) },
+    scale=list(scale_map.keys()),
+    chord_map=list(scale_map.values()),
+    net={ i: transitions for i in range(1, size) },
+    weights={ i: weights for i in range(1, size) },
     verbose=False,
 )
 device = Device(verbose=False)
