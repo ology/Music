@@ -35,9 +35,9 @@ clock_tick_event = threading.Event()
 clock_tick_count = 0
 # clock ticks per beat
 CLOCKS_PER_BEAT = 24
-stop_threads = False
 # time between clock messages at 24 PPQN per beat
 interval = 60 / (bpm * CLOCKS_PER_BEAT)
+stop_threads = False
 
 def midi_clock_thread():
     global interval, stop_threads, clock_tick_event, clock_tick_count
