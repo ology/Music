@@ -43,8 +43,7 @@ def midi_clock_thread():
 def note_stream_thread():
     global g, device, bpm, velocity, stop_threads, clock_tick_event
     while not stop_threads:
-        # wait for the next beat (PLL sync)
-        clock_tick_event.wait()
+        clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
         phrase = g.generate()
         for ph in phrase:
