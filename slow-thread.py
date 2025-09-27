@@ -5,7 +5,7 @@ from music21 import pitch
 from chord_progression_network import Generator
 from music_melodicdevice import Device
 
-bpm = 120
+bpm = 100
 velocity = 100
 transitions = [ i for i in range(1, 6) ]
 weights = [ 1 for _ in range(1, 6) ]
@@ -41,7 +41,7 @@ def midi_clock_thread():
         time.sleep(interval)
 
 def note_stream_thread():
-    global g, device, velocity, stop_threads, clock_tick_event
+    global g, device, bpm, velocity, stop_threads, clock_tick_event
     while not stop_threads:
         # wait for the next beat (PLL sync)
         clock_tick_event.wait()
@@ -50,6 +50,8 @@ def note_stream_thread():
         for ph in phrase:
             arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
             for a in arped:
+                # clock_tick_event.wait()  # Wait for the next clock tick
+                # clock_tick_event.clear()
                 p = pitch.Pitch(a[1]).midi
                 msg_on = mido.Message('note_on', note=p, velocity=velocity)
                 outport.send(msg_on)
@@ -67,7 +69,7 @@ if __name__ == "__main__":
         outport.send(mido.Message('start'))
         try:
             while True:
-                time.sleep(0.5) # keep main thread alive and respond to interrupts
+                time.sleep(interval) # keep main thread alive and respond to interrupts
         except KeyboardInterrupt:
             outport.send(mido.Message('stop'))
             print("\nSignaling threads to stop...")
