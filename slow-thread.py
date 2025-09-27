@@ -1,4 +1,5 @@
 import mido
+import random
 import time
 import threading
 from music21 import pitch
@@ -46,12 +47,15 @@ def note_stream_thread():
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
         phrase = g.generate()
+        transpose = random.random() < 0.5
         for ph in phrase:
             arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
             for a in arped:
                 # clock_tick_event.wait()  # Wait for the next clock tick
                 # clock_tick_event.clear()
                 p = pitch.Pitch(a[1]).midi
+                if transpose:
+                    p -= 12
                 msg_on = mido.Message('note_on', note=p, velocity=velocity)
                 outport.send(msg_on)
                 time.sleep(a[0])
