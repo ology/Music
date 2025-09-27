@@ -51,8 +51,6 @@ def note_stream_thread():
         for ph in phrase:
             arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
             for a in arped:
-                # clock_tick_event.wait()  # Wait for the next clock tick
-                # clock_tick_event.clear()
                 p = pitch.Pitch(a[1]).midi
                 if transpose:
                     p -= 12
