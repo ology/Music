@@ -34,7 +34,7 @@ device = Device(verbose=False)
 r = Rhythm(
     measure_size=1,
     durations=[ 1/4, 1/2, 1/3 ],
-    groups={1/3: 3},
+    groups={ 1/3: 3 },
 )
 # signal the note_stream thread on each clock tick
 clock_tick_event = threading.Event()
@@ -77,7 +77,7 @@ def note_stream_thread():
                 outport.send(msg_off)
 
 if __name__ == "__main__":
-    port_name = sys.argv[1] if len(sys.argv) > 0 else 'USB MIDI Interface'
+    port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     with mido.open_output(port_name) as outport:
         print(outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
