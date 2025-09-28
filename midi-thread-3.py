@@ -46,6 +46,8 @@ CLOCKS_PER_BEAT = 24
 interval = 60 / (bpm * CLOCKS_PER_BEAT)
 stop_threads = False
 
+chance = lambda: random.random() < 0.5
+
 def midi_clock_thread():
     global interval, stop_threads, clock_tick_event, clock_tick_count
     while not stop_threads:
@@ -62,7 +64,8 @@ def note_stream_thread():
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
         phrase = g.generate()
-        transpose = random.random() < 0.5
+        transpose = chance()
+        again = chance()
         motif = r.motif()
         for ph in phrase:
             arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
@@ -70,6 +73,8 @@ def note_stream_thread():
                 p = pitch.Pitch(arped[i % len(arped)][1]).midi
                 if transpose:
                     p -= 12
+                    if again:
+                        p -= 12
                 msg_on = mido.Message('note_on', note=p, velocity=velocity)
                 outport.send(msg_on)
                 time.sleep(d)
