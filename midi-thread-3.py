@@ -33,7 +33,7 @@ g = Generator(
 device = Device(verbose=False)
 r = Rhythm(
     measure_size=1,
-    durations=[ 1/4, 1/2, 1/3 ],
+    durations=[ 1/8, 1/4, 1/2, 1/3 ],
     groups={ 1/3: 3 },
 )
 # signal the note_stream thread on each clock tick
