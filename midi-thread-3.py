@@ -65,7 +65,6 @@ def note_stream_thread():
         clock_tick_event.clear()
         phrase = g.generate()
         transpose = chance()
-        again = chance()
         motif = r.motif()
         for ph in phrase:
             arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
@@ -73,7 +72,7 @@ def note_stream_thread():
                 p = pitch.Pitch(arped[i % len(arped)][1]).midi
                 if transpose:
                     p -= 12
-                    if again:
+                    if chance():
                         p -= 12
                 msg_on = mido.Message('note_on', note=p, velocity=velocity)
                 outport.send(msg_on)
