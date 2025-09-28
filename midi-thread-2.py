@@ -1,3 +1,4 @@
+import sys
 import mido
 import random
 import time
@@ -69,7 +70,8 @@ def note_stream_thread():
                 outport.send(msg_off)
 
 if __name__ == "__main__":
-    with mido.open_output('USB MIDI Interface') as outport:
+    port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
+    with mido.open_output(port_name) as outport:
         print(outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
         note_thread = threading.Thread(target=note_stream_thread, daemon=True)
