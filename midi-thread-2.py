@@ -70,7 +70,7 @@ def note_stream_thread():
                 outport.send(msg_off)
 
 if __name__ == "__main__":
-    port_name = sys.argv[1] if len(sys.argv) > 0 else 'USB MIDI Interface'
+    port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     with mido.open_output(port_name) as outport:
         print(outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
