@@ -8,7 +8,7 @@ from chord_progression_network import Generator
 from music_melodicdevice import Device
 from random_rhythms import Rhythm
 
-factor = 2 # duration multiplier to slow down the pace
+factor = 1 # duration multiplier to slow down the pace of the notes
 bpm = 100
 velocity = 100
 scale_map = {
