@@ -1,14 +1,14 @@
 import sys
-import mido
 import random
 import time
 import threading
+import mido
 from music21 import pitch
 from chord_progression_network import Generator
 from music_melodicdevice import Device
 from random_rhythms import Rhythm
 
-factor = 1 # duration multiplier to slow down the pace of the notes
+factor = 4 # duration multiplier to slow down the pace of the notes
 bpm = 100 # for the clock
 velocity = 100
 scale_map = {
