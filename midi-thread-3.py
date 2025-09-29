@@ -48,6 +48,7 @@ interval = 60 / (bpm * CLOCKS_PER_BEAT)
 stop_threads = False
 
 chance = lambda: random.random() < 0.5
+velo = lambda i: velocity + random.randint(-10, 10)
 
 def midi_clock_thread():
     global interval, stop_threads, clock_tick_event, clock_tick_count
@@ -75,10 +76,11 @@ def note_stream_thread():
                     p -= 12
                     if chance():
                         p -= 12
-                msg_on = mido.Message('note_on', note=p, velocity=velocity)
+                v = velo(i)
+                msg_on = mido.Message('note_on', note=p, velocity=v)
                 outport.send(msg_on)
                 time.sleep(d * factor)
-                msg_off = mido.Message('note_off', note=p, velocity=velocity)
+                msg_off = mido.Message('note_off', note=p, velocity=v)
                 outport.send(msg_off)
 
 if __name__ == "__main__":
