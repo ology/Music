@@ -9,7 +9,7 @@ from music_melodicdevice import Device
 from random_rhythms import Rhythm
 
 factor = 1 # duration multiplier to slow down the pace of the notes
-bpm = 100
+bpm = 100 # for the clock
 velocity = 100
 scale_map = {
     'C': '',
