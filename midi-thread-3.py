@@ -8,6 +8,7 @@ from chord_progression_network import Generator
 from music_melodicdevice import Device
 from random_rhythms import Rhythm
 
+factor = 2 # duration multiplier to slow down the pace
 bpm = 100
 velocity = 100
 scale_map = {
@@ -59,7 +60,7 @@ def midi_clock_thread():
         time.sleep(interval)
 
 def note_stream_thread():
-    global g, device, bpm, velocity, stop_threads, clock_tick_event
+    global g, device, factor, velocity, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
@@ -76,7 +77,7 @@ def note_stream_thread():
                         p -= 12
                 msg_on = mido.Message('note_on', note=p, velocity=velocity)
                 outport.send(msg_on)
-                time.sleep(d)
+                time.sleep(d * factor)
                 msg_off = mido.Message('note_off', note=p, velocity=velocity)
                 outport.send(msg_off)
 
