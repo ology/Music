@@ -103,8 +103,7 @@ def bass_stream_thread():
         clock_tick_event.clear()
         msg = mido.Message('program_change', channel=1, program=43)
         outport.send(msg)
-        notes = list(scale_map.keys())
-        note = random.choice(notes)
+        note = random.choice(list(scale_map.keys()))
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
         for n in bassline:
