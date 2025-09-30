@@ -97,7 +97,7 @@ def note_stream_thread():
                 midi_message(outport, 0, p, d * factor)
 
 def bass_stream_thread():
-    global bass, device, factor, velocity, stop_threads, clock_tick_event
+    global bass, factor, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
@@ -108,7 +108,7 @@ def bass_stream_thread():
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
         for n in bassline:
-            midi_message(outport, 1, n, 1)
+            midi_message(outport, 1, n, factor)
 
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
