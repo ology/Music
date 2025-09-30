@@ -68,12 +68,20 @@ def midi_clock_thread():
             clock_tick_event.set()
         time.sleep(interval)
 
+def midi_message(outport, channel, note, dura):
+    v = velo()
+    msg = mido.Message('note_on', note=note, velocity=v, channel=channel)
+    outport.send(msg)
+    time.sleep(dura)
+    msg = mido.Message('note_off', note=note, velocity=v, channel=channel)
+    outport.send(msg)
+
 def note_stream_thread():
     global g, device, factor, velocity, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        msg = mido.Message('program_change', channel=0, program=5)
+        msg = mido.Message('program_change', channel=0, program=91)
         outport.send(msg)
         phrase = g.generate()
         transpose = chance()
@@ -86,12 +94,7 @@ def note_stream_thread():
                     p -= 12
                     if chance():
                         p -= 12
-                v = velo()
-                msg = mido.Message('note_on', note=p, velocity=v, channel=0)
-                outport.send(msg)
-                time.sleep(d * factor)
-                msg = mido.Message('note_off', note=p, velocity=v, channel=0)
-                outport.send(msg)
+                midi_message(outport, 0, p, d * factor)
 
 def bass_stream_thread():
     global bass, device, factor, velocity, stop_threads, clock_tick_event
@@ -105,12 +108,7 @@ def bass_stream_thread():
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
         for n in bassline:
-            v = velo()
-            msg = mido.Message('note_on', note=n, velocity=v, channel=1)
-            outport.send(msg)
-            time.sleep(1)
-            msg = mido.Message('note_off', note=n, velocity=v, channel=1)
-            outport.send(msg)
+            midi_message(outport, 1, n, 1)
 
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
