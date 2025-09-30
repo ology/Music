@@ -7,8 +7,9 @@ from music21 import pitch
 from chord_progression_network import Generator
 from music_melodicdevice import Device
 from random_rhythms import Rhythm
+from music_bassline_generator import Bassline
 
-factor = 1 # duration multiplier to slow down the pace of the notes
+factor = 2 # duration multiplier to slow down the pace of the notes
 bpm = 100 # for the clock
 velocity = 100
 scale_map = {
@@ -39,6 +40,11 @@ r = Rhythm(
     durations=[ 1/8, 1/4, 1/2, 1/3 ],
     groups={ 1/3: 3 },
 )
+bass = Bassline(
+    modal=True,
+    tonic=False,
+    resolve=False,
+)
 # signal the note_stream thread on each clock tick
 clock_tick_event = threading.Event()
 # clock tick counter
@@ -50,7 +56,7 @@ interval = 60 / (bpm * CLOCKS_PER_BEAT)
 stop_threads = False
 
 chance = lambda: random.random() < 0.5
-velo = lambda i: velocity + random.randint(-10, 10)
+velo = lambda: velocity + random.randint(-10, 10)
 
 def midi_clock_thread():
     global interval, stop_threads, clock_tick_event, clock_tick_count
@@ -67,6 +73,8 @@ def note_stream_thread():
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
+        msg = mido.Message('program_change', channel=0, program=5)
+        outport.send(msg)
         phrase = g.generate()
         transpose = chance()
         motif = r.motif()
@@ -78,12 +86,31 @@ def note_stream_thread():
                     p -= 12
                     if chance():
                         p -= 12
-                v = velo(i)
-                msg_on = mido.Message('note_on', note=p, velocity=v)
-                outport.send(msg_on)
+                v = velo()
+                msg = mido.Message('note_on', note=p, velocity=v, channel=0)
+                outport.send(msg)
                 time.sleep(d * factor)
-                msg_off = mido.Message('note_off', note=p, velocity=v)
-                outport.send(msg_off)
+                msg = mido.Message('note_off', note=p, velocity=v, channel=0)
+                outport.send(msg)
+
+def bass_stream_thread():
+    global bass, device, factor, velocity, stop_threads, clock_tick_event
+    while not stop_threads:
+        clock_tick_event.wait() # wait for the next beat (PLL sync)
+        clock_tick_event.clear()
+        msg = mido.Message('program_change', channel=1, program=43)
+        outport.send(msg)
+        notes = list(scale_map.keys())
+        note = random.choice(notes)
+        chord = note + scale_map[note]
+        bassline = bass.generate(chord, 4)
+        for n in bassline:
+            v = velo()
+            msg = mido.Message('note_on', note=n, velocity=v, channel=1)
+            outport.send(msg)
+            time.sleep(1)
+            msg = mido.Message('note_off', note=n, velocity=v, channel=1)
+            outport.send(msg)
 
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
@@ -91,11 +118,11 @@ if __name__ == "__main__":
         print(outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
         note_thread = threading.Thread(target=note_stream_thread, daemon=True)
+        bass_thread = threading.Thread(target=bass_stream_thread, daemon=True)
         clock_thread.start()
         note_thread.start()
+        bass_thread.start()
         outport.send(mido.Message('start'))
-        msg = mido.Message('program_change', channel=0, program=89)
-        outport.send(msg)
         try:
             while True:
                 time.sleep(interval) # keep main thread alive and respond to interrupts
@@ -105,6 +132,7 @@ if __name__ == "__main__":
             stop_threads = True
             clock_thread.join()
             note_thread.join()
+            bass_thread.join()
             print("All threads stopped.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
