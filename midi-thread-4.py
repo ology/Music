@@ -94,6 +94,8 @@ if __name__ == "__main__":
         clock_thread.start()
         note_thread.start()
         outport.send(mido.Message('start'))
+        msg = mido.Message('program_change', channel=0, program=89)
+        outport.send(msg)
         try:
             while True:
                 time.sleep(interval) # keep main thread alive and respond to interrupts
