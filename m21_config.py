@@ -46,8 +46,8 @@ class M21EnvConfig(App):
                     value = str(value)
                 yield Label(f"{key}")
                 yield Input(placeholder=f"Set value for {key}", id=key, value=value)
-            yield Button("Save", id="save_button", variant="primary")
-            yield Button("Quit", id="quit_button", variant="default")
+            yield Button("Save", id="save_button", variant="primary", compact=True)
+            yield Button("Quit", id="quit_button", variant="default", compact=True)
 
         yield Footer()
 
