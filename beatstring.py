@@ -18,21 +18,22 @@ def pattern1(rhythm, drummer, n=8):
             }
         )
 
-def pattern2(rhythm, drummer, primes, n=4):
+def pattern2(rhythm, drummer, n=4):
+    primes = all_primes(beats, 'list')
+    kick  = ''.join([str(n) for n in rhythm.euclid(random.choice(primes), beats)])
+    snare = ''.join([str(n) for n in rhythm.euclid(random.choice(primes), beats)])
+    hihat = ''.join([str(n) for n in rhythm.euclid(random.choice(primes), beats)])
     for _ in range(n):
         drummer.pattern(
             patterns={
-                'kick':  ''.join([str(n) for n in rhythm.euclid(random.choice(primes), beats)]),
-                'snare': ''.join([str(n) for n in rhythm.euclid(random.choice(primes), beats)]),
-                'hihat': ''.join([str(n) for n in rhythm.euclid(random.choice(primes), beats)]),
+                'kick':  kick,
+                'snare': snare,
+                'hihat': hihat,
             }
         )
 
 def main():
     r = Rhythms()
-
-    primes = all_primes(beats, 'list')
-
     d = Drummer()
 
     d.set_instrument('kick', 'kick2')
@@ -42,15 +43,12 @@ def main():
     d.set_bpm(100)
 
     d.count_in()
-
     d.rest(['kick', 'snare'], duration=4)
-
     pattern1(r, d)
-    pattern2(r, d, primes)
+    pattern2(r, d)
     pattern1(r, d)
 
     d.sync_parts()
-
     d.score.show('midi')
     # d.score.write(filename='drums.mid')
 
