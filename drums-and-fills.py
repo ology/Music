@@ -24,6 +24,29 @@ def section_A():
         d.note('snare', duration)
     d.rest(['kick', 'hihat'], 2)
 
+def section_B():
+    for _ in range(3):
+        d.pattern(
+            patterns={
+                'kick':  '1000001010000010',
+                'snare': '0000100000001000',
+                'hihat': '0010101010101010',
+                'crash': '1000000000000000',
+            },
+        )
+    for _ in range(1):
+        d.pattern(
+            patterns={
+                'kick':  '10000001',
+                'snare': '00001000',
+                'hihat': '23101010',
+            },
+        )
+    fill = random.choice(fills)
+    for duration in fill:
+        d.note('snare', duration)
+    d.rest(['kick', 'hihat'], 2)
+
 if __name__ == "__main__":
     r = Rhythm(
         measure_size=2,
@@ -35,8 +58,10 @@ if __name__ == "__main__":
     d.set_bpm(100)
     d.set_ts()
 
-    for _ in range(8):
-        section_A()
+    section_A()
+    section_B()
+    section_B()
+    section_A()
 
     d.sync_parts()
     d.show('midi')
