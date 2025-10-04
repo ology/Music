@@ -1,6 +1,6 @@
 from textual.app import App, ComposeResult
-from textual.containers import VerticalScroll, Vertical, Horizontal
-from textual.widgets import Header, Footer, Label, Static, Input, Button
+from textual.containers import VerticalScroll
+from textual.widgets import Header, Footer, Label, Input, Button
 from music21 import environment
 
 ALL_KEYS = [
@@ -40,7 +40,25 @@ class MyScrollableApp(App):
                 value = us[key]
                 yield Label(f"{key}")
                 yield Input(placeholder=f"Set value for {key}", id=key, value=str(value))
+            yield Button("Save", id="save_button", variant="primary")
+            yield Button("Quit", id="quit_button", variant="default")
+
         yield Footer()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "quit_button":
+            self.exit()
+
+        elif event.button.id == "save_button":
+            us = environment.UserSettings()
+            for key in us.keys():
+                input_widget = self.query_one(f"#input_{key}", Input)
+                new_value = input_widget.value
+                us[key] = new_value
+
+            # nb: music21 automatically saves changes to the settings file
+            self.log("Settings saved successfully!")
+            self.exit()
 
 if __name__ == "__main__":
     app = MyScrollableApp()
