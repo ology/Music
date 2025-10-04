@@ -75,7 +75,7 @@ class M21EnvConfig(App):
                         us[key] = new_value
 
             # nb: music21 automatically saves changes to the settings file
-            self.log("Settings saved successfully!")
+            self.log("Settings saved successfully.")
             self.exit()
 
 if __name__ == "__main__":
