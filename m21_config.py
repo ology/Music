@@ -1,3 +1,10 @@
+"""
+Bare-bones music21 environment configuration utility
+
+usage:
+  pip install music21 textual
+  python m21_config.py
+"""
 import json
 import os
 from textual.app import App, ComposeResult
