@@ -2,7 +2,7 @@ from music_drummer import Drummer
 from random_rhythms import Rhythm
 import random
 
-def section_A():
+def section_A(section=0):
     for _ in range(3):
         d.pattern(
             patterns={
@@ -11,6 +11,8 @@ def section_A():
                 'hihat': '1010101010101010',
             },
         )
+    if section == 2:
+        d.note('crash1', 1)
     for _ in range(1):
         d.pattern(
             patterns={
@@ -23,7 +25,10 @@ def section_A():
     for duration in fill:
         d.note('snare', duration)
     d.rest(['kick', 'hihat'], 2)
-    d.rest('cymbals', 16)
+    if section == 2:
+        d.rest('cymbals', 15)
+    else:
+        d.rest('cymbals', 16)
 
 def section_B():
     for _ in range(3):
@@ -64,7 +69,7 @@ if __name__ == "__main__":
     section_A()
     section_B()
     section_B()
-    section_A()
+    section_A(2)
 
     d.sync_parts()
     d.show('midi')
