@@ -70,7 +70,7 @@ class MyScrollableApp(App):
                     if key == 'localCorporaSettings':
                         new_value = json.loads(new_value)
                     if key == 'localCorpusSettings':
-                        pass
+                        pass # XXX this pair is confusing
                     else:
                         us[key] = new_value
 
