@@ -1,3 +1,5 @@
+import json
+import os
 from textual.app import App, ComposeResult
 from textual.containers import VerticalScroll
 from textual.widgets import Header, Footer, Label, Input, Button
@@ -38,8 +40,12 @@ class MyScrollableApp(App):
         with VerticalScroll():
             for key in ALL_KEYS:
                 value = us[key]
+                if value is None:
+                    value = ''
+                else:
+                    value = str(value)
                 yield Label(f"{key}")
-                yield Input(placeholder=f"Set value for {key}", id=key, value=str(value))
+                yield Input(placeholder=f"Set value for {key}", id=key, value=value)
             yield Button("Save", id="save_button", variant="primary")
             yield Button("Quit", id="quit_button", variant="default")
 
@@ -48,13 +54,25 @@ class MyScrollableApp(App):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "quit_button":
             self.exit()
-
         elif event.button.id == "save_button":
             us = environment.UserSettings()
-            for key in us.keys():
-                input_widget = self.query_one(f"#input_{key}", Input)
+            for key in ALL_KEYS:
+                input_widget = self.query_one(f"#{key}", Input)
                 new_value = input_widget.value
-                us[key] = new_value
+                try:
+                    new_value
+                except NameError:
+                    pass
+                else:
+                    is_path = key.endswith("Path")
+                    if is_path and not os.path.exists(new_value):
+                        new_value = ''
+                    if key == 'localCorporaSettings':
+                        new_value = json.loads(new_value)
+                    if key == 'localCorpusSettings':
+                        pass
+                    else:
+                        us[key] = new_value
 
             # nb: music21 automatically saves changes to the settings file
             self.log("Settings saved successfully!")
