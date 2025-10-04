@@ -70,7 +70,7 @@ class M21EnvConfig(App):
                     if key == 'localCorporaSettings':
                         new_value = json.loads(new_value)
                     if key == 'localCorpusSettings':
-                        pass # XXX this pair is confusing
+                        pass # XXX setting this value is confusing so far...
                     else:
                         us[key] = new_value
 
