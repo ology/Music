@@ -11,7 +11,7 @@ def section_A(section=0):
                 'hihat': '1010101010101010',
             },
         )
-    if section == 2:
+    if section == 1:
         d.note('crash1', 1)
     for _ in range(1):
         d.pattern(
@@ -25,7 +25,7 @@ def section_A(section=0):
     for duration in fill:
         d.note('snare', duration)
     d.rest(['kick', 'hihat'], 2)
-    if section == 2:
+    if section == 1:
         d.rest('cymbals', 15)
     else:
         d.rest('cymbals', 16)
@@ -65,11 +65,11 @@ if __name__ == "__main__":
     d = Drummer()
     d.set_bpm(100)
     d.set_ts()
-
+    
     section_A()
     section_B()
     section_B()
-    section_A(2)
+    section_A(1)
 
     d.sync_parts()
     d.show('midi')
