@@ -16,7 +16,7 @@ def section_A():
             patterns={
                 'kick':  '10000000',
                 'snare': '00001000',
-                'hihat': '23101010',
+                'hihat': '10101010',
             },
         )
     fill = random.choice(fills)
