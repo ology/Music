@@ -30,7 +30,7 @@ ALL_KEYS = [
     "writeFormat",
 ]
 
-class MyScrollableApp(App):
+class M21EnvConfig(App):
     TITLE = "Music21 Environment Configuration"
     SUB_TITLE="Quit: CRTL-Q"
 
@@ -79,5 +79,5 @@ class MyScrollableApp(App):
             self.exit()
 
 if __name__ == "__main__":
-    app = MyScrollableApp()
+    app = M21EnvConfig()
     app.run()
