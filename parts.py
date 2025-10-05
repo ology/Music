@@ -21,17 +21,7 @@ r = Rhythm(
 )
 melody_motifs = [ r.motif() for _ in range(3) ]
 
-g = Generator(
-    net={
-        1: [3,4,5,6],
-        2: [4,5,6],
-        3: [2,4,5,6],
-        4: [1,5,6],
-        5: [2,3,4,7],
-        6: [3,4,5],
-        7: [3,5],
-    }
-)
+g = Generator()
 
 for _ in range(2):
     for i,motif in enumerate(chord_motifs):
