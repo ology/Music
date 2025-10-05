@@ -49,7 +49,7 @@ def main():
     pattern1(r, d)
 
     d.sync_parts()
-    d.score.show('midi')
+    d.show('midi')
     # d.score.write(filename='drums.mid')
 
 if __name__ == "__main__":
