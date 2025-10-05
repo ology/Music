@@ -1,6 +1,5 @@
 from music_creatingrhythms import Rhythms
 from music_drummer import Drummer
-from find_primes import all_primes
 import random
 
 beats = 16
@@ -18,11 +17,18 @@ def pattern1(rhythm, drummer, n=8):
             }
         )
 
+def odd_nums(limit):
+    odd_numbers = []
+    for i in range(1, limit + 1):
+        if i % 2 != 0:
+            odd_numbers.append(i)
+    return odd_numbers
+
 def pattern2(rhythm, drummer, n=4):
-    primes = all_primes(beats, 'list')
-    kick  = ''.join([str(n) for n in rhythm.euclid(random.choice(primes), beats)])
-    snare = ''.join([str(n) for n in rhythm.euclid(random.choice(primes), beats)])
-    hihat = ''.join([str(n) for n in rhythm.euclid(random.choice(primes), beats)])
+    odds = odd_nums(beats)
+    kick  = ''.join([str(n) for n in rhythm.euclid(random.choice(odds), beats)])
+    snare = ''.join([str(n) for n in rhythm.euclid(random.choice(odds), beats)])
+    hihat = ''.join([str(n) for n in rhythm.euclid(random.choice(odds), beats)])
     for _ in range(n):
         drummer.pattern(
             patterns={
