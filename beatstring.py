@@ -17,15 +17,15 @@ def pattern1(rhythm, drummer, n=8):
             }
         )
 
-def odd_nums(limit):
+def odd_nums(max=16, min=3):
     odd_numbers = []
-    for i in range(1, limit + 1):
+    for i in range(min, max + 1):
         if i % 2 != 0:
             odd_numbers.append(i)
     return odd_numbers
 
 def pattern2(rhythm, drummer, n=4):
-    odds = odd_nums(beats)
+    odds = odd_nums()
     kick  = ''.join([str(n) for n in rhythm.euclid(random.choice(odds), beats)])
     snare = ''.join([str(n) for n in rhythm.euclid(random.choice(odds), beats)])
     hihat = ''.join([str(n) for n in rhythm.euclid(random.choice(odds), beats)])
