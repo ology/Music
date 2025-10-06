@@ -4,7 +4,7 @@ import random
 
 beats = 16
 
-def pattern1(rhythm, drummer, n=8):
+def pattern1(rhythm, drummer, n=4):
     kick  = ''.join([str(n) for n in rhythm.euclid(2, beats)])
     snare = ''.join([str(n) for n in rhythm.rotate_n(4, rhythm.euclid(2, beats))])
     hihat = ''.join([str(n) for n in rhythm.euclid(11, beats)])
@@ -17,16 +17,19 @@ def pattern1(rhythm, drummer, n=8):
             }
         )
 
-def odd_nums(max=16, min=3):
+def even_odd_nums(max=16, min=3):
     odd_numbers = []
+    even_numbers = []
     for i in range(min, max + 1):
-        if i % 2 != 0:
+        if i % 2 == 0:
+            even_numbers.append(i)
+        else:
             odd_numbers.append(i)
-    return odd_numbers
+    return even_numbers, odd_numbers
 
 def pattern2(rhythm, drummer, n=4):
-    odds = odd_nums()
-    kick  = ''.join([str(n) for n in rhythm.euclid(random.choice(odds), beats)])
+    evens, odds = even_odd_nums(11)
+    kick  = ''.join([str(n) for n in rhythm.euclid(random.choice(evens), beats)])
     snare = ''.join([str(n) for n in rhythm.euclid(random.choice(odds), beats)])
     hihat = ''.join([str(n) for n in rhythm.euclid(random.choice(odds), beats)])
     for _ in range(n):
