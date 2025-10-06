@@ -4,7 +4,9 @@ import random
 
 beats = 16
 
-def pattern1(rhythm, drummer, n=4):
+def pattern1(rhythm, drummer, n=4, section=0):
+    if section == 1:
+        n //= 2
     kick  = ''.join([str(n) for n in rhythm.euclid(2, beats)])
     snare = ''.join([str(n) for n in rhythm.rotate_n(4, rhythm.euclid(2, beats))])
     hihat = ''.join([str(n) for n in rhythm.euclid(11, beats)])
@@ -55,7 +57,7 @@ def main():
     d.rest(['kick', 'snare'], duration=4)
     pattern1(r, d)
     pattern2(r, d)
-    pattern1(r, d)
+    pattern1(r, d, section=1)
 
     d.sync_parts()
     d.show('midi')
