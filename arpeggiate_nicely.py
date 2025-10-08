@@ -9,7 +9,6 @@ weights = [ 1 for _ in range(1,5) ] # equal probability
 
 g = Generator(
     max=4 * 4, # beats x measures
-    # scale_name='whole-tone scale',
     net={
         1: [2,3,5,6],
         2: [1,3,5,6],
