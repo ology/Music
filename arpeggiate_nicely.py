@@ -20,7 +20,6 @@ g = Generator(
         7: [],
     },
     weights={ i: weights for i in range(1,8) },
-    chord_map=['m','','m','','m','','m'],
     resolve=False,
     substitute=False,
     verbose=False,
