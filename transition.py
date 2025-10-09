@@ -1,5 +1,5 @@
 from numpy.random import choice
-import music21 as mu
+from music21 import note
 
 #song = mu.converter.parse('/Users/gene/Music/MIDI/chopin-Fantaisie-Impromptu-op66.mid')
 song = mu.corpus.parse('bwv66.6')
@@ -14,7 +14,7 @@ total = 0
 
 # gather the transitions
 for n in song.flat.notes:
-    if type(n) == mu.note.Note:
+    if type(n) == note.Note:
         if prev:
             if last:
                 key = (prev.name, last.name)
@@ -43,20 +43,20 @@ key = list(transition.keys())[0]
 keys = [' '.join(i) for i in list(transition.keys())]
 
 # TODO why?
-n = mu.note.Note(key[0])
+n = note.Note(key[0])
 score.append(n)
-n = mu.note.Note(key[1])
+n = note.Note(key[1])
 score.append(n)
 
 # build the score
 for _ in range(notes - 2):
     if key in transition:
         draw = choice(list(transition[key].keys()), 1, list(transition[key].values()))
-        n = mu.note.Note(draw[0])
+        n = note.Note(draw[0])
         score.append(n)
         key = (key[1], draw[0])
     else:
-        r = mu.note.Rest()
+        r = note.Rest()
         score.append(r)
         draw = choice(keys)
         key = tuple(draw.split())
