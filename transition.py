@@ -1,8 +1,8 @@
 from numpy.random import choice
-from music21 import note
+from music21 import corpus, note, stream
 
 #song = mu.converter.parse('/Users/gene/Music/MIDI/chopin-Fantaisie-Impromptu-op66.mid')
-song = mu.corpus.parse('bwv66.6')
+song = corpus.parse('bwv66.6')
 
 notes = 16 # Change me
 
@@ -37,7 +37,7 @@ for k,v in transition.items():
         transition[k][i] = j / total
 
 # transition probability score
-score = mu.stream.Stream()
+score = stream.Stream()
 
 key = list(transition.keys())[0]
 keys = [' '.join(i) for i in list(transition.keys())]
