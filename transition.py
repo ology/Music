@@ -61,5 +61,4 @@ for _ in range(notes - 2):
         draw = choice(keys)
         key = tuple(draw.split())
 
-score.show()
 score.show('midi')
