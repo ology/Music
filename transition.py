@@ -1,8 +1,8 @@
 from numpy.random import choice
-from music21 import corpus, note, stream
+from music21 import converter, corpus, note, stream
 
-#song = mu.converter.parse('/Users/gene/Music/MIDI/chopin-Fantaisie-Impromptu-op66.mid')
-song = corpus.parse('bwv66.6')
+song = converter.parse('/Users/gene/Music/MIDI/lichens_g_major.mid')
+# song = corpus.parse('bwv66.6')
 
 notes = 16 # Change me
 
@@ -13,7 +13,7 @@ last = None
 total = 0
 
 # gather the transitions
-for n in song.flat.notes:
+for n in song.flatten().notes:
     if type(n) == note.Note:
         if prev:
             if last:
