@@ -10,12 +10,12 @@ from music_voicegen.music_voicegen import MusicVoiceGen
 # song = converter.parse('/Users/gene/Music/MIDI/lichens_g_major.mid')
 # song = corpus.parse('bwv66.6')
 song = corpus.parse('bwv1.6')
-song = instrument.partitionByInstrument(song)[3] # only inspect a single part
+song = instrument.partitionByInstrument(song)[0] # only inspect a single part
 # song.show()
 
 max = int(sys.argv[1]) if len(sys.argv) > 1 else 16 # maximum notes in the result phrase
 
-transition = {}
+pitch_transition = {}
 prev = None # network item
 last = None # network item
 total = 0 # total number of notes
@@ -32,13 +32,13 @@ for n in song.flatten().notes:
                 interval = last.pitch.midi - prev.pitch.midi
                 # print(f"{last.name}{last.octave} - {prev.name}{prev.octave} = {interval}")
                 intervals.append(interval)
-                if key in transition:
-                    if n.name in transition[key]:
-                        transition[key][n.name] += 1
+                if key in pitch_transition:
+                    if n.name in pitch_transition[key]:
+                        pitch_transition[key][n.name] += 1
                     else:
-                        transition[key][n.name] = 1
+                        pitch_transition[key][n.name] = 1
                 else:
-                    transition[key] = {n.name: 1}
+                    pitch_transition[key] = {n.name: 1}
                 prev = last
                 total += 1
             last = n
@@ -49,15 +49,15 @@ pitches = list(set(pitches)) # uniqify
 intervals = list(set(intervals)) # uniqify
 
 # probability for each transition
-for k,v in transition.items():
+for k,v in pitch_transition.items():
     for i,j in v.items():
-        transition[k][i] = j / total
+        pitch_transition[k][i] = j / total
 
 # # transition probability score
 score = stream.Stream()
 
-key = list(transition.keys())[0]
-keys = [' '.join(i) for i in list(transition.keys())]
+key = list(pitch_transition.keys())[0]
+keys = [' '.join(i) for i in list(pitch_transition.keys())]
 
 voice = MusicVoiceGen(
     pitches=pitches,
@@ -68,7 +68,7 @@ voice = MusicVoiceGen(
 # build the score
 i = 0
 while(i < max):
-    if key in transition:
+    if key in pitch_transition:
         draw = voice.rand()
         n = note.Note(draw)
         score.append(n)
