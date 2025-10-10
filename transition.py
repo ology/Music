@@ -1,5 +1,5 @@
 import random
-from music21 import converter, corpus, instrument, note, stream
+from music21 import converter, corpus, duration, instrument, note, stream
 # if author:
 import sys
 sys.path.append('./src')
@@ -22,11 +22,13 @@ last = None # network item
 total = 0 # total number of notes
 pitches = []
 intervals = []
+beats = []
 
 # gather the transitions
 for n in song.flatten().notes:
     if type(n) == note.Note:
         pitches.append(n.pitch.midi)
+        beats.append(n.duration.quarterLength)
         if prev:
             if last:
                 # pitch
@@ -61,10 +63,15 @@ for n in song.flatten().notes:
 pitches = list(set(pitches)) # uniqify
 intervals = list(set(intervals)) # uniqify
 
-# probability for each transition
+# probability for pitch transitions
 for k,v in pitch_transition.items():
     for i,j in v.items():
         pitch_transition[k][i] = j / total
+
+# probability for beat transitions
+for k,v in beat_transition.items():
+    for i,j in v.items():
+        beat_transition[k][i] = j / total
 
 # # transition probability score
 score = stream.Stream()
@@ -84,12 +91,14 @@ while(i < max):
     if key in pitch_transition:
         draw = voice.rand()
         n = note.Note(draw)
+        choice = random.choice(beats)
+        n.duration = duration.Duration(choice)
         score.append(n)
         key = (key[1], n.name)
         i += 1
     else:
         # print(key)
-        # score.append(note.Rest())
+        score.append(note.Rest())
         draw = random.choice(keys)
         key = tuple(draw.split())
 
