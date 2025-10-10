@@ -45,6 +45,7 @@ for row in range(data.shape[0]):
             n.duration = duration.Duration(2.0)
         print(f"escape_val: {escape_val}, #: {midi_pitch}, d: {n.duration}")
 
-        s.append(n)
+        if escape_val < max_iter:
+            s.append(n)
 
 s.show('midi')
