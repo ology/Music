@@ -16,7 +16,7 @@ width, height = 50, 50
 x_min, x_max = -random.random(), random.random()
 y_min, y_max = -random.random(), random.random()
 
-max_iter = 50
+max_iter = 100
 min_pitch = 60
 max_pitch = min_pitch + 24
 
