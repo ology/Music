@@ -10,13 +10,11 @@ def mandelbrot_escape_count(c, max_iterations=50):
             return i
     return max_iterations
 
-width, height = 20, 20
+width, height = 50, 50
 # x_min, x_max = -0.5, 0.5
 # y_min, y_max = -0.5, 0.5
 x_min, x_max = -random.random(), random.random()
 y_min, y_max = -random.random(), random.random()
-# x_min, x_max = random.randrange(-2, 0), random.randrange(0, 2)
-# y_min, y_max = random.randrange(-2, 0), random.randrange(0, 2)
 
 max_iter = 50
 min_pitch = 60
