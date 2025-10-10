@@ -64,7 +64,7 @@ for k,v in beat_transition.items():
 
 score = stream.Stream()
 
-keys = [' '.join(i) for i in list(pitch_transition.keys())]
+pitches = [' '.join(i) for i in list(pitch_transition.keys())]
 current_pitch = list(pitch_transition.keys())[0]
 current_beat = list(beat_transition.keys())[0]
 
@@ -91,7 +91,7 @@ while (i < max):
         i += 1
     else:
         # score.append(note.Rest())
-        draw = random.choice(keys)
+        draw = random.choice(pitches)
         current_pitch = tuple(draw.split())
 
 score.show('midi')
