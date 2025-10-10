@@ -29,10 +29,12 @@ for n in song.flatten().notes:
         pitches.append(n.pitch.midi)
         if prev:
             if last:
+                # pitch
                 pitch_key = (prev.name, last.name)
                 interval = last.pitch.midi - prev.pitch.midi
                 # print(f"{last.name}{last.octave} - {prev.name}{prev.octave} = {interval}")
                 intervals.append(interval)
+                # tally pitch transition frequency
                 if pitch_key in pitch_transition:
                     if n.name in pitch_transition[pitch_key]:
                         pitch_transition[pitch_key][n.name] += 1
@@ -40,6 +42,16 @@ for n in song.flatten().notes:
                         pitch_transition[pitch_key][n.name] = 1
                 else:
                     pitch_transition[pitch_key] = {n.name: 1}
+                # beat
+                beat_key = (prev.duration.quarterLength, last.duration.quarterLength)
+                # tally beat transition frequency
+                if beat_key in beat_transition:
+                    if n.duration.quarterLength in beat_transition[beat_key]:
+                        beat_transition[beat_key][n.duration.quarterLength] += 1
+                    else:
+                        beat_transition[beat_key][n.duration.quarterLength] = 1
+                else:
+                    beat_transition[beat_key] = {n.duration.quarterLength: 1}
                 prev = last
                 total += 1
             last = n
