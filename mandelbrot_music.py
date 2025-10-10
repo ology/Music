@@ -1,13 +1,13 @@
 from music21 import stream, note, duration
 import numpy as np
 
-def mandelbrot_escape_count(c, max):
+def mandelbrot_escape_count(c, max_iterations=50):
     z = 0
-    for i in range(max):
-        z = z ** 2 + c
+    for i in range(max_iterations):
+        z = z**2 + c
         if abs(z) > 2:
             return i
-    return max
+    return max_iterations
 
 width, height = 20, 20
 x_min, x_max = -2.5, 1.5
