@@ -16,6 +16,7 @@ song = instrument.partitionByInstrument(song)[0] # only inspect a single part
 max = int(sys.argv[1]) if len(sys.argv) > 1 else 16 # maximum notes in the result phrase
 
 pitch_transition = {}
+beat_transition = {}
 prev = None # network item
 last = None # network item
 total = 0 # total number of notes
@@ -28,17 +29,17 @@ for n in song.flatten().notes:
         pitches.append(n.pitch.midi)
         if prev:
             if last:
-                key = (prev.name, last.name)
+                pitch_key = (prev.name, last.name)
                 interval = last.pitch.midi - prev.pitch.midi
                 # print(f"{last.name}{last.octave} - {prev.name}{prev.octave} = {interval}")
                 intervals.append(interval)
-                if key in pitch_transition:
-                    if n.name in pitch_transition[key]:
-                        pitch_transition[key][n.name] += 1
+                if pitch_key in pitch_transition:
+                    if n.name in pitch_transition[pitch_key]:
+                        pitch_transition[pitch_key][n.name] += 1
                     else:
-                        pitch_transition[key][n.name] = 1
+                        pitch_transition[pitch_key][n.name] = 1
                 else:
-                    pitch_transition[key] = {n.name: 1}
+                    pitch_transition[pitch_key] = {n.name: 1}
                 prev = last
                 total += 1
             last = n
