@@ -5,10 +5,10 @@ from music21 import converter, corpus, duration, instrument, note, stream
 
 max = int(sys.argv[1]) if len(sys.argv) > 1 else 16 # maximum notes in the result phrase
 
-# song = converter.parse('/Users/gene/Music/MIDI/MHaLL.mid')
-# song = corpus.parse('bwv66.6')
 song = corpus.parse('bwv1.6')
+# song = corpus.parse('bwv66.6')
 # song = corpus.parse('maple_leaf_rag')
+# song = converter.parse('/Users/gene/Music/MIDI/MHaLL.mid')
 
 if len(song.parts) > 1:
     song = instrument.partitionByInstrument(song)[0] # only use a single part
