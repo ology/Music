@@ -31,7 +31,7 @@ for row in range(height):
 s = stream.Stream()
 
 # pitch based on escape count
-# duration is the inverse of escape count (longer for lower counts)
+# duration is the inverse of escape count
 for row in range(data.shape[0]):
     for col in range(data.shape[1]):
         escape_val = data[row, col]
