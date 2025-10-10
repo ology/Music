@@ -26,7 +26,7 @@ for row in range(height):
         real_part = x_min + (col / width) * (x_max - x_min)
         imag_part = y_min + (row / height) * (y_max - y_min)
         c = complex(real_part, imag_part)
-        data[row, col] = mandelbrot_escape_count(c)
+        data[row, col] = mandelbrot_escape_count(c, max_iter)
 
 s = stream.Stream()
 
