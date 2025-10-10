@@ -73,7 +73,6 @@ for k,v in beat_transition.items():
     for i,j in v.items():
         beat_transition[k][i] = j / total
 
-# # transition probability score
 score = stream.Stream()
 
 key = list(pitch_transition.keys())[0]
@@ -87,7 +86,7 @@ voice = MusicVoiceGen(
 
 # build the score
 i = 0
-while(i < max):
+while (i < max):
     if key in pitch_transition:
         draw = voice.rand()
         n = note.Note(draw)
@@ -98,7 +97,7 @@ while(i < max):
         i += 1
     else:
         # print(key)
-        score.append(note.Rest())
+        # score.append(note.Rest())
         draw = random.choice(keys)
         key = tuple(draw.split())
 
