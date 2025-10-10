@@ -34,7 +34,6 @@ for row in range(data.shape[0]):
         escape_val = data[row, col]
 
         # escape_val to pitch
-        # midi_pitch = int(60 + (escape_val / data.max()) * 24)
         normalized_value = 1 - (escape_val / max_iter)
         midi_pitch = min_pitch + (normalized_value * (max_pitch - min_pitch))
         n = note.Note(midi=midi_pitch)
