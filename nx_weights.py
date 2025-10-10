@@ -7,7 +7,11 @@ from music21 import converter, corpus, duration, instrument, note, stream
 # song = corpus.parse('bwv66.6')
 song = corpus.parse('bwv1.6')
 # song = corpus.parse('maple_leaf_rag')
-song = instrument.partitionByInstrument(song)[0] # only use a single part
+if len(song.parts) > 1:
+    song = instrument.partitionByInstrument(song)[0] # only use a single part
+else:
+    song = instrument.partitionByInstrument(song)
+
 # song.show('midi')
 
 max = int(sys.argv[1]) if len(sys.argv) > 1 else 16 # maximum notes in the result phrase
