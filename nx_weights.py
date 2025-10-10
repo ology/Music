@@ -65,7 +65,6 @@ for k,v in beat_transition.items():
     for i,j in v.items():
         w = j / total
         beat_graph.add_edge(k[1], i, weight=w)
-        # print(k[0], i)
 
 score = stream.Stream()
 
