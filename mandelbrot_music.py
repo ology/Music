@@ -18,7 +18,7 @@ y_min, y_max = -random.random(), random.random()
 
 max_iter = 100
 min_pitch = 60
-max_pitch = min_pitch + 24
+max_pitch = min_pitch + 24 # 2 octaves
 
 data = np.zeros((height, width))
 for row in range(height):
