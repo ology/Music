@@ -64,8 +64,9 @@ for k,v in beat_transition.items():
 
 score = stream.Stream()
 
-key = list(pitch_transition.keys())[0]
 keys = [' '.join(i) for i in list(pitch_transition.keys())]
+current_pitch = list(pitch_transition.keys())[0]
+current_beat = list(beat_transition.keys())[0]
 
 def get_weighted_successor(graph, node):
     successors = list(graph.successors(node))
@@ -78,23 +79,19 @@ def get_weighted_successor(graph, node):
 
 # build the score
 i = 0
-current_pitch = list(pitch_transition.keys())[0]
-current_beat = list(beat_transition.keys())[0]
 while (i < max):
-    if key in pitch_transition:
+    if current_pitch in pitch_transition:
         pitch = get_weighted_successor(pitch_graph, current_pitch[0])
         n = note.Note(pitch)
         beat = get_weighted_successor(beat_graph, current_beat[0])
         n.duration = duration.Duration(beat)
         score.append(n)
-        key = (key[1], n.name)
         current_pitch = (current_pitch[1], pitch)
         current_beat = (current_beat[1], beat)
         i += 1
     else:
-        # print(key)
         # score.append(note.Rest())
         draw = random.choice(keys)
-        key = tuple(draw.split())
+        current_pitch = tuple(draw.split())
 
 score.show('midi')
