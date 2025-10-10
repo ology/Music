@@ -61,6 +61,7 @@ for k,v in beat_transition.items():
     for i,j in v.items():
         w = j / total
         beat_graph.add_edge(k[0], i, weight=w)
+        # print(k[0], i)
 
 score = stream.Stream()
 
@@ -82,14 +83,14 @@ current_pitch = list(pitch_transition.keys())[0]
 current_beat = list(beat_transition.keys())[0]
 while (i < max):
     if key in pitch_transition:
-        choice = get_weighted_successor(pitch_graph, current_pitch[0])
-        n = note.Note(choice)
-        choice = get_weighted_successor(beat_graph, current_beat[0])
-        n.duration = duration.Duration(choice)
+        pitch = get_weighted_successor(pitch_graph, current_pitch[0])
+        n = note.Note(pitch)
+        beat = get_weighted_successor(beat_graph, current_beat[0])
+        n.duration = duration.Duration(beat)
         score.append(n)
         key = (key[1], n.name)
-        current_pitch = (current_pitch[1], choice)
-        current_beat = (current_beat[1], choice)
+        current_pitch = (current_pitch[1], pitch)
+        current_beat = (current_beat[1], beat)
         i += 1
     else:
         # print(key)
