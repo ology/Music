@@ -30,7 +30,7 @@ for row in range(height):
 
 s = stream.Stream()
 
-# pitch based on escape count, scaled to a range of notes
+# pitch based on escape count
 # duration is the inverse of escape count (longer for lower counts)
 for row in range(data.shape[0]):
     for col in range(data.shape[1]):
