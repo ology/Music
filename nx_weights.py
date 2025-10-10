@@ -52,14 +52,14 @@ pitch_graph = nx.DiGraph()
 for k,v in pitch_transition.items():
     for i,j in v.items():
         w = j / total
-        pitch_graph.add_edge(k[0], i, weight=w)
+        pitch_graph.add_edge(k[1], i, weight=w)
 
 # probability for beat transitions
 beat_graph = nx.DiGraph()
 for k,v in beat_transition.items():
     for i,j in v.items():
         w = j / total
-        beat_graph.add_edge(k[0], i, weight=w)
+        beat_graph.add_edge(k[1], i, weight=w)
         # print(k[0], i)
 
 score = stream.Stream()
