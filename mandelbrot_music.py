@@ -9,9 +9,8 @@ def mandelbrot_escape_count(c, max_iterations=50):
             return i
     return max_iterations
 
-# generate a small set of escape counts
 width, height = 20, 20
-x_min, x_max = -2, 1
+x_min, x_max = -2.5, 1.5
 y_min, y_max = -1.5, 1.5
 
 max_iter = 50
