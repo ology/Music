@@ -22,26 +22,25 @@ for n in song.flatten().notes:
     if type(n) == note.Note:
         if prev:
             if last:
-                # pitch
-                pitch_key = (prev.name, last.name)
                 # tally pitch transition frequency
+                pitch_key = (prev.name, last.name)
                 if pitch_key in pitch_transition:
                     if n.name in pitch_transition[pitch_key]:
-                        pitch_transition[pitch_key][last.name] += 1
+                        pitch_transition[pitch_key][n.name] += 1
                     else:
-                        pitch_transition[pitch_key][last.name] = 1
+                        pitch_transition[pitch_key][n.name] = 1
                 else:
-                    pitch_transition[pitch_key] = { last.name: 1 }
+                    pitch_transition[pitch_key] = { n.name: 1 }
                 # tally beat transition frequency
                 beat_key = (prev.duration.quarterLength, last.duration.quarterLength)
-                ql = last.duration.quarterLength
+                ql = n.duration.quarterLength
                 if beat_key in beat_transition:
                     if ql in beat_transition[beat_key]:
                         beat_transition[beat_key][ql] += 1
                     else:
                         beat_transition[beat_key][ql] = 1
                 else:
-                    beat_transition[beat_key] = {ql: 1}
+                    beat_transition[beat_key] = { ql: 1 }
                 prev = last
                 total += 1
             last = n
