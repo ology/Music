@@ -1,12 +1,7 @@
 import networkx as nx
 import random
-from music21 import converter, corpus, duration, instrument, note, stream
-# if author:
 import sys
-sys.path.append('./src')
-from music_voicegen.music_voicegen import MusicVoiceGen
-# else:
-# from music_voicegen import MusicVoiceGen
+from music21 import converter, corpus, duration, instrument, note, stream
 
 # song = converter.parse('/Users/gene/Music/MIDI/lichens_g_major.mid')
 # song = corpus.parse('bwv66.6')
@@ -21,22 +16,14 @@ beat_transition = {}
 prev = None # network item
 last = None # network item
 total = 0 # total number of notes
-pitches = []
-intervals = []
-beats = []
 
 # gather the transitions
 for n in song.flatten().notes:
     if type(n) == note.Note:
-        pitches.append(n.pitch.midi)
-        beats.append(n.duration.quarterLength)
         if prev:
             if last:
                 # pitch
                 pitch_key = (prev.name, last.name)
-                interval = last.pitch.midi - prev.pitch.midi
-                # print(f"{last.name}{last.octave} - {prev.name}{prev.octave} = {interval}")
-                intervals.append(interval)
                 # tally pitch transition frequency
                 if pitch_key in pitch_transition:
                     if n.name in pitch_transition[pitch_key]:
@@ -61,21 +48,17 @@ for n in song.flatten().notes:
         else:
             prev = n
 
-pitches = list(set(pitches)) # uniqify
-intervals = list(set(intervals)) # uniqify
-
-# # probability for pitch transitions
+# probability for pitch transitions
 pitch_graph = nx.DiGraph()
 for k,v in pitch_transition.items():
     for i,j in v.items():
         w = j / total
         pitch_graph.add_edge(k[0], i, weight=w)
 
-# # probability for beat transitions
+# probability for beat transitions
 beat_graph = nx.DiGraph()
 for k,v in beat_transition.items():
     for i,j in v.items():
-        # print("X:",k,v,i,j)
         w = j / total
         beat_graph.add_edge(k[0], i, weight=w)
 
@@ -83,12 +66,6 @@ score = stream.Stream()
 
 key = list(pitch_transition.keys())[0]
 keys = [' '.join(i) for i in list(pitch_transition.keys())]
-
-voice = MusicVoiceGen(
-    pitches=pitches,
-    intervals=intervals
-)
-# voice.context(context=[60]) # start at middle c
 
 def get_weighted_successor(graph, node):
     successors = list(graph.successors(node))
@@ -101,16 +78,18 @@ def get_weighted_successor(graph, node):
 
 # build the score
 i = 0
-current_node = list(beat_transition.keys())[0]
+current_pitch = list(pitch_transition.keys())[0]
+current_beat = list(beat_transition.keys())[0]
 while (i < max):
     if key in pitch_transition:
-        n = note.Note(voice.rand())
-        choice = random.choice(beats)
-        choice = get_weighted_successor(beat_graph, current_node[0])
+        choice = get_weighted_successor(pitch_graph, current_pitch[0])
+        n = note.Note(choice)
+        choice = get_weighted_successor(beat_graph, current_beat[0])
         n.duration = duration.Duration(choice)
         score.append(n)
         key = (key[1], n.name)
-        current_node = (current_node[1], choice)
+        current_pitch = (current_pitch[1], choice)
+        current_beat = (current_beat[1], choice)
         i += 1
     else:
         # print(key)
