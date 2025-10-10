@@ -43,7 +43,7 @@ for row in range(data.shape[0]):
             n.duration = duration.Duration(1 / (escape_val * 0.5)) # higher count = faster
         else:
             n.duration = duration.Duration(2.0)
-        print(f"escape_val: {escape_val}, #: {midi_pitch}, d: {n.duration}")
+        # print(f"escape_val: {escape_val}, #: {midi_pitch}, d: {n.duration}")
 
         if escape_val < max_iter:
             s.append(n)
