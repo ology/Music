@@ -1,0 +1,51 @@
+from music21 import stream, note, duration
+import numpy as np
+
+def mandelbrot_escape_count(c, max_iterations=50):
+    z = 0
+    for i in range(max_iterations):
+        z = z**2 + c
+        if abs(z) > 2:
+            return i
+    return max_iterations
+
+# Example: Generate a small set of escape counts
+width, height = 20, 20
+x_min, x_max = -2, 1
+y_min, y_max = -1.5, 1.5
+
+max_iter = 50
+min_pitch = 60
+max_pitch = min_pitch + 24
+
+data = np.zeros((height, width))
+for row in range(height):
+    for col in range(width):
+        real_part = x_min + (col / width) * (x_max - x_min)
+        imag_part = y_min + (row / height) * (y_max - y_min)
+        c = complex(real_part, imag_part)
+        data[row, col] = mandelbrot_escape_count(c)
+
+s = stream.Stream()
+
+# Pitch based on escape count, scaled to a range of notes
+# Duration based on a simple inverse of the escape count (longer for lower counts)
+for row in range(data.shape[0]):
+    for col in range(data.shape[1]):
+        escape_val = data[row, col]
+
+        # escape_val to pitch
+        # midi_pitch = int(60 + (escape_val / data.max()) * 24)
+        normalized_value = 1 - (escape_val / max_iter)
+        midi_pitch = min_pitch + (normalized_value * (max_pitch - min_pitch))
+        print(f"escape_val: {escape_val}, #: {midi_pitch}")
+        n = note.Note(midi=midi_pitch)
+        # escape_val to duration
+        if escape_val > 0:
+            n.duration = duration.Duration(1 / (escape_val * 0.5)) # higher count = faster
+        else:
+            n.duration = duration.Duration(2.0)
+
+        s.append(n)
+
+s.show('midi')
