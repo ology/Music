@@ -1,5 +1,6 @@
 from music21 import stream, note, duration
 import numpy as np
+import random
 
 def mandelbrot_escape_count(c, max_iterations=50):
     z = 0
@@ -12,6 +13,8 @@ def mandelbrot_escape_count(c, max_iterations=50):
 width, height = 20, 20
 x_min, x_max = -0.5, 0.5
 y_min, y_max = -0.5, 0.5
+# x_min, x_max = random.randrange(-2, 0), random.randrange(0, 2)
+# y_min, y_max = random.randrange(-2, 0), random.randrange(0, 2)
 
 max_iter = 50
 min_pitch = 60
