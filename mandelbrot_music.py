@@ -9,7 +9,7 @@ def mandelbrot_escape_count(c, max_iterations=50):
             return i
     return max_iterations
 
-# Example: Generate a small set of escape counts
+# generate a small set of escape counts
 width, height = 20, 20
 x_min, x_max = -2, 1
 y_min, y_max = -1.5, 1.5
@@ -28,8 +28,8 @@ for row in range(height):
 
 s = stream.Stream()
 
-# Pitch based on escape count, scaled to a range of notes
-# Duration based on a simple inverse of the escape count (longer for lower counts)
+# pitch based on escape count, scaled to a range of notes
+# duration is the inverse of escape count (longer for lower counts)
 for row in range(data.shape[0]):
     for col in range(data.shape[1]):
         escape_val = data[row, col]
@@ -38,13 +38,13 @@ for row in range(data.shape[0]):
         # midi_pitch = int(60 + (escape_val / data.max()) * 24)
         normalized_value = 1 - (escape_val / max_iter)
         midi_pitch = min_pitch + (normalized_value * (max_pitch - min_pitch))
-        print(f"escape_val: {escape_val}, #: {midi_pitch}")
         n = note.Note(midi=midi_pitch)
         # escape_val to duration
         if escape_val > 0:
             n.duration = duration.Duration(1 / (escape_val * 0.5)) # higher count = faster
         else:
             n.duration = duration.Duration(2.0)
+        print(f"escape_val: {escape_val}, #: {midi_pitch}, d: {n.duration}")
 
         s.append(n)
 
