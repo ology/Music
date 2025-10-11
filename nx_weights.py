@@ -85,8 +85,8 @@ i = 0
 while (i < max):
     if current_pitch in pitch_transition:
         pitch = get_weighted_successor(pitch_graph, current_pitch[0])
-        n = note.Note(pitch)
         beat = get_weighted_successor(beat_graph, current_beat[0])
+        n = note.Note(pitch)
         n.duration = duration.Duration(beat)
         score.append(n)
         current_pitch = (current_pitch[1], pitch)
