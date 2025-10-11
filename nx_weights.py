@@ -3,6 +3,24 @@ import random
 import sys
 from music21 import converter, corpus, duration, instrument, note, stream
 
+def tally_freqs(target, key, transition):
+    if key in transition:
+        if target in transition[key]:
+            transition[key][target] += 1
+        else:
+            transition[key][target] = 1
+    else:
+        transition[key] = { target: 1 }
+
+def get_weighted_successor(graph, node):
+    successors = list(graph.successors(node))
+    if not successors:
+        return None
+    weights = [
+        graph.get_edge_data(node, successor)['weight'] for successor in successors
+    ]
+    return random.choices(successors, weights=weights, k=1)[0]
+
 max = int(sys.argv[1]) if len(sys.argv) > 1 else 16 # maximum notes in the result phrase
 
 song = corpus.parse('bwv1.6')
@@ -21,15 +39,6 @@ beat_transition = {}
 prev = None # network item
 last = None # network item
 total = 0 # total number of notes
-
-def tally_freqs(target, key, transition):
-    if key in transition:
-        if target in transition[key]:
-            transition[key][target] += 1
-        else:
-            transition[key][target] = 1
-    else:
-        transition[key] = { target: 1 }
 
 # gather the pitch and beat transitions
 i = 0
@@ -69,15 +78,6 @@ score = stream.Stream()
 
 current_pitch = list(pitch_transition.keys())[0]
 current_beat = list(beat_transition.keys())[0]
-
-def get_weighted_successor(graph, node):
-    successors = list(graph.successors(node))
-    if not successors:
-        return None
-    weights = [
-        graph.get_edge_data(node, successor)['weight'] for successor in successors
-    ]
-    return random.choices(successors, weights=weights, k=1)[0]
 
 # build the score
 i = 0
