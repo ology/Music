@@ -22,6 +22,15 @@ prev = None # network item
 last = None # network item
 total = 0 # total number of notes
 
+def tally_freqs(target, key, transition):
+    if key in transition:
+        if target in transition[key]:
+            transition[key][target] += 1
+        else:
+            transition[key][target] = 1
+    else:
+        transition[key] = { target: 1 }
+
 # gather the transitions
 for n in song.flatten().notes:
     if type(n) == note.Note:
@@ -29,23 +38,10 @@ for n in song.flatten().notes:
             if last:
                 # tally pitch transition frequency
                 pitch_key = (prev.name, last.name)
-                if pitch_key in pitch_transition:
-                    if n.name in pitch_transition[pitch_key]:
-                        pitch_transition[pitch_key][n.name] += 1
-                    else:
-                        pitch_transition[pitch_key][n.name] = 1
-                else:
-                    pitch_transition[pitch_key] = { n.name: 1 }
+                tally_freqs(n.name, pitch_key, pitch_transition)
                 # tally beat transition frequency
                 beat_key = (prev.duration.quarterLength, last.duration.quarterLength)
-                ql = n.duration.quarterLength
-                if beat_key in beat_transition:
-                    if ql in beat_transition[beat_key]:
-                        beat_transition[beat_key][ql] += 1
-                    else:
-                        beat_transition[beat_key][ql] = 1
-                else:
-                    beat_transition[beat_key] = { ql: 1 }
+                tally_freqs(n.duration.quarterLength, beat_key, beat_transition)
                 prev = last
                 total += 1
             last = n
