@@ -26,7 +26,7 @@ g = Generator(
 
 device = Device(verbose=False)
 
-for i in range(1800):
+for i in range(1300):
     phrase = g.generate()
     for chord in phrase:
         arped = device.arp(chord, duration=1, arp_type='updown', repeats=1)
