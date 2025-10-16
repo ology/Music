@@ -8,7 +8,7 @@ motifs1 = [ r.motif() for _ in range(4) ]
 motifs2 = [ r.motif() for _ in range(4) ]
 
 s = stream.Score()
-p = stream.Part()
+chord_part = stream.Part()
 
 g1 = Generator(
     net={
@@ -49,7 +49,7 @@ for _ in range(4):
             c = Pychord(phrase[i])
             c = chord.Chord(c.components())
             c.duration = duration.Duration(d)
-            p.append(c)
+            chord_part.append(c)
 
 for _ in range(4):
     for m in motifs2:
@@ -59,7 +59,7 @@ for _ in range(4):
             c = Pychord(phrase[i])
             c = chord.Chord(c.components())
             c.duration = duration.Duration(d)
-            p.append(c)
+            chord_part.append(c)
 
 for _ in range(4):
     for m in motifs1:
@@ -69,8 +69,7 @@ for _ in range(4):
             c = Pychord(phrase[i])
             c = chord.Chord(c.components())
             c.duration = duration.Duration(d)
-            p.append(c)
+            chord_part.append(c)
 
-s.append(p)
-
+s.insert(0, chord_part)
 s.show('midi')
