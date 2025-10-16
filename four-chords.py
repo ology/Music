@@ -2,7 +2,7 @@ from music21 import chord, duration, stream
 from random_rhythms import Rhythm
 from chord_progression_network import Generator
 
-r = Rhythm(durations=[1, 3/2, 2])
+r = Rhythm(durations=[1, 3/2, 2, 3, 4])
 motifs = [ r.motif() for _ in range(4) ]
 
 s = stream.Score()
