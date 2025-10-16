@@ -1,17 +1,19 @@
-from music21 import chord, duration, stream
+from music21 import chord, duration, note, stream
 from pychord import Chord as Pychord
 from random_rhythms import Rhythm
 from chord_progression_network import Generator
 from music_bassline_generator import Bassline
 
-r = Rhythm(durations=[1, 3/2, 2, 3, 4])
-motifs1 = [ r.motif() for _ in range(4) ]
-motifs2 = [ r.motif() for _ in range(4) ]
-motifs3 = [ r.motif() for _ in range(4) ]
-motifs4 = [ r.motif() for _ in range(4) ]
+r1 = Rhythm(durations=[1, 3/2, 2, 3, 4])
+motifs1 = [ r1.motif() for _ in range(4) ]
+motifs2 = [ r1.motif() for _ in range(4) ]
+r2 = Rhythm(durations=[1/2, 1, 3/2, 2])
+motifs3 = [ r2.motif() for _ in range(4) ]
+motifs4 = [ r2.motif() for _ in range(4) ]
 
 s = stream.Score()
 chord_part = stream.Part()
+bass_part = stream.Part()
 
 g1 = Generator(
     net={
@@ -64,6 +66,12 @@ for _ in range(4):
             c.duration = duration.Duration(d)
             chord_part.append(c)
 
+for c in bass:
+    pitches = b1.generate(c, 4)
+    for p in pitches:
+        n = note.Note(p, type='quarter')
+        bass_part.append(n)
+
 bass = []
 
 for _ in range(4):
@@ -76,6 +84,12 @@ for _ in range(4):
             c = chord.Chord(c.components())
             c.duration = duration.Duration(d)
             chord_part.append(c)
+
+for c in bass:
+    pitches = b1.generate(c, 4)
+    for p in pitches:
+        n = note.Note(p, type='quarter')
+        bass_part.append(n)
 
 bass = []
 
@@ -90,5 +104,12 @@ for _ in range(4):
             c.duration = duration.Duration(d)
             chord_part.append(c)
 
+for c in bass:
+    pitches = b1.generate(c, 4)
+    for p in pitches:
+        n = note.Note(p, type='quarter')
+        bass_part.append(n)
+
 s.insert(0, chord_part)
+s.insert(0, bass_part)
 s.show('midi')
