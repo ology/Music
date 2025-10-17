@@ -110,7 +110,8 @@ for j,d in enumerate(motifs[1]):
     parts.duration = duration.Duration(d)
     chord_part.append(parts)
     if j == 0:
-        n = note.Note(c.components()[0], type='whole')
+        n = c.components()[0] + '2'
+        n = note.Note(n, type='whole')
         bass_part.append(n)
 
 # final resolution
