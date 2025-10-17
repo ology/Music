@@ -17,7 +17,6 @@ bass = Bassline(
     guitar=True,
     format='ISO',
 )
-pitches1 = bass.generate('C', 4)
 
 device = Device(
     scale_name='major',
@@ -27,6 +26,7 @@ chords = ['C','G','Am','F']
 # chords = ['CM7','G7','Am7','Fsus4']
 
 # first phrase
+pitches1 = bass.generate('C', 4)
 for i,my_chord in enumerate(chords):
     c = pyChord(my_chord)
     c = chord.Chord(c.components(), type='whole')
