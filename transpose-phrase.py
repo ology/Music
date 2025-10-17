@@ -148,6 +148,11 @@ if __name__ == "__main__":
     pre_chorus()
     chorus()
     chorus()
+    pre_chorus()
+    first_verse()
+    second_verse()
+    third_verse()
+    fourth_verse()
     resolution()
 
     s.append(tempo.MetronomeMark(number=90))
