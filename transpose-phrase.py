@@ -20,7 +20,7 @@ bass = Bassline(
     guitar=True,
     format='ISO',
 )
-pitches = bass.generate('C', 4)
+pitches1 = bass.generate('C', 4)
 
 device = Device(
     scale_name='major',
@@ -34,13 +34,13 @@ for i,my_chord in enumerate(chords):
     c = chord.Chord(c.components(), type='whole')
     chord_part.append(c)
     if i == 2:
-        notes = device.transpose(3, pitches)
+        notes = device.transpose(3, pitches1)
     elif i == 3:
-        notes = device.invert('C3', pitches)
+        notes = device.invert('C3', pitches1)
         notes = device.transpose(-3, notes)
-        # notes = device.transpose(-4, pitches)
+        # notes = device.transpose(-4, pitches1)
     else:
-        notes = pitches
+        notes = pitches1
     for n in notes:
         n = note.Note(n, type='quarter')
         bass_part.append(n)
@@ -50,28 +50,28 @@ for i,my_chord in enumerate(chords):
     c = chord.Chord(c.components(), type='whole')
     chord_part.append(c)
     if i == 2:
-        notes = device.transpose(3, pitches)
+        notes = device.transpose(3, pitches1)
     elif i == 3:
         notes = bass.generate('C', 4)
     else:
-        notes = pitches
+        notes = pitches1
     for n in notes:
         n = note.Note(n, type='quarter')
         bass_part.append(n)
 
-p2 = bass.generate('G', 4)
+pitches2 = bass.generate('G', 4)
 for i,my_chord in enumerate(chords):
     c = pyChord(my_chord)
     c = chord.Chord(c.components(), type='whole')
     chord_part.append(c)
     if i == 2:
-        notes = device.transpose(3, p2)
+        notes = device.transpose(3, pitches2)
     elif i == 3:
-        notes = device.invert('C3', p2)
+        notes = device.invert('C3', pitches2)
         notes = device.transpose(-3, notes)
-        # notes = device.transpose(-4, pitches)
+        # notes = device.transpose(-4, pitches1)
     else:
-        notes = p2
+        notes = pitches2
     for n in notes:
         n = note.Note(n, type='quarter')
         bass_part.append(n)
@@ -81,13 +81,13 @@ for i,my_chord in enumerate(chords):
     c = chord.Chord(c.components(), type='whole')
     chord_part.append(c)
     if i == 2:
-        notes = device.transpose(3, pitches)
+        notes = device.transpose(3, pitches1)
     elif i == 3:
-        notes = device.invert('C3', pitches)
+        notes = device.invert('C3', pitches1)
         notes = device.transpose(-3, notes)
-        # notes = device.transpose(-4, pitches)
+        # notes = device.transpose(-4, pitches1)
     else:
-        notes = pitches
+        notes = pitches1
     for n in notes:
         n = note.Note(n, type='quarter')
         bass_part.append(n)
@@ -95,7 +95,7 @@ for i,my_chord in enumerate(chords):
 c = pyChord(chords[0])
 c = chord.Chord(c.components(), type='whole')
 chord_part.append(c)
-n = note.Note(pitches[0], type='whole')
+n = note.Note(pitches1[0], type='whole')
 bass_part.append(n)
 
 s.append(tempo.MetronomeMark(number=90))
