@@ -3,6 +3,7 @@ from pychord import Chord as pyChord
 import re
 from music_melodicdevice import Device
 from music_bassline_generator import Bassline
+from random_rhythms import Rhythm
 
 # set-up
 s = stream.Stream()
@@ -21,6 +22,14 @@ bass = Bassline(
 device = Device(
     scale_name='major',
 )
+
+r = Rhythm(
+    measure_size=4,
+    durations=[1/2, 1/3, 1, 3/2],
+    groups={1/3: 3, 1/2: 2},
+)
+# (measure_size=5 groups={1/3: 3, 1/2: 2})
+motifs = [ r.motif() for x in range(4) ]
 
 chords = ['C','G','Am','F']
 # chords = ['CM7','G7','Am7','Fsus4']
