@@ -1,5 +1,6 @@
 from music21 import chord, duration, note, stream, tempo
 from pychord import Chord as pyChord
+import random
 import re
 from music_melodicdevice import Device
 from music_bassline_generator import Bassline
@@ -97,6 +98,19 @@ for i,my_chord in enumerate(chords):
     for j,d in enumerate(motifs[0]):
         n = note.Note(notes[j])
         n.duration = duration.Duration(d)
+        bass_part.append(n)
+
+unique = random.sample(list(set(chords)), 2)
+
+# bridge phrase
+for j,d in enumerate(motifs[1]):
+    my_chord = random.choice(unique)
+    c = pyChord(my_chord)
+    parts = chord.Chord(c.components())
+    parts.duration = duration.Duration(d)
+    chord_part.append(parts)
+    if i == 0:
+        n = note.Note(c.components()[0], type='whole')
         bass_part.append(n)
 
 # final resolution
