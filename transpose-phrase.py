@@ -1,4 +1,4 @@
-from music21 import chord, note, stream, tempo
+from music21 import chord, duration, note, stream, tempo
 from pychord import Chord as pyChord
 import re
 from music_melodicdevice import Device
@@ -25,17 +25,15 @@ device = Device(
 
 r = Rhythm(
     measure_size=4,
-    durations=[1/2, 1/3, 1, 3/2],
-    groups={1/3: 3, 1/2: 2},
+    durations=[1/2, 1, 3/2],
 )
-# (measure_size=5 groups={1/3: 3, 1/2: 2})
-motifs = [ r.motif() for x in range(4) ]
+motifs = [ r.motif() for _ in range(4) ]
 
 chords = ['C','G','Am','F']
 # chords = ['CM7','G7','Am7','Fsus4']
 
 # first phrase
-pitches1 = bass.generate('C', 4)
+pitches1 = bass.generate('C', len(motifs[0]))
 for i,my_chord in enumerate(chords):
     c = pyChord(my_chord)
     c = chord.Chord(c.components(), type='whole')
@@ -47,8 +45,9 @@ for i,my_chord in enumerate(chords):
         notes = device.transpose(-3, notes)
     else:
         notes = pitches1
-    for n in notes:
-        n = note.Note(n, type='quarter')
+    for i,d in enumerate(motifs[0]):
+        n = note.Note(notes[i])
+        n.duration = duration.Duration(d)
         bass_part.append(n)
 
 # second phrase
