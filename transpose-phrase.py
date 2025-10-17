@@ -1,5 +1,6 @@
 from music21 import chord, note, stream, tempo
 from pychord import Chord as pyChord
+import re
 from music_melodicdevice import Device
 from music_bassline_generator import Bassline
 
@@ -87,8 +88,11 @@ for i,my_chord in enumerate(chords):
 c = pyChord(chords[0])
 c = chord.Chord(c.components(), type='whole')
 chord_part.append(c)
-n = note.Note(pitches1[0], type='whole')
-bass_part.append(n)
+match = re.search(r'^([a-gA-G][#b]?)', chords[0])
+if match:
+    n = match.group(1) + '2'
+    n = note.Note(n, type='whole')
+    bass_part.append(n)
 
 s.append(tempo.MetronomeMark(number=90))
 s.insert(0, chord_part)
