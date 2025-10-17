@@ -153,6 +153,8 @@ if __name__ == "__main__":
     chorus()
     pre_chorus()
     pre_chorus()
+    chorus()
+    chorus()
     first_verse()
     second_verse()
     third_verse()
