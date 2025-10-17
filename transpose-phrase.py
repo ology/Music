@@ -140,6 +140,16 @@ if __name__ == "__main__":
     pitches1 = bass.generate('C', len(motifs[0]))
     pitches2 = bass.generate('G', 4)
 
+    first_verse()
+    second_verse()
+    third_verse()
+    fourth_verse()
+    pre_chorus()
+    pre_chorus()
+    chorus()
+    chorus()
+    resolution()
+
     s.append(tempo.MetronomeMark(number=90))
     s.insert(0, chord_part)
     s.insert(0, bass_part)
