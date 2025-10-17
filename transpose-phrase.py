@@ -57,7 +57,7 @@ for i,my_chord in enumerate(chords):
     if i == 2:
         notes = device.transpose(3, pitches1)
     elif i == 3:
-        notes = bass.generate('C', 4)
+        notes = bass.generate('C', len(motifs[0]))
     else:
         notes = pitches1
     for j,d in enumerate(motifs[0]):
