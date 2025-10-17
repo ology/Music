@@ -25,6 +25,7 @@ device = Device(
 chords = ['C','G','Am','F']
 # chords = ['CM7','G7','Am7','Fsus4']
 
+# first phrase
 for i,my_chord in enumerate(chords):
     c = pyChord(my_chord)
     c = chord.Chord(c.components(), type='whole')
@@ -40,6 +41,7 @@ for i,my_chord in enumerate(chords):
         n = note.Note(n, type='quarter')
         bass_part.append(n)
 
+# second phrase
 for i,my_chord in enumerate(chords):
     c = pyChord(my_chord)
     c = chord.Chord(c.components(), type='whole')
@@ -54,6 +56,7 @@ for i,my_chord in enumerate(chords):
         n = note.Note(n, type='quarter')
         bass_part.append(n)
 
+# third phrase
 pitches2 = bass.generate('G', 4)
 for i,my_chord in enumerate(chords):
     c = pyChord(my_chord)
@@ -70,6 +73,7 @@ for i,my_chord in enumerate(chords):
         n = note.Note(n, type='quarter')
         bass_part.append(n)
 
+# fourth phrase
 for i,my_chord in enumerate(chords):
     c = pyChord(my_chord)
     c = chord.Chord(c.components(), type='whole')
@@ -85,6 +89,7 @@ for i,my_chord in enumerate(chords):
         n = note.Note(n, type='quarter')
         bass_part.append(n)
 
+# final resolution
 c = pyChord(chords[0])
 c = chord.Chord(c.components(), type='whole')
 chord_part.append(c)
@@ -94,6 +99,7 @@ if match:
     n = note.Note(n, type='whole')
     bass_part.append(n)
 
+# gather the goods!
 s.append(tempo.MetronomeMark(number=90))
 s.insert(0, chord_part)
 s.insert(0, bass_part)
