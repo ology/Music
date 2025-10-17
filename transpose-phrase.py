@@ -4,6 +4,7 @@ import re
 from music_melodicdevice import Device
 from music_bassline_generator import Bassline
 
+# set-up
 s = stream.Stream()
 bass_part = stream.Part()
 chord_part = stream.Part()
