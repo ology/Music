@@ -57,11 +57,11 @@ for i,my_chord in enumerate(chords):
     if i == 2:
         notes = device.transpose(3, pitches1)
     elif i == 3:
-        notes = bass.generate('C', len(motifs[0]))
+        notes = bass.generate('C', len(motifs[1]))
     else:
         notes = pitches1
-    for j,d in enumerate(motifs[0]):
-        n = note.Note(notes[j])
+    for j,d in enumerate(motifs[1]):
+        n = note.Note(notes[j % len(notes)])
         n.duration = duration.Duration(d)
         bass_part.append(n)
 
