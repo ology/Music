@@ -76,6 +76,28 @@ for i,my_chord in enumerate(chords):
         n = note.Note(n, type='quarter')
         bass_part.append(n)
 
+for i,my_chord in enumerate(chords):
+    c = pyChord(my_chord)
+    c = chord.Chord(c.components(), type='whole')
+    chord_part.append(c)
+    if i == 2:
+        notes = device.transpose(3, pitches)
+    elif i == 3:
+        notes = device.invert('C3', pitches)
+        notes = device.transpose(-3, notes)
+        # notes = device.transpose(-4, pitches)
+    else:
+        notes = pitches
+    for n in notes:
+        n = note.Note(n, type='quarter')
+        bass_part.append(n)
+
+c = pyChord(chords[0])
+c = chord.Chord(c.components(), type='whole')
+chord_part.append(c)
+n = note.Note(pitches[0], type='whole')
+bass_part.append(n)
+
 s.append(tempo.MetronomeMark(number=90))
 s.insert(0, chord_part)
 s.insert(0, bass_part)
