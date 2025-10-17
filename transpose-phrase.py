@@ -30,7 +30,6 @@ r = Rhythm(
 motifs = [ r.motif() for _ in range(4) ]
 
 chords = ['C','G','Am','F']
-# chords = ['CM7','G7','Am7','Fsus4']
 
 # first phrase
 pitches1 = bass.generate('C', len(motifs[0]))
@@ -45,8 +44,8 @@ for i,my_chord in enumerate(chords):
         notes = device.transpose(-3, notes)
     else:
         notes = pitches1
-    for i,d in enumerate(motifs[0]):
-        n = note.Note(notes[i])
+    for j,d in enumerate(motifs[0]):
+        n = note.Note(notes[j])
         n.duration = duration.Duration(d)
         bass_part.append(n)
 
@@ -61,8 +60,9 @@ for i,my_chord in enumerate(chords):
         notes = bass.generate('C', 4)
     else:
         notes = pitches1
-    for n in notes:
-        n = note.Note(n, type='quarter')
+    for j,d in enumerate(motifs[0]):
+        n = note.Note(notes[j])
+        n.duration = duration.Duration(d)
         bass_part.append(n)
 
 # third phrase
@@ -94,8 +94,9 @@ for i,my_chord in enumerate(chords):
         notes = device.transpose(-3, notes)
     else:
         notes = pitches1
-    for n in notes:
-        n = note.Note(n, type='quarter')
+    for j,d in enumerate(motifs[0]):
+        n = note.Note(notes[j])
+        n.duration = duration.Duration(d)
         bass_part.append(n)
 
 # final resolution
