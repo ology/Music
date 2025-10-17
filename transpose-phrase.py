@@ -1,12 +1,7 @@
 from music21 import chord, note, stream, tempo
 from pychord import Chord as pyChord
 from music_melodicdevice import Device
-try:
-    import sys
-    sys.path.append('./src')
-    from music_bassline_generator.music_bassline_generator import Bassline
-except ImportError:
-    from music_bassline_generator import Bassline
+from music_bassline_generator import Bassline
 
 s = stream.Stream()
 bass_part = stream.Part()
@@ -38,7 +33,6 @@ for i,my_chord in enumerate(chords):
     elif i == 3:
         notes = device.invert('C3', pitches1)
         notes = device.transpose(-3, notes)
-        # notes = device.transpose(-4, pitches1)
     else:
         notes = pitches1
     for n in notes:
@@ -69,7 +63,6 @@ for i,my_chord in enumerate(chords):
     elif i == 3:
         notes = device.invert('C3', pitches2)
         notes = device.transpose(-3, notes)
-        # notes = device.transpose(-4, pitches1)
     else:
         notes = pitches2
     for n in notes:
@@ -85,7 +78,6 @@ for i,my_chord in enumerate(chords):
     elif i == 3:
         notes = device.invert('C3', pitches1)
         notes = device.transpose(-3, notes)
-        # notes = device.transpose(-4, pitches1)
     else:
         notes = pitches1
     for n in notes:
