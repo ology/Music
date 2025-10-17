@@ -90,7 +90,10 @@ def chorus():
         for j,d in enumerate(motifs[2]):
             my_chord = random.choice(unique3)
             c = pyChord(my_chord)
-            parts = chord.Chord(c.components())
+            comp = c.components()
+            length = len(comp) - 1
+            comp.pop(random.randint(0, length))
+            parts = chord.Chord(comp)
             parts.duration = duration.Duration(d)
             chord_part.append(parts)
             if j == 0:
@@ -148,6 +151,7 @@ if __name__ == "__main__":
     pre_chorus()
     chorus()
     chorus()
+    pre_chorus()
     pre_chorus()
     first_verse()
     second_verse()
