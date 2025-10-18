@@ -130,11 +130,9 @@ if __name__ == "__main__":
     )
 
     rhythm1 = Rhythm(
-        measure_size=4,
         durations=[1/2, 1, 3/2],
     )
     rhythm2 = Rhythm(
-        measure_size=4,
         durations=[1/2, 1, 3/2, 2],
     )
 
