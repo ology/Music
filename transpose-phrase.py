@@ -74,7 +74,7 @@ def fourth_verse():
             bass_part.append(n)
 
 def pre_chorus():
-    for j,d in enumerate(motifs1[1]):
+    for j,d in enumerate(motifs2[0]):
         my_chord = random.choice(unique2)
         c = pyChord(my_chord)
         parts = chord.Chord(c.components())
@@ -87,7 +87,7 @@ def pre_chorus():
 
 def chorus():
     for i in range(2):
-        for j,d in enumerate(motifs1[2]):
+        for j,d in enumerate(motifs2[1]):
             my_chord = random.choice(unique3)
             c = pyChord(my_chord)
             comp = c.components()
@@ -136,7 +136,7 @@ if __name__ == "__main__":
     motifs1 = [ rhythm1.motif() for _ in range(4) ]
     rhythm2 = Rhythm(
         measure_size=4,
-        durations=[1, 3/2, 2],
+        durations=[1/2, 1, 3/2, 2],
     )
     motifs2 = [ rhythm2.motif() for _ in range(4) ]
 
