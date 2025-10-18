@@ -81,7 +81,7 @@ def pre_chorus():
         parts.duration = duration.Duration(d)
         chord_part.append(parts)
         if j == 0:
-            n = c.components()[0] + '2'
+            n = c.components()[0] + '2' # set the octave
             n = note.Note(n, type='whole')
             bass_part.append(n)
 
@@ -97,7 +97,7 @@ def chorus():
             parts.duration = duration.Duration(d)
             chord_part.append(parts)
             if j == 0:
-                n = c.components()[0] + '2'
+                n = c.components()[0] + '2' # set the octave
                 n = note.Note(n, type='whole')
                 bass_part.append(n)
 
@@ -107,7 +107,7 @@ def resolution():
     chord_part.append(c)
     match = re.search(r'^([a-gA-G][#b]?)', chords[0])
     if match:
-        n = match.group(1) + '2'
+        n = match.group(1) + '2' # set the octave
         n = note.Note(n, type='whole')
         bass_part.append(n)
 
