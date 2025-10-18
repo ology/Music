@@ -134,6 +134,11 @@ if __name__ == "__main__":
         durations=[1/2, 1, 3/2],
     )
     motifs1 = [ rhythm1.motif() for _ in range(4) ]
+    rhythm2 = Rhythm(
+        measure_size=4,
+        durations=[1, 3/2, 2],
+    )
+    motifs2 = [ rhythm2.motif() for _ in range(4) ]
 
     chords = ['C','G','Am','F']
 
