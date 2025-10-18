@@ -130,10 +130,10 @@ if __name__ == "__main__":
     )
 
     rhythm1 = Rhythm(
-        durations=[1/2, 1, 3/2],
+        durations=[1/2, 1, 3/2, 2],
     )
     rhythm2 = Rhythm(
-        durations=[1/2, 1, 3/2, 2],
+        durations=[1/2, 1, 3/2],
     )
 
     motifs1 = [ rhythm1.motif() for _ in range(4) ]
