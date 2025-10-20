@@ -33,11 +33,10 @@ try:
         with mido.open_output(out_port_name) as outport:
             for msg in inport:
                 if msg.type != 'clock':
+                    # print(f"Received: {msg}")
                     if msg.type == 'control_change' and msg.control == 26 and msg.value == 0:
-                        # print(f"Received: {msg}")
                         send_to(outport, 0, 60, 1)
                     elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
-                        # print(f"Received: {msg}")
                         send_to(outport, 0, 67, 1)
 except KeyboardInterrupt:
     print("Stopping MIDI I/O.")
