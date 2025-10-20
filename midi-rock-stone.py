@@ -27,6 +27,8 @@ try:
                 if msg.type != 'clock':
                     if msg.type == 'control_change' and msg.control == 26 and msg.value == 0:
                         print(f"Received: {msg}")
+                    elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
+                        print(f"Received: {msg}")
 except KeyboardInterrupt:
     print("Stopping MIDI input.")
 except Exception as e:
