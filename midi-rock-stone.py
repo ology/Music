@@ -20,12 +20,19 @@ with open(device_file, 'r') as f:
     data = yaml.safe_load(f)
     print(data)
 
-def send_to(outport, channel, note, sleep):
-    msg = mido.Message('note_on', note=note, velocity=100, channel=channel)
-    outport.send(msg)
-    time.sleep(sleep)
-    msg = mido.Message('note_off', note=note, velocity=100, channel=channel)
-    outport.send(msg)
+def send_to(outport, mtype, channel, patch, data):
+    if mtype == 'control_change':
+        msg = mido.Message('control_change', control=patch, value=data, channel=channel)
+        outport.send(msg)
+    elif mtype == 'program_change':
+        msg = mido.Message('program_change', program=patch, channel=channel)
+        outport.send(msg)
+    else:
+        msg = mido.Message('note_on', note=patch, velocity=100, channel=channel)
+        outport.send(msg)
+        time.sleep(data)
+        msg = mido.Message('note_off', note=patch, velocity=100, channel=channel)
+        outport.send(msg)
 
 try:
     with mido.open_input(in_port_name) as inport:
@@ -33,11 +40,11 @@ try:
         with mido.open_output(out_port_name) as outport:
             for msg in inport:
                 if msg.type != 'clock':
-                    # print(f"Received: {msg}")
+                    print(f"Received: {msg}")
                     if msg.type == 'control_change' and msg.control == 26 and msg.value == 0:
-                        send_to(outport, 0, 60, 1)
-                    elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
-                        send_to(outport, 0, 67, 1)
+                        send_to(outport, 'program_change', 0, 99, 0)
+                    # elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
+                    #     send_to(outport, 0, 67, 1)
 except KeyboardInterrupt:
     print("Stopping MIDI I/O.")
 except Exception as e:
