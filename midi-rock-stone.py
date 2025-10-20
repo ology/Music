@@ -22,9 +22,11 @@ with open(device_file, 'r') as f:
 try:
     with mido.open_input(in_port_name) as inport:
         print(f"Listening to: {inport.name}")
-        for msg in inport:
-            if msg.type != 'clock':
-                print(f"Received: {msg}")
+        with mido.open_output(out_port_name) as outport:
+            for msg in inport:
+                if msg.type != 'clock':
+                    if msg.type == 'control_change' and msg.control == 26 and msg.value == 0:
+                        print(f"Received: {msg}")
 except KeyboardInterrupt:
     print("Stopping MIDI input.")
 except Exception as e:
