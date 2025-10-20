@@ -16,10 +16,6 @@ if match:
 if not os.path.exists(device_file):
     print(device_file, 'does not exist')
 
-with open(device_file, 'r') as f:
-    data = yaml.safe_load(f)
-    print(data)
-
 def send_to(outport, mtype, patch, data, channel=0, velocity=100):
     if mtype == 'control_change':
         msg = mido.Message('control_change', control=patch, value=data, channel=channel)
@@ -33,6 +29,24 @@ def send_to(outport, mtype, patch, data, channel=0, velocity=100):
         time.sleep(data)
         msg = mido.Message('note_off', note=patch, velocity=velocity, channel=channel)
         outport.send(msg)
+
+def get_by_value(dictionary, target_value):
+    found = False
+    for item in dictionary['messages']:
+        for value in item.values():
+            print(value)
+            if value == target_value:
+                found = True
+                break
+        if found:
+            break
+    return item
+
+with open(device_file, 'r') as f:
+    data = yaml.safe_load(f)
+    # print(data)
+    item = get_by_value(data, 'green button')
+    print(item)
 
 try:
     with mido.open_input(in_port_name) as inport:
