@@ -54,10 +54,10 @@ try:
             for msg in inport:
                 if msg.type != 'clock':
                     print(f"Received: {msg}")
-                    if msg.type == 'control_change' and msg.control == 26 and msg.value == 0:
-                        send_to(outport, 'program_change', 99, 0)
-                    elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
-                        send_to(outport, 'program_change', 98, 1)
+                    if msg.type == 'control_change' and msg.control == 25:
+                        send_to(outport, 'program_change', msg.value, 0)
+                    # elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
+                    #     send_to(outport, 'program_change', 98, 1)
 except KeyboardInterrupt:
     print('Stopping MIDI I/O.')
 except Exception as e:
