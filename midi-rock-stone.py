@@ -61,18 +61,19 @@ try:
         with mido.open_output(out_port_name) as outport:
             print('Sending to:', outport.name)
             for msg in inport:
-                if msg.type != 'clock':
-                    print(f"Received: {msg}")
-                    if msg.type == 'note_on' and msg.note == start:
-                        send_to(outport, 'start')
-                    elif msg.type == 'note_on' and msg.note == stop:
-                        send_to(outport, 'stop')
-                    elif msg.type == 'control_change' and msg.control == 1:
-                        send_to(outport, 'control_change', msg.control, msg.value)
-                    elif msg.type == 'pitchwheel':
-                        send_to(outport, 'pitchwheel', 0, msg.pitch)
-                    elif msg.type == 'control_change' and msg.control == 25:
-                        send_to(outport, 'program_change', msg.value)
+                if msg.type == 'clock':
+                    continue
+                print(f"Received: {msg}")
+                if msg.type == 'note_on' and msg.note == start:
+                    send_to(outport, 'start')
+                elif msg.type == 'note_on' and msg.note == stop:
+                    send_to(outport, 'stop')
+                elif msg.type == 'control_change' and msg.control == 1:
+                    send_to(outport, 'control_change', msg.control, msg.value)
+                elif msg.type == 'pitchwheel':
+                    send_to(outport, 'pitchwheel', 0, msg.pitch)
+                elif msg.type == 'control_change' and msg.control == 25:
+                    send_to(outport, 'program_change', msg.value)
 except KeyboardInterrupt:
     print('Stopping MIDI I/O.')
 except Exception as e:
