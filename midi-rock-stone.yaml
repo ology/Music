@@ -4,35 +4,35 @@ messages:
   - type: note_on
     patch: 81
     value: *
-    desc: 'encoder 1'
+    desc: 'encoder 1 button'
   - type: note_on
     patch: 82
     value: *
-    desc: 'encoder 2'
+    desc: 'encoder 2 button'
   - type: note_on
     patch: 83
     value: *
-    desc: 'encoder 3'
+    desc: 'encoder 3 button'
   - type: note_on
     patch: 84
     value: *
-    desc: 'encoder 4'
+    desc: 'encoder 4 button'
   - type: note_on
     patch: 85
     value: *
-    desc: 'green mini-button'
+    desc: 'green button'
   - type: note_on
     patch: 86
     value: *
-    desc: 'red mini-button'
+    desc: 'red button'
   - type: note_on
     patch: 87
     value: *
-    desc: 'blue mini-button'
+    desc: 'blue button'
   - type: note_on
     patch: 88
     value: *
-    desc: 'yellow mini-button'
+    desc: 'yellow button'
 
   - type: control_change
     patch: 9
@@ -90,3 +90,29 @@ messages:
     patch: 24
     value: *
     desc: 'mode 2 button twist'
+
+  - type: control_change
+    patch: 25
+    value: *
+    desc: 'encoder 1 dial absolute'
+  - type: control_change
+    patch: 26
+    value: *
+    desc: 'encoder 2 dial absolute'
+  - type: control_change
+    patch: 27
+    value: *
+    desc: 'encoder 3 dial absolute'
+  - type: control_change
+    patch: 28
+    value: *
+    desc: 'encoder 4 dial absolute'
+
+  - type: control_change
+    patch: 31
+    value: *
+    desc: 'encoder 3 dial relative'
+  - type: control_change
+    patch: 32
+    value: *
+    desc: 'encoder 4 dial relative'
