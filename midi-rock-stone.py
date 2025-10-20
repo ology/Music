@@ -20,7 +20,7 @@ with open(device_file, 'r') as f:
     data = yaml.safe_load(f)
     print(data)
 
-def midi_message(outport, channel, note, sleep):
+def send_to(outport, channel, note, sleep):
     msg = mido.Message('note_on', note=note, velocity=100, channel=channel)
     outport.send(msg)
     time.sleep(sleep)
@@ -35,10 +35,10 @@ try:
                 if msg.type != 'clock':
                     if msg.type == 'control_change' and msg.control == 26 and msg.value == 0:
                         # print(f"Received: {msg}")
-                        midi_message(outport, 0, 60, 1)
+                        send_to(outport, 0, 60, 1)
                     elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
                         # print(f"Received: {msg}")
-                        midi_message(outport, 0, 67, 1)
+                        send_to(outport, 0, 67, 1)
 except KeyboardInterrupt:
     print("Stopping MIDI I/O.")
 except Exception as e:
