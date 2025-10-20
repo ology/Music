@@ -34,7 +34,6 @@ def get_by_value(dictionary, target_value):
     found = False
     for item in dictionary['messages']:
         for value in item.values():
-            print(value)
             if value == target_value:
                 found = True
                 break
@@ -44,7 +43,6 @@ def get_by_value(dictionary, target_value):
 
 with open(device_file, 'r') as f:
     data = yaml.safe_load(f)
-    # print(data)
     item = get_by_value(data, 'green button')
     print(item)
 
