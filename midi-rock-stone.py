@@ -20,6 +20,9 @@ def send_to(outport, mtype, patch, data, channel=0, velocity=100):
     if mtype == 'control_change':
         msg = mido.Message('control_change', control=patch, value=data, channel=channel)
         outport.send(msg)
+    elif mtype == 'pitchwheel':
+        msg = mido.Message('pitchwheel', pitch=data, channel=channel)
+        outport.send(msg)
     elif mtype == 'program_change':
         msg = mido.Message('program_change', program=patch, channel=channel)
         outport.send(msg)
@@ -54,7 +57,11 @@ try:
             for msg in inport:
                 if msg.type != 'clock':
                     print(f"Received: {msg}")
-                    if msg.type == 'control_change' and msg.control == 25:
+                    if msg.type == 'control_change' and msg.control == 1:
+                        send_to(outport, 'control_change', msg.control, msg.value)
+                    elif msg.type == 'pitchwheel':
+                        send_to(outport, 'pitchwheel', 0, msg.pitch)
+                    elif msg.type == 'control_change' and msg.control == 25:
                         send_to(outport, 'program_change', msg.value, 0)
                     # elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
                     #     send_to(outport, 'program_change', 98, 1)
