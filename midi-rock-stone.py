@@ -44,8 +44,8 @@ try:
                     print(f"Received: {msg}")
                     if msg.type == 'control_change' and msg.control == 26 and msg.value == 0:
                         send_to(outport, 'program_change', 99, 0)
-                    # elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
-                    #     send_to(outport, 'control_change', 67, 1)
+                    elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
+                        send_to(outport, 'program_change', 98, 1)
 except KeyboardInterrupt:
     print('Stopping MIDI I/O.')
 except Exception as e:
