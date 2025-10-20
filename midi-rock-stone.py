@@ -4,7 +4,7 @@ import re
 import sys
 import yaml
 
-port_name = sys.argv[2] if len(sys.argv) > 2 else 'USB MIDI Interface'
+port_name = sys.argv[2] if len(sys.argv) > 2 else 'MIDI ROCK Joystick'
 device_file = sys.argv[1] if len(sys.argv) > 1 else sys.argv[0]
 
 match = re.search(r'^(.+?)\.py$', device_file)
