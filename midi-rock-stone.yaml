@@ -3,116 +3,116 @@ description: 'MIDI Rock: Stone joystick controller'
 messages:
   - type: note_on
     patch: 81
-    value: *
+    value: '*'
     desc: 'encoder 1 button'
   - type: note_on
     patch: 82
-    value: *
+    value: '*'
     desc: 'encoder 2 button'
   - type: note_on
     patch: 83
-    value: *
+    value: '*'
     desc: 'encoder 3 button'
   - type: note_on
     patch: 84
-    value: *
+    value: '*'
     desc: 'encoder 4 button'
   - type: note_on
     patch: 85
-    value: *
+    value: '*'
     desc: 'green button'
   - type: note_on
     patch: 86
-    value: *
+    value: '*'
     desc: 'red button'
   - type: note_on
     patch: 87
-    value: *
+    value: '*'
     desc: 'blue button'
   - type: note_on
     patch: 88
-    value: *
+    value: '*'
     desc: 'yellow button'
 
   - type: control_change
     patch: 9
-    value: *
+    value: '*'
     desc: 'potentiometer'
 
   - type: control_change
     patch: 1
-    value: *
+    value: '*'
     desc: 'mode 1 modulation wheel'
   - type: pitch_wheel_change
     patch: 0
-    value: *
+    value: '*'
     desc: 'mode 1 pitch-bend'
   - type: control_change
     patch: 10
-    value: *
+    value: '*'
     desc: 'mode 1 twist'
 
   - type: control_change
     patch: 16
-    value: *
+    value: '*'
     desc: 'mode 1 button x coordinate'
   - type: control_change
     patch: 17
-    value: *
+    value: '*'
     desc: 'mode 1 button y coordinate'
   - type: control_change
     patch: 18
-    value: *
+    value: '*'
     desc: 'mode 1 button twist'
 
   - type: control_change
     patch: 19
-    value: *
+    value: '*'
     desc: 'mode 2 x coordinate'
   - type: control_change
     patch: 20
-    value: *
+    value: '*'
     desc: 'mode 2 y coordinate'
   - type: control_change
     patch: 21
-    value: *
+    value: '*'
     desc: 'mode 2 twist'
 
   - type: control_change
     patch: 22
-    value: *
+    value: '*'
     desc: 'mode 2 button x coordinate'
   - type: control_change
     patch: 23
-    value: *
+    value: '*'
     desc: 'mode 2 button y coordinate'
   - type: control_change
     patch: 24
-    value: *
+    value: '*'
     desc: 'mode 2 button twist'
 
   - type: control_change
     patch: 25
-    value: *
+    value: '*'
     desc: 'encoder 1 dial absolute'
   - type: control_change
     patch: 26
-    value: *
+    value: '*'
     desc: 'encoder 2 dial absolute'
   - type: control_change
     patch: 27
-    value: *
+    value: '*'
     desc: 'encoder 3 dial absolute'
   - type: control_change
     patch: 28
-    value: *
+    value: '*'
     desc: 'encoder 4 dial absolute'
 
   - type: control_change
     patch: 31
-    value: *
+    value: '*'
     desc: 'encoder 3 dial relative'
   - type: control_change
     patch: 32
-    value: *
+    value: '*'
     desc: 'encoder 4 dial relative'
