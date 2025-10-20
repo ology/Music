@@ -17,7 +17,13 @@ if not os.path.exists(device_file):
     print(device_file, 'does not exist')
 
 def send_to(outport, mtype, patch, data, channel=0, velocity=100):
-    if mtype == 'control_change':
+    if mtype == 'start':
+        msg = mido.Message('start')
+        outport.send(msg)
+    elif mtype == 'stop':
+        msg = mido.Message('start')
+        outport.send(msg)
+    elif mtype == 'control_change':
         msg = mido.Message('control_change', control=patch, value=data, channel=channel)
         outport.send(msg)
     elif mtype == 'pitchwheel':
@@ -46,8 +52,8 @@ def get_by_value(dictionary, target_value):
 
 with open(device_file, 'r') as f:
     data = yaml.safe_load(f)
-    item = get_by_value(data, 'green button')
-    print(item)
+    start = get_by_value(data, 'green button')['patch']
+    stop = get_by_value(data, 'red button')['patch']
 
 try:
     with mido.open_input(in_port_name) as inport:
@@ -57,14 +63,16 @@ try:
             for msg in inport:
                 if msg.type != 'clock':
                     print(f"Received: {msg}")
-                    if msg.type == 'control_change' and msg.control == 1:
+                    if msg.type == 'note_on' and msg.note == start:
+                        send_to(outport, 'start', 0, 0)
+                    elif msg.type == 'note_on' and msg.note == stop:
+                        send_to(outport, 'stop', 0, 0)
+                    elif msg.type == 'control_change' and msg.control == 1:
                         send_to(outport, 'control_change', msg.control, msg.value)
                     elif msg.type == 'pitchwheel':
                         send_to(outport, 'pitchwheel', 0, msg.pitch)
                     elif msg.type == 'control_change' and msg.control == 25:
                         send_to(outport, 'program_change', msg.value, 0)
-                    # elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
-                    #     send_to(outport, 'program_change', 98, 1)
 except KeyboardInterrupt:
     print('Stopping MIDI I/O.')
 except Exception as e:
