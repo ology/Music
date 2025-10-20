@@ -38,6 +38,7 @@ try:
     with mido.open_input(in_port_name) as inport:
         print('Listening to:', inport.name)
         with mido.open_output(out_port_name) as outport:
+            print('Sending to:', outport.name)
             for msg in inport:
                 if msg.type != 'clock':
                     print(f"Received: {msg}")
