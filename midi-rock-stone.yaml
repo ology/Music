@@ -1,5 +1,5 @@
 device: 'Joystick'
-description: 'MIDI Rock: Stone Joystick controller'
+description: 'MIDI Rock: Stone joystick controller'
 messages:
   - type: note_on
     patch: 81
