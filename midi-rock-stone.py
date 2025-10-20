@@ -16,7 +16,7 @@ if match:
 if not os.path.exists(device_file):
     print(device_file, 'does not exist')
 
-def send_to(outport, mtype, patch, data, channel=0, velocity=100):
+def send_to(outport, mtype, patch=0, data=0, channel=0, velocity=100):
     if mtype == 'start':
         msg = mido.Message('start')
         outport.send(msg)
@@ -64,15 +64,15 @@ try:
                 if msg.type != 'clock':
                     print(f"Received: {msg}")
                     if msg.type == 'note_on' and msg.note == start:
-                        send_to(outport, 'start', 0, 0)
+                        send_to(outport, 'start')
                     elif msg.type == 'note_on' and msg.note == stop:
-                        send_to(outport, 'stop', 0, 0)
+                        send_to(outport, 'stop')
                     elif msg.type == 'control_change' and msg.control == 1:
                         send_to(outport, 'control_change', msg.control, msg.value)
                     elif msg.type == 'pitchwheel':
                         send_to(outport, 'pitchwheel', 0, msg.pitch)
                     elif msg.type == 'control_change' and msg.control == 25:
-                        send_to(outport, 'program_change', msg.value, 0)
+                        send_to(outport, 'program_change', msg.value)
 except KeyboardInterrupt:
     print('Stopping MIDI I/O.')
 except Exception as e:
