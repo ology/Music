@@ -36,7 +36,7 @@ def send_to(outport, mtype, patch, data, channel=0, velocity=100):
 
 try:
     with mido.open_input(in_port_name) as inport:
-        print(f"Listening to: {inport.name}")
+        print('Listening to:', inport.name)
         with mido.open_output(out_port_name) as outport:
             for msg in inport:
                 if msg.type != 'clock':
@@ -46,6 +46,6 @@ try:
                     # elif msg.type == 'control_change' and msg.control == 26 and msg.value == 127:
                     #     send_to(outport, 'control_change', 67, 1)
 except KeyboardInterrupt:
-    print("Stopping MIDI I/O.")
+    print('Stopping MIDI I/O.')
 except Exception as e:
     print(f"ERROR: {e}")
