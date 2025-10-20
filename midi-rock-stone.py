@@ -40,6 +40,6 @@ try:
                         # print(f"Received: {msg}")
                         midi_message(outport, 0, 67, 1)
 except KeyboardInterrupt:
-    print("Stopping MIDI input.")
+    print("Stopping MIDI input and output.")
 except Exception as e:
     print(f"ERROR: {e}")
