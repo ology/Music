@@ -3,6 +3,7 @@ import sys
 import time
 
 def send_clock(outport, bpm):
+    outport.send(mido.Message('start'))
     interval = 60 / (int(bpm) * 24) # time between clock messages (24 PPQN per beat)
     try:
         while True:
@@ -18,5 +19,4 @@ if __name__ == "__main__":
     port = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     with mido.open_output(port) as outport:
         print(outport, f"at {bpm} BPM")
-        outport.send(mido.Message('start'))
         send_clock(outport, bpm)
