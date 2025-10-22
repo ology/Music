@@ -15,6 +15,7 @@ if match:
     device_file = device_file + '.yaml'
 if not os.path.exists(device_file):
     print(device_file, 'does not exist')
+    sys.exit()
 
 def send_to(outport, mtype, patch=0, data=0, channel=0, velocity=100):
     if mtype == 'start':
