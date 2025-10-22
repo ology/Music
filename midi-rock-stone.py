@@ -19,19 +19,19 @@ if not os.path.exists(device_file):
 
 def send_to(outport, mtype, patch=0, data=0, channel=0, velocity=100):
     if mtype == 'start':
-        msg = mido.Message('start')
+        msg = mido.Message(mtype)
         outport.send(msg)
     elif mtype == 'stop':
-        msg = mido.Message('start')
+        msg = mido.Message(mtype)
         outport.send(msg)
     elif mtype == 'control_change':
-        msg = mido.Message('control_change', control=patch, value=data, channel=channel)
+        msg = mido.Message(mtype, control=patch, value=data, channel=channel)
         outport.send(msg)
     elif mtype == 'pitchwheel':
-        msg = mido.Message('pitchwheel', pitch=data, channel=channel)
+        msg = mido.Message(mtype, pitch=data, channel=channel)
         outport.send(msg)
     elif mtype == 'program_change':
-        msg = mido.Message('program_change', program=patch, channel=channel)
+        msg = mido.Message(mtype, program=patch, channel=channel)
         outport.send(msg)
     else:
         msg = mido.Message('note_on', note=patch, velocity=velocity, channel=channel)
