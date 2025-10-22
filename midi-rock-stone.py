@@ -18,10 +18,7 @@ if not os.path.exists(device_file):
     sys.exit()
 
 def send_to(outport, mtype, patch=0, data=0, channel=0, velocity=100):
-    if mtype == 'start':
-        msg = mido.Message(mtype)
-        outport.send(msg)
-    elif mtype == 'stop':
+    if mtype == 'start' or mtype == 'stop':
         msg = mido.Message(mtype)
         outport.send(msg)
     elif mtype == 'control_change':
