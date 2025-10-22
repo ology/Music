@@ -11,7 +11,7 @@ def send_clock(outport, bpm):
     except KeyboardInterrupt:
         outport.send(mido.Message('stop'))
         outport.close()
-        print("\nExiting...")
+        print("\nExiting")
 
 if __name__ == "__main__":
     bpm = sys.argv[2] if len(sys.argv) > 2 else 120
