@@ -70,7 +70,7 @@ try:
                     send_to(outport, 'control_change', msg.control, msg.value)
                 elif msg.type == 'pitchwheel':
                     send_to(outport, 'pitchwheel', 0, msg.pitch)
-                elif msg.type == 'control_change' and msg.control == 25:
+                elif msg.type == 'control_change' and msg.control == 9:
                     send_to(outport, 'program_change', msg.value)
 except KeyboardInterrupt:
     print('Stopping MIDI I/O.')
