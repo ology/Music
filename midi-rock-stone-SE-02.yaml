@@ -11,17 +11,10 @@ messages:
     target: 1 # mod
   - type: pitchwheel
     cmd: pitchwheel
-  - type: note_on
-    note: 85 # green btn
-    cmd: start
-  - type: note_on
-    note: 86 # red btn
-    cmd: stop
-  - type: note_on
-    note: 87 # blue btn
+  - type: control_change
+    control: 28 # encoder 4
     cmd: control_change
-    target: 30 # keybd
-    data: 0
+    target: 59 # contour
   - type: control_change
     control: 27 # encoder 3
     cmd: control_change
@@ -30,3 +23,14 @@ messages:
     control: 26 # encoder 2
     cmd: control_change
     target: 71 # resonance
+  # - type: note_on
+  #   note: 85 # green btn
+  #   cmd: start
+  # - type: note_on
+  #   note: 86 # red btn
+  #   cmd: stop
+  # - type: note_on
+  #   note: 87 # blue btn
+  #   cmd: control_change
+  #   target: 30 # keybd
+  #   data: 0
