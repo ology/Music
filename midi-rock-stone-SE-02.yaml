@@ -7,11 +7,11 @@ messages:
     cmd: control_change
     target: 102 # lfo rate
   - type: control_change
-    control: 1 # joystick
+    control: 1 # joystick x
     cmd: control_change
     target: 1 # modwheel
   - type: pitchwheel
-    control: 1 # joystick
+    control: 1 # joystick y
     cmd: control_change
     target: 1 # modwheel
   - type: control_change
