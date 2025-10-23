@@ -17,7 +17,8 @@ messages:
   - type: note_on
     note: 86 # red btn
     cmd: stop
-  - type: control_change
-    control: 87
+  - type: note_on
+    note: 87
     cmd: control_change
-    target: 63
+    target: 30
+    data: 0
