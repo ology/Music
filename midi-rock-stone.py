@@ -57,6 +57,8 @@ try:
                             send_to(outport, m['cmd'])
                         elif m['type'] == 'control_change' and m['cmd'] == 'program_change' and msg.control == m['control']:
                             send_to(outport, 'program_change', patch=msg.value)
+                        elif m['type'] == 'control_change' and msg.control == m['control'] and 'data' in m:
+                            send_to(outport, 'control_change', patch=m['target'], data=m['data'])
                         elif m['type'] == 'control_change' and msg.control == m['control']:
                             send_to(outport, 'control_change', patch=m['target'], data=msg.value)
                         elif m['type'] == 'pitchwheel':
