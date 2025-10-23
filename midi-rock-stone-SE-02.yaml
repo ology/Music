@@ -5,17 +5,19 @@ messages:
   - type: control_change
     control: 9
     cmd: program_change
-    data: 'value'
   - type: control_change
     control: 1
     cmd: control_change
-    data: 'value'
+    target: 1
   - type: pitchwheel
     cmd: pitchwheel
-    data: 'pitch'
   - type: note_on
     note: 85 # green btn
     cmd: start
   - type: note_on
     note: 86 # red btn
     cmd: stop
+  - type: control_change
+    control: 87
+    cmd: control_change
+    target: 63
