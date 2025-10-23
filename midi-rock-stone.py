@@ -56,7 +56,7 @@ try:
                         elif m['type'] == 'control_change' and m['cmd'] == 'program_change' and msg.control == m['control']:
                             send_to(outport, 'program_change', patch=msg.value)
                         elif m['type'] == 'control_change' and msg.control == m['control']:
-                            send_to(outport, 'control_change', patch=msg.control, data=msg.value)
+                            send_to(outport, 'control_change', patch=m['target'], data=msg.value)
                         elif m['type'] == 'pitchwheel':
                             send_to(outport, 'pitchwheel', data=msg.pitch)
 except KeyboardInterrupt:
