@@ -25,6 +25,7 @@ def send_to(outport, mtype, patch=0, data=0, channel=0, velocity=100):
         msg = mido.Message('note_off', note=patch, velocity=velocity, channel=channel)
         outport.send(msg)
 
+# keys: type (required), cmd (required), note, control, target, data
 def dispatch(port, msg, data):
     for m in data['messages']:
         if msg.type == m['type']:
