@@ -20,13 +20,13 @@ messages:
   - type: note_on
     note: 87
     cmd: control_change
-    target: 30
+    target: 30 # keybd
     data: 0
+  - type: control_change
+    control: 27
+    cmd: control_change
+    target: 74 # cutoff
   - type: control_change
     control: 26
     cmd: control_change
-    target: 74
-  - type: control_change
-    control: 25
-    cmd: control_change
-    target: 71
+    target: 71 # resonance
