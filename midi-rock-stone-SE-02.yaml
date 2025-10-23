@@ -9,9 +9,11 @@ messages:
   - type: control_change
     control: 1 # joystick
     cmd: control_change
-    target: 1 # mod
+    target: 1 # modwheel
   - type: pitchwheel
-    cmd: pitchwheel
+    control: 1 # joystick
+    cmd: control_change
+    target: 1 # modwheel
   - type: control_change
     control: 28 # encoder 4
     cmd: control_change
@@ -39,3 +41,11 @@ messages:
   #   cmd: control_change
   #   target: 30 # keybd
   #   data: 0
+  - type: control_change
+    control: 16 # button + joystick x
+    cmd: control_change
+    target: 16 # o2 filter
+  - type: control_change
+    control: 17 # button + joystick y
+    cmd: control_change
+    target: 59 # contour
