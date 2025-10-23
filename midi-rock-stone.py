@@ -51,7 +51,9 @@ try:
                 print(f"Received: {msg}")
                 for m in data['messages']:
                     if msg.type == m['type']:
-                        if m['type'] == 'note_on' and msg.note == m['note']:
+                        if m['type'] == 'note_on' and m['cmd'] == 'control_change' and msg.note == m['note']:
+                            send_to(outport, m['cmd'], patch=m['target'], data=m['data'])
+                        elif m['type'] == 'note_on' and msg.note == m['note']:
                             send_to(outport, m['cmd'])
                         elif m['type'] == 'control_change' and m['cmd'] == 'program_change' and msg.control == m['control']:
                             send_to(outport, 'program_change', patch=msg.value)
