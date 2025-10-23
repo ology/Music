@@ -35,21 +35,21 @@ def send_to(outport, mtype, patch=0, data=0, channel=0, velocity=100):
         msg = mido.Message('note_off', note=patch, velocity=velocity, channel=channel)
         outport.send(msg)
 
-def dispatch(outport, msg, data):
+def dispatch(port, msg, data):
     for m in data['messages']:
         if msg.type == m['type']:
             if m['type'] == 'note_on' and m['cmd'] == 'control_change' and msg.note == m['note']:
-                send_to(outport, m['cmd'], patch=m['target'], data=m['data'])
+                send_to(port, m['cmd'], patch=m['target'], data=m['data'])
             elif m['type'] == 'note_on' and msg.note == m['note']:
-                send_to(outport, m['cmd'])
+                send_to(port, m['cmd'])
             elif m['type'] == 'control_change' and m['cmd'] == 'program_change' and msg.control == m['control']:
-                send_to(outport, 'program_change', patch=msg.value)
+                send_to(port, 'program_change', patch=msg.value)
             elif m['type'] == 'control_change' and msg.control == m['control'] and 'data' in m:
-                send_to(outport, 'control_change', patch=m['target'], data=m['data'])
+                send_to(port, 'control_change', patch=m['target'], data=m['data'])
             elif m['type'] == 'control_change' and msg.control == m['control']:
-                send_to(outport, 'control_change', patch=m['target'], data=msg.value)
+                send_to(port, 'control_change', patch=m['target'], data=msg.value)
             elif m['type'] == 'pitchwheel':
-                send_to(outport, 'pitchwheel', data=msg.pitch)
+                send_to(port, 'pitchwheel', data=msg.pitch)
 
 with open(device_file, 'r') as f:
     data = yaml.safe_load(f)
