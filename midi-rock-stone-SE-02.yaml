@@ -23,6 +23,10 @@ messages:
     control: 26 # encoder 2
     cmd: control_change
     target: 71 # resonance
+  - type: control_change
+    control: 25 # encoder 1
+    cmd: control_change
+    target: 16 # o2 filter
   # - type: note_on
   #   note: 85 # green btn
   #   cmd: start
