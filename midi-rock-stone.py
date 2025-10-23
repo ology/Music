@@ -49,16 +49,16 @@ try:
                 if msg.type == 'clock':
                     continue
                 print(f"Received: {msg}")
-                # if msg.type == 'note_on' and msg.note == start:
-                #     send_to(outport, 'start')
-                # elif msg.type == 'note_on' and msg.note == stop:
-                #     send_to(outport, 'stop')
-                # elif msg.type == 'control_change' and msg.control == 1:
-                #     send_to(outport, 'control_change', msg.control, msg.value)
-                # elif msg.type == 'pitchwheel':
-                #     send_to(outport, 'pitchwheel', 0, msg.pitch)
-                # elif msg.type == 'control_change' and msg.control == 9:
-                #     send_to(outport, 'program_change', msg.value)
+                for m in data['messages']:
+                    if msg.type == m['type']:
+                        if m['type'] == 'note_on' and msg.note == m['note']:
+                            send_to(outport, m['cmd'])
+                        elif m['type'] == 'control_change' and m['cmd'] == 'program_change' and msg.control == m['control']:
+                            send_to(outport, 'program_change', patch=msg.value)
+                        elif m['type'] == 'control_change' and msg.control == m['control']:
+                            send_to(outport, 'control_change', patch=msg.control, data=msg.value)
+                        elif m['type'] == 'pitchwheel':
+                            send_to(outport, 'pitchwheel', data=msg.pitch)
 except KeyboardInterrupt:
     print('Stopping MIDI I/O.')
 except Exception as e:
