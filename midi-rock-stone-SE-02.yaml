@@ -2,12 +2,10 @@ controller: 'MIDI ROCK Joystick'
 device: 'SE-02'
 description: 'Roland SE-02 synthesizer'
 messages:
-  # - type: control_change
-  #   control: 9 # potentiometer
-  #   cmd: program_change
   - type: control_change
-    control: 102 # lfo rate
+    control: 9 # potentiometer
     cmd: control_change
+    target: 102 # lfo rate
   - type: control_change
     control: 1 # joystick
     cmd: control_change
