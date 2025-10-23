@@ -22,3 +22,11 @@ messages:
     cmd: control_change
     target: 30
     data: 0
+  - type: control_change
+    control: 26
+    cmd: control_change
+    target: 74
+  - type: control_change
+    control: 25
+    cmd: control_change
+    target: 71
