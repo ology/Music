@@ -1,0 +1,21 @@
+controller: 'MIDI ROCK Joystick'
+device: 'SE-02'
+description: 'Roland SE-02 synthesizer'
+messages:
+  - type: control_change
+    control: 9
+    cmd: program_change
+    data: 'value'
+  - type: control_change
+    control: 1
+    cmd: control_change
+    data: 'value'
+  - type: pitchwheel
+    cmd: pitchwheel
+    data: 'pitch'
+  - type: note_on
+    note: 85 # green btn
+    cmd: start
+  - type: note_on
+    note: 86 # red btn
+    cmd: stop
