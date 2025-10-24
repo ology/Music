@@ -67,14 +67,18 @@ class App(tk.Tk):
             self.vars[name] = ent
             row += 1
 
-        add_entry("controller:", 'controller', text=self.controller)
-        add_entry("device:", 'device', text=self.device)
+        add_entry("controller*:", 'controller', text=self.controller)
+        add_entry("device*:", 'device', text=self.device)
         add_row("type*:", "type", self.type_choices)
         add_row("cmd*:", "cmd", self.cmd_choices)
         add_row("note:", "note", self.note_choices)
         add_row("control:", "control", self.control_choices)
         add_row("target:", "target", self.target_choices)
         add_row("data:", "data", self.data_choices)
+
+        # blank optional message bits
+        for k in ("note", "control", "target", "data"):
+            self.set_var(k, "")
 
         # Buttons
         btn_frame = ttk.Frame(frm)
