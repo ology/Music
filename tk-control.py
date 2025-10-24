@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
 # Simple Tkinter app to build a YAML list of control items.
-# The YAML is stored under a top-level key "messages".
 
 import os
-import json
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter import scrolledtext
