@@ -32,9 +32,9 @@ class App(tk.Tk):
         self.title("Configure MIDI Control Devices")
         self.resizable(False, False)
 
-        self.controller = "controller"
-        self.device = "device"
         self.data, self.items = load_existing()
+        self.controller = self.data['controller']
+        self.device = self.data['device']
 
         midi_range = [ i for i in range(128) ]
         self.type_choices = ["control_change", "note_on", "pitchwheel"]
@@ -68,8 +68,8 @@ class App(tk.Tk):
             self.vars[name] = ent
             row += 1
 
-        add_entry("controller:", self.controller)
-        add_entry("device:", self.device)
+        add_entry("controller:", 'controller')
+        add_entry("device:", 'device')
         add_row("type*:", "type", self.type_choices)
         add_row("cmd*:", "cmd", self.cmd_choices)
         add_row("note:", "note", self.note_choices)
