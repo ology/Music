@@ -15,6 +15,14 @@ messages:
     cmd: control_change
     target: 1 # modwheel
   - type: control_change
+    control: 31 # encoder 4 relative
+    cmd: control_change
+    target: 17 # o3-o2
+  - type: control_change
+    control: 32 # encoder 3 relative
+    cmd: control_change
+    target: 18 # o3-pw1,2
+  - type: control_change
     control: 28 # encoder 4
     cmd: control_change
     target: 59 # contour
@@ -30,17 +38,6 @@ messages:
     control: 25 # encoder 1
     cmd: control_change
     target: 103 # lfo osc
-  # - type: note_on
-  #   note: 85 # green btn
-  #   cmd: start
-  # - type: note_on
-  #   note: 86 # red btn
-  #   cmd: stop
-  # - type: note_on
-  #   note: 87 # blue btn
-  #   cmd: control_change
-  #   target: 30 # keybd
-  #   data: 0
   - type: control_change
     control: 16 # button + joystick x
     cmd: control_change
@@ -49,3 +46,8 @@ messages:
     control: 17 # button + joystick y
     cmd: control_change
     target: 59 # contour
+  # - type: note_on
+  #   note: 87 # blue btn
+  #   cmd: control_change
+  #   target: 30 # keybd
+  #   data: 0
