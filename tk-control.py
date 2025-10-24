@@ -35,7 +35,7 @@ class App(tk.Tk):
         self.device = self.data.get('device', 'device')
 
         midi_range = [ i for i in range(128) ]
-        self.type_choices = ["control_change", "note_on", "pitchwheel"]
+        self.type_choices = ["control_change", "note_on", "note_off", "pitchwheel"]
         self.cmd_choices = ["control_change", "start", "stop", "pitchwheel", "program_change"]
         self.note_choices = midi_range
         self.control_choices = midi_range
