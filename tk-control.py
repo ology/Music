@@ -12,8 +12,6 @@ import yaml
 import yaml
 
 OUTFILE = os.path.join(os.path.dirname(__file__), "controls.yaml")
-CONTROLLER = "controller"
-DEVICE = 'device'
 WRAP_KEY = "messages"
 
 def load_existing():
@@ -21,20 +19,25 @@ def load_existing():
         with open(OUTFILE, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
             msgs = data.get(WRAP_KEY, [])
-            return msgs if isinstance(msgs, list) else []
+            return data, msgs #if isinstance(msgs, list) else []
     except Exception as e:
         print(f"WARNING: {e}")
         return []
 
-def dump_yaml(data_list):
-    return yaml.safe_dump({WRAP_KEY: data_list}, default_flow_style=False, sort_keys=False, allow_unicode=True)
+def dump_yaml(data):
+    return yaml.safe_dump(
+        data,
+        default_flow_style=False, sort_keys=False, allow_unicode=True)
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Configure MIDI Control Devices")
         self.resizable(False, False)
-        self.items = load_existing()
+
+        self.controller = "controller"
+        self.device = "device"
+        self.data, self.items = load_existing()
 
         midi_range = [ i for i in range(128) ]
         self.type_choices = ["control_change", "note_on", "pitchwheel"]
@@ -68,8 +71,8 @@ class App(tk.Tk):
             self.vars[name] = ent
             row += 1
 
-        add_entry("controller_name:", "controller_name")
-        add_entry("device_name:", "device_name")
+        add_entry("controller:", self.controller)
+        add_entry("device:", self.device)
         add_row("type*:", "type", self.type_choices)
         add_row("cmd*:", "cmd", self.cmd_choices)
         add_row("note:", "note", self.note_choices)
@@ -94,7 +97,7 @@ class App(tk.Tk):
         self.preview.configure(state="disabled")
 
         # validate required fields
-        for name in ("type", "cmd", "controller_name", "device_name"):
+        for name in ("type", "cmd", "controller", "device"):
             widget = self.vars[name]
             try:
                 widget.bind("<<ComboboxSelected>>", lambda e: self.validate())
@@ -128,8 +131,8 @@ class App(tk.Tk):
     def validate(self):
         t = self.get_var("type")
         c = self.get_var("cmd")
-        cn = self.get_var("controller_name")
-        dn = self.get_var("device_name")
+        cn = self.get_var("controller")
+        dn = self.get_var("device")
         if t and c and cn and dn:
             self.add_btn.state(["!disabled"])
         else:
@@ -138,19 +141,22 @@ class App(tk.Tk):
     def add_item(self):
         t = self.get_var("type")
         c = self.get_var("cmd")
-        cn = self.get_var("controller_name")
-        dn = self.get_var("device_name")
+        cn = self.get_var("controller")
+        dn = self.get_var("device")
         if not t or not c or not cn or not dn:
             messagebox.showwarning("Required", "Required fields missing.")
             return
 
         item = {"type": t, "cmd": c}
         # include the existing controls if provided
-        for k in ("controller_name", "device_name", "note", "control", "target", "data"):
+        for k in ("note", "control", "target", "data"):
             v = self.get_var(k)
             if v != "":
                 item[k] = v
         self.items.append(item)
+        self.data['controller'] = self.get_var('controller')
+        self.data['device'] = self.get_var('device')
+        self.data['messages'] = self.items
         self.save_items()
         # clear optional numeric fields and keep type/cmd and controller/device
         for k in ("note", "control", "target", "data"):
@@ -158,7 +164,7 @@ class App(tk.Tk):
         self.refresh_preview()
 
     def save_items(self):
-        txt = dump_yaml(self.items)
+        txt = dump_yaml(self.data)
         try:
             with open(OUTFILE, "w", encoding="utf-8") as f:
                 f.write(txt)
@@ -167,7 +173,7 @@ class App(tk.Tk):
             messagebox.showerror("Save error", f"Could not write {OUTFILE}:\n{e}")
 
     def refresh_preview(self):
-        txt = dump_yaml(self.items)
+        txt = dump_yaml(self.data)
         self.preview.configure(state="normal")
         self.preview.delete("1.0", "end")
         self.preview.insert("1.0", txt)
@@ -176,6 +182,7 @@ class App(tk.Tk):
     def clear_list(self):
         if not messagebox.askyesno("Clear", "Clear all items from list and delete controls.yaml?"):
             return
+        self.data = {}
         self.items = []
         try:
             if os.path.exists(OUTFILE):
