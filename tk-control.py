@@ -29,15 +29,15 @@ def open_file_dialog(self, entry_widget, kind='controller'):
 def load_existing(filename=OUTFILE):
     try:
         with open(filename, "r", encoding="utf-8") as f:
-            pairs = {}
             data = yaml.safe_load(f) or {}
             msgs = data.get('messages', [])
+            pairs = {}
+            for m in msgs:
+                if 'patch' in m:
+                    pairs[m['patch']] = m['desc']
             if filename == OUTFILE:
                 items = msgs
             else:
-                for m in msgs:
-                    if 'patch' in m:
-                        pairs[m['patch']] = m['desc']
                 items = list(pairs.keys())
             return data, items, pairs
     except Exception as e:
