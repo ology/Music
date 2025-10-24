@@ -58,16 +58,17 @@ class App(tk.Tk):
             self.vars[name] = cb
             row += 1
 
-        def add_entry(label, name):
+        def add_entry(label, name, text=''):
             nonlocal row
             ttk.Label(frm, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
             ent = ttk.Entry(frm, width=30)
             ent.grid(row=row, column=1, sticky="w")
+            ent.insert(0, text)
             self.vars[name] = ent
             row += 1
 
-        add_entry("controller:", 'controller')
-        add_entry("device:", 'device')
+        add_entry("controller:", 'controller', text=self.controller)
+        add_entry("device:", 'device', text=self.device)
         add_row("type*:", "type", self.type_choices)
         add_row("cmd*:", "cmd", self.cmd_choices)
         add_row("note:", "note", self.note_choices)
