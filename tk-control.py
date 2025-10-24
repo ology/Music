@@ -90,7 +90,7 @@ class App(tk.Tk):
 
         # YAML display
         row += 1
-        ttk.Label(frm, text="controls.yaml preview:").grid(row=row, column=0, columnspan=2, sticky="w", pady=(8,0))
+        ttk.Label(frm, text="YAML:").grid(row=row, column=0, columnspan=2, sticky="w", pady=(8,0))
         row += 1
         self.preview = scrolledtext.ScrolledText(frm, width=60, height=15)
         self.preview.grid(row=row, column=0, columnspan=2, pady=(4,0))
