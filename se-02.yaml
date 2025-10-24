@@ -270,3 +270,31 @@ messages:
   - type: control_change
     patch: 59
     desc: "filter contour"
+  - type: control_change
+    patch: 60
+    value: 0
+    desc: "filter MTRIG off"
+  - type: control_change
+    patch: 60
+    value: 127
+    desc: "filter MTRIG NORM"
+  - type: control_change
+    patch: 61
+    value: 0
+    desc: "filter contour off"
+  - type: control_change
+    patch: 61
+    value: 127
+    desc: "filter contour NORM"
+  - type: control_change
+    patch: 62
+    value: 0
+    desc: "filter REL off"
+  - type: control_change
+    patch: 62
+    value: 64
+    desc: "filter REL 1,2"
+  - type: control_change
+    patch: 62
+    value: 127
+    desc: "filter REL 2"
