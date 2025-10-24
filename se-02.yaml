@@ -9,3 +9,126 @@ messages:
   - type: control_change
     patch: 1
     desc: 'mod-wheel'
+
+  - type: control_change
+    patch: 5
+    desc: 'glide'
+  - type: control_change
+    patch: 9
+    value: 0
+    desc: 'glide type off'
+  - type: control_change
+    patch: 9
+    value: 64
+    desc: 'glide type exp'
+  - type: control_change
+    patch: 9
+    value: 127
+    desc: 'glide type lin'
+  - type: control_change
+    patch: 13
+    desc: 'WHL mix'
+
+  - type: control_change
+    patch: 22
+    value: 0
+    desc: "osc 1 LO range"
+  - type: control_change
+    patch: 22
+    value: 25
+    desc: "osc 1 32' range"
+  - type: control_change
+    patch: 22
+    value: 51
+    desc: "osc 1 16' range"
+  - type: control_change
+    patch: 22
+    value: 76
+    desc: "osc 1 8' range"
+  - type: control_change
+    patch: 22
+    value: 102
+    desc: "osc 1 4' range"
+  - type: control_change
+    patch: 22
+    value: 127
+    desc: "osc 1 2' range"
+
+  - type: control_change
+    patch: 24
+    value: 0
+    desc: "osc 1 waveform 1"
+  - type: control_change
+    patch: 24
+    value: 25
+    desc: "osc 1 waveform 2"
+  - type: control_change
+    patch: 24
+    value: 51
+    desc: "osc 1 waveform 3"
+  - type: control_change
+    patch: 24
+    value: 76
+    desc: "osc 1 waveform 4"
+  - type: control_change
+    patch: 24
+    value: 102
+    desc: "osc 1 waveform 5"
+  - type: control_change
+    patch: 24
+    value: 127
+    desc: "osc 1 waveform 6"
+
+  - type: control_change
+    patch: 19
+    value: 0
+    desc: "osc 2 LO range"
+  - type: control_change
+    patch: 19
+    value: 25
+    desc: "osc 2 32' range"
+  - type: control_change
+    patch: 19
+    value: 51
+    desc: "osc 2 16' range"
+  - type: control_change
+    patch: 19
+    value: 76
+    desc: "osc 2 8' range"
+  - type: control_change
+    patch: 19
+    value: 102
+    desc: "osc 2 4' range"
+  - type: control_change
+    patch: 19
+    value: 127
+    desc: "osc 2 2' range"
+
+  - type: control_change
+    patch: 20
+    value: 0
+    desc: "osc 1 waveform 1"
+  - type: control_change
+    patch: 20
+    value: 25
+    desc: "osc 1 waveform 2"
+  - type: control_change
+    patch: 20
+    value: 51
+    desc: "osc 1 waveform 3"
+  - type: control_change
+    patch: 20
+    value: 76
+    desc: "osc 1 waveform 4"
+  - type: control_change
+    patch: 20
+    value: 102
+    desc: "osc 1 waveform 5"
+  - type: control_change
+    patch: 20
+    value: 127
+    desc: "osc 1 waveform 6"
+
+  - type: control_change
+    patch: 27
+    desc: "osc 2 fine"
