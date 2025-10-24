@@ -394,3 +394,15 @@ messages:
     patch: 107
     value: 127
     desc: "lfo MWHL FIL F"
+  - type: control_change
+    patch: 108
+    value: 0
+    desc: "lfo MODE free"
+  - type: control_change
+    patch: 108
+    value: 64
+    desc: "lfo MODE key"
+  - type: control_change
+    patch: 108
+    value: 127
+    desc: "lfo MODE 1X"
