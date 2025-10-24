@@ -33,16 +33,17 @@ def load_existing(filename=OUTFILE):
         with open(filename, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
             msgs = data.get('messages', [])
-            if filename != OUTFILE:
-                items = []
-                for m in msgs:
-                    if 'patch' in m:
-                        items.append(m['patch'])
-                        pairs[m['patch']] = m['desc']
-            return data, pairs
+            items = []
+            for m in msgs:
+                if 'patch' in m:
+                    items.append(m['patch'])
+                    pairs[m['patch']] = m['desc']
+            if filename == OUTFILE:
+                items = msgs
+            return data, items, pairs
     except Exception as e:
         print(f"WARNING: {e}")
-        return {}, {}
+        return {}, [], {}
 
 def dump_yaml(data):
     return yaml.safe_dump(
@@ -55,8 +56,7 @@ class App(tk.Tk):
         self.title("Configure MIDI Control Devices")
         self.resizable(False, False)
 
-        self.data, self.pairs = load_existing()
-        self.items = list(self.pairs.keys())
+        self.data, self.items, self.pairs = load_existing()
         self.controller = self.data.get('controller', 'controller')
         self.device = self.data.get('device', 'device')
 
