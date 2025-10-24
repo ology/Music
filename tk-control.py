@@ -21,7 +21,7 @@ def load_existing():
             return data, msgs
     except Exception as e:
         print(f"WARNING: {e}")
-        return []
+        return {}, []
 
 def dump_yaml(data):
     return yaml.safe_dump(
