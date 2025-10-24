@@ -20,11 +20,11 @@ def open_file_dialog(self, entry_widget, kind='controller'):
         entry_widget.delete(0, tk.END)
         entry_widget.insert(0, device)
         if kind == 'controller':
-            self.vars['control'].set("")
-            self.vars['control']['values'] = sorted(items)
+            name = 'control'
         else:
-            self.vars['target'].set("")
-            self.vars['target']['values'] = sorted(items)
+            name = 'target'
+        self.vars[name].set("")
+        self.vars[name]['values'] = sorted(items)
 
 def load_existing(filename=OUTFILE):
     try:
