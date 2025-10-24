@@ -230,7 +230,7 @@ messages:
     desc: "xmod 03-PW1,2"
 
   - type: control_change
-    patch: 74
+    patch: 48
     desc: "mixer osc 1"
   - type: control_change
     patch: 49
@@ -244,3 +244,29 @@ messages:
   - type: control_change
     patch: 41
     desc: "mixer noise"
+
+  - type: control_change
+    patch: 74
+    desc: "filter cutoff"
+  - type: control_change
+    patch: 71
+    desc: "filter emphasis"
+  - type: control_change
+    patch: 57
+    value: 0
+    desc: "filter key track 1/3 off"
+  - type: control_change
+    patch: 57
+    value: 127
+    desc: "filter key track 1/3 on"
+  - type: control_change
+    patch: 58
+    value: 0
+    desc: "filter key track 2/3 off"
+  - type: control_change
+    patch: 58
+    value: 127
+    desc: "filter key track 2/3 on"
+  - type: control_change
+    patch: 59
+    desc: "filter contour"
