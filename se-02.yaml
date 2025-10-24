@@ -324,3 +324,43 @@ messages:
     patch: 63
     value: 127
     desc: "filter LFO"
+
+  - type: control_change
+    patch: 102
+    desc: "lfo rate"
+  - type: control_change
+    patch: 104
+    value: 0
+    desc: "lfo waveform 1"
+  - type: control_change
+    patch: 104
+    value: 16
+    desc: "lfo waveform 2"
+  - type: control_change
+    patch: 104
+    value: 32
+    desc: "lfo waveform 3"
+  - type: control_change
+    patch: 104
+    value: 48
+    desc: "lfo waveform 4"
+  - type: control_change
+    patch: 104
+    value: 64
+    desc: "lfo waveform 5"
+  - type: control_change
+    patch: 104
+    value: 79
+    desc: "lfo waveform 6"
+  - type: control_change
+    patch: 104
+    value: 95
+    desc: "lfo waveform 7"
+  - type: control_change
+    patch: 104
+    value: 111
+    desc: "lfo waveform 8"
+  - type: control_change
+    patch: 104
+    value: 127
+    desc: "lfo waveform 9"
