@@ -30,11 +30,12 @@ messages:
     patch: 9
     desc: 'potentiometer'
 
+  - type: pitch_wheel_change
+    desc: 'mode 1 pitch-bend'
+
   - type: control_change
     patch: 1
     desc: 'mode 1 modulation wheel'
-  - type: pitch_wheel_change
-    desc: 'mode 1 pitch-bend'
   - type: control_change
     patch: 10
     desc: 'mode 1 twist'
