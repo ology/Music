@@ -28,9 +28,9 @@ def open_file_dialog(self, entry_widget, kind='controller'):
         self.vars[name]['values'] = sorted(list(set(items)))
 
 def load_existing(filename=OUTFILE):
-    pairs = {}
     try:
         with open(filename, "r", encoding="utf-8") as f:
+            pairs = {}
             data = yaml.safe_load(f) or {}
             msgs = data.get('messages', [])
             items = []
