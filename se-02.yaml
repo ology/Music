@@ -186,3 +186,45 @@ messages:
   - type: control_change
     patch: 28
     desc: "osc 3 fine"
+
+  - type: control_change
+    patch: 21
+    value: 0
+    desc: "osc sync off"
+  - type: control_change
+    patch: 21
+    value: 127
+    desc: "osc sync on"
+  - type: control_change
+    patch: 29
+    desc: "osc ENV1"
+  - type: control_change
+    patch: 30
+    value: 0
+    desc: "osc KYBD off"
+  - type: control_change
+    patch: 30
+    value: 127
+    desc: "osc KYBD on"
+  - type: control_change
+    patch: 31
+    value: 0
+    desc: "osc XMOD A"
+  - type: control_change
+    patch: 31
+    value: 64
+    desc: "osc XMOD B"
+  - type: control_change
+    patch: 31
+    value: 127
+    desc: "osc XMOD C"
+
+  - type: control_change
+    patch: 16
+    desc: "xmod o2-filter"
+  - type: control_change
+    patch: 17
+    desc: "xmod 03-02"
+  - type: control_change
+    patch: 18
+    desc: "xmod 03-PW1,2"
