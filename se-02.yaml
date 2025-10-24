@@ -1,8 +1,14 @@
 device: 'SE-02'
 description: 'Roland SE-02 synthesizer'
 messages:
+  - type: start
+    desc: 'sequence start'
+  - type: stop
+    desc: 'sequence stop'
+
   - type: patch_change
     desc: 'patch change'
+
   - type: pitch_wheel_change
     patch: 87
     desc: 'pitch-bend'
@@ -406,3 +412,29 @@ messages:
     patch: 108
     value: 127
     desc: "lfo MODE 1X"
+  - type: control_change
+    patch: 109
+    value: 0
+    desc: "lfo SYNC ø"
+  - type: control_change
+    patch: 109
+    value: 42
+    desc: "lfo SYNC L"
+  - type: control_change
+    patch: 109
+    value: 85
+    desc: "lfo SYNC D"
+  - type: control_change
+    patch: 109
+    value: 127
+    desc: "lfo SYNC LP"
+
+  - type: control_change
+    patch: 82
+    desc: "delay time"
+  - type: control_change
+    patch: 83
+    desc: "delay regen"
+  - type: control_change
+    patch: 91
+    desc: "delay amount"
