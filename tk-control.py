@@ -27,19 +27,7 @@ def load_existing():
         return []
 
 def dump_yaml(data_list):
-    try:
-        # Wrap the list under the top-level key
-        return yaml.safe_dump({WRAP_KEY: data_list}, default_flow_style=False, sort_keys=False, allow_unicode=True)
-    except Exception:
-        # simple YAML-ish dump using JSON for values (valid YAML)
-        lines = []
-        lines.append(f"{WRAP_KEY}:")
-        for item in data_list:
-            lines.append("  -")
-            for k, v in item.items():
-                # use json.dumps to produce a safe quoted representation
-                lines.append(f"    {k}: {json.dumps(v, ensure_ascii=False)}")
-        return "\n".join(lines) + ("\n" if lines else "")
+    return yaml.safe_dump({WRAP_KEY: data_list}, default_flow_style=False, sort_keys=False, allow_unicode=True)
 
 class App(tk.Tk):
     def __init__(self):
