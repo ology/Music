@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Simple Tkinter app to build a YAML list of MIDI controls.
+# Tkinter app to build a YAML list of MIDI controls.
 
 import os
 import tkinter as tk
