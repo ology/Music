@@ -61,7 +61,7 @@ class App(tk.Tk):
         def add_entry(label, name, text=''):
             nonlocal row
             ttk.Label(frm, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
-            ent = ttk.Entry(frm, width=10)
+            ent = ttk.Entry(frm, width=20)
             ent.grid(row=row, column=1, sticky="w")
             ent.insert(0, text)
             self.vars[name] = ent
