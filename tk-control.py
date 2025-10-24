@@ -12,13 +12,12 @@ import yaml
 import yaml
 
 OUTFILE = os.path.join(os.path.dirname(__file__), "controls.yaml")
-WRAP_KEY = "messages"
 
 def load_existing():
     try:
         with open(OUTFILE, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
-            msgs = data.get(WRAP_KEY, [])
+            msgs = data.get('messages', [])
             return data, msgs #if isinstance(msgs, list) else []
     except Exception as e:
         print(f"WARNING: {e}")
