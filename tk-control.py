@@ -179,7 +179,7 @@ class App(tk.Tk):
         self.preview.configure(state="disabled")
 
     def clear_list(self):
-        if not messagebox.askyesno("Clear", "Clear all items from list and delete controls.yaml?"):
+        if not messagebox.askyesno("Clear", "Clear all data and delete controls.yaml?"):
             return
         self.data = {}
         self.items = []
