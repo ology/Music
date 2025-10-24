@@ -4,10 +4,19 @@
 
 import os
 import tkinter as tk
-from tkinter import ttk, messagebox, scrolledtext
+from tkinter import filedialog, ttk, messagebox, scrolledtext
 import yaml
 
 OUTFILE = os.path.join(os.path.dirname(__file__), "controls.yaml")
+
+def open_file_dialog(entry_widget):
+    file_path = filedialog.askopenfilename(
+        title="Select a file",
+        filetypes=[("YAML files", "*.yaml")]
+    )    
+    if file_path:
+        entry_widget.delete(0, tk.END)
+        entry_widget.insert(0, file_path)
 
 def load_existing():
     try:
@@ -45,14 +54,18 @@ class App(tk.Tk):
         frm = ttk.Frame(self, padding=10)
         frm.grid(row=0, column=0, sticky="nsew")
 
+        input_frame = tk.Frame(frm)
+        input_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        input_frame.grid_columnconfigure(1, weight=1)
+
         # Build form
         self.vars = {}
         row = 0
 
         def add_row(label, name, values):
             nonlocal row
-            ttk.Label(frm, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
-            cb = ttk.Combobox(frm, values=values, width=20)
+            ttk.Label(input_frame, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
+            cb = ttk.Combobox(input_frame, values=values, width=20)
             cb.grid(row=row, column=1, sticky="w")
             cb.set(values[0] if values else "")
             self.vars[name] = cb
@@ -60,10 +73,16 @@ class App(tk.Tk):
 
         def add_entry(label, name, text=''):
             nonlocal row
-            ttk.Label(frm, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
-            ent = ttk.Entry(frm, width=20)
+            ttk.Label(input_frame, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
+            ent = ttk.Entry(input_frame, width=20)
             ent.grid(row=row, column=1, sticky="w")
             ent.insert(0, text)
+            open_button = tk.Button(
+                input_frame,
+                text=f"Open {name}",
+                command=lambda: open_file_dialog(ent)
+            )
+            open_button.grid(row=row, column=2, padx=(0, 0))
             self.vars[name] = ent
             row += 1
 
