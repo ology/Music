@@ -15,7 +15,8 @@ def open_file_dialog(self, entry_widget, kind='controller'):
         filetypes=[("YAML files", "*.yaml")]
     )    
     if file_path:
-        data, items = load_existing(file_path)
+        data, pairs = load_existing(file_path)
+        items = list(pairs.keys())
         device = data.get('device', 'device')
         entry_widget.delete(0, tk.END)
         entry_widget.insert(0, device)
@@ -27,21 +28,21 @@ def open_file_dialog(self, entry_widget, kind='controller'):
         self.vars[name]['values'] = sorted(list(set(items)))
 
 def load_existing(filename=OUTFILE):
+    pairs = {}
     try:
         with open(filename, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
             msgs = data.get('messages', [])
-            if filename == OUTFILE:
-                items = msgs
-            else:
+            if filename != OUTFILE:
                 items = []
                 for m in msgs:
                     if 'patch' in m:
                         items.append(m['patch'])
-            return data, items
+                        pairs[m['patch']] = m['desc']
+            return data, pairs
     except Exception as e:
         print(f"WARNING: {e}")
-        return {}, []
+        return {}, {}
 
 def dump_yaml(data):
     return yaml.safe_dump(
@@ -54,7 +55,8 @@ class App(tk.Tk):
         self.title("Configure MIDI Control Devices")
         self.resizable(False, False)
 
-        self.data, self.items = load_existing()
+        self.data, self.pairs = load_existing()
+        self.items = list(self.pairs.keys())
         self.controller = self.data.get('controller', 'controller')
         self.device = self.data.get('device', 'device')
 
