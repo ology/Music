@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Simple Tkinter app to build a YAML list of control items.
+# The YAML is stored under a top-level key "messages".
 
 import os
 import json
@@ -11,30 +12,44 @@ import yaml
 import yaml
 
 OUTFILE = os.path.join(os.path.dirname(__file__), "controls.yaml")
+WRAP_KEY = "messages"
 
 def try_load_existing():
     try:
         with open(OUTFILE, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f) or []
-            return data if isinstance(data, list) else []
+            data = yaml.safe_load(f) or {}
+            # If file already a list (old format), return it.
+            if isinstance(data, list):
+                return data
+            # If it's a dict with the wrap key, return that list.
+            if isinstance(data, dict):
+                msgs = data.get(WRAP_KEY, [])
+                return msgs if isinstance(msgs, list) else []
+            return []
     except Exception:
         # if file missing or yaml not installed or parse error, ignore and return empty list
         try:
             if not os.path.exists(OUTFILE):
                 return []
             with open(OUTFILE, "r", encoding="utf-8") as f:
-                # very simple parse: look for lines that start with '- ' and naive key: value pairs
                 items = []
                 curr = None
+                in_messages = False
                 for ln in f:
-                    ln = ln.rstrip("\n")
-                    if ln.strip().startswith("-"):
+                    ln_stripped = ln.rstrip("\n")
+                    s = ln_stripped.lstrip()
+                    # detect top-level messages key
+                    if not in_messages and s.startswith(f"{WRAP_KEY}:"):
+                        in_messages = True
+                        continue
+                    # treat both top-level list and wrapped list similarly
+                    if s.startswith("-"):
                         if curr:
                             items.append(curr)
                         curr = {}
                     else:
-                        if ":" in ln and curr is not None:
-                            k, v = ln.split(":", 1)
+                        if ":" in s and curr is not None:
+                            k, v = s.split(":", 1)
                             k = k.strip()
                             v = v.strip().strip('"').strip("'")
                             curr[k] = v
@@ -46,16 +61,17 @@ def try_load_existing():
 
 def dump_yaml(data_list):
     try:
-        # preserve block style list
-        return yaml.safe_dump(data_list, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        # Wrap the list under the top-level key
+        return yaml.safe_dump({WRAP_KEY: data_list}, default_flow_style=False, sort_keys=False, allow_unicode=True)
     except Exception:
         # simple YAML-ish dump using JSON for values (valid YAML)
         lines = []
+        lines.append(f"{WRAP_KEY}:")
         for item in data_list:
-            lines.append("-")
+            lines.append("  -")
             for k, v in item.items():
                 # use json.dumps to produce a safe quoted representation
-                lines.append(f"  {k}: {json.dumps(v, ensure_ascii=False)}")
+                lines.append(f"    {k}: {json.dumps(v, ensure_ascii=False)}")
         return "\n".join(lines) + ("\n" if lines else "")
 
 class App(tk.Tk):
