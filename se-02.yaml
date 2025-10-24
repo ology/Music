@@ -1,0 +1,11 @@
+device: 'SE-02'
+description: 'Roland SE-02 synthesizer'
+messages:
+  - type: patch_change
+    desc: 'patch change'
+  - type: pitch_wheel_change
+    patch: 87
+    desc: 'pitch-bend'
+  - type: control_change
+    patch: 1
+    desc: 'mod-wheel'
