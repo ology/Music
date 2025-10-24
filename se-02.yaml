@@ -228,3 +228,19 @@ messages:
   - type: control_change
     patch: 18
     desc: "xmod 03-PW1,2"
+
+  - type: control_change
+    patch: 74
+    desc: "mixer osc 1"
+  - type: control_change
+    patch: 49
+    desc: "mixer osc 2"
+  - type: control_change
+    patch: 50
+    desc: "mixer osc 3"
+  - type: control_change
+    patch: 51
+    desc: "mixer feedback"
+  - type: control_change
+    patch: 41
+    desc: "mixer noise"
