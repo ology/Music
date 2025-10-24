@@ -364,3 +364,33 @@ messages:
     patch: 104
     value: 127
     desc: "lfo waveform 9"
+  - type: control_change
+    patch: 103
+    desc: "lfo osc"
+  - type: control_change
+    patch: 105
+    desc: "lfo filter"
+  - type: control_change
+    patch: 106
+    value: 0
+    desc: "lfo MWHL OSC off"
+  - type: control_change
+    patch: 106
+    value: 64
+    desc: "lfo MWHL OSC H"
+  - type: control_change
+    patch: 106
+    value: 127
+    desc: "lfo MWHL OSC F"
+  - type: control_change
+    patch: 107
+    value: 0
+    desc: "lfo MWHL FIL off"
+  - type: control_change
+    patch: 107
+    value: 64
+    desc: "lfo MWHL FIL H"
+  - type: control_change
+    patch: 107
+    value: 127
+    desc: "lfo MWHL FIL F"
