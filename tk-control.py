@@ -81,7 +81,7 @@ class App(tk.Tk):
 
         def add_row(label, name, values):
             nonlocal row
-            ttk.Label(input_frame, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
+            ttk.Label(input_frame, text=label.title()).grid(row=row, column=0, sticky="w", padx=(0,6))
             cb = ttk.Combobox(input_frame, values=values, width=20)
             cb.grid(row=row, column=1, sticky="w")
             cb.set(values[0] if values else "")
@@ -90,7 +90,7 @@ class App(tk.Tk):
 
         def add_entry(label, name, text=''):
             nonlocal row
-            ttk.Label(input_frame, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
+            ttk.Label(input_frame, text=label.title()).grid(row=row, column=0, sticky="w", padx=(0,6))
             ent = ttk.Entry(input_frame, width=20)
             ent.grid(row=row, column=1, sticky="w")
             ent.insert(0, text)
@@ -106,7 +106,7 @@ class App(tk.Tk):
         add_entry("controller*:", 'controller', text=self.controller)
         add_entry("device*:", 'device', text=self.device)
         add_row("type*:", "type", self.type_choices)
-        add_row("cmd*:", "cmd", self.cmd_choices)
+        add_row("command*:", "cmd", self.cmd_choices)
         add_row("note:", "note", self.note_choices)
         add_row("control:", "control", self.control_choices)
         add_row("target:", "target", self.target_choices)
