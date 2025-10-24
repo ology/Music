@@ -15,7 +15,7 @@ def open_file_dialog(self, entry_widget, kind='controller'):
         filetypes=[("YAML files", "*.yaml")]
     )    
     if file_path:
-        data, pairs = load_existing(file_path)
+        data, items, pairs = load_existing(file_path)
         items = list(pairs.keys())
         device = data.get('device', 'device')
         entry_widget.delete(0, tk.END)
