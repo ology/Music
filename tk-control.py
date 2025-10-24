@@ -65,8 +65,6 @@ class App(tk.Tk):
         self.resizable(False, False)
         self.items = try_load_existing()
 
-        self.controller_name = ""
-        self.device_name = ""
         midi_range = [ i for i in range(128) ]
         self.type_choices = ["control_change", "note_on", "pitchwheel"]
         self.cmd_choices = ["control_change", "start", "stop", "pitchwheel", "program_change"]
