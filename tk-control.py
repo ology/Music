@@ -122,10 +122,13 @@ class App(tk.Tk):
         self.preview.grid(row=row, column=0, columnspan=2, pady=(4,0))
         self.preview.configure(state="disabled")
 
-        # Trace combobox edits to validate required fields
-        for name in ("type", "cmd"):
+        # validate required fields
+        for name in ("type", "cmd", "controller_name", "device_name"):
             widget = self.vars[name]
-            widget.bind("<<ComboboxSelected>>", lambda e: self.validate())
+            try:
+                widget.bind("<<ComboboxSelected>>", lambda e: self.validate())
+            except Exception:
+                pass
             widget.bind("<KeyRelease>", lambda e: self.validate())
 
         self.validate()
@@ -154,7 +157,9 @@ class App(tk.Tk):
     def validate(self):
         t = self.get_var("type")
         c = self.get_var("cmd")
-        if t and c:
+        cn = self.get_var("controller_name")
+        dn = self.get_var("device_name")
+        if t and c and cn and dn:
             self.add_btn.state(["!disabled"])
         else:
             self.add_btn.state(["disabled"])
@@ -162,9 +167,12 @@ class App(tk.Tk):
     def add_item(self):
         t = self.get_var("type")
         c = self.get_var("cmd")
-        if not t or not c:
-            messagebox.showwarning("Required", "Fields 'type' and 'cmd' are required.")
+        cn = self.get_var("controller_name")
+        dn = self.get_var("device_name")
+        if not t or not c or not cn or not dn:
+            messagebox.showwarning("Required", "Required fields missing.")
             return
+
         item = {"type": t, "cmd": c}
         # include the existing controls if provided
         for k in ("controller_name", "device_name", "note", "control", "target", "data"):
