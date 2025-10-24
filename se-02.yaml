@@ -132,3 +132,57 @@ messages:
   - type: control_change
     patch: 27
     desc: "osc 2 fine"
+
+  - type: control_change
+    patch: 25
+    value: 0
+    desc: "osc 3 LO range"
+  - type: control_change
+    patch: 25
+    value: 25
+    desc: "osc 3 32' range"
+  - type: control_change
+    patch: 25
+    value: 51
+    desc: "osc 3 16' range"
+  - type: control_change
+    patch: 25
+    value: 76
+    desc: "osc 3 8' range"
+  - type: control_change
+    patch: 25
+    value: 102
+    desc: "osc 3 4' range"
+  - type: control_change
+    patch: 25
+    value: 127
+    desc: "osc 3 2' range"
+
+  - type: control_change
+    patch: 26
+    value: 0
+    desc: "osc 3 waveform 1"
+  - type: control_change
+    patch: 26
+    value: 25
+    desc: "osc 3 waveform 2"
+  - type: control_change
+    patch: 26
+    value: 51
+    desc: "osc 3 waveform 3"
+  - type: control_change
+    patch: 26
+    value: 76
+    desc: "osc 3 waveform 4"
+  - type: control_change
+    patch: 26
+    value: 102
+    desc: "osc 3 waveform 5"
+  - type: control_change
+    patch: 26
+    value: 127
+    desc: "osc 3 waveform 6"
+
+  - type: control_change
+    patch: 28
+    desc: "osc 3 fine"
