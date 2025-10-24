@@ -9,18 +9,20 @@ import yaml
 
 OUTFILE = os.path.join(os.path.dirname(__file__), "controls.yaml")
 
-def open_file_dialog(entry_widget):
+def open_file_dialog(self, entry_widget):
     file_path = filedialog.askopenfilename(
         title="Select a file",
         filetypes=[("YAML files", "*.yaml")]
     )    
     if file_path:
+        data, items = load_existing(file_path)
+        device = data.get('device', 'device')
         entry_widget.delete(0, tk.END)
-        entry_widget.insert(0, file_path)
+        entry_widget.insert(0, device)
 
-def load_existing():
+def load_existing(filename=OUTFILE):
     try:
-        with open(OUTFILE, "r", encoding="utf-8") as f:
+        with open(filename, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
             msgs = data.get('messages', [])
             return data, msgs
@@ -80,7 +82,7 @@ class App(tk.Tk):
             open_button = tk.Button(
                 input_frame,
                 text=f"Open {name}",
-                command=lambda: open_file_dialog(ent)
+                command=lambda: open_file_dialog(self, ent)
             )
             open_button.grid(row=row, column=2, padx=(0, 0))
             self.vars[name] = ent
