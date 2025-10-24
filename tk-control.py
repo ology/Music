@@ -16,14 +16,14 @@ CONTROLLER = "controller"
 DEVICE = 'device'
 WRAP_KEY = "messages"
 
-def try_load_existing():
+def load_existing():
     try:
         with open(OUTFILE, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
             msgs = data.get(WRAP_KEY, [])
             return msgs if isinstance(msgs, list) else []
     except Exception as e:
-        print(f"ERROR: {e}")
+        print(f"WARNING: {e}")
         return []
 
 def dump_yaml(data_list):
@@ -46,7 +46,7 @@ class App(tk.Tk):
         super().__init__()
         self.title("Configure MIDI Control Devices")
         self.resizable(False, False)
-        self.items = try_load_existing()
+        self.items = load_existing()
 
         midi_range = [ i for i in range(128) ]
         self.type_choices = ["control_change", "note_on", "pitchwheel"]
