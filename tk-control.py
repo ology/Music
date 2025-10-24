@@ -33,13 +33,14 @@ def load_existing(filename=OUTFILE):
             pairs = {}
             data = yaml.safe_load(f) or {}
             msgs = data.get('messages', [])
-            items = []
-            for m in msgs:
-                if 'patch' in m:
-                    items.append(m['patch'])
-                    pairs[m['patch']] = m['desc']
             if filename == OUTFILE:
                 items = msgs
+            else:
+                items = []
+                for m in msgs:
+                    if 'patch' in m:
+                        items.append(m['patch'])
+                        pairs[m['patch']] = m['desc']
             return data, items, pairs
     except Exception as e:
         print(f"WARNING: {e}")
