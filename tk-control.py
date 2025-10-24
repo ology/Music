@@ -20,16 +20,25 @@ def open_file_dialog(self, entry_widget, kind='controller'):
         entry_widget.delete(0, tk.END)
         entry_widget.insert(0, device)
         if kind == 'controller':
-            self.controller = device
+            self.vars['control'].set("")
+            self.vars['control']['values'] = sorted(items)
+            # self.control_choices = items
         else:
-            self.device = device
+            self.target_choices = items
 
 def load_existing(filename=OUTFILE):
     try:
         with open(filename, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
             msgs = data.get('messages', [])
-            return data, msgs
+            if filename == OUTFILE:
+                items = msgs
+            else:
+                items = []
+                for m in msgs:
+                    if 'patch' in m:
+                        items.append(m['patch'])
+            return data, items
     except Exception as e:
         print(f"WARNING: {e}")
         return {}, []
