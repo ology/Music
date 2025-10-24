@@ -14,14 +14,14 @@ messages:
     control: 1 # joystick y
     cmd: control_change
     target: 1 # modwheel
-  - type: control_change
-    control: 31 # encoder 4 relative
-    cmd: control_change
-    target: 17 # o3-o2
-  - type: control_change
-    control: 32 # encoder 3 relative
-    cmd: control_change
-    target: 18 # o3-pw1,2
+  # - type: control_change
+  #   control: 31 # encoder 4 relative
+  #   cmd: control_change
+  #   target: # 
+  # - type: control_change
+  #   control: 32 # encoder 3 relative
+  #   cmd: control_change
+  #   target:  # 
   - type: control_change
     control: 28 # encoder 4
     cmd: control_change
