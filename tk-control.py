@@ -79,6 +79,7 @@ class App(tk.Tk):
         # Build form
         self.vars = {}
         row = 0
+
         def add_row(label, name, values):
             nonlocal row
             ttk.Label(frm, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
@@ -87,6 +88,18 @@ class App(tk.Tk):
             cb.set(values[0] if values else "")
             self.vars[name] = cb
             row += 1
+
+        def add_entry(label, name):
+            nonlocal row
+            ttk.Label(frm, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
+            ent = ttk.Entry(frm, width=30)
+            ent.grid(row=row, column=1, sticky="w")
+            self.vars[name] = ent
+            row += 1
+
+        # Add controller_name and device_name text entry fields at the top
+        add_entry("controller_name:", "controller_name")
+        add_entry("device_name:", "device_name")
 
         add_row("type*:", "type", self.type_choices)
         add_row("cmd*:", "cmd", self.cmd_choices)
@@ -120,30 +133,51 @@ class App(tk.Tk):
         self.validate()
         self.refresh_preview()
 
+    def set_var(self, name, value):
+        w = self.vars.get(name)
+        if w is None:
+            return
+        if hasattr(w, "set"):
+            w.set(value)
+        else:
+            # Entry widget
+            w.delete(0, "end")
+            w.insert(0, value)
+
+    def get_var(self, name):
+        w = self.vars.get(name)
+        if w is None:
+            return ""
+        try:
+            return w.get().strip()
+        except Exception:
+            return ""
+
     def validate(self):
-        t = self.vars["type"].get().strip()
-        c = self.vars["cmd"].get().strip()
+        t = self.get_var("type")
+        c = self.get_var("cmd")
         if t and c:
             self.add_btn.state(["!disabled"])
         else:
             self.add_btn.state(["disabled"])
 
     def add_item(self):
-        t = self.vars["type"].get().strip()
-        c = self.vars["cmd"].get().strip()
+        t = self.get_var("type")
+        c = self.get_var("cmd")
         if not t or not c:
             messagebox.showwarning("Required", "Fields 'type' and 'cmd' are required.")
             return
         item = {"type": t, "cmd": c}
-        for k in ("note", "control", "target", "data"):
-            v = self.vars[k].get().strip()
+        # include the existing controls if provided
+        for k in ("controller_name", "device_name", "note", "control", "target", "data"):
+            v = self.get_var(k)
             if v != "":
                 item[k] = v
         self.items.append(item)
         self.save_items()
-        # clear optional fields and keep type/cmd for convenience
+        # clear optional numeric fields and keep type/cmd and controller/device for convenience
         for k in ("note", "control", "target", "data"):
-            self.vars[k].set("")
+            self.set_var(k, "")
         self.refresh_preview()
 
     def save_items(self):
