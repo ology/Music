@@ -24,7 +24,7 @@ def open_file_dialog(self, entry_widget, kind='controller'):
         else:
             name = 'target'
         self.vars[name].set("")
-        self.vars[name]['values'] = sorted(items)
+        self.vars[name]['values'] = sorted(list(set(items)))
 
 def load_existing(filename=OUTFILE):
     try:
