@@ -31,8 +31,8 @@ class App(tk.Tk):
         self.resizable(False, False)
 
         self.data, self.items = load_existing()
-        self.controller = self.data['controller']
-        self.device = self.data['device']
+        self.controller = self.data.get('controller', 'controller')
+        self.device = self.data.get('device', 'device')
 
         midi_range = [ i for i in range(128) ]
         self.type_choices = ["control_change", "note_on", "pitchwheel"]
