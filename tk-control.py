@@ -18,7 +18,7 @@ def load_existing():
         with open(OUTFILE, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
             msgs = data.get('messages', [])
-            return data, msgs #if isinstance(msgs, list) else []
+            return data, msgs
     except Exception as e:
         print(f"WARNING: {e}")
         return []
