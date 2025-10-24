@@ -5,7 +5,7 @@ messages:
   - type: control_change
     control: 9 # potentiometer
     cmd: control_change
-    target: 102 # lfo rate
+    target: 29 # env1
   - type: control_change
     control: 1 # joystick x
     cmd: control_change
