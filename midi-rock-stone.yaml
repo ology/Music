@@ -1,4 +1,4 @@
-device: 'Joystick'
+device: 'MIDI ROCK Joystick'
 description: 'MIDI Rock: Stone joystick controller'
 messages:
   - type: note_on
