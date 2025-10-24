@@ -12,52 +12,19 @@ import yaml
 import yaml
 
 OUTFILE = os.path.join(os.path.dirname(__file__), "controls.yaml")
+CONTROLLER = "controller"
+DEVICE = 'device'
 WRAP_KEY = "messages"
 
 def try_load_existing():
     try:
         with open(OUTFILE, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
-            # If file already a list (old format), return it.
-            if isinstance(data, list):
-                return data
-            # If it's a dict with the wrap key, return that list.
-            if isinstance(data, dict):
-                msgs = data.get(WRAP_KEY, [])
-                return msgs if isinstance(msgs, list) else []
-            return []
-    except Exception:
-        # if file missing or yaml not installed or parse error, ignore and return empty list
-        try:
-            if not os.path.exists(OUTFILE):
-                return []
-            with open(OUTFILE, "r", encoding="utf-8") as f:
-                items = []
-                curr = None
-                in_messages = False
-                for ln in f:
-                    ln_stripped = ln.rstrip("\n")
-                    s = ln_stripped.lstrip()
-                    # detect top-level messages key
-                    if not in_messages and s.startswith(f"{WRAP_KEY}:"):
-                        in_messages = True
-                        continue
-                    # treat both top-level list and wrapped list similarly
-                    if s.startswith("-"):
-                        if curr:
-                            items.append(curr)
-                        curr = {}
-                    else:
-                        if ":" in s and curr is not None:
-                            k, v = s.split(":", 1)
-                            k = k.strip()
-                            v = v.strip().strip('"').strip("'")
-                            curr[k] = v
-                if curr:
-                    items.append(curr)
-                return items
-        except Exception:
-            return []
+            msgs = data.get(WRAP_KEY, [])
+            return msgs if isinstance(msgs, list) else []
+    except Exception as e:
+        print(f"ERROR: {e}")
+        return []
 
 def dump_yaml(data_list):
     try:
