@@ -85,8 +85,8 @@ class App(tk.Tk):
         btn_frame.grid(row=row, column=0, columnspan=2, pady=(8,0), sticky="w")
         self.add_btn = ttk.Button(btn_frame, text="Add Item", command=self.add_item)
         self.add_btn.grid(row=0, column=0, padx=(0,6))
-        ttk.Button(btn_frame, text="Save Now", command=self.save_items).grid(row=0, column=1, padx=(0,6))
-        ttk.Button(btn_frame, text="Clear List", command=self.clear_list).grid(row=0, column=2)
+        ttk.Button(btn_frame, text="Save", command=self.save_items).grid(row=0, column=1, padx=(0,6))
+        ttk.Button(btn_frame, text="Clear", command=self.clear_list).grid(row=0, column=2)
 
         # YAML display
         row += 1
