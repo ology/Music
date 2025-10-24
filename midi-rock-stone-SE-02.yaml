@@ -25,11 +25,11 @@ messages:
   - type: control_change
     control: 26 # encoder 2
     cmd: control_change
-    target: 71 # resonance
+    target: 105 # lfo filter
   - type: control_change
     control: 25 # encoder 1
     cmd: control_change
-    target: 16 # o2 filter
+    target: 103 # lfo osc
   # - type: note_on
   #   note: 85 # green btn
   #   cmd: start
