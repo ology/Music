@@ -298,3 +298,11 @@ messages:
     patch: 62
     value: 127
     desc: "filter REL 2"
+  - type: control_change
+    patch: 63
+    value: 0
+    desc: "filter GATE"
+  - type: control_change
+    patch: 63
+    value: 127
+    desc: "filter LFO"
