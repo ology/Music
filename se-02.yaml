@@ -287,6 +287,24 @@ messages:
     value: 127
     desc: "filter contour NORM"
   - type: control_change
+    patch: 47
+    desc: "env filter attack"
+  - type: control_change
+    patch: 52
+    desc: "env filter decay"
+  - type: control_change
+    patch: 53
+    desc: "env filter sustain"
+  - type: control_change
+    patch: 73
+    desc: "env amp attack"
+  - type: control_change
+    patch: 75
+    desc: "env amp decay"
+  - type: control_change
+    patch: 56
+    desc: "env amp sustain"
+  - type: control_change
     patch: 62
     value: 0
     desc: "filter REL off"
