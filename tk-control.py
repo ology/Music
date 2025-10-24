@@ -219,6 +219,7 @@ class App(tk.Tk):
             return
         self.data = {}
         self.items = []
+        self.pairs = {}
         try:
             if os.path.exists(OUTFILE):
                 os.remove(OUTFILE)
