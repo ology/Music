@@ -52,7 +52,7 @@ class App(tk.Tk):
         def add_row(label, name, values):
             nonlocal row
             ttk.Label(frm, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
-            cb = ttk.Combobox(frm, values=values, width=30)
+            cb = ttk.Combobox(frm, values=values, width=20)
             cb.grid(row=row, column=1, sticky="w")
             cb.set(values[0] if values else "")
             self.vars[name] = cb
@@ -61,7 +61,7 @@ class App(tk.Tk):
         def add_entry(label, name, text=''):
             nonlocal row
             ttk.Label(frm, text=label).grid(row=row, column=0, sticky="w", padx=(0,6))
-            ent = ttk.Entry(frm, width=30)
+            ent = ttk.Entry(frm, width=10)
             ent.grid(row=row, column=1, sticky="w")
             ent.insert(0, text)
             self.vars[name] = ent
