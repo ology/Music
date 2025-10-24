@@ -4,9 +4,7 @@
 
 import os
 import tkinter as tk
-from tkinter import ttk, messagebox
-from tkinter import scrolledtext
-import yaml
+from tkinter import ttk, messagebox, scrolledtext
 import yaml
 
 OUTFILE = os.path.join(os.path.dirname(__file__), "controls.yaml")
