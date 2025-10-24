@@ -22,9 +22,9 @@ def open_file_dialog(self, entry_widget, kind='controller'):
         if kind == 'controller':
             self.vars['control'].set("")
             self.vars['control']['values'] = sorted(items)
-            # self.control_choices = items
         else:
-            self.target_choices = items
+            self.vars['target'].set("")
+            self.vars['target']['values'] = sorted(items)
 
 def load_existing(filename=OUTFILE):
     try:
