@@ -61,10 +61,12 @@ def dump_yaml(data_list):
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("TK Control -> YAML")
+        self.title("Configure MIDI Control Devices")
         self.resizable(False, False)
         self.items = try_load_existing()
 
+        self.controller_name = ""
+        self.device_name = ""
         midi_range = [ i for i in range(128) ]
         self.type_choices = ["control_change", "note_on", "pitchwheel"]
         self.cmd_choices = ["control_change", "start", "stop", "pitchwheel", "program_change"]
@@ -97,10 +99,8 @@ class App(tk.Tk):
             self.vars[name] = ent
             row += 1
 
-        # Add controller_name and device_name text entry fields at the top
         add_entry("controller_name:", "controller_name")
         add_entry("device_name:", "device_name")
-
         add_row("type*:", "type", self.type_choices)
         add_row("cmd*:", "cmd", self.cmd_choices)
         add_row("note:", "note", self.note_choices)
@@ -175,7 +175,7 @@ class App(tk.Tk):
                 item[k] = v
         self.items.append(item)
         self.save_items()
-        # clear optional numeric fields and keep type/cmd and controller/device for convenience
+        # clear optional numeric fields and keep type/cmd and controller/device
         for k in ("note", "control", "target", "data"):
             self.set_var(k, "")
         self.refresh_preview()
