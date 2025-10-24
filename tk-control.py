@@ -16,7 +16,6 @@ def open_file_dialog(self, entry_widget, kind='controller'):
     )    
     if file_path:
         data, items, pairs = load_existing(file_path)
-        items = list(pairs.keys())
         device = data.get('device', 'device')
         entry_widget.delete(0, tk.END)
         entry_widget.insert(0, device)
@@ -36,11 +35,10 @@ def load_existing(filename=OUTFILE):
             if filename == OUTFILE:
                 items = msgs
             else:
-                items = []
                 for m in msgs:
                     if 'patch' in m:
-                        items.append(m['patch'])
                         pairs[m['patch']] = m['desc']
+                items = list(pairs.keys())
             return data, items, pairs
     except Exception as e:
         print(f"WARNING: {e}")
