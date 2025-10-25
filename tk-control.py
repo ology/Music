@@ -107,7 +107,8 @@ class App(tk.Tk):
         self.add_btn = ttk.Button(btn_frame, text="Add Item", command=self.add_item)
         self.add_btn.grid(row=0, column=0, padx=(0,6))
         ttk.Button(btn_frame, text="Save", command=self.save_items).grid(row=0, column=1, padx=(0,6))
-        ttk.Button(btn_frame, text="Clear", command=self.clear_list).grid(row=0, column=2)
+        ttk.Button(btn_frame, text="Clear", command=self.clear_list).grid(row=0, column=2, padx=(0,6))
+        ttk.Button(btn_frame, text="Remove Last", command=self.remove_last).grid(row=0, column=3)
 
         # YAML display
         row += 1
@@ -237,6 +238,13 @@ class App(tk.Tk):
                 name = 'target'
             self.vars[name].set("")
             self.vars[name]['values'] = sorted(list(labels))
+
+    def remove_last(self):
+        self.data['controller'] = self.get_var('controller')
+        self.data['device'] = self.get_var('device')
+        self.items.pop()
+        self.data['messages'] = self.items
+        self.save_items()
 
 if __name__ == "__main__":
     app = App()
