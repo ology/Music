@@ -8,3 +8,15 @@ messages:
     target: 1 # modwheel
   - type: pitchwheel
     cmd: pitchwheel
+  - type: control_change
+    control: 9 # potentiometer
+    cmd: control_change
+    target: 7 # volume
+  - type: control_change
+    control: 26 # encoder 2
+    cmd: control_change
+    target: 74 # Filter cutoff
+  - type: control_change
+    control: 27 # encoder 3
+    cmd: control_change
+    target: 71 # Filter resonance
