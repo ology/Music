@@ -167,7 +167,6 @@ class App(tk.Tk):
         if not t or not c or not cn or not dn:
             messagebox.showwarning("Required", "Required fields missing.")
             return
-        # print(self.pairs)
         item = {"type": t, "cmd": c}
         # include the existing controls if provided
         for k in ("note", "control", "target", "data"):
