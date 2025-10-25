@@ -5,6 +5,7 @@ import sys
 import time
 import yaml
 
+# https://mido.readthedocs.io/en/latest/message_types.html
 def send_to(outport, mtype, patch=0, data=0, channel=0, velocity=100):
     if mtype == 'start' or mtype == 'stop':
         msg = mido.Message(mtype)
