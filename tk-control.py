@@ -9,23 +9,6 @@ import yaml
 
 OUTFILE = os.path.join(os.path.dirname(__file__), "controls.yaml")
 
-def open_file_dialog(self, entry_widget, kind='controller'):
-    file_path = filedialog.askopenfilename(
-        title="Select a file",
-        filetypes=[("YAML files", "*.yaml")]
-    )    
-    if file_path:
-        data, items, pairs = load_existing(file_path)
-        device = data.get('device', 'device')
-        entry_widget.delete(0, tk.END)
-        entry_widget.insert(0, device)
-        if kind == 'controller':
-            name = 'control'
-        else:
-            name = 'target'
-        self.vars[name].set("")
-        self.vars[name]['values'] = sorted(list(set(items)))
-
 def load_existing(filename=OUTFILE):
     try:
         with open(filename, "r", encoding="utf-8") as f:
@@ -34,7 +17,7 @@ def load_existing(filename=OUTFILE):
             pairs = {}
             for m in msgs:
                 if 'patch' in m:
-                    pairs[m['patch']] = m['desc']
+                    pairs[m['desc']] = m['patch']
             if filename == OUTFILE:
                 items = msgs
             else:
@@ -55,9 +38,12 @@ class App(tk.Tk):
         self.title("Configure MIDI Control Devices")
         self.resizable(False, False)
 
-        self.data, self.items, self.pairs = load_existing()
+        self.data, self.items, _ = load_existing()
         self.controller = self.data.get('controller', 'controller')
         self.device = self.data.get('device', 'device')
+        self.pairs = {}
+        self.pairs['controller'] = {}
+        self.pairs['device'] = {}
 
         midi_range = [ i for i in range(128) ]
         self.type_choices = ["control_change", "note_on", "note_off", "pitchwheel"]
@@ -96,7 +82,7 @@ class App(tk.Tk):
             open_button = tk.Button(
                 input_frame,
                 text=f"Open {name}",
-                command=lambda: open_file_dialog(self, ent, kind=name)
+                command=lambda: self.open_file_dialog(ent, kind=name)
             )
             open_button.grid(row=row, column=2, padx=(0, 0))
             self.vars[name] = ent
@@ -181,19 +167,24 @@ class App(tk.Tk):
         if not t or not c or not cn or not dn:
             messagebox.showwarning("Required", "Required fields missing.")
             return
-
+        # print(self.pairs)
         item = {"type": t, "cmd": c}
         # include the existing controls if provided
         for k in ("note", "control", "target", "data"):
             v = self.get_var(k)
             if v != "":
-                item[k] = v
+                if v in self.pairs['controller']:
+                    item[k] = self.pairs['controller'][v]
+                elif v in self.pairs['device']:
+                    item[k] = self.pairs['device'][v]
+                else:
+                    item[k] = v
         self.items.append(item)
         self.data['controller'] = self.get_var('controller')
         self.data['device'] = self.get_var('device')
         self.data['messages'] = self.items
         self.save_items()
-        # clear optional numeric fields and keep type/cmd and controller/device
+        # clear optional numeric fields but keep requires
         for k in ("note", "control", "target", "data"):
             self.set_var(k, "")
         self.refresh_preview()
@@ -220,12 +211,33 @@ class App(tk.Tk):
         self.data = {}
         self.items = []
         self.pairs = {}
+        self.pairs['controller'] = {}
+        self.pairs['device'] = {}
         try:
             if os.path.exists(OUTFILE):
                 os.remove(OUTFILE)
         except Exception:
             pass
         self.refresh_preview()
+
+    def open_file_dialog(self, entry_widget, kind='controller'):
+        file_path = filedialog.askopenfilename(
+            title="Select a file",
+            filetypes=[("YAML files", "*.yaml")]
+        )    
+        if file_path:
+            data, items, pairs = load_existing(file_path)
+            self.pairs[kind] = pairs
+            labels = pairs.keys()
+            device = data.get('device', 'device')
+            entry_widget.delete(0, tk.END)
+            entry_widget.insert(0, device)
+            if kind == 'controller':
+                name = 'control'
+            else:
+                name = 'target'
+            self.vars[name].set("")
+            self.vars[name]['values'] = sorted(list(labels))
 
 if __name__ == "__main__":
     app = App()
