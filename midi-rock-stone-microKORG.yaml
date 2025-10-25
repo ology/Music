@@ -1,0 +1,10 @@
+controller: 'MIDI ROCK Joystick'
+device: 'USB MIDI Interface'
+description: 'Korg microKORG vocoder'
+messages:
+  - type: control_change
+    control: 1 # joystick x
+    cmd: control_change
+    target: 1 # modwheel
+  - type: pitchwheel
+    cmd: pitchwheel
