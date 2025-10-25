@@ -6,7 +6,7 @@ messages:
     control: 1 # joystick x
     cmd: control_change
     target: 1 # modwheel
-  - type: pitchwheel
+  - type: pitchwheel # joystick y
     cmd: pitchwheel
 
   - type: control_change
@@ -24,12 +24,40 @@ messages:
     target: 71 # Filter resonance
 
   - type: note_on
-    note: 88 # yellow button
+    note: 87 # blue button
     cmd: control_change
     target: 92 # Distortion off
     data: 0
   - type: note_on
-    note: 87 # blue button
+    note: 88 # yellow button
     cmd: control_change
     target: 92 # Distortion on
     data: 127
+
+  - type: control_change
+    control: 25 # encoder 1 dial absolute
+    cmd: control_change
+    target: 77 # ocs 1 wave
+
+  - type: note_on
+    note: 85 # green button
+    cmd: control_change
+    target: 14 # Control 1 off
+    data: 0
+  - type: note_on
+    patch: 86 # red button
+    cmd: control_change
+    target: 14 # Control 1 on
+    data: 127
+
+  - type: control_change
+    control: 22 # mode 2 button x
+    cmd: control_change
+    target: 15 # Control 2
+  - type: control_change
+    control: 23 # mode 2 button y
+    cmd: control_change
+    target: 15 # Control 2
+  # - type: control_change
+  #   patch: 24
+  #   desc: 'mode 2 button twist'
