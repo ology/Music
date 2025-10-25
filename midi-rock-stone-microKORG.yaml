@@ -8,6 +8,7 @@ messages:
     target: 1 # modwheel
   - type: pitchwheel
     cmd: pitchwheel
+
   - type: control_change
     control: 9 # potentiometer
     cmd: control_change
@@ -21,3 +22,14 @@ messages:
     control: 17 # button + joystick y
     cmd: control_change
     target: 71 # Filter resonance
+
+  - type: note_on
+    note: 88 # yellow button
+    cmd: control_change
+    target: 92 # Distortion
+    data: 0
+  - type: note_on
+    note: 87 # blue button
+    cmd: control_change
+    target: 92 # Distortion
+    data: 127
