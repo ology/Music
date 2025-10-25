@@ -26,10 +26,10 @@ messages:
   - type: note_on
     note: 88 # yellow button
     cmd: control_change
-    target: 92 # Distortion
+    target: 92 # Distortion off
     data: 0
   - type: note_on
     note: 87 # blue button
     cmd: control_change
-    target: 92 # Distortion
+    target: 92 # Distortion on
     data: 127
