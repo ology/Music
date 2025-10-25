@@ -9,7 +9,7 @@ import yaml
 
 OUTFILE = os.path.join(os.path.dirname(__file__), "controls.yaml")
 
-def load_existing(filename=OUTFILE):
+def load_yaml(filename=OUTFILE):
     try:
         with open(filename, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
@@ -38,7 +38,7 @@ class App(tk.Tk):
         self.title("Configure MIDI Control Devices")
         self.resizable(False, False)
 
-        self.data, self.items, _ = load_existing()
+        self.data, self.items, _ = load_yaml()
         self.controller = self.data.get('controller', 'controller')
         self.device = self.data.get('device', 'device')
         self.pairs = {}
@@ -226,7 +226,7 @@ class App(tk.Tk):
             filetypes=[("YAML files", "*.yaml")]
         )    
         if file_path:
-            data, items, pairs = load_existing(file_path)
+            data, items, pairs = load_yaml(file_path)
             self.pairs[kind] = pairs
             labels = pairs.keys()
             device = data.get('device', 'device')
