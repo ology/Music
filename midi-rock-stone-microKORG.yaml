@@ -12,11 +12,12 @@ messages:
     control: 9 # potentiometer
     cmd: control_change
     target: 7 # volume
+
   - type: control_change
-    control: 26 # encoder 2
+    control: 16 # button + joystick x
     cmd: control_change
     target: 74 # Filter cutoff
   - type: control_change
-    control: 27 # encoder 3
+    control: 17 # button + joystick y
     cmd: control_change
     target: 71 # Filter resonance
