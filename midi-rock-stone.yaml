@@ -62,10 +62,10 @@ messages:
 
   - type: control_change
     patch: 22
-    desc: 'mode 2 button x coordinate'
+    desc: 'mode 2 button x'
   - type: control_change
     patch: 23
-    desc: 'mode 2 button y coordinate'
+    desc: 'mode 2 button y'
   - type: control_change
     patch: 24
     desc: 'mode 2 button twist'
