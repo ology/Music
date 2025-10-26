@@ -39,24 +39,14 @@ messages:
     cmd: control_change
     target: 77 # ocs 1 wave
 
-  # - type: note_on
-  #   note: 85 # green button
-  #   cmd: control_change
-  #   target: 14 # Control 1 off
-  #   data: 0
-  # - type: note_on
-  #   patch: 86 # red button
-  #   cmd: control_change
-  #   target: 14 # Control 1 on
-  #   data: 127
-  # - type: control_change
-  #   control: 22 # mode 2 button x
-  #   cmd: control_change
-  #   target: 15 # Control 2
-  # - type: control_change
-  #   control: 23 # mode 2 button y
-  #   cmd: control_change
-  #   target: 15 # Control 2
+  - type: control_change
+    control: 22 # mode 2 button x
+    cmd: control_change
+    target: 14 # Control 1
+  - type: control_change
+    control: 23 # mode 2 button y
+    cmd: control_change
+    target: 15 # Control 2
   # - type: control_change
   #   patch: 24
   #   desc: 'mode 2 button twist'
