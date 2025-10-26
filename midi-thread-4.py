@@ -1,3 +1,7 @@
+# Use fluidsynth
+# ex: fluidsynth -a coreaudio -m coremidi -g 2.0 ~/Music/soundfont/FluidR3_GM.sf2
+#     python midi-thread-4.py 'FluidSynth virtual port (15609)'
+
 import sys
 import random
 import time
@@ -77,7 +81,7 @@ def midi_message(outport, channel, note, dura):
     outport.send(msg)
 
 def note_stream_thread():
-    global g, device, factor, velocity, stop_threads, clock_tick_event
+    global g, device, factor, outport, velocity, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
@@ -97,7 +101,7 @@ def note_stream_thread():
                 midi_message(outport, 0, p, d * factor)
 
 def bass_stream_thread():
-    global bass, factor, stop_threads, clock_tick_event
+    global bass, factor, outport, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
