@@ -17,7 +17,7 @@ def midi_clock_thread():
         note_outport.send(mido.Message('clock'))
         bass_outport.send(mido.Message('clock'))
         clock_tick_count += 1
-        # signal note_stream thread every beat
+        # signal stream threads every beat
         if clock_tick_count % CLOCKS_PER_BEAT == 0:
             clock_tick_event.set()
         time.sleep(interval)
