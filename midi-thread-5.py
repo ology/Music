@@ -49,12 +49,9 @@ bass = Bassline(
 )
 # signal the note_stream thread on each clock tick
 clock_tick_event = threading.Event()
-# clock tick counter
 clock_tick_count = 0
-# clock ticks per beat
 CLOCKS_PER_BEAT = 24
-# time between clock messages at 24 PPQN per beat
-interval = 60 / (bpm * CLOCKS_PER_BEAT)
+interval = 60 / (bpm * CLOCKS_PER_BEAT) # time between clock messages at 24 PPQN per beat
 stop_threads = False
 
 chance = lambda: random.random() < 0.5
