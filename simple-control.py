@@ -13,7 +13,7 @@ except (ValueError, OSError) as e:
     print(f"Error opening ports: {e}")
     exit()
 
-print("Routing MIDI messages. Press Ctrl+C to exit.")
+print("Routing MIDI messages. Ctrl+C to exit.")
 try:
     for msg in inport:
         print(f"Received: {msg}")
