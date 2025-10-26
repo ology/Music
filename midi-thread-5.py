@@ -64,6 +64,9 @@ def bass_stream_thread():
             midi_message(bass_outport, 0, n, factor)
 
 if __name__ == "__main__":
+    note_port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
+    bass_port_name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
+
     factor = 1 # duration multiplier to slow down the pace of the notes
     bpm = 100 # for the clock
     velocity = 100
@@ -109,9 +112,6 @@ if __name__ == "__main__":
 
     chance = lambda: random.random() < 0.5
     velo = lambda: velocity + random.randint(-10, 10)
-
-    note_port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
-    bass_port_name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
 
     with mido.open_output(note_port_name) as note_outport, mido.open_output(bass_port_name) as bass_outport:
         print(note_outport, bass_outport)
