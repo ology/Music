@@ -9,21 +9,27 @@ import yaml
 def send_to(outport, mtype, patch=0, data=0, channel=0, velocity=100):
     if mtype == 'start' or mtype == 'stop':
         msg = mido.Message(mtype)
+        print(f"Out: {msg}")
         outport.send(msg)
     elif mtype == 'control_change':
         msg = mido.Message(mtype, control=patch, value=data, channel=channel)
+        print(f"Out: {msg}")
         outport.send(msg)
     elif mtype == 'pitchwheel':
         msg = mido.Message(mtype, pitch=data, channel=channel)
+        print(f"Out: {msg}")
         outport.send(msg)
     elif mtype == 'program_change':
         msg = mido.Message(mtype, program=patch, channel=channel)
+        print(f"Out: {msg}")
         outport.send(msg)
     else:
         msg = mido.Message('note_on', note=patch, velocity=velocity, channel=channel)
+        print(f"Out: {msg}")
         outport.send(msg)
         time.sleep(data)
         msg = mido.Message('note_off', note=patch, velocity=velocity, channel=channel)
+        print(f"Out: {msg}")
         outport.send(msg)
 
 # data arg keys: type (required), cmd (required), note, control, target, data
@@ -67,7 +73,7 @@ if __name__ == "__main__":
                 for msg in inport:
                     if msg.type == 'clock':
                         continue
-                    print(f"Received: {msg}")
+                    print(f"In: {msg}")
                     dispatch(outport, msg, data)
     except KeyboardInterrupt:
         print('Stopping MIDI I/O.')
