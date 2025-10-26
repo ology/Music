@@ -11,52 +11,6 @@ from music_melodicdevice import Device
 from random_rhythms import Rhythm
 from music_bassline_generator import Bassline
 
-factor = 1 # duration multiplier to slow down the pace of the notes
-bpm = 100 # for the clock
-velocity = 100
-scale_map = {
-    'A': 'm',
-    'C': '',
-    'D': 'm',
-    'E': 'm',
-    'G': '',
-}
-size = len(scale_map) + 1
-transitions = [ i for i in range(1, size) ]
-weights = [ 1 for _ in range(1, size) ]
-g = Generator(
-    scale_note='A',
-    scale_name='aeolian',
-    max=4 * 1, # beats x measures
-    tonic=False,
-    resolve=False,
-    scale=list(scale_map.keys()),
-    chord_map=list(scale_map.values()),
-    net={ i: transitions for i in range(1, size) },
-    weights={ i: weights for i in range(1, size) },
-    verbose=False,
-)
-device = Device(verbose=False)
-r = Rhythm(
-    measure_size=1,
-    durations=[ 1/8, 1/4, 1/2, 1/3 ],
-    groups={ 1/3: 3 },
-)
-bass = Bassline(
-    modal=True,
-    tonic=False,
-    resolve=False,
-)
-# signal the note_stream thread on each clock tick
-clock_tick_event = threading.Event()
-clock_tick_count = 0
-CLOCKS_PER_BEAT = 24
-interval = 60 / (bpm * CLOCKS_PER_BEAT) # time between clock messages at 24 PPQN per beat
-stop_threads = False
-
-chance = lambda: random.random() < 0.5
-velo = lambda: velocity + random.randint(-10, 10)
-
 def midi_clock_thread():
     global note_outport, bass_outport, interval, stop_threads, clock_tick_event, clock_tick_count
     while not stop_threads:
@@ -110,6 +64,52 @@ def bass_stream_thread():
             midi_message(bass_outport, 0, n, factor)
 
 if __name__ == "__main__":
+    factor = 1 # duration multiplier to slow down the pace of the notes
+    bpm = 100 # for the clock
+    velocity = 100
+    scale_map = {
+        'A': 'm',
+        'C': '',
+        'D': 'm',
+        'E': 'm',
+        'G': '',
+    }
+    size = len(scale_map) + 1
+    transitions = [ i for i in range(1, size) ]
+    weights = [ 1 for _ in range(1, size) ]
+    g = Generator(
+        scale_note='A',
+        scale_name='aeolian',
+        max=4 * 1, # beats x measures
+        tonic=False,
+        resolve=False,
+        scale=list(scale_map.keys()),
+        chord_map=list(scale_map.values()),
+        net={ i: transitions for i in range(1, size) },
+        weights={ i: weights for i in range(1, size) },
+        verbose=False,
+    )
+    device = Device(verbose=False)
+    r = Rhythm(
+        measure_size=1,
+        durations=[ 1/8, 1/4, 1/2, 1/3 ],
+        groups={ 1/3: 3 },
+    )
+    bass = Bassline(
+        modal=True,
+        tonic=False,
+        resolve=False,
+    )
+    # signal the note_stream thread on each clock tick
+    clock_tick_event = threading.Event()
+    clock_tick_count = 0
+    CLOCKS_PER_BEAT = 24
+    interval = 60 / (bpm * CLOCKS_PER_BEAT) # time between clock messages at 24 PPQN per beat
+    stop_threads = False
+
+    chance = lambda: random.random() < 0.5
+    velo = lambda: velocity + random.randint(-10, 10)
+
     note_port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     bass_port_name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
 
