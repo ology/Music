@@ -1,6 +1,6 @@
 # This program is for driving a multi-timbral synth, like a Waldorf, or fluidsynth
-# ex: fluidsynth -a coreaudio -m coremidi -g 2.0 ~/Music/soundfont/FluidR3_GM.sf2
-#     python midi-thread-4.py 'FluidSynth virtual port (15609)'
+# ex: > fluidsynth -a coreaudio -m coremidi -g 2.0 ~/Music/soundfont/FluidR3_GM.sf2
+#     > python midi-thread-4.py 'FluidSynth virtual port (15609)'
 
 import sys
 import random
