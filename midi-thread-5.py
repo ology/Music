@@ -70,6 +70,7 @@ if __name__ == "__main__":
     factor = int(sys.argv[3]) if len(sys.argv) > 3 else 1
 
     velocity = 100
+
     scale_map = {
         'A': 'm',
         'C': '',
@@ -92,17 +93,21 @@ if __name__ == "__main__":
         weights={ i: weights for i in range(1, size) },
         verbose=False,
     )
+
     device = Device(verbose=False)
+
     r = Rhythm(
         measure_size=1,
         durations=[ 1/8, 1/4, 1/2, 1/3 ],
         groups={ 1/3: 3 },
     )
+
     bass = Bassline(
         modal=True,
         tonic=False,
         resolve=False,
     )
+
     # signal the note_stream thread on each clock tick
     clock_tick_event = threading.Event()
     clock_tick_count = 0
