@@ -115,7 +115,8 @@ if __name__ == "__main__":
     velo = lambda: velocity + random.randint(-10, 10)
 
     with mido.open_output(note_port_name) as note_outport, mido.open_output(bass_port_name) as bass_outport:
-        print(note_outport, bass_outport)
+        print(note_outport)
+        print(bass_outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
         note_thread = threading.Thread(target=note_stream_thread, daemon=True)
         bass_thread = threading.Thread(target=bass_stream_thread, daemon=True)
