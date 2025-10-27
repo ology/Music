@@ -13,6 +13,7 @@ messages:
   - type: note_on
     patch: 84
     desc: 'encoder 4 button'
+
   - type: note_on
     patch: 85
     desc: 'green button'
