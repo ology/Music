@@ -2,19 +2,6 @@ device: 'MIDI ROCK Joystick'
 description: 'MIDI Rock: Stone joystick controller'
 messages:
   - type: note_on
-    patch: 81
-    desc: 'encoder 1 button'
-  - type: note_on
-    patch: 82
-    desc: 'encoder 2 button'
-  - type: note_on
-    patch: 83
-    desc: 'encoder 3 button'
-  - type: note_on
-    patch: 84
-    desc: 'encoder 4 button'
-
-  - type: note_on
     patch: 85
     desc: 'green button'
   - type: note_on
@@ -26,6 +13,19 @@ messages:
   - type: note_on
     patch: 88
     desc: 'yellow button'
+
+  - type: note_on
+    patch: 81
+    desc: 'encoder 1 button'
+  - type: note_on
+    patch: 82
+    desc: 'encoder 2 button'
+  - type: note_on
+    patch: 83
+    desc: 'encoder 3 button'
+  - type: note_on
+    patch: 84
+    desc: 'encoder 4 button'
 
   - type: control_change
     patch: 9
