@@ -1,6 +1,19 @@
 device: 'MIDI ROCK Joystick'
 description: 'MIDI Rock: Stone joystick controller'
 messages:
+  - type: control_change
+    patch: 9
+    desc: 'potentiometer'
+
+  - type: pitch_wheel_change
+    desc: 'mode 1 pitch-bend'
+  - type: control_change
+    patch: 1
+    desc: 'mode 1 modulation wheel'
+  - type: control_change
+    patch: 10
+    desc: 'mode 1 twist'
+
   - type: note_on
     patch: 85
     desc: 'green button'
@@ -26,20 +39,6 @@ messages:
   - type: note_on
     patch: 84
     desc: 'encoder 4 button'
-
-  - type: control_change
-    patch: 9
-    desc: 'potentiometer'
-
-  - type: pitch_wheel_change
-    desc: 'mode 1 pitch-bend'
-
-  - type: control_change
-    patch: 1
-    desc: 'mode 1 modulation wheel'
-  - type: control_change
-    patch: 10
-    desc: 'mode 1 twist'
 
   - type: control_change
     patch: 16
