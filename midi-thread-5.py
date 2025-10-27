@@ -56,7 +56,7 @@ def bass_stream_thread():
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
         # msg = mido.Message('program_change', channel=1, program=43)
-        # outport.send(msg)
+        # bass_outport.send(msg)
         note = random.choice(list(scale_map.keys()))
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
