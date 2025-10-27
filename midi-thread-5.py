@@ -69,7 +69,6 @@ if __name__ == "__main__":
     # kludge: duration multiplier to slow down the pace of the notes
     factor = int(sys.argv[3]) if len(sys.argv) > 3 else 1
 
-    bpm = 100 # for the clock
     velocity = 100
     scale_map = {
         'A': 'm',
@@ -108,6 +107,7 @@ if __name__ == "__main__":
     clock_tick_event = threading.Event()
     clock_tick_count = 0
     CLOCKS_PER_BEAT = 24
+    bpm = 100 # for the clock
     interval = 60 / (bpm * CLOCKS_PER_BEAT) # time between clock messages at 24 PPQN per beat
     stop_threads = False
 
