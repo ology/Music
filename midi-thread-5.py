@@ -122,14 +122,10 @@ if __name__ == "__main__":
         clock_thread.start()
         note_thread.start()
         bass_thread.start()
-        note_outport.send(mido.Message('start'))
-        bass_outport.send(mido.Message('start'))
         try:
             while True:
                 time.sleep(interval) # keep main thread alive and respond to interrupts
         except KeyboardInterrupt:
-            note_outport.send(mido.Message('stop'))
-            bass_outport.send(mido.Message('stop'))
             print("\nSignaling threads to stop...")
             stop_threads = True
             clock_thread.join()
