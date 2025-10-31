@@ -17,7 +17,7 @@ messages:
     target: 1 # modwheel
   - type: control_change
     control: 10
-    desc: 'mode 1 twist'
+    cmd: control_change # mode 1 twist
     target: 74 # cutoff
 
   - type: control_change
@@ -29,8 +29,9 @@ messages:
     cmd: control_change
     target: 71 # emphases
   # - type: control_change
-  #   control: 18
-  #   desc: 'mode 1 twist'
+  #   control: 18 # mode 1 twist + button'
+  #   cmd: control_change
+  #   target: 74 # cutoff
 
   - type: control_change
     control: 19 # mode 2 joystick x
@@ -41,8 +42,9 @@ messages:
     cmd: control_change
     target: 59 # contour
   # - type: control_change
-  #   control: 21
-  #   desc: 'mode 1 twist'
+  #   control: 21 # mode 2 twist
+  #   cmd: control_change
+  #   target: 74 # cutoff
 
   - type: control_change
     control: 22 # mode 2 joystick x + button
@@ -53,8 +55,9 @@ messages:
     cmd: control_change
     target: 105 # filter
   # - type: control_change
-  #   control: 24
-  #   desc: 'mode 1 twist'
+  #   control: 24 # mode 2 twist + button
+  #   cmd: control_change
+  #   target: 74 # cutoff
 
   - type: control_change
     control: 25 # encoder 1 dial absolute
