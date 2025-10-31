@@ -54,3 +54,20 @@ messages:
   # - type: control_change
   #   patch: 24
   #   desc: 'mode 1 twist'
+
+  - type: control_change
+    control: 25 # encoder 1 dial absolute
+    cmd: control_change
+    target: 51 # mixer feedback
+  - type: control_change
+    control: 26 # encoder 2 dial absolute
+    cmd: control_change
+    target: 91 # delay amount
+  - type: control_change
+    control: 27 # encoder 2 dial absolute
+    cmd: control_change
+    target: 83 # delay regen
+  - type: control_change
+    control: 28 # encoder 2 dial absolute
+    cmd: control_change
+    target: 82 # delay time
