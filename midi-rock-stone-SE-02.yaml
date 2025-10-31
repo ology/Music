@@ -15,9 +15,10 @@ messages:
     control: 1 # mode 1 joystick y
     cmd: control_change
     target: 1 # modwheel
-  # - type: control_change
-  #   patch: 10
-  #   desc: 'mode 1 twist'
+  - type: control_change
+    control: 10
+    desc: 'mode 1 twist'
+    target: 74 # cutoff
 
   - type: control_change
     control: 16 # mode 1 joystick x + button
@@ -28,7 +29,7 @@ messages:
     cmd: control_change
     target: 71 # emphases
   # - type: control_change
-  #   patch: 18
+  #   control: 18
   #   desc: 'mode 1 twist'
 
   - type: control_change
@@ -40,7 +41,7 @@ messages:
     cmd: control_change
     target: 59 # contour
   # - type: control_change
-  #   patch: 21
+  #   control: 21
   #   desc: 'mode 1 twist'
 
   - type: control_change
@@ -52,7 +53,7 @@ messages:
     cmd: control_change
     target: 105 # filter
   # - type: control_change
-  #   patch: 24
+  #   control: 24
   #   desc: 'mode 1 twist'
 
   - type: control_change
