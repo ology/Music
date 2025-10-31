@@ -5,14 +5,45 @@ messages:
     patch: 9
     desc: 'potentiometer'
 
-  - type: pitch_wheel_change
-    desc: 'mode 1 pitch-bend'
   - type: control_change
     patch: 1
-    desc: 'mode 1 modulation wheel'
+    desc: 'mode 1 joystick modulation wheel x'
+  - type: pitch_wheel_change
+    patch: pitch_wheel_change
+    desc: 'mode 1 joystick pitch-bend y'
   - type: control_change
     patch: 10
-    desc: 'mode 1 twist'
+    desc: 'mode 1 joystick twist'
+
+  - type: control_change
+    patch: 16
+    desc: 'mode 1 joystick button x'
+  - type: control_change
+    patch: 17
+    desc: 'mode 1 joystick button y'
+  - type: control_change
+    patch: 18
+    desc: 'mode 1 joystick button twist'
+
+  - type: control_change
+    patch: 19
+    desc: 'mode 2 joystick x'
+  - type: control_change
+    patch: 20
+    desc: 'mode 2 joystick y'
+  - type: control_change
+    patch: 21
+    desc: 'mode 2 joystick twist'
+
+  - type: control_change
+    patch: 22
+    desc: 'mode 2 joystick button x'
+  - type: control_change
+    patch: 23
+    desc: 'mode 2 joystick button y'
+  - type: control_change
+    patch: 24
+    desc: 'mode 2 joystick button twist'
 
   - type: note_on
     patch: 85
@@ -39,36 +70,6 @@ messages:
   - type: note_on
     patch: 84
     desc: 'encoder 4 button'
-
-  - type: control_change
-    patch: 16
-    desc: 'mode 1 button x'
-  - type: control_change
-    patch: 17
-    desc: 'mode 1 button y'
-  - type: control_change
-    patch: 18
-    desc: 'mode 1 button twist'
-
-  - type: control_change
-    patch: 19
-    desc: 'mode 2 x'
-  - type: control_change
-    patch: 20
-    desc: 'mode 2 y'
-  - type: control_change
-    patch: 21
-    desc: 'mode 2 twist'
-
-  - type: control_change
-    patch: 22
-    desc: 'mode 2 button x'
-  - type: control_change
-    patch: 23
-    desc: 'mode 2 button y'
-  - type: control_change
-    patch: 24
-    desc: 'mode 2 button twist'
 
   - type: control_change
     patch: 25
