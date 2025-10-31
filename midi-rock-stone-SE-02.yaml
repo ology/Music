@@ -22,11 +22,11 @@ messages:
   - type: control_change
     control: 16 # mode 1 joystick x + button
     cmd: control_change
-    target: 1 # modwheel
+    target: 74 # cutoff
   - type: control_change
     control: 17 # mode 1 joystick y + button
     cmd: control_change
-    target: 1 # modwheel
+    target: 71 # emphases
   # - type: control_change
   #   patch: 18
   #   desc: 'mode 1 twist'
@@ -46,11 +46,11 @@ messages:
   - type: control_change
     control: 22 # mode 2 joystick x + button
     cmd: control_change
-    target: 16 # o2 filter
+    target: 102 # LFO rate
   - type: control_change
     control: 23 # mode 2 joystick y + button
     cmd: control_change
-    target: 59 # contour
+    target: 105 # filter
   # - type: control_change
   #   patch: 24
   #   desc: 'mode 1 twist'
