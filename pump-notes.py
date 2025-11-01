@@ -4,7 +4,8 @@ import time
 from music21 import pitch
 
 def note_stream():
-    notes = [ i for i in range(60, 73)]
+    # notes = [ i for i in range(60, 73)]
+    notes = [ 60, 64, 67, 69 ]
     while True:
         phrase = [ random.choice(notes) for _ in range(16) ]
         for n in phrase:
