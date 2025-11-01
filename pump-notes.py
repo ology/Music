@@ -5,8 +5,8 @@ from music21 import pitch
 
 def note_stream():
     notes = [ i for i in range(60, 73)]
-    phrase = [ random.choice(notes) for _ in range(16) ]
     while True:
+        phrase = [ random.choice(notes) for _ in range(16) ]
         for n in phrase:
             p = pitch.Pitch(n).midi
             msg_on = mido.Message('note_on', note=p, velocity=100)
