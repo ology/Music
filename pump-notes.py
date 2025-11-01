@@ -10,12 +10,12 @@ def note_stream():
         for n in phrase:
             p = pitch.Pitch(n).midi
             if random.random() < (30 / 100):
-                p += 12
-            elif random.random() < (50 / 100):
+            #     p += 12
+            # elif random.random() < (50 / 100):
                 p -= 12
             msg_on = mido.Message('note_on', note=p, velocity=100)
             outport.send(msg_on)
-            time.sleep(0.1)
+            time.sleep(4)
             msg_off = mido.Message('note_off', note=p, velocity=100)
             outport.send(msg_off)
 
