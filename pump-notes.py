@@ -1,6 +1,7 @@
 import mido
 import random
 import time
+import sys
 from music21 import pitch
 
 def note_stream():
@@ -21,7 +22,8 @@ def note_stream():
             outport.send(msg_off)
 
 if __name__ == "__main__":
-    with mido.open_output('USB MIDI Interface') as outport:
+    port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
+    with mido.open_output(port_name) as outport:
         outport.send(mido.Message('start'))
         try:
             note_stream()
