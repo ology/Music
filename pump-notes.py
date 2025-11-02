@@ -16,7 +16,7 @@ def note_stream():
                 p -= 12
             msg_on = mido.Message('note_on', note=p, velocity=100)
             outport.send(msg_on)
-            time.sleep(4)
+            time.sleep(1)
             msg_off = mido.Message('note_off', note=p, velocity=100)
             outport.send(msg_off)
 
@@ -26,6 +26,8 @@ if __name__ == "__main__":
         try:
             note_stream()
         except KeyboardInterrupt:
+            msg_off = mido.Message('control_change', control=123, value=0)
+            outport.send(msg_off)
             print("\nStop!")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
