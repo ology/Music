@@ -5,7 +5,6 @@ import sys
 from music21 import pitch
 
 def note_stream():
-    # notes = [ i for i in range(60, 73)]
     notes = [ 60, 64, 67, 69 ]
     while True:
         phrase = [ random.choice(notes) for _ in range(16) ]
@@ -24,11 +23,9 @@ def note_stream():
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     with mido.open_output(port_name) as outport:
-        outport.send(mido.Message('start'))
         try:
             note_stream()
         except KeyboardInterrupt:
-            outport.send(mido.Message('stop'))
             print("\nStop!")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
