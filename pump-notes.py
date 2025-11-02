@@ -10,7 +10,7 @@ def note_stream():
         phrase = [ random.choice(notes) for _ in range(16) ]
         for n in phrase:
             p = pitch.Pitch(n).midi
-            if random.random() < (30 / 100):
+            if random.random() < (40 / 100):
                 p -= 24
             elif random.random() < (60 / 100):
                 p -= 12
