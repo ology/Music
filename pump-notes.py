@@ -7,7 +7,7 @@ from music21 import pitch
 def note_stream():
     notes = [ 60, 64, 67, 69 ]
     while True:
-        phrase = [ random.choice(notes) for _ in range(16) ]
+        phrase = [ random.choice(notes) for _ in range(4) ]
         for n in phrase:
             p = pitch.Pitch(n).midi
             if random.random() < (40 / 100):
