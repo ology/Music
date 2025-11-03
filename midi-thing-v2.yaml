@@ -1,0 +1,39 @@
+device: 'MIDI Thing V2'
+description: 'Befaco MIDI Thing V2 Predef 3'
+messages:
+  - type: control_change
+    patch: 14
+    desc: ''
+  - type: control_change
+    patch: 15
+    desc: ''
+  - type: control_change
+    patch: 16
+    desc: ''
+  - type: control_change
+    patch: 17
+    desc: ''
+  - type: control_change
+    patch: 18
+    desc: ''
+  - type: control_change
+    patch: 19
+    desc: ''
+  - type: control_change
+    patch: 20
+    desc: ''
+  - type: control_change
+    patch: 21
+    desc: ''
+  - type: control_change
+    patch: 22
+    desc: ''
+  - type: control_change
+    patch: 23
+    desc: ''
+  - type: control_change
+    patch: 24
+    desc: ''
+  - type: control_change
+    patch: 25
+    desc: ''
