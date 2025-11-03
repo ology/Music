@@ -3,6 +3,19 @@ device: 'MIDI Thing V2'
 description: 'Befaco MIDI Thing V2 eurorack module'
 messages:
   - type: control_change
+    control: 1 # mode 1 joystick modulation wheel x
+    cmd: control_change
+    target: 14 # 
+  - type: pitch_wheel_change
+    control: pitch_wheel_change # mode 1 joystick pitch-bend y
+    cmd: control_change
+    target: 15 # 
+  # - type: control_change
+  #   control: 10 # mode 1 joystick twist
+  #   cmd: control_change
+  #   target: ? # 
+
+  - type: control_change
     control: 16 # mode 1 joystick x + button
     cmd: control_change
     target: 16 # 
