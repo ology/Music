@@ -7,57 +7,47 @@ messages:
     cmd: control_change
     target: 14 # 
   - type: pitchwheel
-    cmd: control_change
-    target: 15 # modwheel
+    cmd: control_change # mode 1 joystick pitch wheel y
+    target: 15 # 
   - type: control_change
     control: 10 # mode 1 joystick twist
     cmd: control_change
-    target: 15 # 
+    target: 16 # 
 
   - type: control_change
     control: 16 # mode 1 joystick x + button
     cmd: control_change
-    target: 16 # 
+    target: 17 # 
   - type: control_change
     control: 17 # mode 1 joystick y + button
     cmd: control_change
-    target: 17 # 
+    target: 18 # 
   - type: control_change
     control: 18 # mode 1 twist + button'
     cmd: control_change
-    target: 18 # 
+    target: 19 # 
 
   - type: control_change
-    control: 19 # mode 2 joystick x
+    control: 19 # mode 2 joystick modulation wheel x
     cmd: control_change
-    target: 19 # 
-  # - type: pitchwheel
-  #   control: 20 # mode 2 joystick y
-  #   cmd: control_change
-  #   target: 20 # 
+    target: 20 # 
+  - type: pitchwheel
+    cmd: control_change # mode 2 joystick pitch wheel y
+    target: 21 # 
   - type: control_change
     control: 21 # mode 2 twist
     cmd: control_change
-    target: 20 # 
+    target: 22 # 
 
   - type: control_change
     control: 22 # mode 2 joystick x + button
     cmd: control_change
-    target: 21 # 
+    target: 23 # 
   - type: control_change
     control: 23 # mode 2 joystick y + button
     cmd: control_change
-    target: 22 # 
-  - type: control_change
-    control: 24 # mode 2 twist + button
-    cmd: control_change
-    target: 23 # 
-
-  - type: control_change
-    control: 25 # encoder 1 dial absolute
-    cmd: control_change
     target: 24 # 
   - type: control_change
-    control: 26 # encoder 2 dial absolute
+    control: 24 # mode 2 twist + button
     cmd: control_change
     target: 25 # 
