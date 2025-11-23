@@ -30,29 +30,33 @@ messages:
     control: 19 # mode 2 joystick x
     cmd: control_change
     target: 19 # 
-  - type: pitchwheel
-    control: 20 # mode 2 joystick y
-    cmd: control_change
-    target: 20 # 
+  # - type: pitchwheel
+  #   control: 20 # mode 2 joystick y
+  #   cmd: control_change
+  #   target: 20 # 
   - type: control_change
     control: 21 # mode 2 twist
     cmd: control_change
-    target: 21 # 
+    target: 20 # 
 
   - type: control_change
     control: 22 # mode 2 joystick x + button
     cmd: control_change
-    target: 22 # 
+    target: 21 # 
   - type: control_change
     control: 23 # mode 2 joystick y + button
     cmd: control_change
-    target: 23 # 
+    target: 22 # 
   - type: control_change
     control: 24 # mode 2 twist + button
     cmd: control_change
-    target: 24 # 
+    target: 23 # 
 
   - type: control_change
     control: 25 # encoder 1 dial absolute
+    cmd: control_change
+    target: 24 # 
+  - type: control_change
+    control: 26 # encoder 2 dial absolute
     cmd: control_change
     target: 25 # 
