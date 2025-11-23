@@ -31,8 +31,9 @@ messages:
     control: 19 # mode 2 joystick modulation wheel x
     cmd: control_change
     target: 20 # 
-  - type: pitchwheel
-    cmd: control_change # mode 2 joystick pitch wheel y
+  - type: control_change
+    control: 20 # mode 2 joystick y
+    cmd: control_change
     target: 21 # 
   - type: control_change
     control: 21 # mode 2 twist
