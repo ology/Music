@@ -23,6 +23,7 @@ transitions = [ i for i in range(1, size) ]
 weights = [ 1 for _ in range(1, size) ]
 g = Generator(
     max=4 * 1, # beats x measures
+    octave=2,
     tonic=False,
     resolve=False,
     scale=list(scale_map.keys()),
