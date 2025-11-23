@@ -1,5 +1,5 @@
 controller: 'MIDI ROCK Joystick'
-device: 'MIDI Thing V2'
+device: 'MIDIThing2'
 description: 'Befaco MIDI Thing V2 eurorack module'
 messages:
   - type: control_change
