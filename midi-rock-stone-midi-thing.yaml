@@ -6,8 +6,9 @@ messages:
     control: 1 # mode 1 joystick modulation wheel x
     cmd: control_change
     target: 14 # 
-  # - type: pitchwheel
-  #   cmd: pitchwheel
+  - type: pitchwheel
+    cmd: control_change
+    target: 15 # modwheel
   - type: control_change
     control: 10 # mode 1 joystick twist
     cmd: control_change
