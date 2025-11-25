@@ -1,5 +1,5 @@
 # This program is for driving a multi-timbral synth, like a Waldorf, or fluidsynth
-# > python midi-thread-4.py MIDIThing2
+# > python midi-thread-6.py MIDIThing2
 
 import sys
 import random
