@@ -98,10 +98,10 @@ if __name__ == "__main__":
     bpm = 100 # for the clock
     velocity = 100
     scale_map = {
-        'A': 'm',
         'C': '',
         'D': 'm',
         'E': 'm',
+        'F': '',
         'G': '',
     }
     size = len(scale_map) + 1
