@@ -77,7 +77,7 @@ def melody_stream_thread():
             midi_message(outport, 2, n, factor)
 
 if __name__ == "__main__":
-    port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
+    port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
     # kludge: duration multiplier to slow down the pace of the notes
     factor = int(sys.argv[2]) if len(sys.argv) > 2 else 1
 
