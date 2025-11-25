@@ -12,6 +12,14 @@ from music_melodicdevice import Device
 from random_rhythms import Rhythm
 from music_bassline_generator import Bassline
 
+def midi_message(outport, channel, note, dura):
+    v = velo()
+    msg = mido.Message('note_on', note=note, velocity=v, channel=channel)
+    outport.send(msg)
+    time.sleep(dura)
+    msg = mido.Message('note_off', note=note, velocity=v, channel=channel)
+    outport.send(msg)
+
 def midi_clock_thread():
     global interval, stop_threads, clock_tick_event, clock_tick_count
     while not stop_threads:
@@ -21,14 +29,6 @@ def midi_clock_thread():
         if clock_tick_count % CLOCKS_PER_BEAT == 0:
             clock_tick_event.set()
         time.sleep(interval)
-
-def midi_message(outport, channel, note, dura):
-    v = velo()
-    msg = mido.Message('note_on', note=note, velocity=v, channel=channel)
-    outport.send(msg)
-    time.sleep(dura)
-    msg = mido.Message('note_off', note=note, velocity=v, channel=channel)
-    outport.send(msg)
 
 def stream0_thread_fn():
     global g, device, factor, outport, velocity, stop_threads, clock_tick_event
@@ -169,6 +169,14 @@ if __name__ == "__main__":
             stream2_thread.join()
             stream3_thread.join()
             print("All threads stopped.")
+            msg = mido.Message('control_change', channel=0, control=123, value=0)
+            outport.send(msg)
+            msg = mido.Message('control_change', channel=1, control=123, value=0)
+            outport.send(msg)
+            msg = mido.Message('control_change', channel=2, control=123, value=0)
+            outport.send(msg)
+            msg = mido.Message('control_change', channel=3, control=123, value=0)
+            outport.send(msg)
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
         finally:
