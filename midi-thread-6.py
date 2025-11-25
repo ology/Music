@@ -35,8 +35,8 @@ def arp_stream_thread():
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        msg = mido.Message('program_change', channel=0, program=91)
-        outport.send(msg)
+        # msg = mido.Message('program_change', channel=0, program=91)
+        # outport.send(msg)
         phrase = g.generate()
         transpose = chance()
         motif = r.motif()
@@ -55,8 +55,8 @@ def bass_stream_thread():
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        msg = mido.Message('program_change', channel=1, program=43)
-        outport.send(msg)
+        # msg = mido.Message('program_change', channel=1, program=43)
+        # outport.send(msg)
         note = random.choice(list(scale_map.keys()))
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
@@ -75,6 +75,20 @@ def melody_stream_thread():
         bassline = bass.generate(chord, 4)
         for n in bassline:
             midi_message(outport, 2, n, factor)
+
+
+def harmony_stream_thread():
+    global melody, factor, outport, stop_threads, clock_tick_event
+    while not stop_threads:
+        clock_tick_event.wait() # wait for the next beat (PLL sync)
+        clock_tick_event.clear()
+        # msg = mido.Message('program_change', channel=2, program=43)
+        # outport.send(msg)
+        note = random.choice(list(scale_map.keys()))
+        chord = note + scale_map[note]
+        bassline = bass.generate(chord, 4)
+        for n in bassline:
+            midi_message(outport, 3, n, factor)
 
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
@@ -121,6 +135,11 @@ if __name__ == "__main__":
         tonic=False,
         resolve=False,
     )
+    harmony = Bassline(
+        modal=True,
+        tonic=False,
+        resolve=False,
+    )
     # signal the arp_stream thread on each clock tick
     clock_tick_event = threading.Event()
     # clock tick counter
@@ -140,10 +159,12 @@ if __name__ == "__main__":
         arp_thread = threading.Thread(target=arp_stream_thread, daemon=True)
         bass_thread = threading.Thread(target=bass_stream_thread, daemon=True)
         melody_thread = threading.Thread(target=melody_stream_thread, daemon=True)
+        harmony_thread = threading.Thread(target=harmony_stream_thread, daemon=True)
         clock_thread.start()
         arp_thread.start()
         bass_thread.start()
         melody_thread.start()
+        harmony_thread.start()
         outport.send(mido.Message('start'))
         try:
             while True:
@@ -156,6 +177,7 @@ if __name__ == "__main__":
             arp_thread.join()
             bass_thread.join()
             melody_thread.join()
+            harmony_thread.join()
             print("All threads stopped.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
