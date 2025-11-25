@@ -67,7 +67,7 @@ def bass_stream_thread():
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     # kludge: duration multiplier to slow down the pace of the notes
-    factor = int(sys.argv[3]) if len(sys.argv) > 3 else 1
+    factor = int(sys.argv[2]) if len(sys.argv) > 2 else 1
 
     bpm = 100 # for the clock
     velocity = 100
