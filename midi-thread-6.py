@@ -139,20 +139,22 @@ if __name__ == "__main__":
     # time between clock messages at 24 PPQN per beat
     interval = 60 / (bpm * CLOCKS_PER_BEAT)
     stop_threads = False
-    threads = []
 
     chance = lambda: random.random() < 0.5
     velo = lambda: velocity + random.randint(-10, 10)
 
     with mido.open_output(port_name) as outport:
         print(outport)
-        threads.append(threading.Thread(target=midi_clock_thread, daemon=True)) # daemon = stops when main thread exits
-        threads.append(threading.Thread(target=stream0_thread_fn, daemon=True))
-        threads.append(threading.Thread(target=stream1_thread_fn, daemon=True))
-        threads.append(threading.Thread(target=stream2_thread_fn, daemon=True))
-        threads.append(threading.Thread(target=stream3_thread_fn, daemon=True))
-        for thread in threads:
-            thread.start
+        clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
+        stream0_thread = threading.Thread(target=stream0_thread_fn, daemon=True)
+        stream1_thread = threading.Thread(target=stream1_thread_fn, daemon=True)
+        stream2_thread = threading.Thread(target=stream2_thread_fn, daemon=True)
+        stream3_thread = threading.Thread(target=stream3_thread_fn, daemon=True)
+        clock_thread.start()
+        stream0_thread.start()
+        stream1_thread.start()
+        stream2_thread.start()
+        stream3_thread.start()
         outport.send(mido.Message('start'))
         try:
             while True:
@@ -161,8 +163,11 @@ if __name__ == "__main__":
             outport.send(mido.Message('stop'))
             print("\nSignaling threads to stop...")
             stop_threads = True
-            for thread in threads:
-                thread.join()
+            clock_thread.join()
+            stream0_thread.join()
+            stream1_thread.join()
+            stream2_thread.join()
+            stream3_thread.join()
             print("All threads stopped.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
