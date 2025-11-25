@@ -108,8 +108,8 @@ if __name__ == "__main__":
     transitions = [ i for i in range(1, size) ]
     weights = [ 1 for _ in range(1, size) ]
     g = Generator(
-        scale_note='A',
-        scale_name='aeolian',
+        scale_note='C',
+        scale_name='ionian',
         max=4 * 1, # beats x measures
         tonic=False,
         resolve=False,
