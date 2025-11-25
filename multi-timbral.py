@@ -96,7 +96,7 @@ if __name__ == "__main__":
     factor = int(sys.argv[2]) if len(sys.argv) > 2 else 1
 
     bpm = 100 # for the clock
-    velocity = 100
+    velocity = 64
     scale_map = {
         'C': '',
         'D': 'm',
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     stop_threads = False
 
     chance = lambda: random.random() < 0.5
-    velo = lambda: velocity + random.randint(-10, 10)
+    velo = lambda: velocity + random.randint(-40, 40)
 
     with mido.open_output(port_name) as outport:
         print(outport)
