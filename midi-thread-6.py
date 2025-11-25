@@ -30,7 +30,7 @@ def midi_message(outport, channel, note, dura):
     msg = mido.Message('note_off', note=note, velocity=v, channel=channel)
     outport.send(msg)
 
-def arp_stream_thread():
+def stream0_thread_fn():
     global g, device, factor, outport, velocity, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
@@ -50,7 +50,7 @@ def arp_stream_thread():
                         p -= 12
                 midi_message(outport, 0, p, d * factor)
 
-def bass_stream_thread():
+def stream1_thread_fn():
     global bass, factor, outport, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
@@ -63,8 +63,8 @@ def bass_stream_thread():
         for n in bassline:
             midi_message(outport, 1, n, factor)
 
-def melody_stream_thread():
-    global melody, factor, outport, stop_threads, clock_tick_event
+def stream2_thread_fn():
+    global bass, factor, outport, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
@@ -77,8 +77,8 @@ def melody_stream_thread():
             midi_message(outport, 2, n, factor)
 
 
-def harmony_stream_thread():
-    global melody, factor, outport, stop_threads, clock_tick_event
+def stream3_thread_fn():
+    global bass, factor, outport, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
@@ -130,16 +130,6 @@ if __name__ == "__main__":
         tonic=False,
         resolve=False,
     )
-    melody = Bassline(
-        modal=True,
-        tonic=False,
-        resolve=False,
-    )
-    harmony = Bassline(
-        modal=True,
-        tonic=False,
-        resolve=False,
-    )
     # signal the arp_stream thread on each clock tick
     clock_tick_event = threading.Event()
     # clock tick counter
@@ -156,15 +146,15 @@ if __name__ == "__main__":
     with mido.open_output(port_name) as outport:
         print(outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
-        arp_thread = threading.Thread(target=arp_stream_thread, daemon=True)
-        bass_thread = threading.Thread(target=bass_stream_thread, daemon=True)
-        melody_thread = threading.Thread(target=melody_stream_thread, daemon=True)
-        harmony_thread = threading.Thread(target=harmony_stream_thread, daemon=True)
+        stream0_thread = threading.Thread(target=stream0_thread_fn, daemon=True)
+        stream1_thread = threading.Thread(target=stream1_thread_fn, daemon=True)
+        stream2_thread = threading.Thread(target=stream2_thread_fn, daemon=True)
+        stream3_thread = threading.Thread(target=stream3_thread_fn, daemon=True)
         clock_thread.start()
-        arp_thread.start()
-        bass_thread.start()
-        melody_thread.start()
-        harmony_thread.start()
+        stream0_thread.start()
+        stream1_thread.start()
+        stream2_thread.start()
+        stream3_thread.start()
         outport.send(mido.Message('start'))
         try:
             while True:
@@ -174,10 +164,10 @@ if __name__ == "__main__":
             print("\nSignaling threads to stop...")
             stop_threads = True
             clock_thread.join()
-            arp_thread.join()
-            bass_thread.join()
-            melody_thread.join()
-            harmony_thread.join()
+            stream0_thread.join()
+            stream1_thread.join()
+            stream2_thread.join()
+            stream3_thread.join()
             print("All threads stopped.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
