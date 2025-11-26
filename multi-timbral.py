@@ -130,7 +130,7 @@ if __name__ == "__main__":
         tonic=False,
         resolve=False,
     )
-    # signal the arp_stream thread on each clock tick
+    # signal the threads on each clock tick
     clock_tick_event = threading.Event()
     # clock tick counter
     clock_tick_count = 0
