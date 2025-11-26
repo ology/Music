@@ -1,5 +1,5 @@
 # This program is for driving a multi-timbral synth, like a Waldorf, fluidsynth, or a multi-oscillator eurorack
-# > python midi-thread-7.py MIDIThing2
+# > python multi-timbral.py MIDIThing2
 
 import sys
 import random
