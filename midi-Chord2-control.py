@@ -54,7 +54,10 @@ def note_stream_thread():
     }
     while not stop_threads:
         note = random.choice(list(note_qualities.keys()))
-        quality = quality_volts[note_qualities[note]]
+        if random.random() < 0.5:
+            quality = quality_volts[note_qualities[note]]
+        else:
+            quality = random.choice(list(quality_volts.values()))
         play_chord(quality, note, duration=4)
 
 if __name__ == "__main__":
