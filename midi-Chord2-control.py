@@ -38,14 +38,13 @@ def note_stream_thread():
     global stop_threads
     note_qualities = {
         60: 'maj7',
-        # 62: 'm7',
+        62: 'm7',
         64: 'm7',
-        # 65: 'maj7',
+        65: 'maj7',
         67: 'maj7',
         69: 'm7',
-        # 71: 'm7',
+        71: 'm7',
     }
-# 0-3: 1, 4-9: 2, 10-14: 3, 15-19: 4, 20-24: 5, 25-29: 6,
     quality_volts = {
         'maj7': 0,
         'm7': 4,
