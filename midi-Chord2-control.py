@@ -1,12 +1,12 @@
 # This program controls the QU-Bit Chord module through a MIDI-CV interface.
 #
+# Default quality:
 # harm: blue = default 4 qualities
-# default quality cv ranges:
 # 0-5: maj, 6-13: min, 14-21: dom, 22-28: dim*, 29-36: dim,
 # 37-43: sus*, 44-51: sus, 52+: aug
 #
+# User chord type:
 # harm: white = user 12 types
-# user chord type cv ranges:
 # 0-3: 1, 4-9: 2, 10-14: 3, 15-19: 4, 20-24: 5, 25-29: 6,
 # 30-34: 7, 35-39: 8, 40-44: 9, 45-49: 10, 50-54: 11, 55+: 12
 
