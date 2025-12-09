@@ -15,25 +15,55 @@ import mido
 import time
 import threading
 
+factor = 1/4 # duration divider
 # time between clock messages at 24 PPQN per beat and 100 BPM
 interval = 60 / (100 * 24)
 stop_threads = False # should I stay or should I go?
 
+def play_chord(quality, note, velocity=100, duration=1):
+    quality_volts = {
+        'maj7': 0,
+        'm7': 4,
+        '7': 10,
+        'half-dim': 15,
+        'dim7': 20,
+        '7#5': 25,
+        '6': 30,
+        '7b9': 35,
+        '7b5': 40,
+        'Mm7': 45,
+        '7#9': 50,
+        'augM7': 55,
+    }
+    msg = mido.Message('note_on', note=quality_volts[quality], channel=0, velocity=velocity)
+    outport.send(msg)
+    msg = mido.Message('note_on', note=quality_volts[quality], channel=1, velocity=velocity)
+    outport.send(msg)
+    time.sleep(duration * factor)
+    msg = mido.Message('note_off', note=note, channel=0, velocity=velocity)
+    outport.send(msg)
+    msg = mido.Message('note_off', note=note, channel=1, velocity=velocity)
+    outport.send(msg)
+
 def note_stream_thread():
-    global bpm, stop_threads
-    p = 0
+    global stop_threads
+    i = 0
     while not stop_threads:
-        print(p)
-        msg_on = mido.Message('note_on', note=p + 60, channel=0, velocity=100)
-        outport.send(msg_on)
-        msg_on = mido.Message('note_on', note=p, channel=1, velocity=100)
-        outport.send(msg_on)
-        time.sleep(1)
-        msg_off = mido.Message('note_off', note=p + 60, channel=0, velocity=100)
-        outport.send(msg_off)
-        msg_off = mido.Message('note_off', note=p, channel=1, velocity=100)
-        outport.send(msg_off)
-        p = p + 1
+        play_chord('maj7', 49, duration=4)
+        play_chord('maj7', 49, duration=1)
+        play_chord('maj7', 49, duration=1)
+        play_chord('m7', 46, duration=2)
+        play_chord('7', 51, duration=4)
+        play_chord('7', 51, duration=4)
+        play_chord('m7', 51, duration=4)
+        play_chord('7', 44, duration=4)
+        play_chord('maj7', 49, duration=4)
+        if i % 2 == 0:
+            play_chord('maj7', 49, duration=2)
+            play_chord('7', 49, duration=2)
+        else:
+            play_chord('7#5', 45, duration=2)
+            play_chord('7', 44, duration=2)
 
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
