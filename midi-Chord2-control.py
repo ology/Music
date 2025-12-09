@@ -18,7 +18,7 @@ import random
 import time
 import threading
 
-factor = 1/4 # duration divider
+factor = 2 # duration divider
 # time between clock messages at 24 PPQN per beat and 100 BPM
 interval = 60 / (100 * 24)
 stop_threads = False # should I stay or should I go?
@@ -36,17 +36,25 @@ def play_chord(quality, note, velocity=100, duration=1):
 
 def note_stream_thread():
     global stop_threads
+    note_qualities = {
+        60: 'maj7',
+        # 62: 'm7',
+        64: 'm7',
+        # 65: 'maj7',
+        67: 'maj7',
+        69: 'm7',
+        # 71: 'm7',
+    }
     quality_volts = {
-        'maj': 0,
-        'm': 4,
         'maj7': 10,
         'm7': 15,
         'sus4': 20,
         '5th': 25,
         '6th': 30,
     }
+    note = random.choice(note_qualities.values())
     while not stop_threads:
-        play_chord(random.choice(list(quality_volts.values())), 60, duration=4)
+        play_chord(random.choice(quality_volts[note_qualities[note]]), note, duration=4)
 
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
