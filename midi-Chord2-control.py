@@ -52,9 +52,10 @@ def note_stream_thread():
         '5th': 25,
         '6th': 30,
     }
-    note = random.choice(list(note_qualities.keys()))
     while not stop_threads:
-        play_chord(quality_volts[note_qualities[note]], note, duration=4)
+        note = random.choice(list(note_qualities.keys()))
+        quality = quality_volts[note_qualities[note]]
+        play_chord(quality, note, duration=4)
 
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
