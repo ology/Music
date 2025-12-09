@@ -15,7 +15,7 @@ import mido
 import time
 import threading
 
-# time between clock messages at 24 PPQN per beat
+# time between clock messages at 24 PPQN per beat and 100 BPM
 interval = 60 / (100 * 24)
 stop_threads = False # should I stay or should I go?
 
