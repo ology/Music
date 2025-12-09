@@ -1,4 +1,6 @@
 # This program controls the QU-Bit Chord module through a MIDI-CV interface.
+# MIDI channel 0 = chord quality cv input
+# MIDI channel 1 = v/oct root note 
 #
 # Default quality:
 # harm: blue = default 4 qualities
@@ -64,6 +66,7 @@ def note_stream_thread():
         else:
             play_chord('7#5', 45, duration=2)
             play_chord('7', 44, duration=2)
+        i += 1
 
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
