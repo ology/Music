@@ -1,4 +1,5 @@
-# This program controls the QU-Bit Chord module through a MIDI-CV interface.
+# This program controls the QU-Bit Chord module through a multi-timbral MIDI-CV interface.
+#
 # MIDI channel 0 = chord quality cv input
 # MIDI channel 1 = v/oct root note 
 #
@@ -18,12 +19,12 @@ import random
 import time
 import threading
 
-factor = 2 # duration divider
+factor = 2 # duration multiplier
 # time between clock messages at 24 PPQN per beat and 100 BPM
 interval = 60 / (100 * 24)
 stop_threads = False # should I stay or should I go?
 
-def play_chord(quality, note, velocity=100, duration=1):
+def play_chord(quality, note, velocity=127, duration=1):
     msg = mido.Message('note_on', note=quality, channel=0, velocity=velocity)
     outport.send(msg)
     msg = mido.Message('note_on', note=quality, channel=1, velocity=velocity)
