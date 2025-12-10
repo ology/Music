@@ -18,12 +18,13 @@ import threading
 from music_voicegen import MusicVoiceGen
 
 def play_chord(quality, note, velocity=127, duration=1):
+    print(f"N: {note}, Q: {quality}")
     msg = mido.Message('note_on', note=quality, channel=0, velocity=velocity)
     outport.send(msg)
-    msg = mido.Message('note_on', note=quality, channel=1, velocity=velocity)
+    msg = mido.Message('note_on', note=note, channel=1, velocity=velocity)
     outport.send(msg)
     time.sleep(duration * factor)
-    msg = mido.Message('note_off', note=note, channel=0, velocity=velocity)
+    msg = mido.Message('note_off', note=quality, channel=0, velocity=velocity)
     outport.send(msg)
     msg = mido.Message('note_off', note=note, channel=1, velocity=velocity)
     outport.send(msg)
@@ -47,9 +48,9 @@ if __name__ == "__main__":
     }
     quality_volts = {
         'maj': 0,
-        'min': 6,
-        'dom': 14,
-        'dim*': 22,
+        'min': 5,
+        # 'dom': 14,
+        # 'dim*': 22,
         'dim': 29,
         # 'sus*': 37,
         # 'sus': 44,
@@ -57,7 +58,7 @@ if __name__ == "__main__":
     }
     voice = MusicVoiceGen(
         pitches=list(pitch_qualites.keys()),
-        intervals=[-4,-3,-2,-1,1,2,3,4],
+        intervals=[-3,-2,-1,1,2,3],
     )
 
     factor = 1/2 # duration multiplier
