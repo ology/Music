@@ -53,16 +53,16 @@ def note_stream_thread():
         '6th': 15,
         'sus4': 20,
     }
+    subset = {
+        '5th': 10,
+        '6th': 15,
+        'sus4': 20,
+    }
     while not stop_threads:
         note = random.choice(list(note_qualities.keys()))
         if random.random() < 0.5:
             quality = quality_volts[note_qualities[note]]
         else:
-            subset = {
-                '5th': 10,
-                '6th': 15,
-                'sus4': 20,
-            }
             quality = random.choice(list(subset.values()))
         play_chord(quality, note, duration=4)
 
