@@ -32,13 +32,13 @@ def note_stream_thread():
 
 if __name__ == "__main__":
     pitches = [
-        24, # c
-        26, # d
-        28, # e
-        29, # f
-        31, # g
-        33, # a
-        35, # b
+        12, # c
+        14, # d
+        16, # e
+        17, # f
+        19, # g
+        21, # a
+        23, # b
     ]
     voice = MusicVoiceGen(
         pitches=pitches,
