@@ -1,27 +1,16 @@
-"""
-This program controls the QU-Bit Chord module through a multi-timbral MIDI-CV interface.
-
-MIDI channel 0 = chord quality cv input
-MIDI channel 1 = v/oct root note 
-
-harm: blue = default qualities
-0-5: maj, 6-13: min, 14-21: dom, 22-28: dim*, 29-36: dim,
-37-43: sus*, 44-51: sus, 52+: aug
-
-"""
+# This program controls the QU-Bit Chord module through a multi-timbral MIDI-CV interface.
 
 import sys
 import mido
-import random
 import time
 import threading
 from music_voicegen import MusicVoiceGen
 
 def play_chord(pitch, velocity=127, duration=1):
-    msg = mido.Message('note_on', note=pitch, channel=1, velocity=velocity)
+    msg = mido.Message('note_on', note=pitch, channel=0, velocity=velocity)
     outport.send(msg)
     time.sleep(duration * factor)
-    msg = mido.Message('note_off', note=pitch, channel=1, velocity=velocity)
+    msg = mido.Message('note_off', note=pitch, channel=0, velocity=velocity)
     outport.send(msg)
 
 def note_stream_thread():
@@ -32,7 +21,7 @@ def note_stream_thread():
 
 if __name__ == "__main__":
     pitches = [
-        12, # c
+        12, # c0
         14, # d
         16, # e
         17, # f
