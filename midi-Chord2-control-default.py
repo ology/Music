@@ -17,47 +17,31 @@ import time
 import threading
 from music_voicegen import MusicVoiceGen
 
-def play_chord(quality, note, velocity=127, duration=1):
-    print(f"N: {note}, Q: {quality}")
-    msg = mido.Message('note_on', note=quality, channel=0, velocity=velocity)
-    outport.send(msg)
-    msg = mido.Message('note_on', note=note, channel=1, velocity=velocity)
+def play_chord(pitch, velocity=127, duration=1):
+    msg = mido.Message('note_on', note=pitch, channel=1, velocity=velocity)
     outport.send(msg)
     time.sleep(duration * factor)
-    msg = mido.Message('note_off', note=quality, channel=0, velocity=velocity)
-    outport.send(msg)
-    msg = mido.Message('note_off', note=note, channel=1, velocity=velocity)
+    msg = mido.Message('note_off', note=pitch, channel=1, velocity=velocity)
     outport.send(msg)
 
 def note_stream_thread():
     global voice, pitch_qualites, quality_volts, stop_threads
     while not stop_threads:
         pitch = voice.rand()
-        quality = quality_volts[pitch_qualites[pitch]]
-        play_chord(quality, pitch, duration=4)
+        play_chord(pitch, duration=4)
 
 if __name__ == "__main__":
-    pitch_qualites = {
-        60: 'maj',
-        62: 'min',
-        64: 'min',
-        65: 'maj',
-        67: 'maj',
-        69: 'min',
-        71: 'dim',
-    }
-    quality_volts = {
-        'maj': 0,
-        'min': 5,
-        # 'dom': 14,
-        # 'dim*': 22,
-        'dim': 29,
-        # 'sus*': 37,
-        # 'sus': 44,
-        # 'aug': 52,
-    }
+    pitches = [
+        24, # c
+        26, # d
+        28, # e
+        29, # f
+        31, # g
+        33, # a
+        35, # b
+    ]
     voice = MusicVoiceGen(
-        pitches=list(pitch_qualites.keys()),
+        pitches=pitches,
         intervals=[-3,-2,-1,1,2,3],
     )
 
