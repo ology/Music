@@ -55,7 +55,10 @@ if __name__ == "__main__":
         # 'sus': 44,
         # 'aug': 52,
     }
-    voice = MusicVoiceGen(pitches=list(pitch_qualites.keys()))
+    voice = MusicVoiceGen(
+        pitches=list(pitch_qualites.keys()),
+        intervals=[-4,-3,-2,-1,1,2,3,4],
+    )
 
     factor = 1/2 # duration multiplier
     # time between clocks at 24 PPQN per beat and 100 BPM
