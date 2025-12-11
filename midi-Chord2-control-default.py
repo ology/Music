@@ -24,10 +24,6 @@ def duration(x=1, y=4):
     return random.randint(x, y)
 
 if __name__ == "__main__":
-    # note duration length range, between x and y inclusive
-    x = 4
-    y = 8
-
     pitches = [
         12, # c0
         14, # d
@@ -47,6 +43,9 @@ if __name__ == "__main__":
     stop_threads = False
 
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
+    # note duration length range, between x and y inclusive
+    x = sys.argv[2] if len(sys.argv) > 2 else 4
+    y = sys.argv[3] if len(sys.argv) > 3 else 8
 
     with mido.open_output(port_name) as outport:
         print(outport)
