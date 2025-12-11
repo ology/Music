@@ -37,7 +37,7 @@ if __name__ == "__main__":
     factor = 2 # duration multiplier
     # time between clocks at 24 PPQN per beat and 100 BPM
     interval = 60 / (100 * 24)
-    stop_threads = False # should I stay or should I go?
+    stop_threads = False
 
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
 
