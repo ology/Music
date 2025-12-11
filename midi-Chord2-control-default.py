@@ -34,7 +34,7 @@ if __name__ == "__main__":
         intervals=[-3,-2,-1,1,2,3],
     )
 
-    factor = 1/2 # duration multiplier
+    factor = 2 # duration multiplier
     # time between clocks at 24 PPQN per beat and 100 BPM
     interval = 60 / (100 * 24)
     stop_threads = False # should I stay or should I go?
