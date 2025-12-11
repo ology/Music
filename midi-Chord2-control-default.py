@@ -2,6 +2,7 @@
 
 import sys
 import mido
+import random
 import time
 import threading
 from music_voicegen import MusicVoiceGen
@@ -9,15 +10,18 @@ from music_voicegen import MusicVoiceGen
 def play_chord(pitch, velocity=127, duration=1):
     msg = mido.Message('note_on', note=pitch, channel=0, velocity=velocity)
     outport.send(msg)
-    time.sleep(duration * factor)
+    time.sleep(duration)
     msg = mido.Message('note_off', note=pitch, channel=0, velocity=velocity)
     outport.send(msg)
 
 def note_stream_thread():
-    global voice, pitch_qualites, quality_volts, stop_threads
+    global voice, stop_threads
     while not stop_threads:
         pitch = voice.rand()
-        play_chord(pitch, duration=4)
+        play_chord(pitch, duration=duration())
+
+def duration(x=1, y=4):
+    return random.randint(x, y)
 
 if __name__ == "__main__":
     pitches = [
@@ -34,7 +38,6 @@ if __name__ == "__main__":
         intervals=[-3,-2,-1,1,2,3],
     )
 
-    factor = 2 # duration multiplier
     # time between clocks at 24 PPQN per beat and 100 BPM
     interval = 60 / (100 * 24)
     stop_threads = False
