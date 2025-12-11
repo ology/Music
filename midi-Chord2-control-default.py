@@ -24,7 +24,7 @@ def duration(x=1, y=4):
     return random.randint(x, y)
 
 if __name__ == "__main__":
-    # note duration length range, between x and y
+    # note duration length range, between x and y inclusive
     x = 4
     y = 8
 
