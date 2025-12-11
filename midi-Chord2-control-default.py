@@ -1,4 +1,4 @@
-# This program controls the QU-Bit Chord module through a multi-timbral MIDI-CV interface.
+# This program controls the QU-Bit Chord module.
 
 import sys
 import mido
