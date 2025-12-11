@@ -15,15 +15,19 @@ def play_chord(pitch, velocity=127, duration=1):
     outport.send(msg)
 
 def note_stream_thread():
-    global voice, stop_threads
+    global x, y, voice, stop_threads
     while not stop_threads:
         pitch = voice.rand()
-        play_chord(pitch, duration=duration())
+        play_chord(pitch, duration=duration(x, y))
 
 def duration(x=1, y=4):
     return random.randint(x, y)
 
 if __name__ == "__main__":
+    # note duration length range, between x and y
+    x = 4
+    y = 8
+
     pitches = [
         12, # c0
         14, # d
