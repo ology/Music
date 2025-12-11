@@ -1,8 +1,8 @@
 """
 This program controls the QU-Bit Chord module through a multi-timbral MIDI-CV interface.
 
-MIDI channel 0 = chord quality cv input
-MIDI channel 1 = v/oct root note 
+MIDI channel 0 = v/oct root note 
+MIDI channel 1 = chord quality cv input
 
 Default quality:
   harm: blue = default qualities
@@ -42,14 +42,14 @@ interval = 60 / (100 * 24)
 stop_threads = False # should I stay or should I go?
 
 def play_chord(quality, note, velocity=127, duration=1):
-    msg = mido.Message('note_on', note=quality, channel=0, velocity=velocity)
+    msg = mido.Message('note_on', note=note, channel=0, velocity=velocity)
     outport.send(msg)
     msg = mido.Message('note_on', note=quality, channel=1, velocity=velocity)
     outport.send(msg)
     time.sleep(duration * factor)
     msg = mido.Message('note_off', note=note, channel=0, velocity=velocity)
     outport.send(msg)
-    msg = mido.Message('note_off', note=note, channel=1, velocity=velocity)
+    msg = mido.Message('note_off', note=quality, channel=1, velocity=velocity)
     outport.send(msg)
 
 def note_stream_thread():
