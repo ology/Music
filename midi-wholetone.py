@@ -9,7 +9,7 @@ User chord type:
   0-3: 1, 4-9: 2, 10-14: 3, 15-19: 4, 20-24: 5, 25-29: 6,
   30-34: 7, 35-39: 8, 40-44: 9, 45-49: 10, 50-54: 11, 55+: 12
 
-Here is a chord_config.txt example, where 5 of 12 user chord types are defined.
+Here is a wholetone chord_config.txt example.
 The chords can each have up to 4 pitches. (And the root 0 is assumed to be present).
 The "#" comments below are for illustration only:
 
@@ -31,8 +31,9 @@ import mido
 import random
 import time
 import threading
+from music_voicegen import MusicVoiceGen
 
-factor = 1 # duration multiplier
+factor = 1/2 # duration multiplier
 # time between clocks at 24 PPQN per beat and 100 BPM
 interval = 60 / (100 * 24)
 stop_threads = False # should I stay or should I go?
@@ -49,21 +50,34 @@ def play_chord(quality, note, velocity=127, duration=1):
     outport.send(msg)
 
 def note_stream_thread():
-    global stop_threads
+    global voice, stop_threads
     note_qualities = { # wholetones
-        60: 0,
-        62: 4,
-        64: 10,
-        66: 15,
-        68: 20,
-        70: 25,
+        12: 0,
+        14: 4,
+        16: 10,
+        18: 15,
+        20: 20,
+        22: 25,
     }
     while not stop_threads:
-        note = random.choice(list(note_qualities.keys()))
-        quality = note_qualities[note]
-        play_chord(quality, note, duration=4)
+        pitch = voice.rand()
+        quality = note_qualities[pitch]
+        play_chord(quality, pitch, duration=4)
 
 if __name__ == "__main__":
+    pitches = [
+        12, # C0
+        14, # D
+        16, # E
+        18, # Gb
+        20, # Ab
+        22, # Bb
+    ]
+    voice = MusicVoiceGen(
+        pitches=pitches,
+        intervals=[-4,-2,2,4],
+    )
+
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
     with mido.open_output(port_name) as outport:
         print(outport)
