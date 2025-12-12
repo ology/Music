@@ -7,12 +7,16 @@ import time
 import threading
 from music_voicegen import MusicVoiceGen
 
+def velo(x=0, y=127):
+    return random.randint(x, y)
+
 def play_chord(pitch, velocity=127, duration=1):
     global outport
-    msg = mido.Message('note_on', note=pitch, channel=0, velocity=velocity)
+    nv = velo()
+    msg = mido.Message('note_on', note=pitch, channel=0, velocity=nv)
     outport.send(msg)
     time.sleep(duration)
-    msg = mido.Message('note_off', note=pitch, channel=0, velocity=velocity)
+    msg = mido.Message('note_off', note=pitch, channel=0, velocity=nv)
     outport.send(msg)
 
 def note_stream_thread():
