@@ -33,11 +33,6 @@ import time
 import threading
 from music_voicegen import MusicVoiceGen
 
-factor = 1/2 # duration multiplier
-# time between clocks at 24 PPQN per beat and 100 BPM
-interval = 60 / (100 * 24)
-stop_threads = False # should I stay or should I go?
-
 def play_chord(quality, note, velocity=127, duration=1):
     msg = mido.Message('note_on', note=note, channel=0, velocity=velocity)
     outport.send(msg)
@@ -65,6 +60,11 @@ def note_stream_thread():
         play_chord(quality, pitch, duration=4)
 
 if __name__ == "__main__":
+    factor = 2 # duration multiplier
+    # time between clocks at 24 PPQN per beat and 100 BPM
+    interval = 60 / (100 * 24)
+    stop_threads = False
+
     pitches = [
         12, # C0
         14, # D
