@@ -7,6 +7,9 @@ import time
 import threading
 from music_voicegen import MusicVoiceGen
 
+def duration(x=1, y=4):
+    return random.randint(x, y)
+
 def velo(x=0, y=127):
     return random.randint(x, y)
 
@@ -24,9 +27,6 @@ def note_stream_thread():
     while not stop_threads:
         pitch = voice.rand()
         play_chord(pitch, duration=duration(x, y))
-
-def duration(x=1, y=4):
-    return random.randint(x, y)
 
 if __name__ == "__main__":
     pitches = [
