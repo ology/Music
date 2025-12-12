@@ -42,6 +42,10 @@ if __name__ == "__main__":
         pitches=pitches,
         intervals=[-3,-2,-1,1,2,3],
     )
+    velocity = MusicVoiceGen(
+        pitches=[ i for i in range(0,128) ],
+        intervals=[ i for i in range(-10,11) if i != 0 ],
+    )
 
     # time between clocks at 24 PPQN per beat and 100 BPM
     interval = 60 / (100 * 24)
