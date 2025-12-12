@@ -47,6 +47,7 @@ if __name__ == "__main__":
         pitches=[ i for i in range(0,128) ],
         intervals=[ i for i in range(-10,11) if i != 0 ],
     )
+    velocity.context(context=[64])
 
     # time between clocks at 24 PPQN per beat and 100 BPM
     interval = 60 / (100 * 24)
