@@ -10,8 +10,9 @@ from music_voicegen import MusicVoiceGen
 def duration(x=1, y=4):
     return random.randint(x, y)
 
-def velo(x=0, y=127):
-    return random.randint(x, y)
+def velo():
+    global velocity
+    return velocity.rand()
 
 def play_chord(pitch, velocity=127, duration=1):
     global outport
