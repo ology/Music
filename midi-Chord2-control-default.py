@@ -45,7 +45,7 @@ if __name__ == "__main__":
     )
     velocity = MusicVoiceGen(
         pitches=[ i for i in range(0,128) ],
-        intervals=[ i for i in range(-20,21) if i != 0 and (i % 5 == 0) ],
+        intervals=[ i for i in range(-20,21) if i != 0 and (i % 4 == 0) ],
     )
     velocity.context(context=[64]) # start in the middle of the range
 
