@@ -70,8 +70,6 @@ if __name__ == "__main__":
     synth2_port_name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
     factor           = sys.argv[3] if len(sys.argv) > 3 else 1
 
-    velocity = 100
-
     scale_map = {
         'A': 'm',
         'C': '',
@@ -116,6 +114,7 @@ if __name__ == "__main__":
     bpm = 100 # for the clock
     interval = 60 / (bpm * CLOCKS_PER_BEAT) # time between clock messages at 24 PPQN per beat
     stop_threads = False
+    velocity = 100
 
     chance = lambda: random.random() < 0.5
     velo = lambda: velocity + random.randint(-10, 10)
