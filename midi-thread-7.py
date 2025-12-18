@@ -90,8 +90,6 @@ if __name__ == "__main__":
         'G': '',
     }
     g.chord_map, g.net, g.weights = g.map_net_weights(scale_map=scale_map)
-    # print(g.chord_map, g.net, g.weights)
-    # print(g.graph)
 
     device = Device(verbose=False)
 
