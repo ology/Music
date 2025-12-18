@@ -18,7 +18,7 @@ def midi_clock_thread():
         synth2_outport.send(mido.Message('clock'))
         clock_tick_count += 1
         # signal stream threads every beat
-        if clock_tick_count % CLOCKS_PER_BEAT == 0:
+        if clock_tick_count % clocks_per_beat == 0:
             clock_tick_event.set()
         time.sleep(interval)
 
