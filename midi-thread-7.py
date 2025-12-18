@@ -22,7 +22,7 @@ def midi_clock_thread():
             clock_tick_event.set()
         time.sleep(interval)
 
-def midi_message(outport, channel, note, dura):
+def midi_message(outport, note, channel, dura):
     v = velo()
     msg = mido.Message('note_on', note=note, velocity=v, channel=channel)
     outport.send(msg)
@@ -50,7 +50,7 @@ def synth1_stream_thread(program=None, bank=6, prog=8):
                     p -= 12
                     if chance():
                         p -= 12
-                midi_message(synth1_outport, 0, p, d * factor)
+                midi_message(synth1_outport, p, 0, d * factor)
 
 def synth2_stream_thread(program=44, bank=None, prog=None):
     global bass, factor, synth2_outport, stop_threads, clock_tick_event
@@ -65,7 +65,7 @@ def synth2_stream_thread(program=44, bank=None, prog=None):
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
         for n in bassline:
-            midi_message(synth2_outport, 1, n, factor)
+            midi_message(synth2_outport, n, 1, factor)
 
 if __name__ == "__main__":
     synth1_port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
