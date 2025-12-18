@@ -33,12 +33,12 @@ def midi_message(outport, channel, note, dura):
 
 def synth1_stream_thread(bank=6, prog=8):
     global g, device, factor, synth1_outport, velocity, stop_threads, clock_tick_event
+    patch = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
+    msg = mido.Message('program_change', channel=0, program=patch)
+    synth1_outport.send(msg)
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        patch = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
-        msg = mido.Message('program_change', channel=0, program=patch)
-        synth1_outport.send(msg)
         phrase = g.generate()
         transpose = chance()
         motif = r.motif()
@@ -54,11 +54,11 @@ def synth1_stream_thread(bank=6, prog=8):
 
 def synth2_stream_thread():
     global bass, factor, synth2_outport, stop_threads, clock_tick_event
+    msg = mido.Message('program_change', channel=1, program=44)
+    synth2_outport.send(msg)
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        msg = mido.Message('program_change', channel=1, program=44)
-        synth2_outport.send(msg)
         note = random.choice(list(scale_map.keys()))
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
