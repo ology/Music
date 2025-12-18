@@ -1,5 +1,4 @@
 # ex: python midi-thread-7.py 'USB MIDI Interface' 'SE-02'
-# where bank-program on the USB is in octal, and decimal on the SE-02.
 
 import sys
 import random
