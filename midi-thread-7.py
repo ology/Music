@@ -73,6 +73,15 @@ if __name__ == "__main__":
     synth2_port_name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
     factor           = sys.argv[3] if len(sys.argv) > 3 else 2
 
+    g = Generator(
+        scale_note='A',
+        scale_name='aeolian',
+        max=4,
+        tonic=False,
+        resolve=False,
+        # scale=list(scale_map.keys()),
+        verbose=True,
+    )
     scale_map = {
         'A': 'm',
         'C': '',
@@ -80,21 +89,9 @@ if __name__ == "__main__":
         'E': 'm',
         'G': '',
     }
-    size = len(scale_map) + 1
-    transitions = [ i for i in range(1, size) ]
-    weights = [ 1 for _ in range(1, size) ]
-    g = Generator(
-        scale_note='A',
-        scale_name='aeolian',
-        max=4 * 1, # beats x measures
-        tonic=False,
-        resolve=False,
-        scale=list(scale_map.keys()),
-        chord_map=list(scale_map.values()),
-        net={ i: transitions for i in range(1, size) },
-        weights={ i: weights for i in range(1, size) },
-        verbose=False,
-    )
+    g.chord_map, g.net, g.weights = g.map_net_weights(scale_map=scale_map)
+    # print(g.chord_map, g.net, g.weights)
+    # print(g.graph)
 
     device = Device(verbose=False)
 
