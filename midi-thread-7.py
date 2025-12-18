@@ -31,7 +31,7 @@ def midi_message(outport, channel, note, dura):
     msg = mido.Message('note_off', note=note, velocity=v, channel=channel)
     outport.send(msg)
 
-def synth1_stream_thread(bank=6, prog=1):
+def synth1_stream_thread(bank=6, prog=8):
     global g, device, factor, synth1_outport, velocity, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
@@ -57,7 +57,7 @@ def synth2_stream_thread():
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        msg = mido.Message('program_change', channel=1, program=43)
+        msg = mido.Message('program_change', channel=1, program=44)
         synth2_outport.send(msg)
         note = random.choice(list(scale_map.keys()))
         chord = note + scale_map[note]
