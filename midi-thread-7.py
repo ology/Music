@@ -22,7 +22,7 @@ def midi_clock_thread():
             clock_tick_event.set()
         time.sleep(interval)
 
-def midi_message(outport, note, channel, dura):
+def midi_message(outport, note, channel=0, dura=1):
     v = velo()
     msg = mido.Message('note_on', note=note, velocity=v, channel=channel)
     outport.send(msg)
