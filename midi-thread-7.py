@@ -112,9 +112,9 @@ if __name__ == "__main__":
     # signal the synth1_stream thread on each clock tick
     clock_tick_event = threading.Event()
     clock_tick_count = 0
-    CLOCKS_PER_BEAT = 24
     bpm = 100 # for the clock
-    interval = 60 / (bpm * CLOCKS_PER_BEAT) # time between clock messages at 24 PPQN per beat
+    clocks_per_beat = 24
+    interval = 60 / (bpm * clocks_per_beat) # time between clock messages at 24 PPQN per beat
     stop_threads = False
     velocity = 100
 
