@@ -31,10 +31,11 @@ def midi_message(outport, channel, note, dura):
     msg = mido.Message('note_off', note=note, velocity=v, channel=channel)
     outport.send(msg)
 
-def synth1_stream_thread(bank=6, prog=8):
+def synth1_stream_thread(program=None, bank=6, prog=8):
     global g, device, factor, synth1_outport, velocity, stop_threads, clock_tick_event
-    patch = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
-    msg = mido.Message('program_change', channel=0, program=patch)
+    if program is None:
+        program = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
+    msg = mido.Message('program_change', channel=0, program=program)
     synth1_outport.send(msg)
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
@@ -52,9 +53,11 @@ def synth1_stream_thread(bank=6, prog=8):
                         p -= 12
                 midi_message(synth1_outport, 0, p, d * factor)
 
-def synth2_stream_thread():
+def synth2_stream_thread(program=44, bank=None, prog=None):
     global bass, factor, synth2_outport, stop_threads, clock_tick_event
-    msg = mido.Message('program_change', channel=1, program=44)
+    if program is None:
+        program = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
+    msg = mido.Message('program_change', channel=1, program=program)
     synth2_outport.send(msg)
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
