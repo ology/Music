@@ -15,7 +15,6 @@ def midi_clock_thread():
     global synth1_outport, synth2_outport, interval, stop_threads, clock_tick_event, clock_tick_count
     while not stop_threads:
         synth1_outport.send(mido.Message('clock'))
-        synth2_outport.send(mido.Message('clock'))
         clock_tick_count += 1
         # signal stream threads every beat
         if clock_tick_count % CLOCKS_PER_BEAT == 0:
