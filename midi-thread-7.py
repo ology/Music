@@ -71,7 +71,7 @@ def synth2_stream_thread(program=44, bank=None, prog=None):
 if __name__ == "__main__":
     synth1_port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     synth2_port_name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
-    factor           = sys.argv[3] if len(sys.argv) > 3 else 1
+    factor           = sys.argv[3] if len(sys.argv) > 3 else 2
 
     scale_map = {
         'A': 'm',
