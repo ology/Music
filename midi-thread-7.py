@@ -1,4 +1,5 @@
 # ex: python midi-thread-7.py 'USB MIDI Interface' 'SE-02'
+# where bank-program on the USB is in octal, and decimal on the SE-02.
 
 import sys
 import random
@@ -15,6 +16,7 @@ def midi_clock_thread():
     global synth1_outport, synth2_outport, interval, stop_threads, clock_tick_event, clock_tick_count
     while not stop_threads:
         synth1_outport.send(mido.Message('clock'))
+        synth2_outport.send(mido.Message('clock'))
         clock_tick_count += 1
         # signal stream threads every beat
         if clock_tick_count % CLOCKS_PER_BEAT == 0:
@@ -29,12 +31,13 @@ def midi_message(outport, channel, note, dura):
     msg = mido.Message('note_off', note=note, velocity=v, channel=channel)
     outport.send(msg)
 
-def synth1_stream_thread():
+def synth1_stream_thread(bank=6, prog=1):
     global g, device, factor, synth1_outport, velocity, stop_threads, clock_tick_event
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        msg = mido.Message('program_change', channel=0, program=91)
+        patch = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
+        msg = mido.Message('program_change', channel=0, program=patch)
         synth1_outport.send(msg)
         phrase = g.generate()
         transpose = chance()
@@ -60,13 +63,12 @@ def synth2_stream_thread():
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
         for n in bassline:
-            midi_message(synth2_outport, 0, n, factor)
+            midi_message(synth2_outport, 1, n, factor)
 
 if __name__ == "__main__":
     synth1_port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     synth2_port_name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
-    # kludge: duration multiplier to slow down the pace of the notes
-    factor = int(sys.argv[3]) if len(sys.argv) > 3 else 1
+    factor           = sys.argv[3] if len(sys.argv) > 3 else 1
 
     velocity = 100
 
