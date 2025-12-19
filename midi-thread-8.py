@@ -1,5 +1,5 @@
-# Constrol two synths on MIDI channels 1 & 2, respectively.
-# ex: python midi-thread-8.py 'USB MIDI Interface' 'SE-02'
+# Control two synths on MIDI channels 1 & 2, respectively.
+# ex: python midi-thread-8.py 'USB MIDI Interface' 'SE-02' 16 ''
 
 import sys
 import random
@@ -43,7 +43,7 @@ def synth_stream_thread(program=45, bank=6, prog=8):
     patch = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
     msg = mido.Message('program_change', channel=0, program=patch)
     synth1_outport.send(msg)
-    msg = mido.Message('program_change', channel=1, program=program - 1)
+    msg = mido.Message('program_change', channel=1, program=program-1)
     synth2_outport.send(msg)
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
