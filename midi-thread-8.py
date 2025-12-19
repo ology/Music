@@ -65,7 +65,7 @@ def synth_stream_thread(program=45, bank=6, prog=8):
                 # print(c, pitch.Pitch(bassline[0]).name)
                 c = pychord.Chord(c)
                 c = c.components_with_pitch(root_pitch=g.octave)
-                bassline = [c[0]]
+                bassline = [c[0]] # random.choice(c)
                 midi_on_messages(synth1_outport, c, 0)
                 midi_on_messages(synth2_outport, bassline, 1)
                 time.sleep(d * factor)
