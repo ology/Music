@@ -1,5 +1,5 @@
 # Constrol two synths on MIDI channels 1 & 2, respectively.
-# ex: python midi-thread-7.py 'USB MIDI Interface' 'SE-02'
+# ex: python midi-thread-8.py 'USB MIDI Interface' 'SE-02'
 
 import sys
 import random
@@ -24,48 +24,27 @@ def midi_clock_thread():
             clock_tick_event.set()
         time.sleep(interval)
 
-def midi_message(outport, note, channel=0, dura=1):
-    v = velo()
-    msg = mido.Message('note_on', note=note, velocity=v, channel=channel)
-    outport.send(msg)
-    time.sleep(dura)
-    msg = mido.Message('note_off', note=note, velocity=v, channel=channel)
-    outport.send(msg)
-
-def midi_messages(outport, notes, channel=0, dura=1):
-    v = velo()
+def midi_on_messages(outport, notes, channel=0, velocity=127):
     for note in notes:
+        if not velocity:
+            velocity = velo()
         p = pitch.Pitch(note).midi
-        msg = mido.Message('note_on', note=p, velocity=v, channel=channel)
-        outport.send(msg)
-    time.sleep(dura)
-    for note in notes:
-        p = pitch.Pitch(note).midi
-        msg = mido.Message('note_off', note=p, velocity=v, channel=channel)
+        msg = mido.Message('note_on', note=p, velocity=velocity, channel=channel)
         outport.send(msg)
 
-def synth2_stream_thread(program=44, bank=None, prog=None):
-    global g, bass, factor, synth2_outport, stop_threads, clock_tick_event
-    if program is None:
-        program = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
-    msg = mido.Message('program_change', channel=1, program=program)
-    synth2_outport.send(msg)
-    while not stop_threads:
-        clock_tick_event.wait() # wait for the next beat (PLL sync)
-        clock_tick_event.clear()
-        note = random.choice(g.scale)
-        p = pitch.Pitch(note).name
-        chord = p + scale_map[p]
-        bassline = bass.generate(chord, 4)
-        for n in bassline:
-            midi_message(synth2_outport, n, 1, factor)
+def midi_off_messages(outport, notes, channel=0, velocity=0):
+    for note in notes:
+        p = pitch.Pitch(note).midi
+        msg = mido.Message('note_off', note=p, velocity=velocity, channel=channel)
+        outport.send(msg)
 
-def synth1_stream_thread(program=None, bank=6, prog=8):
-    global default_quality, default_scale, default_scale_map, g, device, factor, synth1_outport, velocity, stop_threads, clock_tick_event
-    if program is None:
-        program = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
-    msg = mido.Message('program_change', channel=0, program=program)
+def synth_stream_thread(program=45, bank=6, prog=7):
+    global default_quality, g, bass, device, factor, synth1_outport, synth2_outport, velocity, stop_threads, clock_tick_event
+    patch = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
+    msg = mido.Message('program_change', channel=0, program=patch)
     synth1_outport.send(msg)
+    msg = mido.Message('program_change', channel=1, program=program - 1)
+    synth2_outport.send(msg)
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
@@ -82,9 +61,14 @@ def synth1_stream_thread(program=None, bank=6, prog=8):
                 except ValueError:
                     pass
                 c = p + quality
+                bassline = bass.generate(c, 1)
                 c = pychord.Chord(c)
-                c = c.components_with_pitch(root_pitch=4)
-                midi_messages(synth1_outport, c, 0, d * factor)
+                c = c.components_with_pitch(root_pitch=g.octave)
+                midi_on_messages(synth1_outport, c, 0)
+                midi_on_messages(synth2_outport, bassline, 1)
+                time.sleep(d * factor)
+                midi_off_messages(synth1_outport, c, 0)
+                midi_off_messages(synth2_outport, bassline, 1)
 
 if __name__ == "__main__":
     synth1_port_name = sys.argv[1]      if len(sys.argv) > 1 else 'USB MIDI Interface'
@@ -151,11 +135,9 @@ if __name__ == "__main__":
     with mido.open_output(synth1_port_name) as synth1_outport, mido.open_output(synth2_port_name) as synth2_outport:
         print(synth1_outport, synth2_outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
-        synth1_thread = threading.Thread(target=synth1_stream_thread, daemon=True)
-        synth2_thread = threading.Thread(target=synth2_stream_thread, daemon=True)
+        synth_thread = threading.Thread(target=synth_stream_thread, daemon=True)
         clock_thread.start()
-        synth1_thread.start()
-        synth2_thread.start()
+        synth_thread.start()
         try:
             while True:
                 time.sleep(interval) # keep main thread alive and respond to interrupts
@@ -163,11 +145,9 @@ if __name__ == "__main__":
             print("\nSignaling threads to stop...")
             stop_threads = True
             clock_thread.join()
-            synth1_thread.join()
-            synth2_thread.join()
+            synth_thread.join()
             print("All threads stopped.")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
         finally:
             synth1_outport.close()
-            synth2_outport.close()
