@@ -24,6 +24,22 @@ def midi_clock_thread():
             clock_tick_event.set()
         time.sleep(interval)
 
+def midi_message(outport, note, dura=1, channel=0, velocity=127):
+    if not velocity:
+        velocity = velo()
+    p = pitch.Pitch(note).midi
+    msg = mido.Message('note_on', note=p, velocity=velocity, channel=channel)
+    outport.send(msg)
+    time.sleep(dura)
+    msg = mido.Message('note_off', note=p, velocity=0, channel=channel)
+    outport.send(msg)
+
+def midi_off_messages(outport, notes, channel=0, velocity=0):
+    for note in notes:
+        p = pitch.Pitch(note).midi
+        msg = mido.Message('note_off', note=p, velocity=velocity, channel=channel)
+        outport.send(msg)
+
 def midi_on_messages(outport, notes, channel=0, velocity=127):
     for note in notes:
         if not velocity:
@@ -61,16 +77,29 @@ def synth_stream_thread(program=45, bank=6, prog=8):
                 except ValueError:
                     pass
                 c = p + quality
-                # bassline = bass.generate(c, 1)
-                # print(c, pitch.Pitch(bassline[0]).name)
+                x = random.randint(1, 3)
+                bassline = bass.generate(c, x)
                 c = pychord.Chord(c)
                 c = c.components_with_pitch(root_pitch=g.octave)
-                bassline = [c[0]] # random.choice(c)
+                # bassline = [c[0]] # random.choice(c)
                 midi_on_messages(synth1_outport, c, 0)
-                midi_on_messages(synth2_outport, bassline, 1)
+                if x == 1:
+                    midi_on_messages(synth2_outport, bassline, 1)
+                elif x == 2:
+                    midi_message(synth2_outport, bassline[1], d * factor / 2, 1)
+                    midi_on_messages(synth2_outport, [bassline[0]], 1)
+                elif x == 3:
+                    midi_message(synth2_outport, bassline[1], d * factor / 3, 1)
+                    midi_message(synth2_outport, bassline[2], d * factor / 3, 1)
+                    midi_on_messages(synth2_outport, [bassline[0]], 1)
                 time.sleep(d * factor)
                 midi_off_messages(synth1_outport, c, 0)
-                midi_off_messages(synth2_outport, bassline, 1)
+                if x == 1:
+                    midi_off_messages(synth2_outport, bassline, 1)
+                elif x == 2:
+                    midi_off_messages(synth2_outport, [bassline[0]], 1)
+                elif x == 3:
+                    midi_off_messages(synth2_outport, [bassline[0]], 1)
 
 if __name__ == "__main__":
     synth1_port_name = sys.argv[1]      if len(sys.argv) > 1 else 'USB MIDI Interface'
