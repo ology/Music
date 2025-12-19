@@ -61,9 +61,11 @@ def synth_stream_thread(program=45, bank=6, prog=8):
                 except ValueError:
                     pass
                 c = p + quality
-                bassline = bass.generate(c, 1)
+                # bassline = bass.generate(c, 1)
+                # print(c, pitch.Pitch(bassline[0]).name)
                 c = pychord.Chord(c)
                 c = c.components_with_pitch(root_pitch=g.octave)
+                bassline = [c[0]]
                 midi_on_messages(synth1_outport, c, 0)
                 midi_on_messages(synth2_outport, bassline, 1)
                 time.sleep(d * factor)
@@ -116,8 +118,8 @@ if __name__ == "__main__":
 
     bass = Bassline(
         modal=True,
-        tonic=False,
-        resolve=False,
+        # tonic=False,
+        # resolve=False,
     )
 
     # signal the synth1_stream thread on each clock tick
