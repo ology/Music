@@ -96,9 +96,7 @@ def synth_stream_thread(program=45, bank=6, prog=8):
                 midi_off_messages(synth1_outport, c, 0)
                 if x == 1:
                     midi_off_messages(synth2_outport, bassline, 1)
-                elif x == 2:
-                    midi_off_messages(synth2_outport, [bassline[0]], 1)
-                elif x == 3:
+                else:
                     midi_off_messages(synth2_outport, [bassline[0]], 1)
 
 if __name__ == "__main__":
