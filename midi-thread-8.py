@@ -70,13 +70,10 @@ def synth_stream_thread(program=45, bank=6, prog=8):
             arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
             for i,d in enumerate(motif):
                 p = pitch.Pitch(arped[i % len(arped)][1]).name
-                quality = default_quality
-                try:
-                    i = g.scale.index(p)
+                i = g.scale.index(p) if p in g.scale else None
+                if i:
                     quality = g.chord_map[i]
-                except ValueError:
-                    pass
-                if quality == 'dim':
+                if not i or quality == 'dim':
                     quality = default_quality
                 c = p + quality
                 x = random.randint(1, 3)
