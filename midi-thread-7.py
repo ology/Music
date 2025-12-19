@@ -108,10 +108,10 @@ def synth3_stream_thread(program=None, bank=6, prog=8):
                 midi_messages(synth1_outport, c, 0, d * factor)
 
 if __name__ == "__main__":
-    synth1_port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
-    synth2_port_name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
-    factor           = sys.argv[3] if len(sys.argv) > 3 else 32
-    default_quality  = sys.argv[4] if len(sys.argv) > 4 else 'm' # minor
+    synth1_port_name = sys.argv[1]      if len(sys.argv) > 1 else 'USB MIDI Interface'
+    synth2_port_name = sys.argv[2]      if len(sys.argv) > 2 else 'SE-02'
+    factor           = int(sys.argv[3]) if len(sys.argv) > 3 else 32
+    default_quality  = sys.argv[4]      if len(sys.argv) > 4 else 'm' # minor
 
     g = Generator(
         scale_note='A',
@@ -124,13 +124,22 @@ if __name__ == "__main__":
     )
     default_scale = g.scale
     default_scale_map = dict(zip(g.scale, g.chord_map))
-    scale_map = {
-        'A': 'm',
-        'C': '',
-        'D': 'm',
-        'E': 'm',
-        'G': '',
-    }
+    if default_quality == 'm':
+        scale_map = {
+            'A': 'm',
+            'C': '',
+            'D': 'm',
+            'E': 'm',
+            'G': '',
+        }
+    else:
+        scale_map = {
+            'C': '',
+            'E': 'm',
+            'F': '',
+            'G': '',
+            'A': 'm',
+        }
     g.map_net_weights(scale_map=scale_map)
 
     device = Device(verbose=False)
