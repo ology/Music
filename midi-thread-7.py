@@ -45,28 +45,6 @@ def midi_messages(outport, notes, channel=0, dura=1):
         msg = mido.Message('note_off', note=p, velocity=v, channel=channel)
         outport.send(msg)
 
-def synth1_stream_thread(program=None, bank=6, prog=8):
-    global g, device, factor, synth1_outport, velocity, stop_threads, clock_tick_event
-    if program is None:
-        program = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
-    msg = mido.Message('program_change', channel=0, program=program)
-    synth1_outport.send(msg)
-    while not stop_threads:
-        clock_tick_event.wait() # wait for the next beat (PLL sync)
-        clock_tick_event.clear()
-        phrase = g.generate()
-        transpose = chance()
-        motif = r.motif()
-        for ph in phrase:
-            arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
-            for i,d in enumerate(motif):
-                p = pitch.Pitch(arped[i % len(arped)][1]).midi
-                if transpose:
-                    p -= 12
-                    if chance():
-                        p -= 12
-                midi_message(synth1_outport, p, 0, d * factor)
-
 def synth2_stream_thread(program=44, bank=None, prog=None):
     global g, bass, factor, synth2_outport, stop_threads, clock_tick_event
     if program is None:
@@ -87,7 +65,7 @@ def synth2_stream_thread(program=44, bank=None, prog=None):
         for n in bassline:
             midi_message(synth2_outport, n, 1, factor)
 
-def synth3_stream_thread(program=None, bank=6, prog=8):
+def synth1_stream_thread(program=None, bank=6, prog=8):
     global default_quality, default_scale, default_scale_map, g, device, factor, synth1_outport, velocity, stop_threads, clock_tick_event
     if program is None:
         program = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
@@ -178,7 +156,7 @@ if __name__ == "__main__":
     with mido.open_output(synth1_port_name) as synth1_outport, mido.open_output(synth2_port_name) as synth2_outport:
         print(synth1_outport, synth2_outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
-        synth1_thread = threading.Thread(target=synth3_stream_thread, daemon=True)
+        synth1_thread = threading.Thread(target=synth1_stream_thread, daemon=True)
         synth2_thread = threading.Thread(target=synth2_stream_thread, daemon=True)
         clock_thread.start()
         synth1_thread.start()
