@@ -75,7 +75,7 @@ def synth2_stream_thread(program=44, bank=None, prog=None):
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        note = random.choice(list(scale_map.keys()))
+        note = random.choice(['A','E'])
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
         for n in bassline:
