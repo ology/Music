@@ -76,6 +76,8 @@ def synth_stream_thread(program=45, bank=6, prog=8):
                     quality = g.chord_map[i]
                 except ValueError:
                     pass
+                if quality == 'dim':
+                    quality = default_quality
                 c = p + quality
                 x = random.randint(1, 3)
                 bassline = bass.generate(c, x)
