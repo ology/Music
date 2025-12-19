@@ -38,7 +38,7 @@ def midi_off_messages(outport, notes, channel=0, velocity=0):
         msg = mido.Message('note_off', note=p, velocity=velocity, channel=channel)
         outport.send(msg)
 
-def synth_stream_thread(program=45, bank=6, prog=7):
+def synth_stream_thread(program=45, bank=6, prog=8):
     global default_quality, g, bass, device, factor, synth1_outport, synth2_outport, velocity, stop_threads, clock_tick_event
     patch = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
     msg = mido.Message('program_change', channel=0, program=patch)
