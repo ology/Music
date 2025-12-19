@@ -127,10 +127,10 @@ if __name__ == "__main__":
     clocks_per_beat = 24
     interval = 60 / (bpm * clocks_per_beat) # time between clock messages at 24 PPQN per beat
     stop_threads = False
-    velocity = 100
 
-    chance = lambda: random.random() < 0.5
+    velocity = 100
     velo = lambda: velocity + random.randint(-10, 10)
+    chance = lambda: random.random() < 0.5
 
     with mido.open_output(synth1_port_name) as synth1_outport, mido.open_output(synth2_port_name) as synth2_outport:
         print(synth1_outport, synth2_outport)
