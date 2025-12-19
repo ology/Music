@@ -6,12 +6,13 @@ import random
 import time
 import threading
 import mido
+import pychord
 from music21 import pitch
 from chord_progression_network import Generator
 from music_melodicdevice import Device
 from random_rhythms import Rhythm
 from music_bassline_generator import Bassline
-import pychord
+from music_voicegen import MusicVoiceGen
 
 def midi_clock_thread():
     global synth1_outport, synth2_outport, interval, stop_threads, clock_tick_event, clock_tick_count
@@ -67,16 +68,21 @@ def synth1_stream_thread(program=None, bank=6, prog=8):
                 midi_message(synth1_outport, p, 0, d * factor)
 
 def synth2_stream_thread(program=44, bank=None, prog=None):
-    global bass, factor, synth2_outport, stop_threads, clock_tick_event
+    global g, bass, factor, synth2_outport, stop_threads, clock_tick_event
     if program is None:
         program = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
     msg = mido.Message('program_change', channel=1, program=program)
     synth2_outport.send(msg)
+    voice = MusicVoiceGen(
+        pitches=[ pitch.Pitch(n + str(g.octave)).midi for n in g.scale ],
+        intervals=[-3,-2,-1,1,2,3]
+    )
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        note = random.choice(list(scale_map.keys()))
-        chord = note + scale_map[note]
+        note = voice.rand()
+        p = pitch.Pitch(note).name
+        chord = p + scale_map[p]
         bassline = bass.generate(chord, 4)
         for n in bassline:
             midi_message(synth2_outport, n, 1, factor)
@@ -114,6 +120,7 @@ if __name__ == "__main__":
     default_quality  = sys.argv[4]      if len(sys.argv) > 4 else 'm' # minor
 
     g = Generator(
+        octave=4,
         scale_note='A',
         scale_name='aeolian',
         max=4,
