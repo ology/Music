@@ -62,7 +62,6 @@ def synth_stream_thread(program=45, bank=6, prog=8):
                     pass
                 c = p + quality
                 bassline = bass.generate(c, 1)
-                print(pitch.Pitch(bassline).name)
                 c = pychord.Chord(c)
                 c = c.components_with_pitch(root_pitch=g.octave)
                 midi_on_messages(synth1_outport, c, 0)
@@ -116,7 +115,6 @@ if __name__ == "__main__":
     )
 
     bass = Bassline(
-        keycenter='A',
         modal=True,
         tonic=False,
         resolve=False,
