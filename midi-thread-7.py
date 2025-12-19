@@ -1,4 +1,4 @@
-# Constrol two synths on the first and second MIDI channels, respectively.
+# Constrol two synths on MIDI channels 1 & 2, respectively.
 # ex: python midi-thread-7.py 'USB MIDI Interface' 'SE-02'
 
 import sys
@@ -11,6 +11,7 @@ from chord_progression_network import Generator
 from music_melodicdevice import Device
 from random_rhythms import Rhythm
 from music_bassline_generator import Bassline
+import pychord
 
 def midi_clock_thread():
     global synth1_outport, synth2_outport, interval, stop_threads, clock_tick_event, clock_tick_count
@@ -30,6 +31,18 @@ def midi_message(outport, note, channel=0, dura=1):
     time.sleep(dura)
     msg = mido.Message('note_off', note=note, velocity=v, channel=channel)
     outport.send(msg)
+
+def midi_messages(outport, notes, channel=0, dura=1):
+    v = velo()
+    for note in notes:
+        p = pitch.Pitch(note).midi
+        msg = mido.Message('note_on', note=p, velocity=v, channel=channel)
+        outport.send(msg)
+    time.sleep(dura)
+    for note in notes:
+        p = pitch.Pitch(note).midi
+        msg = mido.Message('note_off', note=p, velocity=v, channel=channel)
+        outport.send(msg)
 
 def synth1_stream_thread(program=None, bank=6, prog=8):
     global g, device, factor, synth1_outport, velocity, stop_threads, clock_tick_event
@@ -68,10 +81,37 @@ def synth2_stream_thread(program=44, bank=None, prog=None):
         for n in bassline:
             midi_message(synth2_outport, n, 1, factor)
 
+def synth3_stream_thread(program=None, bank=6, prog=8):
+    global default_quality, default_scale, default_scale_map, g, device, factor, synth1_outport, velocity, stop_threads, clock_tick_event
+    if program is None:
+        program = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
+    msg = mido.Message('program_change', channel=0, program=program)
+    synth1_outport.send(msg)
+    while not stop_threads:
+        clock_tick_event.wait() # wait for the next beat (PLL sync)
+        clock_tick_event.clear()
+        phrase = g.generate()
+        motif = r.motif()
+        for ph in phrase:
+            arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
+            for i,d in enumerate(motif):
+                p = pitch.Pitch(arped[i % len(arped)][1]).name
+                quality = default_quality
+                try:
+                    i = g.scale.index(p)
+                    quality = g.chord_map[i]
+                except ValueError:
+                    pass
+                c = p + quality
+                c = pychord.Chord(c)
+                c = c.components_with_pitch(root_pitch=4)
+                midi_messages(synth1_outport, c, 0, d * factor)
+
 if __name__ == "__main__":
     synth1_port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     synth2_port_name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
-    factor           = sys.argv[3] if len(sys.argv) > 3 else 2
+    factor           = sys.argv[3] if len(sys.argv) > 3 else 32
+    default_quality  = sys.argv[4] if len(sys.argv) > 4 else 'm' # minor
 
     g = Generator(
         scale_note='A',
@@ -82,6 +122,8 @@ if __name__ == "__main__":
         # scale=list(scale_map.keys()),
         verbose=True,
     )
+    default_scale = g.scale
+    default_scale_map = dict(zip(g.scale, g.chord_map))
     scale_map = {
         'A': 'm',
         'C': '',
@@ -120,7 +162,7 @@ if __name__ == "__main__":
     with mido.open_output(synth1_port_name) as synth1_outport, mido.open_output(synth2_port_name) as synth2_outport:
         print(synth1_outport, synth2_outport)
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
-        synth1_thread = threading.Thread(target=synth1_stream_thread, daemon=True)
+        synth1_thread = threading.Thread(target=synth3_stream_thread, daemon=True)
         synth2_thread = threading.Thread(target=synth2_stream_thread, daemon=True)
         clock_thread.start()
         synth1_thread.start()
