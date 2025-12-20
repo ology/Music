@@ -11,7 +11,6 @@ from music21 import pitch
 from chord_progression_network import Generator
 from music_melodicdevice import Device
 from random_rhythms import Rhythm
-from music_bassline_generator import Bassline
 
 def midi_clock_thread():
     global synth1_outport, synth2_outport, interval, stop_threads, clock_tick_event, clock_tick_count
@@ -23,16 +22,6 @@ def midi_clock_thread():
         if clock_tick_count % clocks_per_beat == 0:
             clock_tick_event.set()
         time.sleep(interval)
-
-def midi_message(outport, note, dura=1, channel=0, velocity=127):
-    if not velocity:
-        velocity = velo()
-    p = pitch.Pitch(note).midi
-    msg = mido.Message('note_on', note=p, velocity=velocity, channel=channel)
-    outport.send(msg)
-    time.sleep(dura)
-    msg = mido.Message('note_off', note=p, velocity=0, channel=channel)
-    outport.send(msg)
 
 def midi_off_messages(outport, notes, channel=0, velocity=0):
     for note in notes:
@@ -55,7 +44,7 @@ def midi_off_messages(outport, notes, channel=0, velocity=0):
         outport.send(msg)
 
 def synth_stream_thread(program=45, bank=6, prog=8):
-    global default_quality, g, bass, device, factor, synth1_outport, synth2_outport, velocity, stop_threads, clock_tick_event
+    global default_quality, g, device, factor, synth1_outport, synth2_outport, velocity, stop_threads, clock_tick_event
     patch = int(str(bank - 1) + str(prog - 1), 8) # 8x8 bank x program
     msg = mido.Message('program_change', channel=0, program=patch)
     synth1_outport.send(msg)
@@ -76,27 +65,17 @@ def synth_stream_thread(program=45, bank=6, prog=8):
                 if not i or quality == 'dim':
                     quality = default_quality
                 c = p + quality
-                x = random.randint(1, 3)
-                bassline = bass.generate(c, x)
+                print(c)
                 c = pychord.Chord(c)
                 c = c.components_with_pitch(root_pitch=g.octave)
-                # bassline = [c[0]] # random.choice(c)
+                # bassline = [ pitch.Pitch(c[0]).midi - 12 ]
+                bassline = [ pitch.Pitch(random.choice(c)).midi - 12 ]
+                print(pitch.Pitch(bassline[0]).name)
                 midi_on_messages(synth1_outport, c, 0)
-                if x == 1:
-                    midi_on_messages(synth2_outport, bassline, 1)
-                elif x == 2:
-                    midi_message(synth2_outport, bassline[1], d * factor / 2, 1)
-                    midi_on_messages(synth2_outport, [bassline[0]], 1)
-                elif x == 3:
-                    midi_message(synth2_outport, bassline[1], d * factor / 3, 1)
-                    midi_message(synth2_outport, bassline[2], d * factor / 3, 1)
-                    midi_on_messages(synth2_outport, [bassline[0]], 1)
+                midi_on_messages(synth2_outport, bassline, 1)
                 time.sleep(d * factor)
                 midi_off_messages(synth1_outport, c, 0)
-                if x == 1:
-                    midi_off_messages(synth2_outport, bassline, 1)
-                else:
-                    midi_off_messages(synth2_outport, [bassline[0]], 1)
+                midi_off_messages(synth2_outport, bassline, 1)
 
 if __name__ == "__main__":
     synth1_port_name = sys.argv[1]      if len(sys.argv) > 1 else 'USB MIDI Interface'
@@ -140,12 +119,6 @@ if __name__ == "__main__":
         measure_size=1,
         durations=[ 1/8, 1/4, 1/2, 1/3 ],
         groups={ 1/3: 3 },
-    )
-
-    bass = Bassline(
-        modal=True,
-        # tonic=False,
-        # resolve=False,
     )
 
     # signal the synth1_stream thread on each clock tick
