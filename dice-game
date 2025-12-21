@@ -5,7 +5,6 @@ use warnings;
 ##
 # Musical dice game, attributed to Mozart
 # Write-up: https://ology.github.io/2022/01/17/if-mozart-were-a-programmer/
-# 16 measures x 11 dice sums (2-12) = 176 2D-grid of 3/8 measures
 # Examples:
 #   $ perl dice-game
 #   $ perl dice-game  8 80 0 0
