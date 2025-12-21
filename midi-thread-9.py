@@ -23,12 +23,6 @@ def midi_clock_thread():
             clock_tick_event.set()
         time.sleep(interval)
 
-def midi_off_messages(outport, notes, channel=0, velocity=0):
-    for note in notes:
-        p = pitch.Pitch(note).midi
-        msg = mido.Message('note_off', note=p, velocity=velocity, channel=channel)
-        outport.send(msg)
-
 def midi_on_messages(outport, notes, channel=0, velocity=127):
     for note in notes:
         if not velocity:
