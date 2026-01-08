@@ -45,13 +45,14 @@ my $d = MIDI::Drummer::Tiny->new(
 # play the parts simultaneously
 $d->sync(
     \&drums,
-    # \&bass,
+    \&bass,
     # \&harmony,
     \&coltrane,
 );
 
 # write the score as a midi file
-$d->write;
+# $d->write;
+$d->play_with_timidity;
 
 sub drums {
     $d->metronome4($d->bars, $d->ride2, $d->quarter, 67);
