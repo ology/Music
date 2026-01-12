@@ -15,6 +15,7 @@ use Music::Scales qw(get_scale_notes);
 use Data::Dataset::ChordProgressions ();
 use Music::Bassline::Generator ();
 use MIDI::Drummer::Tiny ();
+use MIDI::Drummer::Tiny::Grooves ();
 use MIDI::Util qw(set_chan_patch midi_format);
 use Music::Duration::Partition ();
 
@@ -49,7 +50,14 @@ $d->sync(
 $d->write;
 
 sub drums {
-    $d->metronome4($multi * $d->bars, 1);
+    my $beats = MIDI::Drummer::Tiny::Grooves->new(drummer => $d);
+    my $rock = $beats->search(cat => 'house');
+    my @nums = keys %$rock;
+    for (1 .. $multi * $d->bars) {
+      my $beat = $rock->{ $nums[ rand @nums ] };
+      $beat->{beat}->();
+    }
+
 }
 
 sub chords {
