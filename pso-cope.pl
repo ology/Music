@@ -1,7 +1,9 @@
 #!/usr/bin/env perl
 use v5.36;
 
+use Data::Dumper::Compact qw(ddc);
 use MIDI::Util qw(setup_score);
+use Music::Scales qw(get_scale_notes get_scale_nums);
 use Music::Tension::Cope ();
 
 package ChordParticle {
@@ -53,7 +55,7 @@ package Swarm {
 
 my $bpm = shift || 100;
 
-my %scale = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
+my %scale = map { $_ => 1 } get_scale_nums('major'); # Semitones in C Major
 
 my $tension = Music::Tension::Cope->new;
 
@@ -83,9 +85,9 @@ my $musical_fitness = sub ($notes) {
     return $score;
 };
 
-my %note_names = (
-    0=>'C', 1=>'C#', 2=>'D', 3=>'Eb', 4=>'E', 5=>'F', 6=>'F#', 7=>'G', 8=>'Ab', 9=>'A', 10=>'Bb', 11=>'B'
-);
+my $n = 0;
+my %note_names = map { $n++ => $_ } get_scale_notes('C', 'Chromatic');
+say ddc \%note_names;
 
 my $score = setup_score(bpm => $bpm, patch => 5);
 
