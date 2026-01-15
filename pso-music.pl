@@ -1,6 +1,10 @@
 #!/usr/bin/env perl
 use v5.36;
 
+use MIDI::Util qw(setup_score);
+
+my $bpm  = shift || 100;
+
 my %SCALE_C_MAJOR = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
 
 # Tenney Height / Dissonance Metric: Simplest ratios = lower score
@@ -100,9 +104,18 @@ package Swarm {
 my %note_names = (
     0=>'C', 1=>'C#', 2=>'D', 3=>'Eb', 4=>'E', 5=>'F', 6=>'F#', 7=>'G', 8=>'Ab', 9=>'A', 10=>'Bb', 11=>'B'
 );
-my ($chord, $fitness) = Swarm::search($musical_fitness, 50);
-my @vec = map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord;
 
-say "Optimized Chord Found:";
-say join '-', @vec;
-say "Final Dissonance Score: $fitness (Lower is more consonant)";
+my $score = setup_score(bpm => $bpm, patch => 5);
+
+for my $i (1 .. 8) {
+    my ($chord, $fitness) = Swarm::search($musical_fitness, 50);
+    my @vec = map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord;
+
+    say "Optimized Chord Found:";
+    say join '-', @vec;
+    say "Final Dissonance Score: $fitness (Lower is more consonant)";
+
+    $score->n('wn', @vec);
+}
+
+$score->write_score("$0.mid");
