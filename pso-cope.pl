@@ -53,6 +53,7 @@ package Swarm {
     }
 }
 
+# Command-line arguments
 my $bpm        = shift || 100;
 my $limit      = shift || 8;
 my $population = shift || 100;
