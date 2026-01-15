@@ -4,7 +4,6 @@ use v5.36;
 use MIDI::Util qw(setup_score);
 use Music::Tension::Cope ();
 
-# --- The Musical Particle ---
 package ChordParticle {
     use v5.36;
 
@@ -18,13 +17,12 @@ package ChordParticle {
     }
 }
 
-# --- Optimization ---
 package Swarm {
     use v5.36;
     use List::Util qw(min max);
 
     sub search ($objective, $iters=100) {
-        my @swarm = map { ChordParticle->new([48, 72]) } 1 .. 30; # Range: C3 to C5
+        my @swarm = map { ChordParticle->new([48, 72]) } 1 .. 30; # C3 to C5
         my ($gbest_pos, $gbest_score) = ([], 1e18);
 
         for (1 .. $iters) {
