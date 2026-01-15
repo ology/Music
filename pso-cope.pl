@@ -92,12 +92,12 @@ my $score = setup_score(bpm => $bpm, patch => 5);
 
 for my $i (1 .. 8) {
     my ($chord, $fitness) = Swarm::search($musical_fitness);
-    my @vec = map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord;
+    my @notes = map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord;
 
-    say "$i. Optimized Chord: ", join '-', @vec;
+    say "$i. Optimized Chord: ", join '-', @notes;
     say "\tFinal Dissonance Score: $fitness (Lower is more consonant)";
 
-    $score->n('wn', @vec);
+    $score->n('wn', @notes);
 }
 
 $score->write_score("$0.mid");
