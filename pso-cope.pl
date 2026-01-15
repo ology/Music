@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 use v5.36;
 
-use Data::Dumper::Compact qw(ddc);
 use MIDI::Util qw(setup_score);
 use Music::Scales qw(get_scale_notes get_scale_nums);
 use Music::Tension::Cope ();
