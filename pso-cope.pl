@@ -57,6 +57,7 @@ my $bpm        = shift || 100;
 my $limit      = shift || 8;
 my $population = shift || 100;
 my $iterations = shift || 50;
+my $init_score = shift || 10;
 
 my %scale = map { $_ => 1 } get_scale_nums('major'); # Semitones in C Major
 
@@ -69,21 +70,23 @@ my $musical_fitness = sub ($notes) {
 
     for my $i (0 .. $#sorted) {
         # 1. Penalty for notes NOT in C Major scale
-        $score += 500 if !$scale{ $sorted[$i] % 12 };
+        $score += $init_score * 50 if !$scale{ $sorted[$i] % 12 };
 
         # 2. Consonance of pairwise intervals (i vs j)
         for my $j ($i + 1 .. $#sorted) {
-            $score += $tension->vertical([$sorted[$i], $sorted[$j]]) // 100;
+            $score += $tension->vertical([$sorted[$i], $sorted[$j]]) // $init_score * 10;
         }
     }
 
     # 3. Penalty for unison notes
-    $score += 1000 if $sorted[0] == $sorted[1] || $sorted[1] == $sorted[2];
+    $score += $init_score * 100
+        if $sorted[0] == $sorted[1] || $sorted[1] == $sorted[2];
 
     # 4. Penalty for octave notes
-    $score += 1000 if abs($sorted[1] - $sorted[0]) % 12 == 0 ||
-                      abs($sorted[2] - $sorted[0]) % 12 == 0 ||
-                      abs($sorted[2] - $sorted[1]) % 12 == 0;
+    $score += $init_score * 100
+        if abs($sorted[1] - $sorted[0]) % 12 == 0 ||
+           abs($sorted[2] - $sorted[0]) % 12 == 0 ||
+           abs($sorted[2] - $sorted[1]) % 12 == 0;
 
     return $score;
 };
