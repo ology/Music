@@ -21,8 +21,8 @@ my %INTERVAL_DISSONANCE = (
     2  => 10.0, # Major 2nd (9:8) - Dissonant
     10 => 12.0, # Minor 7th (16:9)
     11 => 20.0, # Major 7th (15:8)
-    1  => 50.0, # Minor 2nd (16:15) - Very Dissonant
-    6  => 60.0, # Tritone (45:32)
+    1  => 50.0, # Minor 2nd (16:15)
+    6  => 60.0, # Tritone (45:32) - Very Dissonant
 );
 
 # --- The Musical Particle ---
