@@ -87,7 +87,6 @@ my $musical_fitness = sub ($notes) {
 
 my $n = 0;
 my %note_names = map { $n++ => $_ } get_scale_notes('C', 'Chromatic');
-say ddc \%note_names;
 
 my $score = setup_score(bpm => $bpm, patch => 5);
 
