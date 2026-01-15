@@ -3,7 +3,7 @@ use v5.36;
 
 use MIDI::Util qw(setup_score);
 
-my $bpm  = shift || 100;
+my $bpm = shift || 100;
 
 my %SCALE_C_MAJOR = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
 
