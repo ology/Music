@@ -4,12 +4,6 @@ use v5.36;
 use MIDI::Util qw(setup_score);
 use Music::Tension::Cope ();
 
-my $bpm = shift || 100;
-
-my %scale = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
-
-my $tension = Music::Tension::Cope->new;
-
 # --- The Musical Particle ---
 package ChordParticle {
     use v5.36;
@@ -58,6 +52,12 @@ package Swarm {
         return ($gbest_pos, $gbest_score);
     }
 }
+
+my $bpm = shift || 100;
+
+my %scale = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
+
+my $tension = Music::Tension::Cope->new;
 
 # --- The Objective Function ---
 my $musical_fitness = sub ($notes) {
