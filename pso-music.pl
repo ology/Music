@@ -9,7 +9,7 @@ my %scale = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
 
 # Tenney Height / Dissonance Metric: Simplest ratios = lower score
 # Standard ratios for intervals
-my %INTERVAL_DISSONANCE = (
+my %interval_dissonance = (
     0  => 0,    # Unison (1:1)
     12 => 1,    # Octave (2:1)
     7  => 2.5,  # Perfect 5th (3:2)
@@ -51,7 +51,7 @@ my $musical_fitness = sub ($notes) {
         # 2. Consonance of pairwise intervals (i vs j)
         for my $j ($i + 1 .. $#sorted) {
             my $interval = ($sorted[$j] - $sorted[$i]) % 12;
-            $score += $INTERVAL_DISSONANCE{$interval} // 100;
+            $score += $interval_dissonance{$interval} // 100;
         }
     }
 
