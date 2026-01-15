@@ -8,7 +8,7 @@ my $bpm  = shift || 100;
 my %SCALE_C_MAJOR = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
 
 # Tenney Height / Dissonance Metric: Simplest ratios = lower score
-# Standard ratios for intervals: Octave(2/1), Fifth(3/2), Fourth(4/3), Maj3rd(5/4)
+# Standard ratios for intervals
 my %INTERVAL_DISSONANCE = (
     0  => 0,    # Unison (1:1)
     12 => 1,    # Octave (2:1)
