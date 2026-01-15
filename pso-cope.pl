@@ -24,32 +24,6 @@ package ChordParticle {
     }
 }
 
-# --- The Objective Function ---
-my $musical_fitness = sub ($notes) {
-    my $score = 0;
-    my @sorted = sort { $a <=> $b } @$notes;
-
-    for my $i (0 .. $#sorted) {
-        # 1. Penalty for notes NOT in C Major scale
-        $score += 500 if !$scale{ $sorted[$i] % 12 };
-
-        # 2. Consonance of pairwise intervals (i vs j)
-        for my $j ($i + 1 .. $#sorted) {
-            $score += $tension->vertical([$sorted[$i], $sorted[$j]]) // 100;
-        }
-    }
-
-    # 3. Penalty for unison notes
-    $score += 1000 if $sorted[0] == $sorted[1] || $sorted[1] == $sorted[2];
-
-    # 4. Penalty for octave notes
-    $score += 1000 if abs($sorted[1] - $sorted[0]) % 12 == 0 ||
-                      abs($sorted[2] - $sorted[0]) % 12 == 0 ||
-                      abs($sorted[2] - $sorted[1]) % 12 == 0;
-
-    return $score;
-};
-
 # --- Optimization ---
 package Swarm {
     use v5.36;
@@ -84,6 +58,32 @@ package Swarm {
         return ($gbest_pos, $gbest_score);
     }
 }
+
+# --- The Objective Function ---
+my $musical_fitness = sub ($notes) {
+    my $score = 0;
+    my @sorted = sort { $a <=> $b } @$notes;
+
+    for my $i (0 .. $#sorted) {
+        # 1. Penalty for notes NOT in C Major scale
+        $score += 500 if !$scale{ $sorted[$i] % 12 };
+
+        # 2. Consonance of pairwise intervals (i vs j)
+        for my $j ($i + 1 .. $#sorted) {
+            $score += $tension->vertical([$sorted[$i], $sorted[$j]]) // 100;
+        }
+    }
+
+    # 3. Penalty for unison notes
+    $score += 1000 if $sorted[0] == $sorted[1] || $sorted[1] == $sorted[2];
+
+    # 4. Penalty for octave notes
+    $score += 1000 if abs($sorted[1] - $sorted[0]) % 12 == 0 ||
+                      abs($sorted[2] - $sorted[0]) % 12 == 0 ||
+                      abs($sorted[2] - $sorted[1]) % 12 == 0;
+
+    return $score;
+};
 
 my %note_names = (
     0=>'C', 1=>'C#', 2=>'D', 3=>'Eb', 4=>'E', 5=>'F', 6=>'F#', 7=>'G', 8=>'Ab', 9=>'A', 10=>'Bb', 11=>'B'
