@@ -23,8 +23,8 @@ package Swarm {
     use v5.36;
     use List::Util qw(min max);
 
-    sub search ($objective, $iters=100) {
-        my @swarm = map { ChordParticle->new([48, 72]) } 1 .. 30; # C3 to C5
+    sub search ($objective, $population=30, $iters=100) {
+        my @swarm = map { ChordParticle->new([48, 72]) } 1 .. $population; # C3 to C5
         my ($gbest_pos, $gbest_score) = ([], 1e18);
 
         for (1 .. $iters) {
@@ -54,6 +54,9 @@ package Swarm {
 }
 
 my $bpm = shift || 100;
+my $limit = shift || 8;
+my $population = shift || 100;
+my $iterations = shift || 50;
 
 my %scale = map { $_ => 1 } get_scale_nums('major'); # Semitones in C Major
 
@@ -90,8 +93,8 @@ my %note_names = map { $n++ => $_ } get_scale_notes('C', 'Chromatic');
 
 my $score = setup_score(bpm => $bpm, patch => 5);
 
-for my $i (1 .. 8) {
-    my ($chord, $fitness) = Swarm::search($musical_fitness);
+for my $i (1 .. $limit) {
+    my ($chord, $fitness) = Swarm::search($musical_fitness, $population, $iterations);
     my @notes = map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord;
 
     say "$i. Optimized Chord: ", join '-', @notes;
