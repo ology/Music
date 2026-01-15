@@ -91,7 +91,7 @@ my %note_names = map { $n++ => $_ } get_scale_notes('C', 'Chromatic');
 my $score = setup_score(bpm => $bpm, patch => 5);
 
 for my $i (1 .. 8) {
-    my ($chord, $fitness) = Swarm::search($musical_fitness, 50);
+    my ($chord, $fitness) = Swarm::search($musical_fitness);
     my @vec = map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord;
 
     say "$i. Optimized Chord: ", join '-', @vec;
