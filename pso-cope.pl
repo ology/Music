@@ -39,7 +39,7 @@ package Swarm {
                     $gbest_pos = [ $p->{pos}->@* ];
                 }
             }
-            # Movement logic
+            # movement logic
             for my $p (@swarm) {
                 for my $d (0..2) {
                     $p->{vel}[$d] = 0.5 * $p->{vel}[$d] +
@@ -53,37 +53,37 @@ package Swarm {
     }
 }
 
-# Command-line arguments
+# optional command-line arguments
 my $bpm        = shift || 100;
 my $limit      = shift || 8;
 my $population = shift || 100;
 my $iterations = shift || 50;
 my $init_score = shift || 10;
 
-my %scale = map { $_ => 1 } get_scale_nums('major'); # Semitones in C Major
+my %scale = map { $_ => 1 } get_scale_nums('major'); # semitones in major
 
 my $tension = Music::Tension::Cope->new;
 
-# --- The Objective Function ---
+# objective function
 my $musical_fitness = sub ($notes) {
     my $score = 0;
     my @sorted = sort { $a <=> $b } @$notes;
 
     for my $i (0 .. $#sorted) {
-        # 1. Penalty for notes NOT in C Major scale
+        # penalty for notes NOT in the C major scale
         $score += $init_score * 50 if !$scale{ $sorted[$i] % 12 };
 
-        # 2. Consonance of pairwise intervals (i vs j)
+        # consonance of pairwise intervals (i vs j)
         for my $j ($i + 1 .. $#sorted) {
             $score += $tension->vertical([$sorted[$i], $sorted[$j]]) // $init_score * 10;
         }
     }
 
-    # 3. Penalty for unison notes
+    # penalty for unison notes
     $score += $init_score * 100
         if $sorted[0] == $sorted[1] || $sorted[1] == $sorted[2];
 
-    # 4. Penalty for octave notes
+    # penalty for octave notes
     $score += $init_score * 100
         if abs($sorted[1] - $sorted[0]) % 12 == 0 ||
            abs($sorted[2] - $sorted[0]) % 12 == 0 ||
