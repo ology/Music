@@ -101,7 +101,8 @@ my %note_names = (
     0=>'C', 1=>'C#', 2=>'D', 3=>'Eb', 4=>'E', 5=>'F', 6=>'F#', 7=>'G', 8=>'Ab', 9=>'A', 10=>'Bb', 11=>'B'
 );
 my ($chord, $fitness) = Swarm::search($musical_fitness, 50);
+my @vec = map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord;
 
 say "Optimized Chord Found:";
-say join("-", map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord);
+say join '-', @vec;
 say "Final Dissonance Score: $fitness (Lower is more consonant)";
