@@ -111,9 +111,8 @@ for my $i (1 .. 8) {
     my ($chord, $fitness) = Swarm::search($musical_fitness, 50);
     my @vec = map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord;
 
-    say "Optimized Chord Found:";
-    say join '-', @vec;
-    say "Final Dissonance Score: $fitness (Lower is more consonant)";
+    say "Optimized Chord: ", join '-', @vec;
+    say "\tFinal Dissonance Score: $fitness (Lower is more consonant)";
 
     $score->n('wn', @vec);
 }
