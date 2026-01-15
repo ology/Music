@@ -53,8 +53,8 @@ package Swarm {
     }
 }
 
-my $bpm = shift || 100;
-my $limit = shift || 8;
+my $bpm        = shift || 100;
+my $limit      = shift || 8;
 my $population = shift || 100;
 my $iterations = shift || 50;
 
