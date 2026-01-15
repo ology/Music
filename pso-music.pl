@@ -5,7 +5,7 @@ use MIDI::Util qw(setup_score);
 
 my $bpm = shift || 100;
 
-my %SCALE = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
+my %scale = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
 
 # Tenney Height / Dissonance Metric: Simplest ratios = lower score
 # Standard ratios for intervals
@@ -46,7 +46,7 @@ my $musical_fitness = sub ($notes) {
 
     for my $i (0 .. $#sorted) {
         # 1. Penalty for notes NOT in C Major scale
-        $score += 500 if !$SCALE{ $sorted[$i] % 12 };
+        $score += 500 if !$scale{ $sorted[$i] % 12 };
 
         # 2. Consonance of pairwise intervals (i vs j)
         for my $j ($i + 1 .. $#sorted) {
