@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use v5.36;
 
-use MIDI::Util qw(setup_score);
+use MIDI::Util qw(setup_score play_timidity);
 use Music::Scales qw(get_scale_notes get_scale_nums);
 use Music::Tension::Cope ();
 
@@ -106,5 +106,5 @@ for my $i (1 .. $limit) {
     $score->n('wn', @notes);
 }
 
-# $score->write_score("$0.mid");
-$score->play_with_timidity;
+$score->write_score("$0.mid");
+play_timidity($score, "$0.mid");
