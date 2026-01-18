@@ -106,4 +106,5 @@ for my $i (1 .. $limit) {
     $score->n('wn', @notes);
 }
 
-$score->write_score("$0.mid");
+# $score->write_score("$0.mid");
+$score->play_with_timidity;
