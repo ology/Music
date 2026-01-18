@@ -101,7 +101,7 @@ for my $i (1 .. $limit) {
     my @notes = map { $note_names{ $_ % 12 } . int( $_ / 12 ) } sort { $a <=> $b } @$chord;
 
     say "$i. Optimized Chord: ", join '-', @notes;
-    say "\tFinal Dissonance Score: $fitness (Lower is more consonant)";
+    say "\tFinal Dissonance Score: $fitness"; #  lower is more consonant
 
     $score->n('wn', @notes);
 }
