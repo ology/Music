@@ -45,8 +45,8 @@ def midi_clock_thread():
         # signal stream threads every beat
         if clock_tick_count % clocks_per_beat == 0:
             clock_tick_event.set()
-            phrase1 = generate()
-            phrase2 = generate()
+            # phrase1 = generate()
+            # phrase2 = generate()
         time.sleep(interval)
 
 def stream0_thread_fn():
@@ -57,6 +57,7 @@ def stream0_thread_fn():
         clock_tick_event.clear()
         msg = mido.Message('program_change', channel=channel, program=5)
         outport.send(msg)
+        phrase1 = generate()
         transpose = chance()
         motif = r.motif()
         for _ in range(4):
@@ -77,6 +78,7 @@ def stream1_thread_fn():
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
         msg = mido.Message('program_change', channel=channel, program=91)
+        phrase2 = generate()
         outport.send(msg)
         motif = r.motif()
         for _ in range(4):
