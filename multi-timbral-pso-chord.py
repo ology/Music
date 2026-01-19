@@ -50,7 +50,7 @@ def midi_clock_thread():
         time.sleep(interval)
 
 def stream0_thread_fn():
-    global phrase1, device, factor, outport, velocity, stop_threads, clock_tick_event
+    global phrase1, device, factor, outport, stop_threads, clock_tick_event
     channel = 0
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
@@ -72,7 +72,7 @@ def stream0_thread_fn():
                     midi_message(outport, channel, p, d * factor)
 
 def stream1_thread_fn():
-    global phrase2, melody, factor, outport, stop_threads, clock_tick_event
+    global phrase2, factor, outport, stop_threads, clock_tick_event
     channel = 1
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
@@ -108,7 +108,6 @@ if __name__ == "__main__":
     # kludge: duration multiplier to slow down the pace of the notes
     factor = int(sys.argv[2]) if len(sys.argv) > 2 else 2
 
-    velocity = 64
     scale_map = {
         'C': '',
         'D': 'm',
@@ -127,12 +126,6 @@ if __name__ == "__main__":
         tonic=False,
         resolve=False,
     )
-    melody = Bassline(
-        octave=5,
-        modal=True,
-        tonic=False,
-        resolve=False,
-    )
     bpm = 60 # for the clock
     # signal the threads on each clock tick
     clock_tick_event = threading.Event()
@@ -146,6 +139,8 @@ if __name__ == "__main__":
 
     phrase1 = [] # generated on each clock interval
     phrase2 = [] # "
+
+    velocity = 64
 
     chance = lambda: random.random() < 0.5
     velo = lambda: velocity + random.randint(-20, 20)
