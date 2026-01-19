@@ -90,7 +90,7 @@ package Swarm {
             }
             # Movement logic
             for my $p (@swarm) {
-                for my $d (0..2) {
+                for my $d (0 .. 2) {
                     $p->{vel}[$d] = 0.5 * $p->{vel}[$d] +
                                     rand() * ($p->{pbest}[$d] - $p->{pos}[$d]) +
                                     rand() * ($gbest_pos->[$d] - $p->{pos}[$d]);
