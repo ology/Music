@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use v5.36;
 
-use MIDI::Util qw(setup_score);
+use MIDI::Util qw(setup_score play_timidity);
 
 my $bpm = shift || 100;
 
@@ -118,3 +118,4 @@ for my $i (1 .. 8) {
 }
 
 $score->write_score("$0.mid");
+play_timidity($score, "$0.mid");
