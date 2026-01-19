@@ -55,7 +55,9 @@ my $musical_fitness = sub ($notes) {
     }
 
     # 3. Penalty for unison notes
-    $score += 1000 if $sorted[0] == $sorted[1] || $sorted[1] == $sorted[2];
+    $score += 1000 if $sorted[0] == $sorted[1] ||
+                      $sorted[0] == $sorted[2] ||
+                      $sorted[1] == $sorted[2];
 
     # 4. Penalty for octave notes
     $score += 1000 if abs($sorted[1] - $sorted[0]) % 12 == 0 ||
