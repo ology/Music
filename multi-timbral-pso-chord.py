@@ -8,7 +8,6 @@ import time
 import threading
 import mido
 from music21 import pitch
-from chord_progression_network import Generator
 from music_melodicdevice import Device
 from random_rhythms import Rhythm
 from music_bassline_generator import Bassline
@@ -49,7 +48,7 @@ def midi_clock_thread():
         time.sleep(interval)
 
 def stream0_thread_fn():
-    global g, device, factor, outport, velocity, stop_threads, clock_tick_event
+    global device, factor, outport, velocity, stop_threads, clock_tick_event
     channel = 0
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
@@ -112,21 +111,6 @@ if __name__ == "__main__":
         'F': '',
         'G': '',
     }
-    size = len(scale_map) + 1
-    transitions = [ i for i in range(1, size) ]
-    weights = [ 1 for _ in range(1, size) ]
-    g = Generator(
-        scale_note='C',
-        scale_name='ionian',
-        max=4 * 1, # beats x measures
-        tonic=False,
-        resolve=False,
-        scale=list(scale_map.keys()),
-        chord_map=list(scale_map.values()),
-        net={ i: transitions for i in range(1, size) },
-        weights={ i: weights for i in range(1, size) },
-        verbose=False,
-    )
     device = Device(verbose=False)
     r = Rhythm(
         measure_size=1,
