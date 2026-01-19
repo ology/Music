@@ -75,8 +75,8 @@ def stream1_thread_fn():
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        # msg = mido.Message('program_change', channel=channel, program=91)
-        # outport.send(msg)
+        msg = mido.Message('program_change', channel=channel, program=0)
+        outport.send(msg)
         note = random.choice(list(scale_map.keys()))
         chord = note + scale_map[note]
         bassline = bass.generate(chord, 4)
@@ -100,7 +100,7 @@ def stream2_thread_fn():
 if __name__ == "__main__":
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
     # kludge: duration multiplier to slow down the pace of the notes
-    factor = int(sys.argv[2]) if len(sys.argv) > 2 else 1
+    factor = int(sys.argv[2]) if len(sys.argv) > 2 else 2
 
     bpm = 60 # for the clock
     velocity = 64
@@ -113,9 +113,9 @@ if __name__ == "__main__":
     }
     device = Device(verbose=False)
     r = Rhythm(
-        measure_size=1,
-        durations=[ 1/8, 1/4, 1/2, 1/3 ],
-        groups={ 1/3: 3 },
+        measure_size=2,
+        durations=[ 1/8, 1/4, 1/2 ],
+        # groups={ 1/3: 3 },
     )
     bass = Bassline(
         modal=True,
