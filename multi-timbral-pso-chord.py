@@ -140,11 +140,11 @@ if __name__ == "__main__":
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
         stream0_thread = threading.Thread(target=stream0_thread_fn, daemon=True)
         # stream1_thread = threading.Thread(target=stream1_thread_fn, daemon=True)
-        # stream2_thread = threading.Thread(target=stream2_thread_fn, daemon=True)
+        stream2_thread = threading.Thread(target=stream2_thread_fn, daemon=True)
         clock_thread.start()
         stream0_thread.start()
         # stream1_thread.start()
-        # stream2_thread.start()
+        stream2_thread.start()
         outport.send(mido.Message('start'))
         try:
             while True:
@@ -156,14 +156,14 @@ if __name__ == "__main__":
             clock_thread.join()
             stream0_thread.join()
             # stream1_thread.join()
-            # stream2_thread.join()
+            stream2_thread.join()
             print("All threads stopped.")
             msg = mido.Message('control_change', channel=0, control=123, value=0)
             outport.send(msg)
             # msg = mido.Message('control_change', channel=1, control=123, value=0)
             # outport.send(msg)
-            # msg = mido.Message('control_change', channel=2, control=123, value=0)
-            # outport.send(msg)
+            msg = mido.Message('control_change', channel=2, control=123, value=0)
+            outport.send(msg)
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
         finally:
