@@ -38,24 +38,24 @@ def midi_message(outport, channel, note, dura):
     outport.send(msg)
 
 def midi_clock_thread():
-    global interval, stop_threads, clock_tick_event, clock_tick_count
+    global phrase, interval, stop_threads, clock_tick_event, clock_tick_count
     while not stop_threads:
         outport.send(mido.Message('clock'))
         clock_tick_count += 1
         # signal stream threads every beat
         if clock_tick_count % clocks_per_beat == 0:
             clock_tick_event.set()
+            phrase = generate()
         time.sleep(interval)
 
 def stream0_thread_fn():
-    global device, factor, outport, velocity, stop_threads, clock_tick_event
+    global phrase, device, factor, outport, velocity, stop_threads, clock_tick_event
     channel = 0
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
         msg = mido.Message('program_change', channel=channel, program=5)
         outport.send(msg)
-        phrase = generate()
         transpose = chance()
         motif = r.motif()
         for _ in range(4):
@@ -138,6 +138,8 @@ if __name__ == "__main__":
     # time between clock messages at 24 PPQN per beat
     interval = 60 / (bpm * clocks_per_beat)
     stop_threads = False
+
+    phrase = [] # generated on each clock interval
 
     chance = lambda: random.random() < 0.5
     velo = lambda: velocity + random.randint(-20, 20)
