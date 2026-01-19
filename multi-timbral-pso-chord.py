@@ -58,7 +58,7 @@ def stream0_thread_fn():
         msg = mido.Message('program_change', channel=channel, program=5)
         outport.send(msg)
         phrase1 = generate()
-        transpose = chance()
+        transpose = 1 #chance()
         motif = r.motif()
         for _ in range(4):
             for ph in phrase1:
@@ -79,6 +79,7 @@ def stream1_thread_fn():
         clock_tick_event.clear()
         msg = mido.Message('program_change', channel=channel, program=91)
         phrase2 = generate()
+        transpose = chance()
         outport.send(msg)
         motif = r.motif()
         for _ in range(4):
@@ -86,6 +87,10 @@ def stream1_thread_fn():
                 arped = device.arp(ph, duration=1, arp_type='updown', repeats=1)
                 for i,d in enumerate(motif):
                     p = pitch.Pitch(arped[i % len(arped)][1]).midi
+                    if transpose:
+                        p -= 12
+                        if chance():
+                            p -= 12
                     midi_message(outport, channel, p, d * factor)
 
 def stream2_thread_fn():
