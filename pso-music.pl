@@ -4,6 +4,7 @@ use v5.36;
 use MIDI::Util qw(setup_score play_timidity);
 
 my $bpm = shift || 100;
+my $max = shift || 3;
 
 my %scale = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
 
@@ -30,8 +31,8 @@ package ChordParticle {
 
     sub new ($class, $range) {
         bless {
-            pos   => [ map { int(rand($range->[1] - $range->[0])) + $range->[0] } 1 .. 3 ],
-            vel   => [ map { rand(4) - 2 } 1 .. 3 ],
+            pos   => [ map { int(rand($range->[1] - $range->[0])) + $range->[0] } 1 .. $max ],
+            vel   => [ map { rand(4) - 2 } 1 .. $max ],
             pbest => undef,
             score => 1e18,
         }, $class;
