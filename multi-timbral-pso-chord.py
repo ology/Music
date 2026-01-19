@@ -19,7 +19,7 @@ def generate():
         # print("STDOUT:", result.stdout)
         notes = result.stdout.split()
         notes = [ pitch.Pitch(n).midi for n in notes ]
-        # print(notes)
+        print(f"Notes: {notes}")
         # print("STDERR:", result.stderr)
         return [notes]
     except subprocess.CalledProcessError as e:
