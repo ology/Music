@@ -12,11 +12,11 @@ my %scale = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
 my %interval_dissonance = (
     0  => 0,   # Unison (1:1)
     1  => 9.2, # Minor 2nd (16:15)
-    2  => 6.8, # Major 2nd (9:8) - Dissonant
+    2  => 6.8, # Major 2nd (9:8)
     3  => 4.9, # Minor 3rd (6:5)
     4  => 4.3, # Major 3rd (5:4)
     5  => 3.6, # Perfect 4th (4:3)
-    6  => 8.8, # Tritone (45:32) - Very Dissonant
+    6  => 8.8, # Tritone (45:32)
     7  => 2.6, # Perfect 5th (3:2)
     8  => 5.3, # Minor 6th (8:5)
     9  => 3.9, # Major 6th (5:3)
