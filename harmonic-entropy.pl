@@ -52,7 +52,7 @@ sub harmonic_entropy ($p1, $p2, $sigma = 0.05) {
 
 my ($num, $den) = @ARGV;
 if (!$num || !$den) {
-    say "Usage: $0 <num> <den>";
+    say "Usage: $0 <numer> <denom>";
     say "Example: $0 3 2 # Perfect Fifth";
     exit;
 }
