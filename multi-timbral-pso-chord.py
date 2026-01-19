@@ -16,10 +16,10 @@ def generate():
     command = ['perl', 'pso-chord.pl']
     try:
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
-        print("STDOUT:", result.stdout)
+        # print("STDOUT:", result.stdout)
         notes = result.stdout.split()
         notes = [ pitch.Pitch(n).midi for n in notes ]
-        print(notes)
+        # print(notes)
         # print("STDERR:", result.stderr)
         return [notes]
     except subprocess.CalledProcessError as e:
