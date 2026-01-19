@@ -70,7 +70,7 @@ def stream0_thread_fn():
                     midi_message(outport, channel, p, d * factor)
 
 def stream1_thread_fn():
-    global bass, factor, outport, stop_threads, clock_tick_event
+    global melody, factor, outport, stop_threads, clock_tick_event
     channel = 1
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
@@ -79,8 +79,8 @@ def stream1_thread_fn():
         outport.send(msg)
         note = random.choice(list(scale_map.keys()))
         chord = note + scale_map[note]
-        bassline = bass.generate(chord, 4)
-        for n in bassline:
+        line = melody.generate(chord, 4)
+        for n in line:
             midi_message(outport, channel, n, factor)
 
 def stream2_thread_fn():
@@ -103,7 +103,6 @@ if __name__ == "__main__":
     # kludge: duration multiplier to slow down the pace of the notes
     factor = int(sys.argv[2]) if len(sys.argv) > 2 else 2
 
-    bpm = 60 # for the clock
     velocity = 64
     scale_map = {
         'C': '',
@@ -114,7 +113,7 @@ if __name__ == "__main__":
     }
     device = Device(verbose=False)
     r = Rhythm(
-        measure_size=2,
+        measure_size=1,
         durations=[ 1/8, 1/4, 1/2 ],
         # groups={ 1/3: 3 },
     )
@@ -123,6 +122,13 @@ if __name__ == "__main__":
         tonic=False,
         resolve=False,
     )
+    melody = Bassline(
+        octave=5,
+        modal=True,
+        tonic=False,
+        resolve=False,
+    )
+    bpm = 60 # for the clock
     # signal the threads on each clock tick
     clock_tick_event = threading.Event()
     # clock tick counter
@@ -141,11 +147,11 @@ if __name__ == "__main__":
         clock_thread = threading.Thread(target=midi_clock_thread, daemon=True) # daemon = stops when main thread exits
         stream0_thread = threading.Thread(target=stream0_thread_fn, daemon=True)
         # stream1_thread = threading.Thread(target=stream1_thread_fn, daemon=True)
-        stream2_thread = threading.Thread(target=stream2_thread_fn, daemon=True)
+        # stream2_thread = threading.Thread(target=stream2_thread_fn, daemon=True)
         clock_thread.start()
         stream0_thread.start()
         # stream1_thread.start()
-        stream2_thread.start()
+        # stream2_thread.start()
         outport.send(mido.Message('start'))
         try:
             while True:
@@ -157,14 +163,14 @@ if __name__ == "__main__":
             clock_thread.join()
             stream0_thread.join()
             # stream1_thread.join()
-            stream2_thread.join()
+            # stream2_thread.join()
             print("All threads stopped.")
             msg = mido.Message('control_change', channel=0, control=123, value=0)
             outport.send(msg)
             # msg = mido.Message('control_change', channel=1, control=123, value=0)
             # outport.send(msg)
-            msg = mido.Message('control_change', channel=2, control=123, value=0)
-            outport.send(msg)
+            # msg = mido.Message('control_change', channel=2, control=123, value=0)
+            # outport.send(msg)
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
         finally:
