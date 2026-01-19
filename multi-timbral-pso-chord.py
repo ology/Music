@@ -93,7 +93,7 @@ def stream2_thread_fn():
         outport.send(msg)
         note = random.choice(list(scale_map.keys()))
         chord = note + scale_map[note]
-        bassline = bass.generate(chord, 4)
+        bassline = bass.generate(chord, 1)
         print(f"Bass: {bassline}")
         for n in bassline:
             midi_message(outport, channel, n, factor)
