@@ -11,18 +11,18 @@ my %scale = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
 # Standard ratios for intervals
 my %interval_dissonance = (
     0  => 0,    # Unison (1:1)
+    1  => 9.23, # Minor 2nd (16:15)
+    2  => 6.17, # Major 2nd (9:8) - Dissonant
+    3  => 4.91, # Minor 3rd (6:5)
+    4  => 4.32, # Major 3rd (5:4)
+    5  => 3.58, # Perfect 4th (4:3)
+    6  => 8.81, # Tritone (45:32) - Very Dissonant
+    7  => 2.58, # Perfect 5th (3:2)
+    8  => 5.32, # Minor 6th (8:5)
+    9  => 3.91, # Major 6th (5:3)
+    10 => 5.49, # Minor 7th (16:9)
+    11 => 6.91, # Major 7th (15:8)
     12 => 1,    # Octave (2:1)
-    7  => 2.5,  # Perfect 5th (3:2)
-    5  => 3.5,  # Perfect 4th (4:3)
-    4  => 4.5,  # Major 3rd (5:4)
-    9  => 5.0,  # Major 6th (5:3)
-    3  => 6.0,  # Minor 3rd (6:5)
-    8  => 7.5,  # Minor 6th (8:5)
-    2  => 10.0, # Major 2nd (9:8) - Dissonant
-    10 => 12.0, # Minor 7th (16:9)
-    11 => 20.0, # Major 7th (15:8)
-    1  => 50.0, # Minor 2nd (16:15)
-    6  => 60.0, # Tritone (45:32) - Very Dissonant
 );
 
 # --- The Musical Particle ---
