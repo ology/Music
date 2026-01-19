@@ -10,19 +10,19 @@ my %scale = map { $_ => 1 } (0, 2, 4, 5, 7, 9, 11); # Semitones in C Major
 # Tenney Height / Dissonance Metric: Simplest ratios = lower score
 # Standard ratios for intervals
 my %interval_dissonance = (
-    0  => 0,    # Unison (1:1)
-    1  => 9.23, # Minor 2nd (16:15)
-    2  => 6.17, # Major 2nd (9:8) - Dissonant
-    3  => 4.91, # Minor 3rd (6:5)
-    4  => 4.32, # Major 3rd (5:4)
-    5  => 3.58, # Perfect 4th (4:3)
-    6  => 8.81, # Tritone (45:32) - Very Dissonant
-    7  => 2.58, # Perfect 5th (3:2)
-    8  => 5.32, # Minor 6th (8:5)
-    9  => 3.91, # Major 6th (5:3)
-    10 => 5.49, # Minor 7th (16:9)
-    11 => 6.91, # Major 7th (15:8)
-    12 => 1,    # Octave (2:1)
+    0  => 0,   # Unison (1:1)
+    1  => 9.2, # Minor 2nd (16:15)
+    2  => 6.8, # Major 2nd (9:8) - Dissonant
+    3  => 4.9, # Minor 3rd (6:5)
+    4  => 4.3, # Major 3rd (5:4)
+    5  => 3.6, # Perfect 4th (4:3)
+    6  => 8.8, # Tritone (45:32) - Very Dissonant
+    7  => 2.6, # Perfect 5th (3:2)
+    8  => 5.3, # Minor 6th (8:5)
+    9  => 3.9, # Major 6th (5:3)
+    10 => 5.5, # Minor 7th (16:9)
+    11 => 6.9, # Major 7th (15:8)
+    12 => 1,   # Octave (2:1)
 );
 
 # --- The Musical Particle ---
