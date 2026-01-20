@@ -77,7 +77,7 @@ def stream1_thread_fn():
     while not stop_threads:
         clock_tick_event.wait() # wait for the next beat (PLL sync)
         clock_tick_event.clear()
-        msg = mido.Message('program_change', channel=channel, program=91)
+        msg = mido.Message('program_change', channel=channel, program=4)
         phrase2 = generate()
         transpose = chance()
         outport.send(msg)
