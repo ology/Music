@@ -8,7 +8,7 @@ from find_primes import all_primes
 from music_creatingrhythms import Rhythms
 
 def run_drum_machine(port_name):
-    global PATTERNS, DRUMS, step_duration, beats
+    global PATTERNS, DRUMS, step_duration, beats, N
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
@@ -18,6 +18,10 @@ def run_drum_machine(port_name):
                     primes = all_primes(beats, 'list')
                     p = random.choice(primes)
                     PATTERNS['hihat'] = r.euclid(p, beats)
+                    if N % 2 == 0:
+                        PATTERNS['kick'] = r.euclid(2, beats)
+                    else:
+                        PATTERNS['kick'] = [1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0]
                     for step in range(16):
                         if PATTERNS['kick'][step]:
                             msg = mido.Message('note_on', note=DRUMS['kick'], velocity=90, channel=0)
@@ -42,6 +46,7 @@ def run_drum_machine(port_name):
                             outport.send(msg)
 
                         time.sleep(step_duration * 0.1) # Remainder of the step duration
+                    N += 1
             except KeyboardInterrupt:
                 print("\nDrum machine stopped.")
     except mido.PortUnavailableError as e:
@@ -65,6 +70,9 @@ if __name__ == "__main__":
         'snare': r.rotate_n(4, r.euclid(2, beats)),
         'hihat': r.euclid(11, beats),
     }
+
+    N = 0
+
     try:
         run_drum_machine('MIDIThing2')
     except IndexError:
