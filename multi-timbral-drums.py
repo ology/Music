@@ -1,3 +1,4 @@
+
 import mido
 import time
 import sys
@@ -28,37 +29,37 @@ def run_drum_machine(port_name):
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
             print("Drum machine running... Press Ctrl+C to stop.")
-            while True:
-                for step in range(16):
-                    if PATTERNS['kick'][step]:
-                        msg = mido.Message('note_on', note=DRUMS['kick'], velocity=90, channel=0)
-                        outport.send(msg)
-                    if PATTERNS['snare'][step]:
-                        msg = mido.Message('note_on', note=DRUMS['snare'], velocity=90, channel=1)
-                        outport.send(msg)
-                    if PATTERNS['hihat'][step]:
-                        msg = mido.Message('note_on', note=DRUMS['hihat'], velocity=70, channel=2)
-                        outport.send(msg)
-                    
-                    time.sleep(step_duration * 0.9) # slightly shorter than step to prevent overlap
+            try:
+                while True:
+                    for step in range(16):
+                        if PATTERNS['kick'][step]:
+                            msg = mido.Message('note_on', note=DRUMS['kick'], velocity=90, channel=0)
+                            outport.send(msg)
+                        if PATTERNS['snare'][step]:
+                            msg = mido.Message('note_on', note=DRUMS['snare'], velocity=90, channel=1)
+                            outport.send(msg)
+                        if PATTERNS['hihat'][step]:
+                            msg = mido.Message('note_on', note=DRUMS['hihat'], velocity=70, channel=2)
+                            outport.send(msg)
+                        
+                        time.sleep(step_duration * 0.9) # slightly shorter than step to prevent overlap
 
-                    if PATTERNS['kick'][step]:
-                        msg = mido.Message('note_off', note=DRUMS['kick'], velocity=0, channel=0)
-                        outport.send(msg)
-                    if PATTERNS['snare'][step]:
-                        msg = mido.Message('note_off', note=DRUMS['snare'], velocity=0, channel=1)
-                        outport.send(msg)
-                    if PATTERNS['hihat'][step]:
-                        msg = mido.Message('note_off', note=DRUMS['hihat'], velocity=0, channel=2)
-                        outport.send(msg)
+                        if PATTERNS['kick'][step]:
+                            msg = mido.Message('note_off', note=DRUMS['kick'], velocity=0, channel=0)
+                            outport.send(msg)
+                        if PATTERNS['snare'][step]:
+                            msg = mido.Message('note_off', note=DRUMS['snare'], velocity=0, channel=1)
+                            outport.send(msg)
+                        if PATTERNS['hihat'][step]:
+                            msg = mido.Message('note_off', note=DRUMS['hihat'], velocity=0, channel=2)
+                            outport.send(msg)
 
-                    time.sleep(step_duration * 0.1) # Remainder of the step duration
-                    
+                        time.sleep(step_duration * 0.1) # Remainder of the step duration
+            except KeyboardInterrupt:
+                print("\nDrum machine stopped.")
     except mido.PortUnavailableError as e:
         print(f"Error: {e}")
         print("Please check your virtual MIDI port setup and names.")
-    except KeyboardInterrupt:
-        print("\nDrum machine stopped.")
 
 if __name__ == "__main__":
     try:
