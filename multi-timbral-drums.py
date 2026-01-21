@@ -6,7 +6,7 @@ import sys
 from music_creatingrhythms import Rhythms
 
 BPM = 100
-# Calculate the time duration for one 16th note (one step in our pattern)
+# time duration for one step in pattern
 step_duration = 60.0 / BPM / 4
 
 DRUMS = {
