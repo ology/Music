@@ -6,6 +6,7 @@ import sys
 from music_creatingrhythms import Rhythms
 
 def run_drum_machine(port_name):
+    global PATTERNS, DRUMS
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
