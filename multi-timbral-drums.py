@@ -40,7 +40,7 @@ def run_drum_machine(port_name):
                         msg = mido.Message('note_on', note=DRUMS['hihat'], velocity=70, channel=2)
                         outport.send(msg)
                     
-                    time.sleep(step_duration * 0.9) # Note on duration (slightly shorter than step to prevent overlap)
+                    time.sleep(step_duration * 0.9) # slightly shorter than step to prevent overlap
 
                     if PATTERNS['kick'][step]:
                         msg = mido.Message('note_off', note=DRUMS['kick'], velocity=0, channel=0)
