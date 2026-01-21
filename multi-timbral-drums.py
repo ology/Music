@@ -5,24 +5,6 @@ import sys
 
 from music_creatingrhythms import Rhythms
 
-BPM = 100
-# time duration for one step in pattern
-step_duration = 60.0 / BPM / 4
-
-DRUMS = {
-    'kick': 36,  # Acoustic Bass Drum
-    'snare': 38, # Acoustic Snare
-    'hihat': 42  # Closed Hi-Hat
-}
-
-r = Rhythms()
-beats = 16
-PATTERNS = {
-    'kick': r.euclid(2, beats),
-    'snare': r.rotate_n(4, r.euclid(2, beats)),
-    'hihat': r.euclid(11, beats),
-}
-
 def run_drum_machine(port_name):
     try:
         with mido.open_output(port_name) as outport:
@@ -61,6 +43,23 @@ def run_drum_machine(port_name):
         print("Check your virtual MIDI port setup and names")
 
 if __name__ == "__main__":
+    BPM = 100
+    # time duration for one step in pattern
+    step_duration = 60.0 / BPM / 4
+
+    DRUMS = {
+        'kick': 36,  # Acoustic Bass Drum
+        'snare': 38, # Acoustic Snare
+        'hihat': 42  # Closed Hi-Hat
+    }
+
+    r = Rhythms()
+    beats = 16
+    PATTERNS = {
+        'kick': r.euclid(2, beats),
+        'snare': r.rotate_n(4, r.euclid(2, beats)),
+        'hihat': r.euclid(11, beats),
+    }
     try:
         run_drum_machine('MIDIThing2')
     except IndexError:
