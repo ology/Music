@@ -43,13 +43,13 @@ def run_drum_machine(port_name):
                     time.sleep(step_duration * 0.9) # Note on duration (slightly shorter than step to prevent overlap)
 
                     if PATTERNS['kick'][step]:
-                        msg = mido.Message('note_off', note=DRUMS['kick'], channel=0)
+                        msg = mido.Message('note_off', note=DRUMS['kick'], velocity=0, channel=0)
                         outport.send(msg)
                     if PATTERNS['snare'][step]:
-                        msg = mido.Message('note_off', note=DRUMS['snare'], channel=1)
+                        msg = mido.Message('note_off', note=DRUMS['snare'], velocity=0, channel=1)
                         outport.send(msg)
                     if PATTERNS['hihat'][step]:
-                        msg = mido.Message('note_off', note=DRUMS['hihat'], channel=2)
+                        msg = mido.Message('note_off', note=DRUMS['hihat'], velocity=0, channel=2)
                         outport.send(msg)
 
                     time.sleep(step_duration * 0.1) # Remainder of the step duration
