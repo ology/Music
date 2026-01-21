@@ -44,8 +44,7 @@ def run_drum_machine(port_name):
 
 if __name__ == "__main__":
     BPM = 100
-    # time duration for one step in pattern
-    step_duration = 60.0 / BPM / 4
+    step_duration = 60.0 / BPM / 4 # duration for one step in pattern
 
     DRUMS = {
         'kick': 36,  # Acoustic Bass Drum
