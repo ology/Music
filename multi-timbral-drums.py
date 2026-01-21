@@ -1,18 +1,23 @@
 
 import mido
-import time
+import random
 import sys
+import time
 
+from find_primes import all_primes
 from music_creatingrhythms import Rhythms
 
 def run_drum_machine(port_name):
-    global PATTERNS, DRUMS, step_duration
+    global PATTERNS, DRUMS, step_duration, beats
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
             print("Drum machine running... Ctrl+C to stop.")
             try:
                 while True:
+                    primes = all_primes(beats, 'list')
+                    p = random.choice(primes)
+                    PATTERNS['hihat'] = r.euclid(p, beats)
                     for step in range(16):
                         if PATTERNS['kick'][step]:
                             msg = mido.Message('note_on', note=DRUMS['kick'], velocity=90, channel=0)
