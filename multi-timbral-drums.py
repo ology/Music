@@ -10,7 +10,7 @@ def run_drum_machine(port_name):
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
-            print("Drum machine running... Press Ctrl+C to stop.")
+            print("Drum machine running... Ctrl+C to stop.")
             try:
                 while True:
                     for step in range(16):
