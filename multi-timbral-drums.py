@@ -24,7 +24,6 @@ PATTERNS = {
 }
 
 def run_drum_machine(port_name):
-    """Opens the MIDI port and loops the drum patterns."""
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
@@ -59,11 +58,11 @@ def run_drum_machine(port_name):
                 print("\nDrum machine stopped.")
     except mido.PortUnavailableError as e:
         print(f"Error: {e}")
-        print("Please check your virtual MIDI port setup and names.")
+        print("Check your virtual MIDI port setup and names")
 
 if __name__ == "__main__":
     try:
         run_drum_machine('MIDIThing2')
     except IndexError:
-        print("No MIDI output ports found. Please set up a virtual MIDI port.")
+        print("No MIDI output ports found.")
         sys.exit(1)
