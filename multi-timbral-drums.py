@@ -18,7 +18,7 @@ DRUMS = {
 r = Rhythms()
 beats = 16
 PATTERNS = {
-    'kick':  r.euclid(2, beats),
+    'kick': r.euclid(2, beats),
     'snare': r.rotate_n(4, r.euclid(2, beats)),
     'hihat': r.euclid(11, beats),
 }
