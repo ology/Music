@@ -57,7 +57,7 @@ def run_drum_machine(port_name):
         print("Check your virtual MIDI port setup and names")
 
 if __name__ == "__main__":
-    BPM = 100
+    BPM = 70
     step_duration = 60.0 / BPM / 4 # duration for one step in pattern
 
     DRUMS = {
