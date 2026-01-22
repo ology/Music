@@ -22,6 +22,7 @@ def run_drum_machine(port_name):
                         PATTERNS['kick'] = r.euclid(2, beats)
                     else:
                         PATTERNS['kick'] = [1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0]
+                        DRUMS['kick'] = random.choice([60,64,67,71]) - 12
                     for step in range(16):
                         if PATTERNS['kick'][step]:
                             msg = mido.Message('note_on', note=DRUMS['kick'], velocity=90, channel=0)
