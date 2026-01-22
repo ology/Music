@@ -32,11 +32,11 @@ def kick():
 def snare():
     global size, drummer
     for _ in range(drummer.beats):
-        roll = randint(0, 1)
-        print(f"Snare: {roll}")
+        i = randint(0, 1)
+        print(f"Snare toggle: {i}")
         for _ in range(drummer.beats - 1):
             for n in range(1, size + 1):
-                if roll:
+                if i:
                     if n % 2 == 0:
                         drummer.note('snare', duration=1)
                     else:
