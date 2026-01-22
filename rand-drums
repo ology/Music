@@ -31,7 +31,8 @@ $d->score->synch(
 );
 
 # Write the MIDI to a file
-$d->write;
+# $d->write;
+$d->play_with_timidity;
 
 sub hihat {
     _part('Hihat', $d->closed_hh, [qw(qn en)])
