@@ -7,8 +7,8 @@ import time
 from find_primes import all_primes
 from music_creatingrhythms import Rhythms
 
-def midi_msg(outport, event, note, velocity):
-    msg = mido.Message(event, note=note, velocity=velocity, channel=0)
+def midi_msg(outport, event, note, channel, velocity):
+    msg = mido.Message(event, note=note, channel=channel, velocity=velocity)
     outport.send(msg)
 
 def run_drum_machine(port_name):
@@ -30,20 +30,20 @@ def run_drum_machine(port_name):
                         DRUMS['hihat'] = random_note()
                     for step in range(16):
                         if PATTERNS['kick'][step]:
-                            midi_msg(outport, 'note_on', DRUMS['kick'], velo())
+                            midi_msg(outport, 'note_on', DRUMS['kick'], 0, velo())
                         if PATTERNS['snare'][step]:
-                            midi_msg(outport, 'note_on', DRUMS['snare'], velo())
+                            midi_msg(outport, 'note_on', DRUMS['snare'], 1, velo())
                         if PATTERNS['hihat'][step]:
-                            midi_msg(outport, 'note_on', DRUMS['hihat'], velo())
+                            midi_msg(outport, 'note_on', DRUMS['hihat'], 2, velo())
                         
                         time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
 
                         if PATTERNS['kick'][step]:
-                            midi_msg(outport, 'note_off', DRUMS['kick'], 0)
+                            midi_msg(outport, 'note_off', DRUMS['kick'], 0, 0)
                         if PATTERNS['snare'][step]:
-                            midi_msg(outport, 'note_off', DRUMS['snare'], 0)
+                            midi_msg(outport, 'note_off', DRUMS['snare'], 1, 0)
                         if PATTERNS['hihat'][step]:
-                            midi_msg(outport, 'note_off', DRUMS['hihat'], 0)
+                            midi_msg(outport, 'note_off', DRUMS['hihat'], 2, 0)
 
                         time.sleep(dura * 0.1) # Remainder of the step duration
                     N += 1
