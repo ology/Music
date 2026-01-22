@@ -8,7 +8,7 @@ from find_primes import all_primes
 from music_creatingrhythms import Rhythms
 
 def run_drum_machine(port_name):
-    global PATTERNS, DRUMS, dura, beats, N
+    global PATTERNS, DRUMS, dura, beats, N, velo
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
