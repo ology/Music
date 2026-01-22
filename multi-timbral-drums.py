@@ -18,12 +18,12 @@ def run_drum_machine(port_name):
                     primes = all_primes(beats, 'list')
                     p = random.choice(primes)
                     PATTERNS['hihat'] = r.euclid(p, beats)
+                    DRUMS['snare'] = random.choice([60,64,67,71]) - 12
                     if N % 2 == 0:
                         PATTERNS['kick'] = r.euclid(2, beats)
                     else:
                         PATTERNS['kick'] = [1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0]
                         DRUMS['kick'] = random.choice([60,64,67,71]) - 12
-                        DRUMS['snare'] = random.choice([60,64,67,71]) - 12
                         DRUMS['hihat'] = random.choice([60,64,67,71]) - 12
                     for step in range(16):
                         if PATTERNS['kick'][step]:
