@@ -17,13 +17,13 @@ def run_drum_machine(port_name):
                 while True:
                     p = random.choice(primes)
                     PATTERNS['hihat'] = r.euclid(p, beats)
-                    DRUMS['snare'] = random.choice([60,64,67,71]) - 12
+                    DRUMS['snare'] = random_note()
                     if N % 2 == 0:
                         PATTERNS['kick'] = r.euclid(2, beats)
                     else:
                         PATTERNS['kick'] = [1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0]
-                        DRUMS['kick'] = random.choice([60,64,67,71]) - 12
-                        DRUMS['hihat'] = random.choice([60,64,67,71]) - 12
+                        DRUMS['kick'] = random_note()
+                        DRUMS['hihat'] = random_note()
                     for step in range(16):
                         if PATTERNS['kick'][step]:
                             v = velo()
@@ -78,6 +78,7 @@ if __name__ == "__main__":
 
     velocity = 64
     velo = lambda: velocity + random.randint(-10, 10)
+    random_note = lambda: random.choice([60,64,67,71]) - 12
 
     N = 0
 
