@@ -49,7 +49,7 @@ def snare():
         fill()
 
 def fill():
-    global drummer, fills
+    global drummer
     rr = Rhythm(
         measure_size=size,
         durations=[1, 0.5, 0.25],
@@ -58,40 +58,9 @@ def fill():
     )
     motif = rr.motif()
     print(f"Fill: {motif}")
-    fill_func = choice(fills)
-    for i, duration in enumerate(motif):
-        patch = fill_func(i)
+    for duration in motif:
+        patch = 'snare'
         drummer.note(patch, duration=duration)
-
-def fill_1(i):
-    patch = 'snare'
-    return patch
-
-def fill_2(i):
-    patch = 'snare'
-    return patch
-
-def fill_3(i):
-    patch = 'snare'
-    return patch
-
-def fill_4(i):
-    patch = 'snare'
-    return patch
-
-def fill_5(i):
-    patch = 'snare'
-    return patch
-
-def fill_6(i):
-    patch = 'snare'
-    return patch
-
-def or_cymbal(patch):
-    global drummer
-    cymbals = ['crash1', 'crash2', 'splash', 'china']
-    cymbal = choice(cymbals)
-    return cymbal
 
 if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
@@ -100,15 +69,6 @@ if __name__ == "__main__":
     drummer = Drummer()
     drummer.set_bpm(bpm)
     drummer.set_ts()
-
-    f1 = fill_1
-    f2 = fill_2
-    f3 = fill_3
-    f4 = fill_4
-    f5 = fill_5
-    f6 = fill_6
-
-    fills = [f1, f2, f3, f4, f5, f6]
 
     kick()
     snare()
