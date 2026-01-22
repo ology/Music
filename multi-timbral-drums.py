@@ -27,13 +27,16 @@ def run_drum_machine(port_name):
                         DRUMS['hihat'] = random.choice([60,64,67,71]) - 12
                     for step in range(16):
                         if PATTERNS['kick'][step]:
-                            msg = mido.Message('note_on', note=DRUMS['kick'], velocity=90, channel=0)
+                            v = velo()
+                            msg = mido.Message('note_on', note=DRUMS['kick'], velocity=v, channel=0)
                             outport.send(msg)
                         if PATTERNS['snare'][step]:
-                            msg = mido.Message('note_on', note=DRUMS['snare'], velocity=90, channel=1)
+                            v = velo()
+                            msg = mido.Message('note_on', note=DRUMS['snare'], velocity=v, channel=1)
                             outport.send(msg)
                         if PATTERNS['hihat'][step]:
-                            msg = mido.Message('note_on', note=DRUMS['hihat'], velocity=70, channel=2)
+                            v = velo()
+                            msg = mido.Message('note_on', note=DRUMS['hihat'], velocity=v, channel=2)
                             outport.send(msg)
                         
                         time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
@@ -73,6 +76,9 @@ if __name__ == "__main__":
         'snare': r.rotate_n(4, r.euclid(2, beats)),
         'hihat': r.euclid(11, beats),
     }
+
+    velocity = 64
+    velo = lambda: velocity + random.randint(-20, 20)
 
     N = 0
 
