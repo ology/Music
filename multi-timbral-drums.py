@@ -11,8 +11,8 @@ def midi_msg(outport, event, note, channel, velocity):
     msg = mido.Message(event, note=note, channel=channel, velocity=velocity)
     outport.send(msg)
 
-def drums(port_name):
-    global PATTERNS, DRUMS, dura, beats, N, velo, primes
+def drum_part(port_name):
+    global patterns, drums, dura, beats, N, velo, primes
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
@@ -20,30 +20,30 @@ def drums(port_name):
             try:
                 while True:
                     p = random.choice(primes)
-                    PATTERNS['hihat'] = r.euclid(p, beats)
-                    DRUMS['snare'] = random_note()
+                    patterns['hihat'] = r.euclid(p, beats)
+                    drums['snare'] = random_note()
                     if N % 2 == 0:
-                        PATTERNS['kick'] = r.euclid(2, beats)
+                        patterns['kick'] = r.euclid(2, beats)
                     else:
-                        PATTERNS['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
-                        DRUMS['kick'] = random_note()
-                        DRUMS['hihat'] = random_note()
+                        patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
+                        drums['kick'] = random_note()
+                        drums['hihat'] = random_note()
                     for step in range(beats):
-                        if PATTERNS['kick'][step]:
-                            midi_msg(outport, 'note_on', DRUMS['kick'], 0, velo())
-                        if PATTERNS['snare'][step]:
-                            midi_msg(outport, 'note_on', DRUMS['snare'], 1, velo())
-                        if PATTERNS['hihat'][step]:
-                            midi_msg(outport, 'note_on', DRUMS['hihat'], 2, velo())
+                        if patterns['kick'][step]:
+                            midi_msg(outport, 'note_on', drums['kick'], 0, velo())
+                        if patterns['snare'][step]:
+                            midi_msg(outport, 'note_on', drums['snare'], 1, velo())
+                        if patterns['hihat'][step]:
+                            midi_msg(outport, 'note_on', drums['hihat'], 2, velo())
                         
                         time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
 
-                        if PATTERNS['kick'][step]:
-                            midi_msg(outport, 'note_off', DRUMS['kick'], 0, 0)
-                        if PATTERNS['snare'][step]:
-                            midi_msg(outport, 'note_off', DRUMS['snare'], 1, 0)
-                        if PATTERNS['hihat'][step]:
-                            midi_msg(outport, 'note_off', DRUMS['hihat'], 2, 0)
+                        if patterns['kick'][step]:
+                            midi_msg(outport, 'note_off', drums['kick'], 0, 0)
+                        if patterns['snare'][step]:
+                            midi_msg(outport, 'note_off', drums['snare'], 1, 0)
+                        if patterns['hihat'][step]:
+                            midi_msg(outport, 'note_off', drums['hihat'], 2, 0)
 
                         time.sleep(dura * 0.1) # Remainder of the step duration
                     N += 1
@@ -54,10 +54,10 @@ def drums(port_name):
         print("Check your virtual MIDI port setup and names")
 
 if __name__ == "__main__":
-    BPM = 70
-    dura = 60.0 / BPM / 4 # duration of one pattern step
+    bpm = 70
+    dura = 60.0 / bpm / 4 # duration of one pattern step
 
-    DRUMS = {
+    drums = {
         'kick': 36,  # Acoustic Bass Drum
         'snare': 38, # Acoustic Snare
         'hihat': 42  # Closed Hi-Hat
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     r = Rhythms()
     beats = 16
-    PATTERNS = {
+    patterns = {
         'kick': r.euclid(2, beats),
         'snare': r.rotate_n(4, r.euclid(2, beats)),
         'hihat': r.euclid(11, beats),
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     primes = all_primes(beats, 'list')
 
     try:
-        drums('MIDIThing2')
+        patterns('MIDIThing2')
     except IndexError:
         print("No MIDI output ports found.")
         sys.exit(1)
