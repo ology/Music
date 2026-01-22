@@ -28,7 +28,7 @@ def drums(port_name):
                         PATTERNS['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
                         DRUMS['kick'] = random_note()
                         DRUMS['hihat'] = random_note()
-                    for step in range(16):
+                    for step in range(beats):
                         if PATTERNS['kick'][step]:
                             midi_msg(outport, 'note_on', DRUMS['kick'], 0, velo())
                         if PATTERNS['snare'][step]:
