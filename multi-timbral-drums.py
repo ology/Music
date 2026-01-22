@@ -21,7 +21,7 @@ def run_drum_machine(port_name):
                     if N % 2 == 0:
                         PATTERNS['kick'] = r.euclid(2, beats)
                     else:
-                        PATTERNS['kick'] = [1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0]
+                        PATTERNS['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
                         DRUMS['kick'] = random_note()
                         DRUMS['hihat'] = random_note()
                     for step in range(16):
