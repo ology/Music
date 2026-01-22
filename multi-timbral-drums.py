@@ -78,7 +78,7 @@ if __name__ == "__main__":
     }
 
     velocity = 64
-    velo = lambda: velocity + random.randint(-20, 20)
+    velo = lambda: velocity + random.randint(-10, 10)
 
     N = 0
 
