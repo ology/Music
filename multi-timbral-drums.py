@@ -8,14 +8,13 @@ from find_primes import all_primes
 from music_creatingrhythms import Rhythms
 
 def run_drum_machine(port_name):
-    global PATTERNS, DRUMS, dura, beats, N, velo
+    global PATTERNS, DRUMS, dura, beats, N, velo, primes
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
             print("Drum machine running... Ctrl+C to stop.")
             try:
                 while True:
-                    primes = all_primes(beats, 'list')
                     p = random.choice(primes)
                     PATTERNS['hihat'] = r.euclid(p, beats)
                     DRUMS['snare'] = random.choice([60,64,67,71]) - 12
@@ -81,6 +80,8 @@ if __name__ == "__main__":
     velo = lambda: velocity + random.randint(-10, 10)
 
     N = 0
+
+    primes = all_primes(beats, 'list')
 
     try:
         run_drum_machine('MIDIThing2')
