@@ -11,7 +11,7 @@ def midi_msg(outport, event, note, channel, velocity):
     msg = mido.Message(event, note=note, channel=channel, velocity=velocity)
     outport.send(msg)
 
-def run_drum_machine(port_name):
+def drums(port_name):
     global PATTERNS, DRUMS, dura, beats, N, velo, primes
     try:
         with mido.open_output(port_name) as outport:
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     primes = all_primes(beats, 'list')
 
     try:
-        run_drum_machine('MIDIThing2')
+        drums('MIDIThing2')
     except IndexError:
         print("No MIDI output ports found.")
         sys.exit(1)
