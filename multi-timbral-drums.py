@@ -7,6 +7,10 @@ import time
 from find_primes import all_primes
 from music_creatingrhythms import Rhythms
 
+def midi_msg(outport, event, note, velocity):
+    msg = mido.Message(event, note=note, velocity=velocity, channel=0)
+    outport.send(msg)
+
 def run_drum_machine(port_name):
     global PATTERNS, DRUMS, dura, beats, N, velo, primes
     try:
@@ -26,29 +30,20 @@ def run_drum_machine(port_name):
                         DRUMS['hihat'] = random_note()
                     for step in range(16):
                         if PATTERNS['kick'][step]:
-                            v = velo()
-                            msg = mido.Message('note_on', note=DRUMS['kick'], velocity=v, channel=0)
-                            outport.send(msg)
+                            midi_msg(outport, 'note_on', DRUMS['kick'], velo())
                         if PATTERNS['snare'][step]:
-                            v = velo()
-                            msg = mido.Message('note_on', note=DRUMS['snare'], velocity=v, channel=1)
-                            outport.send(msg)
+                            midi_msg(outport, 'note_on', DRUMS['snare'], velo())
                         if PATTERNS['hihat'][step]:
-                            v = velo()
-                            msg = mido.Message('note_on', note=DRUMS['hihat'], velocity=v, channel=2)
-                            outport.send(msg)
+                            midi_msg(outport, 'note_on', DRUMS['hihat'], velo())
                         
                         time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
 
                         if PATTERNS['kick'][step]:
-                            msg = mido.Message('note_off', note=DRUMS['kick'], velocity=0, channel=0)
-                            outport.send(msg)
+                            midi_msg(outport, 'note_off', DRUMS['kick'], 0)
                         if PATTERNS['snare'][step]:
-                            msg = mido.Message('note_off', note=DRUMS['snare'], velocity=0, channel=1)
-                            outport.send(msg)
+                            midi_msg(outport, 'note_off', DRUMS['snare'], 0)
                         if PATTERNS['hihat'][step]:
-                            msg = mido.Message('note_off', note=DRUMS['hihat'], velocity=0, channel=2)
-                            outport.send(msg)
+                            midi_msg(outport, 'note_off', DRUMS['hihat'], 0)
 
                         time.sleep(dura * 0.1) # Remainder of the step duration
                     N += 1
