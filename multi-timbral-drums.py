@@ -8,7 +8,7 @@ from find_primes import all_primes
 from music_creatingrhythms import Rhythms
 
 def run_drum_machine(port_name):
-    global PATTERNS, DRUMS, step_duration, beats, N
+    global PATTERNS, DRUMS, dura, beats, N
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
@@ -36,7 +36,7 @@ def run_drum_machine(port_name):
                             msg = mido.Message('note_on', note=DRUMS['hihat'], velocity=70, channel=2)
                             outport.send(msg)
                         
-                        time.sleep(step_duration * 0.9) # slightly shorter than step to prevent overlap
+                        time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
 
                         if PATTERNS['kick'][step]:
                             msg = mido.Message('note_off', note=DRUMS['kick'], velocity=0, channel=0)
@@ -48,7 +48,7 @@ def run_drum_machine(port_name):
                             msg = mido.Message('note_off', note=DRUMS['hihat'], velocity=0, channel=2)
                             outport.send(msg)
 
-                        time.sleep(step_duration * 0.1) # Remainder of the step duration
+                        time.sleep(dura * 0.1) # Remainder of the step duration
                     N += 1
             except KeyboardInterrupt:
                 print("\nDrum machine stopped.")
@@ -58,7 +58,7 @@ def run_drum_machine(port_name):
 
 if __name__ == "__main__":
     BPM = 70
-    step_duration = 60.0 / BPM / 4 # duration for one step in pattern
+    dura = 60.0 / BPM / 4 # duration for one step in pattern
 
     DRUMS = {
         'kick': 36,  # Acoustic Bass Drum
