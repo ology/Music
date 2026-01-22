@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     velocity = 64
     velo = lambda: velocity + random.randint(-10, 10)
-    random_note = lambda: random.choice([60,64,67,71]) - 12
+    random_note = lambda: random.choice([60,64,67]) - 12
 
     N = 0
 
