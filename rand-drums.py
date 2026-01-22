@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import sys
-from random import randint, choice
 
 from music_drummer import Drummer
 from random_rhythms import Rhythm
