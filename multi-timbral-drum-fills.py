@@ -56,28 +56,20 @@ def drum_part(port_name):
                 while True:
                     for i in range(3):
                         adjust_kit(i, N)
+
                         for step in range(beats):
-                            if patterns['kick'][step]:
-                                midi_msg(outport, 'note_on', drums['kick']['num'], drums['kick']['chan'], velo())
-                            if patterns['snare'][step]:
-                                midi_msg(outport, 'note_on', drums['snare']['num'], drums['snare']['chan'], velo())
-                            if patterns['hihat'][step]:
-                                midi_msg(outport, 'note_on', drums['hihat']['num'], drums['hihat']['chan'], velo())
-                            if patterns['cymbals'][step]:
-                                midi_msg(outport, 'note_on', drums['cymbals']['num'], drums['cymbals']['chan'], velo())
+                            for drum in ['kick', 'snare', 'hihat', 'cymbals']:
+                                if patterns[drum][step]:
+                                    midi_msg(outport, 'note_on', drums[drum]['num'], drums[drum]['chan'], velo())
                             
                             time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
 
-                            if patterns['kick'][step]:
-                                midi_msg(outport, 'note_off', drums['kick']['num'], drums['kick']['chan'], 0)
-                            if patterns['snare'][step]:
-                                midi_msg(outport, 'note_off', drums['snare']['num'], drums['snare']['chan'], 0)
-                            if patterns['hihat'][step]:
-                                midi_msg(outport, 'note_off', drums['hihat']['num'], drums['hihat']['chan'], 0)
-                            if patterns['cymbals'][step]:
-                                midi_msg(outport, 'note_off', drums['cymbals']['num'], drums['cymbals']['chan'], 0)
+                            for drum in ['kick', 'snare', 'hihat', 'cymbals']:
+                                if patterns[drum][step]:
+                                    midi_msg(outport, 'note_off', drums[drum]['num'], drums[drum]['chan'], 0)
 
                             time.sleep(dura * 0.1) # Remainder of the step duration
+
                     fill(outport)
                     N += 1
             except KeyboardInterrupt:
