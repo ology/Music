@@ -20,9 +20,7 @@ def fill(outport):
         groups=[0, 0, 2]
     )
     motif = rr.motif()
-    print(f"Fill: {motif}")
     for duration in motif:
-        print(duration)
         midi_msg(outport, 'note_on', drums['snare'], 1, velo())
         time.sleep(duration * per_sec * 0.9)
         midi_msg(outport, 'note_off', drums['snare'], 1, 0)
