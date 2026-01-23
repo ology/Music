@@ -137,8 +137,8 @@ if __name__ == "__main__":
         stream_thread.start()
         outport.send(mido.Message('start'))
         try:
-            while not stop_threads:
-                time.sleep(0.1) # shorter sleep to allow signal handling
+            while True:
+                time.sleep(interval)
         except KeyboardInterrupt:
             outport.send(mido.Message('stop'))
             print("\nSignaling threads to stop...")
