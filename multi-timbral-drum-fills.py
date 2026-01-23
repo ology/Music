@@ -32,13 +32,13 @@ def adjust_kit(i, n):
     patterns['hihat'] = r.euclid(p, beats)
     drums['snare']['num'] = random_note()
     if n % 2 == 0:
-        patterns['kick'] = r.euclid(2, beats)
         patterns['snare'] = r.rotate_n(4, r.euclid(2, beats))
+        patterns['kick'] = r.euclid(2, beats)
     else:
+        patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
         patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
         drums['kick']['num'] = random_note()
         drums['hihat']['num'] = random_note()
-        patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
     if i == 0 and n > 0:
         patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         drums['cymbals']['num'] = random_note()
