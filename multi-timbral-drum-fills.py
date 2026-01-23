@@ -75,7 +75,7 @@ def drum_part(port_name):
         print("Check your virtual MIDI port setup and names")
 
 if __name__ == "__main__":
-    bpm = sys.argv[1] if len(sys.argv) > 1 else 120
+    bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
 
     per_sec = 60.0 / bpm
     dura = 60.0 / bpm / 4 # duration of one pattern step
