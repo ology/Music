@@ -17,7 +17,7 @@ def part(name, note, pool):
     for _ in range(drummer.beats - 1):
         for duration in motif:
             drummer.note(note, duration=duration)
-    drummer.rest(note, duration=4)
+    drummer.rest(note, duration=size)
 
 def hihat():
     global drummer
