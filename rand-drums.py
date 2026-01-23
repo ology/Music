@@ -63,7 +63,7 @@ def fill():
 
 if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
-    size = 4
+    size = int(sys.argv[2]) if len(sys.argv) > 2 else 4
 
     drummer = Drummer()
     drummer.set_bpm(bpm)
