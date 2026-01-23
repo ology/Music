@@ -34,7 +34,7 @@ def drum_part(port_name):
             print("Drum machine running... Ctrl+C to stop.")
             try:
                 while True:
-                    for _ in range(3):
+                    for i in range(3):
                         p = random.choice(primes)
                         patterns['hihat'] = r.euclid(p, beats)
                         drums['snare'] = random_note()
@@ -44,6 +44,11 @@ def drum_part(port_name):
                             patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
                             drums['kick'] = random_note()
                             drums['hihat'] = random_note()
+                        if i == 0 and N > 0:
+                            patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+                            drums['cymbals'] = random_note()
+                        else:
+                            patterns['cymbals'] = [0 for _ in range(beats)]
                         for step in range(beats):
                             if patterns['kick'][step]:
                                 midi_msg(outport, 'note_on', drums['kick'], 0, velo())
@@ -51,6 +56,8 @@ def drum_part(port_name):
                                 midi_msg(outport, 'note_on', drums['snare'], 1, velo())
                             if patterns['hihat'][step]:
                                 midi_msg(outport, 'note_on', drums['hihat'], 2, velo())
+                            if patterns['cymbals'][step]:
+                                midi_msg(outport, 'note_on', drums['cymbals'], 3, velo())
                             
                             time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
 
@@ -60,6 +67,8 @@ def drum_part(port_name):
                                 midi_msg(outport, 'note_off', drums['snare'], 1, 0)
                             if patterns['hihat'][step]:
                                 midi_msg(outport, 'note_off', drums['hihat'], 2, 0)
+                            if patterns['cymbals'][step]:
+                                midi_msg(outport, 'note_off', drums['cymbals'], 3, 0)
 
                             time.sleep(dura * 0.1) # Remainder of the step duration
                     fill(outport)
@@ -81,9 +90,10 @@ if __name__ == "__main__":
     dura = per_sec / 4 # duration of one pattern step
 
     drums = {
-        'kick': 36,  # Acoustic Bass Drum
+        'kick': 36, # Acoustic Bass Drum
         'snare': 38, # Acoustic Snare
-        'hihat': 42  # Closed Hi-Hat
+        'hihat': 42, # Closed Hi-Hat
+        'cymbals': 49, # Crash1
     }
 
     r = Rhythms()
@@ -92,6 +102,7 @@ if __name__ == "__main__":
         'kick': r.euclid(2, beats),
         'snare': r.rotate_n(4, r.euclid(2, beats)),
         'hihat': r.euclid(11, beats),
+        'cymbals': [0 for _ in range(beats)],
     }
 
     velo = lambda: 64 + random.randint(-10, 10)
