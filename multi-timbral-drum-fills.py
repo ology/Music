@@ -40,10 +40,12 @@ def drum_part(port_name):
                         drums['snare'] = random_note()
                         if N % 2 == 0:
                             patterns['kick'] = r.euclid(2, beats)
+                            patterns['snare'] = r.rotate_n(4, r.euclid(2, beats))
                         else:
                             patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
                             drums['kick'] = random_note()
                             drums['hihat'] = random_note()
+                            patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
                         if i == 0 and N > 0:
                             patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
                             drums['cymbals'] = random_note()
