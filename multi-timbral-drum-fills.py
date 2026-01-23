@@ -12,7 +12,7 @@ def midi_msg(outport, event, note, channel, velocity):
     outport.send(msg)
 
 def fill(outport):
-    global drums, velo
+    global per_sec, drums, velo
     rr = Rhythm(
         measure_size=4,
         durations=[1, 0.5, 0.25],
@@ -24,9 +24,9 @@ def fill(outport):
     for duration in motif:
         print(duration)
         midi_msg(outport, 'note_on', drums['snare'], 1, velo())
-        time.sleep(duration * 0.9)
+        time.sleep(duration * per_sec * 0.9)
         midi_msg(outport, 'note_off', drums['snare'], 1, 0)
-        time.sleep(duration * 0.1)
+        time.sleep(duration * per_sec * 0.1)
 
 def drum_part(port_name):
     global r, patterns, drums, dura, beats, N, velo, random_note, primes
@@ -81,6 +81,7 @@ def drum_part(port_name):
 
 if __name__ == "__main__":
     bpm = 70
+    per_sec = 60.0 / bpm
     dura = 60.0 / bpm / 4 # duration of one pattern step
 
     drums = {
