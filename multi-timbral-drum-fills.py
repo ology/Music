@@ -15,7 +15,7 @@ def fill(outport):
     global per_sec, drums, velo
     rr = Rhythm(
         measure_size=4,
-        durations=[1, 0.5, 0.25],
+        durations=[1, 1/2, 1/4],
         weights=[5, 10, 5],
         groups=[0, 0, 2]
     )
