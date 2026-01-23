@@ -59,8 +59,7 @@ def fill():
     motif = rr.motif()
     print(f"Fill: {motif}")
     for duration in motif:
-        patch = 'snare'
-        drummer.note(patch, duration=duration)
+        drummer.note('snare', duration=duration)
 
 if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
