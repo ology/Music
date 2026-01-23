@@ -78,7 +78,7 @@ if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
 
     per_sec = 60.0 / bpm
-    dura = 60.0 / bpm / 4 # duration of one pattern step
+    dura = per_sec / 4 # duration of one pattern step
 
     drums = {
         'kick': 36,  # Acoustic Bass Drum
