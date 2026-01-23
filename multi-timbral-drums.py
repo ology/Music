@@ -12,7 +12,7 @@ def midi_msg(outport, event, note, channel, velocity):
     outport.send(msg)
 
 def drum_part(port_name):
-    global patterns, drums, dura, beats, N, velo, primes
+    global r, patterns, drums, dura, beats, N, velo, random_note, primes
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
