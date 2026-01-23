@@ -65,7 +65,10 @@ if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
     ts = sys.argv[2] if len(sys.argv) > 2 else '4/4'
 
-    size = int(ts.split('/')[0])
+    numerator   = int(ts.split('/')[0])
+    denominator = int(ts.split('/')[1])
+    by4         = denominator / 4
+    size        = int(numerator / 1 / by4)
 
     drummer = Drummer()
     drummer.set_bpm(bpm)
