@@ -124,7 +124,7 @@ if __name__ == "__main__":
     }
 
     velo = lambda: 64 + random.randint(-10, 10)
-    random_note = lambda: random.choice([60,64,67]) - 12
+    random_note = lambda: random.choice([60,64,67]) - 24
 
     N = 0
 
