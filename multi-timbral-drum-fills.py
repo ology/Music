@@ -26,8 +26,28 @@ def fill(outport):
         midi_msg(outport, 'note_off', drums['snare'], 1, 0)
         time.sleep(duration * per_sec * 0.1)
 
+def adjust_kit(i, n):
+    global r, patterns, drums, beats, random_note, primes
+    p = random.choice(primes)
+    patterns['hihat'] = r.euclid(p, beats)
+    drums['snare'] = random_note()
+    if n % 2 == 0:
+        patterns['kick'] = r.euclid(2, beats)
+        patterns['snare'] = r.rotate_n(4, r.euclid(2, beats))
+    else:
+        patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
+        drums['kick'] = random_note()
+        drums['hihat'] = random_note()
+        patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
+    if i == 0 and n > 0:
+        patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        drums['cymbals'] = random_note()
+        patterns['hihat'][0] = 0
+    else:
+        patterns['cymbals'] = [0 for _ in range(beats)]
+
 def drum_part(port_name):
-    global r, patterns, drums, dura, beats, N, velo, random_note, primes
+    global r, patterns, drums, beats, velo, N
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
@@ -35,23 +55,7 @@ def drum_part(port_name):
             try:
                 while True:
                     for i in range(3):
-                        p = random.choice(primes)
-                        patterns['hihat'] = r.euclid(p, beats)
-                        drums['snare'] = random_note()
-                        if N % 2 == 0:
-                            patterns['kick'] = r.euclid(2, beats)
-                            patterns['snare'] = r.rotate_n(4, r.euclid(2, beats))
-                        else:
-                            patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
-                            drums['kick'] = random_note()
-                            drums['hihat'] = random_note()
-                            patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
-                        if i == 0 and N > 0:
-                            patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-                            drums['cymbals'] = random_note()
-                            patterns['hihat'][0] = 0
-                        else:
-                            patterns['cymbals'] = [0 for _ in range(beats)]
+                        adjust_kit(i, N)
                         for step in range(beats):
                             if patterns['kick'][step]:
                                 midi_msg(outport, 'note_on', drums['kick'], 0, velo())
