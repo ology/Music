@@ -21,27 +21,27 @@ def fill(outport):
     )
     motif = rr.motif()
     for duration in motif:
-        midi_msg(outport, 'note_on', drums['snare'], 1, velo())
+        midi_msg(outport, 'note_on', drums['snare']['num'], drums['snare']['chan'], velo())
         time.sleep(duration * per_sec * 0.9)
-        midi_msg(outport, 'note_off', drums['snare'], 1, 0)
+        midi_msg(outport, 'note_off', drums['snare']['num'], drums['snare']['chan'], 0)
         time.sleep(duration * per_sec * 0.1)
 
 def adjust_kit(i, n):
     global r, patterns, drums, beats, random_note, primes
     p = random.choice(primes)
     patterns['hihat'] = r.euclid(p, beats)
-    drums['snare'] = random_note()
+    drums['snare']['num'] = random_note()
     if n % 2 == 0:
         patterns['kick'] = r.euclid(2, beats)
         patterns['snare'] = r.rotate_n(4, r.euclid(2, beats))
     else:
         patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
-        drums['kick'] = random_note()
-        drums['hihat'] = random_note()
+        drums['kick']['num'] = random_note()
+        drums['hihat']['num'] = random_note()
         patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
     if i == 0 and n > 0:
         patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        drums['cymbals'] = random_note()
+        drums['cymbals']['num'] = random_note()
         patterns['hihat'][0] = 0
     else:
         patterns['cymbals'] = [0 for _ in range(beats)]
@@ -58,30 +58,30 @@ def drum_part(port_name):
                         adjust_kit(i, N)
                         for step in range(beats):
                             if patterns['kick'][step]:
-                                midi_msg(outport, 'note_on', drums['kick'], 0, velo())
+                                midi_msg(outport, 'note_on', drums['kick']['num'], drums['kick']['chan'], velo())
                             if patterns['snare'][step]:
-                                midi_msg(outport, 'note_on', drums['snare'], 1, velo())
+                                midi_msg(outport, 'note_on', drums['snare']['num'], drums['snare']['chan'], velo())
                             if patterns['hihat'][step]:
-                                midi_msg(outport, 'note_on', drums['hihat'], 2, velo())
+                                midi_msg(outport, 'note_on', drums['hihat']['num'], drums['hihat']['chan'], velo())
                             if patterns['cymbals'][step]:
-                                midi_msg(outport, 'note_on', drums['cymbals'], 3, velo())
+                                midi_msg(outport, 'note_on', drums['cymbals']['num'], drums['cymbals']['chan'], velo())
                             
                             time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
 
                             if patterns['kick'][step]:
-                                midi_msg(outport, 'note_off', drums['kick'], 0, 0)
+                                midi_msg(outport, 'note_off', drums['kick']['num'], drums['kick']['chan'], 0)
                             if patterns['snare'][step]:
-                                midi_msg(outport, 'note_off', drums['snare'], 1, 0)
+                                midi_msg(outport, 'note_off', drums['snare']['num'], drums['snare']['chan'], 0)
                             if patterns['hihat'][step]:
-                                midi_msg(outport, 'note_off', drums['hihat'], 2, 0)
+                                midi_msg(outport, 'note_off', drums['hihat']['num'], drums['hihat']['chan'], 0)
                             if patterns['cymbals'][step]:
-                                midi_msg(outport, 'note_off', drums['cymbals'], 3, 0)
+                                midi_msg(outport, 'note_off', drums['cymbals']['num'], drums['cymbals']['chan'], 0)
 
                             time.sleep(dura * 0.1) # Remainder of the step duration
                     fill(outport)
                     N += 1
             except KeyboardInterrupt:
-                for c in [0,1,2]:
+                for c in [0,1,2,3]:
                     msg = mido.Message('control_change', channel=c, control=123, value=0)
                     outport.send(msg)
                 outport.close()
@@ -97,10 +97,22 @@ if __name__ == "__main__":
     dura = per_sec / 4 # duration of one pattern step
 
     drums = {
-        'kick': 36, # Acoustic Bass Drum
-        'snare': 38, # Acoustic Snare
-        'hihat': 42, # Closed Hi-Hat
-        'cymbals': 49, # Crash1
+        'kick': {
+            'num': 36, # Acoustic Bass Drum
+            'chan': 0,
+        },
+        'snare': {
+            'num': 38, # Acoustic Snare
+            'chan': 1,
+        },
+        'hihat': {
+            'num': 42, # Closed Hi-Hat
+            'chan': 2,
+        },
+        'cymbals': {
+            'num': 49, # Crash1
+            'chan': 3,
+        },
     }
 
     r = Rhythms()
