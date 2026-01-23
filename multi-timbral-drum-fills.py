@@ -65,12 +65,9 @@ def drum_part(port_name):
                     fill(outport)
                     N += 1
             except KeyboardInterrupt:
-                msg = mido.Message('control_change', channel=0, control=123, value=0)
-                outport.send(msg)
-                msg = mido.Message('control_change', channel=1, control=123, value=0)
-                outport.send(msg)
-                msg = mido.Message('control_change', channel=2, control=123, value=0)
-                outport.send(msg)
+                for c in [0,1,2]:
+                    msg = mido.Message('control_change', channel=c, control=123, value=0)
+                    outport.send(msg)
                 outport.close()
                 print("\nDrum machine stopped.")
     except mido.PortUnavailableError as e:
