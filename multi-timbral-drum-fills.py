@@ -88,7 +88,6 @@ def drum_part(port_name):
                 print("\nDrum machine stopped.")
     except mido.PortUnavailableError as e:
         print(f"Error: {e}")
-        print("Check your virtual MIDI port setup and names")
 
 if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
