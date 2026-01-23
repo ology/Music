@@ -63,12 +63,13 @@ def fill():
 
 if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
-    size = int(sys.argv[2]) if len(sys.argv) > 2 else 4
+    ts = sys.argv[2] if len(sys.argv) > 2 else '4/4'
+
+    size = int(ts.split('/')[0])
 
     drummer = Drummer()
     drummer.set_bpm(bpm)
-    drummer.set_ts()
-    # drummer.beats(size)
+    drummer.set_ts(ts)
 
     kick()
     snare()
