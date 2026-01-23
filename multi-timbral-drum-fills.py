@@ -36,7 +36,7 @@ def drum_part(port_name):
             print("Drum machine running... Ctrl+C to stop.")
             try:
                 while True:
-                    for _ in range(4):
+                    for _ in range(3):
                         p = random.choice(primes)
                         patterns['hihat'] = r.euclid(p, beats)
                         drums['snare'] = random_note()
