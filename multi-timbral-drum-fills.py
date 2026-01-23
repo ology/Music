@@ -47,6 +47,7 @@ def drum_part(port_name):
                         if i == 0 and N > 0:
                             patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
                             drums['cymbals'] = random_note()
+                            patterns['hihat'][0] = 0
                         else:
                             patterns['cymbals'] = [0 for _ in range(beats)]
                         for step in range(beats):
