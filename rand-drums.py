@@ -68,6 +68,7 @@ if __name__ == "__main__":
     drummer = Drummer()
     drummer.set_bpm(bpm)
     drummer.set_ts()
+    drummer.beats(size)
 
     kick()
     snare()
