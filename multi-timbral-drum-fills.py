@@ -103,5 +103,5 @@ if __name__ == "__main__":
     try:
         drum_part('MIDIThing2')
     except IndexError:
-        print("No MIDI output ports found.")
+        print("Something went wrong.")
         sys.exit(1)
