@@ -73,6 +73,6 @@ if __name__ == "__main__":
     kick()
     snare()
     hihat()
-
     drummer.sync_parts()
+    
     drummer.show('midi')
