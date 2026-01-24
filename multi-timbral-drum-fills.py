@@ -1,3 +1,7 @@
+"""
+Play Euclidean pattersn and snare fills with no clock.
+"""
+
 import mido
 import random
 import sys
