@@ -53,37 +53,31 @@ def adjust_kit(i, n):
 def drum_part(port_name):
     global patterns, drums, beats, velo, N, voices, chans
     try:
-        with mido.open_output(port_name) as outport:
-            print(f"Opened output port: {outport.name}")
-            print("Drum machine running... Ctrl+C to stop.")
-            try:
-                while True:
-                    for i in range(3):
-                        adjust_kit(i, N) # set notes and patterns
+        while True:
+            for i in range(3):
+                adjust_kit(i, N) # set notes and patterns
 
-                        for step in range(beats):
-                            for drum in voices:
-                                if patterns[drum][step]:
-                                    midi_msg(outport, 'note_on', drums[drum]['num'], drums[drum]['chan'], velo())
-                            
-                            time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
+                for step in range(beats):
+                    for drum in voices:
+                        if patterns[drum][step]:
+                            midi_msg(outport, 'note_on', drums[drum]['num'], drums[drum]['chan'], velo())
+                    
+                    time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
 
-                            for drum in voices:
-                                if patterns[drum][step]:
-                                    midi_msg(outport, 'note_off', drums[drum]['num'], drums[drum]['chan'], 0)
+                    for drum in voices:
+                        if patterns[drum][step]:
+                            midi_msg(outport, 'note_off', drums[drum]['num'], drums[drum]['chan'], 0)
 
-                            time.sleep(dura * 0.1) # Remainder of the step duration
+                    time.sleep(dura * 0.1) # Remainder of the step duration
 
-                    fill(outport)
-                    N += 1
-            except KeyboardInterrupt:
-                for c in chans:
-                    msg = mido.Message('control_change', channel=c, control=123, value=0)
-                    outport.send(msg)
-                outport.close()
-                print("\nDrum machine stopped.")
-    except mido.PortUnavailableError as e:
-        print(f"Error: {e}")
+            fill(outport)
+            N += 1
+    except KeyboardInterrupt:
+        for c in chans:
+            msg = mido.Message('control_change', channel=c, control=123, value=0)
+            outport.send(msg)
+        outport.close()
+        print("\nDrum machine stopped.")
 
 if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
@@ -128,7 +122,9 @@ if __name__ == "__main__":
     primes = all_primes(beats, 'list')
 
     try:
-        drum_part('MIDIThing2')
-    except IndexError:
-        print("Something went wrong.")
-        sys.exit(1)
+        with mido.open_output('MIDIThing2') as outport:
+            print(f"Opened output port: {outport.name}")
+            print("Drum machine running... Ctrl+C to stop.")
+            drum_part('MIDIThing2')
+    except mido.PortUnavailableError as e:
+        print(f"Error: {e}")
