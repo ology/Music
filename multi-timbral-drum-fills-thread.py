@@ -14,7 +14,7 @@ def midi_clock_thread():
     while not stop_threads:
         outport.send(mido.Message('clock'))
         clock_tick_count += 1
-        # signal arp_stream thread every beat
+        # signal stream thread every beat
         if clock_tick_count % clocks_per_beat == 0:
             clock_tick_event.set()
             time.sleep(0.001)  # Brief delay to ensure stream thread sees the set event
