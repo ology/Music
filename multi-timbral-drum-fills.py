@@ -125,7 +125,6 @@ if __name__ == "__main__":
     random_note = lambda: random.choice([60,64,67]) - 24
 
     N = 0
-
     primes = all_primes(beats, 'list')
 
     try:
