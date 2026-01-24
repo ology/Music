@@ -17,6 +17,7 @@ def midi_clock_thread():
         # signal arp_stream thread every beat
         if clock_tick_count % clocks_per_beat == 0:
             clock_tick_event.set()
+            time.sleep(0.001)  # Brief delay to ensure stream thread sees the set event
         time.sleep(interval)
 
 def midi_msg(outport, event, note, channel, velocity):
@@ -61,8 +62,10 @@ def adjust_kit(i, n):
 def stream_thread_fn():
     global outport, stop_threads, clock_tick_event, patterns, drums, beats, velo, N
     while not stop_threads:
-        clock_tick_event.wait() # wait for the next beat (PLL sync)
-        clock_tick_event.clear()
+        if clock_tick_event.wait(timeout=1.0):  # Add timeout to prevent hanging
+            clock_tick_event.clear()
+        else:
+            continue  # Skip this iteration if timeout occurs
         for i in range(3):
             adjust_kit(i, N)
 
