@@ -80,7 +80,7 @@ def drum_part():
         print("\nDrum machine stopped.")
 
 if __name__ == "__main__":
-    bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
+    bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120 # XXX actual = 115
 
     per_sec = 60.0 / bpm
     dura = per_sec / 4 # duration of one pattern step
