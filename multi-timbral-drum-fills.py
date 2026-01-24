@@ -51,7 +51,7 @@ def adjust_kit(i, n):
         patterns['cymbals'] = [0 for _ in range(beats)]
 
 def drum_part(port_name):
-    global patterns, drums, beats, velo, N
+    global patterns, drums, beats, velo, N, voices, chans
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
@@ -77,7 +77,7 @@ def drum_part(port_name):
                     fill(outport)
                     N += 1
             except KeyboardInterrupt:
-                for c in [0,1,2,3]:
+                for c in chans:
                     msg = mido.Message('control_change', channel=c, control=123, value=0)
                     outport.send(msg)
                 outport.close()
@@ -110,6 +110,7 @@ if __name__ == "__main__":
         },
     }
     voices = list(drums.keys())
+    chans = [ i['chan'] for i in drums.values() ]
 
     r = Rhythms()
     beats = 16
