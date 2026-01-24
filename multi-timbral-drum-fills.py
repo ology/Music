@@ -1,5 +1,5 @@
 """
-Play Euclidean pattersn and snare fills with no clock.
+Play Euclidean patterns and snare fills with no clock.
 """
 
 import mido
