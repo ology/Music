@@ -51,7 +51,7 @@ def adjust_kit(i, n):
         patterns['cymbals'] = [0 for _ in range(beats)]
 
 def drum_part(port_name):
-    global r, patterns, drums, beats, velo, N
+    global patterns, drums, beats, velo, N
     try:
         with mido.open_output(port_name) as outport:
             print(f"Opened output port: {outport.name}")
