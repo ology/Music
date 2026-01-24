@@ -59,7 +59,7 @@ def drum_part(port_name):
             try:
                 while True:
                     for i in range(3):
-                        adjust_kit(i, N)
+                        adjust_kit(i, N) # set notes and patterns
 
                         for step in range(beats):
                             for drum in voices:
