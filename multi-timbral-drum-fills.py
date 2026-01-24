@@ -62,13 +62,13 @@ def drum_part(port_name):
                         adjust_kit(i, N)
 
                         for step in range(beats):
-                            for drum in ['kick', 'snare', 'hihat', 'cymbals']:
+                            for drum in voices:
                                 if patterns[drum][step]:
                                     midi_msg(outport, 'note_on', drums[drum]['num'], drums[drum]['chan'], velo())
                             
                             time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
 
-                            for drum in ['kick', 'snare', 'hihat', 'cymbals']:
+                            for drum in voices:
                                 if patterns[drum][step]:
                                     midi_msg(outport, 'note_off', drums[drum]['num'], drums[drum]['chan'], 0)
 
@@ -109,6 +109,7 @@ if __name__ == "__main__":
             'chan': 3,
         },
     }
+    voices = list(drums.keys())
 
     r = Rhythms()
     beats = 16
