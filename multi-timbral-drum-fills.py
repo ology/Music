@@ -50,7 +50,7 @@ def adjust_kit(i, n):
     else:
         patterns['cymbals'] = [0 for _ in range(beats)]
 
-def drum_part(port_name):
+def drum_part():
     global patterns, drums, beats, velo, N, voices, chans
     try:
         while True:
@@ -125,6 +125,6 @@ if __name__ == "__main__":
         with mido.open_output('MIDIThing2') as outport:
             print(f"Opened output port: {outport.name}")
             print("Drum machine running... Ctrl+C to stop.")
-            drum_part('MIDIThing2')
+            drum_part()
     except mido.PortUnavailableError as e:
         print(f"Error: {e}")
