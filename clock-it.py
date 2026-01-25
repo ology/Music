@@ -15,8 +15,8 @@ def send_clock(outport, bpm):
         print("\nExiting")
 
 if __name__ == "__main__":
-    bpm = sys.argv[2] if len(sys.argv) > 2 else 120
     port = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
+    bpm = sys.argv[2] if len(sys.argv) > 2 else 120
     with mido.open_output(port) as outport:
         print(f"Port {outport} at {bpm} BPM")
         send_clock(outport, bpm)
