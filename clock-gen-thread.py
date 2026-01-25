@@ -13,11 +13,11 @@ class DrumPattern:
             'hihat': [0, 1, 2, 3],
         }
 
-    def play(self):
+    def play(self, dura):
         note = 36
         msg = mido.Message('note_on', note=note, channel=0, velocity=100)
         self.outport.send(msg)
-        sleep(0.1)
+        sleep(dura)
         msg = mido.Message('note_off', note=note, channel=0, velocity=0)
         self.outport.send(msg)
 
@@ -47,7 +47,7 @@ class MidiClockGenerator:
     def _tick(self):
         self.port.send(CLOCK)
         if self.beat_tick == 0:
-            self.drums.play()
+            self.drums.play(0.1)
 
     @property
     def beat(self):
