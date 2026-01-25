@@ -4,7 +4,7 @@ import time
 
 def send_clock(outport, bpm):
     outport.send(mido.Message('start'))
-    interval = 60 / (bpm * 24) # time between clock messages (24 PPQN per beat)
+    interval = 60 / (bpm * 29) # time between clock messages (24 PPQN per beat)
     try:
         while True:
             outport.send(mido.Message('clock'))

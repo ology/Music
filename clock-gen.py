@@ -1,3 +1,4 @@
+import sys
 from time import sleep, time
 import mido
 
@@ -37,9 +38,11 @@ class Generator(object):
         self.port.send(CLOCK)
 
 if __name__ == "__main__":
+    bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
+
     with mido.open_output('MIDIThing2') as outport:
         outport.send(mido.Message('start'))
-        gen = Generator(port=outport, bpm=70, tpb=24)
+        gen = Generator(port=outport, bpm=bpm, tpb=24)
         try:
             gen.start()
         except KeyboardInterrupt:
