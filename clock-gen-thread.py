@@ -17,7 +17,7 @@ class DrumPattern:
         note = 36
         msg = mido.Message('note_on', note=note, channel=0, velocity=100)
         self.outport.send(msg)
-        sleep(0.01)
+        sleep(0.1)
         msg = mido.Message('note_off', note=note, channel=0, velocity=0)
         self.outport.send(msg)
 
