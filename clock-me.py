@@ -17,7 +17,7 @@ def midi_clock_generator(out_port_name, bpm, run_event):
         with mido.open_output(out_port_name) as midi_output:
             print(f"Starting MIDI clock at {bpm} BPM on {out_port_name}")
             clock_tick = mido.Message('clock')
-            # time interval between pulses at 24 pulses per quarter note
+            # interval between pulses at 24 pulses per quarter note
             pulse_rate = 60.0 / (bpm * 24)
             while run_event.is_set():
                 start_time = time.perf_counter()
