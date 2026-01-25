@@ -70,4 +70,4 @@ if __name__ == "__main__":
             gen.start()
         except KeyboardInterrupt:
             outport.send(mido.Message('stop'))
-            print('Stopped.')
+            print("\nStopped.")
