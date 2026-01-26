@@ -11,120 +11,115 @@ from find_primes import all_primes
 from music_creatingrhythms import Rhythms
 from random_rhythms import Rhythm
 
-def midi_msg(outport, event, note, channel, velocity):
-    msg = mido.Message(event, note=note, channel=channel, velocity=velocity)
-    outport.send(msg)
+class DrumMachine:
+    def __init__(self, bpm=120):
+        self.bpm = bpm
+        self.per_sec = 60.0 / bpm
+        self.dura = self.per_sec / 4
+        
+        self.drums = {
+            'kick': {'num': 36, 'chan': 0},
+            'snare': {'num': 38, 'chan': 1},
+            'hihat': {'num': 42, 'chan': 2},
+            'cymbals': {'num': 49, 'chan': 3},
+        }
+        self.voices = list(self.drums.keys())
+        self.chans = [i['chan'] for i in self.drums.values()]
+        
+        self.r = Rhythms()
+        self.beats = 16
+        self.patterns = {
+            'kick': self.r.euclid(2, self.beats),
+            'snare': self.r.rotate_n(4, self.r.euclid(2, self.beats)),
+            'hihat': self.r.euclid(11, self.beats),
+            'cymbals': [0 for _ in range(self.beats)],
+        }
+        
+        self.N = 0
+        self.primes = all_primes(self.beats, 'list')
+        self.outport = None
 
-def fill(outport):
-    global per_sec, drums, velo
-    rr = Rhythm(
-        measure_size=4,
-        durations=[1, 1/2, 1/4],
-        weights=[5, 10, 5],
-        groups=[0, 0, 2]
-    )
-    motif = rr.motif()
-    for duration in motif:
-        midi_msg(outport, 'note_on', drums['snare']['num'], drums['snare']['chan'], velo())
-        time.sleep(duration * per_sec * 0.9)
-        midi_msg(outport, 'note_off', drums['snare']['num'], drums['snare']['chan'], 0)
-        time.sleep(duration * per_sec * 0.1)
+    def midi_msg(self, event, note, channel, velocity):
+        msg = mido.Message(event, note=note, channel=channel, velocity=velocity)
+        self.outport.send(msg)
 
-def adjust_kit(i, n):
-    global r, patterns, drums, beats, random_note, primes
-    p = random.choice(primes)
-    patterns['hihat'] = r.euclid(p, beats)
-    drums['snare']['num'] = random_note()
-    if n % 2 == 0:
-        patterns['snare'] = r.rotate_n(4, r.euclid(2, beats))
-        patterns['kick'] = r.euclid(2, beats)
-    else:
-        patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
-        patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
-        drums['kick']['num'] = random_note()
-        drums['hihat']['num'] = random_note()
-    if i == 0 and n > 0:
-        patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        drums['cymbals']['num'] = random_note()
-        patterns['hihat'][0] = 0
-    else:
-        patterns['cymbals'] = [0 for _ in range(beats)]
+    def velo(self):
+        return 64 + random.randint(-10, 10)
 
-def drum_part():
-    global patterns, drums, beats, velo, N, voices, chans
-    try:
-        while True:
-            for i in range(3):
-                adjust_kit(i, N) # set notes and patterns
+    def random_note(self):
+        return random.choice([60, 64, 67]) - 24
 
-                for step in range(beats):
-                    for drum in voices:
-                        if patterns[drum][step]:
-                            midi_msg(outport, 'note_on', drums[drum]['num'], drums[drum]['chan'], velo())
-                    
-                    time.sleep(dura * 0.9) # slightly shorter than step to prevent overlap
+    def fill(self):
+        rr = Rhythm(
+            measure_size=4,
+            durations=[1, 1/2, 1/4],
+            weights=[5, 10, 5],
+            groups=[0, 0, 2]
+        )
+        motif = rr.motif()
+        for duration in motif:
+            self.midi_msg('note_on', self.drums['snare']['num'], self.drums['snare']['chan'], self.velo())
+            time.sleep(duration * self.per_sec * 0.9)
+            self.midi_msg('note_off', self.drums['snare']['num'], self.drums['snare']['chan'], 0)
+            time.sleep(duration * self.per_sec * 0.1)
 
-                    for drum in voices:
-                        if patterns[drum][step]:
-                            midi_msg(outport, 'note_off', drums[drum]['num'], drums[drum]['chan'], 0)
+    def adjust_kit(self, i, n):
+        p = random.choice(self.primes)
+        self.patterns['hihat'] = self.r.euclid(p, self.beats)
+        self.drums['snare']['num'] = self.random_note()
+        if n % 2 == 0:
+            self.patterns['snare'] = self.r.rotate_n(4, self.r.euclid(2, self.beats))
+            self.patterns['kick'] = self.r.euclid(2, self.beats)
+        else:
+            self.patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
+            self.patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
+            self.drums['kick']['num'] = self.random_note()
+            self.drums['hihat']['num'] = self.random_note()
+        if i == 0 and n > 0:
+            self.patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            self.drums['cymbals']['num'] = self.random_note()
+            self.patterns['hihat'][0] = 0
+        else:
+            self.patterns['cymbals'] = [0 for _ in range(self.beats)]
 
-                    time.sleep(dura * 0.1) # Remainder of the step duration
+    def drum_part(self):
+        try:
+            while True:
+                for i in range(3):
+                    self.adjust_kit(i, self.N)
+                    for step in range(self.beats):
+                        for drum in self.voices:
+                            if self.patterns[drum][step]:
+                                self.midi_msg('note_on', self.drums[drum]['num'], self.drums[drum]['chan'], self.velo())
+                        time.sleep(self.dura * 0.9)
+                        for drum in self.voices:
+                            if self.patterns[drum][step]:
+                                self.midi_msg('note_off', self.drums[drum]['num'], self.drums[drum]['chan'], 0)
+                        time.sleep(self.dura * 0.1)
+                self.fill()
+                self.N += 1
+        except KeyboardInterrupt:
+            self.stop()
 
-            fill(outport)
-            N += 1
-    except KeyboardInterrupt:
-        for c in chans:
+    def stop(self):
+        for c in self.chans:
             msg = mido.Message('control_change', channel=c, control=123, value=0)
-            outport.send(msg)
-        outport.close()
+            self.outport.send(msg)
+        self.outport.close()
         print("\nDrum machine stopped.")
 
+    def run(self, port_name='MIDIThing2'):
+        try:
+            with mido.open_output(port_name) as outport:
+                self.outport = outport
+                print(f"Opened output port: {self.outport.name}")
+                print("Drum machine running... Ctrl+C to stop.")
+                self.drum_part()
+        except mido.PortUnavailableError as e:
+            print(f"Error: {e}")
+
+
 if __name__ == "__main__":
-    bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120 # XXX actual = 115
-
-    per_sec = 60.0 / bpm
-    dura = per_sec / 4 # duration of one pattern step
-
-    drums = {
-        'kick': {
-            'num': 36, # Acoustic Bass Drum
-            'chan': 0,
-        },
-        'snare': {
-            'num': 38, # Acoustic Snare
-            'chan': 1,
-        },
-        'hihat': {
-            'num': 42, # Closed Hi-Hat
-            'chan': 2,
-        },
-        'cymbals': {
-            'num': 49, # Crash1
-            'chan': 3,
-        },
-    }
-    voices = list(drums.keys())
-    chans = [ i['chan'] for i in drums.values() ]
-
-    r = Rhythms()
-    beats = 16
-    patterns = {
-        'kick': r.euclid(2, beats),
-        'snare': r.rotate_n(4, r.euclid(2, beats)),
-        'hihat': r.euclid(11, beats),
-        'cymbals': [0 for _ in range(beats)],
-    }
-
-    velo = lambda: 64 + random.randint(-10, 10)
-    random_note = lambda: random.choice([60,64,67]) - 24
-
-    N = 0
-    primes = all_primes(beats, 'list')
-
-    try:
-        with mido.open_output('MIDIThing2') as outport:
-            print(f"Opened output port: {outport.name}")
-            print("Drum machine running... Ctrl+C to stop.")
-            drum_part()
-    except mido.PortUnavailableError as e:
-        print(f"Error: {e}")
+    bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
+    machine = DrumMachine(bpm)
+    machine.run()
