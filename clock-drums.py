@@ -87,3 +87,7 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             gen.stop()
             outport.send(mido.Message('stop'))
+            for c in [0,1,2,3]:
+                msg = mido.Message('control_change', channel=c, control=123, value=0)
+                outport.send(msg)
+            outport.close()
