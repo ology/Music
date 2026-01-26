@@ -112,7 +112,7 @@ class DrumMachine:
         try:
             with mido.open_output(port_name) as outport:
                 self.outport = outport
-                print(f"Opened output port: {self.outport.name}")
+                print(self.outport)
                 print("Drum machine running... Ctrl+C to stop.")
                 self.drum_part()
         except mido.PortUnavailableError as e:
