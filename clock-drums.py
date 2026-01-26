@@ -70,7 +70,6 @@ class Generator(object):
 if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
 
-    # Define a 4-beat drum pattern (kick and snare)
     pattern = DrumPattern({
         0: [(36, 100, 0)],
         1: [(38, 100, 1)],
