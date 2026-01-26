@@ -65,16 +65,17 @@ class Generator(object):
                 self.port.send(mido.Message('note_on', note=note, channel=channel, velocity=velocity))
                 sleep(0.01)
                 self.port.send(mido.Message('note_off', note=note, channel=channel, velocity=0))
+                sleep(0.01)
 
 if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
 
     # Define a 4-beat drum pattern (kick and snare)
     pattern = DrumPattern({
-        0: [(36, 100, 0)],  # Beat 1: kick + snare
-        1: [(38, 80, 1)],              # Beat 2: snare
-        2: [(36, 100, 0)],             # Beat 3: kick
-        3: [(38, 80, 1)],              # Beat 4: snare
+        0: [(36, 100, 0)],
+        1: [(38, 100, 1)],
+        2: [(36, 100, 0)],
+        3: [(38, 100, 1)],
     })
 
     with mido.open_output('MIDIThing2') as outport:
