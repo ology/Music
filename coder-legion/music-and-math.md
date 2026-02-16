@@ -156,7 +156,7 @@ import random
 from mido import Message, MidiFile, MidiTrack, MetaMessage, bpm2tempo
 from music_creatingrhythms import Rhythms
 
-def play_midi(notes):
+def play_simul(notes):
     global mid, track
     channel = 9
     duration = mid.ticks_per_beat // 4 # nb: 480 = quarter-note
@@ -214,7 +214,7 @@ if __name__ == '__main__':
                 hihat: 1,
             }
             print(simul)
-            play_midi(simul)
+            play_simul(simul)
 
     mid.save('coder-legion-3.mid')
 ```
@@ -294,7 +294,7 @@ import random
 from mido import Message, MidiFile, MidiTrack, MetaMessage, bpm2tempo
 from music_creatingrhythms import Rhythms
 
-def play_midi(notes):
+def play_simul(notes):
     global mid, track
     channel = 9
     duration = mid.ticks_per_beat // 4 # nb: 480 = quarter-note
@@ -345,7 +345,7 @@ if __name__ == '__main__':
                 low_conga: z_choice[i],
             }
             print(simul)
-            play_midi(simul)
+            play_simul(simul)
 
     mid.save('coder-legion-4.2.mid')
 ```
@@ -363,7 +363,7 @@ import random
 from mido import Message, MidiFile, MidiTrack, MetaMessage, bpm2tempo
 from music_creatingrhythms import Rhythms
 
-def play_midi(notes):
+def play_simul(notes):
     global mid, track
     channel = 9
     duration = mid.ticks_per_beat // 4 # nb: 480 = quarter-note
@@ -412,7 +412,7 @@ if __name__ == '__main__':
                 hihat: h_pat[i],
             }
             print(simul)
-            play_midi(simul)
+            play_simul(simul)
 
     mid.save('coder-legion-5.mid')
     ```
