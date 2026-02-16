@@ -61,11 +61,15 @@ for _ in range(4):
 ```
 
 With this shell command, we can hear what it sounds like:
+
 ```shell
-python coder-legion-2.py 'FluidSynth virtual port (89324)'
+python coder-legion-1.1.py 'FluidSynth virtual port (89324)'
 ```
 
-TODO: ADD AUDIO
+<audio controls>
+  <source src="coder-legion-1.1.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 
 Not terribly exciting yet! Also, the code is kind of klunky, but it illustrates things in a simple way. We *can* get all sophisticated and make a `class` when things get more complicated, of course. But for now, we'll try to keep things on the simple side.
 
@@ -131,7 +135,10 @@ In order to play the MIDI file that is produced, we can use `fluidsynth` like th
 fluidsynth -i ~/Music/soundfont/FluidR3_GM.sf2 coder-legion-2.1.mid
 ```
 
-TODO: ADD AUDIO
+<audio controls>
+  <source src="coder-legion-2.1.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 
 A little better. Like a syncopated snare solo.
 
@@ -223,7 +230,10 @@ if __name__ == '__main__':
     mid.save('coder-legion-3.mid')
 ```
 
-TODO: ADD AUDIO
+<audio controls>
+  <source src="coder-legion-3.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 
 Here we play generated kick and snare patterns, along with a steady hi-hat. A bit of gymnastics happens in the `repeat` loop in order to play simultaneous notes. Corresponding changes are made to the `play_single()` function, which is renamed to `play_simul()`. This sends `note_on` messages for all the simultanous notes, followed by corresponding `note_off` messages.
 
@@ -265,7 +275,10 @@ if __name__ == '__main__':
     mid.save('coder-legion-4.1.mid')
 ```
 
-TODO: ADD AUDIO
+<audio controls>
+  <source src="coder-legion-4.1.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 
 Here we choose from **all** necklaces. But note that includes the sequence with all ones and the sequence with all zeroes, also. More sophisticated code might skip these.
 
@@ -306,7 +319,10 @@ if __name__ == '__main__':
 
 And that sounds like:
 
-TODO: ADD AUDIO
+<audio controls>
+  <source src="coder-legion-4.2.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 
 How about Euclidean patterns? What are they, and why are they named for a geometer?
 
@@ -343,7 +359,10 @@ if __name__ == '__main__':
     mid.save('coder-legion-5.mid')
 ```
 
-TODO: ADD AUDIO
+<audio controls>
+  <source src="coder-legion-5.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 
 Now we're talkin' - an actual drum groove! To reiterate, the `euclid()` method distributes a number of beats, like `2` or `11` over the number of beats, `16`. The kick and snare use the same arguments, but the snare pattern is rotated by 4 beats, so that they alternate.
 
