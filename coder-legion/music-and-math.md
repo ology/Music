@@ -219,9 +219,9 @@ if __name__ == '__main__':
     mid.save('coder-legion-3.mid')
 ```
 
-Here we play generated kick and snare patterns, along with a steady hi-hat. A bit of gymnastics happens in the `repeat` loop in order to play simultaneous notes. Corresponding changes are made to the `play_single()` function, which is renamed to `play_simul()`. This sends `note_on` messages for all the simultanous notes, followed by corresponding `note_off` messages.
-
 TODO: ADD AUDIO
+
+Here we play generated kick and snare patterns, along with a steady hi-hat. A bit of gymnastics happens in the `repeat` loop in order to play simultaneous notes. Corresponding changes are made to the `play_single()` function, which is renamed to `play_simul()`. This sends `note_on` messages for all the simultanous notes, followed by corresponding `note_off` messages.
 
 Notice how even a little musical change involves a bunch of code, sometimes? Hrm. Also, every programmer is going to do things differently. So, YMMV. :D
 
