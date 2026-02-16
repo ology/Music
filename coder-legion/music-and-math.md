@@ -67,7 +67,7 @@ python coder-legion-1.1.py 'FluidSynth virtual port (89324)'
 ```
 
 <audio controls>
-  <source src="coder-legion-1.1.mp3" type="audio/mpeg">
+  <source src="https://github.com/ology/Music/blob/master/coder-legion/coder-legion-1.1.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
@@ -136,7 +136,7 @@ fluidsynth -i ~/Music/soundfont/FluidR3_GM.sf2 coder-legion-2.1.mid
 ```
 
 <audio controls>
-  <source src="coder-legion-2.1.mp3" type="audio/mpeg">
+  <source src="https://github.com/ology/Music/blob/master/coder-legion/coder-legion-2.1.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
@@ -231,7 +231,7 @@ if __name__ == '__main__':
 ```
 
 <audio controls>
-  <source src="coder-legion-3.mp3" type="audio/mpeg">
+  <source src="https://github.com/ology/Music/blob/master/coder-legion/coder-legion-3.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
@@ -276,7 +276,7 @@ if __name__ == '__main__':
 ```
 
 <audio controls>
-  <source src="coder-legion-4.1.mp3" type="audio/mpeg">
+  <source src="https://github.com/ology/Music/blob/master/coder-legion/coder-legion-4.1.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
@@ -320,7 +320,7 @@ if __name__ == '__main__':
 And that sounds like:
 
 <audio controls>
-  <source src="coder-legion-4.2.mp3" type="audio/mpeg">
+  <source src="https://github.com/ology/Music/blob/master/coder-legion/coder-legion-4.2.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
@@ -360,7 +360,7 @@ if __name__ == '__main__':
 ```
 
 <audio controls>
-  <source src="coder-legion-5.mp3" type="audio/mpeg">
+  <source src="https://github.com/ology/Music/blob/master/coder-legion/coder-legion-5.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
