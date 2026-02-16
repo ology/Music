@@ -3,7 +3,7 @@ Musical Rhythms with Math in Python
 
 Let's talk about music programming! There are a million aspects to this subject, but today, we'll touch on generating rhythmic patterns with mathematical and combinatorial techniques. These include the generation of partitions, necklaces, and Euclidean patterns.
 
-Stefan and J. Richard Hollos wrote an [excellent little book](https://abrazol.com/books/rhythm1/) called "Creating Rhythms" that has been turned into [C, Perl, and Python](https://abrazol.com/books/rhythm1/software.html). It features a number of algorithms that produce or modify lists of numbers or bit-vectors (of ones and zeroes). These can be beat onsets (the ones) and rests (the zeroes) of a rhythm. We'll check out these conectps with Python.
+Stefan and J. Richard Hollos wrote an [excellent little book](https://abrazol.com/books/rhythm1/) called "Creating Rhythms" that has been turned into [C, Perl, and Python](https://abrazol.com/books/rhythm1/software.html). It features a number of algorithms that produce or modify lists of numbers or bit-vectors (of ones and zeroes). These can be beat onsets (the ones) and rests (the zeroes) of a rhythm. We'll check out these concepts with Python.
 
 For each example, we will play what things sound like with MIDI, by using the [mido](https://mido.readthedocs.io/en/stable/) Python package. And in order to actually hear the rhythms, we will need a MIDI synthesizer. For the simplest illustration, we can use [fluidsynth](https://www.fluidsynth.org/). Of course, any MIDI capable synth will work.
 
