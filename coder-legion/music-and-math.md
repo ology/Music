@@ -341,9 +341,9 @@ if __name__ == '__main__':
             play_simul(simul)
 
     mid.save('coder-legion-5.mid')
-    ```
+```
 
-    TODO: ADD AUDIO
+TODO: ADD AUDIO
 
 Now we're talkin' - an actual drum groove! To reiterate, the `euclid()` method distributes a number of beats, like `2` or `11` over the number of beats, `16`. The kick and snare use the same arguments, but the snare pattern is rotated by 4 beats, so that they alternate.
 
