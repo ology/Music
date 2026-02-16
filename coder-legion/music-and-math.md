@@ -156,6 +156,15 @@ import random
 from mido import Message, MidiFile, MidiTrack, MetaMessage, bpm2tempo
 from music_creatingrhythms import Rhythms
 
+def open_mid():
+    mid = MidiFile()
+    track = MidiTrack()
+    mid.tracks.append(track)
+    tempo = bpm2tempo(120)
+    track.append(MetaMessage('set_tempo', tempo=tempo, time=0))
+    track.append(MetaMessage('time_signature', numerator=4, denominator=4, time=0))
+    return mid, track
+
 def play_simul(notes):
     global mid, track
     channel = 9
@@ -178,12 +187,7 @@ def play_simul(notes):
             track.append(Message('note_off', note=n, velocity=0, time=t))
 
 if __name__ == '__main__':
-    mid = MidiFile()
-    track = MidiTrack()
-    mid.tracks.append(track)
-    tempo = bpm2tempo(120)
-    track.append(MetaMessage('set_tempo', tempo=tempo, time=0))
-    track.append(MetaMessage('time_signature', numerator=4, denominator=4, time=0))
+    mid, track = open_mid()
 
     kick = 36
     snare = 40
@@ -247,12 +251,7 @@ Also, let's simplify the code a bit.
 # ...
 
 if __name__ == '__main__':
-    mid = MidiFile()
-    track = MidiTrack()
-    mid.tracks.append(track)
-    tempo = bpm2tempo(120)
-    track.append(MetaMessage('set_tempo', tempo=tempo, time=0))
-    track.append(MetaMessage('time_signature', numerator=4, denominator=4, time=0))
+    mid, track = open_mid()
 
     r = Rhythms()
 
@@ -276,12 +275,7 @@ More interesting would be playing simultaneous beats.
 # ...
 
 if __name__ == '__main__':
-    mid = MidiFile()
-    track = MidiTrack()
-    mid.tracks.append(track)
-    tempo = bpm2tempo(120)
-    track.append(MetaMessage('set_tempo', tempo=tempo, time=0))
-    track.append(MetaMessage('time_signature', numerator=4, denominator=4, time=0))
+    mid, track = open_mid()
 
     claves = 75
     hi_conga = 63
@@ -322,12 +316,7 @@ Euclidean patterns are a set number of positions `P` that are filled with a numb
 # ...
 
 if __name__ == '__main__':
-    mid = MidiFile()
-    track = MidiTrack()
-    mid.tracks.append(track)
-    tempo = bpm2tempo(120)
-    track.append(MetaMessage('set_tempo', tempo=tempo, time=0))
-    track.append(MetaMessage('time_signature', numerator=4, denominator=4, time=0))
+    mid, track = open_mid()
 
     kick = 36
     snare = 40
