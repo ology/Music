@@ -45,7 +45,9 @@ Now we realize the rhythm:
 ```python
 import mido
 
-port = mido.open_output('Port Name')
+port_name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI'
+port = mido.open_output(port_name)
+
 snare = 40
 
 for _ in range(4):
