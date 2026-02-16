@@ -91,7 +91,7 @@ Here are the compositions of `5` turned into sequences, played by a snare drum, 
 from mido import Message, MidiFile, MidiTrack, MetaMessage, bpm2tempo
 from music_creatingrhythms import Rhythms
 
-def play_midi(sequence):
+def play_single(sequence):
     global mid, track
     snare = 40
     channel = 9
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     seq = r.int2b(comps)
 
     for s in seq:
-        play_midi(s)
+        play_single(s)
 
     mid.save('coder-legion-2.1.mid')
 ```
@@ -219,7 +219,7 @@ if __name__ == '__main__':
     mid.save('coder-legion-3.mid')
 ```
 
-Here we play generated kick and snare patterns, along with a steady hi-hat. A bit of gymnastics happens in the `repeat` loop in order to play simultaneous notes. Corresponding changes are made to the `play_midi()` function. These send `note_on` messages for all the simultanous notes, followed by `note_off` messages for all.
+Here we play generated kick and snare patterns, along with a steady hi-hat. A bit of gymnastics happens in the `repeat` loop in order to play simultaneous notes. Corresponding changes are made to the `play_single()` function, which is renamed `play_simul()`. This sends `note_on` messages for all the simultanous notes, followed by corresponding `note_off` messages.
 
 TODO: ADD AUDIO
 
@@ -248,7 +248,7 @@ import random
 from mido import Message, MidiFile, MidiTrack, MetaMessage, bpm2tempo
 from music_creatingrhythms import Rhythms
 
-def play_midi(sequence):
+def play_single(sequence):
     global mid, track
     note = 75 # claves
     channel = 9
@@ -278,7 +278,7 @@ if __name__ == '__main__':
     print(choice)
 
     for _ in range(4):
-        play_midi(choice)
+        play_single(choice)
 
     mid.save('coder-legion-4.1.mid')
 ```
