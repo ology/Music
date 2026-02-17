@@ -389,3 +389,7 @@ So what have we learned today?
 [fluidsynth](https://www.fluidsynth.org/)
 
 [timidity](https://wiki.archlinux.org/title/Timidity++)
+
+**About the author**
+
+Gene is a long-time musician and software engineer. His personal website is [https://www.ology.net/](https://www.ology.net/).
