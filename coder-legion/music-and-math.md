@@ -378,17 +378,17 @@ So what have we learned today?
 
 **References:**
 
-[Article repository](https://github.com/ology/Music/tree/master/coder-legion)
+* [Article repository](https://github.com/ology/Music/tree/master/coder-legion)
 
-[Creating Rhythms](https://abrazol.com/books/rhythm1/)
+* [Creating Rhythms book](https://abrazol.com/books/rhythm1/)
 
-[Python package](https://pypi.org/project/music-creatingrhythms/)
+* [Creating Rhythms Python package](https://pypi.org/project/music-creatingrhythms/)
 
-[mido](https://mido.readthedocs.io/en/stable/)
+* [mido](https://mido.readthedocs.io/en/stable/)
 
-[fluidsynth](https://www.fluidsynth.org/)
+* [fluidsynth](https://www.fluidsynth.org/)
 
-[timidity](https://wiki.archlinux.org/title/Timidity++)
+* [timidity](https://wiki.archlinux.org/title/Timidity++)
 
 **About the author**
 
