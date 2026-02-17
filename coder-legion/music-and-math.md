@@ -378,4 +378,14 @@ So what have we learned today?
 
 **References:**
 
-[repo](https://github.com/ology/Music/tree/master/coder-legion)
+[Article repository](https://github.com/ology/Music/tree/master/coder-legion)
+
+[Creating Rhythms](https://abrazol.com/books/rhythm1/)
+
+[Python package](https://pypi.org/project/music-creatingrhythms/)
+
+[mido](https://mido.readthedocs.io/en/stable/)
+
+[fluidsynth](https://www.fluidsynth.org/)
+
+[timidity](https://wiki.archlinux.org/title/Timidity++)
