@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 # Examples:
-# perl rtmidi.pl --named="Beethoven In" --bpm=97 --phrase="G4,en G4,en G4,en Eb4,wn F4,en F4,en F4,en D4,wn"
+# perl rtmidi.pl --named="USB MIDI" --bpm=97 --phrase="G4,en G4,en G4,en Eb4,wn F4,en F4,en F4,en D4,wn"
 
 use strict;
 use warnings;
