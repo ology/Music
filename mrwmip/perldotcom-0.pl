@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use MIDI::RtMidi::FFI::Device;
+use MIDI::RtMidi::FFI::Device ();
 
 my $midi_in = RtMidiIn->new;
 my $midi_out = RtMidiOut->new;
