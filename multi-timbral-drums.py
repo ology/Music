@@ -54,6 +54,8 @@ def drum_part(port_name):
         print("Check your virtual MIDI port setup and names")
 
 if __name__ == "__main__":
+    port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
+
     bpm = 70
     dura = 60.0 / bpm / 4 # duration of one pattern step
 
@@ -80,7 +82,7 @@ if __name__ == "__main__":
     primes = all_primes(beats, 'list')
 
     try:
-        drum_part('MIDIThing2')
+        drum_part(port_name)
     except IndexError:
         print("No MIDI output ports found.")
         sys.exit(1)
