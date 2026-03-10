@@ -96,7 +96,7 @@ class DrumMachine:
         self.drums['hihat']['num'] = self.random_note()
         self.drums['cymbals']['num'] = self.random_note()
 
-    def drum_part(self):
+    def play(self):
         try:
             while True:
                 if self.N % 2 == 0:
@@ -123,7 +123,7 @@ class DrumMachine:
                 self.outport = outport
                 print(self.outport)
                 print("Drum machine running... Ctrl+C to stop.")
-                self.drum_part()
+                self.play()
         except mido.PortUnavailableError as e:
             print(f"Error: {e}")
 
