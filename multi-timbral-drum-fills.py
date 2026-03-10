@@ -50,7 +50,7 @@ class DrumMachine:
         return random.choice([60, 64, 67]) - 24
 
     def part(self, i):
-        self.adjust_kit(i, self.N)
+        self.adjust_kit(i)
         for step in range(self.beats):
             for drum in self.voices:
                 if self.patterns[drum][step]:
@@ -75,11 +75,11 @@ class DrumMachine:
             self.midi_msg('note_off', self.drums['snare']['num'], self.drums['snare']['chan'], 0)
             time.sleep(duration * self.per_sec * 0.1)
 
-    def adjust_kit(self, i, n):
+    def adjust_kit(self, i):
         p = random.choice(self.primes)
         self.patterns['hihat'] = self.r.euclid(p, self.beats)
         self.drums['snare']['num'] = self.random_note()
-        if n % 2 == 0:
+        if self.N % 2 == 0:
             self.patterns['snare'] = self.r.rotate_n(4, self.r.euclid(2, self.beats))
             self.patterns['kick'] = self.r.euclid(2, self.beats)
         else:
@@ -87,7 +87,7 @@ class DrumMachine:
             self.patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
             self.drums['kick']['num'] = self.random_note()
             self.drums['hihat']['num'] = self.random_note()
-        if i == 0 and n > 0:
+        if i == 0 and self.N > 0:
             self.patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             self.drums['cymbals']['num'] = self.random_note()
             self.patterns['hihat'][0] = 0
