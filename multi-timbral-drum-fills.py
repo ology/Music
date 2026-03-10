@@ -129,6 +129,7 @@ class DrumMachine:
 
 
 if __name__ == "__main__":
-    bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
+    port_name = sys.argv[1] if len(sys.argv) > 1 else 'MIDIThing2'
+    bpm = int(sys.argv[2]) if len(sys.argv) > 2 else 120
     machine = DrumMachine(bpm)
-    machine.run()
+    machine.run(port_name=port_name)
