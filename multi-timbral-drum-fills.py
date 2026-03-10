@@ -82,9 +82,11 @@ class DrumMachine:
         if self.N % 2 == 0:
             self.patterns['snare'] = self.r.rotate_n(4, self.r.euclid(2, self.beats))
             self.patterns['kick'] = self.r.euclid(2, self.beats)
+            self.patterns['snare'][p] = 1
+            self.patterns['kick'][p - 1] = 1
         else:
-            self.patterns['snare'][14] = 1
-            self.patterns['kick'][15] = 1
+            self.patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
+            self.patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
             self.drums['kick']['num'] = self.random_note()
             self.drums['hihat']['num'] = self.random_note()
         if i == 0 and self.N > 0:
