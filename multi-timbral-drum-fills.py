@@ -50,7 +50,7 @@ class DrumMachine:
         return random.choice([60, 64, 67]) - 24
 
     def part(self, i):
-        self.adjust_kit(i)
+        self.adjust_groove(i)
         for step in range(self.beats):
             for drum in self.voices:
                 if self.patterns[drum][step]:
@@ -75,7 +75,7 @@ class DrumMachine:
             self.midi_msg('note_off', self.drums['snare']['num'], self.drums['snare']['chan'], 0)
             time.sleep(duration * self.per_sec * 0.1)
 
-    def adjust_kit(self, i):
+    def adjust_groove(self, i):
         p = random.choice(self.primes)
         self.patterns['hihat'] = self.r.euclid(p, self.beats)
         if self.N % 2 == 0:
