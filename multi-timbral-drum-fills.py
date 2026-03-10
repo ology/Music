@@ -49,9 +49,10 @@ class DrumMachine:
     def random_note(self):
         return random.choice([60, 64, 67]) - 24
 
-    def part(self, i):
+    def part(self, i, n=0):
+        n = self.beats if n == 0 else n
         self.adjust_groove(i)
-        for step in range(self.beats):
+        for step in range(n):
             for drum in self.voices:
                 if self.patterns[drum][step]:
                     self.midi_msg('note_on', self.drums[drum]['num'], self.drums[drum]['chan'], self.velo())
@@ -61,9 +62,9 @@ class DrumMachine:
                     self.midi_msg('note_off', self.drums[drum]['num'], self.drums[drum]['chan'], 0)
             time.sleep(self.dura * 0.1)
 
-    def fill(self):
+    def fill(self, measure_size=4):
         rr = Rhythm(
-            measure_size=4,
+            measure_size=measure_size,
             durations=[1, 1/2, 1/4],
             weights=[1, 2, 1],
             groups=[0, 0, 2]
@@ -102,7 +103,11 @@ class DrumMachine:
                 if self.N % 2 == 0:
                     for i in range(3):
                         self.part(i)
-                    self.fill()
+                    # if random.random() < 0.5:
+                    #     self.fill()
+                    # else:
+                    self.part(i, self.beats // 2)
+                    self.fill(measure_size=2)
                 else:
                     for i in range(4):
                         self.part(i)
