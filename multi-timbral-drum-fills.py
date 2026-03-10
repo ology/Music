@@ -103,11 +103,11 @@ class DrumMachine:
                 if self.N % 2 == 0:
                     for i in range(3):
                         self.part(i)
-                    # if random.random() < 0.5:
-                    #     self.fill()
-                    # else:
-                    self.part(i, self.beats // 2)
-                    self.fill(measure_size=2)
+                    if random.random() < 0.5:
+                        self.fill()
+                    else:
+                        self.part(i, self.beats // 2)
+                        self.fill(measure_size=2)
                 else:
                     for i in range(4):
                         self.part(i)
