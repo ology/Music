@@ -49,6 +49,18 @@ class DrumMachine:
     def random_note(self):
         return random.choice([60, 64, 67]) - 24
 
+    def part(self, i):
+        self.adjust_kit(i, self.N)
+        for step in range(self.beats):
+            for drum in self.voices:
+                if self.patterns[drum][step]:
+                    self.midi_msg('note_on', self.drums[drum]['num'], self.drums[drum]['chan'], self.velo())
+            time.sleep(self.dura * 0.9)
+            for drum in self.voices:
+                if self.patterns[drum][step]:
+                    self.midi_msg('note_off', self.drums[drum]['num'], self.drums[drum]['chan'], 0)
+            time.sleep(self.dura * 0.1)
+
     def fill(self):
         rr = Rhythm(
             measure_size=4,
@@ -85,18 +97,13 @@ class DrumMachine:
     def drum_part(self):
         try:
             while True:
-                for i in range(3):
-                    self.adjust_kit(i, self.N)
-                    for step in range(self.beats):
-                        for drum in self.voices:
-                            if self.patterns[drum][step]:
-                                self.midi_msg('note_on', self.drums[drum]['num'], self.drums[drum]['chan'], self.velo())
-                        time.sleep(self.dura * 0.9)
-                        for drum in self.voices:
-                            if self.patterns[drum][step]:
-                                self.midi_msg('note_off', self.drums[drum]['num'], self.drums[drum]['chan'], 0)
-                        time.sleep(self.dura * 0.1)
-                self.fill()
+                if self.N % 2 == 0:
+                    for i in range(3):
+                        self.part(i)
+                    self.fill()
+                else:
+                    for i in range(4):
+                        self.part(i)
                 self.N += 1
         except KeyboardInterrupt:
             self.stop()
