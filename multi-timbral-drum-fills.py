@@ -65,7 +65,7 @@ class DrumMachine:
         rr = Rhythm(
             measure_size=4,
             durations=[1, 1/2, 1/4],
-            weights=[5, 10, 5],
+            weights=[1, 2, 1],
             groups=[0, 0, 2]
         )
         motif = rr.motif()
