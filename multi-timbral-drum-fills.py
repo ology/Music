@@ -78,7 +78,6 @@ class DrumMachine:
     def adjust_kit(self, i):
         p = random.choice(self.primes)
         self.patterns['hihat'] = self.r.euclid(p, self.beats)
-        self.drums['snare']['num'] = self.random_note()
         if self.N % 2 == 0:
             self.patterns['snare'] = self.r.rotate_n(4, self.r.euclid(2, self.beats))
             self.patterns['kick'] = self.r.euclid(2, self.beats)
@@ -87,14 +86,15 @@ class DrumMachine:
         else:
             self.patterns['snare'] = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0]
             self.patterns['kick'] = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1]
-            self.drums['kick']['num'] = self.random_note()
-            self.drums['hihat']['num'] = self.random_note()
         if i == 0 and self.N > 0:
             self.patterns['cymbals'] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-            self.drums['cymbals']['num'] = self.random_note()
             self.patterns['hihat'][0] = 0
         else:
             self.patterns['cymbals'] = [0 for _ in range(self.beats)]
+        self.drums['snare']['num'] = self.random_note()
+        self.drums['kick']['num'] = self.random_note()
+        self.drums['hihat']['num'] = self.random_note()
+        self.drums['cymbals']['num'] = self.random_note()
 
     def drum_part(self):
         try:
