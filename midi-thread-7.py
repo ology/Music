@@ -1,4 +1,4 @@
-# Constrol two synths on MIDI channels 1 & 2, respectively.
+# Control two synths on MIDI channels 1 & 2, respectively.
 # ex: python midi-thread-7.py 'USB MIDI Interface' 'SE-02'
 
 import sys
