@@ -39,8 +39,9 @@ class Generator(object):
 
 if __name__ == "__main__":
     bpm = int(sys.argv[1]) if len(sys.argv) > 1 else 120
+    name = sys.argv[2] if len(sys.argv) > 2 else 'SE-02'
 
-    with mido.open_output('MIDIThing2') as outport:
+    with mido.open_output(name) as outport:
         outport.send(mido.Message('start'))
         gen = Generator(port=outport, bpm=bpm, tpb=24)
         try:
