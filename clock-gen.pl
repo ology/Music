@@ -13,11 +13,14 @@ $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
 
 $midi_out->send_event('start');
-sleep(0.5);
+
+$SIG{INT} = sub { 
+    print "\nStop\n";
+    $midi_out->send_event('stop');
+    exit;
+};
 
 while (1) {
     $midi_out->send_event('clock');
     sleep($interval);
 }
-
-# $midi_out->send_event('stop');
