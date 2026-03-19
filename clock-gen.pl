@@ -15,7 +15,7 @@ $midi_out->open_port_by_name(qr/\Q$name/i);
 $midi_out->send_event('start');
 
 $SIG{INT} = sub { 
-    print "\nStop\n";
+    say "\nStop";
     $midi_out->send_event('stop');
     exit;
 };
