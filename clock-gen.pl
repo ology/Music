@@ -3,7 +3,7 @@ use v5.36;
 use MIDI::RtMidi::FFI::Device ();
 use Time::HiRes qw(sleep);
 
-my $name = shift || 'SE-02';
+my $name = shift || 'SE-02'; # MIDI sequencer device
 my $bpm  = shift || 120;
 
 my $interval = 60 / $bpm / 24;
