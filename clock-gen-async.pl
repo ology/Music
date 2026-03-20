@@ -26,10 +26,12 @@ $SIG{INT} = sub {
 };
 
 my $loop = IO::Async::Loop->new;
+
 my $timer = IO::Async::Timer::Periodic->new(
    interval => $interval,
    on_tick  => sub { $midi_out->clock },
 );
 $timer->start;
+
 $loop->add($timer);
 $loop->run;
