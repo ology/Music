@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use v5.36;
-use IO::Async::Loop;
-use IO::Async::Timer::Periodic;
+use IO::Async::Loop ();
+use IO::Async::Timer::Periodic ();
 use MIDI::RtMidi::FFI::Device ();
 use Time::HiRes qw(sleep);
 
