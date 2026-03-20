@@ -8,7 +8,7 @@ use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use MIDI::RtMidi::FFI::Device ();
 
-my $name = shift || 'SE-02'; # MIDI sequencer device
+my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
 
 my $interval = 60 / $bpm / 24;
