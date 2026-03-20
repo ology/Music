@@ -13,6 +13,7 @@ my $interval = 60 / $bpm / 24;
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
+$midi_out->start;
 
 $SIG{INT} = sub { 
     say "\nStop";
@@ -25,9 +26,6 @@ my $timer = IO::Async::Timer::Periodic->new(
    interval => $interval,
    on_tick  => sub { $midi_out->clock },
 );
-
-$midi_out->start;
-
 $timer->start;
 $loop->add($timer);
 $loop->run;
