@@ -12,15 +12,15 @@ my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
 
-$midi_out->send_event('start');
+$midi_out->start;
 
 $SIG{INT} = sub { 
     say "\nStop";
-    $midi_out->send_event('stop');
+    $midi_out->stop;
     exit;
 };
 
 while (1) {
-    $midi_out->send_event('clock');
+    $midi_out->clock;
     sleep($interval);
 }
