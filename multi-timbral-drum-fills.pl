@@ -20,6 +20,7 @@ my $machine = DrumMachine->new($bpm);
 $machine->run($name);
 
 package DrumMachine;
+use MIDI::Util qw(dura_size);
 use Try::Tiny;
 
 sub new($class, $bpm) {
@@ -73,12 +74,11 @@ sub random_note($self) {
 }
 
 sub part($self, $i, $n) {
-    $n ||= $self->{beats};
     $self->adjust_groove($i);
     for my $step (0 .. $n) {
         for my $drum ($self->{voices}) {
             if ($self->{patterns}{$drum}[$step]) {
-                $self->midi_msg('note_on', $self->{drums}{$drum}{num}, $self->{drums}{$drum}{chan}, $self->velo);
+                $self->midi_msg('note_on', $self->{drums}{$drum}{num}, $self->{drums}{$drum}{chan}, $self->velo(-10, 10, 64));
             }
         }
         sleep($self->{dura} * 0.9);
@@ -93,17 +93,17 @@ sub part($self, $i, $n) {
 
 sub fill($self, $measure_size) {
     my $rr = Music::Duration::Partition->new(
-        size      => $measure_size,
-        durations => [qw(qn en sn)],
-        weights   => [1, 2, 1],
-        groups    => [0, 0, 2],
+        size    => $measure_size,
+        pool    => [qw(qn en sn)],
+        weights => [1, 2, 1],
+        groups  => [0, 0, 2],
     );
     my $motif = $rr->motif;
     for my $duration (@$motif) {
-        $self->midi_msg('note_on', $self->{drums}{snare}{num}, $self->{drums}{snare}{chan}, $self->velo);
-        sleep($duration * $self->{per_sec} * 0.9);
+        $self->midi_msg('note_on', $self->{drums}{snare}{num}, $self->{drums}{snare}{chan}, $self->velo(-10, 10, 64));
+        sleep(dura_size($duration) * $self->{per_sec} * 0.9);
         $self->midi_msg('note_off', $self->{drums}{snare}{num}, $self->{drums}{snare}{chan}, 0);
-        sleep($duration * $self->{per_sec} * 0.1);
+        sleep(dura_size($duration) * $self->{per_sec} * 0.1);
     }
 }
 
@@ -138,9 +138,9 @@ sub play($self) {
     try {
         while (1) {
             if ($self->{N} % 2 == 0) {
-                my $i;
+                my $i = 1;
                 for $i (1 .. 3) {
-                    $self->part($i);
+                    $self->part($i, $self->{beats});
                 }
                 if (rand() < 0.5) {
                     $self->fill(4);
@@ -152,13 +152,14 @@ sub play($self) {
             }
             else {
                 for my $i (1 .. 4) {
-                    $self->part($i);
+                    $self->part($i, $self->{beats});
                 }
             }
             $self->{N} += 1;
         }
     }
     catch {
+        print "ERROR: $_\n";
         $self->stop;
     };
 }
