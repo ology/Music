@@ -158,7 +158,6 @@ sub play($self) {
             }
             $self->{N} += 1;
         }
-        $self->part(1, $self->{beats});
     }
     catch {
         print "ERROR: $_\n";
