@@ -15,7 +15,6 @@ use Time::HiRes qw(sleep);
 
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
-
 my $machine = DrumMachine->new($bpm);
 $machine->run($name);
 
@@ -156,6 +155,7 @@ sub play($self) {
                     $self->part($i, $self->{beats});
                 }
             }
+            sleep(1);
             $self->{N} += 1;
         }
     }
