@@ -27,7 +27,12 @@ for (1 .. 4) { # repeats
         if ($z_choice->[$i]) {
             push @notes, 64; # low_conga
         }
-        $score->n('en', @notes);
+                if (@notes) {
+            $score->n('en', @notes);
+        }
+        else {
+            $score->r('en');
+        }
     }
 }
 
