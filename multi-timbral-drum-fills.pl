@@ -20,6 +20,7 @@ my $machine = DrumMachine->new($bpm);
 $machine->run($name);
 
 package DrumMachine;
+use Data::Dumper::Compact 'ddc';
 use MIDI::Util qw(dura_size);
 use Try::Tiny;
 
@@ -47,7 +48,7 @@ sub new($class, $bpm) {
         hihat   => { num => 42, chan => 2 },
         cymbals => { num => 49, chan => 3 },
     };
-    $self->{voices}   = keys $self->{drums}->%*;
+    $self->{voices}   = [ keys $self->{drums}->%* ];
     $self->{chans}    = [ map { $_->{chan} } values $self->{drums}->%* ];
     $self->{r}        = Music::CreatingRhythms->new;
     $self->{patterns} = {
@@ -76,7 +77,7 @@ sub random_note($self) {
 sub part($self, $i, $n) {
     $self->adjust_groove($i);
     for my $step (0 .. $n) {
-        for my $drum ($self->{voices}) {
+        for my $drum ($self->{voices}->@*) {
             if ($self->{patterns}{$drum}[$step]) {
                 $self->midi_msg('note_on', $self->{drums}{$drum}{num}, $self->{drums}{$drum}{chan}, $self->velo(-10, 10, 64));
             }
@@ -157,6 +158,7 @@ sub play($self) {
             }
             $self->{N} += 1;
         }
+        $self->part(1, $self->{beats});
     }
     catch {
         print "ERROR: $_\n";
