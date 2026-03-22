@@ -94,8 +94,8 @@ sub adjust_pat($drums, $primes, $toggle) {
         $$toggle = 1;
     }
     else {
-        $drums->{kick}{pat}  = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
-        $drums->{snare}{pat} = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
+        $drums->{kick}{pat}    = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
+        $drums->{snare}{pat}   = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
         $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
         $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
         $$toggle = 0;
