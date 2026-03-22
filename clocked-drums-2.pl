@@ -37,7 +37,6 @@ my $drums = {
     hihat   => { num => 42, chan => 2 },
     cymbals => { num => 49, chan => 3 },
 };
-adjust_pat($drums, \@primes);
 
 my $loop = IO::Async::Loop->new;
 
