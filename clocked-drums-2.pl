@@ -8,7 +8,9 @@ use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use Math::Prime::XS qw(primes);
 use MIDI::RtMidi::FFI::Device ();
+use MIDI::Util qw(dura_size);
 use Music::CreatingRhythms ();
+use Music::Duration::Partition ();
 use Time::HiRes qw(sleep);
 
 my $name = shift || 'usb'; # MIDI sequencer device
@@ -23,13 +25,15 @@ my $drums = {
 
 my $divisions = 4;
 my $clocks_per_beat = 24;
-my $clock_interval = 60 / $bpm / $clocks_per_beat; # seconds / bpm / ppqn
+my $per_sec = 60 / $bpm;
+my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beats = 16;
-my $beat_interval = 60 / $bpm / $divisions; # 16th-note resolution
+my $beat_interval = $per_sec / $divisions; # 16th-note resolution
 my @primes = primes($beats);
 my $ticks = 0;
 my $beat_count = 0;
 my $toggle = 0;
+my $crash = 0;
 
 $SIG{INT} = sub { 
     say "\nStop";
@@ -51,13 +55,16 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % $divisions == 0) {
-                adjust_pat($drums, \@primes, \$toggle);
+                adjust_pat($drums, \@primes, \$toggle, $crash);
+                if ($beat_count > 0) {
+                    fill($midi_out, 4);
+                }
             }
-            $beat_count++;
             for my $i (0 .. $beats - 1) {
                 my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
                 play_simul($midi_out, $beat_interval, $drums, \%simul);
             }
+            $beat_count++;
         }
     },
 );
@@ -84,7 +91,7 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     sleep($beat_interval * 0.1);
 }
 
-sub adjust_pat($drums, $primes, $toggle) {
+sub adjust_pat($drums, $primes, $toggle, $crash) {
     my $p = $primes->[ int rand @$primes ];
     if ($$toggle == 0) {
         $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
@@ -97,7 +104,35 @@ sub adjust_pat($drums, $primes, $toggle) {
         $drums->{kick}{pat}    = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
         $drums->{snare}{pat}   = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
         $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
-        $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
+        $drums->{cymbals}{pat} = [ (0) x $beats ];
         $$toggle = 0;
     }
+    if ($crash) {
+        $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
+    }
+}
+
+sub fill($midi_out, $size) {
+    my $mdp = Music::Duration::Partition->new(
+        size    => $size,
+        pool    => [qw(qn en sn)],
+        weights => [1, 2, 1],
+        groups  => [0, 0, 2],
+    );
+    my $motif = $mdp->motif;
+    for my $duration (@$motif) {
+        midi_msg($midi_out, 'note_on', $drums->{snare}{num}, $drums->{snare}{chan}, velo(-10, 10, 64));
+        sleep(dura_size($duration) * $per_sec * 0.9);
+        midi_msg($midi_out, 'note_off', $drums->{snare}{num}, $drums->{snare}{chan}, 0);
+        sleep(dura_size($duration) * $per_sec * 0.1);
+    }
+}
+
+sub midi_msg($midi_out, $event, $note, $channel, $velocity) {
+    $midi_out->send_event($event, $channel, $note, $velocity);
+}
+
+sub velo($min, $max, $offset) {
+    my $random = $offset + int(rand($max - $min + 1)) + $min;
+    return $random;
 }
