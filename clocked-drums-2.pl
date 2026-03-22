@@ -47,7 +47,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            alter_pat($drums, \@primes);
+            adjust_pat($drums, \@primes);
             for my $i (0 .. $beats - 1) {
                 my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
                 play_simul($midi_out, $beat_interval, $drums, \%simul);
@@ -79,7 +79,7 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     sleep($beat_interval * 0.1);
 }
 
-sub alter_pat($drums, $primes) {
+sub adjust_pat($drums, $primes) {
     my $p = $primes->[ int rand @$primes ];
     $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
     $drums->{snare}{pat}   = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
