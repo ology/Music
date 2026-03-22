@@ -27,20 +27,18 @@ $SIG{INT} = sub {
     exit;
 };
 
+my $mcr = Music::CreatingRhythms->new;
+my $beats = 16;
 my $drums = {
     kick    => { num => 36, chan => 0 },
     snare   => { num => 38, chan => 1 },
     hihat   => { num => 42, chan => 2 },
     cymbals => { num => 49, chan => 3 },
 };
-my $mcr = Music::CreatingRhythms->new;
-my $beats = 16;
-my $patterns = {
-    kick    => $mcr->euclid(2, $beats),
-    snare   => $mcr->rotate_n(4, $mcr->euclid(2, $beats)),
-    hihat   => $mcr->euclid(11, $beats),
-    cymbals => [ 0 .. $beats - 1 ],
-};
+$drums->{kick}{pat}    = $mcr->euclid(2, $beats);
+$drums->{snare}{pat}   = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
+$drums->{hihat}{pat}   = $mcr->euclid(11, $beats);
+$drums->{cymbals}{pat} = [ 0 .. $beats - 1 ];
 
 my $loop = IO::Async::Loop->new;
 
