@@ -31,7 +31,7 @@ my $drums = {
     kick    => { num => 36, chan => 0 },
     snare   => { num => 38, chan => 1 },
     hihat   => { num => 42, chan => 2 },
-    # cymbals => { num => 49, chan => 3 },
+    cymbals => { num => 49, chan => 3 },
 };
 my $mcr = Music::CreatingRhythms->new;
 my $beats = 16;
@@ -39,7 +39,7 @@ my $patterns = {
     kick    => $mcr->euclid(2, $beats),
     snare   => $mcr->rotate_n(4, $mcr->euclid(2, $beats)),
     hihat   => $mcr->euclid(11, $beats),
-    # cymbals => [ 0 .. $beats - 1 ],
+    cymbals => [ 0 .. $beats - 1 ],
 };
 
 my $loop = IO::Async::Loop->new;
@@ -51,11 +51,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             for my $i (0 .. $beats - 1) {
-                my $simul = {
-                    kick  => $patterns->{kick}[$i],
-                    snare => $patterns->{snare}[$i],
-                    hihat => $patterns->{hihat}[$i],
-                };
+                my $simul = { map { $patterns->{$_}[$i] } keys %$patterns };
                 play_simul($midi_out, $beat_interval, $drums, $simul);
             }
         }
