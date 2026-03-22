@@ -56,7 +56,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     snare => $patterns->{snare}[$i],
                     hihat => $patterns->{hihat}[$i],
                 };
-                play_simul($simul);
+                play_simul($midi_out, $beat_interval, $drums, $simul);
             }
         }
     },
@@ -66,7 +66,7 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-sub play_simul($simul) {
+sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     my $i = 0;
     for my $drum (keys %$simul) {
         my $bit = $simul->{$drum};
