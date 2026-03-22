@@ -21,10 +21,12 @@ my $drums = {
     cymbals => { num => 49, chan => 3 },
 };
 
+my $beats = 16;
 my $clocks_per_beat = 24;
 my $clock_interval = 60 / $bpm / $clocks_per_beat; # seconds / bpm / ppqn
 my $beat_interval = 60 / $bpm / 4; # 16th-note resolution
 my $ticks = 0;
+my @primes = primes($beats);
 
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
@@ -34,9 +36,6 @@ $SIG{INT} = sub {
     say "\nStop";
     exit;
 };
-
-my $beats = 16;
-my @primes = primes($beats);
 
 my $mcr = Music::CreatingRhythms->new;
 
