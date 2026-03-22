@@ -21,12 +21,14 @@ my $drums = {
     cymbals => { num => 49, chan => 3 },
 };
 
+my $divisions = 4;
 my $clocks_per_beat = 24;
 my $clock_interval = 60 / $bpm / $clocks_per_beat; # seconds / bpm / ppqn
 my $beats = 16;
-my $beat_interval = 60 / $bpm / 4; # 16th-note resolution
+my $beat_interval = 60 / $bpm / $divisions; # 16th-note resolution
 my @primes = primes($beats);
 my $ticks = 0;
+my $N = 0;
 
 $SIG{INT} = sub { 
     say "\nStop";
@@ -47,7 +49,10 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            adjust_pat($drums, \@primes);
+            if ($N % $divisions == 0) {
+                adjust_pat($drums, \@primes);
+            }
+            $N++;
             for my $i (0 .. $beats - 1) {
                 my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
                 play_simul($midi_out, $beat_interval, $drums, \%simul);
