@@ -83,5 +83,5 @@ sub adjust_pat($drums, $primes) {
     $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
     $drums->{snare}{pat}   = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
     $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
-    $drums->{cymbals}{pat} = [ 0 x $beats ];
+    $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
 }
