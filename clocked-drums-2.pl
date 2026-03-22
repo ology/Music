@@ -29,6 +29,7 @@ my $beat_interval = 60 / $bpm / $divisions; # 16th-note resolution
 my @primes = primes($beats);
 my $ticks = 0;
 my $beat_count = 0;
+my $toggle = 0;
 
 $SIG{INT} = sub { 
     say "\nStop";
@@ -50,7 +51,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % $divisions == 0) {
-                adjust_pat($drums, \@primes, $beat_count);
+                $toggle = adjust_pat($drums, \@primes, $toggle);
             }
             $beat_count++;
             for my $i (0 .. $beats - 1) {
@@ -83,16 +84,21 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     sleep($beat_interval * 0.1);
 }
 
-sub adjust_pat($drums, $primes, $n) {
-    if ($n % 2 == 0) {
-        my $p = $primes->[ int rand @$primes ];
+sub adjust_pat($drums, $primes, $toggle) {
+    my $p = $primes->[ int rand @$primes ];
+    if ($toggle == 0) {
         $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
         $drums->{snare}{pat}   = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
         $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
-        $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
+        $drums->{cymbals}{pat} = [ (0) x $beats ];
+        $toggle = 1;
     }
     else {
         $drums->{kick}{pat}  = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
         $drums->{snare}{pat} = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
+        $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
+        $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
+        $toggle = 0;
     }
+    return $toggle;
 }
