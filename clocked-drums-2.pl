@@ -28,14 +28,14 @@ my $beat_interval = 60 / $bpm / 4; # 16th-note resolution
 my @primes = primes($beats);
 my $ticks = 0;
 
-my $midi_out = RtMidiOut->new;
-$midi_out->open_virtual_port('RtMidiOut');
-$midi_out->open_port_by_name(qr/\Q$name/i);
-
 $SIG{INT} = sub { 
     say "\nStop";
     exit;
 };
+
+my $midi_out = RtMidiOut->new;
+$midi_out->open_virtual_port('RtMidiOut');
+$midi_out->open_port_by_name(qr/\Q$name/i);
 
 my $mcr = Music::CreatingRhythms->new;
 
