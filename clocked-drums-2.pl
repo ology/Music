@@ -14,6 +14,13 @@ use Time::HiRes qw(sleep);
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
 
+my $drums = {
+    kick    => { num => 36, chan => 0 },
+    snare   => { num => 38, chan => 1 },
+    hihat   => { num => 42, chan => 2 },
+    cymbals => { num => 49, chan => 3 },
+};
+
 my $clocks_per_beat = 24;
 my $clock_interval = 60 / $bpm / $clocks_per_beat; # seconds / bpm / ppqn
 my $beat_interval = 60 / $bpm / 4; # 16th-note resolution
@@ -28,12 +35,6 @@ $SIG{INT} = sub {
     exit;
 };
 
-my $drums = {
-    kick    => { num => 36, chan => 0 },
-    snare   => { num => 38, chan => 1 },
-    hihat   => { num => 42, chan => 2 },
-    cymbals => { num => 49, chan => 3 },
-};
 my $mcr = Music::CreatingRhythms->new;
 my $beats = 16;
 my @primes = primes($beats);
