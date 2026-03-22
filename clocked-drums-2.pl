@@ -49,7 +49,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             for my $i (0 .. $beats - 1) {
-                my @simul = map { $drums->{$_}{pat}[$i] } keys %$patterns;
+                my @simul = map { $drums->{$_}{pat}[$i] } keys %$drums;
                 play_simul($midi_out, $beat_interval, $drums, \@simul);
             }
         }
