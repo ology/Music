@@ -35,9 +35,10 @@ $SIG{INT} = sub {
     exit;
 };
 
-my $mcr = Music::CreatingRhythms->new;
 my $beats = 16;
 my @primes = primes($beats);
+
+my $mcr = Music::CreatingRhythms->new;
 
 my $loop = IO::Async::Loop->new;
 
