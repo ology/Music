@@ -58,11 +58,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     hihat => $patterns->{hihat}[$i],
                 };
                 play_simul($simul);
-                # sleep(0.5);
             }
-            # $midi_out->send_event('note_on', 1, 38, 127);
-            # sleep(1);
-            # $midi_out->send_event('note_off', 1, 38, 0);
         }
     },
 );
