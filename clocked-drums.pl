@@ -28,18 +28,16 @@ $SIG{INT} = sub {
 };
 
 my $drums = {
-    kick    => { num => 36, chan => 0 },
-    snare   => { num => 38, chan => 1 },
-    hihat   => { num => 42, chan => 2 },
-    # cymbals => { num => 49, chan => 3 },
+    kick  => { num => 36, chan => 0 },
+    snare => { num => 38, chan => 1 },
+    hihat => { num => 42, chan => 2 },
 };
 my $mcr = Music::CreatingRhythms->new;
 my $beats = 16;
 my $patterns = {
-    kick    => $mcr->euclid(2, $beats),
-    snare   => $mcr->rotate_n(4, $mcr->euclid(2, $beats)),
-    hihat   => $mcr->euclid(11, $beats),
-    # cymbals => [ 0 .. $beats - 1 ],
+    kick  => $mcr->euclid(2, $beats),
+    snare => $mcr->rotate_n(4, $mcr->euclid(2, $beats)),
+    hihat => $mcr->euclid(11, $beats),
 };
 
 my $loop = IO::Async::Loop->new;
