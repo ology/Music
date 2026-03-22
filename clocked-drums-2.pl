@@ -63,8 +63,7 @@ $loop->run;
 sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     my $i = 0;
     for my $drum (keys %$simul) {
-        my $bit = $simul->{$drum};
-        if ($bit == 1) {
+        if ($simul->{$drum} == 1) {
             $midi_out->send_event('note_on', $drums->{$drum}{chan}, $drums->{$drum}{num}, 127);
         }
         else { # rest
