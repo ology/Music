@@ -33,7 +33,6 @@ my @primes = primes($beats);
 my $ticks = 0;
 my $beat_count = 0;
 my $toggle = 0;
-my $crash = 0;
 
 $SIG{INT} = sub { 
     say "\nStop";
@@ -54,8 +53,8 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            if ($beat_count % $divisions == 0) {
-                adjust_pat($drums, \@primes, \$toggle, $crash);
+            if ($beat_count % ($divisions - 1) == 0) {
+                adjust_pat($drums, \@primes, \$toggle);
                 if ($beat_count > 0) {
                     fill($midi_out, 4);
                 }
@@ -91,7 +90,7 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     sleep($beat_interval * 0.1);
 }
 
-sub adjust_pat($drums, $primes, $toggle, $crash) {
+sub adjust_pat($drums, $primes, $toggle) {
     my $p = $primes->[ int rand @$primes ];
     if ($$toggle == 0) {
         $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
@@ -107,9 +106,9 @@ sub adjust_pat($drums, $primes, $toggle, $crash) {
         $drums->{cymbals}{pat} = [ (0) x $beats ];
         $$toggle = 0;
     }
-    if ($crash) {
-        $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
-    }
+    # if ($crash) {
+    #     $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
+    # }
 }
 
 sub fill($midi_out, $size) {
