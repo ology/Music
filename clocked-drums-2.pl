@@ -32,7 +32,8 @@ my $beat_interval = $per_sec / $divisions; # 16th-note resolution
 my @primes = primes($beats);
 my $ticks = 0;
 my $beat_count = 0;
-my $toggle = 0;
+my $toggle = 0; # part A or B?
+my $filled = 0;
 
 $SIG{INT} = sub { 
     say "\nStop";
@@ -57,8 +58,10 @@ my $timer = IO::Async::Timer::Periodic->new(
                 adjust_pat($drums, \@primes, \$toggle);
                 if ($beat_count > 0) {
                     fill($midi_out, 4);
+                    $filled = 1;
                 }
             }
+            adjust_cymbal($drums, \$filled);
             for my $i (0 .. $beats - 1) {
                 my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
                 play_simul($midi_out, $beat_interval, $drums, \%simul);
@@ -90,25 +93,32 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     sleep($beat_interval * 0.1);
 }
 
+sub adjust_cymbal($drums, $filled) {
+    if ($$filled) {
+        $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
+    }
+    else {
+        $drums->{cymbals}{pat} = [ (0) x $beats ];
+    }
+    $$filled = 0;
+}
+
 sub adjust_pat($drums, $primes, $toggle) {
     my $p = $primes->[ int rand @$primes ];
-    if ($$toggle == 0) {
+    if ($$toggle == 0) { # part A
         $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
         $drums->{snare}{pat}   = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
         $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
         $drums->{cymbals}{pat} = [ (0) x $beats ];
         $$toggle = 1;
     }
-    else {
+    else { # part B
         $drums->{kick}{pat}    = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
         $drums->{snare}{pat}   = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
         $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
         $drums->{cymbals}{pat} = [ (0) x $beats ];
         $$toggle = 0;
     }
-    # if ($crash) {
-    #     $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
-    # }
 }
 
 sub fill($midi_out, $size) {
