@@ -49,8 +49,8 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             for my $i (0 .. $beats - 1) {
-                my $simul = { map { $patterns->{$_}[$i] } keys %$patterns };
-                play_simul($midi_out, $beat_interval, $drums, $simul);
+                my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
+                play_simul($midi_out, $beat_interval, $drums, \%simul);
             }
         }
     },

@@ -6,6 +6,7 @@
 use v5.36;
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
+use Math::Prime::XS qw(primes);
 use MIDI::RtMidi::FFI::Device ();
 use Music::CreatingRhythms ();
 use Time::HiRes qw(sleep);
@@ -29,16 +30,14 @@ $SIG{INT} = sub {
 
 my $mcr = Music::CreatingRhythms->new;
 my $beats = 16;
+my @primes = primes($beats);
 my $drums = {
     kick    => { num => 36, chan => 0 },
     snare   => { num => 38, chan => 1 },
     hihat   => { num => 42, chan => 2 },
     cymbals => { num => 49, chan => 3 },
 };
-$drums->{kick}{pat}    = $mcr->euclid(2, $beats);
-$drums->{snare}{pat}   = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
-$drums->{hihat}{pat}   = $mcr->euclid(11, $beats);
-$drums->{cymbals}{pat} = [ 0 .. $beats - 1 ];
+alter_pat($drums, \@primes);
 
 my $loop = IO::Async::Loop->new;
 
@@ -48,9 +47,10 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
+            alter_pat($drums, \@primes);
             for my $i (0 .. $beats - 1) {
-                my @simul = map { $drums->{$_}{pat}[$i] } keys %$drums;
-                play_simul($midi_out, $beat_interval, $drums, \@simul);
+                my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
+                play_simul($midi_out, $beat_interval, $drums, \%simul);
             }
         }
     },
@@ -77,4 +77,12 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
         $midi_out->send_event('note_off', $drums->{$drum}{chan}, $drums->{$drum}{num}, 0);
     }
     sleep($beat_interval * 0.1);
+}
+
+sub alter_pat($drums, $primes) {
+    my $p = $primes->[ int rand @$primes ];
+    $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
+    $drums->{snare}{pat}   = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
+    $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
+    $drums->{cymbals}{pat} = [ 0 .. $beats - 1 ];
 }
