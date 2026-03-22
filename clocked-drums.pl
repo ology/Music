@@ -15,7 +15,7 @@ my $bpm  = shift || 120;
 
 my $clocks_per_beat = 24;
 my $clock_interval = 60 / $bpm / $clocks_per_beat; # seconds / bpm / ppqn
-my $beat_interval = 60 / $bpm / 4;
+my $beat_interval = 60 / $bpm / 4; # 16th-note resolution
 my $ticks = 0;
 
 my $midi_out = RtMidiOut->new;
