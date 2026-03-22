@@ -28,15 +28,15 @@ $SIG{INT} = sub {
     exit;
 };
 
-my $mcr = Music::CreatingRhythms->new;
-my $beats = 16;
-my @primes = primes($beats);
 my $drums = {
     kick    => { num => 36, chan => 0 },
     snare   => { num => 38, chan => 1 },
     hihat   => { num => 42, chan => 2 },
     cymbals => { num => 49, chan => 3 },
 };
+my $mcr = Music::CreatingRhythms->new;
+my $beats = 16;
+my @primes = primes($beats);
 
 my $loop = IO::Async::Loop->new;
 
