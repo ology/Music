@@ -113,17 +113,16 @@ sub adjust_drums($drums, $primes, $toggle) {
         $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
         $drums->{snare}{pat}   = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
         $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
-        $drums->{cymbals}{pat} = [ (0) x $beats ];
         $$toggle = 1;
     }
     else { # part B
         $drums->{kick}{pat}    = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
         $drums->{snare}{pat}   = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
         $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
-        $drums->{cymbals}{pat} = [ (0) x $beats ];
         $$toggle = 0;
     }
     $hats = $drums->{hihat}{pat}[0];
+    $drums->{cymbals}{pat} = [ (0) x $beats ];
     $drums->{snare}{num}   = random_note($notes);
     $drums->{kick}{num}    = random_note($notes);
     $drums->{hihat}{num}   = random_note($notes);
