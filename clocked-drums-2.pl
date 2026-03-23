@@ -22,6 +22,7 @@ my $drums = {
     hihat   => { num => 42, chan => 2 },
     cymbals => { num => 49, chan => 3 },
 };
+my $notes = [qw(60 64 67)];
 
 my $divisions = 4;
 my $clocks_per_beat = 24;
@@ -56,7 +57,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % ($divisions - 1) == 0) {
-                adjust_pat($drums, \@primes, \$toggle);
+                adjust_drums($drums, \@primes, \$toggle);
                 if ($beat_count > 0) {
                     fill($midi_out, 4);
                     $filled = 1;
@@ -106,7 +107,7 @@ sub adjust_cymbal($drums, $filled) {
     $$filled = 0;
 }
 
-sub adjust_pat($drums, $primes, $toggle) {
+sub adjust_drums($drums, $primes, $toggle) {
     my $p = $primes->[ int rand @$primes ];
     if ($$toggle == 0) { # part A
         $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
@@ -123,6 +124,10 @@ sub adjust_pat($drums, $primes, $toggle) {
         $$toggle = 0;
     }
     $hats = $drums->{hihat}{pat}[0];
+    $drums->{snare}{num}   = random_note($notes);
+    $drums->{kick}{num}    = random_note($notes);
+    $drums->{hihat}{num}   = random_note($notes);
+    $drums->{cymbals}{num} = random_note($notes);
 }
 
 sub fill($midi_out, $size) {
@@ -148,4 +153,8 @@ sub midi_msg($midi_out, $event, $channel, $note, $velocity) {
 sub velo($min, $max, $offset) {
     my $random = $offset + int(rand($max - $min + 1)) + $min;
     return $random;
+}
+
+sub random_note($notes) {
+    return $notes->[ int rand @$notes ] - 24;
 }
