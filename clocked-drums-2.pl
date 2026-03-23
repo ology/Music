@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Clock an external MIDI device, like a drum machine or sequencer.
+# Clock an external, multi-timbral MIDI device, like a drum machine or sequencer.
 # Example: perl clocked-drums-2.pl usb 90
 
 use v5.36;
