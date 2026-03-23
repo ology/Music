@@ -21,6 +21,8 @@ my $drums = {
     snare => { num => 38, chan => 1 },
     hihat => { num => 42, chan => 2 },
     crash => { num => 49, chan => 3 },
+    # ride  => { num => 51, chan => 4 },
+    # tom   => { num => 45, chan => 5 },
 };
 my $notes = [qw(60 64 67)];
 
@@ -98,11 +100,11 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
 sub adjust_cymbal($drums, $filled) {
     if ($$filled) {
         $drums->{crash}{pat}[0] = 1;
-        $drums->{hihat}{pat}[0]   = 0;
+        $drums->{hihat}{pat}[0] = 0;
     }
     else {
         $drums->{crash}{pat}[0] = 0;
-        $drums->{hihat}{pat}[0]   = $hats;
+        $drums->{hihat}{pat}[0] = $hats;
     }
     $$filled = 0;
 }
