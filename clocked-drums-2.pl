@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
-# Clock an external, multi-timbral MIDI device, like a drum machine or sequencer.
-# Example: perl clocked-drums-2.pl usb 90
+# Clock an external MIDI device, like a drum machine or sequencer.
+# Example: perl clocked-drums-3.pl usb 90
 
 use v5.36;
 use IO::Async::Loop ();
@@ -41,14 +41,16 @@ my $toggle = 0; # part A or B?
 my $filled = 0; # did we just fill?
 my $hats = 0; # toggle 1st hihat beat
 
-$SIG{INT} = sub { 
-    say "\nStop";
-    exit;
-};
-
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
+$midi_out->start;
+
+$SIG{INT} = sub { 
+    say "\nStop";
+    $midi_out->stop;
+    exit;
+};
 
 my $mcr = Music::CreatingRhythms->new;
 
@@ -65,14 +67,14 @@ my $timer = IO::Async::Timer::Periodic->new(
                 adjust_drums($drums, \@all_primes, \@to_5_primes, \@to_7_primes, \$toggle);
                 if ($beat_count > 0) {
                     if ($size == 2) {
-                        part($midi_out, $drums, $beats, $size);
+        #                 part($midi_out, $drums, $beats, $size);
                     }
-                    fill($midi_out, $size);
+        #             fill($midi_out, $size);
                     $filled = 1;
                 }
             }
             adjust_cymbal($drums, \$filled);
-            part($midi_out, $drums, $beats, 4);
+        #     part($midi_out, $drums, $beats, 4);
             $beat_count++;
         }
     },
