@@ -60,18 +60,16 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
+            my $size = 4;
             if ($beat_count % ($divisions - 1) == 0) {
                 adjust_drums($drums, \@all_primes, \@to_5_primes, \@to_7_primes, \$toggle);
                 if ($beat_count > 0) {
-                    fill($midi_out, 4);
+                    fill($midi_out, $size);
                     $filled = 1;
                 }
             }
             adjust_cymbal($drums, \$filled);
-            for my $i (0 .. $beats - 1) {
-                my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
-                play_simul($midi_out, $beat_interval, $drums, \%simul);
-            }
+            part($midi_out, $drums, $beats, $size);
             $beat_count++;
         }
     },
@@ -133,6 +131,13 @@ sub adjust_drums($drums, $all_primes, $to_5_primes, $to_7_primes, $toggle) {
     $drums->{snare}{num} = random_note($notes);
     $drums->{kick}{num}  = random_note($notes);
     $drums->{hihat}{num} = random_note($notes);
+}
+
+sub part($midi_out, $drums, $beats, $size) {
+    for my $i (0 .. $beats - 1) {
+        my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
+        play_simul($midi_out, $beat_interval, $drums, \%simul);
+    }
 }
 
 sub fill($midi_out, $size) {
