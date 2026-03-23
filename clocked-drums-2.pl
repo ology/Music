@@ -34,6 +34,7 @@ my $ticks = 0;
 my $beat_count = 0;
 my $toggle = 0; # part A or B?
 my $filled = 0;
+my $hats = 0;
 
 $SIG{INT} = sub { 
     say "\nStop";
@@ -96,9 +97,11 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
 sub adjust_cymbal($drums, $filled) {
     if ($$filled) {
         $drums->{cymbals}{pat} = [ 1, (0) x ($beats - 1) ];
+        $drums->{hihat}{pat}[0] = 0;
     }
     else {
         $drums->{cymbals}{pat} = [ (0) x $beats ];
+        $drums->{hihat}{pat}[0] = $hats;
     }
     $$filled = 0;
 }
@@ -119,6 +122,7 @@ sub adjust_pat($drums, $primes, $toggle) {
         $drums->{cymbals}{pat} = [ (0) x $beats ];
         $$toggle = 0;
     }
+    $hats = $drums->{hihat}{pat}[0];
 }
 
 sub fill($midi_out, $size) {
