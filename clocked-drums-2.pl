@@ -98,11 +98,11 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
 sub adjust_cymbal($drums, $filled) {
     if ($$filled) {
         $drums->{cymbals}{pat}[0] = 1;
-        $drums->{hihat}{pat}[0] = 0;
+        $drums->{hihat}{pat}[0]   = 0;
     }
     else {
         $drums->{cymbals}{pat}[0] = 0;
-        $drums->{hihat}{pat}[0] = $hats;
+        $drums->{hihat}{pat}[0]   = $hats;
     }
     $$filled = 0;
 }
