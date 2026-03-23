@@ -17,10 +17,10 @@ my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
 
 my $drums = {
-    kick   => { num => 36, chan => 0 },
-    snare  => { num => 38, chan => 1 },
-    hihat  => { num => 42, chan => 2 },
-    cymbal => { num => 49, chan => 3 },
+    kick  => { num => 36, chan => 0 },
+    snare => { num => 38, chan => 1 },
+    hihat => { num => 42, chan => 2 },
+    crash => { num => 49, chan => 3 },
 };
 my $notes = [qw(60 64 67)];
 
@@ -97,11 +97,11 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
 
 sub adjust_cymbal($drums, $filled) {
     if ($$filled) {
-        $drums->{cymbal}{pat}[0] = 1;
+        $drums->{crash}{pat}[0] = 1;
         $drums->{hihat}{pat}[0]   = 0;
     }
     else {
-        $drums->{cymbal}{pat}[0] = 0;
+        $drums->{crash}{pat}[0] = 0;
         $drums->{hihat}{pat}[0]   = $hats;
     }
     $$filled = 0;
@@ -110,23 +110,23 @@ sub adjust_cymbal($drums, $filled) {
 sub adjust_drums($drums, $primes, $toggle) {
     my $p = $primes->[ int rand @$primes ];
     if ($$toggle == 0) { # part A
-        $drums->{kick}{pat}    = $mcr->euclid(2, $beats);
-        $drums->{snare}{pat}   = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
-        $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
+        $drums->{kick}{pat}  = $mcr->euclid(2, $beats);
+        $drums->{snare}{pat} = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
+        $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
         $$toggle = 1;
     }
     else { # part B
-        $drums->{kick}{pat}    = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
-        $drums->{snare}{pat}   = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
-        $drums->{hihat}{pat}   = $mcr->euclid($p, $beats);
+        $drums->{kick}{pat}  = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
+        $drums->{snare}{pat} = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
+        $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
         $$toggle = 0;
     }
     $hats = $drums->{hihat}{pat}[0];
-    $drums->{cymbal}{pat} = [ (0) x $beats ];
-    $drums->{snare}{num}   = random_note($notes);
-    $drums->{kick}{num}    = random_note($notes);
-    $drums->{hihat}{num}   = random_note($notes);
-    $drums->{cymbal}{num} = random_note($notes);
+    $drums->{crash}{pat} = [ (0) x $beats ];
+    $drums->{crash}{num} = random_note($notes);
+    $drums->{snare}{num} = random_note($notes);
+    $drums->{kick}{num}  = random_note($notes);
+    $drums->{hihat}{num} = random_note($notes);
 }
 
 sub fill($midi_out, $size) {
