@@ -33,8 +33,8 @@ my @primes = primes($beats);
 my $ticks = 0;
 my $beat_count = 0;
 my $toggle = 0; # part A or B?
-my $filled = 0;
-my $hats = 0;
+my $filled = 0; # did we just fill?
+my $hats = 0; # toggle 1st hihat beat
 
 $SIG{INT} = sub { 
     say "\nStop";
