@@ -32,7 +32,9 @@ my $per_sec = 60 / $bpm;
 my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beats = 16; # beats in a phrase
 my $beat_interval = $per_sec / $divisions; # 16th-note resolution
-my @primes = primes($beats);
+my @all_primes = primes($beats);
+my @to_5_primes = primes(5);
+my @to_7_primes = primes(7);
 my $ticks = 0; # clock ticks
 my $beat_count = 0;
 my $toggle = 0; # part A or B?
@@ -59,7 +61,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % ($divisions - 1) == 0) {
-                adjust_drums($drums, \@primes, \$toggle);
+                adjust_drums($drums, \@all_primes, \@to_5_primes, \@to_7_primes, \$toggle);
                 if ($beat_count > 0) {
                     fill($midi_out, 4);
                     $filled = 1;
@@ -109,11 +111,13 @@ sub adjust_cymbal($drums, $filled) {
     $$filled = 0;
 }
 
-sub adjust_drums($drums, $primes, $toggle) {
-    my $p = $primes->[ int rand @$primes ];
+sub adjust_drums($drums, $all_primes, $to_5_primes, $to_7_primes, $toggle) {
+    my $p = $all_primes->[ int rand @$all_primes ];
+    my $q = $to_5_primes->[ int rand @$to_5_primes ];
+    my $r = $to_7_primes->[ int rand @$to_7_primes ];
     if ($$toggle == 0) { # part A
-        $drums->{kick}{pat}  = $mcr->euclid(2, $beats);
-        $drums->{snare}{pat} = $mcr->rotate_n(4, $mcr->euclid(2, $beats));
+        $drums->{kick}{pat}  = $mcr->euclid($q, $beats);
+        $drums->{snare}{pat} = $mcr->rotate_n($r, $mcr->euclid(2, $beats));
         $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
         $$toggle = 1;
     }
