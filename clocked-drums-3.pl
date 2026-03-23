@@ -80,7 +80,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            # await play();
+            await play();
         }
     },
 );
