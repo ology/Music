@@ -138,7 +138,7 @@ sub fill($midi_out, $size) {
     );
     my $motif = $mdp->motif;
     for my $duration (@$motif) {
-        midi_msg($midi_out, 'note_on', $drums->{snare}{chan}, $drums->{snare}{num}, velo(-10, 10, 64));
+        midi_msg($midi_out, 'note_on', $drums->{snare}{chan}, $drums->{snare}{num}, velocity(-10, 10, 64));
         sleep(dura_size($duration) * $per_sec * 0.9);
         midi_msg($midi_out, 'note_off', $drums->{snare}{chan}, $drums->{snare}{num}, 0);
         sleep(dura_size($duration) * $per_sec * 0.1);
@@ -149,7 +149,7 @@ sub midi_msg($midi_out, $event, $channel, $note, $velocity) {
     $midi_out->send_event($event, $channel, $note, $velocity);
 }
 
-sub velo($min, $max, $offset) {
+sub velocity($min, $max, $offset) {
     my $random = $offset + int(rand($max - $min + 1)) + $min;
     return $random;
 }
