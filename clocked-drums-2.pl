@@ -155,5 +155,6 @@ sub velo($min, $max, $offset) {
 }
 
 sub random_note($notes) {
-    return $notes->[ int rand @$notes ] - 24;
+    my $random = $notes->[ int rand @$notes ] - 24;
+    return $random;
 }
