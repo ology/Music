@@ -5,6 +5,7 @@
 
 use v5.36;
 use Future::AsyncAwait;
+use Future::IO ();
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use Math::Prime::XS qw(primes);
@@ -12,7 +13,6 @@ use MIDI::RtMidi::FFI::Device ();
 use MIDI::Util qw(dura_size);
 use Music::CreatingRhythms ();
 use Music::Duration::Partition ();
-use Time::HiRes qw(sleep);
 
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
@@ -63,14 +63,14 @@ async sub play() {
         adjust_drums($drums, \@all_primes, \@to_5_primes, \@to_7_primes, \$toggle);
         if ($beat_count > 0) {
             if ($size == 2) {
-                part($midi_out, $drums, $beats, $size);
+                await part($midi_out, $drums, $beats, $size);
             }
-            fill($midi_out, $size);
+            await fill($midi_out, $size);
             $filled = 1;
         }
     }
     adjust_cymbal($drums, \$filled);
-    part($midi_out, $drums, $beats, 4);
+    await part($midi_out, $drums, $beats, 4);
     $beat_count++;
 }
 
@@ -80,7 +80,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            play()->get;
+            play()->retain;
         }
     },
 );
@@ -89,7 +89,7 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-sub play_simul($midi_out, $beat_interval, $drums, $simul) {
+async sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     my $i = 0;
     for my $drum (keys %$simul) {
         if ($simul->{$drum} == 1) {
@@ -99,12 +99,12 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
             $midi_out->send_event('note_on', $drums->{$drum}{chan}, $drums->{$drum}{num}, 0);
         }
     }
-    sleep($beat_interval * 0.9);
+    await Future::IO->sleep($beat_interval * 0.9);
     $i = 0;
     for my $drum (keys %$simul) {
         $midi_out->send_event('note_off', $drums->{$drum}{chan}, $drums->{$drum}{num}, 0);
     }
-    sleep($beat_interval * 0.1);
+    await Future::IO->sleep($beat_interval * 0.1);
 }
 
 sub adjust_cymbal($drums, $filled) {
@@ -143,15 +143,15 @@ sub adjust_drums($drums, $all_primes, $to_5_primes, $to_7_primes, $toggle) {
     $drums->{hihat}{num} = random_note($notes);
 }
 
-sub part($midi_out, $drums, $beats, $size) {
+async sub part($midi_out, $drums, $beats, $size) {
     my $end = $size == 2 ? $beats / 2 : $beats;
     for my $i (0 .. $end - 1) {
         my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
-        play_simul($midi_out, $beat_interval, $drums, \%simul);
+        await play_simul($midi_out, $beat_interval, $drums, \%simul);
     }
 }
 
-sub fill($midi_out, $size) {
+async sub fill($midi_out, $size) {
     my $mdp = Music::Duration::Partition->new(
         size    => $size,
         pool    => [qw(qn en sn)],
@@ -161,9 +161,9 @@ sub fill($midi_out, $size) {
     my $motif = $mdp->motif;
     for my $duration (@$motif) {
         midi_msg($midi_out, 'note_on', $drums->{snare}{chan}, $drums->{snare}{num}, velocity(-10, 10, 64));
-        sleep(dura_size($duration) * $per_sec * 0.9);
+        await Future::IO->sleep(dura_size($duration) * $per_sec * 0.9);
         midi_msg($midi_out, 'note_off', $drums->{snare}{chan}, $drums->{snare}{num}, 0);
-        sleep(dura_size($duration) * $per_sec * 0.1);
+        await Future::IO->sleep(dura_size($duration) * $per_sec * 0.1);
     }
 }
 
