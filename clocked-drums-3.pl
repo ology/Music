@@ -7,12 +7,14 @@ use v5.36;
 use Future::AsyncAwait;
 use Future::IO ();
 use IO::Async::Loop ();
+use IO::Async::Process ();
 use IO::Async::Timer::Periodic ();
 use Math::Prime::XS qw(primes);
 use MIDI::RtMidi::FFI::Device ();
 use MIDI::Util qw(dura_size);
 use Music::CreatingRhythms ();
 use Music::Duration::Partition ();
+use Time::HiRes qw(sleep);
 
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
@@ -29,6 +31,7 @@ my $notes = [qw(60 64 67)];
 
 my $divisions = 4;
 my $clocks_per_beat = 24;
+my $clocks_per_div = $clocks_per_beat / $divisions;
 my $per_sec = 60 / $bpm;
 my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beats = 16; # beats in a phrase
@@ -63,9 +66,9 @@ async sub play() {
         adjust_drums($drums, \@all_primes, \@to_5_primes, \@to_7_primes, \$toggle);
         if ($beat_count > 0) {
             if ($size == 2) {
-                await part($midi_out, $drums, $beats, $size);
+                # part($midi_out, $drums, $beats, $size);
             }
-            await fill($midi_out, $size);
+            # fill($midi_out, $size);
             $filled = 1;
         }
     }
@@ -80,7 +83,14 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            play()->retain;
+            my $proc = IO::Async::Process->new(
+                code => async sub { await play(); return 0 },
+                on_finish => sub {
+                    my ( $self, $exitcode ) = @_;
+                    print "Process finished with code $exitcode\n";
+                },
+            );
+            $loop->add( $proc );
         }
     },
 );
@@ -105,6 +115,7 @@ async sub play_simul($midi_out, $beat_interval, $drums, $simul) {
         $midi_out->send_event('note_off', $drums->{$drum}{chan}, $drums->{$drum}{num}, 0);
     }
     await Future::IO->sleep($beat_interval * 0.1);
+    say 'Hello?';
 }
 
 sub adjust_cymbal($drums, $filled) {
@@ -151,7 +162,7 @@ async sub part($midi_out, $drums, $beats, $size) {
     }
 }
 
-async sub fill($midi_out, $size) {
+sub fill($midi_out, $size) {
     my $mdp = Music::Duration::Partition->new(
         size    => $size,
         pool    => [qw(qn en sn)],
@@ -161,9 +172,9 @@ async sub fill($midi_out, $size) {
     my $motif = $mdp->motif;
     for my $duration (@$motif) {
         midi_msg($midi_out, 'note_on', $drums->{snare}{chan}, $drums->{snare}{num}, velocity(-10, 10, 64));
-        await Future::IO->sleep(dura_size($duration) * $per_sec * 0.9);
+        sleep(dura_size($duration) * $per_sec * 0.9);
         midi_msg($midi_out, 'note_off', $drums->{snare}{chan}, $drums->{snare}{num}, 0);
-        await Future::IO->sleep(dura_size($duration) * $per_sec * 0.1);
+        sleep(dura_size($duration) * $per_sec * 0.1);
     }
 }
 
