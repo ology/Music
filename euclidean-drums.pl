@@ -57,7 +57,6 @@ my $loop = IO::Async::Loop->new;
 my $timer = IO::Async::Timer::Periodic->new(
     interval => $clock_interval,
     on_tick  => sub {
-        $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             my $size = rand() < 0.4 ? 2 : 4;
