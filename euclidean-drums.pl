@@ -130,7 +130,7 @@ sub adjust_cymbal($drums, $filled) {
     }
     else {
         $drums->{crash}{pat}[0] = 0;
-        $drums->{hihat}{pat}[0] = $hats;
+        $drums->{hihat}{pat}[0] = $hats; # restore bit
     }
     $$filled = 0;
 }
@@ -151,7 +151,7 @@ sub adjust_drums($drums, $all_primes, $to_5_primes, $to_7_primes, $toggle) {
         $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
         $$toggle = 0;
     }
-    $hats = $drums->{hihat}{pat}[0];
+    $hats = $drums->{hihat}{pat}[0]; # save bit
     $drums->{crash}{pat} = [ (0) x $beats ];
     $drums->{crash}{num} = random_note($notes);
     $drums->{snare}{num} = random_note($notes);
