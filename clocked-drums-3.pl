@@ -79,18 +79,18 @@ async sub play() {
 
 my $timer = IO::Async::Timer::Periodic->new(
     interval => $clock_interval,
-    on_tick  => async sub {
+    on_tick  => sub {
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             my $proc = IO::Async::Process->new(
-                code => async sub { await play(); return 0 },
+                code => sub { play()->get; return 0 },
                 on_finish => sub {
-                    my ( $self, $exitcode ) = @_;
+                    my ($self, $exitcode) = @_;
                     print "Process finished with code $exitcode\n";
                 },
             );
-            $loop->add( $proc );
+            $loop->add($proc);
         }
     },
 );
