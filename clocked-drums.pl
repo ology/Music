@@ -4,6 +4,7 @@
 # Example: perl clocked-drums.pl usb 90
 
 use v5.36;
+use Data::Dumper::Compact 'ddc';
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use MIDI::RtMidi::FFI::Device ();
@@ -50,6 +51,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $clocks_per_beat == 0) {
             for my $i (0 .. $beats - 1) {
                 my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
+                say ddc \%simul;
                 play_simul($midi_out, $beat_interval, $drums, \%simul);
             }
         }

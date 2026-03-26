@@ -90,7 +90,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     print "Process finished with code $exitcode\n";
                 },
             );
-            $loop->add($proc);
+            # $loop->add($proc);
         }
     },
 );

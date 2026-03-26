@@ -11,8 +11,7 @@ use MIDI::RtMidi::FFI::Device ();
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
 
-my $interval = 60 / $bpm / 24; # seconds / bpm / ppqn
-say "I: $interval";
+my $interval = 60 / $bpm / 24; # seconds / bpm / clocks-per-beat
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
