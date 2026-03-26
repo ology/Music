@@ -18,8 +18,8 @@ my $bpm  = shift || 120;
 
 my $drums = {
     kick  => { num => 36, chan => 0 },
-    snare => { num => 38, chan => 1 },
-    hihat => { num => 42, chan => 2 },
+    snare => { num => 38, chan => 2 },
+    hihat => { num => 42, chan => 1 },
     crash => { num => 49, chan => 3 },
     # ride  => { num => 51, chan => 4 },
     # tom   => { num => 45, chan => 5 },
@@ -81,6 +81,30 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
+sub part($midi_out, $drums, $beats, $size) {
+    my $end = $size == 2 ? $beats / 2 : $beats;
+    for my $i (0 .. $end - 1) {
+        my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
+        play_simul($midi_out, $beat_interval, $drums, \%simul);
+    }
+}
+
+sub fill($midi_out, $size) {
+    my $mdp = Music::Duration::Partition->new(
+        size    => $size,
+        pool    => [qw(qn en sn)],
+        weights => [1, 2, 1],
+        groups  => [0, 0, 2],
+    );
+    my $motif = $mdp->motif;
+    for my $duration (@$motif) {
+        midi_msg($midi_out, 'note_on', $drums->{snare}{chan}, $drums->{snare}{num}, velocity(-10, 10, 64));
+        sleep(dura_size($duration) * $per_sec * 0.9);
+        midi_msg($midi_out, 'note_off', $drums->{snare}{chan}, $drums->{snare}{num}, 0);
+        sleep(dura_size($duration) * $per_sec * 0.1);
+    }
+}
+
 sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     my $i = 0;
     for my $drum (keys %$simul) {
@@ -133,30 +157,6 @@ sub adjust_drums($drums, $all_primes, $to_5_primes, $to_7_primes, $toggle) {
     $drums->{snare}{num} = random_note($notes);
     $drums->{kick}{num}  = random_note($notes);
     $drums->{hihat}{num} = random_note($notes);
-}
-
-sub part($midi_out, $drums, $beats, $size) {
-    my $end = $size == 2 ? $beats / 2 : $beats;
-    for my $i (0 .. $end - 1) {
-        my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
-        play_simul($midi_out, $beat_interval, $drums, \%simul);
-    }
-}
-
-sub fill($midi_out, $size) {
-    my $mdp = Music::Duration::Partition->new(
-        size    => $size,
-        pool    => [qw(qn en sn)],
-        weights => [1, 2, 1],
-        groups  => [0, 0, 2],
-    );
-    my $motif = $mdp->motif;
-    for my $duration (@$motif) {
-        midi_msg($midi_out, 'note_on', $drums->{snare}{chan}, $drums->{snare}{num}, velocity(-10, 10, 64));
-        sleep(dura_size($duration) * $per_sec * 0.9);
-        midi_msg($midi_out, 'note_off', $drums->{snare}{chan}, $drums->{snare}{num}, 0);
-        sleep(dura_size($duration) * $per_sec * 0.1);
-    }
 }
 
 sub midi_msg($midi_out, $event, $channel, $note, $velocity) {
