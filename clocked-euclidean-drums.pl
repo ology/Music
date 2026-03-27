@@ -48,11 +48,12 @@ my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
 
-$SIG{INT} = sub { 
+$SIG{INT} = sub { # halt gracefully
     say "\nStop";
     exit;
 };
 
+# for computing the pattern
 my $mcr = Music::CreatingRhythms->new;
 
 my $loop = IO::Async::Loop->new;
