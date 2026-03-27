@@ -28,7 +28,7 @@ my $drums = {
 
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
-my $clocks_per_beat = 24;
+my $clocks_per_beat = 24; # PPQN
 my $per_sec = 60 / $bpm;
 my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beat_interval = $per_sec / $divisions; # 16th-note resolution
