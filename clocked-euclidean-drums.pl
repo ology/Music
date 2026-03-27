@@ -114,8 +114,8 @@ __END__
 
 * Make patterns other than prime-number based Euclidean grooves.
 
+* Toggle more than two groove parts.
+
 * Add snare fills to the 4th bar.
 
 * Make this code handle odd meter grooves.
-
-* Toggle more than two groove parts.
