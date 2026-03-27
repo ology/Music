@@ -62,17 +62,20 @@ my $timer = IO::Async::Timer::Periodic->new(
             if ($beat_count % ($beats * $divisions) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle);
             }
+            # add the simultaneous drums to the queue
             for my $drum (keys %$drums) {
                 if ($drums->{$drum}{pat}[ $beat_count % $beats ]) {
                     push @queue, { drum => $drum, velocity => 127 };
                 }
             }
+            # play the queue
             for my $drum (@queue) {
                 $midi_out->note_on($drums->{ $drum->{drum} }{chan}, $drums->{ $drum->{drum} }{num}, $drum->{velocity});
             }
             $beat_count++;
         }
         else {
+            # drain the queue with note_off messages
             while (my $drum = pop @queue) {
                 $midi_out->note_off($drums->{ $drum->{drum} }{chan}, $drums->{ $drum->{drum} }{num}, 0);
             }
