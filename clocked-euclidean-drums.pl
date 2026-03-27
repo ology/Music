@@ -17,7 +17,7 @@ use Time::HiRes qw(sleep);
 use Data::Dumper::Compact qw(ddc);
 
 my $name = shift || 'usb'; # MIDI sequencer device
-my $bpm  = shift || 120;
+my $bpm  = shift || 120; # beats-per-minute
 my $chan = shift // 9; # 0-15, 9=percussion. -1 means "multi-timbral"
 
 my $drums = {
