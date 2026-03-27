@@ -41,7 +41,7 @@ my $beat_count = 0;
 my $toggle = 0; # part A or B?
 my $filled = 0; # did we just fill?
 my $hats = 0; # toggle 1st hihat beat
-my @queue;
+my @queue; # priority queue for note_on/off messages
 
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
