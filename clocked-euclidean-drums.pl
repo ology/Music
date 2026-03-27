@@ -31,6 +31,7 @@ my $clocks_per_beat = 24;
 my $per_sec = 60 / $bpm;
 my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beats = 16; # beats in a phrase
+my $sixteenth = $clocks_per_beat / $divisions; # 16th-notes
 my $beat_interval = $per_sec / $divisions; # 16th-note resolution
 my @all_primes = primes($beats);
 my @to_5_primes = primes(5);
@@ -60,13 +61,23 @@ my $timer = IO::Async::Timer::Periodic->new(
     on_tick  => sub {
         $midi_out->clock;
         $ticks++;
-        if ($ticks % $clocks_per_beat == 0) {
-            midi_msg($midi_out, 'note_on', $drums->{kick}{chan}, $drums->{kick}{num}, 127);
+        if ($ticks % $sixteenth == 0) {
+            if ($beat_count % ($divisions - 1) == 0) {
+                adjust_drums($drums, \@all_primes, \@to_5_primes, \@to_7_primes, \$toggle);
+            }
+            for my $drum (keys %$drums) {
+                if ($drums->{$drum}{pat}[ $beat_count % $beats ]) {
+                    push @queue, { drum => $drum, velocity => 127 };
+                }
+            }
+            for my $drum (@queue) {
+                midi_msg($midi_out, 'note_on', $drums->{ $drum->{drum} }{chan}, $drums->{ $drum->{drum} }{num}, $drum->{velocity});
+            }
             $beat_count++;
         }
         else {
-            for my $drum (keys %$drums) {
-                midi_msg($midi_out, 'note_off', $drums->{$drum}{chan}, $drums->{$drum}{num}, 0);
+            while (my $drum = pop @queue) {
+                midi_msg($midi_out, 'note_off', $drums->{ $drum->{drum} }{chan}, $drums->{ $drum->{drum} }{num}, 0);
             }
         }
     },
