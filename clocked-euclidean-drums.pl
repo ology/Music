@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Play and clock a MIDI drum machine.
+# Play and clock a MIDI drum machine in 4/4.
 # Examples:
 #   perl clocked-euclidean-drums.pl fluid 120 # with fluidsynth
 #   perl clocked-euclidean-drums.pl usb 90 -1 # multi-timbral
