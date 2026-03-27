@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 # Play an external MIDI device, like a drum machine or sequencer.
-# Example: perl euclidean-drums.pl usb 90
+# Example: perl clocked-euclidean-drums.pl usb 90
 
 use v5.36;
 use IO::Async::Loop ();
