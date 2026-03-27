@@ -94,8 +94,8 @@ sub adjust_drums($mcr, $drums, $primes, $toggle) {
     }
     else { # part B
         $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
-        $drums->{kick}{pat}  = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
-        $drums->{snare}{pat} = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
+        $drums->{kick}{pat}  = [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1)];
+        $drums->{snare}{pat} = [qw(0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0)];
         $$toggle = 0; # set to part A
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
