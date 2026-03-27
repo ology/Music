@@ -117,3 +117,5 @@ __END__
 * Add snare fills to the 4th bar.
 
 * Make this code handle odd meter grooves.
+
+* Toggle more than two groove parts.
