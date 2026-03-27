@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Clock an external MIDI device, like a drum machine or sequencer.
+# Clock a MIDI device, like a drum machine or sequencer.
 # Example: perl clock-gen-async.pl usb 90
 
 use v5.36;
