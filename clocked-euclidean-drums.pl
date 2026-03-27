@@ -6,7 +6,7 @@
 #   perl clocked-euclidean-drums.pl usb 90 -1 # multi-timbral
 
 use v5.36;
-use Data::Dumper::Compact qw(ddc);
+# use Data::Dumper::Compact qw(ddc);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use Math::Prime::XS qw(primes);
