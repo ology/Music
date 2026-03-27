@@ -87,51 +87,6 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-sub part($midi_out, $drums, $beats, $size) {
-    my $end = $size == 2 ? $beats / 2 : $beats;
-    for my $i (0 .. $end - 1) {
-        my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
-        play_simul($midi_out, $beat_interval, $drums, \%simul);
-    }
-}
-
-sub fill($midi_out, $size) {
-    my $mdp = Music::Duration::Partition->new(
-        size    => $size,
-        pool    => [qw(qn en sn)],
-        weights => [1, 2, 1],
-        groups  => [0, 0, 2],
-    );
-    my $motif = $mdp->motif;
-    for my $duration (@$motif) {
-        midi_msg($midi_out, 'note_on', $drums->{snare}{chan}, $drums->{snare}{num}, velocity(-10, 10, 64));
-    }
-}
-
-sub play_simul($midi_out, $beat_interval, $drums, $simul) {
-    my $i = 0;
-    for my $drum (keys %$simul) {
-        if ($simul->{$drum} == 1) {
-            $midi_out->send_event('note_on', $drums->{$drum}{chan}, $drums->{$drum}{num}, 127);
-        }
-        else { # rest
-            $midi_out->send_event('note_on', $drums->{$drum}{chan}, $drums->{$drum}{num}, 0);
-        }
-    }
-}
-
-sub adjust_cymbal($drums, $filled) {
-    if ($$filled) {
-        $drums->{crash}{pat}[0] = 1;
-        $drums->{hihat}{pat}[0] = 0;
-    }
-    else {
-        $drums->{crash}{pat}[0] = 0;
-        $drums->{hihat}{pat}[0] = $hats; # restore bit
-    }
-    $$filled = 0;
-}
-
 sub adjust_drums($drums, $all_primes, $to_5_primes, $to_7_primes, $toggle) {
     my $p = $all_primes->[ int rand @$all_primes ];
     my $q = $to_5_primes->[ int rand @$to_5_primes ];
@@ -150,22 +105,8 @@ sub adjust_drums($drums, $all_primes, $to_5_primes, $to_7_primes, $toggle) {
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
     $drums->{crash}{pat} = [ (0) x $beats ];
-    $drums->{crash}{num} = random_note($notes);
-    $drums->{snare}{num} = random_note($notes);
-    $drums->{kick}{num}  = random_note($notes);
-    $drums->{hihat}{num} = random_note($notes);
 }
 
 sub midi_msg($midi_out, $event, $channel, $note, $velocity) {
     $midi_out->send_event($event, $channel, $note, $velocity);
-}
-
-sub velocity($min, $max, $offset) {
-    my $random = $offset + int(rand($max - $min + 1)) + $min;
-    return $random;
-}
-
-sub random_note($notes) {
-    my $random = $notes->[ int rand @$notes ] - 24;
-    return $random;
 }
