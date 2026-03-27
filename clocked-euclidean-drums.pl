@@ -33,13 +33,13 @@ my $per_sec = 60 / $bpm;
 my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beat_interval = $per_sec / $divisions; # 16th-note resolution
 my $sixteenth = $clocks_per_beat / $divisions; # clocks per 16th-note
-my %primes = (
+my %primes = ( # for computing the pattern
     all  => [ primes($beats) ],
     to_5 => [ primes(5) ],
     to_7 => [ primes(7) ],
 );
 my $ticks = 0; # clock ticks
-my $beat_count = 0;
+my $beat_count = 0; # how many beats?
 my $toggle = 0; # part A or B?
 my $hats = 0; # toggle 1st hihat beat
 my @queue; # priority queue for note_on/off messages
