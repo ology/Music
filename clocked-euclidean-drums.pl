@@ -23,13 +23,12 @@ my $drums = {
     hihat => { num => 42, chan => 2, pat => [] },
     crash => { num => 49, chan => 3, pat => [] },
 };
-my $notes = [qw(60 64 67)];
 
-my $divisions = 4;
+my $beats = 16; # beats in a phrase
+my $divisions = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 24;
 my $per_sec = 60 / $bpm;
 my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
-my $beats = 16; # beats in a phrase
 my $sixteenth = $clocks_per_beat / $divisions; # 16th-notes
 my $beat_interval = $per_sec / $divisions; # 16th-note resolution
 my %primes = (
