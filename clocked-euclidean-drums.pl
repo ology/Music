@@ -58,6 +58,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
+            # ajdust the drum pattern every 4th measure
             if ($beat_count % ($beats * $divisions) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle);
             }
