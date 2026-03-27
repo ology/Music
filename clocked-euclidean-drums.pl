@@ -90,7 +90,7 @@ $loop->add($timer);
 $loop->run;
 
 sub adjust_drums($drums, $primes, $toggle) {
-    # choose random primes for use in the kick, snare, and hihats
+    # choose random primes to use by the kick, snare, and hihat
     my ($p, $q, $r) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
     if ($$toggle == 0) { # part A
         $drums->{kick}{pat}  = $mcr->euclid($q, $beats);
