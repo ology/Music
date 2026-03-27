@@ -87,6 +87,7 @@ $loop->add($timer);
 $loop->run;
 
 sub adjust_drums($drums, $primes, $toggle) {
+    # choose random primes for use in the kick, snare, and hihats
     my $p = $primes->{all}[ int rand $primes->{all}->@* ];
     my $q = $primes->{to_5}[ int rand $primes->{to_5}->@* ];
     my $r = $primes->{to_7}[ int rand $primes->{to_7}->@* ];
@@ -94,15 +95,16 @@ sub adjust_drums($drums, $primes, $toggle) {
         $drums->{kick}{pat}  = $mcr->euclid($q, $beats);
         $drums->{snare}{pat} = $mcr->rotate_n($r, $mcr->euclid(2, $beats));
         $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
-        $$toggle = 1;
+        $$toggle = 1; # set to part B
     }
     else { # part B
         $drums->{kick}{pat}  = [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1];
         $drums->{snare}{pat} = [0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0];
         $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
-        $$toggle = 0;
+        $$toggle = 0; # set to part A
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
+    # no crashing
     $drums->{crash}{pat} = [ (0) x $beats ];
 }
 
