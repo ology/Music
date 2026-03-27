@@ -17,10 +17,10 @@ my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
 
 my $drums = {
-    kick  => { num => 36, chan => 0 },
-    snare => { num => 38, chan => 1 },
-    hihat => { num => 42, chan => 2 },
-    crash => { num => 49, chan => 3 },
+    kick  => { num => 36, chan => 0, pat => [] },
+    snare => { num => 38, chan => 1, pat => [] },
+    hihat => { num => 42, chan => 2, pat => [] },
+    crash => { num => 49, chan => 3, pat => [] },
     # ride  => { num => 51, chan => 4 },
     # tom   => { num => 45, chan => 5 },
 };
