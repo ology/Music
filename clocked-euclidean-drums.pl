@@ -24,7 +24,6 @@ my $drums = {
     kick  => { num => 36, chan => $chan < 0 ? 0 : $chan, pat => [] },
     snare => { num => 38, chan => $chan < 0 ? 1 : $chan, pat => [] },
     hihat => { num => 42, chan => $chan < 0 ? 2 : $chan, pat => [] },
-    crash => { num => 49, chan => $chan < 0 ? 3 : $chan, pat => [] },
 };
 
 my $beats = 16; # beats in a phrase
@@ -107,8 +106,6 @@ sub adjust_drums($drums, $primes, $toggle) {
         $$toggle = 0; # set to part A
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
-    # no crashing
-    $drums->{crash}{pat} = [ (0) x $beats ];
 }
 
 sub midi_msg($midi_out, $event, $channel, $note, $velocity) {
