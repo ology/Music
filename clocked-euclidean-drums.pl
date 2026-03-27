@@ -107,3 +107,13 @@ sub adjust_drums($mcr, $drums, $primes, $toggle) {
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
 }
+
+__END__
+
+=head1 TODO
+
+* Make patterns other than prime-number based Euclidean grooves.
+
+* Add snare fills to the 4th bar.
+
+* Make this code handle odd meter grooves.
