@@ -12,6 +12,7 @@ use MIDI::Util qw(dura_size);
 use Music::CreatingRhythms ();
 use Music::Duration::Partition ();
 use Time::HiRes qw(sleep);
+use Data::Dumper::Compact 'ddc';
 
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
@@ -33,13 +34,14 @@ my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beats = 16; # beats in a phrase
 my $sixteenth = $clocks_per_beat / $divisions; # 16th-notes
 my $beat_interval = $per_sec / $divisions; # 16th-note resolution
-my @all_primes = primes($beats);
-my @to_5_primes = primes(5);
-my @to_7_primes = primes(7);
+my %primes = (
+    all  => [primes($beats)],
+    to_5 => [primes(5)],
+    to_7 => [primes(7)],
+);
 my $ticks = 0; # clock ticks
 my $beat_count = 0;
 my $toggle = 0; # part A or B?
-my $filled = 0; # did we just fill?
 my $hats = 0; # toggle 1st hihat beat
 my @queue; # priority queue for note_on/off messages
 
@@ -63,7 +65,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             if ($beat_count % ($divisions - 1) == 0) {
-                adjust_drums($drums, \@all_primes, \@to_5_primes, \@to_7_primes, \$toggle);
+                adjust_drums($drums, \%primes, \$toggle);
             }
             for my $drum (keys %$drums) {
                 if ($drums->{$drum}{pat}[ $beat_count % $beats ]) {
@@ -87,10 +89,10 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-sub adjust_drums($drums, $all_primes, $to_5_primes, $to_7_primes, $toggle) {
-    my $p = $all_primes->[ int rand @$all_primes ];
-    my $q = $to_5_primes->[ int rand @$to_5_primes ];
-    my $r = $to_7_primes->[ int rand @$to_7_primes ];
+sub adjust_drums($drums, $primes, $toggle) {
+    my $p = $primes->{all}[ int rand $primes->{all}->@* ];
+    my $q = $primes->{to_5}[ int rand $primes->{to_5}->@* ];
+    my $r = $primes->{to_7}[ int rand $primes->{to_7}->@* ];
     if ($$toggle == 0) { # part A
         $drums->{kick}{pat}  = $mcr->euclid($q, $beats);
         $drums->{snare}{pat} = $mcr->rotate_n($r, $mcr->euclid(2, $beats));
