@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 # Play and clock an external MIDI device, like a drum machine or sequencer.
-# Example: perl clocked-euclidean-drums.pl usb 90
+# Example: perl clocked-euclidean-drums.pl usb 90 -1
 
 use v5.36;
 use IO::Async::Loop ();
@@ -16,12 +16,13 @@ use Data::Dumper::Compact 'ddc';
 
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
+my $chan = shift // 9; # 0-15, 9=percussion. -1 means "multitimbral"
 
 my $drums = {
-    kick  => { num => 36, chan => 0, pat => [] },
-    snare => { num => 38, chan => 1, pat => [] },
-    hihat => { num => 42, chan => 2, pat => [] },
-    crash => { num => 49, chan => 3, pat => [] },
+    kick  => { num => 36, chan => $chan == -1 ? 0 : $chan, pat => [] },
+    snare => { num => 38, chan => $chan == -1 ? 1 : $chan, pat => [] },
+    hihat => { num => 42, chan => $chan == -1 ? 2 : $chan, pat => [] },
+    crash => { num => 49, chan => $chan == -1 ? 3 : $chan, pat => [] },
 };
 
 my $beats = 16; # beats in a phrase
