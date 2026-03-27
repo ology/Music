@@ -12,7 +12,6 @@ use IO::Async::Timer::Periodic ();
 use Math::Prime::XS qw(primes);
 use MIDI::RtMidi::FFI::Device ();
 use Music::CreatingRhythms ();
-use Music::Duration::Partition ();
 
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120; # beats-per-minute
