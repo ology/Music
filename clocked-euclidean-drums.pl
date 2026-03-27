@@ -63,7 +63,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             if ($beat_count % ($beats * $divisions) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle);
             }
-            # add the simultaneous drums to the queue
+            # add simultaneous drums to the queue
             for my $drum (keys %$drums) {
                 if ($drums->{$drum}{pat}[ $beat_count % $beats ]) {
                     push @queue, { drum => $drum, velocity => 127 };
