@@ -13,7 +13,6 @@ use MIDI::RtMidi::FFI::Device ();
 use MIDI::Util qw(dura_size);
 use Music::CreatingRhythms ();
 use Music::Duration::Partition ();
-use Time::HiRes qw(sleep);
 use Data::Dumper::Compact qw(ddc);
 
 my $name = shift || 'usb'; # MIDI sequencer device
