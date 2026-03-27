@@ -73,13 +73,13 @@ my $timer = IO::Async::Timer::Periodic->new(
                 }
             }
             for my $drum (@queue) {
-                midi_msg($midi_out, 'note_on', $drums->{ $drum->{drum} }{chan}, $drums->{ $drum->{drum} }{num}, $drum->{velocity});
+                $midi_out->note_on($drums->{ $drum->{drum} }{chan}, $drums->{ $drum->{drum} }{num}, $drum->{velocity});
             }
             $beat_count++;
         }
         else {
             while (my $drum = pop @queue) {
-                midi_msg($midi_out, 'note_off', $drums->{ $drum->{drum} }{chan}, $drums->{ $drum->{drum} }{num}, 0);
+                $midi_out->note_off($drums->{ $drum->{drum} }{chan}, $drums->{ $drum->{drum} }{num}, 0);
             }
         }
     },
@@ -107,8 +107,4 @@ sub adjust_drums($drums, $primes, $toggle) {
         $$toggle = 0; # set to part A
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
-}
-
-sub midi_msg($midi_out, $event, $channel, $note, $velocity) {
-    $midi_out->send_event($event, $channel, $note, $velocity);
 }
