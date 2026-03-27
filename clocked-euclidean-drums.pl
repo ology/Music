@@ -58,7 +58,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
-            if ($beat_count % ($beats * 4) == 0) {
+            if ($beat_count % ($beats * $divisions) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle);
             }
             for my $drum (keys %$drums) {
