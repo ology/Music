@@ -34,9 +34,9 @@ my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beat_interval = $per_sec / $divisions; # 16th-note resolution
 my $sixteenth = $clocks_per_beat / $divisions; # 16th-notes
 my %primes = (
-    all  => [primes($beats)],
-    to_5 => [primes(5)],
-    to_7 => [primes(7)],
+    all  => [ primes($beats) ],
+    to_5 => [ primes(5) ],
+    to_7 => [ primes(7) ],
 );
 my $ticks = 0; # clock ticks
 my $beat_count = 0;
