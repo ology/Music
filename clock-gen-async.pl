@@ -17,11 +17,12 @@ my $interval = 60 / $bpm / 24; # seconds / bpm / clocks-per-beat
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
-$midi_out->start;
+
+$midi_out->start; # start the sequencer
 
 $SIG{INT} = sub { # halt gracefully
     say "\nStop";
-    $midi_out->stop;
+    $midi_out->stop; # stop the sequencer
     exit;
 };
 
