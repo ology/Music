@@ -2,7 +2,7 @@
 
 # Play and clock an external MIDI device, like a drum machine or sequencer.
 # Examples:
-#   perl clocked-euclidean-drums.pl fluid 120
+#   perl clocked-euclidean-drums.pl fluid 120 # with fluidsynth
 #   perl clocked-euclidean-drums.pl usb 90 -1 # multi-timbral
 
 use v5.36;
