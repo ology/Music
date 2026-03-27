@@ -58,7 +58,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
-            if ($beat_count % ($divisions - 1) == 0) {
+            if ($beat_count % ($beats * 4) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle);
             }
             for my $drum (keys %$drums) {
@@ -86,13 +86,15 @@ $loop->run;
 sub adjust_drums($mcr, $drums, $primes, $toggle) {
     # choose random primes to use by the hihat, kick, and snare
     my ($p, $q, $r) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
-    if ($$toggle == 0) { # part A
+    if ($$toggle == 0) {
+        say 'part A';
         $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
         $drums->{kick}{pat}  = $mcr->euclid($q, $beats);
         $drums->{snare}{pat} = $mcr->rotate_n($r, $mcr->euclid(2, $beats));
         $$toggle = 1; # set to part B
     }
-    else { # part B
+    else {
+        say 'part B';
         $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
         $drums->{kick}{pat}  = [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1)];
         $drums->{snare}{pat} = [qw(0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0)];
