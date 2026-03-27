@@ -105,9 +105,6 @@ sub fill($midi_out, $size) {
     my $motif = $mdp->motif;
     for my $duration (@$motif) {
         midi_msg($midi_out, 'note_on', $drums->{snare}{chan}, $drums->{snare}{num}, velocity(-10, 10, 64));
-        # sleep(dura_size($duration) * $per_sec * 0.9);
-        # midi_msg($midi_out, 'note_off', $drums->{snare}{chan}, $drums->{snare}{num}, 0);
-        # sleep(dura_size($duration) * $per_sec * 0.1);
     }
 }
 
@@ -121,12 +118,6 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
             $midi_out->send_event('note_on', $drums->{$drum}{chan}, $drums->{$drum}{num}, 0);
         }
     }
-    # sleep($beat_interval * 0.9);
-    # $i = 0;
-    # for my $drum (keys %$simul) {
-    #     $midi_out->send_event('note_off', $drums->{$drum}{chan}, $drums->{$drum}{num}, 0);
-    # }
-    # sleep($beat_interval * 0.1);
 }
 
 sub adjust_cymbal($drums, $filled) {
