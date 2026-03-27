@@ -38,6 +38,7 @@ my $toggle = 0; # part A or B?
 my $hats = 0; # toggle 1st hihat beat
 my @queue; # priority queue for note_on/off messages
 
+# open the named midi output device
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
