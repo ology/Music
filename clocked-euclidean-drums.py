@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-import time
+import asyncio
 import random
 import mido
 from mido import Message
@@ -28,7 +28,7 @@ def adjust_drums(mcr, drums, primes_dict, toggle):
         toggle[0] = 0
     return drums['hihat']['pat'][0]
 
-def main():
+async def main():
     name = sys.argv[1] if len(sys.argv) > 1 else 'USB MIDI Interface'
     bpm  = int(sys.argv[2]) if len(sys.argv) > 2 else 120
     chan = int(sys.argv[3]) if len(sys.argv) > 3 else 9
@@ -87,9 +87,9 @@ def main():
                                     note=drums[drum_name]['num'], velocity=0)
                         midi_out.send(msg)
 
-                time.sleep(clock_interval)
+                await asyncio.sleep(clock_interval)
     except KeyboardInterrupt:
         print("\nStop")
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
