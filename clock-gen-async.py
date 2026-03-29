@@ -23,7 +23,7 @@ if __name__ == "__main__":
     name = sys.argv[1] if len(sys.argv) > 1 else "USB MIDI Interface"
     bpm = int(sys.argv[2]) if len(sys.argv) > 2 else 120
 
-    clock_interval = 60 / bpm / 24
+    clock_interval = 60 / bpm / 24 # seconds / bpm / ppqn
 
     with open_output(name) as midi_out:
         midi_out.send(Message("start"))
