@@ -17,8 +17,7 @@ async def main(interval: float) -> None:
     driver = AsyncioTimeDriver(loop)
     scheduler: PhysicalScheduler = schedulerFromDriver(driver)
     repeatedly(scheduler, clock, EverySecond(interval))
-    # delay, callback, *args passed to the callback
-    await asyncio.sleep(10)  # Keep main alive to see it work
+    await asyncio.sleep(10) # Keep main alive to see it work
 
 if __name__ == "__main__":
     name = sys.argv[1] if len(sys.argv) > 1 else "USB MIDI Interface"
