@@ -13,9 +13,7 @@ def clock(steps: int, scheduled: SomeScheduledCall) -> None:
     print("MIDI clock sent")
 
 async def main(interval: float) -> None:
-
     loop = asyncio.get_running_loop()
-
     driver = AsyncioTimeDriver(loop)
     scheduler: PhysicalScheduler = schedulerFromDriver(driver)
     repeatedly(scheduler, clock, EverySecond(interval))
