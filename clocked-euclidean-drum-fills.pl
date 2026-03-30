@@ -86,12 +86,12 @@ my $timer = IO::Async::Timer::Periodic->new(
         # }
         if ($ticks % $sixteenth == 0) {
             if (($beat_count + $beats - $fill_flag) % ($beats * $divisions - 1) == 0) {
-                adjust_drums($mcr, $drums, \%primes, \$toggle, 1, $filled);
+                adjust_drums($mcr, $drums, \%primes, \$toggle, 1, $filled); # fill!
                 say "x: $beat_count / $bar_count / $fill_flag";
             }
             if ($beat_count % ($beats * $divisions) == 0) {
                 say "y: $beat_count / $bar_count";
-                adjust_drums($mcr, $drums, \%primes, \$toggle, 0, $filled);
+                adjust_drums($mcr, $drums, \%primes, \$toggle, 0, $filled); # normal part
                 $fill_flag++;
             }
             # say ddc $drums;
