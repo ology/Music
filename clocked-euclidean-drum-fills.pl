@@ -46,7 +46,7 @@ my $bar_count = 0; # how many measures?
 my $toggle = 0; # part A or B?
 my $hats = 0; # toggle 1st hihat beat
 my $filled = 0; # did we just fill?
-my $fill_flag = 0; # trigger a fill
+my $trigger = 0; # trigger a fill
 my @queue; # priority queue for note_on/off messages
 
 my $midi_out = RtMidiOut->new;
@@ -85,14 +85,14 @@ my $timer = IO::Async::Timer::Periodic->new(
             # $beat_count++;
         # }
         if ($ticks % $sixteenth == 0) {
-            if (($beat_count + $beats - $fill_flag) % ($beats * $divisions - 1) == 0) {
+            if (($beat_count + $beats - $trigger) % ($beats * $divisions - 1) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle, 1, $filled); # fill!
-                say "x: $beat_count / $bar_count / $fill_flag";
+                say "x: $beat_count / $bar_count / $trigger";
             }
             if ($beat_count % ($beats * $divisions) == 0) {
-                say "y: $beat_count / $bar_count";
+                say "y: $beat_count / $bar_count / $trigger";
                 adjust_drums($mcr, $drums, \%primes, \$toggle, 0, $filled); # normal part
-                $fill_flag++;
+                $trigger++;
             }
             # say ddc $drums;
             for my $drum (keys %$drums) {
