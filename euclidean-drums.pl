@@ -18,11 +18,9 @@ my $bpm  = shift || 120;
 
 my $drums = {
     kick  => { num => 36, chan => 0 },
-    snare => { num => 38, chan => 2 },
-    hihat => { num => 42, chan => 1 },
+    snare => { num => 38, chan => 1 },
+    hihat => { num => 42, chan => 2 },
     crash => { num => 49, chan => 3 },
-    # ride  => { num => 51, chan => 4 },
-    # tom   => { num => 45, chan => 5 },
 };
 my $notes = [qw(60 64 67)];
 
@@ -32,9 +30,11 @@ my $per_sec = 60 / $bpm;
 my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beats = 16; # beats in a phrase
 my $beat_interval = $per_sec / $divisions; # 16th-note resolution
-my @all_primes = primes($beats);
-my @to_5_primes = primes(5);
-my @to_7_primes = primes(7);
+my %primes = (
+    all  => [primes($beats)],
+    to_5 => [primes(5)],
+    to_7 => [primes(7)],
+);
 my $ticks = 0; # clock ticks
 my $beat_count = 0;
 my $toggle = 0; # part A or B?
@@ -61,7 +61,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $clocks_per_beat == 0) {
             my $size = rand() < 0.4 ? 2 : 4;
             if ($beat_count % ($divisions - 1) == 0) {
-                adjust_drums($drums, \@all_primes, \@to_5_primes, \@to_7_primes, \$toggle);
+                adjust_drums($drums, \%primes, \$toggle);
                 if ($beat_count > 0) {
                     if ($size == 2) {
                         part($midi_out, $drums, $beats, $size);
@@ -135,10 +135,8 @@ sub adjust_cymbal($drums, $filled) {
     $$filled = 0;
 }
 
-sub adjust_drums($drums, $all_primes, $to_5_primes, $to_7_primes, $toggle) {
-    my $p = $all_primes->[ int rand @$all_primes ];
-    my $q = $to_5_primes->[ int rand @$to_5_primes ];
-    my $r = $to_7_primes->[ int rand @$to_7_primes ];
+sub adjust_drums($drums, $primes, $toggle) {
+    my ($p, $q, $r) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
     if ($$toggle == 0) { # part A
         $drums->{kick}{pat}  = $mcr->euclid($q, $beats);
         $drums->{snare}{pat} = $mcr->rotate_n($r, $mcr->euclid(2, $beats));
