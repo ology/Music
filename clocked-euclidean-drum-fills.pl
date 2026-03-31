@@ -24,7 +24,7 @@ my $drums = {
     kick  => { num => 36, chan => $chan < 0 ? 0 : $chan, pat => [] },
     snare => { num => 38, chan => $chan < 0 ? 1 : $chan, pat => [] },
     hihat => { num => 42, chan => $chan < 0 ? 2 : $chan, pat => [] },
-    crash => { num => 49, chan => $chan < 0 ? 2 : $chan, pat => [] },
+    crash => { num => 49, chan => $chan < 0 ? 3 : $chan, pat => [] },
 };
 
 my $notes = [qw(60 64 67)]; # used for random assignment below
