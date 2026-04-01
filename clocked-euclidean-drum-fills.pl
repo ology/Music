@@ -109,7 +109,7 @@ $loop->run;
 sub adjust_cymbals($drums, $filled) {
     if ($$filled) {
         $drums->{crash}{pat}[0] = 1; # crash on one
-        $drums->{hihat}{pat}[0] = 0; # can't play the hihat!
+        $drums->{hihat}{pat}[0] = 0; # mutually exclusive
     }
     else {
         $drums->{crash}{pat}[0] = 0; # not crashing
