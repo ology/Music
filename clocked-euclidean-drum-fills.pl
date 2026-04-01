@@ -123,6 +123,8 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
     my ($p, $q, $r) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
     if ($fill_flag) {
         say 'fill';
+        my $size = rand() < 0.5 ? 2 : 4;
+        say "S: $size";
         my %durations = (
             sn => [1],
             en => [1,0],
@@ -136,9 +138,18 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
         );
         my $motif = $mdp->motif;
         my @converted = map { $durations{$_}->@* } @$motif;
-        $drums->{hihat}{pat} = [ (0) x $beats ];
-        $drums->{kick}{pat}  = [ (0) x $beats ];
-        $drums->{snare}{pat} = \@converted;
+        if ($size == 4) {
+            $drums->{hihat}{pat} = [ (0) x $beats ];
+            $drums->{kick}{pat}  = [ (0) x $beats ];
+            $drums->{snare}{pat} = \@converted;
+        }
+        elsif ($size == 2) {            
+            my %pats = part_A($mcr, $drums, $primes, $beats);
+            $drums->{hihat}{pat} = [ $pats{hihat}->@[0 .. 7], (0) x ($beats / 2) ];
+            $drums->{kick}{pat}  = [ $pats{kick}->@[0 .. 7], (0) x ($beats / 2) ];
+            $drums->{snare}{pat} = [ $pats{snare}->@[0 .. 7], @converted[0 .. 7] ]
+            # say ddc $drums;
+        }
     }
     elsif ($$toggle == 0) {
         my %pats = part_A($mcr, $drums, $primes, $beats);
