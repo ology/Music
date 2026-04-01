@@ -138,17 +138,18 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
         );
         my $motif = $mdp->motif;
         my @converted = map { $durations{$_}->@* } @$motif;
-        if ($size == 4) {
+        if ($size < 4) {
+            my %pats = part_A($mcr, $drums, $primes, $beats);
+            my $div = $beats / 2;
+            $drums->{hihat}{pat} = [ $pats{hihat}->@[0 .. $div - 1], (0) x $div ];
+            $drums->{kick}{pat}  = [ $pats{kick}->@[0 .. $div - 1], (0) x $div ];
+            $drums->{snare}{pat} = [ $pats{snare}->@[0 .. $div - 1], @converted[0 .. $div - 1] ]
+            # say ddc $drums;
+        }
+        else {
             $drums->{hihat}{pat} = [ (0) x $beats ];
             $drums->{kick}{pat}  = [ (0) x $beats ];
             $drums->{snare}{pat} = \@converted;
-        }
-        elsif ($size == 2) {            
-            my %pats = part_A($mcr, $drums, $primes, $beats);
-            $drums->{hihat}{pat} = [ $pats{hihat}->@[0 .. 7], (0) x ($beats / 2) ];
-            $drums->{kick}{pat}  = [ $pats{kick}->@[0 .. 7], (0) x ($beats / 2) ];
-            $drums->{snare}{pat} = [ $pats{snare}->@[0 .. 7], @converted[0 .. 7] ]
-            # say ddc $drums;
         }
     }
     elsif ($$toggle == 0) {
