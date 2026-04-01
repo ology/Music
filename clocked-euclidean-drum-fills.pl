@@ -71,6 +71,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $sixteenth == 0) {
             if (($beat_count + $beats - $trigger) % ($beats * $divisions - 1) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle, 1, \$filled); # fill!
+                # $filled = 1;
                 say "x: $beat_count / $bar_count / $trigger";
             }
             if ($beat_count % ($beats * $divisions) == 0) {
@@ -161,13 +162,8 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
         $$toggle = 0; # set to part A
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
-    # if ($$filled) {
-    #     $drums->{crash}{pat}  = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    #     $drums->{hihat}{pat}[0] = 0;
-    # }
-    # else {
-    #    $drums->{crash}{pat} = [ 0 x $beats ];
-    # }
+    $drums->{crash}{pat} = [ (0) x $beats ];
+    adjust_cymbal($drums, $filled);
     # $drums->{crash}{num} = random_note($notes);
     # $drums->{snare}{num} = random_note($notes);
     # $drums->{kick}{num}  = random_note($notes);
