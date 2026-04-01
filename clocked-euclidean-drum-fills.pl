@@ -141,11 +141,17 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
         $drums->{snare}{pat} = \@converted;
     }
     elsif ($$toggle == 0) {
-        part_A($mcr, $drums, $primes, $beats);
+        my %pats = part_A($mcr, $drums, $primes, $beats);
+        $drums->{hihat}{pat} = $pats{hihat};
+        $drums->{kick}{pat}  = $pats{kick};
+        $drums->{snare}{pat} = $pats{snare};
         $$toggle = 1; # set to part B
     }
     elsif ($$toggle == 1) {
-        part_B($mcr, $drums, $primes, $beats);
+        my %pats = part_B($mcr, $drums, $primes, $beats);
+        $drums->{hihat}{pat} = $pats{hihat};
+        $drums->{kick}{pat}  = $pats{kick};
+        $drums->{snare}{pat} = $pats{snare};
         $$toggle = 0; # set to part A
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
@@ -161,18 +167,24 @@ sub part_A($mcr, $drums, $primes, $beats) {
     say 'part A';
     # choose random primes to use by the hihat, kick, and snare
     my ($p, $q, $r) = primes_list($primes);
-    $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
-    $drums->{kick}{pat}  = $mcr->euclid($q, $beats);
-    $drums->{snare}{pat} = $mcr->rotate_n($r, $mcr->euclid(2, $beats));
+    my %patterns = (
+        hihat => $mcr->euclid($p, $beats),
+        kick  => $mcr->euclid($q, $beats),
+        snare => $mcr->rotate_n($r, $mcr->euclid(2, $beats)),
+    );
+    return %patterns;
 }
 
 sub part_B($mcr, $drums, $primes, $beats) {
     say 'part B';
     # choose a random prime to use by the hihat
     my ($p) = primes_list($primes);
-    $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
-    $drums->{kick}{pat}  = [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1)];
-    $drums->{snare}{pat} = [qw(0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0)];
+    my %patterns = (
+        hihat => $mcr->euclid($p, $beats),
+        kick  => [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1)],
+        snare => [qw(0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0)],
+    );
+    return %patterns;
 }
 
 sub primes_list($primes) {
