@@ -142,16 +142,12 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
     }
     elsif ($$toggle == 0) {
         say 'part A';
-        $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
-        $drums->{kick}{pat}  = $mcr->euclid($q, $beats);
-        $drums->{snare}{pat} = $mcr->rotate_n($r, $mcr->euclid(2, $beats));
+        part_A($mcr, $drums, $primes, $beats);
         $$toggle = 1; # set to part B
     }
     elsif ($$toggle == 1) {
         say 'part B';
-        $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
-        $drums->{kick}{pat}  = [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1)];
-        $drums->{snare}{pat} = [qw(0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0)];
+        part_B($mcr, $drums, $primes, $beats);
         $$toggle = 0; # set to part A
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
@@ -161,6 +157,22 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
     $drums->{snare}{num} = random_note($notes);
     $drums->{kick}{num}  = random_note($notes);
     $drums->{hihat}{num} = random_note($notes);
+}
+
+sub part_A($mcr, $drums, $primes, $beats) {
+    # choose random primes to use by the hihat, kick, and snare
+    my ($p, $q, $r) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
+    $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
+    $drums->{kick}{pat}  = $mcr->euclid($q, $beats);
+    $drums->{snare}{pat} = $mcr->rotate_n($r, $mcr->euclid(2, $beats));
+}
+
+sub part_B($mcr, $drums, $primes, $beats) {
+    # choose random primes to use by the hihat, kick, and snare
+    my ($p) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
+    $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
+    $drums->{kick}{pat}  = [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1)];
+    $drums->{snare}{pat} = [qw(0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0)];
 }
 
 sub midi_msg($midi_out, $event, $channel, $note, $velocity) {
