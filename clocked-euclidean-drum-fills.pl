@@ -203,10 +203,6 @@ sub primes_list($primes) {
     return map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
 }
 
-sub midi_msg($midi_out, $event, $channel, $note, $velocity) {
-    $midi_out->send_event($event, $channel, $note, $velocity);
-}
-
 sub velocity($min, $max, $offset) {
     my $random = $offset + int(rand($max - $min + 1)) + $min;
     return $random;
