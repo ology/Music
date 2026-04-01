@@ -79,9 +79,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 adjust_drums($mcr, $drums, \%primes, \$toggle, 0, \$filled); # normal part
                 $trigger++;
             }
-            # say ddc $drums;
             for my $drum (keys %$drums) {
-                # say $drum, ': '. $drums->{$drum}{pat}[ $beat_count % $beats ];
                 if ($drums->{$drum}{pat}[ $beat_count % scalar($drums->{$drum}{pat}->@*) ]) {
                     push @queue, { drum => $drum, velocity => 127 };
                 }
