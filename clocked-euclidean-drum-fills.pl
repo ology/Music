@@ -44,8 +44,8 @@ my $beat_count = 0; # how many beats?
 my $bar_count = 0; # how many measures?
 my $toggle = 0; # part A or B?
 my $hats = 0; # toggle 1st hihat beat
-my $filled = 0; # did we just fill?
 my $trigger = 0; # trigger a fill
+my $filled = 0; # did we just fill?
 my @queue; # priority queue for note_on/off messages
 
 my $midi_out = RtMidiOut->new;
