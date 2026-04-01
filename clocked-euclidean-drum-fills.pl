@@ -168,10 +168,10 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
     $hats = $drums->{hihat}{pat}[0]; # save bit
     $drums->{crash}{pat} = [ (0) x ($beats * $divisions) ];
     adjust_cymbals($drums, $filled);
-    $drums->{crash}{num} = random_note($notes);
-    $drums->{snare}{num} = random_note($notes);
-    $drums->{kick}{num}  = random_note($notes);
     $drums->{hihat}{num} = random_note($notes);
+    $drums->{kick}{num}  = random_note($notes);
+    $drums->{snare}{num} = random_note($notes);
+    $drums->{crash}{num} = random_note($notes);
 }
 
 sub part_A($mcr, $drums, $primes, $beats) {
