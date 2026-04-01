@@ -71,7 +71,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $sixteenth == 0) {
             if (($beat_count + $beats - $trigger) % ($beats * $divisions - 1) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle, 1, \$filled); # fill!
-                # $filled = 1;
+                # $filled++;
                 say "x: $beat_count / $bar_count / $trigger";
             }
             if ($beat_count % ($beats * $divisions) == 0) {
@@ -136,13 +136,7 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
             groups  => [0, 0, 2],
         );
         my $motif = $mdp->motif;
-        my @convert = map { $durations{$_} } @$motif;
-        my @converted;
-        for my $list (@convert) {
-            for my $bit (@$list) {
-                push @converted, $bit;
-            }
-        }
+        my @converted = map { $durations{$_}->@* } @$motif;
         $drums->{hihat}{pat} = [ (0) x $beats ];
         $drums->{kick}{pat}  = [ (0) x $beats ];
         $drums->{snare}{pat} = \@converted;
