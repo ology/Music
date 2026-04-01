@@ -123,7 +123,7 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
     my ($p, $q, $r) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
     if ($fill_flag) {
         say 'fill';
-        my $size = rand() < 0.5 ? 2 : 4;
+        my $size = rand() < 0.5 ? $divisions / 2 : $divisions;
         say "S: $size";
         my %durations = (
             sn => [1],
