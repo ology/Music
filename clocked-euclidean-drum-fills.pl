@@ -168,7 +168,7 @@ sub part_A($mcr, $drums, $primes, $beats) {
 
 sub part_B($mcr, $drums, $primes, $beats) {
     say 'part B';
-    # choose random primes to use by the hihat
+    # choose a random prime to use by the hihat
     my ($p) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
     $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
     $drums->{kick}{pat}  = [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1)];
