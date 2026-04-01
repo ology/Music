@@ -84,7 +84,6 @@ my $timer = IO::Async::Timer::Periodic->new(
                 # say $drum, ': '. $drums->{$drum}{pat}[ $beat_count % $beats ];
                 if ($drum eq 'crash') {
                     if ($drums->{$drum}{pat}[ $beat_count % ($beats * $divisions) ]) {
-                        say "$drum $beat_count i: " . ($drums->{$drum}{pat}[ $beat_count % ($beats * $divisions) ] ? '1' : '0');
                         push @queue, { drum => $drum, velocity => 127 };
                     }
                 }
