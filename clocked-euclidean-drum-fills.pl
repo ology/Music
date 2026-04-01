@@ -71,7 +71,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $sixteenth == 0) {
             if (($beat_count + $beats - $trigger) % ($beats * $divisions - 1) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle, 1, \$filled); # fill!
-                # $filled++;
+                $filled++;
                 say "x: $beat_count / $bar_count / $trigger";
             }
             if ($beat_count % ($beats * $divisions) == 0) {
@@ -82,14 +82,19 @@ my $timer = IO::Async::Timer::Periodic->new(
             # say ddc $drums;
             for my $drum (keys %$drums) {
                 # say $drum, ': '. $drums->{$drum}{pat}[ $beat_count % $beats ];
-                if ($drums->{$drum}{pat}[ $beat_count % $beats ]) {
+                if ($drum eq 'crash') {
+                    if ($drums->{$drum}{pat}[ $beat_count % ($beats * $divisions) ]) {
+                        say "$drum $beat_count i: " . ($drums->{$drum}{pat}[ $beat_count % ($beats * $divisions) ] ? '1' : '0');
+                        push @queue, { drum => $drum, velocity => 127 };
+                    }
+                }
+                elsif ($drums->{$drum}{pat}[ $beat_count % $beats ]) {
                     push @queue, { drum => $drum, velocity => 127 };
                 }
             }
             for my $drum (@queue) {
                 $midi_out->note_on($drums->{ $drum->{drum} }{chan}, $drums->{ $drum->{drum} }{num}, $drum->{velocity});
             }
-            # say ddc \@queue;
             $beat_count++;
         }
         else {
@@ -156,7 +161,7 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
         $$toggle = 0; # set to part A
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
-    $drums->{crash}{pat} = [ (0) x $beats ];
+    $drums->{crash}{pat} = [ (0) x ($beats * $divisions) ];
     adjust_cymbal($drums, $filled);
     # $drums->{crash}{num} = random_note($notes);
     # $drums->{snare}{num} = random_note($notes);
