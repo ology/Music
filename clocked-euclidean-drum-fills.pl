@@ -106,7 +106,7 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-sub adjust_cymbal($drums, $filled) {
+sub adjust_cymbals($drums, $filled) {
     if ($$filled) {
         $drums->{crash}{pat}[0] = 1;
         $drums->{hihat}{pat}[0] = 0;
@@ -156,7 +156,7 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
     $drums->{crash}{pat} = [ (0) x ($beats * $divisions) ];
-    adjust_cymbal($drums, $filled);
+    adjust_cymbals($drums, $filled);
     $drums->{crash}{num} = random_note($notes);
     $drums->{snare}{num} = random_note($notes);
     $drums->{kick}{num}  = random_note($notes);
