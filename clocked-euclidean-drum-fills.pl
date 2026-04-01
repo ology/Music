@@ -140,7 +140,7 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
         my @converted = map { $durations{$_}->@* } @$motif;
         if ($size < 4) {
             my %pats = part_A($mcr, $drums, $primes, $beats);
-            my $div = $beats / 2;
+            my $div = $beats / $size;
             $drums->{hihat}{pat} = [ $pats{hihat}->@[0 .. $div - 1], (0) x $div ];
             $drums->{kick}{pat}  = [ $pats{kick}->@[0 .. $div - 1], (0) x $div ];
             $drums->{snare}{pat} = [ $pats{snare}->@[0 .. $div - 1], @converted[0 .. $div - 1] ]
