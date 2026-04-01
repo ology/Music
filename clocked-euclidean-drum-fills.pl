@@ -141,12 +141,10 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
         $drums->{snare}{pat} = \@converted;
     }
     elsif ($$toggle == 0) {
-        say 'part A';
         part_A($mcr, $drums, $primes, $beats);
         $$toggle = 1; # set to part B
     }
     elsif ($$toggle == 1) {
-        say 'part B';
         part_B($mcr, $drums, $primes, $beats);
         $$toggle = 0; # set to part A
     }
@@ -160,6 +158,7 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
 }
 
 sub part_A($mcr, $drums, $primes, $beats) {
+    say 'part A';
     # choose random primes to use by the hihat, kick, and snare
     my ($p, $q, $r) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
     $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
@@ -168,6 +167,7 @@ sub part_A($mcr, $drums, $primes, $beats) {
 }
 
 sub part_B($mcr, $drums, $primes, $beats) {
+    say 'part B';
     # choose random primes to use by the hihat, kick, and snare
     my ($p) = map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
     $drums->{hihat}{pat} = $mcr->euclid($p, $beats);
