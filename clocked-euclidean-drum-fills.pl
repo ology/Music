@@ -11,7 +11,6 @@ use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use Math::Prime::XS qw(primes);
 use MIDI::RtMidi::FFI::Device ();
-use MIDI::Util qw(dura_size);
 use Music::CreatingRhythms ();
 use Music::Duration::Partition ();
 
