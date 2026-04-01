@@ -108,12 +108,12 @@ $loop->run;
 
 sub adjust_cymbals($drums, $filled) {
     if ($$filled) {
-        $drums->{crash}{pat}[0] = 1;
-        $drums->{hihat}{pat}[0] = 0;
+        $drums->{crash}{pat}[0] = 1; # crash on one
+        $drums->{hihat}{pat}[0] = 0; # can't play the hihat!
     }
     else {
-        $drums->{crash}{pat}[0] = 0;
-        $drums->{hihat}{pat}[0] = $hats; # restore bit
+        $drums->{crash}{pat}[0] = 0; # not crashing
+        $drums->{hihat}{pat}[0] = $hats; # restore hihat bit
     }
     $$filled = 0;
 }
