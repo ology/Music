@@ -72,10 +72,10 @@ my $timer = IO::Async::Timer::Periodic->new(
             if (($beat_count + $beats - $trigger) % ($beats * $divisions - 1) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle, 1, \$filled); # fill!
                 $filled++;
-                say "x: $beat_count / $bar_count / $trigger";
+                # say "x: $beat_count / $bar_count / $trigger";
             }
             if ($beat_count % ($beats * $divisions) == 0) {
-                say "y: $beat_count / $bar_count / $trigger";
+                # say "y: $beat_count / $bar_count / $trigger";
                 adjust_drums($mcr, $drums, \%primes, \$toggle, 0, \$filled); # normal part
                 $trigger++;
             }
