@@ -14,7 +14,6 @@ use MIDI::RtMidi::FFI::Device ();
 use MIDI::Util qw(dura_size);
 use Music::CreatingRhythms ();
 use Music::Duration::Partition ();
-use Time::HiRes qw(sleep);
 
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120; # beats-per-minute
