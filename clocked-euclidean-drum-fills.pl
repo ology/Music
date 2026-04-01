@@ -82,12 +82,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             # say ddc $drums;
             for my $drum (keys %$drums) {
                 # say $drum, ': '. $drums->{$drum}{pat}[ $beat_count % $beats ];
-                if ($drum eq 'crash') {
-                    if ($drums->{$drum}{pat}[ $beat_count % scalar($drums->{$drum}{pat}->@*) ]) {
-                        push @queue, { drum => $drum, velocity => 127 };
-                    }
-                }
-                elsif ($drums->{$drum}{pat}[ $beat_count % scalar($drums->{$drum}{pat}->@*) ]) {
+                if ($drums->{$drum}{pat}[ $beat_count % scalar($drums->{$drum}{pat}->@*) ]) {
                     push @queue, { drum => $drum, velocity => 127 };
                 }
             }
