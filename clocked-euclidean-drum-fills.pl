@@ -79,7 +79,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             }
             for my $drum (keys %$drums) {
                 if ($drums->{$drum}{pat}[ $beat_count % scalar($drums->{$drum}{pat}->@*) ]) {
-                    push @queue, { drum => $drum, velocity => velocity(90, 127, 64) };
+                    push @queue, { drum => $drum, velocity => velocity(-10, 10, 110) };
                 }
             }
             for my $drum (@queue) {
