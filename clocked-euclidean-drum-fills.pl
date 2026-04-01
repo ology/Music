@@ -68,23 +68,6 @@ my $timer = IO::Async::Timer::Periodic->new(
     on_tick  => sub {
         $midi_out->clock;
         $ticks++;
-        # if ($ticks % $clocks_per_beat == 0) {
-            # say "beats: $beat_count";
-            # my $size = rand() < 0.4 ? 2 : 4;
-            # if ($beat_count % ($divisions - 1) == 0) {
-            #     adjust_drums($mcr, $drums, \%primes, \$toggle, 1, \$filled);
-            #     if ($beat_count > 0) {
-            #         if ($size == 2) {
-            #             adjust_drums($mcr, $drums, \%primes, \$toggle, 0, \$filled);
-            #         }
-            #         adjust_drums($mcr, $drums, \%primes, \$toggle, 1, \$filled);
-            #         $filled = 1;
-            #     }
-            # }
-            # adjust_cymbal($drums, \$filled);
-            # adjust_drums($mcr, $drums, \%primes, \$toggle, 0, \$filled);
-            # $beat_count++;
-        # }
         if ($ticks % $sixteenth == 0) {
             if (($beat_count + $beats - $trigger) % ($beats * $divisions - 1) == 0) {
                 adjust_drums($mcr, $drums, \%primes, \$toggle, 1, \$filled); # fill!
@@ -179,11 +162,11 @@ sub adjust_drums($mcr, $drums, $primes, $toggle, $fill_flag, $filled) {
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
     # if ($$filled) {
-    #     $drums->{cymbals}{pat}  = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    #     $drums->{crash}{pat}  = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     #     $drums->{hihat}{pat}[0] = 0;
     # }
     # else {
-    #    $drums->{cymbals}{pat} = [ 0 x $beats ];
+    #    $drums->{crash}{pat} = [ 0 x $beats ];
     # }
     # $drums->{crash}{num} = random_note($notes);
     # $drums->{snare}{num} = random_note($notes);
