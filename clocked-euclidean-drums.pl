@@ -42,10 +42,10 @@ my @queue; # priority queue for note_on/off messages
 
 # open the named midi output device
 my $midi_out = RtMidiOut->new;
-$midi_out->open_virtual_port('RtMidiOut');
 try { # this will die on windows
-    $midi_out->open_port_by_name(qr/\Q$name/i);
+    $midi_out->open_virtual_port('RtMidiOut');
 }
+$midi_out->open_port_by_name(qr/\Q$name/i);
 
 $SIG{INT} = sub { # halt gracefully
     say "\nStop";
