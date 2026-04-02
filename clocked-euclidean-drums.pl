@@ -45,6 +45,7 @@ my $midi_out = RtMidiOut->new;
 try { # this will die on windows
     $midi_out->open_virtual_port('RtMidiOut');
 }
+catch ($e) {}
 $midi_out->open_port_by_name(qr/\Q$name/i);
 
 $SIG{INT} = sub { # halt gracefully
