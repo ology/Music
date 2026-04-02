@@ -6,6 +6,8 @@
 #   perl clocked-euclidean-drums.pl usb 90 -1 # multi-timbral
 
 use v5.36;
+use feature 'try';
+no warnings 'experimental::try';
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use Math::Prime::XS qw(primes);
@@ -41,7 +43,9 @@ my @queue; # priority queue for note_on/off messages
 # open the named midi output device
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
-$midi_out->open_port_by_name(qr/\Q$name/i);
+try { # this will die on windows
+    $midi_out->open_port_by_name(qr/\Q$name/i);
+}
 
 $SIG{INT} = sub { # halt gracefully
     say "\nStop";
