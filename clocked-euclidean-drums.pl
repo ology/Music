@@ -45,6 +45,8 @@ $midi_out->open_port_by_name(qr/\Q$name/i);
 
 $SIG{INT} = sub { # halt gracefully
     say "\nStop";
+    $midi_out->panic;
+    $midi_out->stop;
     exit;
 };
 
