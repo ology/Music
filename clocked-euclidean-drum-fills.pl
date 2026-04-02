@@ -6,6 +6,8 @@
 #   perl clocked-euclidean-drum-fills.pl usb 100 -1
 
 use v5.36;
+use feature 'try';
+no warnings 'experimental::try';
 use Data::Dumper::Compact qw(ddc);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
@@ -47,11 +49,21 @@ my $filled = 0; # did we just fill?
 my @queue; # priority queue for note_on/off messages
 
 my $midi_out = RtMidiOut->new;
-$midi_out->open_virtual_port('RtMidiOut');
+try { # this will die on windows
+    $midi_out->open_virtual_port('RtMidiOut');
+}
+catch ($e) {}
 $midi_out->open_port_by_name(qr/\Q$name/i);
 
 $SIG{INT} = sub { 
     say "\nStop";
+    try {
+        $midi_out->panic;
+        $midi_out->stop;
+    }
+    catch ($e) {
+        warn "Can't halt the MIDI out device: $e\n";
+    }
     exit;
 };
 
