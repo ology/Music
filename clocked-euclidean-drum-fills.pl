@@ -7,7 +7,6 @@
 
 use v5.36;
 use feature 'try';
-no warnings 'experimental::try';
 use Data::Dumper::Compact qw(ddc);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
