@@ -53,7 +53,6 @@ sub drums {
     my $set = $beats->search({ cat => 'rock' });
     my @keys = keys %$set;
     for (1 .. $multi * $d->bars) {
-        my $x = $keys[ rand @keys ];
         my $groove = $set->{ $keys[ rand @keys ] };
         $groove->{groove}->();
     }
