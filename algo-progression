@@ -10,12 +10,12 @@ use strict;
 use warnings;
 use Data::Dumper::Compact qw(ddc);
 use Data::Dataset::ChordProgressions ();
-use Music::Bassline::Generator ();
 use MIDI::Drummer::Tiny ();
 use MIDI::Drummer::Tiny::Grooves ();
 use MIDI::Util qw(set_chan_patch midi_format);
-use Music::Duration::Partition ();
+use Music::Bassline::Generator ();
 use Music::Chord::Note ();
+use Music::Duration::Partition ();
 use Music::Scales qw(get_scale_notes);
 
 my $bpm   = shift || 100;
