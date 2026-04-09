@@ -19,7 +19,7 @@ use Music::Chord::Note ();
 use Music::Scales qw(get_scale_notes);
 
 my $bpm   = shift || 100;
-my $parts = shift || 'Amv-DMc-Emv-DMc'; # <Note><Major|minor><verse|chorus> phrases
+my $parts = shift || 'Amv-DMc-Emv-DMc'; # <Note><Major|minor><verse|chorus>-... phrases
 my $reps  = shift || 1;                 # The number of times to repeat an individual phrase
 my $multi = shift || 1;                 # The number of times the phrases are repeated
 
