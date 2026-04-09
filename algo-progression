@@ -49,8 +49,8 @@ $d->sync(
 $d->write;
 
 sub drums {
-    my $beats = MIDI::Drummer::Tiny::Grooves->new(drummer => $d);
-    my $set = $beats->search({ cat => 'rock' });
+    my $grooves = MIDI::Drummer::Tiny::Grooves->new(drummer => $d);
+    my $set = $grooves->search({ cat => 'rock' });
     my @keys = keys %$set;
     for (1 .. $multi * $d->bars) {
         my $groove = $set->{ $keys[ rand @keys ] };
