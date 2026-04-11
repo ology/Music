@@ -44,7 +44,13 @@ get '/' => sub ($c) {
     value    => 64,
     ccs      => $ccs,
   );
-};
+} => 'display';
+
+post '/' => sub ($c) {
+  my $num = $c->param('num');
+  my $val = $c->param('val');
+  print "N: $num, V: $val\n";
+} => 'submit';
 
 app->start;
 __DATA__
@@ -88,10 +94,27 @@ __DATA__
   <script>
   $(document).ready(function() {
     $('.range').on('input', function() {
-      var val = $(this).val();
       var num = $(this).attr('id').split("-")[1];
+      var val = $(this).val();
       $('#value-' + num).text(val);
     });
+  });
+  $('.range').on('mouseup', function(event) {
+      if (event.which === 1) { 
+          var num = $(this).attr('id').split("-")[1];
+          var val = $(this).val();
+          $.ajax({
+              url: '<%= url_for("submit") %>' + '?num=' + num + '&val=' + val,
+              type: 'POST', 
+              data: { num: num, val: val },
+              success: function(response) {
+                  console.log('Success:', response);
+              },
+              error: function(xhr, status, error) {
+                  console.error('Error:', error);
+              }
+          });
+      }
   });
   </script>
 </body>
