@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# > morbo volca-drum-cc.pl --verbose --listen http://127.0.0.1:3333
+
 use strict;
 use warnings;
 use Mojolicious::Lite;
@@ -89,8 +92,8 @@ __DATA__
   $(document).ready(function() {
     $('.range').on('input', function() {
       var val = $(this).val();
-      var num = $(this).attr('id').split("-");
-      $('#value-' + num[1]).text(val);
+      var num = $(this).attr('id').split("-")[1];
+      $('#value-' + num).text(val);
     });
   });
   </script>
