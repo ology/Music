@@ -85,7 +85,6 @@ __DATA__
       <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range">
     </div>
 % }
-
   <script>
   $(document).ready(function() {
     $('.range').on('input', function() {
