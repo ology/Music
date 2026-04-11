@@ -4,7 +4,7 @@
 
 use Mojolicious::Lite -signatures;
 
-get '/' => sub($c) {
+get '/' => sub ($c) {
   my $ccs = {
     'Part Level' => 7,
     'Pan' => 10,
