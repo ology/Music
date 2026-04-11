@@ -2,12 +2,9 @@
 
 # > morbo volca-drum-cc.pl --verbose --listen http://127.0.0.1:3333
 
-use strict;
-use warnings;
-use Mojolicious::Lite;
+use Mojolicious::Lite -signatures;
 
-get '/' => sub {
-  my $c = shift;
+get '/' => sub($c) {
   my $ccs = {
     'Part Level' => 7,
     'Pan' => 10,
