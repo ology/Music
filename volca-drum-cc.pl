@@ -57,8 +57,10 @@ my %ccs = (
 );
 
 get '/' => sub ($c) {
+  my $name = $c->param('name') || '';
   $c->render(
     template => 'index',
+    name     => $name,
     value    => 64,
     ccs      => \%ccs,
   );
@@ -73,14 +75,16 @@ post '/' => sub ($c) {
 } => 'submit';
 
 post '/connect' => sub ($c) {
-  my $name = $c-param('device') || 'usb';
-  $device = RtMidiOut->new;
-  try { # this will die on Windows but is needed for Mac
-    $device->open_virtual_port('RtMidiOut');
+  my $name = $c->param('device');
+  if ($name) {
+    $device = RtMidiOut->new;
+    try { # this will die on Windows but is needed for Mac
+      $device->open_virtual_port('RtMidiOut');
+    }
+    catch ($e) {}
+    $device->open_port_by_name(qr/\Q$name/i);
   }
-  catch ($e) {}
-  $device->open_port_by_name(qr/\Q$name/i);
-  $c->redirect_to('display');
+  $c->redirect_to($c->url_for('display')->query(name => $name));
 } => 'connect';
 
 post '/start' => sub ($c) {
@@ -133,7 +137,7 @@ __DATA__
 </head>
 <body>
   <form action="<%= url_for('connect') %>" method="post" class="block">
-    <input type="text" name="device">
+    <span class="pad-left">Device:</span> <input type="text" name="device" size="10" value="<%= $name %>">
     <input type="submit" value="Connect">
   </form>
   <form action="<%= url_for('start') %>" method="post" class="block">
