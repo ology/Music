@@ -86,7 +86,7 @@ __DATA__
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Slider</title>
+  <title>Volca Drum CC</title>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
   <style>
     .pad-left {
