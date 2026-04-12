@@ -3,46 +3,70 @@
 # > morbo volca-drum-cc.pl --verbose --listen http://127.0.0.1:3333
 
 use Mojolicious::Lite -signatures;
+use MIDI::RtController ();
+use MIDI::RtController::Filter::CC ();
+
+my $input_name  = shift || 'usb';
+my $output_name = shift || 'usb';
+
+my %ccs = (
+  'Part Level' => 7,
+  'Pan' => 10,
+  'Select 1' => 14,
+  'Select 2' => 15,
+  'Select 1-2' => 16,
+  'Level 1' => 17,
+  'Level 2' => 18,
+  'Level 1-2' => 19,
+  'EG Attack 1' => 20,
+  'EG Attack 2' => 21,
+  'EG Attack 1-2' => 22,
+  'EG Release 1' => 23,
+  'EG Release 2' => 24,
+  'EG Release 1-2' => 25,
+  'Pitch 1' => 26,
+  'Pitch 2' => 27,
+  'Pitch 1-2' => 28,
+  'Mod Amount 1' => 29,
+  'Mod Amount 2' => 30,
+  'Mod Amount 1-2' => 31,
+  'Mod Rate 1' => 46,
+  'Mod Rate 2' => 47,
+  'Mod Rate 1-2' => 48,
+  'Bit Reduction' => 49,
+  'Fold' => 50,
+  'Drive' => 51,
+  'Dry Gain' => 52,
+  'Send' => 103,
+  'Waveguide Model' => 116,
+  'Decay' => 117,
+  'Body' => 118,
+  'Tune' => 119,
+);
+
+my @filters = map {
+  {
+    port    => $output_name,
+    event   => 'control_change',
+    control => $ccs{$_},
+  }
+} keys %ccs;
+
+my $controller = MIDI::RtController->new(
+    input   => $input_name,
+    output  => $output_name,
+    verbose => 1,
+);
+
+my $filter = MIDI::RtController::Filter::CC->new(rtc => $controller);
+
+$filter->add_filters(\@filters, { $input_name => $controller });
 
 get '/' => sub ($c) {
-  my $ccs = {
-    'Part Level' => 7,
-    'Pan' => 10,
-    'Select 1' => 14,
-    'Select 2' => 15,
-    'Select 1-2' => 16,
-    'Level 1' => 17,
-    'Level 2' => 18,
-    'Level 1-2' => 19,
-    'EG Attack 1' => 20,
-    'EG Attack 2' => 21,
-    'EG Attack 1-2' => 22,
-    'EG Release 1' => 23,
-    'EG Release 2' => 24,
-    'EG Release 1-2' => 25,
-    'Pitch 1' => 26,
-    'Pitch 2' => 27,
-    'Pitch 1-2' => 28,
-    'Mod Amount 1' => 29,
-    'Mod Amount 2' => 30,
-    'Mod Amount 1-2' => 31,
-    'Mod Rate 1' => 46,
-    'Mod Rate 2' => 47,
-    'Mod Rate 1-2' => 48,
-    'Bit Reduction' => 49,
-    'Fold' => 50,
-    'Drive' => 51,
-    'Dry Gain' => 52,
-    'Send' => 103,
-    'Waveguide Model' => 116,
-    'Decay' => 117,
-    'Body' => 118,
-    'Tune' => 119,
-  };
   $c->render(
     template => 'index',
     value    => 64,
-    ccs      => $ccs,
+    ccs      => \%ccs,
   );
 } => 'display';
 
