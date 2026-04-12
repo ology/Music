@@ -59,15 +59,12 @@ sub devices () {
 
 get '/' => sub ($c) {
   my $name = $c->param('device') || '';
-  my $chan = $c->param('channel') // 0;
-  say "C: $chan";
   my $devices = devices();
   # say ddc $devices;
   $c->render(
     template => 'index',
     devices  => $devices,
     device   => $name,
-    channel  => $chan,
     value    => '-',
     ccs      => \%ccs,
   );
@@ -83,7 +80,6 @@ post '/' => sub ($c) {
 
 post '/connect' => sub ($c) {
   my $name = $c->param('device');
-  my $chan = $c->param('channel');
   if ($name) {
     $device = RtMidiOut->new;
     try { # this will die on Windows but is needed for Mac
@@ -92,21 +88,21 @@ post '/connect' => sub ($c) {
     catch ($e) {}
     $device->open_port_by_name(qr/\Q$name/i);
   }
-  $c->redirect_to($c->url_for('display')->query(device => $name, channel => $chan));
+  $c->redirect_to($c->url_for('display')->query(device => $name));
 } => 'connect';
 
 post '/start' => sub ($c) {
   my $name = $c->param('device');
   my $chan = $c->param('channel');
   $device->start if defined $device;
-  $c->redirect_to($c->url_for('display')->query(device => $name, channel => $chan));
+  $c->redirect_to($c->url_for('display')->query(device => $name));
 } => 'start';
 
 post '/stop' => sub ($c) {
   my $name = $c->param('device');
   my $chan = $c->param('channel');
   $device->stop if defined $device;
-  $c->redirect_to($c->url_for('display')->query(device => $name, channel => $chan));
+  $c->redirect_to($c->url_for('display')->query(device => $name));
 } => 'stop';
 
 app->start;
@@ -148,9 +144,7 @@ __DATA__
   </style>
 </head>
 <body>
-X: <%= $channel %>, <%= $device %>
   <form action="<%= url_for('connect') %>" method="post" class="block">
-    <input type="hidden" name="channel" value="<%= $channel %>">
     <span class="pad-left">Device:</span> <select name="device">
 % for my $d (@$devices) {
       <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
@@ -159,17 +153,15 @@ X: <%= $channel %>, <%= $device %>
     <input type="submit" value="Connect">
   </form>
   <form action="<%= url_for('start') %>" method="post" class="block">
-    <input type="hidden" name="channel" value="<%= $channel %>">
     <input type="hidden" name="device" value="<%= $device %>">
     <input type="submit" value="Start">
   </form>
   <form action="<%= url_for('stop') %>" method="post" class="block">
-    <input type="hidden" name="channel" value="<%= $channel %>">
     <input type="hidden" name="device" value="<%= $device %>">
     <input type="submit" value="Stop">
   </form>
   <form method="post">
-    <span class="pad-left">Part:</span> <select name="channel">
+    <span class="pad-left">Part:</span> <select id="channel">
 % for my $n (0 .. 5) {
       <option value="<%= $n %>" <%= $n eq $channel ? 'selected' : '' %>><%= $n + 1 %></option>
 % }
