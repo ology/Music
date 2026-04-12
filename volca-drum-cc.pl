@@ -89,6 +89,10 @@ __DATA__
   <title>Slider</title>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
   <style>
+    .pad-left {
+      font-family: sans-serif;
+      margin: 10px;
+    }
     .slider-container {
       display: flex;
       gap: 10px;
@@ -112,7 +116,7 @@ __DATA__
 </head>
 <body>
   <form method="post">
-  Channel: <select id="channel">
+  <span class="pad-left">Channel: </span><select id="channel">
 % for my $c (0 .. 5) {
     <option value="<%= $c %>"><%= $c %></option>
 % }
