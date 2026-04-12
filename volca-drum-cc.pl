@@ -9,7 +9,6 @@ use MIDI::RtMidi::FFI::Device ();
 use Data::Dumper::Compact qw(ddc);
 
 my $device;
-
 my %ccs = (
   'Part Level' => 7,
   'Pan' => 10,
@@ -47,8 +46,8 @@ my %ccs = (
 
 END {
    if (defined $device) {
-    $device->stop;
-    $device->panic;
+    $device->stop if defined $device;
+    $device->panic if defined $device;
    }
 }
 
