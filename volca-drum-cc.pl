@@ -59,7 +59,6 @@ get '/' => sub ($c) {
     template => 'index',
     devices  => $devices,
     device   => $name,
-    value    => 64,
     ccs      => \%ccs,
   );
 } => 'display';
@@ -160,7 +159,7 @@ __DATA__
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <div class="slider-container">
       <span class="value-display"><%= $cc %>: </span><span id="value-<%= $ccs->{$cc} %>"><%= $value %></span>
-      <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range">
+      <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="64" step="1" class="range">
     </div>
 % }
   <script>
