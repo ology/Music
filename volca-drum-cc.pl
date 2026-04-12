@@ -53,12 +53,14 @@ sub devices () {
 
 get '/' => sub ($c) {
   my $name = $c->param('device') || '';
+  my $chan = $c->param('channel') || '';
   my $devices = devices();
   # say ddc $devices;
   $c->render(
     template => 'index',
     devices  => $devices,
     device   => $name,
+    channel  => $chan,
     ccs      => \%ccs,
   );
 } => 'display';
@@ -152,7 +154,7 @@ __DATA__
   <form method="post">
   <span class="pad-left">Channel:</span> <select id="channel">
 % for my $n (0 .. 5) {
-    <option value="<%= $n %>"><%= $n %></option>
+    <option value="<%= $n %>" <%= $n eq $chan ? 'selected' : '' %>><%= $n %></option>
 % }
   </select>
   <p></p>
