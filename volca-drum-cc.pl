@@ -73,7 +73,7 @@ post '/' => sub ($c) {
 } => 'submit';
 
 post '/connect' => sub ($c) {
-  my $name = 'usb';
+  my $name = $c-param('device') || 'usb';
   $device = RtMidiOut->new;
   try { # this will die on Windows but is needed for Mac
     $device->open_virtual_port('RtMidiOut');
@@ -133,6 +133,7 @@ __DATA__
 </head>
 <body>
   <form action="<%= url_for('connect') %>" method="post" class="block">
+    <input type="text" name="device">
     <input type="submit" value="Connect">
   </form>
   <form action="<%= url_for('start') %>" method="post" class="block">
