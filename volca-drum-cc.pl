@@ -92,17 +92,11 @@ post '/connect' => sub ($c) {
 } => 'connect';
 
 post '/start' => sub ($c) {
-  my $name = $c->param('device');
-  my $chan = $c->param('channel');
   $device->start if defined $device;
-  $c->redirect_to($c->url_for('display')->query(device => $name));
 } => 'start';
 
 post '/stop' => sub ($c) {
-  my $name = $c->param('device');
-  my $chan = $c->param('channel');
   $device->stop if defined $device;
-  $c->redirect_to($c->url_for('display')->query(device => $name));
 } => 'stop';
 
 app->start;
@@ -152,14 +146,8 @@ __DATA__
     </select>
     <input type="submit" value="Connect">
   </form>
-  <form action="<%= url_for('start') %>" method="post" class="block">
-    <input type="hidden" name="device" value="<%= $device %>">
-    <input type="submit" value="Start">
-  </form>
-  <form action="<%= url_for('stop') %>" method="post" class="block">
-    <input type="hidden" name="device" value="<%= $device %>">
-    <input type="submit" value="Stop">
-  </form>
+  <button type="button" id="start">Start</button>
+  <button type="button" id="stop">Stop</button>
   <p></p>
   <form method="post">
     <span class="pad-left">Part:</span> <select id="channel">
@@ -199,6 +187,30 @@ __DATA__
           }
         });
       }
+  });
+  $('#start').click(function(event) {
+    $.ajax({
+      url: '<%= url_for("start") %>',
+      type: 'POST',
+      success: function(response) {
+        console.log('Success:', response);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error:', error);
+      }
+    });
+  });
+  $('#stop').click(function(event) {
+    $.ajax({
+      url: '<%= url_for("stop") %>',
+      type: 'POST',
+      success: function(response) {
+        console.log('Success:', response);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error:', error);
+      }
+    });
   });
   </script>
 </body>
