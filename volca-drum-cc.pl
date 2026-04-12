@@ -58,7 +58,7 @@ get '/' => sub ($c) {
   $c->render(
     template => 'index',
     devices  => $devices,
-    name     => $name,
+    device     => $name,
     value    => 64,
     ccs      => \%ccs,
   );
@@ -74,6 +74,7 @@ post '/' => sub ($c) {
 
 post '/connect' => sub ($c) {
   my $name = $c->param('device');
+  say "N: $name";
   if ($name) {
     $device = RtMidiOut->new;
     try { # this will die on Windows but is needed for Mac
@@ -82,7 +83,7 @@ post '/connect' => sub ($c) {
     catch ($e) {}
     $device->open_port_by_name(qr/\Q$name/i);
   }
-  $c->redirect_to($c->url_for('display')->query(name => $name));
+  $c->redirect_to($c->url_for('display')->query(device => $name));
 } => 'connect';
 
 post '/start' => sub ($c) {
@@ -135,9 +136,9 @@ __DATA__
 </head>
 <body>
   <form action="<%= url_for('connect') %>" method="post" class="block">
-    <span class="pad-left">Device:</span> <select id="device">
+    <span class="pad-left">Device:</span> <select id="device" name="device">
   % for my $d (@$devices) {
-      <option value="<%= $d %>" <%= $d eq $name ? 'selected' : '' %>><%= $d %></option>
+      <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
   % }
     </select>
     <input type="submit" value="Connect">
