@@ -45,6 +45,11 @@ my %ccs = (
   'Tune' => 119,
 );
 
+END {
+  $device->stop;
+  $device->panic;
+}
+
 sub devices () {
   my $midi_out = RtMidiOut->new;
   my @devices = keys $midi_out->get_all_port_names()->%*;
