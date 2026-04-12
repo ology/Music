@@ -52,7 +52,7 @@ sub devices () {
 }
 
 get '/' => sub ($c) {
-  my $name = $c->param('name') || '';
+  my $name = $c->param('device') || '';
   my $devices = devices();
   # say ddc $devices;
   $c->render(
@@ -68,7 +68,7 @@ post '/' => sub ($c) {
   my $chan = $c->param('chan');
   my $num = $c->param('num');
   my $val = $c->param('val');
-  say "C: $chan, N: $num, V: $val";
+  # say "C: $chan, N: $num, V: $val";
   $device->cc($chan, $num, $val);
 } => 'submit';
 
@@ -93,7 +93,7 @@ post '/start' => sub ($c) {
 post '/stop' => sub ($c) {
   $device->stop if defined $device;
   $c->redirect_to('display');
-} => 'start';
+} => 'stop';
 
 app->start;
 __DATA__
@@ -137,7 +137,7 @@ __DATA__
   <form action="<%= url_for('connect') %>" method="post" class="block">
     <span class="pad-left">Device:</span> <select id="device">
   % for my $d (@$devices) {
-      <option value="<%= $d %>"><%= $d %></option>
+      <option value="<%= $d %>" <%= $d eq $name ? 'selected' : '' %>><%= $d %></option>
   % }
     </select>
     <input type="submit" value="Connect">
