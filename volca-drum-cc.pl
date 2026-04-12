@@ -65,7 +65,7 @@ get '/' => sub ($c) {
     template => 'index',
     devices  => $devices,
     device   => $name,
-    value    => '-',
+    value    => 64,
     ccs      => \%ccs,
   );
 } => 'display';
