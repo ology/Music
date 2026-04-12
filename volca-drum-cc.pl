@@ -84,7 +84,7 @@ __DATA__
   </style>
 </head>
 <body>
-  <form>
+  <form method="post">
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <div class="slider-container">
       <span class="value-display"><%= $cc %>: </span><span id="value-<%= $ccs->{$cc} %>"><%= $value %></span>
@@ -105,8 +105,7 @@ __DATA__
           var val = $(this).val();
           $.ajax({
               url: '<%= url_for("submit") %>' + '?num=' + num + '&val=' + val,
-              type: 'POST', 
-              data: { num: num, val: val },
+              type: 'POST',
               success: function(response) {
                   console.log('Success:', response);
               },
