@@ -60,6 +60,7 @@ sub devices () {
 get '/' => sub ($c) {
   my $name = $c->param('device') || '';
   my $chan = $c->param('channel') // 0;
+  say "C: $chan";
   my $devices = devices();
   # say ddc $devices;
   $c->render(
@@ -150,7 +151,7 @@ __DATA__
 X: <%= $channel %>, <%= $device %>
   <form action="<%= url_for('connect') %>" method="post" class="block">
     <input type="hidden" name="channel" value="<%= $channel %>">
-    <span class="pad-left">Device:</span> <select id="device" name="device">
+    <span class="pad-left">Device:</span> <select name="device">
 % for my $d (@$devices) {
       <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
 % }
@@ -167,20 +168,20 @@ X: <%= $channel %>, <%= $device %>
     <input type="hidden" name="device" value="<%= $device %>">
     <input type="submit" value="Stop">
   </form>
-  <p></p>
   <form method="post">
-  <span class="pad-left">Part:</span> <select id="channel">
+    <span class="pad-left">Part:</span> <select name="channel">
 % for my $n (0 .. 5) {
-    <option value="<%= $n %>" <%= $n eq $channel ? 'selected' : '' %>><%= $n + 1 %></option>
+      <option value="<%= $n %>" <%= $n eq $channel ? 'selected' : '' %>><%= $n + 1 %></option>
 % }
-  </select>
-  <p></p>
+    </select>
+    <p></p>
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <div class="slider-container">
       <span class="value-display"><%= $cc %>: </span><span id="value-<%= $ccs->{$cc} %>"><%= $value %></span>
       <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range">
     </div>
 % }
+  </form>
   <script>
   $(document).ready(function() {
     $('.range').on('input', function() {
