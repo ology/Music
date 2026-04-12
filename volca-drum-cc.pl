@@ -75,7 +75,7 @@ post '/' => sub ($c) {
   my $chan = $c->param('chan');
   my $num = $c->param('num');
   my $val = $c->param('val');
-  print "C: $chan, N: $num, V: $val\n";
+  say "C: $chan, N: $num, V: $val";
   $device->cc($chan, $num, $val);
 } => 'submit';
 
