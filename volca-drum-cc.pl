@@ -60,7 +60,7 @@ my $controller = MIDI::RtController->new(
 
 my $filter = MIDI::RtController::Filter::CC->new(rtc => $controller);
 
-$filter->add_filters(\@filters, { $input_name => $controller });
+MIDI::RtController::Filter::CC::add_filters(\@filters, { $input_name => $controller });
 
 get '/' => sub ($c) {
   $c->render(
