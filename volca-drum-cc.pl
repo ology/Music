@@ -123,14 +123,12 @@ __DATA__
       font-family: sans-serif;
       margin: 10px;
     }
-
     .value-display {
       display: flex;
       width: 100%;
       gap: 10px;
       padding-top: 0.3rem;
     }
-
     input[type="range"] {
       width: 100%;
       cursor: pointer;
