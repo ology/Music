@@ -7,26 +7,25 @@ use feature 'try';
 use Mojolicious::Lite -signatures;
 use MIDI::RtMidi::FFI::Device ();
 
-my $name  = shift || 'usb';
-
+my $name  = 'usb';
 my $device = RtMidiOut->new;
 try { # this will die on Windows but is needed for Mac
- $device->open_virtual_port('RtMidiOut');
+$device->open_virtual_port('RtMidiOut');
 }
 catch ($e) {}
 $device->open_port_by_name(qr/\Q$name/i);
 
-$SIG{INT} = sub { # halt gracefully
-    say "\nStop";
-    try {
-        $device->stop; # stop the sequencer
-        $device->panic; # make sure all notes are off
-    }
-    catch ($e) {
-        warn "Can't halt the MIDI out device: $e\n";
-    }
-    exit;
-};
+# $SIG{INT} = sub { # halt gracefully
+#   say "\nStop";
+#   try {
+#     # $device->stop; # stop the sequencer
+#     $device->panic; # make sure all notes are off
+#   }
+#   catch ($e) {
+#     warn "Can't halt the MIDI out device: $e\n";
+#   }
+#   exit;
+# };
 
 my %ccs = (
   'Part Level' => 7,
@@ -79,6 +78,16 @@ post '/' => sub ($c) {
   $device->cc($chan, $num, $val);
 } => 'submit';
 
+post '/start' => sub ($c) {
+  $device->start;
+  $c->redirect_to('display');
+} => 'start';
+
+post '/stop' => sub ($c) {
+  $device->stop;
+  $c->redirect_to('display');
+} => 'start';
+
 app->start;
 __DATA__
 
@@ -89,6 +98,9 @@ __DATA__
   <title>Volca Drum CC</title>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
   <style>
+    .block {
+      display: inline-block;
+    }
     .pad-left {
       font-family: sans-serif;
       margin: 10px;
@@ -115,6 +127,13 @@ __DATA__
   </style>
 </head>
 <body>
+  <form action="<%= url_for('start') %>" method="post" class="block">
+    <input type="submit" value="Start">
+  </form>
+  <form action="<%= url_for('stop') %>" method="post" class="block">
+    <input type="submit" value="Stop">
+  </form>
+  <p></p>
   <form method="post">
   <span class="pad-left">Channel:</span> <select id="channel">
 % for my $c (0 .. 5) {
