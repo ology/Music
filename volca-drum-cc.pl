@@ -2,12 +2,31 @@
 
 # > morbo volca-drum-cc.pl --verbose --listen http://127.0.0.1:3333
 
+use v5.36;
+use feature 'try';
 use Mojolicious::Lite -signatures;
-use MIDI::RtController ();
-use MIDI::RtController::Filter::CC ();
+use MIDI::RtMidi::FFI::Device ();
 
-my $input_name  = shift || 'usb';
-my $output_name = shift || 'usb';
+my $name  = shift || 'usb';
+
+my $device = RtMidiOut->new;
+try { # this will die on Windows but is needed for Mac
+ $device->open_virtual_port('RtMidiOut');
+}
+catch ($e) {}
+$device->open_port_by_name(qr/\Q$name/i);
+
+$SIG{INT} = sub { # halt gracefully
+    say "\nStop";
+    try {
+        $device->stop; # stop the sequencer
+        $device->panic; # make sure all notes are off
+    }
+    catch ($e) {
+        warn "Can't halt the MIDI out device: $e\n";
+    }
+    exit;
+};
 
 my %ccs = (
   'Part Level' => 7,
@@ -44,24 +63,6 @@ my %ccs = (
   'Tune' => 119,
 );
 
-my @filters = map {
-  {
-    port    => $output_name,
-    event   => 'control_change',
-    control => $ccs{$_},
-  }
-} keys %ccs;
-
-my $controller = MIDI::RtController->new(
-    input   => $input_name,
-    output  => $output_name,
-    verbose => 1,
-);
-
-my $filter = MIDI::RtController::Filter::CC->new(rtc => $controller);
-
-MIDI::RtController::Filter::CC::add_filters(\@filters, { $input_name => $controller });
-
 get '/' => sub ($c) {
   $c->render(
     template => 'index',
@@ -71,9 +72,11 @@ get '/' => sub ($c) {
 } => 'display';
 
 post '/' => sub ($c) {
+  my $chan = $c->param('chan');
   my $num = $c->param('num');
   my $val = $c->param('val');
-  print "N: $num, V: $val\n";
+  print "C: $chan, N: $num, V: $val\n";
+  $device->cc($chan, $num, $val);
 } => 'submit';
 
 app->start;
@@ -109,6 +112,12 @@ __DATA__
 </head>
 <body>
   <form method="post">
+  Channel: <select id="channel">
+% for my $c (0 .. 5) {
+    <option value="<%= $c %>"><%= $c %></option>
+% }
+  </select>
+  <p></p>
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <div class="slider-container">
       <span class="value-display"><%= $cc %>: </span><span id="value-<%= $ccs->{$cc} %>"><%= $value %></span>
@@ -124,19 +133,20 @@ __DATA__
     });
   });
   $('.range').on('mouseup', function(event) {
-      if (event.which === 1) { 
-          var num = $(this).attr('id').split("-")[1];
-          var val = $(this).val();
-          $.ajax({
-              url: '<%= url_for("submit") %>' + '?num=' + num + '&val=' + val,
-              type: 'POST',
-              success: function(response) {
-                  console.log('Success:', response);
-              },
-              error: function(xhr, status, error) {
-                  console.error('Error:', error);
-              }
-          });
+      if (event.which === 1) {
+        var chan = $('#channel').val();
+        var num = $(this).attr('id').split("-")[1];
+        var val = $(this).val();
+        $.ajax({
+          url: '<%= url_for("submit") %>' + '?chan=' + chan + '&num=' + num + '&val=' + val,
+          type: 'POST',
+          success: function(response) {
+            console.log('Success:', response);
+          },
+          error: function(xhr, status, error) {
+            console.error('Error:', error);
+          }
+        });
       }
   });
   </script>
