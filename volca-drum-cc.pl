@@ -149,7 +149,7 @@ __DATA__
 </head>
 <body>
   <form action="<%= url_for('connect') %>" method="post" class="block">
-    <input type="hidden" name="channel" value="<%= $chan %>">
+    <input type="hidden" name="channel" value="<%= $channel %>">
     <span class="pad-left">Device:</span> <select id="device" name="device">
 % for my $d (@$devices) {
       <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
@@ -158,12 +158,12 @@ __DATA__
     <input type="submit" value="Connect">
   </form>
   <form action="<%= url_for('start') %>" method="post" class="block">
-    <input type="hidden" name="channel" value="<%= $chan %>">
+    <input type="hidden" name="channel" value="<%= $channel %>">
     <input type="hidden" name="device" value="<%= $device %>">
     <input type="submit" value="Start">
   </form>
   <form action="<%= url_for('stop') %>" method="post" class="block">
-    <input type="hidden" name="channel" value="<%= $chan %>">
+    <input type="hidden" name="channel" value="<%= $channel %>">
     <input type="hidden" name="device" value="<%= $device %>">
     <input type="submit" value="Stop">
   </form>
