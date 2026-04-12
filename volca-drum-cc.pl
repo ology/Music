@@ -6,20 +6,9 @@ use v5.36;
 use feature 'try';
 use Mojolicious::Lite -signatures;
 use MIDI::RtMidi::FFI::Device ();
+use Data::Dumper::Compact qw(ddc);
 
 my $device;
-
-# $SIG{INT} = sub { # halt gracefully
-#   say "\nStop";
-#   try {
-#     # $device->stop; # stop the sequencer
-#     $device->panic; # make sure all notes are off
-#   }
-#   catch ($e) {
-#     warn "Can't halt the MIDI out device: $e\n";
-#   }
-#   exit;
-# };
 
 my %ccs = (
   'Part Level' => 7,
@@ -56,10 +45,19 @@ my %ccs = (
   'Tune' => 119,
 );
 
+sub devices () {
+  my $midi_out = RtMidiOut->new;
+  my @devices = keys $midi_out->get_all_port_names()->%*;
+  return \@devices;
+}
+
 get '/' => sub ($c) {
   my $name = $c->param('name') || '';
+  my $devices = devices();
+  # say ddc $devices;
   $c->render(
     template => 'index',
+    devices  => $devices,
     name     => $name,
     value    => 64,
     ccs      => \%ccs,
@@ -137,7 +135,11 @@ __DATA__
 </head>
 <body>
   <form action="<%= url_for('connect') %>" method="post" class="block">
-    <span class="pad-left">Device:</span> <input type="text" name="device" size="10" value="<%= $name %>">
+    <span class="pad-left">Device:</span> <select id="device">
+  % for my $d (@$devices) {
+      <option value="<%= $d %>"><%= $d %></option>
+  % }
+    </select>
     <input type="submit" value="Connect">
   </form>
   <form action="<%= url_for('start') %>" method="post" class="block">
@@ -149,8 +151,8 @@ __DATA__
   <p></p>
   <form method="post">
   <span class="pad-left">Channel:</span> <select id="channel">
-% for my $c (0 .. 5) {
-    <option value="<%= $c %>"><%= $c %></option>
+% for my $n (0 .. 5) {
+    <option value="<%= $n %>"><%= $n %></option>
 % }
   </select>
   <p></p>
