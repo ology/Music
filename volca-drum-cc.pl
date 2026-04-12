@@ -7,13 +7,7 @@ use feature 'try';
 use Mojolicious::Lite -signatures;
 use MIDI::RtMidi::FFI::Device ();
 
-my $name  = 'usb';
-my $device = RtMidiOut->new;
-try { # this will die on Windows but is needed for Mac
-$device->open_virtual_port('RtMidiOut');
-}
-catch ($e) {}
-$device->open_port_by_name(qr/\Q$name/i);
+my $device;
 
 # $SIG{INT} = sub { # halt gracefully
 #   say "\nStop";
@@ -78,13 +72,24 @@ post '/' => sub ($c) {
   $device->cc($chan, $num, $val);
 } => 'submit';
 
+post '/connect' => sub ($c) {
+  my $name = 'usb';
+  $device = RtMidiOut->new;
+  try { # this will die on Windows but is needed for Mac
+    $device->open_virtual_port('RtMidiOut');
+  }
+  catch ($e) {}
+  $device->open_port_by_name(qr/\Q$name/i);
+  $c->redirect_to('display');
+} => 'connect';
+
 post '/start' => sub ($c) {
-  $device->start;
+  $device->start if defined $device;
   $c->redirect_to('display');
 } => 'start';
 
 post '/stop' => sub ($c) {
-  $device->stop;
+  $device->stop if defined $device;
   $c->redirect_to('display');
 } => 'start';
 
@@ -127,6 +132,9 @@ __DATA__
   </style>
 </head>
 <body>
+  <form action="<%= url_for('connect') %>" method="post" class="block">
+    <input type="submit" value="Connect">
+  </form>
   <form action="<%= url_for('start') %>" method="post" class="block">
     <input type="submit" value="Start">
   </form>
