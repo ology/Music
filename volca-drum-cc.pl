@@ -129,7 +129,7 @@ __DATA__
     .slider-container {
       display: flex;
       gap: 10px;
-      width: 300px;
+      width: 340px;
       font-family: sans-serif;
       margin: 10px;
     }
