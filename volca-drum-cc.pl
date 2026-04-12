@@ -92,11 +92,23 @@ post '/connect' => sub ($c) {
 } => 'connect';
 
 post '/start' => sub ($c) {
-  $device->start if defined $device;
+  try {
+    $device->start if defined $device;
+    return { status => 200 };
+  }
+  catch ($e) {
+    return { status => 404, error => 'Oof!' };
+  }
 } => 'start';
 
 post '/stop' => sub ($c) {
-  $device->stop if defined $device;
+  try {
+    $device->stop if defined $device;
+    return { status => 200 };
+  }
+  catch ($e) {
+    return { status => 404, error => 'Oof!' };
+  }
 } => 'stop';
 
 app->start;
@@ -190,6 +202,7 @@ __DATA__
     $.ajax({
       url: '<%= url_for("start") %>',
       type: 'POST',
+      dataType: 'json',
       success: function(response) {
         console.log('Success:', response);
       },
@@ -202,6 +215,7 @@ __DATA__
     $.ajax({
       url: '<%= url_for("stop") %>',
       type: 'POST',
+      dataType: 'json',
       success: function(response) {
         console.log('Success:', response);
       },
