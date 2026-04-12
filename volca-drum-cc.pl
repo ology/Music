@@ -76,7 +76,6 @@ post '/' => sub ($c) {
 
 post '/connect' => sub ($c) {
   my $name = $c->param('device');
-  say "N: $name";
   if ($name) {
     $device = RtMidiOut->new;
     try { # this will die on Windows but is needed for Mac
