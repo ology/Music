@@ -45,10 +45,10 @@ my %ccs = (
 );
 
 END {
-   if (defined $device) {
+  if (defined $device) {
     $device->stop if defined $device;
     $device->panic if defined $device;
-   }
+  }
 }
 
 sub devices () {
