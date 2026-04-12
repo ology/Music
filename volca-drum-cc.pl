@@ -116,7 +116,7 @@ __DATA__
 </head>
 <body>
   <form method="post">
-  <span class="pad-left">Channel: </span><select id="channel">
+  <span class="pad-left">Channel:</span> <select id="channel">
 % for my $c (0 .. 5) {
     <option value="<%= $c %>"><%= $c %></option>
 % }
