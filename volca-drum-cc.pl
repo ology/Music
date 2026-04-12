@@ -169,7 +169,7 @@ __DATA__
   </form>
   <p></p>
   <form method="post">
-  <span class="pad-left">Channel:</span> <select id="channel">
+  <span class="pad-left">Part:</span> <select id="channel">
 % for my $n (0 .. 5) {
     <option value="<%= $n %>" <%= $n eq $channel ? 'selected' : '' %>><%= $n + 1 %></option>
 % }
