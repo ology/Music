@@ -160,6 +160,7 @@ __DATA__
     <input type="hidden" name="device" value="<%= $device %>">
     <input type="submit" value="Stop">
   </form>
+  <p></p>
   <form method="post">
     <span class="pad-left">Part:</span> <select id="channel">
 % for my $n (0 .. 5) {
