@@ -137,9 +137,9 @@ __DATA__
 <body>
   <form action="<%= url_for('connect') %>" method="post" class="block">
     <span class="pad-left">Device:</span> <select id="device" name="device">
-  % for my $d (@$devices) {
+% for my $d (@$devices) {
       <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
-  % }
+% }
     </select>
     <input type="submit" value="Connect">
   </form>
