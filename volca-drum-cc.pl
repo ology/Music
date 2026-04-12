@@ -137,7 +137,6 @@ __DATA__
   </style>
 </head>
 <body>
-D: <%= $device %>
   <form action="<%= url_for('connect') %>" method="post" class="block">
     <span class="pad-left">Device:</span> <select id="device" name="device">
 % for my $d (@$devices) {
