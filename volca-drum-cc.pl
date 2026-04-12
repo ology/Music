@@ -60,7 +60,7 @@ sub devices () {
 
 get '/' => sub ($c) {
   my $name = $c->param('device') || '';
-  my $chan = $c->param('channel') || '';
+  my $chan = $c->param('channel') // 0;
   my $devices = devices();
   # say ddc $devices;
   $c->render(
@@ -148,6 +148,7 @@ __DATA__
   </style>
 </head>
 <body>
+X: <%= $channel %>, <%= $device %>
   <form action="<%= url_for('connect') %>" method="post" class="block">
     <input type="hidden" name="channel" value="<%= $channel %>">
     <span class="pad-left">Device:</span> <select id="device" name="device">
