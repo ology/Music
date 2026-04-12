@@ -46,8 +46,10 @@ my %ccs = (
 );
 
 END {
-  $device->stop;
-  $device->panic;
+   if (defined $device) {
+    $device->stop;
+    $device->panic;
+   }
 }
 
 sub devices () {
@@ -81,6 +83,7 @@ post '/' => sub ($c) {
 
 post '/connect' => sub ($c) {
   my $name = $c->param('device');
+  my $chan = $c->param('channel');
   if ($name) {
     $device = RtMidiOut->new;
     try { # this will die on Windows but is needed for Mac
@@ -89,17 +92,21 @@ post '/connect' => sub ($c) {
     catch ($e) {}
     $device->open_port_by_name(qr/\Q$name/i);
   }
-  $c->redirect_to($c->url_for('display')->query(device => $name));
+  $c->redirect_to($c->url_for('display')->query(device => $name, channel => $chan));
 } => 'connect';
 
 post '/start' => sub ($c) {
+  my $name = $c->param('device');
+  my $chan = $c->param('channel');
   $device->start if defined $device;
-  $c->redirect_to('display');
+  $c->redirect_to($c->url_for('display')->query(device => $name, channel => $chan));
 } => 'start';
 
 post '/stop' => sub ($c) {
+  my $name = $c->param('device');
+  my $chan = $c->param('channel');
   $device->stop if defined $device;
-  $c->redirect_to('display');
+  $c->redirect_to($c->url_for('display')->query(device => $name, channel => $chan));
 } => 'stop';
 
 app->start;
@@ -142,6 +149,7 @@ __DATA__
 </head>
 <body>
   <form action="<%= url_for('connect') %>" method="post" class="block">
+    <input type="hidden" name="channel" value="<%= $chan %>">
     <span class="pad-left">Device:</span> <select id="device" name="device">
 % for my $d (@$devices) {
       <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
@@ -150,9 +158,13 @@ __DATA__
     <input type="submit" value="Connect">
   </form>
   <form action="<%= url_for('start') %>" method="post" class="block">
+    <input type="hidden" name="channel" value="<%= $chan %>">
+    <input type="hidden" name="device" value="<%= $device %>">
     <input type="submit" value="Start">
   </form>
   <form action="<%= url_for('stop') %>" method="post" class="block">
+    <input type="hidden" name="channel" value="<%= $chan %>">
+    <input type="hidden" name="device" value="<%= $device %>">
     <input type="submit" value="Stop">
   </form>
   <p></p>
