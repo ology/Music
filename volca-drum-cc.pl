@@ -358,6 +358,7 @@ __DATA__
         success: function(data) {
           $.each(data, function(index, value) {
             $('#recall').append('<option value="' + value + '" selected>' + value + '</option>');
+            $('#patch').val('');
           });
         },
         error: function(err) {
