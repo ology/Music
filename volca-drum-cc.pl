@@ -128,7 +128,7 @@ post '/recall' => sub ($c) {
   my $patches = retrieve(PATCHES);
   try {
     for my $cc (keys $patches->{$patch}->%*) {
-      $device->cc($chan, $cc, $patches->{patch}{$cc});
+      $device->cc($chan, $cc, $patches->{$patch}{$cc});
     }
     return { status => 200, message => 'Recalled patch' };
   }
