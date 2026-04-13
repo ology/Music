@@ -182,7 +182,7 @@ post '/save' => sub ($c) {
 } => 'save';
 
 post '/delete' => sub ($c) {
-  my $patch = $c->param('recall');
+  my $patch = $c->param('patch');
   my $patches = retrieve(PATCHES);
   try {
     if (exists $patches->{$patch}) {
@@ -358,8 +358,9 @@ __DATA__
     });
   });
   $('#delete').click(function(event) {
+    var patch = $('#recall').val();
     $.ajax({
-      url: '<%= url_for("delete") %>',
+      url: '<%= url_for("delete") %>' + '?patch=' + patch,
       type: 'POST',
     });
   });
