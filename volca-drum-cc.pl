@@ -356,8 +356,13 @@ __DATA__
       type: 'POST',
         dataType: 'json',
         success: function(data) {
+          var allValues = $('#recall option').map(function() {
+            return $(this).val();
+          }).get();
           $.each(data, function(index, value) {
-            $('#recall').append('<option value="' + value + '" selected>' + value + '</option>');
+            if (!allValues.includes(value)) {
+              $('#recall').append('<option value="' + value + '" selected>' + value + '</option>');
+            }
             $('#patch').val('');
           });
         },
