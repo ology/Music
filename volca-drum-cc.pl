@@ -137,6 +137,22 @@ post '/recall' => sub ($c) {
   }
 } => 'recall';
 
+post '/save' => sub ($c) {
+  my $chan = $c->param('channel');
+  my $patch = $c->param('patch');
+  my $patches = retrieve(PATCHES);
+  say "P: $patch";
+  $patches->{$patch} = { 28 => 80, }; # TODO process set
+  try {
+    store($patches, PATCHES);    
+    return { status => 200, message => 'Recalled patch' };
+  }
+  catch ($e) {
+    return { status => 404, error => 'Oof!' };
+  }
+  $c->redirect_to('display');
+} => 'save';
+
 app->start;
 __DATA__
 
@@ -188,7 +204,7 @@ __DATA__
   <p></p>
   <span class="pad-left">Patch: <input type="text" name="patch" id="patch" size="10">
   <button type="button" id="save">Save</button>
-  <select name="recall">
+  <select name="recall" id="recall">
 % for my $p (@$patches) {
       <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
 % }
@@ -241,8 +257,18 @@ __DATA__
     });
   });
   $('#recall').click(function(event) {
+    var chan = $('#channel').val();
+    var patch = $('#recall').val();
     $.ajax({
-      url: '<%= url_for("recall") %>',
+      url: '<%= url_for("recall") %>' + '?chan=' + chan + '&recall=' + patch,
+      type: 'POST',
+    });
+  });
+  $('#save').click(function(event) {
+    var chan = $('#channel').val();
+    var patch = $('#patch').val();
+    $.ajax({
+      url: '<%= url_for("save") %>' + '?chan=' + chan + '&patch=' + patch,
       type: 'POST',
     });
   });
