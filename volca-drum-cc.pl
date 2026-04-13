@@ -82,7 +82,7 @@ get '/' => sub ($c) {
 } => 'display';
 
 post '/' => sub ($c) {
-  my $chan = $c->param('chan');
+  my $chan = $c->param('channel');
   my $num = $c->param('num');
   my $val = $c->param('val');
   # say "C: $chan, N: $num, V: $val";
@@ -140,11 +140,11 @@ post '/recall' => sub ($c) {
 post '/save' => sub ($c) {
   my $chan = $c->param('channel');
   my $patch = $c->param('patch');
+  my $ccs = $c->param('ccs');
+  my %cc = map { split /:/, $_ } split(/,\s/, $ccs);
   my $patches = retrieve(PATCHES);
-  say "P: $patch";
-  $patches->{$patch} = { 28 => 80, }; # TODO process set
   try {
-    store($patches, PATCHES);    
+    store(\%cc, PATCHES);    
     return { status => 200, message => 'Recalled patch' };
   }
   catch ($e) {
@@ -239,7 +239,7 @@ __DATA__
         var num = $(this).attr('id').split("-")[1];
         var val = $(this).val();
         $.ajax({
-          url: '<%= url_for("submit") %>' + '?chan=' + chan + '&num=' + num + '&val=' + val,
+          url: '<%= url_for("submit") %>' + '?channel=' + chan + '&num=' + num + '&val=' + val,
           type: 'POST',
         });
       }
@@ -260,15 +260,20 @@ __DATA__
     var chan = $('#channel').val();
     var patch = $('#recall').val();
     $.ajax({
-      url: '<%= url_for("recall") %>' + '?chan=' + chan + '&recall=' + patch,
+      url: '<%= url_for("recall") %>' + '?channel=' + chan + '&recall=' + patch,
       type: 'POST',
     });
   });
   $('#save').click(function(event) {
     var chan = $('#channel').val();
     var patch = $('#patch').val();
+    var ccs = '';
+% for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
+    var value = $('#value-<%= $ccs->{$cc} %>').text();
+    ccs = ccs + '<%= $ccs->{$cc} %>:' + value + ', ';
+% }
     $.ajax({
-      url: '<%= url_for("save") %>' + '?chan=' + chan + '&patch=' + patch,
+      url: '<%= url_for("save") %>' + '?channel=' + chan + '&patch=' + patch + '&ccs=' + ccs,
       type: 'POST',
     });
   });
