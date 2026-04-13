@@ -157,7 +157,7 @@ post '/recall' => sub ($c) {
   }
   catch ($e) {
     $c->res->code(404);
-    $c->render(text => "Error: $e");
+    $c->render(json => { error => $e });
   }
 } => 'recall';
 
