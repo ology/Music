@@ -312,6 +312,7 @@ __DATA__
           $.each(data, function(index, value) {
               //console.log(index + ": " + value);
               $('#value-' + index).text(value);
+              $('#slider-' + index).val(value);
           });
         },
         error: function(err) {
