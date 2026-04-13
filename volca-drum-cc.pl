@@ -181,6 +181,23 @@ post '/save' => sub ($c) {
   $c->redirect_to('display');
 } => 'save';
 
+post '/delete' => sub ($c) {
+  my $patch = $c->param('recall');
+  my $patches = retrieve(PATCHES);
+  try {
+    if (exists $patches->{$patch}) {
+      delete $patches->{$patch};
+      store($patches, PATCHES);
+    }
+    $c->res->code(200);
+    $c->render(text => 'Success');
+  }
+  catch ($e) {
+    $c->res->code(404);
+    $c->render(text => "Error: $e");
+  }
+} => 'delete';
+
 app->start;
 __DATA__
 
@@ -244,7 +261,8 @@ __DATA__
 % for my $p (sort @$patches) {
       <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
 % }
-    </select>
+  </select>
+  <button type="button" id="delete" onclick="if(!confirm('Delete patch?')) return false;">Delete</button>
   <p></p>
   <form method="post">
     <span class="pad-left">Part:</span> <select id="channel">
@@ -336,6 +354,12 @@ __DATA__
 % }
     $.ajax({
       url: '<%= url_for("save") %>' + '?channel=' + chan + '&patch=' + patch + '&ccs=' + ccs,
+      type: 'POST',
+    });
+  });
+  $('#delete').click(function(event) {
+    $.ajax({
+      url: '<%= url_for("delete") %>',
       type: 'POST',
     });
   });
