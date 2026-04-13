@@ -63,6 +63,7 @@ sub devices () {
 get '/' => sub ($c) {
   my $name = $c->param('device') || '';
   my $patch = $c->param('patch') || '';
+  my $program = $c->param('program') // 0;
   my $devices = devices();
   # say ddc $devices;
   unless (-e PATCHES) {
@@ -74,9 +75,10 @@ get '/' => sub ($c) {
     template => 'index',
     devices  => $devices,
     device   => $name,
+    program  => $program,
     patch    => $patch,
     patches  => $patches,
-    value    => 64,
+    value    => '-',
     ccs      => \%ccs,
   );
 } => 'display';
@@ -122,13 +124,27 @@ post '/stop' => sub ($c) {
   }
 } => 'stop';
 
+post '/program' => sub ($c) {
+  my $chan = $c->param('channel');
+  my $program = $c->param('program');
+  try {
+    $device->program_change($chan, $program);
+    return { status => 200 };
+  }
+  catch ($e) {
+    return { status => 404, error => 'Oof!' };
+  }
+} => 'program';
+
 post '/recall' => sub ($c) {
   my $chan = $c->param('channel');
   my $patch = $c->param('recall');
   my $patches = retrieve(PATCHES);
   try {
-    for my $cc (keys $patches->{$patch}->%*) {
-      $device->cc($chan, $cc, $patches->{$patch}{$cc});
+    for my $channel (keys $patches->{$patch}->%*) {
+      for my $cc (keys $patches->{$patch}{$channel}->%*) {
+        $device->cc($channel, $cc, $patches->{$patch}{$channel}{$cc});
+      }
     }
     return { status => 200, message => 'Recalled patch' };
   }
@@ -141,10 +157,12 @@ post '/save' => sub ($c) {
   my $chan = $c->param('channel');
   my $patch = $c->param('patch');
   my $ccs = $c->param('ccs');
-  my %cc = map { split /:/, $_ } split(/,\s/, $ccs);
   my $patches = retrieve(PATCHES);
+  my %cc = map { split /:/, $_, 2 } split(/,\s/, $ccs);
+  %cc = map { $_ => $cc{$_} } grep { $cc{$_} !~ /^-,?$/ } keys %cc;
+  $patches->{$patch}{$chan} = { %cc };
   try {
-    store(\%cc, PATCHES);    
+    store($patches, PATCHES);
     return { status => 200, message => 'Recalled patch' };
   }
   catch ($e) {
@@ -199,17 +217,22 @@ __DATA__
     </select>
     <input type="submit" value="Connect">
   </form>
+  <p></p>
+  <span class="pad-left">Program: <select name="program" id="program">
+% for my $p (0 .. 15) {
+      <option value="<%= $p %>" <%= $p eq $program ? 'selected' : '' %>><%= $p + 1 %></option>
+% }
+    </select>
   <button type="button" id="start">Start</button>
   <button type="button" id="stop">Stop</button>
   <p></p>
   <span class="pad-left">Patch: <input type="text" name="patch" id="patch" size="10">
   <button type="button" id="save">Save</button>
-  <select name="recall" id="recall">
+  <span class="pad-left">Recall: <select name="recall" id="recall">
 % for my $p (@$patches) {
       <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
 % }
     </select>
-  <button type="button" id="recall">Recall</button>
   <p></p>
   <form method="post">
     <span class="pad-left">Part:</span> <select id="channel">
@@ -244,6 +267,14 @@ __DATA__
         });
       }
   });
+  $('#program').change(function(event) {
+    var chan = $('#channel').val();
+    var program = $('#program').val();
+    $.ajax({
+      url: '<%= url_for("program") %>' + '?channel=' + chan + '&program=' + program,
+      type: 'POST',
+    });
+  });
   $('#start').click(function(event) {
     $.ajax({
       url: '<%= url_for("start") %>',
@@ -256,7 +287,7 @@ __DATA__
       type: 'POST',
     });
   });
-  $('#recall').click(function(event) {
+  $('#recall').change(function(event) {
     var chan = $('#channel').val();
     var patch = $('#recall').val();
     $.ajax({
