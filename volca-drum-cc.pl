@@ -75,6 +75,7 @@ get '/' => sub ($c) {
     template => 'index',
     devices  => $devices,
     device   => $name,
+    connect  => $device,
     program  => $program,
     patch    => $patch,
     patches  => $patches,
@@ -231,6 +232,20 @@ __DATA__
       width: 100%;
       cursor: pointer;
     }
+    .parent {
+    }
+    .green-circle {
+      width: 20px;
+      height: 20px;
+      background-color: #4CAF50;
+      border-radius: 50%;
+    }
+    .red-circle {
+      width: 20px;
+      height: 20px;
+      background-color: #ca3833;
+      border-radius: 50%;
+    }
   </style>
 </head>
 <body>
@@ -243,6 +258,14 @@ __DATA__
     </select>
     <input type="submit" value="Connect">
   </form>
+  &nbsp;
+  <div class="block parent">
+% if (defined $connect) { # TODO red / green connected device state
+  <div class="block green-circle"></div>
+% } else {
+  <div class="block red-circle"></div>
+% }
+  </div>
   <p></p>
   <span class="pad-left">Program:</span><select name="program" id="program">
 % for my $p (0 .. 15) {
