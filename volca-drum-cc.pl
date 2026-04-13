@@ -153,7 +153,7 @@ post '/recall' => sub ($c) {
       }
     }
     $c->res->code(200);
-    $c->render(text => 'Success');
+    $c->render(json => $patches->{$patch}{$chan});
   }
   catch ($e) {
     $c->res->code(404);
@@ -166,7 +166,7 @@ post '/save' => sub ($c) {
   my $patch = $c->param('patch');
   my $ccs = $c->param('ccs');
   my $patches = retrieve(PATCHES);
-  my %cc = map { split /:/, $_, 2 } split(/,\s/, $ccs);
+  my %cc = map { split /:/, $_, 2 } split(/,\s*/, $ccs);
   %cc = map { $_ => $cc{$_} } grep { $cc{$_} !~ /^-,?$/ } keys %cc;
   $patches->{$patch}{$chan} = { %cc };
   try {
@@ -240,7 +240,8 @@ __DATA__
   <span class="pad-left">Patch:</span><input type="text" name="patch" id="patch" size="10">
   <button type="button" id="save">Save</button>
   <span class="pad-left">Recall:</span><select name="recall" id="recall">
-% for my $p (@$patches) {
+      <option value="">-</option>
+% for my $p (sort @$patches) {
       <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
 % }
     </select>
@@ -254,7 +255,7 @@ __DATA__
     <p></p>
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <div class="slider-container">
-      <span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): </span><span id="value-<%= $ccs->{$cc} %>"><%= $value %></span>
+      <span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): </span><span id="value-<%= $ccs->{$cc} %>" class="cc-value"><%= $value %></span>
       <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range">
     </div>
 % }
@@ -301,24 +302,36 @@ __DATA__
   $('#recall').change(function(event) {
     var chan = $('#channel').val();
     var patch = $('#recall').val();
-    $.ajax({
-      url: '<%= url_for("recall") %>' + '?channel=' + chan + '&recall=' + patch,
-      type: 'POST',
-      success: function(data) {
-        console.log(data);
-      },
-      error: function(err) {
-        console.log(err.responseText);
-      }
-    });
+    if (patch != '-') {
+      $.ajax({
+        url: '<%= url_for("recall") %>' + '?channel=' + chan + '&recall=' + patch,
+        type: 'POST',
+        dataType: 'json',
+        success: function(data) {
+          //console.log(data);
+          $.each(data, function(index, value) {
+              //console.log(index + ": " + value);
+              $('#value-' + index).text(value);
+          });
+        },
+        error: function(err) {
+          console.log(err.responseText);
+        }
+      });
+    }
   });
   $('#save').click(function(event) {
     var chan = $('#channel').val();
     var patch = $('#patch').val();
     var ccs = '';
+% my $i = 0;
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     var value = $('#value-<%= $ccs->{$cc} %>').text();
-    ccs = ccs + '<%= $ccs->{$cc} %>:' + value + ', ';
+    ccs = ccs + '<%= $ccs->{$cc} %>:' + value;
+%   if ($i < scalar keys %$ccs) {
+      ccs = ccs + ', ';
+%   }
+%   $i++;
 % }
     $.ajax({
       url: '<%= url_for("save") %>' + '?channel=' + chan + '&patch=' + patch + '&ccs=' + ccs,
