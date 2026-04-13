@@ -246,7 +246,7 @@ __DATA__
   <p></p>
   <span class="pad-left">Program:</span><select name="program" id="program">
 % for my $p (0 .. 15) {
-      <option value="<%= $p %>" <%= $p eq $program ? 'selected' : '' %>><%= $p + 1 %></option>
+    <option value="<%= $p %>" <%= $p eq $program ? 'selected' : '' %>><%= $p + 1 %></option>
 % }
   </select>
   &nbsp;
@@ -256,9 +256,9 @@ __DATA__
   <span class="pad-left">Patch:</span><input type="text" name="patch" id="patch" size="10">
   <button type="button" id="save">Save</button>
   <span class="pad-left">Recall:</span><select name="recall" id="recall">
-      <option value="-">-</option>
+    <option value="-">-</option>
 % for my $p (sort @$patches) {
-      <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
+    <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
 % }
   </select>
   <button type="button" id="delete" onclick="if(!confirm('Delete patch?')) return false;">Delete</button>
