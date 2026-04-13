@@ -172,13 +172,12 @@ post '/save' => sub ($c) {
   try {
     store($patches, PATCHES);
     $c->res->code(200);
-    $c->render(text => 'Success');
+    $c->render(json => { patch => $patch });
   }
   catch ($e) {
     $c->res->code(404);
-    $c->render(text => 'Error');
+    $c->render(json => { error => $e });
   }
-  $c->redirect_to('display');
 } => 'save';
 
 post '/delete' => sub ($c) {
@@ -190,11 +189,11 @@ post '/delete' => sub ($c) {
       store($patches, PATCHES);
     }
     $c->res->code(200);
-    $c->render(text => 'Success');
+    $c->render(json => { status => 'ok' });
   }
   catch ($e) {
     $c->res->code(404);
-    $c->render(text => "Error: $e");
+    $c->render(json => { error => $e });
   }
 } => 'delete';
 
@@ -355,6 +354,15 @@ __DATA__
     $.ajax({
       url: '<%= url_for("save") %>' + '?channel=' + chan + '&patch=' + patch + '&ccs=' + ccs,
       type: 'POST',
+        dataType: 'json',
+        success: function(data) {
+          $.each(data, function(index, value) {
+            $('#recall').append('<option value="' + value + '" selected>' + value + '</option>');
+          });
+        },
+        error: function(err) {
+          console.log(err.responseText);
+        }
     });
   });
   $('#delete').click(function(event) {
@@ -362,6 +370,13 @@ __DATA__
     $.ajax({
       url: '<%= url_for("delete") %>' + '?patch=' + patch,
       type: 'POST',
+      dataType: 'json',
+      success: function(data) {
+        $('#recall option:selected').remove();
+      },
+      error: function(err) {
+        console.log(err.responseText);
+      }
     });
   });
   </script>
