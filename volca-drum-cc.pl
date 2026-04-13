@@ -327,7 +327,6 @@ __DATA__
         success: function(data) {
           $.each($('.cc-value'), function(index, value) {
               $('#value-' + index).text('-');
-              $('#slider-' + index).val(64);
           });
           $.each($('.range'), function(index, value) {
               $('#slider-' + index).val(64);
