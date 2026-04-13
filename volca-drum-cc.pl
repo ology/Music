@@ -233,23 +233,29 @@ __DATA__
       cursor: pointer;
     }
     .parent {
+      position: relative;
+      height: 22px;
     }
     .green-circle {
       width: 20px;
       height: 20px;
       background-color: #4CAF50;
       border-radius: 50%;
+      bottom: 0;
     }
     .red-circle {
       width: 20px;
       height: 20px;
       background-color: #ca3833;
       border-radius: 50%;
+      position: absolute;
+      bottom: 0;
     }
   </style>
 </head>
 <body>
   <h2 class="pad-left">Volca Drum CC</h2>
+  <div class="block parent">
   <form action="<%= url_for('connect') %>" method="post" class="block">
     <span class="pad-left">Device:</span><select name="device">
 % for my $d (@$devices) {
@@ -259,7 +265,6 @@ __DATA__
     <input type="submit" value="Connect">
   </form>
   &nbsp;
-  <div class="block parent">
 % if (defined $connect) { # TODO red / green connected device state
   <div class="block green-circle"></div>
 % } else {
