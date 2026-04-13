@@ -7,6 +7,9 @@ use feature 'try';
 use Mojolicious::Lite -signatures;
 use MIDI::RtMidi::FFI::Device ();
 use Data::Dumper::Compact qw(ddc);
+use Storable qw(retrieve store);
+
+use constant PATCHES => './patches.dat';
 
 my $device;
 my %ccs = (
@@ -59,12 +62,20 @@ sub devices () {
 
 get '/' => sub ($c) {
   my $name = $c->param('device') || '';
+  my $patch = $c->param('patch') || '';
   my $devices = devices();
   # say ddc $devices;
+  unless (-e PATCHES) {
+    store({}, PATCHES);
+  }
+  my $patches = retrieve(PATCHES);
+  $patches = [ keys %$patches ];
   $c->render(
     template => 'index',
     devices  => $devices,
     device   => $name,
+    patch    => $patch,
+    patches  => $patches,
     value    => 64,
     ccs      => \%ccs,
   );
@@ -112,8 +123,13 @@ post '/stop' => sub ($c) {
 } => 'stop';
 
 post '/recall' => sub ($c) {
+  my $chan = $c->param('channel');
+  my $patch = $c->param('recall');
+  my $patches = retrieve(PATCHES);
   try {
-    $device->cc(0, 28, 80); # TODO recall saved patches
+    for my $cc (keys $patches->{$patch}->%*) {
+      $device->cc($chan, $cc, $patches->{patch}{$cc});
+    }
     return { status => 200, message => 'Recalled patch' };
   }
   catch ($e) {
@@ -169,6 +185,14 @@ __DATA__
   </form>
   <button type="button" id="start">Start</button>
   <button type="button" id="stop">Stop</button>
+  <p></p>
+  <span class="pad-left">Patch: <input type="text" name="patch" id="patch" size="10">
+  <button type="button" id="save">Save</button>
+  <select name="recall">
+% for my $p (@$patches) {
+      <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
+% }
+    </select>
   <button type="button" id="recall">Recall</button>
   <p></p>
   <form method="post">
