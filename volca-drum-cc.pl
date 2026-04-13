@@ -316,6 +316,33 @@ __DATA__
       type: 'POST',
     });
   });
+  $('#channel').change(function(event) {
+    var chan = $('#channel').val();
+    var patch = $('#recall').val();
+    if (patch != '-') {
+      $.ajax({
+        url: '<%= url_for("recall") %>' + '?channel=' + chan + '&recall=' + patch,
+        type: 'POST',
+        dataType: 'json',
+        success: function(data) {
+          $.each($('.cc-value'), function(index, value) {
+              $('#value-' + index).text('-');
+              $('#slider-' + index).val(64);
+          });
+          $.each($('.range'), function(index, value) {
+              $('#slider-' + index).val(64);
+          });
+          $.each(data, function(index, value) {
+              $('#value-' + index).text(value);
+              $('#slider-' + index).val(value);
+          });
+        },
+        error: function(err) {
+          console.log(err.responseText);
+        }
+      });
+    }
+  });
   $('#recall').change(function(event) {
     var chan = $('#channel').val();
     var patch = $('#recall').val();
