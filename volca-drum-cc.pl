@@ -173,7 +173,7 @@ __DATA__
     .slider-container {
       display: flex;
       gap: 10px;
-      width: 340px;
+      width: 400px;
       font-family: sans-serif;
       margin: 10px;
     }
@@ -220,7 +220,7 @@ __DATA__
     <p></p>
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <div class="slider-container">
-      <span class="value-display"><%= $cc %>: </span><span id="value-<%= $ccs->{$cc} %>"><%= $value %></span>
+      <span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): </span><span id="value-<%= $ccs->{$cc} %>"><%= $value %></span>
       <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range">
     </div>
 % }
