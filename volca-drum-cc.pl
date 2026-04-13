@@ -256,7 +256,7 @@ __DATA__
   <span class="pad-left">Patch:</span><input type="text" name="patch" id="patch" size="10">
   <button type="button" id="save">Save</button>
   <span class="pad-left">Recall:</span><select name="recall" id="recall">
-      <option value="">-</option>
+      <option value="-">-</option>
 % for my $p (sort @$patches) {
       <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
 % }
@@ -345,7 +345,16 @@ __DATA__
   $('#recall').change(function(event) {
     var chan = $('#channel').val();
     var patch = $('#recall').val();
-    if (patch != '-') {
+    console.log(patch);
+    if (patch == '-') {
+      $.each($('.cc-value'), function(index, value) {
+        $('#value-' + index).text('-');
+      });
+      $.each($('.range'), function(index, value) {
+        $('#slider-' + index).val(64);
+      });
+    }
+    else {
       $.ajax({
         url: '<%= url_for("recall") %>' + '?channel=' + chan + '&recall=' + patch,
         type: 'POST',
@@ -353,9 +362,9 @@ __DATA__
         success: function(data) {
           //console.log(data);
           $.each(data, function(index, value) {
-              //console.log(index + ": " + value);
-              $('#value-' + index).text(value);
-              $('#slider-' + index).val(value);
+            //console.log(index + ": " + value);
+            $('#value-' + index).text(value);
+            $('#slider-' + index).val(value);
           });
         },
         error: function(err) {
