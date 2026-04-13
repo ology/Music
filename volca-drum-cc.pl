@@ -210,7 +210,7 @@ __DATA__
 <body>
   <h2 class="pad-left">Volca Drum CC</h2>
   <form action="<%= url_for('connect') %>" method="post" class="block">
-    <span class="pad-left">Device:</span> <select name="device">
+    <span class="pad-left">Device:</span><select name="device">
 % for my $d (@$devices) {
       <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
 % }
@@ -218,17 +218,18 @@ __DATA__
     <input type="submit" value="Connect">
   </form>
   <p></p>
-  <span class="pad-left">Program: <select name="program" id="program">
+  <span class="pad-left">Program:</span><select name="program" id="program">
 % for my $p (0 .. 15) {
       <option value="<%= $p %>" <%= $p eq $program ? 'selected' : '' %>><%= $p + 1 %></option>
 % }
-    </select>
+  </select>
+  &nbsp;
   <button type="button" id="start">Start</button>
   <button type="button" id="stop">Stop</button>
   <p></p>
-  <span class="pad-left">Patch: <input type="text" name="patch" id="patch" size="10">
+  <span class="pad-left">Patch:</span><input type="text" name="patch" id="patch" size="10">
   <button type="button" id="save">Save</button>
-  <span class="pad-left">Recall: <select name="recall" id="recall">
+  <span class="pad-left">Recall:</span><select name="recall" id="recall">
 % for my $p (@$patches) {
       <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
 % }
