@@ -111,6 +111,16 @@ post '/stop' => sub ($c) {
   }
 } => 'stop';
 
+post '/recall' => sub ($c) {
+  try {
+    $device->cc(0, 28, 80); # TODO recall saved patches
+    return { status => 200, message => 'Recalled patch' };
+  }
+  catch ($e) {
+    return { status => 404, error => 'Oof!' };
+  }
+} => 'recall';
+
 app->start;
 __DATA__
 
@@ -159,6 +169,7 @@ __DATA__
   </form>
   <button type="button" id="start">Start</button>
   <button type="button" id="stop">Stop</button>
+  <button type="button" id="recall">Recall</button>
   <p></p>
   <form method="post">
     <span class="pad-left">Part:</span> <select id="channel">
@@ -202,6 +213,12 @@ __DATA__
   $('#stop').click(function(event) {
     $.ajax({
       url: '<%= url_for("stop") %>',
+      type: 'POST',
+    });
+  });
+  $('#recall').click(function(event) {
+    $.ajax({
+      url: '<%= url_for("recall") %>',
       type: 'POST',
     });
   });
