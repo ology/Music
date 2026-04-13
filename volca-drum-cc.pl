@@ -189,12 +189,6 @@ __DATA__
         $.ajax({
           url: '<%= url_for("submit") %>' + '?chan=' + chan + '&num=' + num + '&val=' + val,
           type: 'POST',
-          success: function(response) {
-            console.log('Success:', response);
-          },
-          error: function(xhr, status, error) {
-            console.error('Error:', error);
-          }
         });
       }
   });
@@ -202,26 +196,12 @@ __DATA__
     $.ajax({
       url: '<%= url_for("start") %>',
       type: 'POST',
-      dataType: 'json',
-      success: function(response) {
-        console.log('Success:', response);
-      },
-      error: function(xhr, status, error) {
-        console.error('Error:', error);
-      }
     });
   });
   $('#stop').click(function(event) {
     $.ajax({
       url: '<%= url_for("stop") %>',
       type: 'POST',
-      dataType: 'json',
-      success: function(response) {
-        console.log('Success:', response);
-      },
-      error: function(xhr, status, error) {
-        console.error('Error:', error);
-      }
     });
   });
   </script>
