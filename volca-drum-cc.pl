@@ -363,6 +363,9 @@ __DATA__
             if (!allValues.includes(value)) {
               $('#recall').append('<option value="' + value + '" selected>' + value + '</option>');
             }
+            else {
+              $('#recall').val(value);
+            }
             $('#patch').val('');
           });
         },
