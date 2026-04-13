@@ -148,6 +148,7 @@ __DATA__
   </style>
 </head>
 <body>
+  <h2 class="pad-left">Volca Drum CC</h2>
   <form action="<%= url_for('connect') %>" method="post" class="block">
     <span class="pad-left">Device:</span> <select name="device">
 % for my $d (@$devices) {
