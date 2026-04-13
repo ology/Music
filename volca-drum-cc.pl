@@ -107,20 +107,24 @@ post '/connect' => sub ($c) {
 post '/start' => sub ($c) {
   try {
     $device->start if defined $device;
-    return { status => 200 };
+    $c->res->code(200);
+    $c->render(text => 'Success');
   }
   catch ($e) {
-    return { status => 404, error => 'Oof!' };
+    $c->res->code(404);
+    $c->render(text => "Error: $e");
   }
 } => 'start';
 
 post '/stop' => sub ($c) {
   try {
     $device->stop if defined $device;
-    return { status => 200 };
+    $c->res->code(200);
+    $c->render(text => 'Success');
   }
   catch ($e) {
-    return { status => 404, error => 'Oof!' };
+    $c->res->code(404);
+    $c->render(text => "Error: $e");
   }
 } => 'stop';
 
@@ -129,10 +133,12 @@ post '/program' => sub ($c) {
   my $program = $c->param('program');
   try {
     $device->program_change($chan, $program);
-    return { status => 200 };
+    $c->res->code(200);
+    $c->render(text => 'Success');
   }
   catch ($e) {
-    return { status => 404, error => 'Oof!' };
+    $c->res->code(404);
+    $c->render(text => "Error: $e");
   }
 } => 'program';
 
@@ -146,10 +152,12 @@ post '/recall' => sub ($c) {
         $device->cc($channel, $cc, $patches->{$patch}{$channel}{$cc});
       }
     }
-    return { status => 200, message => 'Recalled patch' };
+    $c->res->code(200);
+    $c->render(text => 'Success');
   }
   catch ($e) {
-    return { status => 404, error => 'Oof!' };
+    $c->res->code(404);
+    $c->render(text => "Error: $e");
   }
 } => 'recall';
 
@@ -163,10 +171,12 @@ post '/save' => sub ($c) {
   $patches->{$patch}{$chan} = { %cc };
   try {
     store($patches, PATCHES);
-    return { status => 200, message => 'Recalled patch' };
+    $c->res->code(200);
+    $c->render(text => 'Success');
   }
   catch ($e) {
-    return { status => 404, error => 'Oof!' };
+    $c->res->code(404);
+    $c->render(text => 'Error');
   }
   $c->redirect_to('display');
 } => 'save';
@@ -294,6 +304,12 @@ __DATA__
     $.ajax({
       url: '<%= url_for("recall") %>' + '?channel=' + chan + '&recall=' + patch,
       type: 'POST',
+      success: function(data) {
+        console.log(data);
+      },
+      error: function(err) {
+        console.log(err.responseText);
+      }
     });
   });
   $('#save').click(function(event) {
