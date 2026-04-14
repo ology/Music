@@ -222,9 +222,6 @@ __DATA__
       font-family: sans-serif;
       margin: 10px;
     }
-    .slider {
-      width: 250px;
-    }
     .cc-value {
       padding-top: 5px;
     }
@@ -308,9 +305,7 @@ __DATA__
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <div class="slider-container">
       <span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): </span><span id="value-<%= $ccs->{$cc} %>" class="cc-value"><%= $value %></span>
-      <div class="slider">
-        <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range">
-      </div>
+      <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range">
     </div>
 % }
   </form>
