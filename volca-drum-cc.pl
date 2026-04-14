@@ -208,6 +208,9 @@ __DATA__
   <title>Volca Drum CC</title>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
   <style>
+    td {
+      vertical-align: middle;
+    }
     .block {
       display: inline-block;
     }
@@ -221,9 +224,6 @@ __DATA__
       width: 350px;
       font-family: sans-serif;
       margin: 10px;
-    }
-    .cc-value {
-      padding-top: 5px;
     }
     .value-display {
       display: flex;
@@ -257,6 +257,7 @@ __DATA__
     }
     .fixed-width {
       width: 1.5em;
+      text-align: center;
     }
   </style>
 </head>
@@ -305,7 +306,7 @@ __DATA__
 % }
     </select>
     <p></p>
-    <table border="0">
+    <table border="0" cellspacing="5">
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <tr>
       <td><span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>):</span></td>
