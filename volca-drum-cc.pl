@@ -222,6 +222,9 @@ __DATA__
       font-family: sans-serif;
       margin: 10px;
     }
+    .cc-value {
+      padding-top: 5px;
+    }
     .value-display {
       display: flex;
       width: 100%;
