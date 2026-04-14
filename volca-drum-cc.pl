@@ -255,6 +255,9 @@ __DATA__
       position: absolute;
       bottom: 0;
     }
+    .fixed-width {
+      width: 1.5em;
+    }
   </style>
 </head>
 <body>
@@ -302,12 +305,15 @@ __DATA__
 % }
     </select>
     <p></p>
+    <table border="0">
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
-    <div class="slider-container">
-      <span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): </span><span id="value-<%= $ccs->{$cc} %>" class="cc-value"><%= $value %></span>
-      <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range">
-    </div>
+    <tr>
+      <td><span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>):</span></td>
+      <td class="fixed-width"><span id="value-<%= $ccs->{$cc} %>" class="cc-value"><%= $value %></span></td>
+      <td><input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range"></td>
+    </tr>
 % }
+    </table>
   </form>
   <script>
   $(document).ready(function() {
