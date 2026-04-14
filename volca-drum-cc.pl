@@ -230,6 +230,7 @@ __DATA__
       width: 100%;
       gap: 10px;
       padding-top: 0.3rem;
+      font-family: sans-serif;
     }
     input[type="range"] {
       width: 100%;
@@ -258,6 +259,7 @@ __DATA__
     .fixed-width {
       width: 1.5em;
       text-align: center;
+      font-family: sans-serif;
     }
   </style>
 </head>
@@ -305,11 +307,10 @@ __DATA__
       <option value="<%= $n %>"><%= $n + 1 %></option>
 % }
     </select>
-    <p></p>
-    <table border="0" cellspacing="5">
+    <table border="0" cellspacing="0" class="pad-left">
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <tr>
-      <td><span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>):</span></td>
+      <td><span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): &nbsp;</span></td>
       <td class="fixed-width"><span id="value-<%= $ccs->{$cc} %>" class="cc-value"><%= $value %></span></td>
       <td><input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range"></td>
     </tr>
