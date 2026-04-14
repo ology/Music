@@ -241,6 +241,7 @@ __DATA__
       height: 20px;
       background-color: #4CAF50;
       border-radius: 50%;
+      position: absolute;
       bottom: 0;
     }
     .red-circle {
