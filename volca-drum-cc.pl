@@ -256,8 +256,13 @@ __DATA__
       position: absolute;
       bottom: 0;
     }
-    .fixed-width {
-      width: 1.5em;
+    .fixed-width1 {
+      width: 2em;
+      text-align: center;
+      font-family: sans-serif;
+    }
+    .fixed-width2 {
+      width: 13em;
       text-align: center;
       font-family: sans-serif;
     }
@@ -310,8 +315,8 @@ __DATA__
     <table class="pad-left">
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <tr>
-      <td><span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): &nbsp;</span></td>
-      <td class="fixed-width"><span id="value-<%= $ccs->{$cc} %>" class="cc-value"><%= $value %></span></td>
+      <td class="fixed-width2"><span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): &nbsp;</span></td>
+      <td class="fixed-width1"><span id="value-<%= $ccs->{$cc} %>" class="cc-value"><%= $value %></span></td>
       <td><input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range"></td>
     </tr>
 % }
