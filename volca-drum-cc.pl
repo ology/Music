@@ -307,7 +307,7 @@ __DATA__
       <option value="<%= $n %>"><%= $n + 1 %></option>
 % }
     </select>
-    <table border="0" class="pad-left">
+    <table class="pad-left">
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
     <tr>
       <td><span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): &nbsp;</span></td>
