@@ -218,13 +218,6 @@ __DATA__
       font-family: sans-serif;
       margin: 10px;
     }
-    .slider-container {
-      display: flex;
-      gap: 10px;
-      width: 350px;
-      font-family: sans-serif;
-      margin: 10px;
-    }
     .value-display {
       display: flex;
       width: 100%;
