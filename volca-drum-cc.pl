@@ -262,7 +262,7 @@ __DATA__
       font-family: sans-serif;
     }
     .fixed-width2 {
-      width: 13em;
+      width: 11.5em;
       text-align: center;
       font-family: sans-serif;
     }
