@@ -12,7 +12,7 @@ $SIG{INT} = sub {
     exit;
 };
 
-my $port_name = shift || 'logic';
+my $port_name = shift || 'iac';
 
 my $device = RtMidiIn->new;
 try { # this will die on Windows but is needed for Mac
