@@ -7,11 +7,6 @@ use feature 'try';
 use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::FFI::Device ();
 
-$SIG{INT} = sub {
-    say "\nStopping...";
-    exit;
-};
-
 my $port_name = shift || 'iac';
 
 my $device = RtMidiIn->new;
@@ -21,6 +16,11 @@ try { # this will die on Windows but is needed for Mac
 catch ($e) {}
 $device->open_port_by_name(qr/\Q$port_name/i);
 $device->ignore_timing(0);
+
+$SIG{INT} = sub {
+    say "\nStopping...";
+    exit;
+};
 
 print "Listening on '$port_name'...\n";
 while (1) {
