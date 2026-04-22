@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Listen for a MIDI clock.
+# Listen for MIDI events.
 
 use v5.36;
 use feature 'try';
