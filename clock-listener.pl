@@ -22,7 +22,7 @@ $SIG{INT} = sub {
     exit;
 };
 
-print "Listening on '$port_name'...\n";
+say "Listening on '$port_name'...";
 while (1) {
     my $event = $device->get_message_decoded;
     if ($event) {
