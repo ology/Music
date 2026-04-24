@@ -59,7 +59,7 @@ while ($t <= $t_end) {
     # XXX naive note gymnastics
     my $n1 = sprintf '%.0f', uniform_scaling($x_range, $midi_range, $y->[0]);
     my $note = Music::Note->new($n1, 'midinum');
-    $n1++ if $note->format('isobase') =~ /[#b]/;
+    $n1++ if $note->format('isobase') =~ /[#b]/; # increment the note number if sharp or flat
     my $n2 = sprintf '%.0f', uniform_scaling($yz_range, $midi_range, $y->[1]);
     $note = Music::Note->new($n2, 'midinum');
     $n2++ if $note->format('isobase') =~ /[#b]/;
