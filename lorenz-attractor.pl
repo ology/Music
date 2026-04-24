@@ -1,0 +1,71 @@
+#!/usr/bin/env perl
+use v5.36;
+
+use Math::Utils qw(uniform_scaling);
+use MIDI::Util qw(setup_score);
+
+my $midi_range = [60, 83];
+my $x_range    = [-25, 25];
+my $yz_range   = [0, 50];
+
+# ── Lorenz parameters ──────────────────────────────────────────────
+use constant SIGMA => 10;
+use constant RHO   => 28;
+use constant BETA  => 8/3;
+
+# ── Vector helpers ─────────────────────────────────────────────────
+sub vadd ($i, $j) { [ map { $i->[$_] + $j->[$_] } 0 .. $#$i ] }
+sub vscale ($v, $s) { [ map { $_ * $s } @$v ] }
+sub vmadd ($i, $j, $s) { [ map { $i->[$_] + $j->[$_] * $s } 0 .. $#$i ] }
+
+# ── RK4 integrator ────────────────────────────────────────────────
+sub rk4 ($f, $t, $y, $dt) {
+    my $k1 = $f->($t, $y);
+    my $k2 = $f->($t + $dt/2,  vmadd($y, $k1, $dt/2));
+    my $k3 = $f->($t + $dt/2,  vmadd($y, $k2, $dt/2));
+    my $k4 = $f->($t + $dt,    vmadd($y, $k3, $dt));
+    return [
+        map {
+            $y->[$_] + ($dt/6) * ($k1->[$_] + 2*$k2->[$_] + 2*$k3->[$_] + $k4->[$_])
+        } 0 .. $#$y
+    ];
+}
+
+# ── Lorenz system ─────────────────────────────────────────────────
+my $lorenz = sub ($t, $y) {
+    my ($x, $yy, $z) = @$y;
+    return [
+        SIGMA * ($yy - $x),
+        $x * (RHO - $z) - $yy,
+        $x * $yy - BETA * $z,
+    ]
+};
+
+# ── Configuration ─────────────────────────────────────────────────
+my $t     = 0.0;
+my $t_end = 50.0;
+my $dt    = 0.01;
+my $y     = [1.0, 1.0, 1.0];    # initial [x, y, z]
+
+my $score = setup_score();
+
+# ── Solve and write CSV ───────────────────────────────────────────
+open my $fh, '>', "$0.csv" or die "Cannot open csv: $!";
+say $fh 't,x,y,z';
+
+while ($t <= $t_end) {
+    say $fh join ',', map { sprintf '%.8g', $_ } $t, @$y;
+    $y = rk4($lorenz, $t, $y, $dt);
+    my ($n1) = sprintf '%.0f', uniform_scaling($x_range, $midi_range, $y->[0]);
+    my ($n2) = sprintf '%.0f', uniform_scaling($yz_range, $midi_range, $y->[1]);
+    my ($n3) = sprintf '%.0f', uniform_scaling($yz_range, $midi_range, $y->[2]);
+    # say "N: $n1, $n2, $n3";
+    $score->n('qn', $n1, $n2, $n3);
+    $t += $dt;
+}
+
+close $fh;
+
+$score->write_score("$0.mid");
+
+say "Done — lorenz.csv written.";
