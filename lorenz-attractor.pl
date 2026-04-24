@@ -17,10 +17,8 @@ my $yz_range   = [0, 50];
 
 my $score = setup_score(patch => 4);
 
-# ── Vector helper ─────────────────────────────────────────────────
-sub vmadd ($i, $j, $s) { [ map { $i->[$_] + $j->[$_] * $s } 0 .. $#$i ] }
-
 # ── RK4 integrator ────────────────────────────────────────────────
+sub vmadd ($i, $j, $s) { [ map { $i->[$_] + $j->[$_] * $s } 0 .. $#$i ] }
 sub rk4 ($f, $t, $y, $dt) {
     my $k1 = $f->($t, $y);
     my $k2 = $f->($t + $dt/2, vmadd($y, $k1, $dt/2));
