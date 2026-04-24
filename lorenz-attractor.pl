@@ -10,7 +10,7 @@ use constant SIGMA => 10;
 use constant RHO   => 28;
 use constant BETA  => 8/3;
 
-# ── MIDI ──────────────────────────────────────────────
+# ── MIDI ──────────────────────────-------------────────────────────
 my $midi_range = [48, 83];  # allowed MIDI pitches
 my $x_range    = [-25, 25]; # x-axis scale
 my $yz_range   = [0, 50];   # y- & z-axis scale
@@ -41,13 +41,13 @@ my $lorenz = sub ($t, $y) {
     ]
 };
 
-# ── Initial conditions ─────────────────────────────────────────────────
+# ── Initial conditions ────────────────────────────────────────────
 my $t     = 0.0;
 my $t_end = 50.0;
 my $dt    = 0.01;
 my $y     = [1.0, 1.0, 1.0];    # initial [x, y, z]
 
-# ── Solve and write CSV ───────────────────────────────────────────
+# ── Solve ----------------─────────────────────────────────────────
 open my $fh, '>', "$0.csv" or die "Cannot open csv: $!";
 say $fh 't,x,y,z';
 
@@ -70,5 +70,4 @@ while ($t <= $t_end) {
 }
 
 close $fh;
-
 $score->write_score("$0.mid");
