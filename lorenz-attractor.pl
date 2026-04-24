@@ -55,7 +55,8 @@ while ($t <= $t_end) {
     say $fh join ',', map { sprintf '%.8g', $_ } $t, @$y;
     $y = rk4($lorenz, $t, $y, $dt);
     $t += $dt;
-    # XXX naive
+
+    # XXX naive MIDI gymnastics
     my $n1 = sprintf '%.0f', uniform_scaling($x_range, $midi_range, $y->[0]);
     my $note = Music::Note->new($n1, 'midinum');
     $n1++ if $note->format('isobase') =~ /[#b]/;
