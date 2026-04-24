@@ -8,6 +8,8 @@ my $midi_range = [60, 83];
 my $x_range    = [-25, 25];
 my $yz_range   = [0, 50];
 
+my $score = setup_score(patch => 4);
+
 # ── Lorenz parameters ──────────────────────────────────────────────
 use constant SIGMA => 10;
 use constant RHO   => 28;
@@ -46,8 +48,6 @@ my $t     = 0.0;
 my $t_end = 50.0;
 my $dt    = 0.01;
 my $y     = [1.0, 1.0, 1.0];    # initial [x, y, z]
-
-my $score = setup_score();
 
 # ── Solve and write CSV ───────────────────────────────────────────
 open my $fh, '>', "$0.csv" or die "Cannot open csv: $!";
