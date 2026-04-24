@@ -5,16 +5,16 @@ use Math::Utils qw(uniform_scaling);
 use MIDI::Util qw(setup_score);
 use Music::Note ();
 
+# ── Lorenz parameters ──────────────────────────────────────────────
+use constant SIGMA => 10;
+use constant RHO   => 28;
+use constant BETA  => 8/3;
+
 my $midi_range = [48, 83];
 my $x_range    = [-25, 25];
 my $yz_range   = [0, 50];
 
 my $score = setup_score(patch => 4);
-
-# ── Lorenz parameters ──────────────────────────────────────────────
-use constant SIGMA => 10;
-use constant RHO   => 28;
-use constant BETA  => 8/3;
 
 # ── Vector helpers ─────────────────────────────────────────────────
 sub vadd ($i, $j) { [ map { $i->[$_] + $j->[$_] } 0 .. $#$i ] }
