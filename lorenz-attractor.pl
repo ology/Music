@@ -75,5 +75,3 @@ while ($t <= $t_end) {
 close $fh;
 
 $score->write_score("$0.mid");
-
-say "Done — lorenz.csv written.";
