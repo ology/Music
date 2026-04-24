@@ -57,6 +57,7 @@ say $fh 't,x,y,z';
 while ($t <= $t_end) {
     say $fh join ',', map { sprintf '%.8g', $_ } $t, @$y;
     $y = rk4($lorenz, $t, $y, $dt);
+    $t += $dt;
     # XXX naive
     my $n1 = sprintf '%.0f', uniform_scaling($x_range, $midi_range, $y->[0]);
     my $note = Music::Note->new($n1, 'midinum');
@@ -69,7 +70,6 @@ while ($t <= $t_end) {
     $n3++ if $note->format('isobase') =~ /[#b]/;
     # say "N: $n1, $n2, $n3";
     $score->n('qn', $n1, $n2, $n3);
-    $t += $dt;
 }
 
 close $fh;
