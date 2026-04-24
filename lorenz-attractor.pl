@@ -5,19 +5,19 @@ use Math::Utils qw(uniform_scaling);
 use MIDI::Util qw(setup_score);
 use Music::Note ();
 
-# ── Lorenz parameters ──────────────────────────────────────────────
+# Lorenz parameters
 use constant SIGMA => 10;
 use constant RHO   => 28;
 use constant BETA  => 8/3;
 
-# ── MIDI ──────────────────────────-------------────────────────────
+# MIDI
 my $midi_range = [48, 83];  # allowed MIDI pitches
 my $x_range    = [-25, 25]; # x-axis scale
 my $yz_range   = [0, 50];   # y- & z-axis scale
 
 my $score = setup_score(patch => 4);
 
-# ── RK4 integrator ────────────────────────────────────────────────
+# RK4 integrator
 sub vec_add_scale ($i, $j, $s) { [ map { $i->[$_] + $j->[$_] * $s } 0 .. $#$i ] }
 sub rk4 ($f, $t, $y, $dt) {
     my $k1 = $f->($t, $y);
@@ -31,7 +31,7 @@ sub rk4 ($f, $t, $y, $dt) {
     ];
 }
 
-# ── Lorenz system ─────────────────────────────────────────────────
+# Lorenz system
 my $lorenz = sub ($t, $y) {
     my ($x, $yy, $z) = @$y;
     return [
@@ -41,13 +41,13 @@ my $lorenz = sub ($t, $y) {
     ]
 };
 
-# ── Initial conditions ────────────────────────────────────────────
+# Initial conditions
 my $t     = 0.0;
 my $t_end = 50.0;
 my $dt    = 0.01;
 my $y     = [1.0, 1.0, 1.0];    # initial [x, y, z]
 
-# ── Solve ----------------─────────────────────────────────────────
+# Solve
 open my $fh, '>', "$0.csv" or die "Cannot open csv: $!";
 say $fh 't,x,y,z';
 
