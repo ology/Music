@@ -18,12 +18,12 @@ my $yz_range   = [0, 50];
 my $score = setup_score(patch => 4);
 
 # ── RK4 integrator ────────────────────────────────────────────────
-sub vmadd ($i, $j, $s) { [ map { $i->[$_] + $j->[$_] * $s } 0 .. $#$i ] }
+sub vec_mult_add ($i, $j, $s) { [ map { $i->[$_] + $j->[$_] * $s } 0 .. $#$i ] }
 sub rk4 ($f, $t, $y, $dt) {
     my $k1 = $f->($t, $y);
-    my $k2 = $f->($t + $dt/2, vmadd($y, $k1, $dt/2));
-    my $k3 = $f->($t + $dt/2, vmadd($y, $k2, $dt/2));
-    my $k4 = $f->($t + $dt, vmadd($y, $k3, $dt));
+    my $k2 = $f->($t + $dt/2, vec_mult_add($y, $k1, $dt/2));
+    my $k3 = $f->($t + $dt/2, vec_mult_add($y, $k2, $dt/2));
+    my $k4 = $f->($t + $dt, vec_mult_add($y, $k3, $dt));
     return [
         map {
             $y->[$_] + ($dt/6) * ($k1->[$_] + 2*$k2->[$_] + 2*$k3->[$_] + $k4->[$_])
