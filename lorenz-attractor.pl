@@ -69,5 +69,6 @@ while ($t <= $t_end) {
     $score->n('qn', $n1, $n2, $n3);
 }
 
+# Finish
 close $fh;
 $score->write_score("$0.mid");
