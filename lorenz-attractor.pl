@@ -11,9 +11,9 @@ use constant RHO   => 28;
 use constant BETA  => 8/3;
 
 # ── MIDI ──────────────────────────────────────────────
-my $midi_range = [48, 83];
-my $x_range    = [-25, 25];
-my $yz_range   = [0, 50];
+my $midi_range = [48, 83]; # allowed MIDI pitches
+my $x_range    = [-25, 25]; # x-axis scale
+my $yz_range   = [0, 50]; # y- & z-axis scale
 
 my $score = setup_score(patch => 4);
 
