@@ -67,7 +67,7 @@ while ($t <= $t_end) {
     $note = Music::Note->new($n3, 'midinum');
     $n3++ if $note->format('isobase') =~ /[#b]/;
     # say "N: $n1, $n2, $n3";
-    $score->n('qn', $n1, $n2, $n3);
+    $score->n('qn', $n1, $n2, $n3); # add the quarter-note triad to the score
 }
 
 # Finish
