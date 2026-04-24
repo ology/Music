@@ -10,6 +10,7 @@ use constant SIGMA => 10;
 use constant RHO   => 28;
 use constant BETA  => 8/3;
 
+# ── MIDI ──────────────────────────────────────────────
 my $midi_range = [48, 83];
 my $x_range    = [-25, 25];
 my $yz_range   = [0, 50];
