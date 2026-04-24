@@ -4,7 +4,7 @@ use v5.36;
 use Math::Utils qw(uniform_scaling);
 use MIDI::Util qw(setup_score);
 
-my $midi_range = [60, 83];
+my $midi_range = [48, 83];
 my $x_range    = [-25, 25];
 my $yz_range   = [0, 50];
 
