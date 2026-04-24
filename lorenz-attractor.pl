@@ -58,13 +58,13 @@ while ($t <= $t_end) {
     say $fh join ',', map { sprintf '%.8g', $_ } $t, @$y;
     $y = rk4($lorenz, $t, $y, $dt);
     # XXX naive
-    my ($n1) = sprintf '%.0f', uniform_scaling($x_range, $midi_range, $y->[0]);
+    my $n1 = sprintf '%.0f', uniform_scaling($x_range, $midi_range, $y->[0]);
     my $note = Music::Note->new($n1, 'midinum');
     $n1++ if $note->format('isobase') =~ /[#b]/;
-    my ($n2) = sprintf '%.0f', uniform_scaling($yz_range, $midi_range, $y->[1]);
+    my $n2 = sprintf '%.0f', uniform_scaling($yz_range, $midi_range, $y->[1]);
     $note = Music::Note->new($n2, 'midinum');
     $n2++ if $note->format('isobase') =~ /[#b]/;
-    my ($n3) = sprintf '%.0f', uniform_scaling($yz_range, $midi_range, $y->[2]);
+    my $n3 = sprintf '%.0f', uniform_scaling($yz_range, $midi_range, $y->[2]);
     $note = Music::Note->new($n3, 'midinum');
     $n3++ if $note->format('isobase') =~ /[#b]/;
     # say "N: $n1, $n2, $n3";
