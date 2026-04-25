@@ -18,7 +18,7 @@ my $yz_range   = [0, 50];   # y- & z-axis scale
 my $score = setup_score(patch => 4);
 
 # RK4 integrator
-sub vec_add_scale ($i, $j, $s) { [ map { $i->[$_] + $j->[$_] * $s } 0 .. $#$i ] }
+sub vec_add_scale ($i, $j, $s) { return [ map { $i->[$_] + $j->[$_] * $s } 0 .. $#$i ] }
 sub rk4 ($f, $t, $y, $dt) {
     my $k1 = $f->($t, $y);
     my $k2 = $f->($t + $dt/2, vec_add_scale($y, $k1, $dt/2));
