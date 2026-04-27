@@ -136,11 +136,9 @@ my %translate = (
 
 # Apply the string re-writing production rules
 for ( 1 .. $opts{iterations} ) {
-    $string =~ s/(.)/defined($rules->{ $opts{rule} }{$1})
-        ? $rules->{ $opts{rule} }{$1}
-        : $1/eg;
+    $string =~ s/(.)/defined($rules->{ $opts{rule} }{$1}) ? $rules->{ $opts{rule} }{$1} : $1/eg;
 }
-warn "$string\n";
+print "$string\n";
 
 # Execute the dispatch routines defined by the string elements
 for my $command ( split //, $string ) {
