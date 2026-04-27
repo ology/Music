@@ -1,18 +1,45 @@
 #!/usr/bin/env perl
-
-# Create a MIDI file of various L-systems
-# Examples:
-# perl lindenmayer-midi --rule=6 --bpm=100  # a Sierpiński triangle
-# perl lindenmayer-midi --rule=10 --bpm=100 --iterations=2 --fpatch=86
-
 use strict;
 use warnings;
 
+use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use MIDI::Util qw(setup_score set_chan_patch);
 use Music::ScaleNote ();
 use Music::Note ();
 use Pod::Usage;
+use YAML::Tiny;
+
+=head1 NAME
+
+lindenmayer-midi - Create a MIDI file of L-system transformations
+
+=head1 SYNOPSIS
+
+  # lindenmayer-midi [--options|-o]
+
+  > perl lindenmayer-midi --rule=6 --bpm=100  # a Sierpiński triangle
+  > perl lindenmayer-midi --rule=10 --bpm=100 --iterations=2 --fpatch=86
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<help>
+
+Print a brief help message.
+
+=item B<man>
+
+Print the full help (the "manpage).
+
+=back
+
+=head1 DESCRIPTION
+
+B<lindenmayer-midi> transforms the input into a MIDI file of L-systems!
+
+=cut
 
 pod2usage(1) unless @ARGV;
 
@@ -53,83 +80,14 @@ my $n_duration = [ split /\s+/, $opts{n_duration} ];
 my $r_duration = [ split /\s+/, $opts{r_duration} ];
 
 # The master list of fractals by rule number, their axioms and production rules
-my %rules = (
-    1 => { # Branches
-        axiom => 'X',
-        X => 'YF-X+X',
-        Y => 'F',
-    },
-    2 => { # Koch curve
-        axiom => 'F',
-        F => 'F+F-F-F+F',
-    },
-    3 => { # Fractal plant
-        axiom => 'X',
-        X => 'F-XXF-X+FX',
-        F => 'FF',
-    },
-    4 => { # Dragon curve
-        axiom => 'FX',
-        X => 'X+YF+',
-        Y => '-FX-Y',
-    },
-    5 => { # Sierpiński arrowhead curve
-        axiom => 'F',
-        F => 'G-F-G',
-        G => 'F+G+F',
-    },
-    6 => { # Sierpiński triangle
-        axiom => 'F-G-G',
-        F => 'F-G+F+G-F',
-        G => 'GG',
-    },
-    7 => { # Koch snowflake
-        axiom => 'F++F++F',
-        F => 'F-F++F-F',
-        X => 'FF',
-    },
-    8 => { # Sierpiński carpet
-        axiom => 'F',
-        F => 'F+F-F-F-G+F+F+F-F',
-        G => 'GGG',
-    },
-    9 => { # Koch island
-        axiom => 'F-F-F-F',
-        F => 'F-F+F+FF-F-F+F',
-    },
-    10 => { # Koch islands and lakes
-        axiom => 'F+F+F+F',
-        F => 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF',
-        f => 'ffffff',
-    },
-    11 => { # Grid
-        axiom => 'F-F-F-F',
-        F => 'FF-F-F-F-FF',
-    },
-    12 => { # Terndrils
-        axiom => 'F-F-F-F',
-        F => 'FF-F--F-F',
-    },
-    13 => { # Custom
-        axiom => 'F+G-F+G',
-        F => 'FG+F--F+F',
-    },
-    14 => { # Branches with space
-        axiom => 'X',
-        X => 'YF-X+X',
-        Y => 'f',
-    },
-    15 => { # Leaf
-        axiom => 'X',
-        X => 'F[+X][-X]FX',
-        F => 'FF',
-    },
-);
+my $yaml_text = do { local $/; <DATA> };
+my $rules = YAML::Tiny->read_string($yaml_text)->[0];
+# print ddc $rules;
 
 my $midi_note = $opts{midi_note};
 
 # Get the axiom to use based on the given rule
-my $string = $rules{ $opts{rule} }{axiom};
+my $string = $rules->{ $opts{rule} }{axiom};
 
 # Prepare to create MIDI
 my $score = setup_score( bpm => $opts{bpm} );
@@ -178,7 +136,9 @@ my %translate = (
 
 # Apply the string re-writing production rules
 for ( 1 .. $opts{iterations} ) {
-    $string =~ s/(.)/defined($rules{ $opts{rule} }{$1}) ? $rules{ $opts{rule} }{$1} : $1/eg;
+    $string =~ s/(.)/defined($rules->{ $opts{rule} }{$1})
+        ? $rules->{ $opts{rule} }{$1}
+        : $1/eg;
 }
 warn "$string\n";
 
@@ -197,34 +157,59 @@ sub random_duration {
     return $duration[ int rand @duration ];
 }
 
-__END__
-
-=head1 NAME
-
-lindenmayer-midi - Create a MIDI file of L-system transformations
-
-=head1 SYNOPSIS
-
-  lindenmayer-midi [--options|-o]
-
-  TODO!
-
-=head1 OPTIONS
-
-=over 4
-
-=item B<help>
-
-Print a brief help message.
-
-=item B<man>
-
-Print the full help (the "manpage).
-
-=back
-
-=head1 DESCRIPTION
-
-B<lindenmayer-midi> transforms the input into a MIDI file of L-systems!
-
-=cut
+__DATA__
+1:
+  axiom: 'X'
+  X: 'YF-X+X'
+  Y: 'F'
+2:
+  axiom: 'F'
+  F: 'F+F-F-F+F'
+3:
+  axiom: 'X'
+  X: 'F-XXF-X+FX'
+  F: 'FF'
+4:
+  axiom: 'FX'
+  X: 'X+YF+'
+  Y: '-FX-Y'
+5:
+  axiom: 'F'
+  F: 'G-F-G'
+  G: 'F+G+F'
+6:
+  axiom: 'F-G-G'
+  F: 'F-G+F+G-F'
+  G: 'GG'
+7:
+  axiom: 'F++F++F'
+  F: 'F-F++F-F'
+  X: 'FF'
+8:
+  axiom: 'F'
+  F: 'F+F-F-F-G+F+F+F-F'
+  G: 'GGG'
+9:
+  axiom: 'F-F-F-F'
+  F: 'F-F+F+FF-F-F+F'
+10:
+  axiom: 'F+F+F+F'
+  F: 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF'
+  f: 'ffffff'
+11:
+  axiom: 'F-F-F-F'
+  F: 'FF-F-F-F-FF'
+12:
+  axiom: 'F-F-F-F'
+  F: 'FF-F--F-F'
+13:
+  axiom: 'F+G-F+G'
+  F: 'FG+F--F+F'
+14:
+  axiom: 'X'
+  X: 'YF-X+X'
+  Y: 'f'
+15:
+  axiom: 'X'
+  X: 'F[+X][-X]FX'
+  F: 'FF'
