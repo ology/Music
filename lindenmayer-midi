@@ -19,7 +19,7 @@ lindenmayer-midi - Create a MIDI file of L-system transformations
   # lindenmayer-midi [--options|-o]
 
   > perl lindenmayer-midi --rule=6 --bpm=100  # a Sierpiński triangle
-  > perl lindenmayer-midi --rule=10 --bpm=100 --iterations=2 --fpatch=86
+  > perl lindenmayer-midi --rule=10 --bpm=100 --iterations=2 --scale=minor --fpatch=86
 
 =head1 OPTIONS
 
