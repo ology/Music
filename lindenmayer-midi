@@ -99,7 +99,8 @@ my $note = Music::Note->new( $midi_note, $opts{format} );
 my $msn = Music::ScaleNote->new(
     scale_note => $note->format('isobase'),
     scale_name => $opts{scale},
-#    verbose    => 1,
+    flat       => 1,
+    verbose    => 1,
 );
 
 # The dispatch table of MIDI routines based on "turtle graphic" moves
