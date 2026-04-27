@@ -2,11 +2,11 @@
 
 # Create a MIDI file of various L-systems
 # Examples:
-# perl lindenmayer-midi --rule=6 --bpm=100 # a Sierpiński triangle 
+# perl lindenmayer-midi --rule=6 --bpm=100  # a Sierpiński triangle
+# perl lindenmayer-midi --rule=10 --bpm=100 --iterations=2 --fpatch=86
 
 use strict;
 use warnings;
-
 
 use Getopt::Long qw(GetOptions);
 use MIDI::Util qw(setup_score set_chan_patch);
