@@ -39,6 +39,24 @@ Print the full help (the "manpage).
 
 B<lindenmayer-midi> transforms the input into a MIDI file of L-systems!
 
+=head2 Rules
+
+  1: Branches
+  2: Koch curve
+  3: Fractal plant
+  4: Dragon curve
+  5: Sierpiński arrowhead curve
+  6: Sierpiński triangle
+  7: Koch snowflake
+  8: Sierpiński carpet
+  9: Koch island
+  10: Koch islands and lakes
+  11: Grid
+  12: Terndrils
+  13: Custom
+  14: Branches with space
+  15: Leaf
+
 =cut
 
 pod2usage(1) unless @ARGV;
