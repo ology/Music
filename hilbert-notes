@@ -16,8 +16,8 @@ my $score = setup_score( bpm => $bpm );
 
 my $format = 'midinum';
 
-my $treb = 60;
-my $bass = 48;
+my $treb = 60; # initial note
+my $bass = 48; # "
 
 my $t_note = Music::Note->new( $treb, $format );
 my $b_note = Music::Note->new( $bass, $format );
