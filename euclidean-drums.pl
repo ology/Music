@@ -92,6 +92,7 @@ $loop->run;
 
 sub part($midi_out, $drums, $beats, $size) {
     my $end = $size == 2 ? $beats / 2 : $beats;
+    say join ',', map { $_ . '=' . join '', $drums->{$_}{pat}->@* } sort keys %$drums;
     for my $i (0 .. $end - 1) {
         my %simul = map { $_ => $drums->{$_}{pat}[$i] } keys %$drums;
         play_simul($midi_out, $beat_interval, $drums, \%simul);
