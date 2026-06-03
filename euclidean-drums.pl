@@ -70,6 +70,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     if ($size == 2) {
                         part($midi_out, $drums, $beats, $size);
                     }
+                    say "Fill of size $size" if $VERBOSE;
                     fill($midi_out, $size);
                     $filled = 1;
                 }
@@ -96,7 +97,6 @@ sub part($midi_out, $drums, $beats, $size) {
 }
 
 sub fill($midi_out, $size) {
-    say "Fill of size $size" if $VERBOSE;
     my $mdp = Music::Duration::Partition->new(
         size    => $size,
         pool    => [qw(qn en sn)],
