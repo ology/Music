@@ -1,8 +1,9 @@
 #!/usr/bin/env perl
 
 # Play an external MIDI device, like a drum machine or sequencer.
-# Example: perl euclidean-drums.pl 1 usb 90 # args = verbose, midi port, bpm
-#          perl euclidean-drums.pl 0 keyboard 60
+# The arguments are verbose-or-not, midi port to play, beats per minute
+# Examples: perl euclidean-drums.pl 1 usb
+#           perl euclidean-drums.pl 0 keys 60
 
 use v5.36;
 use IO::Async::Loop ();
