@@ -27,9 +27,9 @@ my $drums = {
 };
 my $notes = [qw(60 64 67)];
 
-my $divisions = 4;
-my $clocks_per_beat = 24;
-my $per_sec = 60 / $bpm;
+my $divisions = 4; # handy universal divisor
+my $clocks_per_beat = 24; # clock ticks per beat
+my $per_sec = 60 / $bpm; # how long is a beat?
 my $clock_interval = $per_sec / $clocks_per_beat; # seconds / bpm / ppqn
 my $beats = 16; # beats in a phrase
 my $beat_interval = $per_sec / $divisions; # 16th-note resolution
@@ -39,7 +39,7 @@ my %primes = ( # for syncopated drum patterns
     to_7 => [primes(7)],
 );
 my $ticks = 0; # clock ticks
-my $beat_count = 0;
+my $beat_count = 0; # ...
 my $toggle = 0; # part A or B?
 my $filled = 0; # did we just fill?
 my $hats = 0; # toggle 1st hihat beat
