@@ -13,6 +13,7 @@ use Music::CreatingRhythms ();
 use Music::Duration::Partition ();
 use Time::HiRes qw(sleep);
 
+my $VERBOSE = shift // 0;
 my $name = shift || 'usb'; # MIDI sequencer device
 my $bpm  = shift || 120;
 
@@ -44,11 +45,14 @@ my $hats = 0; # toggle 1st hihat beat
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
+say "Sending to $name" if $VERBOSE;
 
 $SIG{INT} = sub { 
-    say "\nStop";
+    say "\nStop" if $VERBOSE;
     exit;
 };
+
+my $INCREMENT = 0;
 
 my $mcr = Music::CreatingRhythms->new;
 
@@ -71,6 +75,8 @@ my $timer = IO::Async::Timer::Periodic->new(
                 }
             }
             adjust_cymbal($drums, \$filled);
+            $INCREMENT++;
+            say "Part $INCREMENT" if $VERBOSE;
             part($midi_out, $drums, $beats, 4);
             $beat_count++;
         }
@@ -90,6 +96,7 @@ sub part($midi_out, $drums, $beats, $size) {
 }
 
 sub fill($midi_out, $size) {
+    say "Fill of size $size" if $VERBOSE;
     my $mdp = Music::Duration::Partition->new(
         size    => $size,
         pool    => [qw(qn en sn)],
