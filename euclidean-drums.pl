@@ -2,6 +2,7 @@
 
 # Play an external MIDI device, like a drum machine or sequencer.
 # Example: perl euclidean-drums.pl 1 usb 90 # args = verbose, midi port, bpm
+#          perl euclidean-drums.pl 0 keyboard 60
 
 use v5.36;
 use IO::Async::Loop ();
