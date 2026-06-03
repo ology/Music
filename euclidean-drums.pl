@@ -45,7 +45,7 @@ my $hats = 0; # toggle 1st hihat beat
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
-say "Sending to $name" if $VERBOSE;
+say "Sending MIDI to $name" if $VERBOSE;
 
 $SIG{INT} = sub { 
     say "\nStop" if $VERBOSE;
@@ -70,7 +70,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     if ($size == 2) {
                         part($midi_out, $drums, $beats, $size);
                     }
-                    say "Fill of size $size" if $VERBOSE;
+                    say "Fill size $size" if $VERBOSE;
                     fill($midi_out, $size);
                     $filled = 1;
                 }
