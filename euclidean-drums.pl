@@ -15,9 +15,9 @@ use Music::CreatingRhythms ();
 use Music::Duration::Partition ();
 use Time::HiRes qw(sleep);
 
-my $VERBOSE = shift // 0;
-my $name = shift || 'usb'; # MIDI sequencer device
-my $bpm  = shift || 120;
+my $verbose = shift // 0;
+my $name    = shift || 'usb'; # MIDI sequencer device
+my $bpm     = shift || 120;
 
 my $drums = {
     kick  => { num => 36, chan => 0 },
@@ -47,14 +47,14 @@ my $hats = 0; # toggle 1st hihat beat
 my $midi_out = RtMidiOut->new;
 $midi_out->open_virtual_port('RtMidiOut');
 $midi_out->open_port_by_name(qr/\Q$name/i);
-say "Sending MIDI to $name" if $VERBOSE;
+say "Sending MIDI to $name" if $verbose;
 
 $SIG{INT} = sub { 
-    say "\nStop" if $VERBOSE;
+    say "\nStop" if $verbose;
     exit;
 };
 
-my $INCREMENT = 0;
+my $increment = 0;
 
 my $mcr = Music::CreatingRhythms->new;
 
@@ -72,14 +72,14 @@ my $timer = IO::Async::Timer::Periodic->new(
                     if ($size == 2) {
                         part($midi_out, $drums, $beats, $size);
                     }
-                    say "Fill size $size" if $VERBOSE;
+                    say "Fill size $size" if $verbose;
                     fill($midi_out, $size);
                     $filled = 1;
                 }
             }
             adjust_cymbal($drums, \$filled);
-            $INCREMENT++;
-            say "Part $INCREMENT" if $VERBOSE;
+            $increment++;
+            say "Part $increment" if $verbose;
             part($midi_out, $drums, $beats, 4);
             $beat_count++;
         }
