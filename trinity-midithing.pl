@@ -2,8 +2,8 @@
 
 # Play an external MIDI device, like a drum machine or sequencer.
 # The arguments are verbose-or-not, midi port to play, beats per minute
-# Examples: perl euclidean-drums.pl 1 usb
-#           perl euclidean-drums.pl 0 keys 60
+# Examples:
+# perl trinity-midithing.pl --verbose --bpm=70 --drum_port=Trinity --tone_port=MIDIThing2
 
 use v5.36;
 use Getopt::Long qw(GetOptions);
@@ -21,8 +21,8 @@ use YAML::Tiny;
 
 my %opts = (
     verbose    => 0,
-    name1      => 'Trinity',    # MIDI out drums
-    name2      => 'MIDIThing2', # MIDI out tones
+    drum_port  => 'Trinity',    # MIDI out drums
+    tone_port  => 'MIDIThing2', # MIDI out tones
     rule       => 2,            # Rule number in the list of rules below
     iterations => 4,            # Number of iterations of the fractal curve
     n_duration => 'qn',         # Space separated list of note durations from which to choose *
@@ -40,8 +40,8 @@ GetOptions( \%opts,
     'help|?',
     'man',
     'verbose',
-    'name1=s',
-    'name2=s',
+    'drum_port=s',
+    'tone_port=s',
     'rule=i',
     'iterations=i',
     'n_duration=s',
@@ -81,13 +81,13 @@ my $filled = 0; # did we just fill?
 my $hats = 0; # toggle 1st hihat beat
 
 my $midi_out1 = RtMidiOut->new;
-my $name = $opts{name1};
+my $name = $opts{drum_port};
 $midi_out1->open_virtual_port('RtMidiOut_Drums');
 $midi_out1->open_port_by_name(qr/\Q$name/i);
 say "Sending MIDI to $name" if $opts{verbose};
 
 my $midi_out2 = RtMidiOut->new;
-$name = $opts{name2};
+$name = $opts{tone_port};
 $midi_out2->open_virtual_port('RtMidiOut_Tonal');
 $midi_out2->open_port_by_name(qr/\Q$name/i);
 say "Sending MIDI to $name" if $opts{verbose};
