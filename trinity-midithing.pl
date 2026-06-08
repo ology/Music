@@ -6,6 +6,7 @@
 # perl trinity-midithing.pl --verbose --bpm=70 --drum_port=Trinity --tone_port=MIDIThing2
 
 use v5.36;
+use Array::Circular ();
 use Getopt::Long qw(GetOptions);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
@@ -23,7 +24,7 @@ my %opts = (
     verbose    => 0,
     drum_port  => 'Trinity',    # MIDI out drums
     tone_port  => 'MIDIThing2', # MIDI out tones
-    rule       => 1,            # Rule number in the list of rules below
+    rule       => 6,            # Rule number in the list of rules below
     iterations => 2,            # Number of iterations of the fractal curve
     n_duration => 'qn',         # Space separated list of note durations from which to choose *
     r_duration => 'qn',         # Space separated list of rest durations from which to choose *
@@ -150,6 +151,7 @@ for ( 1 .. $opts{iterations} ) {
     $string =~ s/(.)/defined($rules->{ $opts{rule} }{$1}) ? $rules->{ $opts{rule} }{$1} : $1/eg;
 }
 say "L-system:\n$string" if $opts{verbose};
+my $circular_string = Array::Circular->new(split //, $string);
 
 my $increment = 0;
 
@@ -162,6 +164,14 @@ my $timer = IO::Async::Timer::Periodic->new(
     on_tick  => sub {
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
+            # tonal - Execute the dispatch routine defined by the string elements
+            my $command;
+            do {
+                $command = $circular_string->next;
+                say "Command: $command";
+                $translate{$command}->() if exists $translate{$command};    
+            } until ($command =~ /[fg]/i);
+
             # drums
             my $size = rand() < 0.4 ? 2 : 4;
             if ($beat_count % ($divisions - 1) == 0) {
@@ -192,11 +202,19 @@ $loop->add($timer);
 $loop->run;
 
 sub rest($midi_out, $channel, $note) {
-    $midi_out->send_event('note_on', $channel, $note, 0);
+    my $duration = 'qn';
+    midi_msg($midi_out, 'note_on', $channel, $note, 0);
+    sleep(dura_size($duration) * $per_sec * 0.9);
+    midi_msg($midi_out, 'note_off', $channel, $note, 0);
+    sleep(dura_size($duration) * $per_sec * 0.1);
 }
 
 sub note($midi_out, $channel, $note, $velocity) {
-    $midi_out->send_event('note_on', $channel, $note, $velocity);
+    my $duration = 'qn';
+    midi_msg($midi_out, 'note_on', $channel, $note, $velocity);
+    sleep(dura_size($duration) * $per_sec * 0.9);
+    midi_msg($midi_out, 'note_off', $channel, $note, 0);
+    sleep(dura_size($duration) * $per_sec * 0.1);
 }
 
 sub part($midi_out, $drums, $beats, $size) {
