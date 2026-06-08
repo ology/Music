@@ -145,6 +145,12 @@ $SIG{INT} = sub {
     exit;
 };
 
+# Apply the string re-writing production rules
+for ( 1 .. $opts{iterations} ) {
+    $string =~ s/(.)/defined($rules->{ $opts{rule} }{$1}) ? $rules->{ $opts{rule} }{$1} : $1/eg;
+}
+say "L-system:\n$string" if $opts{verbose};
+
 my $increment = 0;
 
 my $mcr = Music::CreatingRhythms->new;
@@ -273,3 +279,75 @@ sub velocity($min, $max, $offset) {
     my $random = $offset + int(rand($max - $min + 1)) + $min;
     return $random;
 }
+
+__DATA__
+1:
+  name: 'Branches'
+  axiom: 'X'
+  X: 'YF-X+X'
+  Y: 'F'
+2:
+  name: 'Koch curve'
+  axiom: 'F'
+  F: 'F+F-F-F+F'
+3:
+  name: 'Fractal plant'
+  axiom: 'X'
+  X: 'F-XXF-X+FX'
+  F: 'FF'
+4:
+  name: 'Dragon curve'
+  axiom: 'FX'
+  X: 'X+YF+'
+  Y: '-FX-Y'
+5:
+  name: 'Sierpiński arrowhead curve'
+  axiom: 'F'
+  F: 'G-F-G'
+  G: 'F+G+F'
+6:
+  name: 'Sierpiński triangle'
+  axiom: 'F-G-G'
+  F: 'F-G+F+G-F'
+  G: 'GG'
+7:
+  name: 'Koch snowflake'
+  axiom: 'F++F++F'
+  F: 'F-F++F-F'
+  X: 'FF'
+8:
+  name: 'Sierpiński carpet'
+  axiom: 'F'
+  F: 'F+F-F-F-G+F+F+F-F'
+  G: 'GGG'
+9:
+  name: 'Koch island'
+  axiom: 'F-F-F-F'
+  F: 'F-F+F+FF-F-F+F'
+10:
+  name: 'Koch islands and lakes'
+  axiom: 'F+F+F+F'
+  F: 'F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF'
+  f: 'ffffff'
+11:
+  name: 'Grid'
+  axiom: 'F-F-F-F'
+  F: 'FF-F-F-F-FF'
+12:
+  name: 'Terndrils'
+  axiom: 'F-F-F-F'
+  F: 'FF-F--F-F'
+13:
+  name: 'Custom'
+  axiom: 'F+G-F+G'
+  F: 'FG+F--F+F'
+14:
+  name: 'Branches with space'
+  axiom: 'X'
+  X: 'YF-X+X'
+  Y: 'f'
+15:
+  name: 'Leaf'
+  axiom: 'X'
+  X: 'F[+X][-X]FX'
+  F: 'FF'
