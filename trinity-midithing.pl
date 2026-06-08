@@ -23,8 +23,8 @@ my %opts = (
     verbose    => 0,
     drum_port  => 'Trinity',    # MIDI out drums
     tone_port  => 'MIDIThing2', # MIDI out tones
-    rule       => 2,            # Rule number in the list of rules below
-    iterations => 4,            # Number of iterations of the fractal curve
+    rule       => 1,            # Rule number in the list of rules below
+    iterations => 2,            # Number of iterations of the fractal curve
     n_duration => 'qn',         # Space separated list of note durations from which to choose *
     r_duration => 'qn',         # Space separated list of rest durations from which to choose *
     midi_note  => 60,           # Initial midinum format note. 60 = Middle C
