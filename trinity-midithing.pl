@@ -92,6 +92,54 @@ $midi_out2->open_virtual_port('RtMidiOut_Tonal');
 $midi_out2->open_port_by_name(qr/\Q$name/i);
 say "Sending MIDI to $name" if $opts{verbose};
 
+# Split the durations into a list so that they can be randomly selected
+my $n_duration = [ split /\s+/, $opts{n_duration} ];
+my $r_duration = [ split /\s+/, $opts{r_duration} ];
+# The master list of fractals by rule number, their axioms and production rules
+my $yaml_text = do { local $/; <DATA> };
+my $rules = YAML::Tiny->read_string($yaml_text)->[0];
+# print ddc $rules;
+my $midi_note = $opts{midi_note};
+# Get the axiom to use based on the given rule
+my $string = $rules->{ $opts{rule} }{axiom};
+# Create a note object for the given start note value
+my $note = Music::Note->new( $midi_note, $opts{format} );
+# Create a scale-note object to use to traverse the given scale
+my $msn = Music::ScaleNote->new(
+    scale_note => $note->format('isobase'),
+    scale_name => $opts{scale},
+    verbose    => 1,
+);
+# The dispatch table of MIDI routines based on "turtle graphic" moves
+my %translate = (
+    # Add a rest to the score
+    'f' => sub { rest($midi_out2, 0, $note) },
+    'g' => sub { rest($midi_out2, 1, $note) },
+    # Add a note to the score
+    'F' => sub {
+        note($midi_out2, 0, $opts{fpatch}, 127);
+    },
+    'G' => sub {
+        note($midi_out2, 1, $opts{gpatch}, 127);
+    },
+    # Decrement the scale-note
+    '-' => sub {
+        $midi_note = $msn->get_offset(
+            note_name   => $midi_note,
+            note_format => $opts{format},
+            offset      => -$opts{offset},
+        )->format( $opts{format} );
+    },
+    # Increment the scale-note
+    '+' => sub {
+        $midi_note = $msn->get_offset(
+            note_name   => $midi_note,
+            note_format => $opts{format},
+            offset      => $opts{offset},
+        )->format( $opts{format} );
+    },
+);
+
 $SIG{INT} = sub { 
     say "\nStop" if $opts{verbose};
     exit;
@@ -136,6 +184,14 @@ $timer->start;
 
 $loop->add($timer);
 $loop->run;
+
+sub rest($midi_out, $channel, $note) {
+    $midi_out->send_event('note_on', $channel, $note, 0);
+}
+
+sub note($midi_out, $channel, $note, $velocity) {
+    $midi_out->send_event('note_on', $channel, $note, $velocity);
+}
 
 sub part($midi_out, $drums, $beats, $size) {
     my $end = $size == 2 ? $beats / 2 : $beats;
