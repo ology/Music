@@ -3,9 +3,10 @@
 # Play an external MIDI device, like a drum machine or sequencer.
 # The arguments are verbose-or-not, midi port to play, beats per minute
 # Examples:
-# perl trinity-midithing.pl --verbose --bpm=70 --drum_port=Trinity --tone_port=MIDIThing2
+# perl trinity-midithing.pl --verbose --bpm=70 --drum_port=Trinity
 
 use v5.36;
+use feature 'try';
 use Array::Circular ();
 use Getopt::Long qw(GetOptions);
 use IO::Async::Loop ();
@@ -23,7 +24,6 @@ use YAML::Tiny;
 my %opts = (
     verbose    => 0,
     drum_port  => 'Trinity',    # MIDI out drums
-    tone_port  => 'MIDIThing2', # MIDI out tones
     rule       => 6,            # Rule number in the list of rules below
     iterations => 2,            # Number of iterations of the fractal curve
     n_duration => 'qn',         # Space separated list of note durations from which to choose *
@@ -33,7 +33,7 @@ my %opts = (
     scale      => 'major',      # Name of the scale to traverse
     bpm        => 120,          # Beats per minute of the rendered MIDI
     format     => 'midinum',    # see Music::Note
-    fpatch     => 0,            # midi patch number
+    fpatch     => 4,            # midi patch number
     gpatch     => 13,           # midi patch number
     # drums => '~/Music/drums.yml', # TODO
 );
@@ -42,7 +42,6 @@ GetOptions( \%opts,
     'man',
     'verbose',
     'drum_port=s',
-    'tone_port=s',
     'rule=i',
     'iterations=i',
     'n_duration=s',
@@ -57,10 +56,10 @@ GetOptions( \%opts,
 );
 
 my $drums = {
-    kick  => { num => 36, chan => 0 },
-    snare => { num => 38, chan => 1 },
-    hihat => { num => 42, chan => 2 },
-    crash => { num => 49, chan => 3 },
+    kick  => { num => 36, chan => 0, vel => 0 },
+    snare => { num => 38, chan => 1, vel => 0 },
+    hihat => { num => 42, chan => 2, vel => 0 },
+    crash => { num => 49, chan => 3, vel => 0 },
 };
 
 # timing parameters
@@ -81,16 +80,15 @@ my $toggle = 0; # part A or B?
 my $filled = 0; # did we just fill?
 my $hats = 0; # toggle 1st hihat beat
 
-my $midi_out1 = RtMidiOut->new;
+my $midi_out = RtMidiOut->new;
 my $name = $opts{drum_port};
-$midi_out1->open_virtual_port('RtMidiOut_Drums');
-$midi_out1->open_port_by_name(qr/\Q$name/i);
-say "Sending MIDI to $name" if $opts{verbose};
-
-my $midi_out2 = RtMidiOut->new;
-$name = $opts{tone_port};
-$midi_out2->open_virtual_port('RtMidiOut_Tonal');
-$midi_out2->open_port_by_name(qr/\Q$name/i);
+$midi_out->open_virtual_port('RtMidiOut_Drums');
+try {
+    $midi_out->open_port_by_name(qr/\Q$name/i);
+}
+catch ($e) {
+    die "Can't open MIDI port: $name";
+}
 say "Sending MIDI to $name" if $opts{verbose};
 
 # Split the durations into a list so that they can be randomly selected
@@ -114,15 +112,11 @@ my $msn = Music::ScaleNote->new(
 # The dispatch table of MIDI routines based on "turtle graphic" moves
 my %translate = (
     # Add a rest to the score
-    'f' => sub { rest($midi_out2, 0, $note) },
-    'g' => sub { rest($midi_out2, 1, $note) },
+    'f' => sub { return 0, $midi_note, 0 }, # channel, note, velocity
+    'g' => sub { return 1, $midi_note, 0 }, # ""
     # Add a note to the score
-    'F' => sub {
-        note($midi_out2, 0, $opts{fpatch}, 127);
-    },
-    'G' => sub {
-        note($midi_out2, 1, $opts{gpatch}, 127);
-    },
+    'F' => sub { return 0, $midi_note, 127 },
+    'G' => sub { return 1, $midi_note, 127 },
     # Decrement the scale-note
     '-' => sub {
         $midi_note = $msn->get_offset(
@@ -130,6 +124,7 @@ my %translate = (
             note_format => $opts{format},
             offset      => -$opts{offset},
         )->format( $opts{format} );
+        return undef, undef, undef;
     },
     # Increment the scale-note
     '+' => sub {
@@ -138,6 +133,7 @@ my %translate = (
             note_format => $opts{format},
             offset      => $opts{offset},
         )->format( $opts{format} );
+        return undef, undef, undef;
     },
 );
 
@@ -164,24 +160,16 @@ my $timer = IO::Async::Timer::Periodic->new(
     on_tick  => sub {
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            # tonal - Execute the dispatch routine defined by the string elements
-            my $command;
-            do {
-                $command = $circular_string->next;
-                say "Command: $command";
-                $translate{$command}->() if exists $translate{$command};    
-            } until ($command =~ /[fg]/i);
-
             # drums
             my $size = rand() < 0.4 ? 2 : 4;
             if ($beat_count % ($divisions - 1) == 0) {
                 adjust_drums($drums, \%primes, \$toggle);
                 if ($beat_count > 0) {
                     if ($size == 2) {
-                        part($midi_out1, $drums, $beats, $size);
+                        part($midi_out, $drums, $beats, $size);
                     }
                     say "Fill size $size" if $opts{verbose};
-                    fill($midi_out1, $size);
+                    fill($midi_out, $size);
                     $filled = 1;
                 }
             }
@@ -191,7 +179,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 say "Part $increment";
                 say join ',', map { $_ . '=' . join '', $drums->{$_}{pat}->@* } sort keys %$drums;
             }
-            part($midi_out1, $drums, $beats, 4);
+            part($midi_out, $drums, $beats, 4);
             $beat_count++;
         }
     },
@@ -200,22 +188,6 @@ $timer->start;
 
 $loop->add($timer);
 $loop->run;
-
-sub rest($midi_out, $channel, $note) {
-    my $duration = 'qn';
-    midi_msg($midi_out, 'note_on', $channel, $note, 0);
-    sleep(dura_size($duration) * $per_sec * 0.9);
-    midi_msg($midi_out, 'note_off', $channel, $note, 0);
-    sleep(dura_size($duration) * $per_sec * 0.1);
-}
-
-sub note($midi_out, $channel, $note, $velocity) {
-    my $duration = 'qn';
-    midi_msg($midi_out, 'note_on', $channel, $note, $velocity);
-    sleep(dura_size($duration) * $per_sec * 0.9);
-    midi_msg($midi_out, 'note_off', $channel, $note, 0);
-    sleep(dura_size($duration) * $per_sec * 0.1);
-}
 
 sub part($midi_out, $drums, $beats, $size) {
     my $end = $size == 2 ? $beats / 2 : $beats;
@@ -245,7 +217,7 @@ sub play_simul($midi_out, $beat_interval, $drums, $simul) {
     my $i = 0;
     for my $drum (keys %$simul) {
         if ($simul->{$drum} == 1) {
-            $midi_out->send_event('note_on', $drums->{$drum}{chan}, $drums->{$drum}{num}, 127);
+            $midi_out->send_event('note_on', $drums->{$drum}{chan}, $drums->{$drum}{num}, $drums->{$drum}{vel});
         }
         else { # rest
             $midi_out->send_event('note_on', $drums->{$drum}{chan}, $drums->{$drum}{num}, 0);
@@ -287,6 +259,24 @@ sub adjust_drums($drums, $primes, $toggle) {
     }
     $hats = $drums->{hihat}{pat}[0]; # save bit
     $drums->{crash}{pat} = [ (0) x $beats ];
+
+    # # tonal - Execute the dispatch routine defined by the string items
+    # my ($item, @rtn);
+    # do {
+    #     $item = $circular_string->next;
+    #     say "Item: $item";
+    #     @rtn = $translate{$item}->();
+    # } until ($item =~ /[fg]/i);
+    # if ($rtn[0] == 0) {
+    #     $drums->{kick}{num} = $rtn[1];
+    #     $drums->{kick}{vel} = $rtn[2];
+    #     say "K: @rtn";
+    # }
+    # elsif ($rtn[0] == 1) {
+    #     $drums->{snare}{num} = $rtn[1];
+    #     $drums->{snare}{vel} = $rtn[2];
+    #     say "S: @rtn";
+    # }
 }
 
 sub midi_msg($midi_out, $event, $channel, $note, $velocity) {
