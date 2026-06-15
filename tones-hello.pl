@@ -58,7 +58,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            push @queue, $notes[int rand @notes]; # TODO choose a note
+            push @queue, $notes[int rand @notes]; # push the note onto the queue
             for my $note (@queue) {
                 $midi_out->note_on(
                     0,
