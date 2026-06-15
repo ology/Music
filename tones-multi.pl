@@ -11,6 +11,7 @@ use MIDI::RtMidi::FFI::Device ();
 use Music::Scales qw(get_scale_MIDI);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
+no warnings 'experimental::try';
 
 my $port = shift || 'MIDIThing2'; # MIDI device
 my $bpm  = shift || 70; # beats-per-minute
