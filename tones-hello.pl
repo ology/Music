@@ -5,7 +5,7 @@ use feature 'try';
 use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::FFI::Device ();
 
-my $tone = shift || 'MIDIThing'; # MIDI drums
+my $port = shift || 'MIDIThing'; # MIDI drums
 my $bpm  = shift || 70; # beats-per-minute
 my $chan = shift // -1; # 0-15, 9=percussion, -1=multi-timbral
 
@@ -19,12 +19,12 @@ try { # this will die on windows
 }
 catch ($e) {}
 try {
-    $midi_out->open_port_by_name(qr/\Q$tone/i);
+    $midi_out->open_port_by_name(qr/\Q$port/i);
 }
 catch ($e) {
-    die "Can't open MIDI port: $tone";
+    die "Can't open MIDI port: $port";
 }
-say "Sending MIDI to $tone";
+say "Sending MIDI to $port";
 
 $SIG{INT} = sub { 
     say "\nStop";
