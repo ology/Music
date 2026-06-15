@@ -12,16 +12,10 @@ my $duration = 1; # second
 my @notes = (32, 48, 60);
 
 my $midi_out = RtMidiOut->new;
-try { # this will die on windows
-    $midi_out->open_virtual_port('RtMidiOut');
-}
+try { $midi_out->open_virtual_port('RtMidiOut') } # this will die on windows
 catch ($e) {}
-try {
-    $midi_out->open_port_by_name(qr/\Q$port/i);
-}
-catch ($e) {
-    die "Can't open MIDI port: $port";
-}
+try { $midi_out->open_port_by_name(qr/\Q$port/i) }
+catch ($e) { die "Can't open MIDI port: $port" }
 say "Sending MIDI to $port";
 
 $SIG{INT} = sub { 
