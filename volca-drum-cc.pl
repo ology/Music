@@ -1,6 +1,8 @@
 #!/usr/bin/env perl
 
-# > morbo volca-drum-cc.pl --verbose --listen http://127.0.0.1:3333
+# Expose the control change messages of the Volca Drum.
+# Ex:
+# morbo volca-drum-cc.pl --verbose --listen http://127.0.0.1:3333
 
 use v5.36;
 use feature 'try';
