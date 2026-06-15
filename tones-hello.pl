@@ -63,9 +63,9 @@ my $timer = IO::Async::Timer::Periodic->new(
             # note_on!
             for my $note (@queue) {
                 $midi_out->note_on(
-                    0,
+                    0,  # channel
                     $note,
-                    127 # set the velocity
+                    127 # velocity
                 );
             }
             $beat_count++;
