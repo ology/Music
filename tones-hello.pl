@@ -5,9 +5,8 @@ use feature 'try';
 use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::FFI::Device ();
 
-my $port = shift || 'MIDIThing'; # MIDI drums
-my $bpm  = shift || 70; # beats-per-minute
-my $chan = shift // -1; # 0-15, 9=percussion, -1=multi-timbral
+my $port = shift || 'MIDIThing'; # MIDI device
+my $bpm  = shift || 70; # beats per minute
 
 my $duration = 1; # second
 
