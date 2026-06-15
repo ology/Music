@@ -6,7 +6,6 @@ use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::FFI::Device ();
 
 my $port = shift || 'MIDIThing'; # MIDI device
-my $bpm  = shift || 70; # beats per minute
 
 my $duration = 1; # second
 
