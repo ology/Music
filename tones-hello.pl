@@ -4,10 +4,11 @@ use v5.36;
 use feature 'try';
 use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::FFI::Device ();
+use Music::Scales qw(get_scale_MIDI);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 
-my $port = shift || 'MIDIThing'; # MIDI device
+my $port = shift || 'MIDIThing2'; # MIDI device
 my $bpm  = shift || 70; # beats-per-minute
 
 my $beats = 16; # beats in a phrase
@@ -18,14 +19,17 @@ my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 my @queue; # priority queue for note_on/off messages
 
-my @notes = (32, 48, 60);
+my @notes = (
+  get_scale_MIDI('C', 2, 'minor'),
+  get_scale_MIDI('C', 3, 'minor'),
+);
 
 my $midi_out = RtMidiOut->new;
 try { $midi_out->open_virtual_port('RtMidiOut') } # this will die on windows
 catch ($e) {}
 try { $midi_out->open_port_by_name(qr/\Q$port/i) }
 catch ($e) { die "Can't open MIDI port: $port\n" }
-say "Sending MIDI to $port";
+say "Sending MIDI to $port at $bpm BPM";
 
 $SIG{INT} = sub { 
     say "\nStop";
