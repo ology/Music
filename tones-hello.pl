@@ -7,8 +7,6 @@ use MIDI::RtMidi::FFI::Device ();
 
 my $port = shift || 'MIDIThing'; # MIDI device
 
-my $duration = 1; # second
-
 my @notes = (32, 48, 60);
 
 my $midi_out = RtMidiOut->new;
