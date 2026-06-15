@@ -15,7 +15,7 @@ my $midi_out = RtMidiOut->new;
 try { $midi_out->open_virtual_port('RtMidiOut') } # this will die on windows
 catch ($e) {}
 try { $midi_out->open_port_by_name(qr/\Q$port/i) }
-catch ($e) { die "Can't open MIDI port: $port" }
+catch ($e) { die "Can't open MIDI port: $port\n" }
 say "Sending MIDI to $port";
 
 $SIG{INT} = sub { 
