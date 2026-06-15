@@ -20,8 +20,8 @@ my $beat_count = 0; # how many beats?
 my @queue; # priority queue for note_on/off messages
 
 my @notes = (
-  get_scale_MIDI('C', 2, 'minor'),
-  get_scale_MIDI('C', 3, 'minor'),
+  get_scale_MIDI('C', 0, 'pminor'),
+  get_scale_MIDI('C', 1, 'pminor'),
 );
 
 my $midi_out = RtMidiOut->new;
