@@ -9,6 +9,8 @@ my $tone = shift || 'MIDIThing'; # MIDI drums
 my $bpm  = shift || 70; # beats-per-minute
 my $chan = shift // -1; # 0-15, 9=percussion, -1=multi-timbral
 
+my $duration = 1; # second
+
 my @notes = (32, 48, 60);
 
 my $midi_out = RtMidiOut->new;
