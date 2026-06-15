@@ -1,5 +1,9 @@
 #!/usr/bin/env perl
 
+# Play tonal MIDI in real-time!
+# Example(s):
+# perl tones-hello.pl MIDIThing2 30
+
 use v5.36;
 use feature 'try';
 use Data::Dumper::Compact qw(ddc);
