@@ -60,13 +60,18 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             my $note = $notes[int rand @notes];
-            push @queue, $note, $note + 7; # 5th interval 
+            push @queue, $note;
             # note_on!
             for my $note (@queue) {
                 $midi_out->note_on(
                     0,  # channel
                     $note,
                     127 # velocity
+                );
+                $midi_out->note_on(
+                    1,
+                    $note + 7, # 5th interval
+                    127
                 );
             }
             $beat_count++;
@@ -77,6 +82,11 @@ my $timer = IO::Async::Timer::Periodic->new(
                 $midi_out->note_off(
                     0,
                     $note,
+                    0
+                );
+                $midi_out->note_off(
+                    1,
+                    $note + 7,
                     0
                 );
             }
