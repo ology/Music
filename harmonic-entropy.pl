@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# What?
+
 use v5.36;
 use List::Util qw(sum);
 use Math::Trig qw(pi);
