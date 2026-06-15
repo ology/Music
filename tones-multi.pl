@@ -70,7 +70,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 );
                 $midi_out->note_on(
                     1,
-                    $note - 12 + 7, # 5th interval below
+                    $note - 12 + 7, # 4th interval below
                     127
                 );
             }
