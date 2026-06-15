@@ -15,6 +15,12 @@ use IO::Async::Timer::Periodic ();
 my $port = shift || 'MIDIThing2'; # MIDI device
 my $bpm  = shift || 70; # beats-per-minute
 
+# choose the pitches to use
+my @notes = (
+  get_scale_MIDI('C', 0, 'pminor'),
+  get_scale_MIDI('C', 1, 'pminor'),
+);
+
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 24; # PPQN
@@ -22,12 +28,6 @@ my $clock_interval = 60 / $bpm / $clocks_per_beat; # time / bpm / ppqn
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 my @queue; # priority queue for note_on/off messages
-
-# choose the pitches to use
-my @notes = (
-  get_scale_MIDI('C', 0, 'pminor'),
-  get_scale_MIDI('C', 1, 'pminor'),
-);
 
 # open the midi device for output
 my $midi_out = RtMidiOut->new;
