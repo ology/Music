@@ -23,11 +23,13 @@ my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 my @queue; # priority queue for note_on/off messages
 
+# choose the pitches to use
 my @notes = (
   get_scale_MIDI('C', 0, 'pminor'),
   get_scale_MIDI('C', 1, 'pminor'),
 );
 
+# open the midi device for output
 my $midi_out = RtMidiOut->new;
 try { $midi_out->open_virtual_port('RtMidiOut') } # this will die on windows
 catch ($e) {}
@@ -35,6 +37,7 @@ try { $midi_out->open_port_by_name(qr/\Q$port/i) }
 catch ($e) { die "Can't open MIDI port: $port\n" }
 say "Sending MIDI to $port at $bpm BPM";
 
+# redefine what happens on halt
 $SIG{INT} = sub { 
     say "\nStop";
     try {
@@ -55,12 +58,12 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            push @queue, $notes[int rand @notes];
+            push @queue, $notes[int rand @notes]; # TODO choose a note
             for my $note (@queue) {
                 $midi_out->note_on(
                     0,
                     $note,
-                    127
+                    127 # set the velocity
                 );
             }
             $beat_count++;
