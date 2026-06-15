@@ -60,6 +60,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             push @queue, $notes[int rand @notes]; # push the note onto the queue
+            # note_on!
             for my $note (@queue) {
                 $midi_out->note_on(
                     0,
@@ -70,6 +71,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             $beat_count++;
         }
         else {
+            # drain the queue with note_off
             while (my $note = pop @queue) {
                 $midi_out->note_off(
                     0,
