@@ -71,7 +71,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             $beat_count++;
         }
         else {
-            # drain the queue with note_off
+            # drain the queue and send note_off msgs
             while (my $note = pop @queue) {
                 $midi_out->note_off(
                     0,
