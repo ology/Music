@@ -72,7 +72,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % 4 == 0) {
-                my $motif = $motifs[ int rand @motifs ];
+                my $motif = $motifs[ int rand @motifs ]; # TODO something better
                 say "$beat_count => ", ddc $motif;
                 @queue = ();
                 for my $duration (@$motif) {
