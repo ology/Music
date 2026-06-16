@@ -2,7 +2,7 @@
 
 # Play tonal MIDI in real-time!
 # Example(s):
-# perl tones-hello.pl MIDIThing2 30
+# perl tones-multi.pl usb 70
 
 use v5.36;
 use feature 'try';
