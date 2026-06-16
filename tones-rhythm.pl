@@ -11,6 +11,7 @@ use MIDI::RtMidi::FFI::Device ();
 use Music::Scales qw(get_scale_MIDI);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
+use MIDI::Util qw(dura_size);
 use Music::Duration::Partition ();
 use Time::HiRes qw(sleep);
 no warnings 'experimental::try';
@@ -86,11 +87,12 @@ my $timer = IO::Async::Timer::Periodic->new(
                     $note->{pitch},
                     127 # velocity
                 );
-                $midi_out->note_on(
-                    1,
-                    $note->{pitch} - 12 + 7, # 4th interval below
-                    127
-                );
+                # $midi_out->note_on(
+                #     1,
+                #     $note->{pitch} - 12 + 7, # 4th interval below
+                #     127
+                # );
+                sleep(dura_size($note->{duration}) * 0.9);
             }
             $beat_count++;
         }
@@ -102,11 +104,12 @@ my $timer = IO::Async::Timer::Periodic->new(
                     $note->{pitch},
                     0
                 );
-                $midi_out->note_off(
-                    1,
-                    $note->{pitch} - 12 + 7,
-                    0
-                );
+                # $midi_out->note_off(
+                #     1,
+                #     $note->{pitch} - 12 + 7,
+                #     0
+                # );
+                sleep(dura_size($note->{duration}) * 0.1);
             }
         }
     },
