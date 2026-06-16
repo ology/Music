@@ -99,7 +99,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     $note->{pitch},
                     0
                 );
-                sleep(dura_size($note->{duration}) * 0.1);
+                sleep(dura_size($note->{duration}) * 0.1); # TODO no sleeping!
             }
         }
     },
