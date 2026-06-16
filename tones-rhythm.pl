@@ -2,7 +2,7 @@
 
 # Play tonal MIDI in real-time!
 # Example(s):
-# perl tones-multi.pl usb 70
+# perl tones-rhythm.pl usb 70
 
 use v5.36;
 use feature 'try';
@@ -13,7 +13,7 @@ use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use MIDI::Util qw(dura_size);
 use Music::Duration::Partition ();
-use Time::HiRes qw(sleep);
+use Time::HiRes qw(sleep); # TODO no sleeping!
 no warnings 'experimental::try';
 
 my $port = shift || 'MIDIThing2'; # MIDI device
@@ -87,12 +87,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     $note->{pitch},
                     127 # velocity
                 );
-                # $midi_out->note_on(
-                #     1,
-                #     $note->{pitch} - 12 + 7, # 4th interval below
-                #     127
-                # );
-                sleep(dura_size($note->{duration}) * 0.9);
+                sleep(dura_size($note->{duration}) * 0.9); # TODO no sleeping!
             }
             $beat_count++;
         }
@@ -104,11 +99,6 @@ my $timer = IO::Async::Timer::Periodic->new(
                     $note->{pitch},
                     0
                 );
-                # $midi_out->note_off(
-                #     1,
-                #     $note->{pitch} - 12 + 7,
-                #     0
-                # );
                 sleep(dura_size($note->{duration}) * 0.1);
             }
         }
