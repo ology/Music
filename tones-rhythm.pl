@@ -39,7 +39,6 @@ my $mdp = Music::Duration::Partition->new(
     # groups  => [0, 0, 2],
 );
 my @motifs = $mdp->motifs(4);
-my $motif = [];
 
 # open the midi device for output
 my $midi_out = RtMidiOut->new;
@@ -72,21 +71,24 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % 4 == 0) {
-                $motif = $motifs[ int rand @motifs ];
-                say $beat_count . ' => ', ddc $motif;
+                my $motif = $motifs[ int rand @motifs ];
+                say "$beat_count => ", ddc $motif;
+                @queue = ();
+                for my $duration (@$motif) {
+                    my $note = $notes[int rand @notes];
+                    push @queue, { pitch => $note, duration => $duration };
+                }
             }
-            my $note = $notes[int rand @notes];
-            push @queue, $note;
             # note_on!
             for my $note (@queue) {
                 $midi_out->note_on(
                     0,  # channel
-                    $note,
+                    $note->{pitch},
                     127 # velocity
                 );
                 $midi_out->note_on(
                     1,
-                    $note - 12 + 7, # 4th interval below
+                    $note->{pitch} - 12 + 7, # 4th interval below
                     127
                 );
             }
@@ -97,12 +99,12 @@ my $timer = IO::Async::Timer::Periodic->new(
             while (my $note = pop @queue) {
                 $midi_out->note_off(
                     0,
-                    $note,
+                    $note->{pitch},
                     0
                 );
                 $midi_out->note_off(
                     1,
-                    $note - 12 + 7,
+                    $note->{pitch} - 12 + 7,
                     0
                 );
             }
