@@ -13,7 +13,6 @@ use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use MIDI::Util qw(dura_size);
 use Music::Duration::Partition ();
-use Time::HiRes qw(sleep); # TODO no sleeping!
 no warnings 'experimental::try';
 
 my $port = shift || 'MIDIThing2'; # MIDI device
@@ -80,6 +79,13 @@ my $timer = IO::Async::Timer::Periodic->new(
                     push @queue, { pitch => $note, duration => $duration };
                 }
             }
+            my $tally = 0;
+            my @onsets = ($tally);
+            for my $note (@queue[0 .. $#queue - 1]) {
+                $tally += dura_size($note->{duration});
+                push @onsets, $tally;
+            }
+            say ddc \@onsets;
             # note_on!
             for my $note (@queue) {
                 $midi_out->note_on(
@@ -87,7 +93,6 @@ my $timer = IO::Async::Timer::Periodic->new(
                     $note->{pitch},
                     127 # velocity
                 );
-                sleep(dura_size($note->{duration}) * 0.9); # TODO no sleeping!
             }
             $beat_count++;
         }
@@ -99,7 +104,6 @@ my $timer = IO::Async::Timer::Periodic->new(
                     $note->{pitch},
                     0
                 );
-                sleep(dura_size($note->{duration}) * 0.1); # TODO no sleeping!
             }
         }
     },
