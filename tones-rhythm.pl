@@ -78,14 +78,14 @@ my $timer = IO::Async::Timer::Periodic->new(
                     my $note = $notes[int rand @notes];
                     push @queue, { pitch => $note, duration => $duration };
                 }
+                my $tally = 0;
+                my @onsets = ($tally);
+                for my $note (@queue[0 .. $#queue - 1]) {
+                    $tally += dura_size($note->{duration});
+                    push @onsets, $tally;
+                }
+                say ddc \@onsets;
             }
-            my $tally = 0;
-            my @onsets = ($tally);
-            for my $note (@queue[0 .. $#queue - 1]) {
-                $tally += dura_size($note->{duration});
-                push @onsets, $tally;
-            }
-            say ddc \@onsets;
             # note_on!
             for my $note (@queue) {
                 $midi_out->note_on(
