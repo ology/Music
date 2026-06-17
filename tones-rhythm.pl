@@ -71,6 +71,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % 4 == 0) {
+                # populate the queue
                 my $motif = $motifs[ int rand @motifs ]; # TODO something better
                 say "$beat_count => ", ddc $motif;
                 @queue = ();
@@ -78,6 +79,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     my $note = $notes[int rand @notes];
                     push @queue, { pitch => $note, duration => $duration };
                 }
+                # compute the onsets
                 my $tally = 0;
                 my @onsets = ($tally);
                 for my $note (@queue[0 .. $#queue - 1]) {
