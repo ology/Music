@@ -31,6 +31,9 @@ my $clock_interval = 60 / $bpm / $clocks_per_beat; # time / bpm / ppqn
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 my @queue; # priority queue for note_on/off messages
+my $i; # queue index
+my $n; # selected note
+my @onsets;
 
 my $mdp = Music::Duration::Partition->new(
     size    => 4,
@@ -79,31 +82,35 @@ my $timer = IO::Async::Timer::Periodic->new(
                     my $note = $notes[int rand @notes];
                     push @queue, { pitch => $note, duration => $duration };
                 }
+                say 'Q: ', ddc \@queue;
                 # compute the onsets
                 my $tally = 0;
-                my @onsets = ($tally);
+                @onsets = ($tally);
                 for my $note (@queue[0 .. $#queue - 1]) {
                     $tally += dura_size($note->{duration});
                     push @onsets, $tally;
                 }
-                say ddc \@onsets;
+                @onsets = map { $beat_count + $_ } @onsets;
+                say 'O: ', ddc \@onsets;
+                $i = 0;
             }
-            # note_on!
-            for my $note (@queue) {
+            if ($onsets[$i] && $onsets[$i] == $beat_count) {
+                $n = $queue[$i];
+                say "$i, $beat_count", ddc $n;
                 $midi_out->note_on(
                     0,  # channel
-                    $note->{pitch},
+                    $n->{pitch},
                     127 # velocity
                 );
             }
+            $i++;
             $beat_count++;
         }
         else {
-            # drain the queue and send note_off msgs
-            while (my $note = pop @queue) {
+            if ($n) {
                 $midi_out->note_off(
                     0,
-                    $note->{pitch},
+                    $n->{pitch},
                     0
                 );
             }
