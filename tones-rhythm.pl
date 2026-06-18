@@ -37,7 +37,7 @@ my @onsets;
 
 my $mdp = Music::Duration::Partition->new(
     size    => 4,
-    pool    => [qw(wn dhn hn dqn qn)],
+    pool    => [qw(wn dhn hn qn)],
     # weights => [1, 2, 1],
     # groups  => [0, 0, 2],
 );
@@ -94,16 +94,18 @@ my $timer = IO::Async::Timer::Periodic->new(
                 say 'O: ', ddc \@onsets;
                 $i = 0;
             }
-            if ($onsets[$i] && $onsets[$i] == $beat_count) {
+            my $x = defined $onsets[$i] ? $onsets[$i] : '?';
+            say "* $i, $beat_count, $x";
+            if (defined $onsets[$i] && $onsets[$i] == $beat_count) {
                 $n = $queue[$i];
-                say "$i, $beat_count", ddc $n;
+                say "$i, $beat_count, ", ddc $n;
                 $midi_out->note_on(
                     0,  # channel
                     $n->{pitch},
                     127 # velocity
                 );
+                $i++;
             }
-            $i++;
             $beat_count++;
         }
         else {
