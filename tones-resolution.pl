@@ -51,6 +51,7 @@ catch ($e) { warn 'Not a Mac' }
 try { $midi_out->open_port_by_name(qr/\Q$port/i) }
 catch ($e) { die "Can't open MIDI port: $port\n" }
 say "Sending MIDI to $port at $bpm BPM";
+
 $midi_out->start;
 
 # redefine what happens on halt
