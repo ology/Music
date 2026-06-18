@@ -96,6 +96,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             }
             my $x = defined $onsets[$i] ? $onsets[$i] : '?';
             say "* $i, $beat_count, $x";
+            # if we are on a beat onset, note_on!
             if (defined $onsets[$i] && $onsets[$i] == $beat_count) {
                 $n = $queue[$i];
                 say "$i, $beat_count, ", ddc $n;
@@ -104,7 +105,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     $n->{pitch},
                     127 # velocity
                 );
-                $i++;
+                $i++; # increment the queue index
             }
             $beat_count++;
         }
