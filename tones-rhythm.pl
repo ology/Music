@@ -25,7 +25,6 @@ my @notes = (
 );
 
 my $beats = 16; # beats in a phrase
-my $divisions = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 24; # PPQN
 my $clock_interval = 60 / $bpm / $clocks_per_beat; # time / bpm / ppqn
 my $ticks = 0; # clock ticks
