@@ -94,8 +94,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 say 'Onset: ', ddc \@onsets;
                 $i = 0; # reset the queue index
             }
-            my $x = defined $onsets[$i] ? $onsets[$i] : '?';
-            say "* $i, $beat_count, $x";
+            say "* $i, $beat_count, ", (defined $onsets[$i] ? $onsets[$i] : '?');
             # if we are on a beat onset, note_on!
             if (defined $onsets[$i] && $onsets[$i] == $beat_count) {
                 $n = $queue[$i];
