@@ -37,7 +37,7 @@ my $n; # selected note
 my @onsets;
 
 my $mdp = Music::Duration::Partition->new(
-    size    => 4,
+    size    => $divisions,
     pool    => [qw(hn dqn qn en)],
     # weights => [1, 2, 1],
     # groups  => [0, 0, 2],
