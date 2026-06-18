@@ -73,7 +73,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
-            if ($beat_count % 4 == 0) {
+            if ($beat_count % 4 == 0) { # do this every 4th beat:
                 # populate the queue
                 my $motif = $motifs[ int rand @motifs ]; # TODO something better
                 say "$beat_count => ", ddc $motif;
