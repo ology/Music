@@ -38,7 +38,7 @@ my @onsets;
 
 my $mdp = Music::Duration::Partition->new(
     size    => 4,
-    pool    => [qw(wn dhn hn dqn qn en)],
+    pool    => [qw(hn dqn qn en)],
     # weights => [1, 2, 1],
     # groups  => [0, 0, 2],
 );
