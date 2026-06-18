@@ -82,7 +82,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     my $note = $notes[int rand @notes]; # TODO something better!
                     push @queue, { pitch => $note, duration => $duration };
                 }
-                say 'Q: ', ddc \@queue;
+                say 'Queue: ', ddc \@queue;
                 # compute the onsets
                 my $tally = 0;
                 @onsets = ($tally);
@@ -91,7 +91,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     push @onsets, $tally;
                 }
                 @onsets = map { $beat_count + $_ } @onsets;
-                say 'O: ', ddc \@onsets;
+                say 'Onset: ', ddc \@onsets;
                 $i = 0; # reset the queue index
             }
             my $x = defined $onsets[$i] ? $onsets[$i] : '?';
