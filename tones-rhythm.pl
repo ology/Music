@@ -92,7 +92,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 }
                 @onsets = map { $beat_count + $_ } @onsets;
                 say 'O: ', ddc \@onsets;
-                $i = 0;
+                $i = 0; # reset the queue index
             }
             my $x = defined $onsets[$i] ? $onsets[$i] : '?';
             say "* $i, $beat_count, $x";
