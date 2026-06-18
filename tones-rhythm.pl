@@ -86,7 +86,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 # compute the onsets
                 my $tally = 0;
                 @onsets = ($tally);
-                for my $note (@queue[0 .. $#queue - 1]) { # XXX is this right?
+                for my $note (@queue[0 .. $#queue - 1]) {
                     $tally += dura_size($note->{duration});
                     push @onsets, $tally;
                 }
