@@ -95,33 +95,30 @@ my $timer = IO::Async::Timer::Periodic->new(
                 say 'Onset: ', ddc \@onsets;
                 $i = 0; # reset the queue index
             }
-            # if ($ticks % ($clocks_per_beat * $divisions) == 0) {
-            #     $bar_count++;
-            # }
             say "* $i, $beat_count, ", (defined $onsets[$i] ? $onsets[$i] : '?');
             # if we are on a beat onset, note_on!
             if (defined $onsets[$i] && $onsets[$i] == $beat_count) {
                 $n = $queue[$i];
                 say "$i, $beat_count, ", ddc $n;
-                # $midi_out->note_on(
-                #     0,  # channel
-                #     $n->{pitch},
-                #     127 # velocity
-                # );
+                $midi_out->note_on(
+                    0,  # channel
+                    $n->{pitch},
+                    127 # velocity
+                );
                 $i++; # increment the queue index
             }
             $beat_count++;
         }
-        # else {
-        #     # if we just saw a note, close it
-        #     if ($n) {
-        #         $midi_out->note_off(
-        #             0,
-        #             $n->{pitch},
-        #             0
-        #         );
-        #     }
-        # }
+        else {
+            # if we just saw a note, close it
+            if ($n) {
+                $midi_out->note_off(
+                    0,
+                    $n->{pitch},
+                    0
+                );
+            }
+        }
     },
 );
 
