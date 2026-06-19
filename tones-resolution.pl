@@ -111,7 +111,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             $beat_count++;
         }
         else {
-            # if we just saw a note, close it
+            # if we just played a note, close it
             if ($n) {
                 $midi_out->note_off(
                     0,
