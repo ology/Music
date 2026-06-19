@@ -118,6 +118,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     $n->{pitch},
                     0
                 );
+                $n = undef;
             }
         }
     },
