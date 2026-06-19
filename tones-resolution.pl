@@ -78,7 +78,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
                 # populate the queue
                 my $motif = $motifs[int rand @motifs]; # TODO something clever?
-                say "\n$beat_count => ", ddc $motif;
+                say "$beat_count => ", ddc $motif;
                 @queue = ();
                 for my $duration (@$motif) {
                     my $note = $notes[int rand @notes]; # TODO something better!
@@ -96,7 +96,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 say 'Onset: ', ddc \@onsets;
                 $i = 0; # reset the queue index
             }
-            say "* $i, $beat_count, ", (defined $onsets[$i] ? $onsets[$i] : '?');
+            # say "* $i, $beat_count, ", (defined $onsets[$i] ? $onsets[$i] : '?');
             # if we are on a beat onset, note_on!
             if (defined $onsets[$i] && $onsets[$i] == $beat_count) {
                 $n = $queue[$i];
