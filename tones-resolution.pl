@@ -78,7 +78,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
                 # populate the queue
                 my $motif = $motifs[int rand @motifs]; # TODO something clever?
-                say "$beat_count => ", ddc $motif;
+                say "\n$beat_count => ", ddc $motif;
                 @queue = ();
                 for my $duration (@$motif) {
                     my $note = $notes[int rand @notes]; # TODO something better!
