@@ -16,8 +16,10 @@ use Music::Duration::Partition ();
 use Music::VoiceGen ();
 no warnings 'experimental::try';
 
-my $port = shift || 'MIDIThing2'; # MIDI device
-my $bpm  = shift || 70; # beats-per-minute
+my $port   = shift || 'MIDIThing2'; # MIDI device
+my $bpm    = shift || 70; # beats-per-minute
+my $scale  = shift || 'pminor';
+my $octave = shift // 0;
 
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
@@ -39,8 +41,8 @@ my $mdp = Music::Duration::Partition->new(
 );
 my @motifs = $mdp->motifs(5);
 my @pitches = (
-  get_scale_MIDI('C', 0, 'pminor'),
-  get_scale_MIDI('C', 1, 'pminor'),
+  get_scale_MIDI('C', $octave, $scale),
+  get_scale_MIDI('C', $octave + 1, $scale),
 );
 my @intervals = qw(-3 -2 -1 1 2 3);
 my $voice = Music::VoiceGen->new(
