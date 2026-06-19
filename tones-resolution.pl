@@ -77,7 +77,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $sixteenth == 0) {
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
                 # populate the queue
-                my $motif = $motifs[int rand @motifs];
+                my $motif = $motifs[int rand @motifs]; # TODO something clever?
                 say "$beat_count => ", ddc $motif;
                 @queue = ();
                 for my $duration (@$motif) {
