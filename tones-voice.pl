@@ -37,7 +37,7 @@ my $mdp = Music::Duration::Partition->new(
     # weights => [1, 2, 1],
     # groups  => [0, 0, 2],
 );
-my @motifs = $mdp->motifs(4);
+my @motifs = $mdp->motifs(5);
 my @pitches = (
   get_scale_MIDI('C', 0, 'pminor'),
   get_scale_MIDI('C', 1, 'pminor'),
