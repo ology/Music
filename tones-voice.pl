@@ -2,7 +2,7 @@
 
 # Play tonal MIDI in real-time!
 # Example(s):
-# perl tones-voice.pl usb 111
+# perl tones-voice.pl --port=usb --bpm=111 --scale=major --octave=2
 
 use v5.36;
 use feature 'try';
