@@ -14,17 +14,26 @@ use IO::Async::Timer::Periodic ();
 use MIDI::Util qw(dura_size);
 use Music::Duration::Partition ();
 use Music::VoiceGen ();
+use Getopt::Long qw(GetOptions);
 no warnings 'experimental::try';
 
-my $port   = shift || 'MIDIThing2'; # MIDI device
-my $bpm    = shift || 70; # beats-per-minute
-my $scale  = shift || 'pminor';
-my $octave = shift // 0;
+my %opt = (
+    port   => 'MIDIThing2',
+    bpm    => 70,
+    scale  => 'pminor',
+    octave => 0,
+);
+GetOptions(\%opt,
+    'port=s',
+    'bpm=i',
+    'scale=s',
+    'octave=i',
+);
 
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 24; # PPQN
-my $clock_interval = 60 / $bpm / $clocks_per_beat; # time / bpm / ppqn
+my $clock_interval = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
 my $sixteenth = $clocks_per_beat / $divisions; # clocks per 16th-note
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
@@ -41,8 +50,8 @@ my $mdp = Music::Duration::Partition->new(
 );
 my @motifs = $mdp->motifs(5);
 my @pitches = (
-  get_scale_MIDI('C', $octave, $scale),
-  get_scale_MIDI('C', $octave + 1, $scale),
+  get_scale_MIDI('C', $opt{octave}, $opt{scale}),
+  get_scale_MIDI('C', $opt{octave} + 1, $opt{scale}),
 );
 my @intervals = qw(-3 -2 -1 1 2 3);
 my $voice = Music::VoiceGen->new(
@@ -54,9 +63,9 @@ my $voice = Music::VoiceGen->new(
 my $midi_out = RtMidiOut->new;
 try { $midi_out->open_virtual_port('RtMidiOut') } # needed for mac
 catch ($e) { warn 'Not a Mac' }
-try { $midi_out->open_port_by_name(qr/\Q$port/i) }
-catch ($e) { die "Can't open MIDI port: $port\n" }
-say "Sending MIDI to $port at $bpm BPM\n";
+try { $midi_out->open_port_by_name(qr/\Q$opt{port}/i) }
+catch ($e) { die "Can't open MIDI port: $opt{port}\n" }
+say "Sending MIDI to $opt{port} at $opt{bpm} BPM\n";
 
 $midi_out->start; # start the sequencer
 
