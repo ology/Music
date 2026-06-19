@@ -2,7 +2,7 @@
 
 # Play tonal MIDI in real-time!
 # Example(s):
-# perl tones-resolution.pl usb 111
+# perl tones-voice.pl usb 111
 
 use v5.36;
 use feature 'try';
