@@ -116,7 +116,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $sixteenth == 0) {
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
                 populate(\@motifs, $beat_count, \@queue, $voice, \@onsets, \$i);
-                # populate(\@motifs2, $beat_count, \@queue2, $voice2, \@onsets2, \$i2);
+                populate(\@motifs2, $beat_count, \@queue2, $voice2, \@onsets2, \$i2);
             }
             # if we are on a beat onset, note_on!
             if (defined $onsets[$i] && $onsets[$i] == $beat_count) {
