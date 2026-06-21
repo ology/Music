@@ -51,9 +51,9 @@ my @onsets2;
 
 my $mdp = Music::Duration::Partition->new(
     size    => $divisions,
-    pool    => [qw(hn dqn qn en sn)],
-    weights => [   1, 2,  2, 1, 1 ],
-    groups  => [   0, 0,  0, 2, 2 ],
+    pool    => [qw(hn dqn qn)],
+    weights => [   1, 2,  2 ],
+    groups  => [   0, 0,  0 ],
 );
 my @motifs = $mdp->motifs(5);
 my @pitches = (
@@ -68,9 +68,9 @@ my $voice = Music::VoiceGen->new(
 
 my $mdp2 = Music::Duration::Partition->new(
     size    => $divisions,
-    pool    => [qw(hn dqn qn en sn)],
-    weights => [   1, 2,  2, 1, 1 ],
-    groups  => [   0, 0,  0, 2, 2 ],
+    pool    => [qw(dqn qn en sn)],
+    weights => [   2,  2, 1, 1 ],
+    groups  => [   0,  0, 2, 2 ],
 );
 my @motifs2 = $mdp2->motifs(5);
 my @pitches2 = (
@@ -116,6 +116,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $sixteenth == 0) {
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
                 populate(\@motifs, $beat_count, \@queue, $voice, \@onsets, \$i);
+                # populate(\@motifs2, $beat_count, \@queue2, $voice2, \@onsets2, \$i2);
             }
             # say "* $i, $beat_count, ", (defined $onsets[$i] ? $onsets[$i] : '?');
             # if we are on a beat onset, note_on!
