@@ -116,8 +116,36 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
-                populate(\@motifs, $beat_count, \@queue, $voice, \@onsets, \$i);
-                populate(\@motifs2, $beat_count, \@queue2, $voice2, \@onsets2, \$i2);
+                # populate the queue
+                my $motif = $motifs[int rand @motifs]; # TODO something clever?
+                say "$beat_count => ", ddc $motif;
+                @queue = map { +{ pitch => $voice->rand, duration => $_ } } @$motif;
+                say 'Queue: ', ddc \@queue;
+                # compute the onsets
+                my $tally = 0;
+                @onsets = ($tally);
+                for my $note (@queue[0 .. $#queue - 1]) {
+                    $tally += dura_size($note->{duration}) * $divisions;
+                    push @onsets, $tally;
+                }
+                @onsets = map { $beat_count + $_ } @onsets;
+                say 'Onset: ', ddc \@onsets;
+                $i = 0; # reset the queue index
+
+                $motif = $motifs2[int rand @motifs2]; # TODO something clever?
+                say "$beat_count => ", ddc $motif;
+                @queue2 = map { +{ pitch => $voice2->rand, duration => $_ } } @$motif;
+                say 'Queue2: ', ddc \@queue2;
+                # compute the onsets
+                $tally = 0;
+                @onsets2 = ($tally);
+                for my $note (@queue2[0 .. $#queue2 - 1]) {
+                    $tally += dura_size($note->{duration}) * $divisions;
+                    push @onsets2, $tally;
+                }
+                @onsets2 = map { $beat_count + $_ } @onsets2;
+                say 'Onset2: ', ddc \@onsets2;
+                $i2 = 0; # reset the queue index
             }
             # if we are on a beat onset, note_on!
             if (defined $onsets[$i] && $onsets[$i] == $beat_count) {
@@ -132,7 +160,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             }
             if (defined $onsets2[$i2] && $onsets2[$i2] == $beat_count) {
                 $n2 = $queue2[$i2];
-                say "2: $i2, $beat_count, ", ddc $n2;
+                say "$i2, $beat_count, ", ddc $n2;
                 $midi_out->note_on(
                     1,  # channel
                     $n2->{pitch},
@@ -140,6 +168,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 );
                 $i2++; # increment the queue index
             }
+
             $beat_count++;
         }
         else {
@@ -169,18 +198,9 @@ $loop->add($timer);
 $loop->run;
 
 sub populate ($ms, $count, $q, $v, $ons, $inc) {
-    my $motif = $ms->[int rand @$ms]; # TODO something clever?
-    say "$count => ", ddc $motif;
-    @$q = map { +{ pitch => $v->rand, duration => $_ } } @$motif;
-    say 'Queue: ', ddc $q;
-    # compute the onsets
-    my $tally = 0;
-    @$ons = ($tally);
-    for my $note ($q->@[0 .. $#$q - 1]) {
-        $tally += dura_size($note->{duration}) * $divisions;
-        push @$ons, $tally;
-    }
-    @$ons = map { $count + $_ } @$ons;
-    say 'Onset: ', ddc $ons;
-    $$inc = 0; # reset the queue index
 };
+
+sub on($ons, $inc, $count, $q, $chan) {
+    my $selected;
+    return $selected;
+}
