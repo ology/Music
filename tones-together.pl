@@ -44,6 +44,10 @@ my @queue; # priority queue for note_on/off messages
 my $i; # queue index
 my $n; # selected note
 my @onsets;
+my @queue2; # priority queue for note_on/off messages
+my $i2; # queue index
+my $n2; # selected note
+my @onsets2;
 
 my $mdp = Music::Duration::Partition->new(
     size    => $divisions,
