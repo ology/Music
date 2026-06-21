@@ -118,7 +118,6 @@ my $timer = IO::Async::Timer::Periodic->new(
                 populate(\@motifs, $beat_count, \@queue, $voice, \@onsets, \$i);
                 # populate(\@motifs2, $beat_count, \@queue2, $voice2, \@onsets2, \$i2);
             }
-            # say "* $i, $beat_count, ", (defined $onsets[$i] ? $onsets[$i] : '?');
             # if we are on a beat onset, note_on!
             if (defined $onsets[$i] && $onsets[$i] == $beat_count) {
                 $n = $queue[$i];
@@ -129,6 +128,16 @@ my $timer = IO::Async::Timer::Periodic->new(
                     127 # velocity
                 );
                 $i++; # increment the queue index
+            }
+            if (defined $onsets2[$i2] && $onsets2[$i2] == $beat_count) {
+                $n2 = $queue2[$i2];
+                say "2: $i2, $beat_count, ", ddc $n2;
+                $midi_out->note_on(
+                    1,  # channel
+                    $n2->{pitch},
+                    127 # velocity
+                );
+                $i2++; # increment the queue index
             }
             $beat_count++;
         }
@@ -141,6 +150,14 @@ my $timer = IO::Async::Timer::Periodic->new(
                     0
                 );
                 $n = undef;
+            }
+            if ($n2) {
+                $midi_out->note_off(
+                    1,
+                    $n2->{pitch},
+                    0
+                );
+                $n2 = undef;
             }
         }
     },
