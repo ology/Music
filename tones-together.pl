@@ -21,7 +21,7 @@ my %opt = (
     port   => 'MIDIThing2',
     bpm    => 70,
     base   => 'C',
-    scale1 => 'pminor',
+    scale  => 'pminor',
     scale2 => 'minor',
     octave => 0,
 );
@@ -30,6 +30,7 @@ GetOptions(\%opt,
     'bpm=i',
     'base=s',
     'scale=s',
+    'scale2=s',
     'octave=i',
 );
 
