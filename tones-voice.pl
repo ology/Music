@@ -20,12 +20,14 @@ no warnings 'experimental::try';
 my %opt = (
     port   => 'MIDIThing2',
     bpm    => 70,
+    base   => 'C',
     scale  => 'pminor',
     octave => 0,
 );
 GetOptions(\%opt,
     'port=s',
     'bpm=i',
+    'base=s',
     'scale=s',
     'octave=i',
 );
@@ -50,8 +52,8 @@ my $mdp = Music::Duration::Partition->new(
 );
 my @motifs = $mdp->motifs(5);
 my @pitches = (
-  get_scale_MIDI('C', $opt{octave}, $opt{scale}),
-  get_scale_MIDI('C', $opt{octave} + 1, $opt{scale}),
+  get_scale_MIDI($opt{'base'}, $opt{octave}, $opt{scale}),
+  get_scale_MIDI($opt{'base'}, $opt{octave} + 1, $opt{scale}),
 );
 my @intervals = qw(-3 -2 -1 1 2 3);
 my $voice = Music::VoiceGen->new(
