@@ -161,7 +161,7 @@ sub populate ($ms, $count, $q, $v, $ons, $inc) {
     # compute the onsets
     my $tally = 0;
     @$ons = ($tally);
-    for my $note ($q->[0 .. $#$q - 1]) {
+    for my $note ($q->@[0 .. $#$q - 1]) {
         $tally += dura_size($note->{duration}) * $divisions;
         push @$ons, $tally;
     }
