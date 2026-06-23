@@ -94,9 +94,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
-                for my $part (@parts) {
-                    populate ($part, $beat_count);
-                }
+                populate ($_, $beat_count) for @parts;
             }
 
             # if we are on a beat onset, note_on!
