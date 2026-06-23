@@ -105,9 +105,8 @@ my $timer = IO::Async::Timer::Periodic->new(
 
             $beat_count++;
         }
-        # TODO
         # else {
-        #     while (my $n = pop @notes) {
+        #     for my $n (@notes) {
         #         $midi_out->note_off(
         #             $n->{chan},
         #             $n->{pitch},
@@ -132,8 +131,10 @@ sub populate ($m, $count, $chan) {
     my $tally = 0;
     my @ons = ($tally);
     for my $note ($m->queue->@[0 .. $m->queue->@* - 1]) {
-        $tally += dura_size($note->{duration}) * $divisions;
+        my $off = dura_size($note->{duration}) * $divisions;
+        $tally += $off;
         push @ons, $tally;
+        $note->{off} = $count + $off;
     }
     $m->onsets([ map { $count + $_ } @ons ]);
     say 'Onset: ', ddc $m->onsets;
