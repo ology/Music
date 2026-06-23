@@ -51,6 +51,7 @@ my $mvp = Music::VoicePhrase->new(
     groups    => [   0, 0,  0 ],
     motif_num => 4,
     scale     => $scales->[0],
+    octave    => $octaves->[0],
 );
 
 my $mvp2 = Music::VoicePhrase->new(
@@ -60,6 +61,7 @@ my $mvp2 = Music::VoicePhrase->new(
     groups    => [   0,  0, 2, 2 ],
     motif_num => 4,
     scale     => $scales->[1],
+    octave    => $octaves->[0],
 );
 
 # open the midi device for output
