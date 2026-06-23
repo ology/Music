@@ -50,6 +50,7 @@ my $mvp = Music::VoicePhrase->new(
     weights   => [   1, 2,  2 ],
     groups    => [   0, 0,  0 ],
     motif_num => 4,
+    scale     => $scales[0],
 );
 
 my $mvp2 = Music::VoicePhrase->new(
@@ -57,7 +58,8 @@ my $mvp2 = Music::VoicePhrase->new(
     pool      => [qw(dqn qn en sn)],
     weights   => [   2,  2, 1, 1 ],
     groups    => [   0,  0, 2, 2 ],
-    motif_num => 6,
+    motif_num => 4,
+    scale     => $scales[1],
 );
 
 # open the midi device for output
