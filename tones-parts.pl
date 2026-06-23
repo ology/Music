@@ -121,15 +121,17 @@ sub populate ($m, $count, $chan) {
     my $tally = 0;
     my @ons = ($tally);
     for my $note ($m->queue->@[0 .. $m->queue->@* - 1]) {
-        my $off = dura_size($note->{duration}) * $divisions;
-        $tally += $off;
+        my $dura = dura_size($note->{duration});
+        my $on = $dura * $divisions;
+        $tally += $on;
         push @ons, $tally;
-        $note->{off} = $tally + $off;
+        $note->{on} = $tally - $on;
+        $note->{off} = $tally;
     }
     $m->onsets([ map { $count + $_ } @ons ]);
     say 'Onset: ', ddc $m->onsets;
     $m->index(0); # reset the queue index
-    say 'WTF: ', ddc $m->queue;
+    say 'AFTER: ', ddc $m->queue;
 };
 
 sub on ($m, $count) {
