@@ -63,6 +63,7 @@ my $mvp2 = Music::VoicePhrase->new(
     scale     => $scales->[1],
     octave    => $octaves->[0],
 );
+my @parts = ($mvp, $mvp2);
 
 # open the midi device for output
 my $midi_out = RtMidiOut->new;
@@ -96,13 +97,17 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
-                populate ($mvp, $beat_count);
-                populate ($mvp2, $beat_count);
+                for my $part (@parts) {
+                    populate ($part, $beat_count);
+                }
             }
-            
+
             # if we are on a beat onset, note_on!
-            on($mvp, $beat_count, 0);
-            on($mvp2, $beat_count, 1);
+            my $chan = 0;
+            for my $part (@parts) {
+                on($part, $beat_count, $chan);
+                $chan++;
+            }
 
             $beat_count++;
         }
