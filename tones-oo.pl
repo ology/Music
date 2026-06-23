@@ -99,10 +99,7 @@ my $timer = IO::Async::Timer::Periodic->new(
 
             # if we are on a beat onset, note_on!
             my $chan = 0;
-            for my $part (@parts) {
-                on($part, $beat_count, $chan);
-                $chan++;
-            }
+            on($_, $beat_count, $chan++) for @parts;
 
             $beat_count++;
         }
