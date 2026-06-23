@@ -126,25 +126,6 @@ my $timer = IO::Async::Timer::Periodic->new(
 
             $beat_count++;
         }
-        else {
-            # if we just played a note, close it
-            if ($n) {
-                $midi_out->note_off(
-                    0,
-                    $n->{pitch},
-                    0
-                );
-                $n = undef;
-            }
-            if ($n2) {
-                $midi_out->note_off(
-                    1,
-                    $n2->{pitch},
-                    0
-                );
-                $n2 = undef;
-            }
-        }
     },
 );
 
