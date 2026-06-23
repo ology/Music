@@ -59,7 +59,7 @@ my $mvp2 = Music::VoicePhrase->new(
     weights   => [   2,  2, 1, 1 ],
     groups    => [   0,  0, 2, 2 ],
     motif_num => 4,
-    scale     => $scales[->1],
+    scale     => $scales->[1],
 );
 
 # open the midi device for output
