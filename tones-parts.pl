@@ -95,13 +95,10 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             my $chan = 0;
-
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
                 populate($_, $beat_count, $chan++) for @parts;
             }
-
             on($_, $beat_count) for @parts;
-
             $beat_count++;
         }
         else {
@@ -127,11 +124,12 @@ sub populate ($m, $count, $chan) {
         my $off = dura_size($note->{duration}) * $divisions;
         $tally += $off;
         push @ons, $tally;
-        $note->{off} = $count + $off;
+        $note->{off} = $tally + $off;
     }
     $m->onsets([ map { $count + $_ } @ons ]);
     say 'Onset: ', ddc $m->onsets;
     $m->index(0); # reset the queue index
+    say 'WTF: ', ddc $m->queue;
 };
 
 sub on ($m, $count) {
@@ -139,7 +137,7 @@ sub on ($m, $count) {
     # if we are on a beat onset, note_on!
     if (defined $m->onsets->[$m->index] && $m->onsets->[$m->index] == $count) {
         $n = $m->queue->[$m->index];
-        say $m->index, ', ', "$count, ", ddc $n;
+        say 'ON: ', $m->index, ", $count, ", ddc $n;
         $midi_out->note_on(
             $n->{chan},
             $n->{pitch},
@@ -152,7 +150,7 @@ sub on ($m, $count) {
 sub off ($p, $count) {
     for my $n ($p->queue->@*) {
         if ($beat_count == $n->{off}) {
-            # say 'OFF: ', ddc $n;
+            say 'OFF: ', ddc $n;
             $midi_out->note_off(
                 $n->{chan},
                 $n->{pitch},
