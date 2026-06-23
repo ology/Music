@@ -105,6 +105,7 @@ my $timer = IO::Async::Timer::Periodic->new(
 
             $beat_count++;
         }
+        # TODO
         # else {
         #     while (my $n = pop @notes) {
         #         $midi_out->note_off(
