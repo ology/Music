@@ -37,6 +37,7 @@ my $clock_interval = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
 my $sixteenth = $clocks_per_beat / $divisions; # clocks per 16th-note
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
+my @notes; # to trigger note_off msgs
 
 my $scales  = [ split /\s+/, $opt{scales} ];
 my $octaves = [ split /\s+/, $opt{octaves} ];
@@ -94,16 +95,25 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
+            my $chan = 0;
+
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
-                populate($_, $beat_count) for @parts;
+                populate($_, $beat_count, $chan++) for @parts;
             }
 
-            # if we are on a beat onset, note_on!
-            my $chan = 0;
-            on($_, $beat_count, $chan++) for @parts;
+            push @notes, on($_, $beat_count) for @parts;
 
             $beat_count++;
         }
+        # else {
+        #     while (my $n = pop @notes) {
+        #         $midi_out->note_off(
+        #             $n->{chan},
+        #             $n->{pitch},
+        #             0
+        #         );
+        #     }
+        # }
     },
 );
 
@@ -111,10 +121,11 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-sub populate ($m, $count) {
+sub populate ($m, $count, $chan) {
+    $chan ||= 0;
     my $motif = $m->motifs->[int rand $m->motifs->@*]; # TODO something clever?
     say "$count => ", ddc $motif;
-    $m->queue([ map { +{ pitch => $m->voice->rand, duration => $_ } } @$motif ]);
+    $m->queue([ map { +{ pitch => $m->voice->rand, duration => $_, chan => $chan } } @$motif ]);
     say 'Queue: ', ddc $m->queue;
     # compute the onsets
     my $tally = 0;
@@ -128,13 +139,14 @@ sub populate ($m, $count) {
     $m->index(0); # reset the queue index
 };
 
-sub on ($m, $count, $chan) {
+sub on ($m, $count) {
     my $selected;
+    # if we are on a beat onset, note_on!
     if (defined $m->onsets->[$m->index] && $m->onsets->[$m->index] == $count) {
         $selected = $m->queue->[$m->index];
         say $m->index, ', ', "$count, ", ddc $selected;
         $midi_out->note_on(
-            $chan,  # channel
+            $selected->{chan},
             $selected->{pitch},
             127 # velocity
         );
