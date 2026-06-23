@@ -41,26 +41,26 @@ my $beat_count = 0; # how many beats?
 my $scales  = [ split /\s+/, $opt{scales} ];
 my $octaves = [ split /\s+/, $opt{octaves} ];
 
-my $mvp = Music::VoicePhrase->new(
-    size      => $divisions,
-    pool      => [qw(dhn hn qn)],
-    weights   => [   1, 2,  2 ],
-    groups    => [   0, 0,  0 ],
-    motif_num => 4,
-    scale     => $scales->[0],
-    octave    => $octaves->[0],
+my @parts = (
+    Music::VoicePhrase->new(
+        size      => $divisions,
+        pool      => [qw(dhn hn qn)],
+        weights   => [   1, 2,  2 ],
+        groups    => [   0, 0,  0 ],
+        motif_num => 4,
+        scale     => $scales->[0],
+        octave    => $octaves->[0],
+    ),
+    Music::VoicePhrase->new(
+        size      => $divisions,
+        pool      => [qw(dqn qn en sn)],
+        weights   => [   2,  2, 1, 1 ],
+        groups    => [   0,  0, 2, 2 ],
+        motif_num => 4,
+        scale     => $scales->[1],
+        octave    => $octaves->[0],
+    ),
 );
-
-my $mvp2 = Music::VoicePhrase->new(
-    size      => $divisions,
-    pool      => [qw(dqn qn en sn)],
-    weights   => [   2,  2, 1, 1 ],
-    groups    => [   0,  0, 2, 2 ],
-    motif_num => 4,
-    scale     => $scales->[1],
-    octave    => $octaves->[0],
-);
-my @parts = ($mvp, $mvp2);
 
 # open the midi device for output
 my $midi_out = RtMidiOut->new;
