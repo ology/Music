@@ -41,6 +41,7 @@ my $beat_count = 0; # how many beats?
 my $scales  = [ split /\s+/, $opt{scales} ];
 my $octaves = [ split /\s+/, $opt{octaves} ];
 
+# TODO prompt for part args
 my @parts = (
     Music::VoicePhrase->new(
         size      => $divisions,
@@ -94,7 +95,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
-                populate ($_, $beat_count) for @parts;
+                populate($_, $beat_count) for @parts;
             }
 
             # if we are on a beat onset, note_on!
