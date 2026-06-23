@@ -45,8 +45,8 @@ my @parts = (
     Music::VoicePhrase->new(
         size      => $divisions,
         pool      => [qw(dhn hn qn)],
-        weights   => [   1, 2,  2 ],
-        groups    => [   0, 0,  0 ],
+        weights   => [   1,  2, 2 ],
+        groups    => [   0,  0, 0 ],
         motif_num => 4,
         scale     => $scales->[0],
         octave    => $octaves->[0],
