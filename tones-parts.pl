@@ -118,6 +118,15 @@ $loop->add($timer);
 $loop->run;
 
 sub populate ($p, $count) {
+    # XXX loop needed?
+    for my $n ($p->queue->@*) {
+        say "* $count: ", $p->channel, ', ', ddc $n;
+        $midi_out->note_off(
+            $p->{channel},
+            $n->{pitch},
+            0
+        );
+    }
     my $motif = $p->motifs->[int rand $p->motifs->@*]; # TODO something clever?
     say "$count => ", ddc $motif if $opt{verbose};
     $p->queue([ map { +{ pitch => $p->voice->rand, duration => $_ } } @$motif ]);
