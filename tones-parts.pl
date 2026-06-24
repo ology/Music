@@ -102,7 +102,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             $beat_count++;
         }
         else {
-            off($_, $beat_count) for @parts;
+            # off($_, $beat_count) for @parts;
         }
     },
 );
@@ -132,18 +132,18 @@ sub populate ($p, $count, $chan) {
     $p->index(0); # reset the queue index
 };
 
-sub on ($m, $count) {
+sub on ($p, $count) {
     my $n;
     # if we are on a beat onset, note_on!
-    if (defined $m->onsets->[$m->index] && $m->onsets->[$m->index] == $count) {
-        $n = $m->queue->[$m->index];
-        say 'ON: ', $m->index, ", $count, ", ddc $n;
+    if (defined $p->onsets->[$p->index] && $p->onsets->[$p->index] == $count) {
+        $n = $p->queue->[$p->index];
+        say 'ON: ', $p->index, ", $count, ", ddc $n;
         $midi_out->note_on(
             $n->{chan},
             $n->{pitch},
             127 # velocity
         );
-        $m->increment_index;
+        $p->increment_index;
     }
 }
 
