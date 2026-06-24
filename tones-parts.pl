@@ -62,7 +62,7 @@ my @parts = (
         groups    => [   0,  0, 2, 2 ],
         motif_num => 4,
         scale     => $scales->[1],
-        octave    => $octaves->[0],
+        octave    => $octaves->[1],
         verbose   => $opt{verbose},
     ),
 );
