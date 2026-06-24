@@ -30,6 +30,7 @@ GetOptions(\%opt,
     'base=s',
     'scales=s',
     'octaves=s',
+    'patches=s',
     'verbose=s',
 );
 
