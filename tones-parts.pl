@@ -148,7 +148,6 @@ sub on ($m, $count) {
 }
 
 sub off ($p, $count) {
-    my @q;
     for my $n ($p->queue->@*) {
         if ($beat_count == $n->{off}) {
             say 'OFF: ', $p->index, ", $count, ", ddc $n;
@@ -157,9 +156,6 @@ sub off ($p, $count) {
                 $n->{pitch},
                 0
             );
-        }
-        else {
-            push @q, $n;
         }
     }
 }
