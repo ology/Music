@@ -102,7 +102,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             $beat_count++;
         }
         else {
-            off($_, $beat_count) for @parts;
+            # off($_, $beat_count) for @parts;
         }
     },
 );
@@ -116,22 +116,20 @@ sub populate ($m, $count, $chan) {
     my $motif = $m->motifs->[int rand $m->motifs->@*]; # TODO something clever?
     say "$count => ", ddc $motif;
     $m->queue([ map { +{ pitch => $m->voice->rand, duration => $_, chan => $chan } } @$motif ]);
-    say 'Queue: ', ddc $m->queue;
     # compute the onsets
     my $tally = 0;
     my @ons = ($tally);
     for my $note ($m->queue->@[0 .. $m->queue->@* - 1]) {
-        my $dura = dura_size($note->{duration});
-        my $on = $dura * $divisions;
+        my $on = dura_size($note->{duration}) * $divisions;
         $tally += $on;
         push @ons, $tally;
-        $note->{on} = $tally - $on;
-        $note->{off} = $tally;
+        $note->{on}  = $count + $tally - $on;
+        $note->{off} = $count + $tally;
     }
     $m->onsets([ map { $count + $_ } @ons ]);
-    say 'Onset: ', ddc $m->onsets;
+    say 'Onsets: ', ddc $m->onsets;
+    say 'Queue: ', ddc $m->queue;
     $m->index(0); # reset the queue index
-    say 'AFTER: ', ddc $m->queue;
 };
 
 sub on ($m, $count) {
@@ -150,14 +148,18 @@ sub on ($m, $count) {
 }
 
 sub off ($p, $count) {
+    my @q;
     for my $n ($p->queue->@*) {
         if ($beat_count == $n->{off}) {
-            say 'OFF: ', ddc $n;
+            say 'OFF: ', $p->index, ", $count, ", ddc $n;
             $midi_out->note_off(
                 $n->{chan},
                 $n->{pitch},
                 0
             );
+        }
+        else {
+            push @q, $n;
         }
     }
 }
