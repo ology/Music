@@ -51,6 +51,7 @@ my @parts = (
         weights   => [   1,  2, 2 ],
         groups    => [   0,  0, 0 ],
         motif_num => 4,
+        intervals => [qw(-7 -5 -4 -3 -2 -1 1 2 3 4 5 7)],
         scale     => $scales->[0],
         octave    => $octaves->[0],
         verbose   => $opt{verbose},
