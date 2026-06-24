@@ -118,7 +118,7 @@ $loop->add($timer);
 $loop->run;
 
 sub populate ($p, $count) {
-    # XXX loop needed?
+    # XXX loop needed or effective even?
     for my $n ($p->queue->@*) {
         say "* $count: ", $p->channel, ', ', ddc $n;
         $midi_out->note_off(
