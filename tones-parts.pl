@@ -150,7 +150,7 @@ sub on ($p, $count) {
 sub off ($p, $count) {
     for my $n ($p->queue->@*) {
         if ($beat_count == $n->{off}) {
-            say 'OFF: ', $p->index, ", $count, ", ddc $n;
+            say "OFF: $count, ", ddc $n;
             $midi_out->note_off(
                 $n->{chan},
                 $n->{pitch},
