@@ -21,6 +21,7 @@ my %opt = (
     base    => 'C',
     scales  => 'pminor minor',
     octaves => '0, 1',
+    patches => '35 5',
     verbose => 0,
 );
 GetOptions(\%opt,
@@ -42,6 +43,7 @@ my $beat_count = 0; # how many beats?
 
 my $scales  = [ split /\s+/, $opt{scales} ];
 my $octaves = [ split /\s+/, $opt{octaves} ];
+my $patches = [ split /\s+/, $opt{patches} ];
 
 # TODO prompt for part args
 my @parts = (
@@ -79,6 +81,9 @@ catch ($e) { die "Can't open MIDI port: $opt{port}\n" }
 say "Sending MIDI to $opt{port} at $opt{bpm} BPM\n" if $opt{verbose};
 
 $midi_out->start; # start the sequencer
+
+$midi_out->program_change(0, $patches->[0]);
+$midi_out->program_change(1, $patches->[1]);
 
 # redefine what happens on ^C
 $SIG{INT} = sub { 
