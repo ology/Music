@@ -98,11 +98,11 @@ my $timer = IO::Async::Timer::Periodic->new(
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
                 populate($_, $beat_count, $chan++) for @parts;
             }
-            on($_, $beat_count) for @parts;
+            for my $part (@parts) {
+                on($part, $beat_count);
+                # off($part, $beat_count);
+            }
             $beat_count++;
-        }
-        else {
-            # off($_, $beat_count) for @parts;
         }
     },
 );
