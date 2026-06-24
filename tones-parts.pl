@@ -120,7 +120,7 @@ $loop->run;
 sub populate ($p, $count) {
     my $motif = $p->motifs->[int rand $p->motifs->@*]; # TODO something clever?
     say "$count => ", ddc $motif if $opt{verbose};
-    $p->queue([ map { +{ pitch => $p->voice->rand, duration => $_ } } @$motif ]);
+    $p->queue([ map { +{ pitch => $p->voice->rand, duration => $_, velocity => 127 } } @$motif ]);
     # compute the onsets
     my $tally = 0;
     my @ons = ($tally);
@@ -146,7 +146,7 @@ sub on ($p, $count) {
         $midi_out->note_on(
             $p->{channel},
             $n->{pitch},
-            127 # velocity
+            $n->{velocity},
         );
         $p->increment_index;
     }
