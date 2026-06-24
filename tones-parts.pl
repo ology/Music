@@ -46,6 +46,7 @@ my $octaves = [ split /\s+/, $opt{octaves} ];
 # TODO prompt for part args
 my @parts = (
     Music::VoicePhrase->new(
+        channel   => 0,
         size      => $divisions,
         pool      => [qw(dhn hn qn)],
         weights   => [   1,  2, 2 ],
@@ -57,6 +58,7 @@ my @parts = (
         verbose   => $opt{verbose},
     ),
     Music::VoicePhrase->new(
+        channel   => 1,
         size      => $divisions,
         pool      => [qw(dqn qn en sn)],
         weights   => [   2,  2, 1, 1 ],
@@ -99,9 +101,8 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
-            my $chan = 0;
             if ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
-                populate($_, $beat_count, $chan++) for @parts;
+                populate($_, $beat_count) for @parts;
             }
             for my $part (@parts) {
                 on($part, $beat_count);
@@ -116,11 +117,10 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-sub populate ($p, $count, $chan) {
-    $chan ||= 0;
+sub populate ($p, $count) {
     my $motif = $p->motifs->[int rand $p->motifs->@*]; # TODO something clever?
     say "$count => ", ddc $motif if $opt{verbose};
-    $p->queue([ map { +{ pitch => $p->voice->rand, duration => $_, chan => $chan } } @$motif ]);
+    $p->queue([ map { +{ pitch => $p->voice->rand, duration => $_ } } @$motif ]);
     # compute the onsets
     my $tally = 0;
     my @ons = ($tally);
@@ -142,9 +142,9 @@ sub on ($p, $count) {
     # if we are on a beat onset, note_on!
     if (defined $p->onsets->[$p->index] && $p->onsets->[$p->index] == $count) {
         $n = $p->queue->[$p->index];
-        say 'ON: ', $p->index, ", $count, ", ddc $n if $opt{verbose};
+        say 'ON: ', $p->{channel}, ', ', $p->index, ", $count, ", ddc $n if $opt{verbose};
         $midi_out->note_on(
-            $n->{chan},
+            $p->{channel},
             $n->{pitch},
             127 # velocity
         );
@@ -154,9 +154,9 @@ sub on ($p, $count) {
 
 sub off ($p, $count) {
     for my $n (grep { $count == $_->{off} } $p->queue->@*) {
-        say "OFF: $count, ", ddc $n if $opt{verbose};
+        say 'OFF: ', $p->{channel}, ", $count, ", ddc $n if $opt{verbose};
         $midi_out->note_off(
-            $n->{chan},
+            $p->{channel},
             $n->{pitch},
             0
         );
