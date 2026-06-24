@@ -100,7 +100,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             }
             for my $part (@parts) {
                 on($part, $beat_count);
-                # off($part, $beat_count);
+                off($part, $beat_count);
             }
             $beat_count++;
         }
@@ -148,14 +148,12 @@ sub on ($p, $count) {
 }
 
 sub off ($p, $count) {
-    for my $n ($p->queue->@*) {
-        if ($beat_count == $n->{off}) {
-            say "OFF: $count, ", ddc $n;
-            $midi_out->note_off(
-                $n->{chan},
-                $n->{pitch},
-                0
-            );
-        }
+    for my $n (grep { $count == $_->{off} } $p->queue->@*) {
+        say "OFF: $count, ", ddc $n;
+        $midi_out->note_off(
+            $n->{chan},
+            $n->{pitch},
+            0
+        );
     }
 }
