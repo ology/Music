@@ -102,7 +102,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             $beat_count++;
         }
         else {
-            # off($_, $beat_count) for @parts;
+            off($_, $beat_count) for @parts;
         }
     },
 );
@@ -111,25 +111,25 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-sub populate ($m, $count, $chan) {
+sub populate ($p, $count, $chan) {
     $chan ||= 0;
-    my $motif = $m->motifs->[int rand $m->motifs->@*]; # TODO something clever?
+    my $motif = $p->motifs->[int rand $p->motifs->@*]; # TODO something clever?
     say "$count => ", ddc $motif;
-    $m->queue([ map { +{ pitch => $m->voice->rand, duration => $_, chan => $chan } } @$motif ]);
+    $p->queue([ map { +{ pitch => $p->voice->rand, duration => $_, chan => $chan } } @$motif ]);
     # compute the onsets
     my $tally = 0;
     my @ons = ($tally);
-    for my $note ($m->queue->@[0 .. $m->queue->@* - 1]) {
+    for my $note ($p->queue->@[0 .. $p->queue->@* - 1]) {
         my $on = dura_size($note->{duration}) * $divisions;
         $tally += $on;
         push @ons, $tally;
         $note->{on}  = $count + $tally - $on;
         $note->{off} = $count + $tally;
     }
-    $m->onsets([ map { $count + $_ } @ons ]);
-    say 'Onsets: ', ddc $m->onsets;
-    say 'Queue: ', ddc $m->queue;
-    $m->index(0); # reset the queue index
+    $p->onsets([ map { $count + $_ } @ons ]);
+    say 'Onsets: ', ddc $p->onsets;
+    say 'Queue: ', ddc $p->queue;
+    $p->index(0); # reset the queue index
 };
 
 sub on ($m, $count) {
