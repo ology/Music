@@ -21,6 +21,7 @@ my %opt = (
     base    => 'C',
     scales  => 'pminor minor',
     octaves => '0, 1',
+    verbose => 0,
 );
 GetOptions(\%opt,
     'port=s',
@@ -28,6 +29,7 @@ GetOptions(\%opt,
     'base=s',
     'scales=s',
     'octaves=s',
+    'verbose=s',
 );
 
 my $beats = 16; # beats in a phrase
@@ -51,6 +53,7 @@ my @parts = (
         motif_num => 4,
         scale     => $scales->[0],
         octave    => $octaves->[0],
+        verbose   => $opt{verbose},
     ),
     Music::VoicePhrase->new(
         size      => $divisions,
@@ -60,28 +63,29 @@ my @parts = (
         motif_num => 4,
         scale     => $scales->[1],
         octave    => $octaves->[0],
+        verbose   => $opt{verbose},
     ),
 );
 
 # open the midi device for output
 my $midi_out = RtMidiOut->new;
 try { $midi_out->open_virtual_port('RtMidiOut') } # needed for mac
-catch ($e) { warn 'Not a Mac' }
+catch ($e) { warn 'Not a Mac' if $opt{verbose} }
 try { $midi_out->open_port_by_name(qr/\Q$opt{port}/i) }
 catch ($e) { die "Can't open MIDI port: $opt{port}\n" }
-say "Sending MIDI to $opt{port} at $opt{bpm} BPM\n";
+say "Sending MIDI to $opt{port} at $opt{bpm} BPM\n" if $opt{verbose};
 
 $midi_out->start; # start the sequencer
 
 # redefine what happens on ^C
 $SIG{INT} = sub { 
-    say "\nStop";
+    say "\nStop" if $opt{verbose};
     try {
         $midi_out->stop;
         $midi_out->panic;
     }
     catch ($e) {
-        warn "Can't halt the MIDI out device: $e\n";
+        warn "Can't halt the MIDI out device: $e\n" if $opt{verbose};
     }
     exit;
 };
@@ -114,7 +118,7 @@ $loop->run;
 sub populate ($p, $count, $chan) {
     $chan ||= 0;
     my $motif = $p->motifs->[int rand $p->motifs->@*]; # TODO something clever?
-    say "$count => ", ddc $motif;
+    say "$count => ", ddc $motif if $opt{verbose};
     $p->queue([ map { +{ pitch => $p->voice->rand, duration => $_, chan => $chan } } @$motif ]);
     # compute the onsets
     my $tally = 0;
@@ -127,8 +131,8 @@ sub populate ($p, $count, $chan) {
         $note->{off} = $count + $tally;
     }
     $p->onsets([ map { $count + $_ } @ons ]);
-    say 'Onsets: ', ddc $p->onsets;
-    say 'Queue: ', ddc $p->queue;
+    say 'Onsets: ', ddc $p->onsets if $opt{verbose};
+    say 'Queue: ', ddc $p->queue if $opt{verbose};
     $p->index(0); # reset the queue index
 };
 
@@ -137,7 +141,7 @@ sub on ($p, $count) {
     # if we are on a beat onset, note_on!
     if (defined $p->onsets->[$p->index] && $p->onsets->[$p->index] == $count) {
         $n = $p->queue->[$p->index];
-        say 'ON: ', $p->index, ", $count, ", ddc $n;
+        say 'ON: ', $p->index, ", $count, ", ddc $n if $opt{verbose};
         $midi_out->note_on(
             $n->{chan},
             $n->{pitch},
@@ -149,7 +153,7 @@ sub on ($p, $count) {
 
 sub off ($p, $count) {
     for my $n (grep { $count == $_->{off} } $p->queue->@*) {
-        say "OFF: $count, ", ddc $n;
+        say "OFF: $count, ", ddc $n if $opt{verbose};
         $midi_out->note_off(
             $n->{chan},
             $n->{pitch},
