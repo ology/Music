@@ -120,7 +120,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             if ($beat_count > 0 && $beat_count % ($divisions * $divisions * $divisions) == 0) { # do this every 4th measure:
-                say "***** ALT! *****\n\n";
+                say "***** ALT! *****\n\n" if $opt{verbose};
                 @play = @parts[0,2];
                 populate($_, $beat_count) for @play;
             }
