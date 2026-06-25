@@ -192,6 +192,5 @@ sub off ($p, $count) {
 }
 
 sub velocity ($min, $max, $offset) {
-    my $x = $offset + int(rand($max - $min + 1)) + $min;
-    return $x;
+    return $offset + int(rand($max - $min + 1)) + $min;
 }
