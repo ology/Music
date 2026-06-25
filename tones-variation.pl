@@ -144,17 +144,15 @@ $loop->run;
 sub populate ($p, $count) {
     my $motif = $p->motifs->[int rand $p->motifs->@*]; # TODO something clever?
     say "$count => ", ddc $motif if $opt{verbose};
-    $p->queue(
-        [
-            map {
-                +{
-                    pitch    => $p->voice->rand,
-                    duration => $_,
-                    velocity => velocity(-10, 10, 110),
-                }
-            } @$motif
-        ]
-    );
+    $p->queue([
+        map {
+            +{
+                pitch    => $p->voice->rand,
+                duration => $_,
+                velocity => velocity(-10, 10, 110),
+            }
+        } @$motif
+    ]);
     # compute the onsets
     my $tally = 0;
     my @ons = ($tally);
