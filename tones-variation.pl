@@ -128,7 +128,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 @play = @parts[0,1];
                 populate($_, $beat_count) for @play;
             }
-            for my $part (@parts) {
+            for my $part (@play) {
                 on($part, $beat_count);
                 off($part, $beat_count);
             }
