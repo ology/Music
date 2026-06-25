@@ -95,8 +95,8 @@ say "Sending MIDI to $opt{port} at $opt{bpm} BPM\n" if $opt{verbose};
 
 $midi_out->start; # start the sequencer
 
-$midi_out->program_change(0, $patches->[0]);
-$midi_out->program_change(1, $patches->[1]);
+$midi_out->program_change(0, $patches->[0]) if defined $patches->[0];
+$midi_out->program_change(1, $patches->[1]) if defined $patches->[1];
 
 # redefine what happens on ^C
 $SIG{INT} = sub { 
