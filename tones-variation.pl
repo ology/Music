@@ -2,7 +2,7 @@
 
 # Play tonal MIDI in real-time!
 # Example(s):
-# perl tones-variation.pl --verbose=1 --scales='pminor minor' --octaves='2 4' --patches='32 5' --port=fluid --bpm=60
+# perl tones-variation.pl --verbose=1 --scales='pminor minor' --octaves='2 4' --patches='0 0' --port=fluid --bpm=60
 
 use v5.36;
 use feature 'try';
