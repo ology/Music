@@ -119,9 +119,8 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
-            my $j = 0;
             if ($beat_count > 0 && $beat_count % ($divisions * $divisions * $divisions) == 0) { # do this every 4th measure:
-                say "***** ALT! $j *****\n\n";
+                say "***** ALT! *****\n\n";
                 @play = @parts[0,2];
                 populate($_, $beat_count) for @play;
             }
