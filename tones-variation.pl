@@ -47,7 +47,7 @@ my $beat_count = 0; # how many beats?
 my $scales  = [ split /\s+/, $opt{scales} ];
 my $octaves = [ split /\s+/, $opt{octaves} ];
 my $patches = [ split /\s+/, $opt{patches} ];
-my $pitches = [ map { $_ - 36 } split /\s+/, $opt{pitches} ];
+my $pitches = [ split /\s+/, $opt{pitches} ];
 
 # TODO prompt for part args
 my @parts = (
