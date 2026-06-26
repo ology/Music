@@ -104,6 +104,11 @@ $SIG{INT} = sub {
     try {
         $midi_out->stop;
         $midi_out->panic;
+        for my $chan (0, 1) {
+            for my $note (0 .. 127) {
+                $midi_out->note_off($chan, $note, 0);
+            }
+        }
     }
     catch ($e) {
         warn "Can't halt the MIDI out device: $e\n" if $opt{verbose};
