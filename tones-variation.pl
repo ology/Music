@@ -21,7 +21,7 @@ my %opt = (
     base    => 'C',
     pitches => undef,
     scales  => 'pminor minor',
-    octaves => '0, 1',
+    octaves => '0 1',
     patches => '35 5',
     verbose => 0,
 );
