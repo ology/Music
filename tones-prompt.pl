@@ -14,6 +14,7 @@ use MIDI::Util qw(dura_size scale_names);
 use Getopt::Long qw(GetOptions);
 use Music::VoicePhrase ();
 use Term::Choose qw(choose);
+use IO::Prompt::Tiny qw/prompt/;
 no warnings 'experimental::try';
 
 use constant QUIT => 'Quit';
@@ -47,7 +48,8 @@ my %choices = (
     },
 );
 
-while (not done) {
+my $response = '';
+while ($response ne 'd') {
     push @parts, Music::VoicePhrase->new(
         channel   => make_choice([0 .. 15], 'channel', 1),
         motif_num => make_choice([1 .. 16], 'motif_num', 4),
@@ -60,6 +62,10 @@ while (not done) {
         pitches   => make_choice($choices{pitches}, 'pitches', 1),
         intervals => make_choice($choices{intervals}, 'intervals', 1),
     );
+    my $response = prompt('a = another; d = done', 'a');
+    # if ($response eq 'd') {
+    #     last;
+    # }
 }
 
 sub make_choice ($choices, $name, $default) {
