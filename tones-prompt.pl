@@ -97,42 +97,6 @@ while ($response ne DONE || $response ne QUIT) {
     }
 }
 
-sub make_choice ($n, $choices, $name, $default, $params) {
-    say ddc $params;
-    my @args;
-    if (ref $choices eq 'ARRAY') {
-        @args = (QUIT, @$choices);
-    }
-    else { # hashref
-        @args = (QUIT, (sort keys $choices->{$name}->%*), 'custom');
-    }
-    my $choice;
-    if ($name eq 'weights' || $name eq 'groups') {
-        my $response = prompt(
-            "Part $i - Choose the $name for pool = " . join(' ', $params->{pool}->@*) . ':',
-            join(' ', map { 0 } $params->{pool}->@*)
-        );
-        $choice = [ split /\s+/, $response ];
-    }
-    else {
-        $choice = choose(\@args, {
-            prompt  => "Part $i - Choose the $name:",
-            default => $default,
-        });
-        if (ref $choices eq 'HASH') {
-            $choice = $name eq 'pitches'
-                ? [ $choices->{$name}{$choice}->() ]
-                : $choices->{$name}{$choice};
-        }
-        if ($choice eq 'custom') {
-            my $response = prompt('Enter a space-separated list: ');
-            $choice = [ split /\s+/, $response ];
-        }
-    }
-    exit if $choice eq QUIT;
-    return $choice;
-}
-
 my @play;
 
 # open the midi device for output
@@ -256,4 +220,40 @@ sub off ($p, $count) {
 
 sub velocity ($min, $max, $offset) {
     return $offset + int(rand($max - $min + 1)) + $min;
+}
+
+sub make_choice ($n, $choices, $name, $default, $params) {
+    say ddc $params;
+    my @args;
+    if (ref $choices eq 'ARRAY') {
+        @args = (QUIT, @$choices);
+    }
+    else { # hashref
+        @args = (QUIT, (sort keys $choices->{$name}->%*), 'custom');
+    }
+    my $choice;
+    if ($name eq 'weights' || $name eq 'groups') {
+        my $response = prompt(
+            "Part $i - Choose the $name for pool = " . join(' ', $params->{pool}->@*) . ':',
+            join(' ', map { 0 } $params->{pool}->@*)
+        );
+        $choice = [ split /\s+/, $response ];
+    }
+    else {
+        $choice = choose(\@args, {
+            prompt  => "Part $i - Choose the $name:",
+            default => $default,
+        });
+        if (ref $choices eq 'HASH') {
+            $choice = $name eq 'pitches'
+                ? [ $choices->{$name}{$choice}->() ]
+                : $choices->{$name}{$choice};
+        }
+        if ($choice eq 'custom') {
+            my $response = prompt('Enter a space-separated list: ');
+            $choice = [ split /\s+/, $response ];
+        }
+    }
+    exit if $choice eq QUIT;
+    return $choice;
 }
