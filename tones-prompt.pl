@@ -234,14 +234,14 @@ sub make_choice ($n, $choices, $name, $default, $params) {
     my $choice;
     if ($name eq 'weights' || $name eq 'groups') {
         my $response = prompt(
-            "Part $i - Choose the $name for pool = " . join(' ', $params->{pool}->@*) . ':',
+            "Part $n - Choose the $name for pool = " . join(' ', $params->{pool}->@*) . ':',
             join(' ', map { 0 } $params->{pool}->@*)
         );
         $choice = [ split /\s+/, $response ];
     }
     else {
         $choice = choose(\@args, {
-            prompt  => "Part $i - Choose the $name:",
+            prompt  => "Part $n - Choose the $name:",
             default => $default,
         });
         if (ref $choices eq 'HASH') {
