@@ -132,7 +132,6 @@ sub make_choice ($n, $choices, $name, $default, $params) {
     return $choice;
 }
 
-__END__
 my @play;
 
 # open the midi device for output
