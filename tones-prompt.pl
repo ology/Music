@@ -107,7 +107,10 @@ sub make_choice ($n, $choices, $name, $default, $params) {
     }
     my $choice;
     if ($name eq 'weights' || $name eq 'groups') {
-        my $response = prompt("Part $i - Choose the $name for pool [" . join(' ', $params->{pool}->@*) . ']:');
+        my $response = prompt(
+            "Part $i - Choose the $name for pool = " . join(' ', $params->{pool}->@*) . ':',
+            join(' ', map { 0 } $params->{pool}->@*)
+        );
         $choice = [ split /\s+/, $response ];
     }
     else {
