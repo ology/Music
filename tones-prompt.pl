@@ -133,45 +133,6 @@ sub make_choice ($n, $choices, $name, $default, $params) {
 }
 
 __END__
-my @parts = (
-    Music::VoicePhrase->new(
-        channel   => 0,
-        size      => $divisions,
-        pool      => [qw(dhn hn qn)],
-        weights   => [   1,  2, 2 ],
-        groups    => [   0,  0, 0 ],
-        motif_num => 4,
-        pitches   => $pitches,
-        intervals => [(-7 .. -1),(1 .. 7)],
-        scale     => $scales->[0],
-        octave    => $octaves->[0],
-        verbose   => $opt{verbose},
-    ),
-    Music::VoicePhrase->new(
-        channel   => 1,
-        size      => $divisions,
-        pool      => [qw(dqn qn en sn)],
-        weights   => [   2,  2, 1, 1 ],
-        groups    => [   0,  0, 2, 2 ],
-        motif_num => 4,
-        pitches   => $pitches,
-        scale     => $scales->[1],
-        octave    => $octaves->[1],
-        verbose   => $opt{verbose},
-    ),
-    Music::VoicePhrase->new(
-        channel   => 1,
-        size      => $divisions,
-        pool      => [qw(dqn qn)],
-        weights   => [   1,  1 ],
-        groups    => [   0,  0 ],
-        motif_num => 4,
-        pitches   => $pitches,
-        scale     => $scales->[1],
-        octave    => $octaves->[1],
-        verbose   => $opt{verbose},
-    ),
-);
 my @play;
 
 # open the midi device for output
