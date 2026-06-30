@@ -11,10 +11,11 @@ use MIDI::RtMidi::FFI::Device ();
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use MIDI::Util qw(dura_size scale_names);
-use Getopt::Long qw(GetOptions);
+use Music::Scales qw(get_scale_MIDI);
 use Music::VoicePhrase ();
 use Term::Choose qw(choose);
-use IO::Prompt::Tiny qw/prompt/;
+use IO::Prompt::Tiny qw(prompt);
+use Getopt::Long qw(GetOptions);
 no warnings 'experimental::try';
 
 use constant QUIT => 'Quit';
@@ -41,47 +42,88 @@ my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 
 my @parts;
+my %params;
 my %choices = (
+    weights => {}, # only custom
+    groups => {}, # only custom
+    pool => {
+        'wn hn'        => [qw(wn hn)],
+        'wn dhn hn qn' => [qw(wn dhn hn qn)],
+        'qn en'        => [qw(qn en)],
+        'hn dqn qn en' => [qw(hn dqn qn en)],
+        'qn den en sn' => [qw(qn den en sn)],
+    },
+    pitches => {
+        '1 octave'  => sub { get_scale_MIDI($opt{'base'}, $params{octave}, $params{scale}) },
+        '2 octaves' => sub {
+            get_scale_MIDI($opt{'base'}, $params{octave}, $params{scale}),
+            get_scale_MIDI($opt{'base'}, $params{octave} + 1, $params{scale}),
+        },
+    },
     intervals => {
-        '-7..-1,1..7' => [(-7 .. -1),(1 .. 7)],
         '-3..-1,1..3' => [(-3 .. -1),(1 .. 3)],
+        '-4..-1,1..4' => [(-4 .. -1),(1 .. 4)],
+        '-5..-1,1..5' => [(-5 .. -1),(1 .. 5)],
+        '-7..-1,1..7' => [(-7 .. -1),(1 .. 7)],
     },
 );
 
 my $response = '';
-while ($response ne 'd') {
-    push @parts, Music::VoicePhrase->new(
-        channel   => make_choice([0 .. 15], 'channel', 1),
-        motif_num => make_choice([1 .. 16], 'motif_num', 4),
-        scale     => make_choice(scale_names(), 'scale', 2),
-        octave    => make_choice([0 .. 9], 'octave', 1),
-        size      => make_choice([qw(1 2 2.5 3 3.5), (4 .. 16)], 'size', 6)
-        pool      => make_choice($choices{pool}, 'pool', 1),
-        weights   => make_choice($choices{weights}, 'weights', 1),
-        groups    => make_choice($choices{groups}, 'groups', 1),
-        pitches   => make_choice($choices{pitches}, 'pitches', 1),
-        intervals => make_choice($choices{intervals}, 'intervals', 1),
-    );
-    my $response = prompt('a = another; d = done', 'a');
-    # if ($response eq 'd') {
-    #     last;
-    # }
+my $i = 0;
+while ($response ne 'Done' || $response ne QUIT) {
+    $i++;
+    $params{channel}   = make_choice($i, [0 .. 15], 'channel', 1, \%params);
+    $params{motif_num} = make_choice($i, [1 .. 16], 'motif_num', 4, \%params);
+    $params{scale}     = make_choice($i, scale_names(), 'scale', 2, \%params);
+    $params{octave}    = make_choice($i, [0 .. 9], 'octave', 1, \%params);
+    $params{size}      = make_choice($i, [qw(1 2 2.5 3 3.5), (4 .. 16)], 'size', 6, \%params);
+    $params{pool}      = make_choice($i, \%choices, 'pool', 1, \%params); # must come before weights & groups
+    $params{weights}   = make_choice($i, \%choices, 'weights', 1, \%params);
+    $params{groups}    = make_choice($i, \%choices, 'groups', 1, \%params);
+    $params{pitches}   = make_choice($i, \%choices, 'pitches', 1, \%params);
+    $params{intervals} = make_choice($i, \%choices, 'intervals', 1, \%params);
+    say ddc \%params;
+    push @parts, Music::VoicePhrase->new(%params);
+    my $response = choose([QUIT, 'Done', 'Another'], {
+        prompt  => "Choose:",
+        default => 3,
+    });
+    if ($response eq QUIT) {
+        exit;
+    }
+    elsif ($response eq 'Done') {
+        last;
+    }
 }
 
-sub make_choice ($choices, $name, $default) {
+sub make_choice ($n, $choices, $name, $default, $params) {
+    say ddc $params;
     my @args;
     if (ref $choices eq 'ARRAY') {
         @args = (QUIT, @$choices);
     }
     else { # hashref
-        @args = (QUIT, (sort keys %$choices), 'custom');
+        @args = (QUIT, (sort keys $choices->{$name}->%*), 'custom');
     }
-    my $choice = choose(\@args, {
-        prompt  => "Choose a $name:",
-        default => $default,
-    });
-    if ($choice eq 'custom') {
-        # TODO
+    my $choice;
+    if ($name eq 'weights' || $name eq 'groups') {
+        my $response = prompt("Part $i - Choose the $name for pool [" . join(' ', $params->{pool}->@*) . ']:');
+        $choice = [ split /\s+/, $response ];
+    }
+    else {
+        $choice = choose(\@args, {
+            prompt  => "Part $i - Choose the $name:",
+            default => $default,
+        });
+        if (ref $choices eq 'HASH') {
+            $choice = $name eq 'pitches'
+                ? [ $choices->{$name}{$choice}->() ]
+                : $choices->{$name}{$choice};
+        }
+        if ($choice eq 'custom') {
+            my $response = prompt('Enter a space-separated list: ');
+            $choice = [ split /\s+/, $response ];
+        }
     }
     exit if $choice eq QUIT;
     return $choice;
