@@ -83,7 +83,6 @@ while ($response ne DONE || $response ne QUIT) {
     $params{groups}    = make_choice($i, \%choices, 'groups', 1, \%params);
     $params{pitches}   = make_choice($i, \%choices, 'pitches', 1, \%params);
     $params{intervals} = make_choice($i, \%choices, 'intervals', 1, \%params);
-    say ddc \%params;
     push @parts, Music::VoicePhrase->new(%params);
     my $response = choose([QUIT, DONE, 'Another'], {
         prompt  => "Choose:",
@@ -223,7 +222,6 @@ sub velocity ($min, $max, $offset) {
 }
 
 sub make_choice ($n, $choices, $name, $default, $params) {
-    say ddc $params;
     my @args;
     if (ref $choices eq 'ARRAY') {
         @args = (QUIT, @$choices);
@@ -254,6 +252,7 @@ sub make_choice ($n, $choices, $name, $default, $params) {
             $choice = [ split /\s+/, $response ];
         }
     }
+    say ddc $params;
     exit if $choice eq QUIT;
     return $choice;
 }
