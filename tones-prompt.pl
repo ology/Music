@@ -19,6 +19,7 @@ use Getopt::Long qw(GetOptions);
 no warnings 'experimental::try';
 
 use constant QUIT => 'Quit';
+use constant DONE => 'Done';
 
 my %opt = (
     port    => 'MIDIThing2',
@@ -70,7 +71,7 @@ my %choices = (
 
 my $response = '';
 my $i = 0;
-while ($response ne 'Done' || $response ne QUIT) {
+while ($response ne DONE || $response ne QUIT) {
     $i++;
     $params{channel}   = make_choice($i, [0 .. 15], 'channel', 1, \%params);
     $params{motif_num} = make_choice($i, [1 .. 16], 'motif_num', 4, \%params);
@@ -84,14 +85,14 @@ while ($response ne 'Done' || $response ne QUIT) {
     $params{intervals} = make_choice($i, \%choices, 'intervals', 1, \%params);
     say ddc \%params;
     push @parts, Music::VoicePhrase->new(%params);
-    my $response = choose([QUIT, 'Done', 'Another'], {
+    my $response = choose([QUIT, DONE, 'Another'], {
         prompt  => "Choose:",
         default => 3,
     });
     if ($response eq QUIT) {
         exit;
     }
-    elsif ($response eq 'Done') {
+    elsif ($response eq DONE) {
         last;
     }
 }
