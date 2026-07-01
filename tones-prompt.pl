@@ -41,10 +41,10 @@ my $clock_interval = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
 my $sixteenth = $clocks_per_beat / $divisions; # clocks per 16th-note
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
-
 my @parts;
 my %params;
 my %choices = (
+    patch   => midi_dump('patch2number'),
     weights => {},
     groups  => {},
     pool    => {
@@ -74,7 +74,7 @@ my $i = 0;
 while ($response ne DONE || $response ne QUIT) {
     $i++;
     $params{channel}   = make_choice($i, [0 .. 15], 'channel', $i, \%params);
-    $params{patch}     = make_choice($i, [keys midi_dump('patch2number')->%*], 'patch', 1, \%params);
+    $params{patch}     = make_choice($i, \%choices, 'patch', 1, \%params);
     $params{motif_num} = make_choice($i, [1 .. 16], 'motif_num', 4, \%params);
     $params{scale}     = make_choice($i, scale_names(), 'scale', 2, \%params);
     $params{octave}    = make_choice($i, [0 .. 9], 'octave', 1, \%params);
@@ -142,7 +142,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $sixteenth == 0) {
             if ($beat_count > 0 && $beat_count % ($divisions ** 3) == 0) { # do this every 4th measure:
                 say "***** ALT! *****\n\n" if $opt{verbose};
-                @play = @parts[-1];
+                @play = $parts[-1];
                 populate($_, $beat_count) for @play;
             }
             elsif ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
@@ -230,7 +230,10 @@ sub make_choice ($n, $choices, $name, $default, $params) {
         @args = (QUIT, @$choices);
     }
     else { # hashref
-        @args = (QUIT, (sort keys $choices->{$name}->%*), 'custom');
+        say ddc $choices;
+        @args = $name eq 'patch'
+            ? (QUIT, (sort keys $choices->{$name}->%*), 'custom')
+            : (QUIT, (sort keys $choices->{$name}->%*));
     }
     my $choice;
     if ($name eq 'weights' || $name eq 'groups') {
