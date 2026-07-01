@@ -73,6 +73,7 @@ my $response = '';
 my $i = 0;
 while ($response ne DONE || $response ne QUIT) {
     $i++;
+    $params{patch}     = make_choice($i, [0 .. 127], 'patch', 1, \%params);
     $params{channel}   = make_choice($i, [0 .. 15], 'channel', 1, \%params);
     $params{motif_num} = make_choice($i, [1 .. 16], 'motif_num', 4, \%params);
     $params{scale}     = make_choice($i, scale_names(), 'scale', 2, \%params);
@@ -108,8 +109,10 @@ say "Sending MIDI to $opt{port} at $opt{bpm} BPM\n" if $opt{verbose};
 
 $midi_out->start; # start the sequencer
 
-$midi_out->program_change(0, $patches->[0]) if defined $patches->[0];
-$midi_out->program_change(1, $patches->[1]) if defined $patches->[1];
+for my $part (@parts) {
+    $midi_out->program_change($part->{channel}, $part->{patch})
+        if defined $part->{patch};
+}
 
 # redefine what happens on ^C
 $SIG{INT} = sub { 
