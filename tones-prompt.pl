@@ -45,9 +45,9 @@ my $beat_count = 0; # how many beats?
 my @parts;
 my %params;
 my %choices = (
-    weights => {}, # only custom
-    groups => {}, # only custom
-    pool => {
+    weights => {},
+    groups  => {},
+    pool    => {
         'wn hn'        => [qw(wn hn)],
         'wn dhn hn qn' => [qw(wn dhn hn qn)],
         'qn en'        => [qw(qn en)],
