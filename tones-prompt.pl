@@ -97,6 +97,11 @@ while ($response ne DONE || $response ne QUIT) {
     }
 }
 
+for my $part (@parts) {
+    $midi_out->program_change($part->{channel}, $part->{patch})
+        if defined $part->{patch};
+}
+
 my @play;
 
 # open the midi device for output
@@ -108,11 +113,6 @@ catch ($e) { die "Can't open MIDI port: $opt{port}\n" }
 say "Sending MIDI to $opt{port} at $opt{bpm} BPM\n" if $opt{verbose};
 
 $midi_out->start; # start the sequencer
-
-for my $part (@parts) {
-    $midi_out->program_change($part->{channel}, $part->{patch})
-        if defined $part->{patch};
-}
 
 # redefine what happens on ^C
 $SIG{INT} = sub { 
