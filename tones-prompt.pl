@@ -140,13 +140,13 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
-            if ($beat_count > 0 && $beat_count % ($divisions ** 3) == 0) { # do this every 4th measure:
+            if (($beat_count > 0) && (@parts > 1) && ($beat_count % ($divisions ** 3) == 0)) { # do this every 4th measure:
                 say "***** ALT! *****\n\n" if $opt{verbose};
                 @play = $parts[-1];
                 populate($_, $beat_count) for @play;
             }
             elsif ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
-                @play = @parts[0,1];
+                @play = @parts[0 .. $#parts - 1];
                 populate($_, $beat_count) for @play;
             }
             for my $part (@play) {
@@ -230,10 +230,8 @@ sub make_choice ($n, $choices, $name, $default, $params) {
         @args = (QUIT, @$choices);
     }
     else { # hashref
-        say ddc $choices;
-        @args = $name eq 'patch'
-            ? (QUIT, (sort keys $choices->{$name}->%*), 'custom')
-            : (QUIT, (sort keys $choices->{$name}->%*));
+        @args = (QUIT, (sort keys $choices->{$name}->%*));
+        push @args, 'custom' unless $name eq 'patch';
     }
     my $choice;
     if ($name eq 'weights' || $name eq 'groups') {
