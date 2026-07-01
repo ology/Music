@@ -245,6 +245,7 @@ sub make_choice ($n, $choices, $name, $default, $params) {
         $choice = choose(\@args, {
             prompt  => "Part $n - Choose the $name:",
             default => $default,
+            clear_screen => 1,
         });
         if (ref $choices eq 'HASH') {
             $choice = $name eq 'pitches'
