@@ -146,7 +146,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 populate($_, $beat_count) for @play;
             }
             elsif ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
-                #play = @parts;
+                @play = @parts;
                 populate($_, $beat_count) for @parts;
             }
             for my $part (@play) {
