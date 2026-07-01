@@ -74,7 +74,7 @@ my $i = 0;
 while ($response ne DONE || $response ne QUIT) {
     $i++;
     $params{patch}     = make_choice($i, [0 .. 127], 'patch', 1, \%params);
-    $params{channel}   = make_choice($i, [0 .. 15], 'channel', 1, \%params);
+    $params{channel}   = make_choice($i, [0 .. 15], 'channel', $i, \%params);
     $params{motif_num} = make_choice($i, [1 .. 16], 'motif_num', 4, \%params);
     $params{scale}     = make_choice($i, scale_names(), 'scale', 2, \%params);
     $params{octave}    = make_choice($i, [0 .. 9], 'octave', 1, \%params);
@@ -87,7 +87,7 @@ while ($response ne DONE || $response ne QUIT) {
     push @parts, Music::VoicePhrase->new(%params);
     my $response = choose([QUIT, DONE, 'Another'], {
         prompt  => "Choose:",
-        default => 3,
+        default => 2,
     });
     if ($response eq QUIT) {
         exit;
@@ -255,7 +255,7 @@ sub make_choice ($n, $choices, $name, $default, $params) {
             $choice = [ split /\s+/, $response ];
         }
     }
-    say ddc $params;
+    say ddc $params if $opt{verbose};
     exit if $choice eq QUIT;
     return $choice;
 }
