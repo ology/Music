@@ -10,7 +10,7 @@ use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::FFI::Device ();
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
-use MIDI::Util qw(dura_size scale_names);
+use MIDI::Util qw(dura_size midi_dump scale_names);
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoicePhrase ();
 use Term::Choose qw(choose);
@@ -74,7 +74,7 @@ my $i = 0;
 while ($response ne DONE || $response ne QUIT) {
     $i++;
     $params{channel}   = make_choice($i, [0 .. 15], 'channel', $i, \%params);
-    $params{patch}     = make_choice($i, [0 .. 127], 'patch', 1, \%params);
+    $params{patch}     = make_choice($i, [keys midi_dump('patch2number')->%*], 'patch', 1, \%params);
     $params{motif_num} = make_choice($i, [1 .. 16], 'motif_num', 4, \%params);
     $params{scale}     = make_choice($i, scale_names(), 'scale', 2, \%params);
     $params{octave}    = make_choice($i, [0 .. 9], 'octave', 1, \%params);
@@ -97,11 +97,6 @@ while ($response ne DONE || $response ne QUIT) {
     }
 }
 
-for my $part (@parts) {
-    $midi_out->program_change($part->{channel}, $part->{patch})
-        if defined $part->{patch};
-}
-
 my @play;
 
 # open the midi device for output
@@ -111,6 +106,11 @@ catch ($e) { warn 'Not a Mac' if $opt{verbose} }
 try { $midi_out->open_port_by_name(qr/\Q$opt{port}/i) }
 catch ($e) { die "Can't open MIDI port: $opt{port}\n" }
 say "Sending MIDI to $opt{port} at $opt{bpm} BPM\n" if $opt{verbose};
+
+for my $part (@parts) {
+    $midi_out->program_change($part->{channel}, $part->{patch})
+        if defined $part->{patch};
+}
 
 $midi_out->start; # start the sequencer
 
