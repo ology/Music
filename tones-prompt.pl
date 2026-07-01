@@ -87,7 +87,7 @@ while ($response ne DONE || $response ne QUIT) {
     push @parts, Music::VoicePhrase->new(%params);
     my $response = choose([QUIT, DONE, 'Another'], {
         prompt  => "Choose:",
-        default => 2,
+        default => 1,
     });
     if ($response eq QUIT) {
         exit;
