@@ -146,7 +146,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 populate($_, $beat_count) for @play;
             }
             elsif ($beat_count % ($divisions * $divisions) == 0) { # do this every measure:
-                @play = @parts[0 .. $#parts - 1];
+                @play = @parts;#[0 .. $#parts - 1];
                 populate($_, $beat_count) for @play;
             }
             for my $part (@play) {
@@ -256,7 +256,6 @@ sub make_choice ($n, $choices, $name, $default, $params) {
             $choice = [ split /\s+/, $response ];
         }
     }
-    say ddc $params if $opt{verbose};
     exit if $choice eq QUIT;
     return $choice;
 }
