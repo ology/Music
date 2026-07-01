@@ -120,7 +120,7 @@ $SIG{INT} = sub {
     try {
         $midi_out->stop;
         $midi_out->panic;
-        for my $chan (0, 1) {
+        for my $chan (0 .. 15) {
             for my $n (0 .. 127) {
                 $midi_out->note_off($chan, $n, 0);
             }
