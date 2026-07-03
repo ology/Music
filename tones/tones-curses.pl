@@ -25,7 +25,7 @@ $main_window->add(
     -x    => 2
 );
 
-my $actions = ['Create part', 'Modify part', 'Delete part', 'Quit'];
+my $actions = ['Create part', 'Modify part', 'Delete part', 'Play parts', 'Quit'];
 my %action_labels;
 @action_labels{@$actions} = (@$actions);
 
