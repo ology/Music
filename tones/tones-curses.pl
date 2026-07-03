@@ -44,12 +44,6 @@ my $listbox = $main_window->add(
 # Intercept keyboard shortcut sequences to trigger application exit loops
 $cui->set_binding(sub { exit 0 }, "\cQ"); # Ctrl+Q safely breaks execution
 $cui->set_binding(\&handle_selection, "\cP");
-$main_window->add(
-    info  => 'Label',
-    -text => 'Press Ctrl+P to trigger the Task.',
-    -x    => 2,
-    -y    => 2,
-);
 # Shift programmatic user interface input focus onto the selection menu listbox
 $listbox->focus();
 # Fire up the user interface application primary engine polling thread
@@ -58,7 +52,6 @@ $cui->mainloop();
 # Trigger specific execution logic branches matching user selection
 sub handle_selection {
     my $selected_value = $listbox->get_active_value();
-
     if ($selected_value eq 'Quit') {
         my $confirm_exit = $cui->dialog(
             -message => "Are you sure you want to exit?",
