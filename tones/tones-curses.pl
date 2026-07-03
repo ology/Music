@@ -44,7 +44,12 @@ my $listbox = $main_window->add(
 # Intercept keyboard shortcut sequences to trigger application exit loops
 $cui->set_binding(sub { exit 0 }, "\cQ"); # Ctrl+Q safely breaks execution
 $cui->set_binding(\&handle_selection, "\cP");
-$main_window->add('info', 'Label', -text => 'Press Ctrl+P to trigger the Elsif Multi-Field Dialog.', -y => 2, -x => 2);
+$main_window->add(
+    info => 'Label',
+    -text => 'Press Ctrl+P to trigger the Task.',
+    -x => 2,
+    -y => 2,
+);
 # Shift programmatic user interface input focus onto the selection menu listbox
 $listbox->focus();
 # Fire up the user interface application primary engine polling thread
@@ -68,16 +73,38 @@ sub handle_selection {
             -width    => 50,
             -height   => 13,
             -border   => 1,
-            -title    => ' User Profile Creation ',
+            -title    => 'Create Part',
         );
 
         # Add Label and Field for First Name
-        $dialog->add('lbl1', 'Label', -text => 'First Name:', -y => 1, -x => 2);
-        my $txt_first = $dialog->add('first_name', 'TextEntry', -y => 1, -x => 15, -width => 30, -border => 1);
+        $dialog->add(
+            lbl1  => 'Label',
+            -text => 'First Name:',
+            -x    => 2,
+            -y    => 1,
+        );
+        my $txt_first = $dialog->add(
+            first_name => 'TextEntry',
+            -x         => 15,
+            -y         => 1,
+            -width     => 30,
+            -border    => 1,
+        );
 
         # Add Label and Field for Last Name
-        $dialog->add('lbl2', 'Label', -text => 'Last Name:', -y => 4, -x => 2);
-        my $txt_last = $dialog->add('last_name', 'TextEntry', -y => 4, -x => 15, -width => 30, -border => 1);
+        $dialog->add(
+            lbl2  => 'Label',
+            -text => 'Last Name:',
+            -y    => 4,
+            -x    => 2,
+        );
+        my $txt_last = $dialog->add(
+            last_name => 'TextEntry',
+            -y        => 4,
+            -x        => 15,
+            -width    => 30,
+            -border   => 1,
+        );
 
         # Variables to capture the submission state
         my $submitted = 0;
