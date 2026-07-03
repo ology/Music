@@ -78,11 +78,11 @@ sub handle_selection {
             -y    => 1,
         );
         my $txt_first = $dialog->add(
-            first_name => 'TextEntry',
-            -x         => 15,
-            -y         => 1,
-            -width     => 30,
-            -border    => 1,
+            part_name => 'TextEntry',
+            -x        => 15,
+            -y        => 1,
+            -width    => 30,
+            -border   => 1,
         );
 
         # Add Label and Field for Last Name
@@ -93,7 +93,7 @@ sub handle_selection {
             -y    => 4,
         );
         my $txt_last = $dialog->add(
-            last_name => 'TextEntry',
+            motif_num => 'TextEntry',
             -x        => 15,
             -y        => 4,
             -width    => 30,
@@ -126,14 +126,14 @@ sub handle_selection {
         $dialog->modalfocus(); 
         # --- Resumes Here After loose_focus() Is Triggered ---        
         # Pull values out of the text widgets before destroying the container
-        my $first_name = $txt_first->get();
-        my $last_name  = $txt_last->get();
+        my $part_name = $txt_first->get();
+        my $motif_num = $txt_last->get();
 
         # Cleanup the dialog window object entirely from memory
         $cui->delete('profile_dialog');
 
         if ($submitted) {
-            $cui->dialog("Profile Saved:\n\nName: $first_name $last_name");
+            $cui->dialog("Profile Saved:\n\nName: $part_name $motif_num");
         } else {
             $cui->dialog("Form Cancelled.");
         }
