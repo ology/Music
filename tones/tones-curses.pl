@@ -54,8 +54,8 @@ sub handle_selection {
     my $selected_value = $listbox->get_active_value();
     if ($selected_value eq 'Quit') {
         my $confirm_exit = $cui->dialog(
-            -message => "Are you sure you want to exit?",
-            -title   => "Close Window Confirmation",
+            -message => "Exit?",
+            -title   => "Quit",
             -buttons => ['yes', 'no']
         );
         exit 0 if $confirm_exit;
