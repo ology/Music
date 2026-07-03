@@ -59,7 +59,8 @@ sub handle_selection {
             -buttons => ['yes', 'no']
         );
         exit 0 if $confirm_exit;
-    } elsif ($selected_value eq 'Create part') {
+    }
+    elsif ($selected_value eq 'Create part') {
         my $dialog = $cui->add(
             'profile_dialog', 'Window',
             -centered => 1,
@@ -136,19 +137,22 @@ sub handle_selection {
         } else {
             $cui->dialog("Form Cancelled.");
         }
-    } elsif ($selected_value eq 'Modify part') {
+    }
+    elsif ($selected_value eq 'Modify part') {
         $cui->dialog(
             -message => "Run: $selected_value",
             -title   => "Task",
             -buttons => ['ok']
         );
-    } elsif ($selected_value eq 'Delete part') {
+    }
+    elsif ($selected_value eq 'Delete part') {
         $cui->dialog(
             -message => "Run: $selected_value",
             -title   => "Task",
             -buttons => ['ok']
         );
-    } elsif ($selected_value eq 'Play parts') {
+    }
+    elsif ($selected_value eq 'Play parts') {
         $cui->dialog(
             -message => "Run: $selected_value",
             -title   => "Task",
