@@ -27,7 +27,7 @@ $main_window->add(
 
 my $actions = ['Create part', 'Modify part', 'Delete part', 'Quit'];
 my %action_labels;
-@action_labels{@$actions} = ('Create part', 'Modify part', 'Delete part', 'Quit');
+@action_labels{@$actions} = (@$actions);
 
 # Append an interactive data listbox selection tool
 my $listbox = $main_window->add(
