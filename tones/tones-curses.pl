@@ -130,9 +130,7 @@ sub handle_selection {
         # Enforce exclusive modal behavior and lock the code block here
         $txt_first->focus();
         $dialog->modalfocus(); 
-
-        # --- Resumes Here After loose_focus() Is Triggered ---
-        
+        # --- Resumes Here After loose_focus() Is Triggered ---        
         # Pull values out of the text widgets before destroying the container
         my $first_name = $txt_first->get();
         my $last_name  = $txt_last->get();
