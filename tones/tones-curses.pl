@@ -62,33 +62,6 @@ sub handle_selection {
         );
         exit 0 if $confirm_exit;
     } elsif ($selected_value eq 'Create part') {
-        # Display an informational message modal matching selected execution item
-        $cui->dialog(
-            -message => "Run: $selected_value",
-            -title   => "Task",
-            -buttons => ['ok']
-        );
-    } elsif ($selected_value eq 'Modify part') {
-        $cui->dialog(
-            -message => "Run: $selected_value",
-            -title   => "Task",
-            -buttons => ['ok']
-        );
-    } elsif ($selected_value eq 'Delete part') {
-        $cui->dialog(
-            -message => "Run: $selected_value",
-            -title   => "Task",
-            -buttons => ['ok']
-        );
-    } elsif ($selected_value eq 'Play parts') {
-        # my $user_text = $cui->question(
-        #     -title    => 'Data Required',
-        #     -question => 'Enter your data:',
-        # );
-        # if (defined $user_text) {
-        #     $cui->dialog("You entered: $user_text");
-        # }
-
         my $dialog = $cui->add(
             'profile_dialog', 'Window',
             -centered => 1,
@@ -143,5 +116,23 @@ sub handle_selection {
         } else {
             $cui->dialog("Form Cancelled.");
         }
+    } elsif ($selected_value eq 'Modify part') {
+        $cui->dialog(
+            -message => "Run: $selected_value",
+            -title   => "Task",
+            -buttons => ['ok']
+        );
+    } elsif ($selected_value eq 'Delete part') {
+        $cui->dialog(
+            -message => "Run: $selected_value",
+            -title   => "Task",
+            -buttons => ['ok']
+        );
+    } elsif ($selected_value eq 'Play parts') {
+        $cui->dialog(
+            -message => "Run: $selected_value",
+            -title   => "Task",
+            -buttons => ['ok']
+        );
     }
 }
