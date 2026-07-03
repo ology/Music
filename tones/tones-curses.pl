@@ -73,7 +73,7 @@ sub handle_selection {
         # Add Label and Field for First Name
         $dialog->add(
             lbl1  => 'Label',
-            -text => 'Name:',
+            -text => 'Part name:',
             -x    => 2,
             -y    => 1,
         );
