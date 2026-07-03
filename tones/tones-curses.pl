@@ -38,7 +38,7 @@ my $listbox = $main_window->add(
     -wraparound => 1,
     -values     => $actions,
     -labels     => { %action_labels },
-    -onchange => \&handle_selection
+    -onchange   => \&handle_selection
 );
 
 # Intercept keyboard shortcut sequences to trigger application exit loops
@@ -59,8 +59,26 @@ sub handle_selection {
             -buttons => ['yes', 'no']
         );
         exit 0 if $confirm_exit;
-    } else {
+    } elsif ($selected_value eq 'Create part') {
         # Display an informational message modal matching selected execution item
+        $cui->dialog(
+            -message => "Run: $selected_value",
+            -title   => "Task",
+            -buttons => ['ok']
+        );
+    } elsif ($selected_value eq 'Modify part') {
+        $cui->dialog(
+            -message => "Run: $selected_value",
+            -title   => "Task",
+            -buttons => ['ok']
+        );
+    } elsif ($selected_value eq 'Delete part') {
+        $cui->dialog(
+            -message => "Run: $selected_value",
+            -title   => "Task",
+            -buttons => ['ok']
+        );
+    } elsif ($selected_value eq 'Play parts') {
         $cui->dialog(
             -message => "Run: $selected_value",
             -title   => "Task",
