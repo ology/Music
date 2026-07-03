@@ -72,7 +72,7 @@ sub handle_selection {
         # Add Label and Field for First Name
         $dialog->add(
             lbl1  => 'Label',
-            -text => 'First Name:',
+            -text => 'Name:',
             -x    => 2,
             -y    => 1,
         );
@@ -87,14 +87,14 @@ sub handle_selection {
         # Add Label and Field for Last Name
         $dialog->add(
             lbl2  => 'Label',
-            -text => 'Last Name:',
-            -y    => 4,
+            -text => 'Motifs #:',
             -x    => 2,
+            -y    => 4,
         );
         my $txt_last = $dialog->add(
             last_name => 'TextEntry',
-            -y        => 4,
             -x        => 15,
+            -y        => 4,
             -width    => 30,
             -border   => 1,
         );
@@ -104,8 +104,8 @@ sub handle_selection {
 
         $dialog->add(
             'buttons', 'Buttonbox',
-            -y       => 8,
             -x       => 13,
+            -y       => 8,
             -buttons => [
                 { 
                     -label   => '< OK >', 
