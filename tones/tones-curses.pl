@@ -7,7 +7,7 @@ use Curses::UI;
 # Initialize the main UI instance configuration loop
 my $cui = Curses::UI->new(
     -clear_on_exit => 1,
-    -color_support => 1
+    -color_support => 1,
 );
 
 # Generate a structural main layout window container
@@ -21,8 +21,8 @@ my $main_window = $cui->add(
 $main_window->add(
     info_label => 'Label',
     -text => 'Select an action:',
+    -x    => 2,
     -y    => 1,
-    -x    => 2
 );
 
 my $actions = ['Create part', 'Modify part', 'Delete part', 'Play parts', 'Quit'];
