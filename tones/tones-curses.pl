@@ -86,6 +86,5 @@ sub handle_selection {
         if (defined $user_text) {
             $cui->dialog("You entered: $user_text");
         }
-
     }
 }
