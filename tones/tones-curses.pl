@@ -45,10 +45,10 @@ my $listbox = $main_window->add(
 $cui->set_binding(sub { exit 0 }, "\cQ"); # Ctrl+Q safely breaks execution
 $cui->set_binding(\&handle_selection, "\cP");
 $main_window->add(
-    info => 'Label',
+    info  => 'Label',
     -text => 'Press Ctrl+P to trigger the Task.',
-    -x => 2,
-    -y => 2,
+    -x    => 2,
+    -y    => 2,
 );
 # Shift programmatic user interface input focus onto the selection menu listbox
 $listbox->focus();
