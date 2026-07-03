@@ -79,10 +79,13 @@ sub handle_selection {
             -buttons => ['ok']
         );
     } elsif ($selected_value eq 'Play parts') {
-        $cui->dialog(
-            -message => "Run: $selected_value",
-            -title   => "Task",
-            -buttons => ['ok']
+        my $user_text = $cui->question(
+            -title    => 'Data Required',
+            -question => 'Enter your data:',
         );
+        if (defined $user_text) {
+            $cui->dialog("You entered: $user_text");
+        }
+
     }
 }
