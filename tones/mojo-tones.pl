@@ -251,17 +251,17 @@ post '/parts' => sub ($c) {
     my %params;
     $params{channel}   = ($v->{channel} // 0) + 0;
     $params{patch}     = $choices{patch}{ $v->{patch} // '' };
-    $params{motif_num} = ($v->{motif_num} // 4) + 0;
-    $params{scale}     = $v->{scale} // 'major';
+    $params{motif_num} = ($v->{motif_num} || 4) + 0;
+    $params{scale}     = $v->{scale} || 'major';
     $params{octave}    = ($v->{octave} // 4) + 0;
-    $params{size}      = $v->{size} // 4;
-    $params{pool}      = $choices{pool}{ $v->{pool} // 'wn' };
+    $params{size}      = $v->{size} || 4;
+    $params{pool}      = $choices{pool}{ $v->{pool} || 'wn' };
     $params{weights}   = [ split /\s+/, ($v->{weights} || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
     $params{groups}    = [ split /\s+/, ($v->{groups}  || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
-    $params{pitches}   = [ $choices{pitches}{ $v->{pitches} // '1 octave' }->(
+    $params{pitches}   = [ $choices{pitches}{ $v->{pitches} || '1 octave' }->(
         $opt{base}, $params{octave}, $params{scale}
     ) ];
-    $params{intervals} = $choices{intervals}{ $v->{intervals} // '' };
+    $params{intervals} = $choices{intervals}{ $v->{intervals} || '' };
     # say ddc \%params;
 
     unless ($params{pool}) {
