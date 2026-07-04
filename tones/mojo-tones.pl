@@ -311,6 +311,7 @@ __DATA__
   <label>BPM <input type="number" name="bpm" value="<%= $opt->{bpm} %>"></label>
   <label>Base note <input type="text" name="base" value="<%= $opt->{base} %>" size="3"></label>
   <label><input type="checkbox" name="verbose" value="1" <%= $opt->{verbose} ? 'checked' : '' %>> verbose</label>
+  <p></p>
   <button type="submit" <%= $running ? 'disabled' : '' %>>Save Settings</button>
 </form>
 % if ($running) {
@@ -320,16 +321,27 @@ __DATA__
 <h2>Parts (<%= scalar @$parts %>)</h2>
 % if (@$parts) {
 <table border="1" cellpadding="4" cellspacing="0">
-  <tr><th>#</th><th>Channel</th><th>Motif #</th><th>Scale</th><th>Octave</th><th>Size</th></tr>
+  <tr>
+    <th>#</th>
+    <th>Channel</th>
+    <th>Patch</th>
+    <th>Motifs</th>
+    <th>Scale</th>
+    <th>Octave</th>
+    <th>Size</th>
+    <th>Pool</th>
+</tr>
   % for my $i (0 .. $#$parts) {
     % my $p = $parts->[$i];
     <tr>
       <td><%= $i + 1 %></td>
       <td><%= $p->{channel} %></td>
+      <td><%= $p->{patch} %></td>
       <td><%= $p->{motif_num} %></td>
       <td><%= $p->{scale} %></td>
       <td><%= $p->{octave} %></td>
       <td><%= $p->{size} %></td>
+      <td><%= join(' ', $p->{pool}->@*) %></td>
     </tr>
   % }
 </table>
@@ -416,7 +428,7 @@ __DATA__
       % }
     </select>
   </label>
-
+  <p></p>
   <button type="submit" <%= $running ? 'disabled' : '' %>>Add Part</button>
 </form>
 
