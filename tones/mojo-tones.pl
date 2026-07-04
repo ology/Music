@@ -1,34 +1,5 @@
 #!/usr/bin/env perl
 
-# Play tonal MIDI in real-time -- web-controlled version.
-#
-# This is a Mojolicious::Lite port of tones-prompt.pl. The original used
-# Term::Choose / IO::Prompt::Tiny to interactively build up a list of
-# "parts" at the terminal, then used IO::Async to drive a MIDI clock.
-# Here, the same configuration step happens through a browser form, and
-# the clock is driven by Mojo::IOLoop->recurring instead of IO::Async,
-# so everything runs inside Mojolicious's own event loop.
-#
-# Example(s):
-#   morbo tones-web.pl -- --port=fluid --bpm=60
-#   perl tones-web.pl daemon -l http://*:3000 -- --port=fluid --bpm=60
-#
-# Then open http://localhost:3000/ in a browser.
-#
-# Notes on the port:
-# - Getopt::Long is run against @ARGV *before* Mojolicious parses it, so
-#   our custom flags (--port, --bpm, --base, --verbose) don't collide
-#   with Mojolicious's own commands (daemon, morbo, get, ...).
-# - The %opt hash, @parts list, and running-timer state are ordinary
-#   lexicals closed over by the route handlers -- Mojolicious::Lite is
-#   a single event-loop process, so this is safe as long as you don't
-#   run it under a preforking server like hypnotoad (real-time MIDI
-#   timing wants a single worker anyway: morbo, or `daemon`).
-# - The `pitches` callbacks in %choices used to close over a shared
-#   %params hash in the original script. Here they take ($base, $octave,
-#   $scale) as explicit arguments instead, since there's no single
-#   "currently being edited" part in a web request.
-
 use Mojolicious::Lite -signatures;
 
 use feature qw(say try signatures);
