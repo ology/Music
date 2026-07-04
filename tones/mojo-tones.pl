@@ -299,10 +299,10 @@ __DATA__
 <h1>Tonal MIDI Sequencer</h1>
 
 % if (my $err = flash('error')) {
-  <p style="color:#b00"><strong>Error:</strong> <%= $err %></p>
+  <h2 style="color:#b00"><strong>Error:</strong> <%= $err %></p>
 % }
 % if (my $msg = flash('message')) {
-  <p style="color:#070"><%= $msg %></p>
+  <h2 style="color:#070"><%= $msg %></p>
 % }
 
 <h2>Settings</h2>
