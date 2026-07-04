@@ -12,10 +12,6 @@ use MIDI::Util qw(dura_size midi_dump scale_names);
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoicePhrase ();
 
-# ---------------------------------------------------------------------
-# Options (parsed out of @ARGV before Mojolicious sees the rest of it)
-# ---------------------------------------------------------------------
-
 my %opt = (
     port    => 'fluid',
     bpm     => 60,
@@ -29,14 +25,17 @@ GetOptionsFromArray(\@ARGV, \%opt,
     'verbose=s',
 );
 
-# ---------------------------------------------------------------------
-# Timing constants / sequencer state
-# ---------------------------------------------------------------------
-
 use constant {
     BEATS           => 16, # beats in a phrase
     DIVISIONS       => 4,  # divisions of a quarter-note into 16ths
     CLOCKS_PER_BEAT => 24, # PPQN
+};
+
+# redefine what happens on ^C, same as the original script
+$SIG{INT} = sub {
+    say "\nStop" if $opt{verbose};
+    stop_sequencer();
+    exit;
 };
 
 my $clock_interval; # time / bpm / ppqn, recomputed whenever bpm changes
@@ -77,10 +76,6 @@ my %choices = (
         '-7..-1,1..7' => [(-7 .. -1), (1 .. 7)],
     },
 );
-
-# ---------------------------------------------------------------------
-# MIDI helpers
-# ---------------------------------------------------------------------
 
 sub recompute_timing {
     $clock_interval = 60 / $opt{bpm} / CLOCKS_PER_BEAT;
@@ -128,13 +123,11 @@ sub populate ($p, $count) {
     my $motif = $p->motifs->[int rand $p->motifs->@*]; # TODO something clever?
     say "$count => ", ddc $motif if $opt{verbose};
     $p->queue([
-        map {
-            +{
-                pitch    => $p->voice->rand,
-                duration => $_,
-                velocity => velocity(-10, 10, 110),
-            }
-        } @$motif
+        map { +{
+            pitch    => $p->voice->rand,
+            duration => $_,
+            velocity => velocity(-10, 10, 110),
+        } } @$motif
     ]);
     # compute the onsets
     my $tally = 0;
@@ -182,10 +175,6 @@ sub off ($p, $count) {
     }
 }
 
-# ---------------------------------------------------------------------
-# Sequencer start/stop (replaces IO::Async::Timer::Periodic + loop->run)
-# ---------------------------------------------------------------------
-
 sub start_sequencer {
     return if defined $timer_id; # already running
     die "No parts configured\n" unless @parts;
@@ -226,16 +215,7 @@ sub stop_sequencer {
     panic_all();
 }
 
-# redefine what happens on ^C, same as the original script
-$SIG{INT} = sub {
-    say "\nStop" if $opt{verbose};
-    stop_sequencer();
-    exit;
-};
-
-# ---------------------------------------------------------------------
 # Routes
-# ---------------------------------------------------------------------
 
 get '/' => sub ($c) {
     $c->stash(
