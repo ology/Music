@@ -17,8 +17,8 @@ use Music::VoicePhrase ();
 # ---------------------------------------------------------------------
 
 my %opt = (
-    port    => 'MIDIThing2',
-    bpm     => 70,
+    port    => 'fluid',
+    bpm     => 60,
     base    => 'C',
     verbose => 0,
 );
@@ -41,6 +41,7 @@ use constant {
 
 my $clock_interval; # time / bpm / ppqn, recomputed whenever bpm changes
 my $sixteenth = CLOCKS_PER_BEAT / DIVISIONS; # clocks per 16th-note
+
 recompute_timing();
 
 my $ticks      = 0;  # clock ticks
