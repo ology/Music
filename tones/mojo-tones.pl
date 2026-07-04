@@ -247,7 +247,7 @@ post '/parts' => sub ($c) {
     return $c->redirect_to('/') if defined $timer_id; # don't add while running
 
     my $v = $c->req->params->to_hash;
-
+say ddc $v->{weights};
     my %params;
     $params{channel}   = ($v->{channel} // 0) + 0;
     $params{patch}     = $choices{patch}{ $v->{patch} // '' };
@@ -255,14 +255,14 @@ post '/parts' => sub ($c) {
     $params{scale}     = $v->{scale} // 'major';
     $params{octave}    = ($v->{octave} // 4) + 0;
     $params{size}      = $v->{size} // 4;
-    $params{pool}      = $choices{pool}{ $v->{pool} // '' };
-    $params{weights}   = [ split /\s+/, ($v->{weights} // '') =~ s/^\s+|\s+$//gr ];
-    $params{groups}    = [ split /\s+/, ($v->{groups}  // '') =~ s/^\s+|\s+$//gr ];
+    $params{pool}      = $choices{pool}{ $v->{pool} // 'wn' };
+    $params{weights}   = [ split /\s+/, ($v->{weights} || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
+    $params{groups}    = [ split /\s+/, ($v->{groups}  || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
     $params{pitches}   = [ $choices{pitches}{ $v->{pitches} // '1 octave' }->(
         $opt{base}, $params{octave}, $params{scale}
     ) ];
     $params{intervals} = $choices{intervals}{ $v->{intervals} // '' };
-
+say ddc \%params;
     unless ($params{pool}) {
         $c->flash(error => 'Please choose a pool.');
         return $c->redirect_to('/');
