@@ -247,7 +247,7 @@ post '/parts' => sub ($c) {
     return $c->redirect_to('/') if defined $timer_id; # don't add while running
 
     my $v = $c->req->params->to_hash;
-say ddc $v->{weights};
+
     my %params;
     $params{channel}   = ($v->{channel} // 0) + 0;
     $params{patch}     = $choices{patch}{ $v->{patch} // '' };
@@ -262,7 +262,8 @@ say ddc $v->{weights};
         $opt{base}, $params{octave}, $params{scale}
     ) ];
     $params{intervals} = $choices{intervals}{ $v->{intervals} // '' };
-say ddc \%params;
+    # say ddc \%params;
+
     unless ($params{pool}) {
         $c->flash(error => 'Please choose a pool.');
         return $c->redirect_to('/');
