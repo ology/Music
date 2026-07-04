@@ -385,7 +385,7 @@ __DATA__
   <label>Size
     <select name="size">
       % for my $sz (qw(1 2 2.5 3 3.5), (4 .. 16)) {
-        <option value="<%= $sz %>" <%= $sz == 6 ? 'selected' : '' %>><%= $sz %></option>
+        <option value="<%= $sz %>" <%= $sz == 4 ? 'selected' : '' %>><%= $sz %></option>
       % }
     </select>
   </label>
