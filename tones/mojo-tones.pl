@@ -410,8 +410,8 @@ __DATA__
     </select>
   </label>
 
-  <label>Weights <input type="text" name="weights" placeholder="e.g. 1 1 2 (space separated, one per pool item)"></label>
-  <label>Groups <input type="text" name="groups" placeholder="e.g. 0 0 1 (space separated, one per pool item)"></label>
+  <label>Weights <input type="text" name="weights" placeholder="e.g. 1 1 2 space separated"></label>
+  <label>Groups <input type="text" name="groups" placeholder="e.g. 0 0 1 space separated"></label>
 
   <label>Pitches
     <select name="pitches">
