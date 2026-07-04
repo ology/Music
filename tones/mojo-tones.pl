@@ -254,7 +254,7 @@ post '/parts' => sub ($c) {
     $params{motif_num} = ($v->{motif_num} // 4) + 0;
     $params{scale}     = $v->{scale} // 'major';
     $params{octave}    = ($v->{octave} // 4) + 0;
-    $params{size}      = $v->{size} // 6;
+    $params{size}      = $v->{size} // 4;
     $params{pool}      = $choices{pool}{ $v->{pool} // '' };
     $params{weights}   = [ split /\s+/, ($v->{weights} // '') =~ s/^\s+|\s+$//gr ];
     $params{groups}    = [ split /\s+/, ($v->{groups}  // '') =~ s/^\s+|\s+$//gr ];
