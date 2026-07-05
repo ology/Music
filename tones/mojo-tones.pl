@@ -78,6 +78,22 @@ my %choices = (
     },
 );
 
+my @parameters = qw(
+    channel
+    patch
+    motif_num
+    scale
+    octave
+    size
+    pool
+    weights
+    groups
+    pitches
+    pitches_name
+    intervals
+    intervals_name
+);
+
 sub recompute_timing {
     $clock_interval = 60 / $opt{bpm} / CLOCKS_PER_BEAT;
 }
@@ -277,21 +293,7 @@ post '/parts' => sub ($c) {
 
     if (defined $v->{edit_part}) {
         my $part = $parts[ $v->{edit_part} ];
-        $part->$_($params{$_}) for qw(
-          channel
-          patch
-          motif_num
-          scale
-          octave
-          size
-          pool
-          weights
-          groups
-          pitches
-          pitches_name
-          intervals
-          intervals_name
-        );
+        $part->$_($params{$_}) for @parameters;
         %edit = ();
         $c->flash(message => 'Part ' . $v->{edit_part} . ' updated.');
     }
@@ -323,22 +325,7 @@ post '/stop' => sub ($c) {
 post '/edit' => sub ($c) {
     return $c->redirect_to('/') if defined $timer_id; # don't change while running
     my $v = $c->req->params->to_hash;
-    $edit{$_} = $v->{$_} for qw(
-        edit_part
-        channel
-        patch
-        motif_num
-        scale
-        octave
-        size
-        pool
-        weights
-        groups
-        pitches
-        pitches_name
-        intervals
-        intervals_name
-    );
+    $edit{$_} = $v->{$_} for (@parameters, 'edit_part');
     $c->flash(message => 'Now editing part ' . ($edit{edit_part} + 1));
     $c->redirect_to('/');
 };
