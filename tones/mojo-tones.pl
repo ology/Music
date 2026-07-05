@@ -348,7 +348,7 @@ __DATA__
 
 @@ index.html.ep
 % layout 'default';
-<h1>Tonal MIDI Sequencer</h1>
+<h1>Tonal MIDI Phrase Generator</h1>
 
 % if (my $err = flash('error')) {
   <h2 style="color:#b00"><strong>Error:</strong> <%= $err %></p>
