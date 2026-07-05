@@ -303,6 +303,7 @@ post '/parts' => sub ($c) {
 post '/parts/clear' => sub ($c) {
     return $c->redirect_to('/') if defined $timer_id;
     @parts = ();
+    %edit = ();
     $c->redirect_to('/');
 };
 
