@@ -114,22 +114,21 @@ my %choices = (
         'B♭' => 'Bb',
         'B'  => 'B',
     },
-);
-
-my @parameters = qw(
-    channel
-    patch
-    motif_num
-    scale
-    octave
-    size
-    pool
-    weights
-    groups
-    pitches
-    pitches_name
-    intervals
-    intervals_name
+    parameters => [qw(
+      channel
+      patch
+      motif_num
+      scale
+      octave
+      size
+      pool
+      weights
+      groups
+      pitches
+      pitches_name
+      intervals
+      intervals_name
+    )],
 );
 
 sub recompute_timing {
@@ -331,7 +330,7 @@ post '/parts' => sub ($c) {
 
     if (defined $v->{edit_part}) {
         my $part = $parts[ $v->{edit_part} ];
-        $part->$_($params{$_}) for @parameters;
+        $part->$_($params{$_}) for $choices{parameters}->@*;
         %edit = ();
         $c->flash(message => 'Part ' . $v->{edit_part} . ' updated.');
     }
@@ -363,7 +362,7 @@ post '/stop' => sub ($c) {
 post '/edit' => sub ($c) {
     return $c->redirect_to('/') if defined $timer_id; # don't change while running
     my $v = $c->req->params->to_hash;
-    $edit{$_} = $v->{$_} for (@parameters, 'edit_part');
+    $edit{$_} = $v->{$_} for ($choices{parameters}->@*, 'edit_part');
     $c->flash(message => 'Now editing part ' . ($edit{edit_part} + 1));
     $c->redirect_to('/');
 };
