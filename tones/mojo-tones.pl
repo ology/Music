@@ -251,9 +251,9 @@ post '/settings' => sub ($c) {
     return $c->redirect_to('/') if defined $timer_id; # don't change while running
 
     my $v = $c->req->params->to_hash;
-    $opt{port} = $v->{port} if length($v->{port} // '');
-    $opt{base} = $v->{base} if length($v->{base} // '');
-    if (length($v->{bpm} // '')) {
+    $opt{port} = $v->{port} if length($v->{port} || '');
+    $opt{base} = $v->{base} if length($v->{base} || '');
+    if (length($v->{bpm} || '')) {
         $opt{bpm} = $v->{bpm} + 0;
         recompute_timing();
     }
