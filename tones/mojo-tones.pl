@@ -338,6 +338,15 @@ post '/edit' => sub ($c) {
     $c->redirect_to('/');
 };
 
+post '/delete' => sub ($c) {
+    return $c->redirect_to('/') if defined $timer_id; # don't change while running
+    my $v = $c->req->params->to_hash;
+    splice(@parts, $v->{delete_part}, 1);
+    %edit = ();
+    $c->flash(message => 'Deleted part ' . ($v->{delete_part} + 1));
+    $c->redirect_to('/');
+};
+
 app->start;
 
 __DATA__
@@ -409,7 +418,9 @@ __DATA__
         </form>
       </td>
       <td>
-        <button type="submit" name="delete_part" value="<%= $i %>">Delete</button>
+        <form method="post" action="/delete">
+          <button type="submit" name="delete_part" value="<%= $i %>">Delete</button>
+        </form>
       </td>
     </tr>
   % }
