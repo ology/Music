@@ -291,6 +291,7 @@ post '/parts' => sub ($c) {
         $part->pitches($params{pitches});
         $part->intervals_name($params{intervals_name});
         $part->intervals($params{intervals});
+        %edit = ();
         $c->flash(message => 'Part ' . $v->{edit_part} . ' updated.');
     }
     else {
