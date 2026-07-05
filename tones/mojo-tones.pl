@@ -277,19 +277,21 @@ post '/parts' => sub ($c) {
 
     if (defined $v->{edit_part}) {
         my $part = $parts[ $v->{edit_part} ];
-        $part->channel($params{channel});
-        $part->patch($params{patch});
-        $part->motif_num($params{motif_num});
-        $part->scale($params{scale});
-        $part->octave($params{octave});
-        $part->size($params{size});
-        $part->pool($params{pool});
-        $part->weights($params{weights});
-        $part->groups($params{groups});
-        $part->pitches_name($params{pitches_name});
-        $part->pitches($params{pitches});
-        $part->intervals_name($params{intervals_name});
-        $part->intervals($params{intervals});
+        $part->$_($params{$_}) for qw(
+          channel
+          patch
+          motif_num
+          scale
+          octave
+          size
+          pool
+          weights
+          groups
+          pitches
+          pitches_name
+          intervals
+          intervals_name
+        );
         %edit = ();
         $c->flash(message => 'Part ' . $v->{edit_part} . ' updated.');
     }
