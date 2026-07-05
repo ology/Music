@@ -28,7 +28,6 @@ GetOptionsFromArray(\@ARGV, \%opt,
 my %edit; # edit a part
 
 use constant {
-    BEATS           => 16, # beats in a phrase
     DIVISIONS       => 4,  # divisions of a quarter-note into 16ths
     CLOCKS_PER_BEAT => 24, # PPQN
 };
