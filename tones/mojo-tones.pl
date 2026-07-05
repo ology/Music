@@ -259,7 +259,7 @@ post '/settings' => sub ($c) {
     }
     $opt{verbose} = $v->{verbose} ? 1 : 0;
 
-    $c->flash(message => 'Settings saved.');
+    $c->flash(message => 'Settings saved');
     $c->redirect_to('/');
 };
 
