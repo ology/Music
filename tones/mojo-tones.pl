@@ -321,20 +321,22 @@ post '/stop' => sub ($c) {
 post '/edit' => sub ($c) {
     return $c->redirect_to('/') if defined $timer_id; # don't change while running
     my $v = $c->req->params->to_hash;
-    $edit{edit_part}      = $v->{edit_part};
-    $edit{channel}        = $v->{channel};
-    $edit{patch}          = $v->{patch};
-    $edit{motif_num}      = $v->{motif_num};
-    $edit{scale}          = $v->{scale};
-    $edit{octave}         = $v->{octave};
-    $edit{size}           = $v->{size};
-    $edit{pool}           = $v->{pool};
-    $edit{weights}        = $v->{weights};
-    $edit{groups}         = $v->{groups};
-    $edit{pitches}        = $v->{pitches};
-    $edit{pitches_name}   = $v->{pitches_name};
-    $edit{intervals}      = $v->{intervals};
-    $edit{intervals_name} = $v->{intervals_name};
+    $edit{$_} = $v->{$_} for qw(
+        edit_part
+        channel
+        patch
+        motif_num
+        scale
+        octave
+        size
+        pool
+        weights
+        groups
+        pitches
+        pitches_name
+        intervals
+        intervals_name
+    );
     $c->flash(message => 'Now editing part ' . ($edit{edit_part} + 1));
     $c->redirect_to('/');
 };
