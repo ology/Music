@@ -455,7 +455,7 @@ __DATA__
     </select>
   </label>
 
-  <label>Motif number
+  <label>Motifs
     <select name="motif_num">
       % for my $n (1 .. 16) {
         <option value="<%= $n %>" <%= $edit->{motif_num} && $n == $edit->{motif_num} ? 'selected' : '' %>><%= $n %></option>
