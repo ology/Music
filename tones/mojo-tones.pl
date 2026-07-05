@@ -300,7 +300,7 @@ post '/parts' => sub ($c) {
     $c->redirect_to('/');
 };
 
-post '/parts/clear' => sub ($c) {
+post '/clear' => sub ($c) {
     return $c->redirect_to('/') if defined $timer_id;
     @parts = ();
     %edit = ();
@@ -429,7 +429,7 @@ __DATA__
 % } else {
   <p><em>No parts configured yet.</em></p>
 % }
-<form method="post" action="/parts/clear">
+<form method="post" action="/clear">
   <button type="submit" <%= $running ? 'disabled' : '' %>>Clear Parts</button>
 </form>
 
