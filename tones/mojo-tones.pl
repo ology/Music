@@ -360,7 +360,7 @@ __DATA__
 <h2>Settings</h2>
 <form method="post" action="/settings">
   <label>MIDI port <input type="text" name="port" value="<%= $opt->{port} %>"></label>
-  <label>BPM <input type="number" name="bpm" value="<%= $opt->{bpm} %>"></label>
+  <label>BPM <input type="number" name="bpm" value="<%= $opt->{bpm} %>" size="4"></label>
   <label>Base note
     <select name="base">
       % for my $k ($choices->{keys}->@*) {
