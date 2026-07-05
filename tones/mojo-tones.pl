@@ -16,7 +16,7 @@ my %opt = (
     port    => 'fluid',
     bpm     => 60,
     base    => 'C',
-    verbose => 0,
+    verbose => 1,
 );
 GetOptionsFromArray(\@ARGV, \%opt,
     'port=s',
