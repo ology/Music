@@ -115,19 +115,19 @@ my %choices = (
         'B'  => 'B',
     },
     parameters => [qw(
-      channel
-      patch
-      motif_num
-      scale
-      octave
-      size
-      pool
-      weights
-      groups
-      pitches
-      pitches_name
-      intervals
-      intervals_name
+        channel
+        patch
+        motif_num
+        scale
+        octave
+        size
+        pool
+        weights
+        groups
+        pitches
+        pitches_name
+        intervals
+        intervals_name
     )],
 );
 
