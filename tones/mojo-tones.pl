@@ -367,10 +367,10 @@ __DATA__
 <h1>Tonal MIDI Phrase Generator</h1>
 
 % if (my $err = flash('error')) {
-  <h2 style="color:#b00"><strong>Error:</strong> <%= $err %></p>
+  <h2 style="color:red"><strong>Error:</strong> <%= $err %></p>
 % }
 % if (my $msg = flash('message')) {
-  <h2 style="color:#070"><%= $msg %></p>
+  <h2 style="color:green"><%= $msg %></p>
 % }
 
 <h2>Settings</h2>
@@ -436,7 +436,7 @@ __DATA__
       </td>
       <td>
         <form method="post" action="/delete">
-          <button type="submit" name="delete_part" value="<%= $i %>">Delete</button>
+          <button type="submit" name="delete_part" value="<%= $i %>" onclick="if(!confirm('Delete part <%= $i + 1 %>?')) return false;">Delete</button>
         </form>
       </td>
     </tr>
