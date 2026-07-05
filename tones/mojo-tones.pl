@@ -76,7 +76,7 @@ my %choices = (
         '-5..-1,1..5' => [(-5 .. -1), (1 .. 5)],
         '-7..-1,1..7' => [(-7 .. -1), (1 .. 7)],
     },
-    keys_display => [qw(
+    keys_order => [qw(
         C
         C♯
         D♭
@@ -398,7 +398,7 @@ __DATA__
   <label>BPM <input type="number" name="bpm" value="<%= $opt->{bpm} %>" size="4"></label>
   <label>Base note
     <select name="base">
-      % for my $k ($choices->{keys_display}->@*) {
+      % for my $k ($choices->{keys_order}->@*) {
         <option value="<%= $choices->{keys}{$k} %>" <%= $edit->{base} && $k eq $edit->{base} ? 'selected' : '' %>><%= $k %></option>
       % }
     </select>
