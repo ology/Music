@@ -25,6 +25,8 @@ GetOptionsFromArray(\@ARGV, \%opt,
     'verbose=s',
 );
 
+my %edit; # edit a part
+
 use constant {
     BEATS           => 16, # beats in a phrase
     DIVISIONS       => 4,  # divisions of a quarter-note into 16ths
@@ -215,7 +217,9 @@ sub stop_sequencer {
     panic_all();
 }
 
-# Routes
+#################################################
+#  Routes
+#################################################
 
 get '/' => sub ($c) {
     $c->stash(
@@ -223,6 +227,7 @@ get '/' => sub ($c) {
         parts   => \@parts,
         choices => \%choices,
         running => defined($timer_id) ? 1 : 0,
+        edit    => \%edit,
     );
     $c->render('index');
 };
@@ -250,7 +255,7 @@ post '/parts' => sub ($c) {
 
     my %params;
     $params{channel}   = ($v->{channel} // 0) + 0;
-    $params{patch}     = $choices{patch}{ $v->{patch} // '' };
+    $params{patch}     = $v->{patch} // 0;
     $params{motif_num} = ($v->{motif_num} || 4) + 0;
     $params{scale}     = $v->{scale} || 'major';
     $params{octave}    = ($v->{octave} // 4) + 0;
@@ -258,9 +263,11 @@ post '/parts' => sub ($c) {
     $params{pool}      = $choices{pool}{ $v->{pool} || 'wn' };
     $params{weights}   = [ split /\s+/, ($v->{weights} || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
     $params{groups}    = [ split /\s+/, ($v->{groups}  || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
+    $params{pitches_name} = $v->{pitches};
     $params{pitches}   = [ $choices{pitches}{ $v->{pitches} || '1 octave' }->(
         $opt{base}, $params{octave}, $params{scale}
     ) ];
+    $params{intervals_name} = $v->{intervals};
     $params{intervals} = $choices{intervals}{ $v->{intervals} || '' };
     # say ddc \%params;
 
@@ -269,8 +276,27 @@ post '/parts' => sub ($c) {
         return $c->redirect_to('/');
     }
 
-    push @parts, Music::VoicePhrase->new(%params);
-    $c->flash(message => 'Part ' . scalar(@parts) . ' added.');
+    if (defined $v->{edit_part}) {
+        my $part = $parts[ $v->{edit_part} ];
+        $part->channel($params{channel});
+        $part->patch($params{patch});
+        $part->motif_num($params{motif_num});
+        $part->scale($params{scale});
+        $part->octave($params{octave});
+        $part->size($params{size});
+        $part->pool($params{pool});
+        $part->weights($params{weights});
+        $part->groups($params{groups});
+        $part->pitches_name($params{pitches_name});
+        $part->pitches($params{pitches});
+        $part->intervals_name($params{intervals_name});
+        $part->intervals($params{intervals});
+        $c->flash(message => 'Part ' . $v->{edit_part} . ' updated.');
+    }
+    else {
+        push @parts, Music::VoicePhrase->new(%params);
+        $c->flash(message => 'Part ' . scalar(@parts) . ' added.');
+    }
     $c->redirect_to('/');
 };
 
@@ -288,6 +314,27 @@ post '/start' => sub ($c) {
 
 post '/stop' => sub ($c) {
     stop_sequencer();
+    $c->redirect_to('/');
+};
+
+post '/edit' => sub ($c) {
+    return $c->redirect_to('/') if defined $timer_id; # don't change while running
+    my $v = $c->req->params->to_hash;
+    $edit{edit_part}      = $v->{edit_part};
+    $edit{channel}        = $v->{channel};
+    $edit{patch}          = $v->{patch};
+    $edit{motif_num}      = $v->{motif_num};
+    $edit{scale}          = $v->{scale};
+    $edit{octave}         = $v->{octave};
+    $edit{size}           = $v->{size};
+    $edit{pool}           = $v->{pool};
+    $edit{weights}        = $v->{weights};
+    $edit{groups}         = $v->{groups};
+    $edit{pitches}        = $v->{pitches};
+    $edit{pitches_name}   = $v->{pitches_name};
+    $edit{intervals}      = $v->{intervals};
+    $edit{intervals_name} = $v->{intervals_name};
+    $c->flash(message => 'Now editing part ' . ($edit{edit_part} + 1));
     $c->redirect_to('/');
 };
 
@@ -321,7 +368,7 @@ __DATA__
 
 <h2>Parts (<%= scalar @$parts %>)</h2>
 % if (@$parts) {
-<table border="1" cellpadding="4" cellspacing="0">
+<table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <th>#</th>
     <th>Channel</th>
@@ -331,6 +378,8 @@ __DATA__
     <th>Octave</th>
     <th>Size</th>
     <th>Pool</th>
+    <th></th>
+    <th></th>
 </tr>
   % for my $i (0 .. $#$parts) {
     % my $p = $parts->[$i];
@@ -343,6 +392,25 @@ __DATA__
       <td><%= $p->{octave} %></td>
       <td><%= $p->{size} %></td>
       <td><%= join(' ', $p->{pool}->@*) %></td>
+      <td>
+        <form method="post" action="/edit">
+          <input type="hidden" name="channel" value="<%= $p->{channel} %>">
+          <input type="hidden" name="patch" value="<%= $p->{patch} %>">
+          <input type="hidden" name="motif_num" value="<%= $p->{motif_num} %>">
+          <input type="hidden" name="scale" value="<%= $p->{scale} %>">
+          <input type="hidden" name="octave" value="<%= $p->{octave} %>">
+          <input type="hidden" name="size" value="<%= $p->{size} %>">
+          <input type="hidden" name="pool" value="<%= join ' ', $p->{pool}->@* %>">
+          <input type="hidden" name="weights" value="<%= join ' ', $p->{weights}->@* %>">
+          <input type="hidden" name="groups" value="<%= join ' ', $p->{groups}->@* %>">
+          <input type="hidden" name="pitches" value="<%= $p->{pitches_name} %>">
+          <input type="hidden" name="intervals" value="<%= $p->{intervals_name} %>">
+          <button type="submit" name="edit_part" value="<%= $i %>">Edit</button>
+        </form>
+      </td>
+      <td>
+        <button type="submit" name="delete_part" value="<%= $i %>">Delete</button>
+      </td>
     </tr>
   % }
 </table>
@@ -353,36 +421,40 @@ __DATA__
   <button type="submit" <%= $running ? 'disabled' : '' %>>Clear Parts</button>
 </form>
 
+% if (defined $edit->{edit_part}) {
+<h2>Edit Part <%= $edit->{edit_part} + 1 %></h2>
+% } else {
 <h2>Add a Part</h2>
+% }
 <form method="post" action="/parts">
   <label>Channel
     <select name="channel">
       % for my $ch (0 .. 15) {
-        <option value="<%= $ch %>"><%= $ch %></option>
+        <option value="<%= $ch %>" <%= defined $edit->{channel} && $ch eq $edit->{channel} ? 'selected' : '' %>><%= $ch %></option>
       % }
     </select>
   </label>
 
   <label>Patch
     <select name="patch">
-      % for my $k (sort keys %{ $choices->{patch} }) {
-        <option value="<%= $k %>"><%= $k %></option>
+      % for my $k (sort keys $choices->{patch}->%*) {
+        <option value="<%= $choices->{patch}{$k} %>" <%= defined $edit->{patch} && $choices->{patch}{$k} eq $edit->{patch} ? 'selected' : '' %>><%= $k %></option>
       % }
     </select>
   </label>
 
-  <label>Motif count
+  <label>Motif number
     <select name="motif_num">
       % for my $n (1 .. 16) {
-        <option value="<%= $n %>" <%= $n == 4 ? 'selected' : '' %>><%= $n %></option>
+        <option value="<%= $n %>" <%= $edit->{motif_num} && $n == $edit->{motif_num} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
 
   <label>Scale
     <select name="scale">
-      % for my $s (@{ $choices->{scale_names} }) {
-        <option value="<%= $s %>"><%= $s %></option>
+      % for my $s ($choices->{scale_names}->@*) {
+        <option value="<%= $s %>" <%= $edit->{scale} && $s eq $edit->{scale} ? 'selected' : '' %>><%= $s %></option>
       % }
     </select>
   </label>
@@ -390,47 +462,52 @@ __DATA__
   <label>Octave
     <select name="octave">
       % for my $o (0 .. 9) {
-        <option value="<%= $o %>" <%= $o == 4 ? 'selected' : '' %>><%= $o %></option>
+        <option value="<%= $o %>" <%= $edit->{octave} && $o eq $edit->{octave} ? 'selected' : '' %>><%= $o %></option>
       % }
     </select>
   </label>
 
-  <label>Size
+  <label>Measure size
     <select name="size">
       % for my $sz (qw(1 2 2.5 3 3.5), (4 .. 16)) {
-        <option value="<%= $sz %>" <%= $sz == 4 ? 'selected' : '' %>><%= $sz %></option>
+        <option value="<%= $sz %>" <%= $edit->{size} && $sz eq $edit->{size} ? 'selected' : '' %>><%= $sz %></option>
       % }
     </select>
   </label>
 
   <label>Pool
     <select name="pool">
-      % for my $k (sort keys %{ $choices->{pool} }) {
-        <option value="<%= $k %>"><%= $k %></option>
+      % for my $k (sort keys $choices->{pool}->%*) {
+        <option value="<%= $k %>" <%= $edit->{pool} && $k eq $edit->{pool} ? 'selected' : '' %>><%= $k %></option>
       % }
     </select>
   </label>
 
-  <label>Weights <input type="text" name="weights" placeholder="e.g. 1 1 2 space separated"></label>
-  <label>Groups <input type="text" name="groups" placeholder="e.g. 0 0 1 space separated"></label>
+  <label>Weights <input type="text" name="weights" value="<%= $edit->{weights} %>" placeholder="e.g. 1 1 2 space separated"></label>
+  <label>Groups <input type="text" name="groups" value="<%= $edit->{groups} %>" placeholder="e.g. 0 0 1 space separated"></label>
 
   <label>Pitches
     <select name="pitches">
-      % for my $k (sort keys %{ $choices->{pitches} }) {
-        <option value="<%= $k %>"><%= $k %></option>
+      % for my $k (sort keys $choices->{pitches}->%*) {
+        <option value="<%= $k %>" <%= $edit->{pitches} && $k eq $edit->{pitches} ? 'selected' : '' %>><%= $k %></option>
       % }
     </select>
   </label>
 
   <label>Intervals
     <select name="intervals">
-      % for my $k (sort keys %{ $choices->{intervals} }) {
-        <option value="<%= $k %>"><%= $k %></option>
+      % for my $k (sort keys $choices->{intervals}->%*) {
+        <option value="<%= $k %>" <%= $edit->{intervals} && $k eq $edit->{intervals} ? 'selected' : '' %>><%= $k %></option>
       % }
     </select>
   </label>
   <p></p>
+  % if (defined $edit->{edit_part}) {
+  <input type="hidden" name="edit_part" value="<%= $edit->{edit_part} %>">
+  <button type="submit" <%= $running ? 'disabled' : '' %>>Update Part</button>
+  % } else {
   <button type="submit" <%= $running ? 'disabled' : '' %>>Add Part</button>
+  % }
 </form>
 
 <h2>Player</h2>
@@ -452,7 +529,15 @@ __DATA__
     body { font-family: sans-serif; max-width: 760px; margin: 2em auto; }
     form { margin: 0.75em 0; padding: 0.75em; border: 1px solid #ddd; border-radius: 6px; }
     label { display: inline-block; margin-right: 1em; margin-bottom: 0.5em; }
-    table { margin-bottom: 0.75em; }
+    table, th, td {
+        border: 2px solid #E5E4E2;  /* Sets width, style, and hex color */
+        border-collapse: collapse;    /* Prevents double borders */
+        margin-bottom: 0.75em;
+    }
+    td {
+        text-align: center;     /* Centers text horizontally */
+        vertical-align: middle; /* Centers text vertically */
+    }
     button { padding: 0.4em 1em; }
   </style>
 </head>
