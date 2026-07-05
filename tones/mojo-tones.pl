@@ -57,8 +57,8 @@ my %choices = (
     pool        => {
         'wn hn'        => [qw(wn hn)],
         'wn dhn hn qn' => [qw(wn dhn hn qn)],
-        'qn en'        => [qw(qn en)],
         'hn dqn qn en' => [qw(hn dqn qn en)],
+        'qn en'        => [qw(qn en)],
         'qn den en sn' => [qw(qn den en sn)],
     },
     pitches => {
@@ -76,6 +76,25 @@ my %choices = (
         '-5..-1,1..5' => [(-5 .. -1), (1 .. 5)],
         '-7..-1,1..7' => [(-7 .. -1), (1 .. 7)],
     },
+    keys_display => [qw(
+        C
+        C♯
+        D♭
+        D
+        D♯
+        E♭
+        E
+        F
+        F♯
+        G♭
+        G
+        G♯
+        A♭
+        A
+        A♯
+        B♭
+        B
+    )],
     keys => {
         'C'  => 'C',
         'C♯' => 'C#',
@@ -379,7 +398,7 @@ __DATA__
   <label>BPM <input type="number" name="bpm" value="<%= $opt->{bpm} %>" size="4"></label>
   <label>Base note
     <select name="base">
-      % for my $k (sort keys $choices->{keys}->%*) {
+      % for my $k ($choices->{keys_display}->@*) {
         <option value="<%= $choices->{keys}{$k} %>" <%= $edit->{base} && $k eq $edit->{base} ? 'selected' : '' %>><%= $k %></option>
       % }
     </select>
