@@ -76,6 +76,9 @@ my %choices = (
         '-5..-1,1..5' => [(-5 .. -1), (1 .. 5)],
         '-7..-1,1..7' => [(-7 .. -1), (1 .. 7)],
     },
+    keys => [qw(
+        C C♯ D♭ D D♯ E♭ E F F♯ G♭ G G♯ A♭ A A♯ B♭ B
+    )],
 );
 
 my @parameters = qw(
@@ -358,7 +361,13 @@ __DATA__
 <form method="post" action="/settings">
   <label>MIDI port <input type="text" name="port" value="<%= $opt->{port} %>"></label>
   <label>BPM <input type="number" name="bpm" value="<%= $opt->{bpm} %>"></label>
-  <label>Base note <input type="text" name="base" value="<%= $opt->{base} %>" size="3"></label>
+  <label>Base note
+    <select name="base">
+      % for my $k ($choices->{keys}->@*) {
+        <option value="<%= $k %>" <%= $edit->{base} && $k eq $edit->{base} ? 'selected' : '' %>><%= $k %></option>
+      % }
+    </select>
+  </label>
   <label><input type="checkbox" name="verbose" value="1" <%= $opt->{verbose} ? 'checked' : '' %>> verbose</label>
   <p></p>
   <button type="submit" <%= $running ? 'disabled' : '' %>>Save Settings</button>
