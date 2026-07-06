@@ -501,16 +501,16 @@ __DATA__
 <form method="post" action="/parts">
   <label>Channel
     <select name="channel">
-      % for my $ch (0 .. 15) {
-        <option value="<%= $ch %>" <%= defined $edit->{channel} && $ch eq $edit->{channel} ? 'selected' : '' %>><%= $ch %></option>
+      % for my $n (0 .. 15) {
+        <option value="<%= $n %>" <%= defined $edit->{channel} && $n eq $edit->{channel} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
 
   <label>Patch
     <select name="patch">
-      % for my $k (sort keys $choices->{patch}->%*) {
-        <option value="<%= $choices->{patch}{$k} %>" <%= defined $edit->{patch} && $choices->{patch}{$k} eq $edit->{patch} ? 'selected' : '' %>><%= $k %></option>
+      % for my $n (sort keys $choices->{patch}->%*) {
+        <option value="<%= $choices->{patch}{$n} %>" <%= defined $edit->{patch} && $choices->{patch}{$n} eq $edit->{patch} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
@@ -526,53 +526,55 @@ __DATA__
 
   <label>Scale
     <select name="scale">
-      % for my $s ($choices->{scale_names}->@*) {
-        <option value="<%= $s %>" <%= $edit->{scale} && $s eq $edit->{scale} ? 'selected' : '' %>><%= $s %></option>
+      % for my $n ($choices->{scale_names}->@*) {
+        <option value="<%= $n %>" <%= $edit->{scale} && $n eq $edit->{scale} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
 
   <label>Octave
     <select name="octave">
-      % for my $o (0 .. 9) {
+      % for my $n (0 .. 9) {
         % my $selected = defined $edit->{octave} ? $edit->{octave} : '3';
-        <option value="<%= $o %>" <%= ($edit->{octave} && $o eq $edit->{octave}) || ($o == $selected) ? 'selected' : '' %>><%= $o %></option>
+        <option value="<%= $n %>" <%= ($edit->{octave} && $n eq $edit->{octave}) || ($n == $selected) ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
 
   <label>Measure size
     <select name="size">
-      % for my $sz (qw(1 2 2.5 3 3.5), (4 .. 16)) {
+      % for my $n (qw(1 2 2.5 3 3.5), (4 .. 16)) {
         % my $selected = defined $edit->{size} ? $edit->{size} : '4';
-        <option value="<%= $sz %>" <%= ($edit->{size} && $sz eq $edit->{size}) || ($sz == $selected) ? 'selected' : '' %>><%= $sz %></option>
+        <option value="<%= $n %>" <%= ($edit->{size} && $n eq $edit->{size}) || ($n == $selected) ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
 
   <label>Pool
     <select name="pool">
-      % for my $k (sort keys $choices->{pool}->%*) {
-        <option value="<%= $k %>" <%= $edit->{pool} && $k eq $edit->{pool} ? 'selected' : '' %>><%= $k %></option>
+      % for my $n (sort keys $choices->{pool}->%*) {
+        <option value="<%= $n %>" <%= $edit->{pool} && $n eq $edit->{pool} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
 
-  <label>Weights <input type="text" name="weights" value="<%= $edit->{weights} %>" placeholder="e.g. 1 1 2 space separated" size="22"></label>
-  <label>Groups <input type="text" name="groups" value="<%= $edit->{groups} %>" placeholder="e.g. 0 0 1 space separated" size="22"></label>
+  <label>Weights
+    <input type="text" name="weights" value="<%= $edit->{weights} %>" placeholder="e.g. 1 1 2 space separated" size="22"></label>
+  <label>Groups
+    <input type="text" name="groups" value="<%= $edit->{groups} %>" placeholder="e.g. 0 0 1 space separated" size="22"></label>
 
   <label>Pitches
     <select name="pitches">
-      % for my $k (sort keys $choices->{pitches}->%*) {
-        <option value="<%= $k %>" <%= $edit->{pitches} && $k eq $edit->{pitches} ? 'selected' : '' %>><%= $k %></option>
+      % for my $n (sort keys $choices->{pitches}->%*) {
+        <option value="<%= $n %>" <%= $edit->{pitches} && $n eq $edit->{pitches} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
 
   <label>Intervals
     <select name="intervals">
-      % for my $k (sort keys $choices->{intervals}->%*) {
-        <option value="<%= $k %>" <%= $edit->{intervals} && $k eq $edit->{intervals} ? 'selected' : '' %>><%= $k %></option>
+      % for my $n (sort keys $choices->{intervals}->%*) {
+        <option value="<%= $n %>" <%= $edit->{intervals} && $n eq $edit->{intervals} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
