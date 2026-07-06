@@ -413,7 +413,7 @@ __DATA__
   <h2 class="red"><strong>Error:</strong> <%= $err %></h2>
 % }
 % if (my $msg = flash('message')) {
-  <h2 class="green"><%= $msg %></h2>
+  <!-- <h2 class="green"><%= $msg %></h2> -->
 % }
 
 <table border="0" cellpadding="0" cellspacing="0">
