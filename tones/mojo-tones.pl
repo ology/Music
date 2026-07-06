@@ -410,10 +410,10 @@ __DATA__
 					<h1>MIDI Phrase Generator</h1>
 
 % if (my $err = flash('error')) {
-  <h2 style="color:red"><strong>Error:</strong> <%= $err %></p>
+  <h2 class="red"><strong>Error:</strong> <%= $err %></p>
 % }
 % if (my $msg = flash('message')) {
-  <h2 style="color:green"><%= $msg %></p>
+  <h2 class="green"><%= $msg %></p>
 % }
 
 <table border="0" cellpadding="0" cellspacing="0">
@@ -422,10 +422,10 @@ __DATA__
 
 <h2>Player</h2>
 <p>Status: <strong><%= $running ? 'RUNNING' : 'stopped' %></strong></p>
-<form method="post" action="/start" style="display:inline-block">
+<form method="post" action="/start" class="block">
   <button type="submit" <%= $running ? 'disabled' : '' %>>Start</button>
 </form>
-<form method="post" action="/stop" style="display:inline-block">
+<form method="post" action="/stop" class="block">
   <button type="submit" <%= $running ? '' : 'disabled' %>>Stop</button>
 </form>
 

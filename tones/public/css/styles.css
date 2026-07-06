@@ -18,3 +18,13 @@ input[type="checkbox"] {
     height: 24px;
     accent-color: black;
 }
+
+.block {
+    display: inline-block;
+}
+.red {
+    color: red;
+}
+.green {
+    color: green;
+}
