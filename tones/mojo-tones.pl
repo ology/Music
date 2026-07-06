@@ -387,16 +387,16 @@ __DATA__
 			<div class="left-frame">
 				<a href="#" id="topBtn"><span class="hop">screen</span> top</a>
 				<div>
-					<div class="panel-3">03<span class="hop">-111968</span></div>
-					<div class="panel-4">04<span class="hop">-041969</span></div>
-					<div class="panel-5">05<span class="hop">-1701D</span></div>
-					<div class="panel-6">06<span class="hop">-071984</span></div>
-					<div class="panel-7">07<span class="hop">-081940</span></div>
-					<div class="panel-8">08<span class="hop">-47148</span></div>
-					<div class="panel-9">09<span class="hop">-081966</span></div>
+					<div class="panel-3">03<span class="hop">-<%= substr rand(), 2, 6 %></span></div>
+					<div class="panel-4">04<span class="hop">-<%= substr rand(), 2, 6 %></span></div>
+					<div class="panel-5">05<span class="hop">-<%= substr rand(), 2, 4 %>D</span></div>
+					<div class="panel-6">06<span class="hop">-<%= substr rand(), 2, 6 %></span></div>
+					<div class="panel-7">07<span class="hop">-<%= substr rand(), 2, 6 %></span></div>
+					<div class="panel-8">08<span class="hop">-<%= substr rand(), 2, 5 %></span></div>
+					<div class="panel-9">09<span class="hop">-<%= substr rand(), 2, 6 %></span></div>
 				</div>
 				<div>
-					<div class="panel-10">10<span class="hop">-31</span></div>
+					<div class="panel-10">10<span class="hop">-<%= substr rand(), 2, 2 %></span></div>
 				</div>
 			</div>
 			<div class="right-frame">
