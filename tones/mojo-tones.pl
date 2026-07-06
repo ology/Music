@@ -410,10 +410,10 @@ __DATA__
 					<h1>MIDI Phrase Generator</h1>
 
 % if (my $err = flash('error')) {
-  <h2 class="red"><strong>Error:</strong> <%= $err %></p>
+  <h2 class="red"><strong>Error:</strong> <%= $err %></h2>
 % }
 % if (my $msg = flash('message')) {
-  <h2 class="green"><%= $msg %></p>
+  <h2 class="green"><%= $msg %></h2>
 % }
 
 <table border="0" cellpadding="0" cellspacing="0">
@@ -493,7 +493,7 @@ __DATA__
 
   <label>Pool
     <select name="pool">
-      % for my $n (keys $choices->{pool}->%*) {
+      % for my $n (sort keys $choices->{pool}->%*) {
         <option value="<%= $n %>" <%= $edit->{pool} && $n eq $edit->{pool} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
