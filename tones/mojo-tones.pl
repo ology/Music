@@ -416,80 +416,13 @@ __DATA__
   <h2 style="color:green"><%= $msg %></p>
 % }
 
-<h2>Settings</h2>
-<form method="post" action="/settings">
-  <label>MIDI port <input type="text" name="port" value="<%= $opt->{port} %>"></label>
-  <label>BPM <input type="number" name="bpm" value="<%= $opt->{bpm} %>" size="4"></label>
-  <label>Base note
-    <select name="base">
-      % for my $k ($choices->{keys_order}->@*) {
-        <option value="<%= $choices->{keys}{$k} %>" <%= $edit->{base} && $k eq $edit->{base} ? 'selected' : '' %>><%= $k %></option>
-      % }
-    </select>
-  </label>
-  <label><input type="checkbox" name="verbose" value="1" <%= $opt->{verbose} ? 'checked' : '' %>> verbose</label>
-  <p></p>
-  <button type="submit" <%= $running ? 'disabled' : '' %>>Save Settings</button>
+<h2>Player</h2>
+<p>Status: <strong><%= $running ? 'RUNNING' : 'stopped' %></strong></p>
+<form method="post" action="/start" style="display:inline-block">
+  <button type="submit" <%= $running ? 'disabled' : '' %>>Start</button>
 </form>
-% if ($running) {
-  <p><em>Settings are locked while the sequencer is running.</em></p>
-% }
-
-<h2>Parts (<%= scalar @$parts %>)</h2>
-% if (@$parts) {
-<table border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <th>#</th>
-    <th>Channel</th>
-    <th>Patch</th>
-    <th>Motifs</th>
-    <th>Scale</th>
-    <th>Octave</th>
-    <th>Size</th>
-    <th>Pool</th>
-    <th></th>
-    <th></th>
-</tr>
-  % for my $i (0 .. $#$parts) {
-    % my $p = $parts->[$i];
-    <tr>
-      <td><%= $i + 1 %></td>
-      <td><%= $p->{channel} %></td>
-      <td><%= $p->{patch} %></td>
-      <td><%= $p->{motif_num} %></td>
-      <td><%= $p->{scale} %></td>
-      <td><%= $p->{octave} %></td>
-      <td><%= $p->{size} %></td>
-      <td><%= join(' ', $p->{pool}->@*) %></td>
-      <td>
-        <form method="post" action="/edit">
-          <input type="hidden" name="channel" value="<%= $p->{channel} %>">
-          <input type="hidden" name="patch" value="<%= $p->{patch} %>">
-          <input type="hidden" name="motif_num" value="<%= $p->{motif_num} %>">
-          <input type="hidden" name="scale" value="<%= $p->{scale} %>">
-          <input type="hidden" name="octave" value="<%= $p->{octave} %>">
-          <input type="hidden" name="size" value="<%= $p->{size} %>">
-          <input type="hidden" name="pool" value="<%= join ' ', $p->{pool}->@* %>">
-          <input type="hidden" name="weights" value="<%= join ' ', $p->{weights}->@* %>">
-          <input type="hidden" name="groups" value="<%= join ' ', $p->{groups}->@* %>">
-          <input type="hidden" name="pitches" value="<%= $p->{pitches_name} %>">
-          <input type="hidden" name="intervals" value="<%= $p->{intervals_name} %>">
-          <button type="submit" name="edit_part" value="<%= $i %>">Edit</button>
-        </form>
-      </td>
-      <td>
-        <form method="post" action="/delete">
-          <button type="submit" name="delete_part" value="<%= $i %>" onclick="if(!confirm('Delete part <%= $i + 1 %>?')) return false;">Delete</button>
-        </form>
-      </td>
-    </tr>
-  % }
-</table>
-% } else {
-  <p><em>No parts configured yet.</em></p>
-% }
-<form method="post" action="/clear">
-  <button type="submit" <%= $running ? 'disabled' : '' %>>Clear Parts</button>
+<form method="post" action="/stop" style="display:inline-block">
+  <button type="submit" <%= $running ? '' : 'disabled' %>>Stop</button>
 </form>
 
 % if (defined $edit->{edit_part}) {
@@ -586,14 +519,81 @@ __DATA__
   % }
 </form>
 
-<h2>Player</h2>
-<p>Status: <strong><%= $running ? 'RUNNING' : 'stopped' %></strong></p>
-<form method="post" action="/start" style="display:inline-block">
-  <button type="submit" <%= $running ? 'disabled' : '' %>>Start</button>
+<h2>Parts (<%= scalar @$parts %>)</h2>
+% if (@$parts) {
+<table border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <th>#</th>
+    <th>Channel</th>
+    <th>Patch</th>
+    <th>Motifs</th>
+    <th>Scale</th>
+    <th>Octave</th>
+    <th>Size</th>
+    <th>Pool</th>
+    <th></th>
+    <th></th>
+</tr>
+  % for my $i (0 .. $#$parts) {
+    % my $p = $parts->[$i];
+    <tr>
+      <td><%= $i + 1 %></td>
+      <td><%= $p->{channel} %></td>
+      <td><%= $p->{patch} %></td>
+      <td><%= $p->{motif_num} %></td>
+      <td><%= $p->{scale} %></td>
+      <td><%= $p->{octave} %></td>
+      <td><%= $p->{size} %></td>
+      <td><%= join(' ', $p->{pool}->@*) %></td>
+      <td>
+        <form method="post" action="/edit">
+          <input type="hidden" name="channel" value="<%= $p->{channel} %>">
+          <input type="hidden" name="patch" value="<%= $p->{patch} %>">
+          <input type="hidden" name="motif_num" value="<%= $p->{motif_num} %>">
+          <input type="hidden" name="scale" value="<%= $p->{scale} %>">
+          <input type="hidden" name="octave" value="<%= $p->{octave} %>">
+          <input type="hidden" name="size" value="<%= $p->{size} %>">
+          <input type="hidden" name="pool" value="<%= join ' ', $p->{pool}->@* %>">
+          <input type="hidden" name="weights" value="<%= join ' ', $p->{weights}->@* %>">
+          <input type="hidden" name="groups" value="<%= join ' ', $p->{groups}->@* %>">
+          <input type="hidden" name="pitches" value="<%= $p->{pitches_name} %>">
+          <input type="hidden" name="intervals" value="<%= $p->{intervals_name} %>">
+          <button type="submit" name="edit_part" value="<%= $i %>">Edit</button>
+        </form>
+      </td>
+      <td>
+        <form method="post" action="/delete">
+          <button type="submit" name="delete_part" value="<%= $i %>" onclick="if(!confirm('Delete part <%= $i + 1 %>?')) return false;">Delete</button>
+        </form>
+      </td>
+    </tr>
+  % }
+</table>
+% } else {
+  <p><em>No parts configured yet.</em></p>
+% }
+<form method="post" action="/clear">
+  <button type="submit" <%= $running ? 'disabled' : '' %>>Clear Parts</button>
 </form>
-<form method="post" action="/stop" style="display:inline-block">
-  <button type="submit" <%= $running ? '' : 'disabled' %>>Stop</button>
+
+<h2>Settings</h2>
+<form method="post" action="/settings">
+  <label>MIDI port <input type="text" name="port" value="<%= $opt->{port} %>"></label>
+  <label>BPM <input type="number" name="bpm" value="<%= $opt->{bpm} %>" size="4"></label>
+  <label>Base note
+    <select name="base">
+      % for my $k ($choices->{keys_order}->@*) {
+        <option value="<%= $choices->{keys}{$k} %>" <%= $edit->{base} && $k eq $edit->{base} ? 'selected' : '' %>><%= $k %></option>
+      % }
+    </select>
+  </label>
+  <label><input type="checkbox" name="verbose" value="1" <%= $opt->{verbose} ? 'checked' : '' %>> verbose</label>
+  <p></p>
+  <button type="submit" <%= $running ? 'disabled' : '' %>>Save Settings</button>
 </form>
+% if ($running) {
+  <p><em>Settings are locked while the sequencer is running.</em></p>
+% }
 
 				</main>
 				<footer>
