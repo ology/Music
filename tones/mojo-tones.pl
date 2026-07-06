@@ -596,13 +596,13 @@ __DATA__
 
 				</main>
 				<footer>
-				<div class="bar-panel">
-					<div class="bar-1"></div>
-					<div class="bar-2"></div>
-					<div class="bar-3"></div>
-					<div class="bar-4"></div>
-					<div class="bar-5"></div>
-				</div>
+          <div class="bar-panel">
+            <div class="bar-1"></div>
+            <div class="bar-2"></div>
+            <div class="bar-3"></div>
+            <div class="bar-4"></div>
+            <div class="bar-5"></div>
+          </div>
           Phrase Generator created by <a href="https://www.ology.net/">Gene</a><br>
 					LCARS Template by <a href="https://www.thelcars.com">www.TheLCARS.com</a>
 				</footer>
