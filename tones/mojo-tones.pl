@@ -332,11 +332,11 @@ post '/parts' => sub ($c) {
         my $part = $parts[ $v->{edit_part} ];
         $part->$_($params{$_}) for $choices{parameters}->@*;
         %edit = ();
-        $c->flash(message => 'Part ' . $v->{edit_part} . ' updated.');
+        $c->flash(message => 'Part ' . $v->{edit_part} . ' updated');
     }
     else {
         push @parts, Music::VoicePhrase->new(%params);
-        $c->flash(message => 'Part ' . scalar(@parts) . ' added.');
+        $c->flash(message => 'Part ' . scalar(@parts) . ' added');
     }
     $c->redirect_to('/');
 };
