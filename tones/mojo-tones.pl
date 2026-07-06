@@ -583,7 +583,7 @@ __DATA__
   % }
 </table>
 % } else {
-  <p><em>No parts configured yet.</em></p>
+  <p><em>No parts configured</em></p>
 % }
 <form method="post" action="/clear">
   <button type="submit" <%= $running ? 'disabled' : '' %>>Clear Parts</button>
