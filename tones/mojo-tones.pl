@@ -306,17 +306,17 @@ post '/parts' => sub ($c) {
     my $v = $c->req->params->to_hash;
 
     my %params;
-    $params{channel}   = ($v->{channel} // 0) + 0;
-    $params{patch}     = $v->{patch} // 0;
-    $params{motif_num} = ($v->{motif_num} || 4) + 0;
-    $params{scale}     = $v->{scale} || 'major';
-    $params{octave}    = ($v->{octave} // 4) + 0;
-    $params{size}      = $v->{size} || 4;
-    $params{pool}      = $choices{pool}{ $v->{pool} || 'wn' };
-    $params{weights}   = [ split /\s+/, ($v->{weights} || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
-    $params{groups}    = [ split /\s+/, ($v->{groups}  || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
+    $params{channel}      = ($v->{channel} // 0) + 0;
+    $params{patch}        = $v->{patch} // 0;
+    $params{motif_num}    = ($v->{motif_num} || 4) + 0;
+    $params{scale}        = $v->{scale} || 'major';
+    $params{octave}       = ($v->{octave} // 4) + 0;
+    $params{size}         = $v->{size} || 4;
+    $params{pool}         = $choices{pool}{ $v->{pool} || 'wn' };
+    $params{weights}      = [ split /\s+/, ($v->{weights} || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
+    $params{groups}       = [ split /\s+/, ($v->{groups}  || (join ' ', ('0') x $params{pool}->@*)) =~ s/^\s+|\s+$//gr ];
     $params{pitches_name} = $v->{pitches};
-    $params{pitches}   = [ $choices{pitches}{ $v->{pitches} || '1 octave' }->(
+    $params{pitches}      = [ $choices{pitches}{ $v->{pitches} || '1 octave' }->(
         $opt{base}, $params{octave}, $params{scale}
     ) ];
     $params{intervals_name} = $v->{intervals};
