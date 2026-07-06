@@ -1,0 +1,13 @@
+body { font-family: sans-serif; margin: 2em auto; }
+form { margin: 0.75em 0; padding: 0.75em; border: 1px solid #ddd; border-radius: 6px; }
+label { display: inline-block; margin-right: 1em; margin-bottom: 0.5em; }
+table, th, td {
+    border: 2px solid #E5E4E2;  /* Sets width, style, and hex color */
+    border-collapse: collapse;    /* Prevents double borders */
+    margin-bottom: 0.75em;
+}
+td {
+    text-align: center;     /* Centers text horizontally */
+    vertical-align: middle; /* Centers text vertically */
+}
+button { padding: 0.4em 1em; }

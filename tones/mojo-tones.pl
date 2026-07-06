@@ -382,7 +382,33 @@ __DATA__
 
 @@ index.html.ep
 % layout 'default';
-<h1>Tonal MIDI Phrase Generator</h1>
+	<section class="wrap-standard" id="column-3">
+		<div class="wrap" id="gap">
+			<div class="left-frame">
+				<a href="#" id="topBtn"><span class="hop">screen</span> top</a>
+				<div>
+					<div class="panel-3">03<span class="hop">-111968</span></div>
+					<div class="panel-4">04<span class="hop">-041969</span></div>
+					<div class="panel-5">05<span class="hop">-1701D</span></div>
+					<div class="panel-6">06<span class="hop">-071984</span></div>
+					<div class="panel-7">07<span class="hop">-081940</span></div>
+					<div class="panel-8">08<span class="hop">-47148</span></div>
+					<div class="panel-9">09<span class="hop">-081966</span></div>
+				</div>
+				<div>
+					<div class="panel-10">10<span class="hop">-31</span></div>
+				</div>
+			</div>
+			<div class="right-frame">
+				<div class="bar-panel">
+					<div class="bar-6"></div>
+					<div class="bar-7"></div>
+					<div class="bar-8"></div>
+					<div class="bar-9"></div>
+					<div class="bar-10"></div>
+				</div>
+				<main>
+					<h1>MIDI Phrase Generator</h1>
 
 % if (my $err = flash('error')) {
   <h2 style="color:red"><strong>Error:</strong> <%= $err %></p>
@@ -565,27 +591,29 @@ __DATA__
   <button type="submit" <%= $running ? '' : 'disabled' %>>Stop</button>
 </form>
 
+				</main>
+				<footer>
+					<!-- Do not remove: -->
+					LCARS Inspired Website Template by <a href="https://www.thelcars.com">www.TheLCARS.com</a>.				 		 
+				</footer> 
+			</div>
+		</div>
+	</section>	
+	<script type="text/javascript" src="js/lcars.js"></script>
+	<div class="headtrim"> </div>
+	<div class="baseboard"> </div>
+
 @@ layouts/default.html.ep
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Tonal MIDI Phrase Generator</title>
-  <style>
-    body { font-family: sans-serif; max-width: 760px; margin: 2em auto; }
-    form { margin: 0.75em 0; padding: 0.75em; border: 1px solid #ddd; border-radius: 6px; }
-    label { display: inline-block; margin-right: 1em; margin-bottom: 0.5em; }
-    table, th, td {
-        border: 2px solid #E5E4E2;  /* Sets width, style, and hex color */
-        border-collapse: collapse;    /* Prevents double borders */
-        margin-bottom: 0.75em;
-    }
-    td {
-        text-align: center;     /* Centers text horizontally */
-        vertical-align: middle; /* Centers text vertically */
-    }
-    button { padding: 0.4em 1em; }
-  </style>
+  <title>MIDI Phrase Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="format-detection" content="date=no">
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <link rel="stylesheet" type="text/css" href="css/classic.css">
 </head>
 <body>
 <%= content %>
