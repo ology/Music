@@ -324,7 +324,7 @@ post '/parts' => sub ($c) {
     # say ddc \%params;
 
     unless ($params{pool}) {
-        $c->flash(error => 'Please choose a pool.');
+        $c->flash(error => 'Please choose a pool');
         return $c->redirect_to('/');
     }
 
