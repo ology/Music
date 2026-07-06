@@ -11,6 +11,8 @@ td {
     vertical-align: top; /* Centers text vertically */
     padding-left: 0.75em;
     padding-right: 0.75em;
+    width: fit-content;
+    table-layout: auto;
 }
 button { padding: 0.4em 1em; }
 input[type="checkbox"] {
@@ -27,4 +29,9 @@ input[type="checkbox"] {
 }
 .green {
     color: green;
+}
+.form-container {
+  display: flex;
+  flex-direction: row; /* Aligns items side-by-side */
+  gap: 20px; /* Adds space between the forms */
 }
