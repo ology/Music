@@ -277,7 +277,7 @@ a:active {
 button {
 	border: none;
 	outline: none;
-	color: black;
+	color: white; /* was black ? */
 	transition: width 1s;
 }
 
