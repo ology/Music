@@ -595,7 +595,6 @@ __DATA__
 				<footer>
           <hr>
           Phrase Generator created by <a href="https://www.ology.net/">Gene</a><br>
-					<!-- Do not remove: -->
 					LCARS Template by <a href="https://www.thelcars.com">www.TheLCARS.com</a>
 				</footer>
 			</div>
