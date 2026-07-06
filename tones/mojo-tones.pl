@@ -416,6 +416,10 @@ __DATA__
   <h2 style="color:green"><%= $msg %></p>
 % }
 
+<table border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>
+
 <h2>Player</h2>
 <p>Status: <strong><%= $running ? 'RUNNING' : 'stopped' %></strong></p>
 <form method="post" action="/start" style="display:inline-block">
@@ -424,6 +428,9 @@ __DATA__
 <form method="post" action="/stop" style="display:inline-block">
   <button type="submit" <%= $running ? '' : 'disabled' %>>Stop</button>
 </form>
+
+    </td>
+    <td>
 
 % if (defined $edit->{edit_part}) {
 <h2>Edit Part <%= $edit->{edit_part} + 1 %></h2>
@@ -518,6 +525,10 @@ __DATA__
   <button type="submit" <%= $running ? 'disabled' : '' %>>Add Part</button>
   % }
 </form>
+
+    </td>
+  </tr>
+</table>
 
 <h2>Parts (<%= scalar @$parts %>)</h2>
 % if (@$parts) {

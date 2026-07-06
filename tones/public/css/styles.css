@@ -7,8 +7,8 @@ table, th, td {
     margin-bottom: 0.75em;
 }
 td {
-    text-align: center;     /* Centers text horizontally */
-    vertical-align: middle; /* Centers text vertically */
+    /* text-align: center;  Centers text horizontally */
+    vertical-align: top; /* Centers text vertically */
     padding-left: 0.75em;
     padding-right: 0.75em;
 }
