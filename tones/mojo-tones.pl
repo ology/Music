@@ -394,8 +394,6 @@ __DATA__
 					<div class="panel-7">07<span class="hop">-<%= substr rand(), 2, 6 %></span></div>
 					<div class="panel-8">08<span class="hop">-<%= substr rand(), 2, 5 %></span></div>
 					<div class="panel-9">09<span class="hop">-<%= substr rand(), 2, 6 %></span></div>
-				</div>
-				<div>
 					<div class="panel-10">10<span class="hop">-<%= substr rand(), 2, 2 %></span></div>
 				</div>
 			</div>
