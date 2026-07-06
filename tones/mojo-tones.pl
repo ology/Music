@@ -570,7 +570,7 @@ __DATA__
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Tonal MIDI Sequencer</title>
+  <title>Tonal MIDI Phrase Generator</title>
   <style>
     body { font-family: sans-serif; max-width: 760px; margin: 2em auto; }
     form { margin: 0.75em 0; padding: 0.75em; border: 1px solid #ddd; border-radius: 6px; }
