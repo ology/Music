@@ -518,7 +518,8 @@ __DATA__
   <label>Motifs
     <select name="motif_num">
       % for my $n (1 .. 16) {
-        <option value="<%= $n %>" <%= $edit->{motif_num} && $n == $edit->{motif_num} ? 'selected' : '' %>><%= $n %></option>
+        % my $selected = defined $edit->{motif_num} ? $edit->{motif_num} : '4';
+        <option value="<%= $n %>" <%= ($edit->{motif_num} && $n == $edit->{motif_num}) || ($n == $selected) ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
@@ -534,7 +535,8 @@ __DATA__
   <label>Octave
     <select name="octave">
       % for my $o (0 .. 9) {
-        <option value="<%= $o %>" <%= $edit->{octave} && $o eq $edit->{octave} ? 'selected' : '' %>><%= $o %></option>
+        % my $selected = defined $edit->{octave} ? $edit->{octave} : '3';
+        <option value="<%= $o %>" <%= ($edit->{octave} && $o eq $edit->{octave}) || ($o == $selected) ? 'selected' : '' %>><%= $o %></option>
       % }
     </select>
   </label>
@@ -542,7 +544,8 @@ __DATA__
   <label>Measure size
     <select name="size">
       % for my $sz (qw(1 2 2.5 3 3.5), (4 .. 16)) {
-        <option value="<%= $sz %>" <%= $edit->{size} && $sz eq $edit->{size} ? 'selected' : '' %>><%= $sz %></option>
+        % my $selected = defined $edit->{size} ? $edit->{size} : '4';
+        <option value="<%= $sz %>" <%= ($edit->{size} && $sz eq $edit->{size}) || ($sz == $selected) ? 'selected' : '' %>><%= $sz %></option>
       % }
     </select>
   </label>
