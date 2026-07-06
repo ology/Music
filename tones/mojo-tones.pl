@@ -423,10 +423,10 @@ __DATA__
 <h2>Player</h2>
 <p>Status: <strong><%= $running ? 'RUNNING' : 'stopped' %></strong></p>
 <form method="post" action="/start" class="block">
-  <button type="submit" <%= $running ? 'disabled' : '' %>>Start</button>
+  <button type="submit" <%= $running ? 'disabled' : '' %>>▶</button>
 </form>
 <form method="post" action="/stop" class="block">
-  <button type="submit" <%= $running ? '' : 'disabled' %>>Stop</button>
+  <button type="submit" <%= $running ? '' : 'disabled' %>>⏹</button>
 </form>
 
     </td>
