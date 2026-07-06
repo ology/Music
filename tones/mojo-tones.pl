@@ -493,7 +493,7 @@ __DATA__
 
   <label>Pool
     <select name="pool">
-      % for my $n (sort keys $choices->{pool}->%*) {
+      % for my $n (keys $choices->{pool}->%*) {
         <option value="<%= $n %>" <%= $edit->{pool} && $n eq $edit->{pool} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
