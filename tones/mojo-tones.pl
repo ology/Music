@@ -594,11 +594,11 @@ __DATA__
 				</main>
 				<footer>
 					<!-- Do not remove: -->
-					LCARS Inspired Website Template by <a href="https://www.thelcars.com">www.TheLCARS.com</a>.				 		 
-				</footer> 
+					LCARS Inspired Website Template by <a href="https://www.thelcars.com">www.TheLCARS.com</a>
+				</footer>
 			</div>
 		</div>
-	</section>	
+	</section>
 	<script type="text/javascript" src="js/lcars.js"></script>
 	<div class="headtrim"> </div>
 	<div class="baseboard"> </div>
