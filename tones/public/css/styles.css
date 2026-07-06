@@ -11,3 +11,8 @@ td {
     vertical-align: middle; /* Centers text vertically */
 }
 button { padding: 0.4em 1em; }
+input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    accent-color: black;
+}
