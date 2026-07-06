@@ -436,7 +436,7 @@ __DATA__
 
 <h2>Parts (<%= scalar @$parts %>)</h2>
 % if (@$parts) {
-<table border="1" cellpadding="2" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0">
   <tr>
     <th>#</th>
     <th>Channel</th>
