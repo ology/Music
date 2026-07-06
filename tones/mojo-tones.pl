@@ -46,9 +46,9 @@ recompute_timing();
 
 my $ticks      = 0;  # clock ticks
 my $beat_count = 0;  # how many beats?
-my @parts;           # configured Music::VoicePhrase objects
-my @play;            # which parts are active this measure
-my $midi_out;        # RtMidiOut instance, opened on start
+my @parts;           # Music::VoicePhrase objects
+my @play;            # active parts this measure
+my $midi_out;        # RtMidiOut instance
 my $timer_id;        # Mojo::IOLoop->recurring id while running
 
 my %choices = (
