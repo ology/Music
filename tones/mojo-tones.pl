@@ -555,8 +555,8 @@ __DATA__
     </select>
   </label>
 
-  <label>Weights <input type="text" name="weights" value="<%= $edit->{weights} %>" placeholder="e.g. 1 1 2 space separated"></label>
-  <label>Groups <input type="text" name="groups" value="<%= $edit->{groups} %>" placeholder="e.g. 0 0 1 space separated"></label>
+  <label>Weights <input type="text" name="weights" value="<%= $edit->{weights} %>" placeholder="e.g. 1 1 2 space separated" size="22"></label>
+  <label>Groups <input type="text" name="groups" value="<%= $edit->{groups} %>" placeholder="e.g. 0 0 1 space separated" size="22"></label>
 
   <label>Pitches
     <select name="pitches">
