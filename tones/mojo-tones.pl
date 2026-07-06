@@ -593,7 +593,7 @@ __DATA__
 
 				</main>
 				<footer>
-          Phrase Generator created by <a href="https://www.ology.net/">Gene</a>
+          Phrase Generator created by <a href="https://www.ology.net/">Gene</a><br>
 					<!-- Do not remove: -->
 					LCARS Inspired Website Template by <a href="https://www.thelcars.com">www.TheLCARS.com</a>
 				</footer>
