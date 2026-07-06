@@ -467,7 +467,7 @@ __DATA__
 
   <label>Scale
     <select name="scale">
-      % for my $n (sort $choices->{scale_names}->@*) {
+      % for my $n ($choices->{scale_names}->@*) {
         <option value="<%= $n %>" <%= $edit->{scale} && $n eq $edit->{scale} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
