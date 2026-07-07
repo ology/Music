@@ -225,7 +225,7 @@ sub on ($p, $count) {
 }
 
 sub off ($p, $count) {
-    for my $n (grep { $count == $_->{off} } $p->queue->@*) {
+    for my $n (grep { $count <= $_->{off} } $p->queue->@*) {
         say 'OFF: ', $p->{channel}, ", $count, ", ddc $n if $opt{verbose};
         $midi_out->note_off(
             $p->{channel},
@@ -256,11 +256,14 @@ sub start_sequencer {
                 populate($_, $beat_count) for @play;
             }
             elsif ($beat_count % (DIVISIONS * DIVISIONS) == 0) { # every measure
+                off($_, $beat_count) for @parts; # flush anything ending exactly now, using OLD queue
                 @play = @parts;
                 populate($_, $beat_count) for @parts;
             }
             for my $part (@play) {
                 on($part, $beat_count);
+            }
+            for my $part (@parts) {
                 off($part, $beat_count);
             }
             $beat_count++;
