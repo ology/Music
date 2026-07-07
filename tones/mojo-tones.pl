@@ -427,6 +427,7 @@ Status:
 % } else {
 stopped
 % }
+<p></p>
 <div class="form-container">
   <form method="post" action="/start" class="block">
     <button type="submit" <%= $running ? 'disabled' : '' %>>▶</button>
