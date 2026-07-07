@@ -389,7 +389,7 @@ post '/delete' => sub ($c) {
 post '/cycle' => sub ($c) {
     stop_sequencer();
     system('pkill -9 fluidsynth');
-    my @cmd = ('fluidsynth', '-m', 'coremidi', '-g', '2.0', $ENV{HOME} . '/Music/soundfont/FluidR3_GM.sf2');
+    my @cmd = ('fluidsynth', '-v', '-m', 'coremidi', '-g', '2.0', $ENV{HOME} . '/Music/soundfont/FluidR3_GM.sf2');
     my $pid = open2($fluid_out, $fluid_in, @cmd);
     $fluid_in->autoflush(1);
     undef $midi_out;
