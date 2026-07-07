@@ -555,7 +555,7 @@ stopped
   <input type="hidden" name="edit_part" value="<%= $edit->{edit_part} %>">
   <button type="submit" <%= $running ? 'disabled' : '' %>>Update</button>
   % } else {
-  <button type="submit" <%= $running ? 'disabled' : '' %>>Append</button>
+  <button type="submit" <%= $running ? 'disabled' : '' %>>Affix</button>
   % }
 </form>
 
