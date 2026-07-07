@@ -582,8 +582,8 @@ stopped
   <button type="submit" <%= $running ? 'disabled' : '' %>>Clear Parts</button>
 </form>
 
-    </td>
-    <td>
+    </td> <!-- child1 -->
+    <td class="left_pad"> <!-- child1 -->
 
 <p></p>
 <table border="0" cellpadding="0" cellspacing="0" id="child3">

@@ -1,12 +1,25 @@
-body { font-family: sans-serif; margin: 2em auto; }
-form { margin: 0.75em 0; padding: 0.75em; border: 1px solid #668; border-radius: 6px; }
-label { display: inline-block; margin-right: 1em; margin-bottom: 0.5em; }
+body {
+    font-family: sans-serif;
+    margin: 2em auto;
+}
+form {
+    margin: 0.75em 0;
+    padding: 0.75em;
+    border: 1px solid #668;
+    border-radius: 6px;
+}
+label {
+    display: inline-block;
+    margin-right: 1em; 
+    margin-bottom: 0.5em;
+}
 table, th, td {
     /* border: 2px solid green; */ /* Sets width, style, and hex color */
     border-collapse: collapse;    /* Prevents double borders */
     margin-bottom: 0.75em;
 }
 td {
+    /* border-collapse: collapse; XXX No? */
     /* text-align: center;  Centers text horizontally */
     vertical-align: top; /* Centers text vertically */
     padding-left: 0.75em;
@@ -40,4 +53,7 @@ input[type="checkbox"] {
 }
 .top_align {
     vertical-align: top;
+}
+.left_pad {
+    padding-left: 3em;
 }
