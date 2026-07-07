@@ -11,6 +11,8 @@ use MIDI::RtMidi::FFI::Device ();
 use MIDI::Util qw(dura_size midi_dump scale_names);
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoicePhrase ();
+use Proc::Find qw(find_proc);
+use IPC::Open2 qw(open2);
 
 my %opt = (
     port    => 'fluid',
@@ -50,6 +52,7 @@ my @parts;           # Music::VoicePhrase objects
 my @play;            # active parts this measure
 my $midi_out;        # RtMidiOut instance
 my $timer_id;        # Mojo::IOLoop->recurring id while running
+my ($fluid_out, $fluid_in);
 
 my %choices = (
     patch       => midi_dump('patch2number'),
@@ -142,6 +145,7 @@ sub open_midi {
     $midi_out = RtMidiOut->new;
     try { $midi_out->open_virtual_port('RtMidiOut') } # needed for mac
     catch ($e) { warn 'Not a Mac' if $opt{verbose} }
+    sleep(1);
     try { $midi_out->open_port_by_name(qr/\Q$opt{port}/i) }
     catch ($e) { die "Can't open MIDI port: $opt{port}\n" }
     say "Sending MIDI to $opt{port} at $opt{bpm} BPM" if $opt{verbose};
@@ -378,6 +382,19 @@ post '/delete' => sub ($c) {
     $c->redirect_to('/');
 };
 
+post '/cycle' => sub ($c) {
+    stop_sequencer();
+    system('pkill -9 fluidsynth');
+    my @cmd = ('fluidsynth', '-m', 'coremidi', '-g', '2.0', $ENV{HOME} . '/Music/soundfont/FluidR3_GM.sf2');
+    my $pid = open2($fluid_out, $fluid_in, @cmd);
+    $fluid_in->autoflush(1);
+    undef $midi_out;
+    open_midi();
+    send_program_changes();
+    $c->flash(message => "Fluidsynth $pid cycled");
+    $c->redirect_to('/');
+};
+
 app->start;
 
 __DATA__
@@ -437,6 +454,9 @@ stopped
     <button type="submit" <%= $running ? '' : 'disabled' %>>⏹</button>
   </form>
 </div>
+<form method="post" action="/cycle" class="block">
+  <button type="submit">Cycle</button>
+</form>
 
     </td>
     <td>
