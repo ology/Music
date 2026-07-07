@@ -14,6 +14,11 @@ use Music::VoicePhrase ();
 use Proc::Find qw(find_proc);
 use IPC::Open2 qw(open2);
 
+use constant {
+    DIVISIONS       => 4,  # divisions of a quarter-note into 16ths
+    CLOCKS_PER_BEAT => 24, # PPQN
+};
+
 my %opt = (
     port    => 'fluid',
     bpm     => 60,
@@ -28,11 +33,6 @@ GetOptionsFromArray(\@ARGV, \%opt,
 );
 
 my %edit; # edit a part
-
-use constant {
-    DIVISIONS       => 4,  # divisions of a quarter-note into 16ths
-    CLOCKS_PER_BEAT => 24, # PPQN
-};
 
 # redefine what happens on ^C, same as the original script
 $SIG{INT} = sub {
