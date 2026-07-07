@@ -559,8 +559,24 @@ stopped
   </tr>
 </table>
 
+<table border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>
+
 <h2>Parts (<%= scalar @$parts %>)</h2>
-% if (@$parts) {
+% unless (@$parts) {
+  <p><em>No parts configured</em></p>
+
+% } else {
+
+<form method="post" action="/clear">
+  <button type="submit" <%= $running ? 'disabled' : '' %>>Clear Parts</button>
+</form>
+
+    </td>
+    <td>
+
+<p></p>
 <table border="0" cellpadding="0" cellspacing="0">
   <tr>
     <th>#</th>
@@ -611,12 +627,11 @@ stopped
     </tr>
   % }
 </table>
-% } else {
-  <p><em>No parts configured</em></p>
 % }
-<form method="post" action="/clear">
-  <button type="submit" <%= $running ? 'disabled' : '' %>>Clear Parts</button>
-</form>
+
+    </td>
+  </tr>
+</table>
 
 <h2>Settings</h2>
 <form method="post" action="/settings">
