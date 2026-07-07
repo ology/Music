@@ -35,3 +35,9 @@ input[type="checkbox"] {
   flex-direction: row; /* Aligns items side-by-side */
   gap: 20px; /* Adds space between the forms */
 }
+.middle_align {
+    vertical-align: middle;
+}
+.top_align {
+    vertical-align: top;
+}
