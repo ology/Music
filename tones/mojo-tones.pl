@@ -687,6 +687,7 @@ stopped
             <div class="bar-4"></div>
             <div class="bar-5"></div>
           </div>
+          <p></p>
           Phrase Generator created by <a href="https://www.ology.net/">Gene</a><br>
 					LCARS Template by <a href="https://www.thelcars.com">www.TheLCARS.com</a>
 				</footer>
