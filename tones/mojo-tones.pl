@@ -504,7 +504,7 @@ stopped
 
   <label>Scale
     <select name="scale">
-      % for my $n ($choices->{scale_names}->@*) {
+      % for my $n (sort $choices->{scale_names}->@*) {
         <option value="<%= $n %>" <%= $edit->{scale} && $n eq $edit->{scale} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
@@ -530,7 +530,7 @@ stopped
 
   <label>Pool
     <select name="pool">
-      % for my $n (keys $choices->{pool}->%*) {
+      % for my $n (sort keys $choices->{pool}->%*) {
         <option value="<%= $n %>" <%= $edit->{pool} && $n eq $edit->{pool} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
