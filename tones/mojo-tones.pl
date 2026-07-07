@@ -53,6 +53,7 @@ my $timer_id;        # Mojo::IOLoop->recurring id while running
 
 my %choices = (
     patch       => midi_dump('patch2number'),
+    number      => midi_dump('number2patch'),
     scale_names => scale_names(),
     pool        => {
         'wn hn'        => [qw(wn hn)],
@@ -499,7 +500,7 @@ stopped
 
   <label>Pool
     <select name="pool">
-      % for my $n (sort keys $choices->{pool}->%*) {
+      % for my $n (keys $choices->{pool}->%*) {
         <option value="<%= $n %>" <%= $edit->{pool} && $n eq $edit->{pool} ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
@@ -558,7 +559,7 @@ stopped
     <tr>
       <td class="middle_align"><%= $i + 1 %></td>
       <td class="middle_align"><%= $p->{channel} %></td>
-      <td class="middle_align"><%= $p->{patch} %></td>
+      <td class="middle_align"><%= $choices->{number}{ $p->{patch} } %></td>
       <td class="middle_align"><%= $p->{motif_num} %></td>
       <td class="middle_align"><%= $p->{scale} %></td>
       <td class="middle_align"><%= $p->{octave} %></td>
