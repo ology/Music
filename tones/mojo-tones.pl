@@ -338,11 +338,11 @@ post '/parts' => sub ($c) {
         my $part = $parts[ $v->{edit_part} ];
         $part->$_($params{$_}) for $choices{parameters}->@*;
         %edit = ();
-        $c->flash(message => 'Part ' . $v->{edit_part} . ' updated');
+        $c->flash(message => 'Unit ' . $v->{edit_part} . ' updated');
     }
     else {
         push @parts, Music::VoicePhrase->new(%params);
-        $c->flash(message => 'Part ' . scalar(@parts) . ' added');
+        $c->flash(message => 'Unit ' . scalar(@parts) . ' appended');
     }
     $c->redirect_to('/');
 };
@@ -442,7 +442,7 @@ __DATA__
   <tr>
     <td>
 
-<h2>Player</h2>
+<h2>Engage</h2>
 Status:
 % if ($running) {
 <span class="red"><strong>RUNNING</strong></span>
@@ -466,9 +466,9 @@ stopped
     <td> <!-- child1 -->
 
 % if (defined $edit->{edit_part}) {
-<h2>Edit Part <%= $edit->{edit_part} + 1 %></h2>
+<h2>Modify Unit <%= $edit->{edit_part} + 1 %></h2>
 % } else {
-<h2>Add a Part</h2>
+<h2>Affix Unit</h2>
 % }
 <form method="post" action="/parts">
   <label>Channel
@@ -553,9 +553,9 @@ stopped
   <p></p>
   % if (defined $edit->{edit_part}) {
   <input type="hidden" name="edit_part" value="<%= $edit->{edit_part} %>">
-  <button type="submit" <%= $running ? 'disabled' : '' %>>Update Part</button>
+  <button type="submit" <%= $running ? 'disabled' : '' %>>Update</button>
   % } else {
-  <button type="submit" <%= $running ? 'disabled' : '' %>>Add Part</button>
+  <button type="submit" <%= $running ? 'disabled' : '' %>>Append</button>
   % }
 </form>
 
@@ -572,14 +572,14 @@ stopped
   <tr>
     <td>
 
-<h2>Parts (<%= scalar @$parts %>)</h2>
+<h2>Units [<%= scalar @$parts %>]</h2>
 % unless (@$parts) {
-  <p><em>No parts configured</em></p>
+  <p><em>No units configured</em></p>
 
 % } else {
 
 <form method="post" action="/clear">
-  <button type="submit" <%= $running ? 'disabled' : '' %>>Clear Parts</button>
+  <button type="submit" <%= $running ? 'disabled' : '' %>>Flush Cache</button>
 </form>
 
     </td> <!-- child1 -->
@@ -667,7 +667,7 @@ stopped
   <button type="submit" <%= $running ? 'disabled' : '' %>>Save Settings</button>
 </form>
 % if ($running) {
-  <p><em>Settings are locked while the sequencer is running.</em></p>
+  <p><em>Settings locked while sequencer running</em></p>
 % }
 
     </td> <!-- child4 -->
