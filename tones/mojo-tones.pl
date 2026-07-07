@@ -555,15 +555,15 @@ stopped
   % for my $i (0 .. $#$parts) {
     % my $p = $parts->[$i];
     <tr>
-      <td><%= $i + 1 %></td>
-      <td><%= $p->{channel} %></td>
-      <td><%= $p->{patch} %></td>
-      <td><%= $p->{motif_num} %></td>
-      <td><%= $p->{scale} %></td>
-      <td><%= $p->{octave} %></td>
-      <td><%= $p->{size} %></td>
-      <td><%= join(' ', $p->{pool}->@*) %></td>
-      <td>
+      <td class="middle_align"><%= $i + 1 %></td>
+      <td class="middle_align"><%= $p->{channel} %></td>
+      <td class="middle_align"><%= $p->{patch} %></td>
+      <td class="middle_align"><%= $p->{motif_num} %></td>
+      <td class="middle_align"><%= $p->{scale} %></td>
+      <td class="middle_align"><%= $p->{octave} %></td>
+      <td class="middle_align"><%= $p->{size} %></td>
+      <td class="middle_align"><%= join(' ', $p->{pool}->@*) %></td>
+      <td class="middle_align">
       <div class="form-container">
 
         <form method="post" action="/edit">
