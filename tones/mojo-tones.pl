@@ -145,7 +145,7 @@ sub open_midi {
     $midi_out = RtMidiOut->new;
     try { $midi_out->open_virtual_port('RtMidiOut') } # needed for mac
     catch ($e) { warn 'Not a Mac' if $opt{verbose} }
-    sleep(1);
+    sleep(1); band-aid the race condition
     try { $midi_out->open_port_by_name(qr/\Q$opt{port}/i) }
     catch ($e) { die "Can't open MIDI port: $opt{port}\n" }
     say "Sending MIDI to $opt{port} at $opt{bpm} BPM" if $opt{verbose};
