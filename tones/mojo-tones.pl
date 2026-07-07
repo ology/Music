@@ -336,12 +336,13 @@ post '/parts' => sub ($c) {
 
     if (defined $v->{edit_part}) {
         my $part = $parts[ $v->{edit_part} ];
-        $part->$_($params{$_}) for $choices{parameters}->@*;
+        splice(@parts, $v->{edit_part}, 1, Music::VoicePhrase->new(%params));
+        $part->clear_voice;
         %edit = ();
         $c->flash(message => 'Unit ' . $v->{edit_part} . ' updated');
     }
     else {
-        push @parts, Music::VoicePhrase->new(%params);
+        push @parts, Music::VoicePhrase->new(%params); #, verbose => 1);
         $c->flash(message => 'Unit ' . scalar(@parts) . ' appended');
     }
     $c->redirect_to('/');
