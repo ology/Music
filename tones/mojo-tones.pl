@@ -185,7 +185,7 @@ sub populate ($p, $count) {
     $p->queue([
         map { +{
             pitch    => $p->voice->rand,
-            duration => $_,
+            duration => $_, # TODO add gate length
             velocity => velocity(-10, 10, 110),
         } } @$motif
     ]);
