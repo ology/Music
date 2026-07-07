@@ -185,7 +185,7 @@ sub populate ($p, $count) {
     $p->queue([
         map { +{
             pitch    => $p->voice->rand,
-            duration => $_, # TODO add gate length
+            duration => $_,
             velocity => velocity(-10, 10, 110),
         } } @$motif
     ]);
@@ -197,7 +197,7 @@ sub populate ($p, $count) {
         $tally += $on;
         push @ons, $tally;
         $note->{on}  = $count + $tally - $on;
-        $note->{off} = $count + $tally;
+        $note->{off} = $count + $tally; # TODO add gate length
     }
     $p->onsets([ map { $count + $_ } @ons ]);
     say 'Onsets: ', ddc $p->onsets if $opt{verbose};
@@ -389,7 +389,9 @@ post '/delete' => sub ($c) {
 post '/cycle' => sub ($c) {
     stop_sequencer();
     system('pkill -9 fluidsynth');
-    my @cmd = ('fluidsynth', '-v', '-m', 'coremidi', '-g', '2.0', $ENV{HOME} . '/Music/soundfont/FluidR3_GM.sf2');
+    my @cmd = ('fluidsynth');
+    push @cmd, '-v' if $opt{verbose};
+    push @cmd, ('-m', 'coremidi', '-g', '2.0', $ENV{HOME} . '/Music/soundfont/FluidR3_GM.sf2');
     my $pid = open2($fluid_out, $fluid_in, @cmd);
     $fluid_in->autoflush(1);
     undef $midi_out;
