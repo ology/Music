@@ -235,6 +235,10 @@ sub off ($p, $count) {
     }
 }
 
+sub needs_more ($p) {
+    return $p->index >= $p->queue->@*;   # true once the queue is exhausted
+}
+
 sub start_sequencer {
     return if defined $timer_id; # already running
     die "No parts configured\n" unless @parts;
@@ -253,14 +257,13 @@ sub start_sequencer {
             if (($beat_count > 0) && (@parts > 1) && ($beat_count % (DIVISIONS ** 3) == 0)) { # every 4th measure
                 say "***** ALT! *****\n" if $opt{verbose};
                 @play = ($parts[-1]);
-                populate($_, $beat_count) for @play;
             }
             elsif ($beat_count % (DIVISIONS * DIVISIONS) == 0) { # every measure
                 off($_, $beat_count) for @parts; # flush anything ending exactly now, using OLD queue
                 @play = @parts;
-                populate($_, $beat_count) for @parts;
             }
             for my $part (@play) {
+                populate($part, $beat_count) if needs_more($part);
                 on($part, $beat_count);
             }
             for my $part (@parts) {
