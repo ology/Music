@@ -434,7 +434,11 @@ __DATA__
   <!-- <h2 class="green"><%= $msg %></h2> -->
 % }
 
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" id="top">
+  <tr>
+    <td>
+
+<table border="0" cellpadding="0" cellspacing="0" id="child1">
   <tr>
     <td>
 
@@ -458,8 +462,8 @@ stopped
   <button type="submit">Cycle</button>
 </form>
 
-    </td>
-    <td>
+    </td> <!-- child1 -->
+    <td> <!-- child1 -->
 
 % if (defined $edit->{edit_part}) {
 <h2>Edit Part <%= $edit->{edit_part} + 1 %></h2>
@@ -555,11 +559,16 @@ stopped
   % }
 </form>
 
-    </td>
-  </tr>
-</table>
+    </td> <!-- child1 -->
+  </tr> <!-- child1 -->
+</table> <!-- child1 -->
 
-<table border="0" cellpadding="0" cellspacing="0">
+  </td> <!-- top -->
+</tr> <!-- top -->
+<tr> <!-- top -->
+  <td> <!-- top -->
+
+<table border="0" cellpadding="0" cellspacing="0" id="child2">
   <tr>
     <td>
 
@@ -577,7 +586,7 @@ stopped
     <td>
 
 <p></p>
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" id="child3">
   <tr>
     <th>#</th>
     <th>Channel</th>
@@ -626,12 +635,21 @@ stopped
       </td>
     </tr>
   % }
-</table>
+</table> <!-- child3 -->
 % }
 
-    </td>
-  </tr>
-</table>
+    </td> <!-- child2 -->
+  </tr> <!-- child2 -->
+</table> <!-- child2 -->
+
+    </td> <!-- top -->
+  </tr> <!-- top -->
+  <tr> <!-- top -->
+    <td> <!-- top -->
+
+<table border="0" cellpadding="0" cellspacing="0" id="child4">
+  <tr>
+    <td>
 
 <h2>Settings</h2>
 <form method="post" action="/settings">
@@ -651,6 +669,14 @@ stopped
 % if ($running) {
   <p><em>Settings are locked while the sequencer is running.</em></p>
 % }
+
+    </td> <!-- child4 -->
+  </tr> <!-- child4 -->
+</table> <!-- child4 -->
+
+    </td> <!-- top -->
+  </tr> <!-- top -->
+</table> <!-- top -->
 
 				</main>
 				<footer>
