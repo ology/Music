@@ -421,7 +421,12 @@ __DATA__
     <td>
 
 <h2>Player</h2>
-<p>Status: <strong><%= $running ? 'RUNNING' : 'stopped' %></strong></p>
+Status:
+% if ($running) {
+<span class="red"><strong>RUNNING</strong></span>
+% } else {
+stopped
+% }
 <div class="form-container">
   <form method="post" action="/start" class="block">
     <button type="submit" <%= $running ? 'disabled' : '' %>>▶</button>
@@ -559,6 +564,8 @@ __DATA__
       <td><%= $p->{size} %></td>
       <td><%= join(' ', $p->{pool}->@*) %></td>
       <td>
+      <div class="form-container">
+
         <form method="post" action="/edit">
           <input type="hidden" name="channel" value="<%= $p->{channel} %>">
           <input type="hidden" name="patch" value="<%= $p->{patch} %>">
@@ -573,11 +580,11 @@ __DATA__
           <input type="hidden" name="intervals" value="<%= $p->{intervals_name} %>">
           <button type="submit" name="edit_part" value="<%= $i %>">Edit</button>
         </form>
-      </td>
-      <td>
         <form method="post" action="/delete">
           <button type="submit" name="delete_part" value="<%= $i %>" onclick="if(!confirm('Delete part <%= $i + 1 %>?')) return false;">Delete</button>
         </form>
+
+      </div>
       </td>
     </tr>
   % }
