@@ -51,3 +51,6 @@ input[type="checkbox"] {
 .middle_align {
     vertical-align: middle;
 }
+.left_pad {
+    padding-left: 3em;
+}
