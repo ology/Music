@@ -197,7 +197,7 @@ sub populate ($p, $count) {
         $tally += $on;
         push @ons, $tally;
         $note->{on}  = $count + $tally - $on;
-        $note->{off} = $count + $tally; # TODO add gate length
+        $note->{off} = ($count + $tally) * $p->gate; # TODO add gate length
     }
     $p->onsets([ map { $count + $_ } @ons ]);
     say 'Onsets: ', ddc $p->onsets if $opt{verbose};
@@ -257,22 +257,12 @@ sub start_sequencer {
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
-            # flush pending offs FIRST, every part, every tick
+            # flush pending offs
             off($_, $beat_count) for @parts;
-
-            if (($beat_count > 0) && (@parts > 1) && ($beat_count % (DIVISIONS ** 3) == 0)) {
-                say "***** ALT! *****\n" if $opt{verbose};
-                @play = ($parts[-1]);
-            }
-            elsif ($beat_count % (DIVISIONS * DIVISIONS) == 0) {
-                @play = @parts;
-            }
-
-            for my $part (@play) {
+            for my $part (@parts) {
                 populate($part, $beat_count) if needs_more($part, $beat_count);
                 on($part, $beat_count);
             }
-
             $beat_count++;
         }
     });
@@ -324,6 +314,7 @@ post '/parts' => sub ($c) {
     my %params;
     $params{channel}      = ($v->{channel} // 0) + 0;
     $params{patch}        = $v->{patch} // 0;
+    $params{gate}        = $v->{gate} // 1;
     $params{motif_num}    = ($v->{motif_num} || 4) + 0;
     $params{scale}        = $v->{scale} || 'major';
     $params{octave}       = ($v->{octave} // 4) + 0;
@@ -499,6 +490,9 @@ stopped
       % }
     </select>
   </label>
+
+  <label>Gate amount
+    <input type="number" name="gate" value="<%= $edit->{gate} || '1.00' %>" placeholder="" step="0.01" min="0.00" max="2.00"></label>
 
   <label>Motifs
     <select name="motif_num">
