@@ -186,7 +186,7 @@ sub velocity ($min, $max, $offset) {
 }
 
 sub populate ($p, $count) {
-my $motif = $p->motifs->[int rand $p->motifs->@*];
+    my $motif = $p->motifs->[int rand $p->motifs->@*];
     say "$count => ", ddc $motif if $opt{verbose};
     $p->queue([
         map { +{
@@ -202,7 +202,7 @@ my $motif = $p->motifs->[int rand $p->motifs->@*];
         $tally += $on;
         push @ons, $tally;
         $note->{on}  = $count + $tally - $on;
-        $note->{off} = $note->{on} + $on * $p->gate;   # scale the DURATION, not the running total
+        $note->{off} = $note->{on} + $on * $p->gate; # scale the DURATION
     }
     $p->onsets([ map { $count + $_ } @ons ]);
     say 'Onsets: ', ddc $p->onsets if $opt{verbose};
