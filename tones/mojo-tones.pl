@@ -623,6 +623,7 @@ stopped
         <form method="post" action="/edit">
           <input type="hidden" name="channel" value="<%= $p->{channel} %>">
           <input type="hidden" name="patch" value="<%= $p->{patch} %>">
+          <input type="hidden" name="gate" value="<%= $p->{gate} %>">
           <input type="hidden" name="motif_num" value="<%= $p->{motif_num} %>">
           <input type="hidden" name="scale" value="<%= $p->{scale} %>">
           <input type="hidden" name="octave" value="<%= $p->{octave} %>">
