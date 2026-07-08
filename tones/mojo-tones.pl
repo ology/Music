@@ -258,6 +258,8 @@ sub start_sequencer {
     $beat_count = 0;
     @play       = ();
 
+    my $loop = Mojo::IOLoop->singleton;
+
     $timer_id = Mojo::IOLoop->recurring($clock_interval => sub {
         $midi_out->clock;
         $ticks++;
@@ -275,12 +277,18 @@ sub start_sequencer {
 
 sub stop_sequencer {
     return unless defined $timer_id;
-    Mojo::IOLoop->remove($timer_id);
+    Mojo::IOLoop->singleton->remove($timer_id);
     undef $timer_id;
     panic_all();
     if ($midi_out) {
-        try { $midi_out->close_port } catch ($e) {};
-        undef $midi_out; 
+        try {
+            $midi_out->stop;
+            $midi_out->close_port;
+        } 
+        catch ($e) {
+            warn "Error closing MIDI port: $e\n" if $opt{verbose};
+        };
+        undef $midi_out; # Erase completely to force a clean instantiation next play
     }
 }
 
