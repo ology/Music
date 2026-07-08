@@ -225,7 +225,7 @@ sub on ($p, $count) {
 }
 
 sub off ($p, $count) {
-    for my $n (grep { $count <= $_->{off} } $p->queue->@*) {
+    for my $n (grep { $_->{off} <= $count } $p->queue->@*) {
         say 'OFF: ', $p->{channel}, ", $count, ", ddc $n if $opt{verbose};
         $midi_out->note_off(
             $p->{channel},
@@ -235,8 +235,11 @@ sub off ($p, $count) {
     }
 }
 
-sub needs_more ($p) {
-    return $p->index >= $p->queue->@*;   # true once the queue is exhausted
+sub needs_more ($p, $count) {
+    return 0 unless $p->index >= $p->queue->@*; # all notes triggered...
+    my $max_off = 0;
+    $max_off = $_->{off} > $max_off ? $_->{off} : $max_off for $p->queue->@*;
+    return $count >= $max_off; # ...AND all have finished ringing
 }
 
 sub start_sequencer {
@@ -254,21 +257,22 @@ sub start_sequencer {
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
-            if (($beat_count > 0) && (@parts > 1) && ($beat_count % (DIVISIONS ** 3) == 0)) { # every 4th measure
+            # flush pending offs FIRST, every part, every tick
+            off($_, $beat_count) for @parts;
+
+            if (($beat_count > 0) && (@parts > 1) && ($beat_count % (DIVISIONS ** 3) == 0)) {
                 say "***** ALT! *****\n" if $opt{verbose};
                 @play = ($parts[-1]);
             }
-            elsif ($beat_count % (DIVISIONS * DIVISIONS) == 0) { # every measure
-                off($_, $beat_count) for @parts; # flush anything ending exactly now, using OLD queue
+            elsif ($beat_count % (DIVISIONS * DIVISIONS) == 0) {
                 @play = @parts;
             }
+
             for my $part (@play) {
-                populate($part, $beat_count) if needs_more($part);
+                populate($part, $beat_count) if needs_more($part, $beat_count);
                 on($part, $beat_count);
             }
-            for my $part (@parts) {
-                off($part, $beat_count);
-            }
+
             $beat_count++;
         }
     });
@@ -394,7 +398,7 @@ post '/cycle' => sub ($c) {
     system('pkill -9 fluidsynth');
     my @cmd = ('fluidsynth');
     push @cmd, '-v' if $opt{verbose};
-    push @cmd, ('-m', 'coremidi', '-g', '2.0', $ENV{HOME} . '/Music/soundfont/FluidR3_GM.sf2');
+    push @cmd, ('-m', 'coremidi', $ENV{HOME} . '/Music/soundfont/FluidR3_GM.sf2'); #, '-g', '2.0'
     my $pid = open2($fluid_out, $fluid_in, @cmd);
     $fluid_in->autoflush(1);
     undef $midi_out;
