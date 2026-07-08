@@ -49,7 +49,6 @@ recompute_timing();
 my $ticks      = 0;  # clock ticks
 my $beat_count = 0;  # how many beats?
 my @parts;           # Music::VoicePhrase objects
-my @play;            # active parts this measure
 my $midi_out;        # RtMidiOut instance
 my $timer_id;        # Mojo::IOLoop->recurring id while running
 my ($fluid_out, $fluid_in);
@@ -256,7 +255,6 @@ sub start_sequencer {
 
     $ticks      = 0;
     $beat_count = 0;
-    @play       = ();
 
     my $loop = Mojo::IOLoop->singleton;
 
