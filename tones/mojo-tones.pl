@@ -278,6 +278,10 @@ sub stop_sequencer {
     Mojo::IOLoop->remove($timer_id);
     undef $timer_id;
     panic_all();
+    if ($midi_out) {
+        try { $midi_out->close_port } catch ($e) {};
+        undef $midi_out; 
+    }
 }
 
 
