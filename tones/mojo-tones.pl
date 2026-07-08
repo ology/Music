@@ -186,7 +186,7 @@ sub velocity ($min, $max, $offset) {
 }
 
 sub populate ($p, $count) {
-    my $motif = $p->motifs->[int rand $p->motifs->@*]; # TODO something clever?
+my $motif = $p->motifs->[int rand $p->motifs->@*];
     say "$count => ", ddc $motif if $opt{verbose};
     $p->queue([
         map { +{
@@ -195,7 +195,6 @@ sub populate ($p, $count) {
             velocity => velocity(-10, 10, 110),
         } } @$motif
     ]);
-    # compute the onsets
     my $tally = 0;
     my @ons = ($tally);
     for my $note ($p->queue->@[0 .. $p->queue->@* - 1]) {
@@ -203,17 +202,17 @@ sub populate ($p, $count) {
         $tally += $on;
         push @ons, $tally;
         $note->{on}  = $count + $tally - $on;
-        $note->{off} = ($count + $tally) * $p->gate; # TODO add gate length
+        $note->{off} = $note->{on} + $on * $p->gate;   # scale the DURATION, not the running total
     }
     $p->onsets([ map { $count + $_ } @ons ]);
     say 'Onsets: ', ddc $p->onsets if $opt{verbose};
     say 'Queue: ', ddc $p->queue if $opt{verbose};
-    $p->index(0); # reset the queue index
+    $p->index(0);
 }
 
 sub on ($p, $count) {
     # if we are on a beat onset, note_on!
-    if (defined $p->onsets->[$p->index] && $p->onsets->[$p->index] == $count) {
+    if (defined $p->onsets->[$p->index] && $p->onsets->[$p->index] <= $count) {
         my $n = $p->queue->[$p->index];
         say 'ON: ', $p->{channel}, ', ', $p->index, ", $count, ", ddc $n if $opt{verbose};
         if ($n) {
@@ -242,7 +241,7 @@ sub off ($p, $count) {
 }
 
 sub needs_more ($p, $count) {
-    return 0 unless $p->index >= $p->queue->@*; # all notes triggered...
+    return 1 unless $p->queue->@*;
     my $max_off = 0;
     $max_off = $_->{off} > $max_off ? $_->{off} : $max_off for $p->queue->@*;
     return $count >= $max_off; # ...AND all have finished ringing
