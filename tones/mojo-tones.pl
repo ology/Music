@@ -257,6 +257,12 @@ sub start_sequencer {
     $ticks      = 0;
     $beat_count = 0;
 
+    for my $part (@parts) {
+        $part->index(0);
+        $part->queue([]);
+        $part->onsets([]);
+    }
+
     $timer_id = Mojo::IOLoop->recurring($clock_interval => sub {
         $midi_out->clock;
         $ticks++;
