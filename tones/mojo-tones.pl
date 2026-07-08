@@ -122,6 +122,7 @@ my %choices = (
     parameters => [qw(
         channel
         patch
+        gate
         motif_num
         scale
         octave
@@ -314,7 +315,7 @@ post '/parts' => sub ($c) {
     my %params;
     $params{channel}      = ($v->{channel} // 0) + 0;
     $params{patch}        = $v->{patch} // 0;
-    $params{gate}        = $v->{gate} // 1;
+    $params{gate}         = $v->{gate} // 1;
     $params{motif_num}    = ($v->{motif_num} || 4) + 0;
     $params{scale}        = $v->{scale} || 'major';
     $params{octave}       = ($v->{octave} // 4) + 0;
@@ -388,7 +389,7 @@ post '/cycle' => sub ($c) {
     stop_sequencer();
     system('pkill -9 fluidsynth');
     my @cmd = ('fluidsynth');
-    push @cmd, '-v' if $opt{verbose};
+    # push @cmd, '-v' if $opt{verbose};
     push @cmd, ('-m', 'coremidi', $ENV{HOME} . '/Music/soundfont/FluidR3_GM.sf2'); #, '-g', '2.0'
     my $pid = open2($fluid_out, $fluid_in, @cmd);
     $fluid_in->autoflush(1);
@@ -506,7 +507,8 @@ stopped
   <label>Scale
     <select name="scale">
       % for my $n (sort $choices->{scale_names}->@*) {
-        <option value="<%= $n %>" <%= $edit->{scale} && $n eq $edit->{scale} ? 'selected' : '' %>><%= $n %></option>
+        % my $selected = defined $edit->{scale} ? $edit->{scale} : 'major';
+        <option value="<%= $n %>" <%= ($edit->{scale} && $n eq $edit->{scale}) || ($n eq $selected) ? 'selected' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
