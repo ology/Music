@@ -267,7 +267,6 @@ sub start_sequencer {
         $midi_out->clock;
         $ticks++;
         if ($ticks % $sixteenth == 0) {
-            # flush pending offs
             off($_, $beat_count) for @parts;
             for my $part (@parts) {
                 populate($part, $beat_count) if needs_more($part, $beat_count);
