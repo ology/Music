@@ -185,7 +185,7 @@ sub velocity ($min, $max, $offset) {
 }
 
 sub populate ($p, $count) {
-    my $motif = $p->motifs->[int rand $p->motifs->@*];
+    my $motif = $p->motifs->[int rand $p->motifs->@*]; # TODO something clever?
     say "$count => ", ddc $motif if $opt{verbose};
     $p->queue([
         map { +{
@@ -194,6 +194,7 @@ sub populate ($p, $count) {
             velocity => velocity(-10, 10, 110),
         } } @$motif
     ]);
+    # compute the onsets
     my $tally = 0;
     my @ons = ($tally);
     for my $note ($p->queue->@[0 .. $p->queue->@* - 1]) {
@@ -201,12 +202,12 @@ sub populate ($p, $count) {
         $tally += $on;
         push @ons, $tally;
         $note->{on}  = $count + $tally - $on;
-        $note->{off} = $note->{on} + $on * $p->gate; # scale the DURATION
+        $note->{off} = $note->{off} = $note->{on} + $on * $p->gate; # scale the DURATION
     }
     $p->onsets([ map { $count + $_ } @ons ]);
     say 'Onsets: ', ddc $p->onsets if $opt{verbose};
     say 'Queue: ', ddc $p->queue if $opt{verbose};
-    $p->index(0);
+    $p->index(0); # reset the queue index
 }
 
 sub on ($p, $count) {
@@ -240,7 +241,7 @@ sub off ($p, $count) {
 }
 
 sub needs_more ($p, $count) {
-    return 1 unless $p->queue->@*;
+    return 0 unless $p->index >= $p->queue->@*; # all notes triggered...
     my $max_off = 0;
     $max_off = $_->{off} > $max_off ? $_->{off} : $max_off for $p->queue->@*;
     return $count >= $max_off; # ...AND all have finished ringing
@@ -255,8 +256,6 @@ sub start_sequencer {
 
     $ticks      = 0;
     $beat_count = 0;
-
-    my $loop = Mojo::IOLoop->singleton;
 
     $timer_id = Mojo::IOLoop->recurring($clock_interval => sub {
         $midi_out->clock;
@@ -275,19 +274,17 @@ sub start_sequencer {
 
 sub stop_sequencer {
     return unless defined $timer_id;
-    Mojo::IOLoop->singleton->remove($timer_id);
+    Mojo::IOLoop->remove($timer_id);
     undef $timer_id;
     panic_all();
-    if ($midi_out) {
-        try {
-            $midi_out->stop;
-            $midi_out->close_port;
-        } 
-        catch ($e) {
-            warn "Error closing MIDI port: $e\n" if $opt{verbose};
-        };
-        undef $midi_out; # Erase completely to force a clean instantiation next play
+    try {
+        $midi_out->stop;
+        $midi_out->close_port;
     }
+    catch ($e) {
+        warn "Error closing MIDI port: $e\n" if $opt{verbose};
+    };
+    undef $midi_out;
 }
 
 
