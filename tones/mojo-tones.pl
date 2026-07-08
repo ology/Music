@@ -212,7 +212,7 @@ sub populate ($p, $count) {
 
 sub on ($p, $count) {
     # if we are on a beat onset, note_on!
-    if (defined $p->onsets->[$p->index] && $p->onsets->[$p->index] <= $count) {
+    if (defined $p->onsets->[$p->index] && $p->onsets->[$p->index] == $count) {
         my $n = $p->queue->[$p->index];
         say 'ON: ', $p->{channel}, ', ', $p->index, ", $count, ", ddc $n if $opt{verbose};
         if ($n) {
