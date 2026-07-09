@@ -298,12 +298,19 @@ sub stop_sequencer {
 #################################################
 
 get '/' => sub ($c) {
+    my %used_channels;
+    for my $i (0 .. $#parts) {
+        # don't block the channel of the unit currently being edited
+        next if defined $edit{edit_part} && $i == $edit{edit_part};
+        $used_channels{ $parts[$i]->{channel} } = 1;
+    }
     $c->stash(
-        opt     => \%opt,
-        parts   => \@parts,
-        choices => \%choices,
-        running => defined($timer_id) ? 1 : 0,
-        edit    => \%edit,
+        opt           => \%opt,
+        parts         => \@parts,
+        choices       => \%choices,
+        running       => defined($timer_id) ? 1 : 0,
+        edit          => \%edit,
+        used_channels => \%used_channels,
     );
     $c->render('index');
 };
@@ -501,7 +508,7 @@ stopped
   <label>Channel
     <select name="channel">
       % for my $n (0 .. 15) {
-        <option value="<%= $n %>" <%= defined $edit->{channel} && $n eq $edit->{channel} ? 'selected' : '' %>><%= $n %></option>
+        <option value="<%= $n %>" <%= defined $edit->{channel} && $n eq $edit->{channel} ? 'selected' : '' %> <%= $used_channels->{$n} ? 'disabled' : '' %>><%= $n %></option>
       % }
     </select>
   </label>
