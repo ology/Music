@@ -620,6 +620,11 @@ stopped
 % unless (@$parts) {
   <p><em>No units configured</em></p>
 
+<button id="openModalBtn">Open Modal</button>
+<div id="myModal" title="Modal Title" style="display:none;">
+  <p>This is the content inside your modal dialog box!</p>
+</div>
+
 % } else {
 
 <form method="post" action="/clear">
@@ -736,21 +741,48 @@ stopped
 			</div>
 		</div>
 	</section>
-	<script type="text/javascript" src="js/lcars.js"></script>
 	<div class="headtrim"> </div>
 	<div class="baseboard"> </div>
+<script type="text/javascript" src="js/lcars.js"></script>
+<script>
+$(document).ready(function() {
+  // Initialize the dialog configuration
+  $("#myModal").dialog({
+    autoOpen: false,
+    modal: true,
+    buttons: {
+      "Close": function() {
+        $(this).dialog("close");
+      }
+    }
+  });
+  $("#openModalBtn").on("click", function() {
+    $("#myModal").dialog("open");
+  });
+});
+</script>
 
 @@ layouts/default.html.ep
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
   <title>MIDI Phrase Generator</title>
+
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 	<meta name="format-detection" content="telephone=no">
 	<meta name="format-detection" content="date=no">
+
+  <!-- Core jQuery -->
+  <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+  <!-- jQuery UI CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.2/themes/base/jquery-ui.min.css" rel="stylesheet">
+  <!-- jQuery UI JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.2/jquery-ui.min.js"></script>
+
   <link rel="stylesheet" type="text/css" href="css/styles.css">
   <link rel="stylesheet" type="text/css" href="css/classic.css">
+
 </head>
 <body>
 <%= content %>
