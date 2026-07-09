@@ -654,7 +654,6 @@ stopped
       <td class="middle_align"><%= join(' ', $p->{pool}->@*) %></td>
       <td class="middle_align">
       <div class="form-container">
-
         <form method="post" action="/edit">
           <input type="hidden" name="channel" value="<%= $p->{channel} %>">
           <input type="hidden" name="patch" value="<%= $p->{patch} %>">
