@@ -781,7 +781,7 @@ $(document).ready(function() {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.2/jquery-ui.min.js"></script>
 
   <link rel="stylesheet" type="text/css" href="css/styles.css">
-  <link rel="stylesheet" type="text/css" href="css/classic.css">
+  <link rel="stylesheet" type="text/css" href="css/classic.css"> <!-- LCARS -->
 
 </head>
 <body>
