@@ -73,6 +73,11 @@ my %choices = (
             get_scale_MIDI($base, $octave, $scale),
             get_scale_MIDI($base, $octave + 1, $scale);
         },
+        '3 octaves' => sub ($base, $octave, $scale) {
+            get_scale_MIDI($base, $octave, $scale),
+            get_scale_MIDI($base, $octave + 1, $scale),
+            get_scale_MIDI($base, $octave + 2, $scale);
+        },
     },
     intervals => {
         '-3..-1,1..3' => [(-3 .. -1), (1 .. 3)],
