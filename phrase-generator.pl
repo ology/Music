@@ -626,7 +626,7 @@ stopped
     <option value="667">667</option>
   </select>
 </div>
-<button id="saveModalBtn">Save</button>
+<button id="saveModalBtn" <%= !@$parts ? 'disabled' : '' %>>Save</button>
 <div id="save_modal" title="Save Unit Set" style="display:none;">
   <input type="text" name="save_units" value="667">
 </div>
