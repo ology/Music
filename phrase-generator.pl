@@ -628,7 +628,7 @@ stopped
 
 <button id="loadModalBtn">Load</button>
 <div id="load_modal" title="Load Unit Set" style="display:none;">
-  <select name="unit">
+  <select name="load_parts">
 % for my $n (sort keys %$saved) {
     <option value="<%= $n %>" <%= $n eq $_ ? 'selected' : '' %>><%= $n %></option>
 % }
@@ -636,7 +636,7 @@ stopped
 </div>
 <button id="saveModalBtn" <%= !@$parts ? 'disabled' : '' %>>Save</button>
 <div id="save_modal" title="Save Unit Set" style="display:none;">
-  <input type="text" name="save_units" value="667">
+  <input type="text" name="save_parts" value="667">
 </div>
 
 % } else {
