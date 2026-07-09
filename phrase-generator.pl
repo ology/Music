@@ -620,9 +620,15 @@ stopped
 % unless (@$parts) {
   <p><em>No units configured</em></p>
 
-<button id="openModalBtn">Open Modal</button>
-<div id="myModal" title="Modal Title" style="display:none;">
-  <p>This is the content inside your modal dialog box!</p>
+<button id="loadModalBtn">Load</button>
+<div id="load_modal" title="Load Unit Set" style="display:none;">
+  <select name="unit">
+    <option value="667">667</option>
+  </select>
+</div>
+<button id="saveModalBtn">Save</button>
+<div id="save_modal" title="Save Unit Set" style="display:none;">
+  <input type="text" name="save_units" value="Hello">
 </div>
 
 % } else {
@@ -630,6 +636,17 @@ stopped
 <form method="post" action="/clear">
   <button type="submit" <%= $running ? 'disabled' : '' %>>Flush Cache</button>
 </form>
+
+<button id="loadModalBtn">Load</button>
+<div id="load_modal" title="Load Unit Set" style="display:none;">
+  <select name="load_units">
+    <option value="667">667</option>
+  </select>
+</div>
+<button id="saveModalBtn">Save</button>
+<div id="save_modal" title="Save Unit Set" style="display:none;">
+  <input type="text" name="save_units" value="Hello">
+</div>
 
     </td> <!-- child1 -->
     <td class="left_pad"> <!-- child1 -->
@@ -743,11 +760,10 @@ stopped
 	</section>
 	<div class="headtrim"> </div>
 	<div class="baseboard"> </div>
-<script type="text/javascript" src="js/lcars.js"></script>
+<script type="text/javascript" src="js/lcars.js"></script> <!-- XXX needed? -->
 <script>
 $(document).ready(function() {
-  // Initialize the dialog configuration
-  $("#myModal").dialog({
+  $("#load_modal").dialog({
     autoOpen: false,
     modal: true,
     buttons: {
@@ -756,8 +772,20 @@ $(document).ready(function() {
       }
     }
   });
-  $("#openModalBtn").on("click", function() {
-    $("#myModal").dialog("open");
+  $("#loadModalBtn").on("click", function() {
+    $("#load_modal").dialog("open");
+  });
+  $("#save_modal").dialog({
+    autoOpen: false,
+    modal: true,
+    buttons: {
+      "Close": function() {
+        $(this).dialog("close");
+      }
+    }
+  });
+  $("#saveModalBtn").on("click", function() {
+    $("#save_modal").dialog("open");
   });
 });
 </script>
