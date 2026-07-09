@@ -632,14 +632,13 @@ stopped
 <p></p>
 <table border="0" cellpadding="0" cellspacing="0" id="child3">
   <tr>
-    <th>#</th>
-    <th>Channel</th>
-    <th>Patch</th>
-    <th>Motifs</th>
-    <th>Scale</th>
-    <th>Octave</th>
-    <th>Size</th>
-    <th>Pool</th>
+    <th class="middle_align">#</th>
+    <th class="middle_align">Channel</th>
+    <th class="middle_align">Patch</th>
+    <th class="middle_align">Motifs</th>
+    <th class="middle_align">Scale</th>
+    <th class="middle_align">Octave</th>
+    <th class="middle_align">Pool</th>
     <th></th>
     <th></th>
 </tr>
@@ -652,7 +651,6 @@ stopped
       <td class="middle_align"><%= $p->{motif_num} %></td>
       <td class="middle_align"><%= $p->{scale} %></td>
       <td class="middle_align"><%= $p->{octave} %></td>
-      <td class="middle_align"><%= $p->{size} %></td>
       <td class="middle_align"><%= join(' ', $p->{pool}->@*) %></td>
       <td class="middle_align">
       <div class="form-container">
