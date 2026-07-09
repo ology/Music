@@ -13,10 +13,12 @@ use Music::Scales qw(get_scale_MIDI);
 use Music::VoicePhrase ();
 use Proc::Find qw(find_proc);
 use IPC::Open2 qw(open2);
+use Storable qw(retrieve store);
 
 use constant {
     DIVISIONS       => 4,  # divisions of a quarter-note into 16ths
     CLOCKS_PER_BEAT => 24, # PPQN
+    SAVED           => 'saved-units.dat',
 };
 
 my %opt = (
@@ -31,6 +33,9 @@ GetOptionsFromArray(\@ARGV, \%opt,
     'base=s',
     'verbose=s',
 );
+
+store {}, SAVED unless -e SAVED;
+my $saved_units = retrieve(SAVED);
 
 my %edit; # edit a part
 
@@ -317,6 +322,7 @@ get '/' => sub ($c) {
         running       => defined($timer_id) ? 1 : 0,
         edit          => \%edit,
         used_channels => \%used_channels,
+        saved         => $saved_units,
     );
     $c->render('index');
 };
@@ -623,7 +629,9 @@ stopped
 <button id="loadModalBtn">Load</button>
 <div id="load_modal" title="Load Unit Set" style="display:none;">
   <select name="unit">
-    <option value="667">667</option>
+% for my $n (sort keys %$saved) {
+    <option value="<%= $n %>" <%= $n eq $_ ? 'selected' : '' %>><%= $n %></option>
+% }
   </select>
 </div>
 <button id="saveModalBtn" <%= !@$parts ? 'disabled' : '' %>>Save</button>
