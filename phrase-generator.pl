@@ -59,11 +59,12 @@ my %choices = (
     scale_names => scale_names(),
     pool        => {
         'wn hn'        => [qw(wn hn)],
+        'hn qn'        => [qw(hn qn)],
+        'qn en'        => [qw(qn en)],
+        'en sn'        => [qw(en sn)],
         'wn dhn hn qn' => [qw(wn dhn hn qn)],
         'hn dqn qn en' => [qw(hn dqn qn en)],
-        'qn en'        => [qw(qn en)],
         'qn den en sn' => [qw(qn den en sn)],
-        'en sn'        => [qw(en sn)],
     },
     pitches => {
         '1 octave'  => sub ($base, $octave, $scale) {
