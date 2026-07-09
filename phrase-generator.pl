@@ -628,7 +628,7 @@ stopped
 </div>
 <button id="saveModalBtn">Save</button>
 <div id="save_modal" title="Save Unit Set" style="display:none;">
-  <input type="text" name="save_units" value="Hello">
+  <input type="text" name="save_units" value="667">
 </div>
 
 % } else {
@@ -645,7 +645,7 @@ stopped
 </div>
 <button id="saveModalBtn">Save</button>
 <div id="save_modal" title="Save Unit Set" style="display:none;">
-  <input type="text" name="save_units" value="Hello">
+  <input type="text" name="save_units" value="667">
 </div>
 
     </td> <!-- child1 -->
