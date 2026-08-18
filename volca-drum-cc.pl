@@ -213,118 +213,129 @@ __DATA__
 
 @@ index.html.ep
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Volca Drum CC</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <style>
-    td {
-      vertical-align: middle;
-    }
-    .block {
-      display: inline-block;
-    }
-    .pad-left {
-      font-family: sans-serif;
-      margin: 10px;
-    }
-    .value-display {
-      display: flex;
-      width: 100%;
-      gap: 10px;
-      padding-top: 0.3rem;
-      font-family: sans-serif;
-    }
-    input[type="range"] {
-      width: 100%;
-      cursor: pointer;
-    }
-    .parent {
-      position: relative;
-      height: 22px;
-    }
-    .green-circle {
-      width: 20px;
-      height: 20px;
-      background-color: #4CAF50;
-      border-radius: 50%;
-      position: absolute;
-      bottom: 0;
-    }
-    .red-circle {
-      width: 20px;
-      height: 20px;
-      background-color: #ca3833;
-      border-radius: 50%;
-      position: absolute;
-      bottom: 0;
-    }
-    .fixed-width1 {
-      width: 2em;
-      text-align: center;
-      font-family: sans-serif;
-    }
-    .fixed-width2 {
-      width: 11.5em;
-      text-align: center;
-      font-family: sans-serif;
-    }
+    body { font-family: sans-serif; }
+    .cc-value { display: inline-block; min-width: 2em; text-align: center; }
+    .cc-label { white-space: nowrap; }
   </style>
 </head>
 <body>
-  <h2 class="pad-left">Volca Drum CC</h2>
-  <div class="block parent">
-  <form action="<%= url_for('connect') %>" method="post" class="block">
-    <span class="pad-left">Device:</span><select name="device">
-% for my $d (@$devices) {
-      <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
-% }
-    </select>
-    <input type="submit" value="Connect">
-  </form>
-  &nbsp;
-% if (defined $connect) { # TODO red / green connected device state
-  <div class="block green-circle"></div>
+<div class="container py-4">
+
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="h4 mb-0">Volca Drum CC</h2>
+% if (defined $connect) {
+    <span class="badge bg-success">Connected</span>
 % } else {
-  <div class="block red-circle"></div>
+    <span class="badge bg-danger">Disconnected</span>
 % }
   </div>
-  <p></p>
-  <span class="pad-left">Program:</span><select name="program" id="program">
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <form action="<%= url_for('connect') %>" method="post" class="row g-2 align-items-end">
+        <div class="col-auto">
+          <label class="form-label mb-0">Device</label>
+          <select name="device" class="form-select">
+% for my $d (@$devices) {
+            <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
+% }
+          </select>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary">Connect</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row g-3 align-items-end">
+        <div class="col-auto">
+          <label class="form-label mb-0">Program</label>
+          <select name="program" id="program" class="form-select">
 % for my $p (0 .. 15) {
-    <option value="<%= $p %>" <%= $p eq $program ? 'selected' : '' %>><%= $p + 1 %></option>
+            <option value="<%= $p %>" <%= $p eq $program ? 'selected' : '' %>><%= $p + 1 %></option>
 % }
-  </select>
-  &nbsp;
-  <button type="button" id="start">Start</button>
-  <button type="button" id="stop">Stop</button>
-  <p></p>
-  <span class="pad-left">Patch:</span><input type="text" name="patch" id="patch" size="10">
-  <button type="button" id="save">Save</button>
-  <span class="pad-left">Recall:</span><select name="recall" id="recall">
-    <option value="-">-</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <button type="button" id="start" class="btn btn-success">Start</button>
+          <button type="button" id="stop" class="btn btn-outline-danger">Stop</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row g-3 align-items-end">
+        <div class="col-auto">
+          <label class="form-label mb-0">Patch</label>
+          <input type="text" name="patch" id="patch" class="form-control" size="10">
+        </div>
+        <div class="col-auto">
+          <button type="button" id="save" class="btn btn-primary">Save</button>
+        </div>
+        <div class="col-auto">
+          <label class="form-label mb-0">Recall</label>
+          <select name="recall" id="recall" class="form-select">
+            <option value="-">-</option>
 % for my $p (sort @$patches) {
-    <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
+            <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
 % }
-  </select>
-  <button type="button" id="delete" onclick="if(!confirm('Delete patch?')) return false;">Delete</button>
-  <p></p>
-  <form method="post">
-    <span class="pad-left">Part:</span> <select id="channel">
+          </select>
+        </div>
+        <div class="col-auto">
+          <button type="button" id="delete" class="btn btn-outline-danger"
+                  onclick="if(!confirm('Delete patch?')) return false;">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form method="post">
+        <div class="mb-3" style="max-width: 12em;">
+          <label class="form-label">Part</label>
+          <select id="channel" class="form-select">
 % for my $n (0 .. 5) {
-      <option value="<%= $n %>"><%= $n + 1 %></option>
+            <option value="<%= $n %>"><%= $n + 1 %></option>
 % }
-    </select>
-    <table class="pad-left">
+          </select>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <tbody>
 % for my $cc (sort { $ccs->{$a} <=> $ccs->{$b} } keys %$ccs) {
-    <tr>
-      <td class="fixed-width2"><span class="value-display"><%= $cc %> (<%= $ccs->{$cc} %>): &nbsp;</span></td>
-      <td class="fixed-width1"><span id="value-<%= $ccs->{$cc} %>" class="cc-value"><%= $value %></span></td>
-      <td><input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127" value="<%= $value %>" step="1" class="range"></td>
-    </tr>
+              <tr>
+                <td class="cc-label"><%= $cc %> (<%= $ccs->{$cc} %>)</td>
+                <td class="text-end"><span id="value-<%= $ccs->{$cc} %>" class="cc-value"><%= $value %></span></td>
+                <td>
+                  <input type="range" id="slider-<%= $ccs->{$cc} %>" min="0" max="127"
+                         value="<%= $value %>" step="1" class="form-range range">
+                </td>
+              </tr>
 % }
-    </table>
-  </form>
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
   <script>
   $(document).ready(function() {
     $('.range').on('input', function() {
