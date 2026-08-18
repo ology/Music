@@ -202,6 +202,12 @@ post '/delete' => sub ($c) {
 
 plugin Config => { file => 'volcadrum.conf' };
 
+my $log = Mojo::Log->new(
+  path  => app->config->{log_path},
+  level => app->config->{log_level},
+);
+app->log($log);
+
 app->start;
 __DATA__
 
