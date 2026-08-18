@@ -200,6 +200,8 @@ post '/delete' => sub ($c) {
   }
 } => 'delete';
 
+plugin Config => { file => 'volcadrum.conf' };
+
 app->start;
 __DATA__
 
