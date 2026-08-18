@@ -225,82 +225,78 @@ __DATA__
     body { font-family: sans-serif; }
     .cc-value { display: inline-block; min-width: 2em; text-align: center; }
     .cc-label { white-space: nowrap; }
+    .status-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .green-circle { background-color: #4CAF50; }
+    .red-circle { background-color: #ca3833; }
   </style>
 </head>
 <body>
 <div class="container py-4">
 
-  <div class="d-flex align-items-center justify-content-between mb-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
     <h2 class="h4 mb-0">Volca Drum CC</h2>
-% if (defined $connect) {
-    <span class="badge bg-success">Connected</span>
-% } else {
-    <span class="badge bg-danger">Disconnected</span>
-% }
   </div>
 
-  <div class="card mb-3">
-    <div class="card-body">
-      <form action="<%= url_for('connect') %>" method="post" class="row g-2 align-items-end">
-        <div class="col-auto">
-          <label class="form-label mb-0">Device</label>
-          <select name="device" class="form-select">
+  <div class="d-flex flex-wrap align-items-end gap-3 p-3 mb-4 bg-light border rounded">
+
+    <form action="<%= url_for('connect') %>" method="post" class="d-flex align-items-end gap-2">
+      <div>
+        <label class="form-label mb-0 small text-muted">Device</label>
+        <select name="device" class="form-select form-select-sm">
 % for my $d (@$devices) {
-            <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
+          <option value="<%= $d %>" <%= $d eq $device ? 'selected' : '' %>><%= $d %></option>
 % }
-          </select>
-        </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-primary">Connect</button>
-        </div>
-      </form>
-    </div>
-  </div>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm">Connect</button>
+% if (defined $connect) {
+      <span class="status-circle green-circle align-self-bottom" title="Connected"></span>
+% } else {
+      <span class="status-circle red-circle align-self-bottom" title="Disconnected"></span>
+% }
+    </form>
 
-  <div class="card mb-3">
-    <div class="card-body">
-      <div class="row g-3 align-items-end">
-        <div class="col-auto">
-          <label class="form-label mb-0">Program</label>
-          <select name="program" id="program" class="form-select">
+    <div class="vr d-none d-md-block"></div>
+
+    <div class="d-flex align-items-end gap-2">
+      <div>
+        <label class="form-label mb-0 small text-muted">Program</label>
+        <select name="program" id="program" class="form-select form-select-sm">
 % for my $p (0 .. 15) {
-            <option value="<%= $p %>" <%= $p eq $program ? 'selected' : '' %>><%= $p + 1 %></option>
+          <option value="<%= $p %>" <%= $p eq $program ? 'selected' : '' %>><%= $p + 1 %></option>
 % }
-          </select>
-        </div>
-        <div class="col-auto">
-          <button type="button" id="start" class="btn btn-success">Start</button>
-          <button type="button" id="stop" class="btn btn-outline-danger">Stop</button>
-        </div>
+        </select>
       </div>
+      <button type="button" id="start" class="btn btn-success btn-sm">Start</button>
+      <button type="button" id="stop" class="btn btn-outline-danger btn-sm">Stop</button>
     </div>
-  </div>
 
-  <div class="card mb-3">
-    <div class="card-body">
-      <div class="row g-3 align-items-end">
-        <div class="col-auto">
-          <label class="form-label mb-0">Patch</label>
-          <input type="text" name="patch" id="patch" class="form-control" size="10">
-        </div>
-        <div class="col-auto">
-          <button type="button" id="save" class="btn btn-primary">Save</button>
-        </div>
-        <div class="col-auto">
-          <label class="form-label mb-0">Recall</label>
-          <select name="recall" id="recall" class="form-select">
-            <option value="-">-</option>
-% for my $p (sort @$patches) {
-            <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
-% }
-          </select>
-        </div>
-        <div class="col-auto">
-          <button type="button" id="delete" class="btn btn-outline-danger"
-                  onclick="if(!confirm('Delete patch?')) return false;">Delete</button>
-        </div>
+    <div class="vr d-none d-md-block"></div>
+
+    <div class="d-flex align-items-end gap-2">
+      <div>
+        <label class="form-label mb-0 small text-muted">Patch</label>
+        <input type="text" name="patch" id="patch" class="form-control form-control-sm" size="10">
       </div>
+      <button type="button" id="save" class="btn btn-primary btn-sm">Save</button>
+      <div>
+        <label class="form-label mb-0 small text-muted">Recall</label>
+        <select name="recall" id="recall" class="form-select form-select-sm">
+          <option value="-">-</option>
+% for my $p (sort @$patches) {
+          <option value="<%= $p %>" <%= $p eq $patch ? 'selected' : '' %>><%= $p %></option>
+% }
+        </select>
+      </div>
+      <button type="button" id="delete" class="btn btn-outline-danger btn-sm"
+              onclick="if(!confirm('Delete patch?')) return false;">Delete</button>
     </div>
+
   </div>
 
   <div class="card">
