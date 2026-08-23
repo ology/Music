@@ -51,8 +51,8 @@ my %ccs = (
 
 END {
   if (defined $device) {
-    $device->stop if defined $device;
-    $device->panic if defined $device;
+    $device->stop;
+    $device->panic;
   }
 }
 
