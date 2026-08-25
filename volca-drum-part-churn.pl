@@ -60,12 +60,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             say '1/16th: ', $beat_count;
             if ($beat_count % $beats == 0) {
               say '1/4th: ', $beat_count;
-              try {
-                $device->program_change(0, $program++);
-              }
-              catch ($e) {
-                die "ERROR: $e\n";
-              }
+              program_change($device, 0, $program->next);
             }
         }
     },
@@ -74,6 +69,15 @@ my $timer = IO::Async::Timer::Periodic->new(
 $timer->start;
 $loop->add($timer);
 $loop->run;
+
+sub program_change ($device, $chan, $program) {
+  try {
+    $device->program_change($chan, $program);
+  }
+  catch ($e) {
+    die "ERROR: $e\n";
+  }
+}
 
 sub halt ($device) {
     say "\nStop";
