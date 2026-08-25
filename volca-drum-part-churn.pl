@@ -67,7 +67,6 @@ my $timer = IO::Async::Timer::Periodic->new(
 );
 
 $timer->start;
-
 $loop->add($timer);
 $loop->run;
 
