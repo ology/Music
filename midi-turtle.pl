@@ -15,11 +15,15 @@ my $note = Music::Note->new('C4', 'ISO');
 for (1 .. 8) {
     my @line = $turtle->forward(10);
     if ($turtle->pen_status) {
-        my $dur = $line[3] > $line[1] ? 'qn' : 'en'; # crude duration pick
+        my $dura = $line[3] > $line[1] ? 'qn' : 'en'; # crude duration pick
 
-        $note = $msn->get_offset(note_name => $note->format('ISO'), note_format => 'ISO', offset => 1);
+        $note = $msn->get_offset(
+            note_name   => $note->format('ISO'),
+            note_format => 'ISO',
+            offset      => 1,
+        );
 
-        $score->n($dur, midi_format($note->format('ISO')));
+        $score->n($dura, midi_format($note->format('ISO')));
     }
 
     $turtle->right(45);
