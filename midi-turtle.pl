@@ -36,6 +36,6 @@ sub phrase ($turtle, $score, $msn, $note, $direction) {
             $score->r($dura);
         }
         $turtle->$direction(45);
-        $turtle->pen_status(rand > 0.2 ? 1 : 0)
+        $turtle->pen_status(rand > 0.2 ? 1 : 0); # rest = 20%
     }
 }
