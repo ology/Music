@@ -13,8 +13,7 @@ my $msn    = Music::ScaleNote->new(scale_note => 'C', scale_name => 'major');
 my $note = Music::Note->new('C4', 'ISO');
 
 for (1 .. 8) {
-    my @line = $turtle->forward(10);      # turtle state, not drawing
-
+    my @line = $turtle->forward(10);
     if ($turtle->pen_status) {
         my $dur = $line[3] > $line[1] ? 'qn' : 'en'; # crude duration pick
 
