@@ -16,13 +16,11 @@ for (1 .. 8) {
     my @line = $turtle->forward(10);
     if ($turtle->pen_status) {
         my $dura = $line[3] > $line[1] ? 'qn' : 'en'; # crude duration pick
-
         $note = $msn->get_offset(
             note_name   => $note->format('ISO'),
             note_format => 'ISO',
             offset      => 1,
         );
-
         $score->n($dura, midi_format($note->format('ISO')));
     }
 
