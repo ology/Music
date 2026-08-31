@@ -6,7 +6,6 @@ use warnings;
 # These pitches are then fed into contrapuntal transformations
 # and the results are appended to this "melody."
 
-
 use AI::Genetic::Pro ();
 use Data::Dumper::Compact qw(ddc);
 use MIDI::Util qw(setup_score);
