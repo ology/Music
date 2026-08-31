@@ -72,7 +72,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 my $program = $programs[int rand @programs];
                 say "PC: $program";
                 $midi_out->program_change($channel, $program);
-                # sleep(0.1);
+                sleep(0.1);
             }
             for my $note (@queue) {
                 say "N: $note";
