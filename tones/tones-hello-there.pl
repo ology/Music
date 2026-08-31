@@ -54,7 +54,7 @@ $SIG{INT} = sub {
     exit;
 };
 
-my $programs = qw(0 1 3 8 9 10 16 17 19 40 41 42 49 64 66 72 73 74 80 81 104 105);
+my @programs = qw(0 1 3 8 9 10 16 17 19 40 41 42 49 64 66 72 73 74 80 81 104 105);
 
 my $loop = IO::Async::Loop->new;
 
