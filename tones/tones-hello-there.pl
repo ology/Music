@@ -11,6 +11,7 @@ use MIDI::RtMidi::FFI::Device ();
 use Music::Scales qw(get_scale_MIDI);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
+use Time::HiRes qw(sleep);
 no warnings 'experimental::try';
 
 my $port = shift || 'midimate'; # MIDI device
@@ -71,7 +72,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 my $program = $programs[int rand @programs];
                 say "PC: $program";
                 $midi_out->program_change($channel, $program);
-                sleep(1);
+                # sleep(0.1);
             }
             for my $note (@queue) {
                 say "N: $note";
