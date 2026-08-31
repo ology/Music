@@ -21,8 +21,8 @@ $score->write_score($0 . '.mid');
 sub phrase ($turtle, $score, $msn, $note, $direction) {
     for (1 .. 16) {
         my @line = $turtle->forward(10);
+        my $dura = $line[3] > $line[1] ? 'qn' : 'en'; # crude duration pick
         if ($turtle->pen_status) {
-            my $dura = $line[3] > $line[1] ? 'qn' : 'en'; # crude duration pick
             $note = $msn->get_offset(
                 note_name   => $note->format('ISO'),
                 note_format => 'ISO',
@@ -31,6 +31,9 @@ sub phrase ($turtle, $score, $msn, $note, $direction) {
                     : (rand > 0.5 ? 1 : -1),
             );
             $score->n($dura, midi_format($note->format('ISO')));
+        }
+        else {
+            $score->r($dura);
         }
         $turtle->$direction(45);
     }
