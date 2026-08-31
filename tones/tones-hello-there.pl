@@ -54,7 +54,8 @@ $SIG{INT} = sub {
     exit;
 };
 
-my @programs = qw(0 1 3 8 9 10 16 17 19 40 41 42 49 64 66 72 73 74 80 81 104 105);
+# microKORG arp'ing patches
+my @programs = qw(0 1 3 8 10 17 19 40 73 74 104); # no: 9 16 41 42 49 64 72 74 80 81 105
 
 my $loop = IO::Async::Loop->new;
 
@@ -66,9 +67,11 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % 16 == 0) {
                 push @queue, $notes[int rand @notes], $notes[int rand @notes], $notes[int rand @notes];
+                # change microKORG programs - why not?
                 my $program = $programs[int rand @programs];
                 say "PC: $program";
                 $midi_out->program_change($channel, $program);
+                sleep(1);
             }
             for my $note (@queue) {
                 say "N: $note";
