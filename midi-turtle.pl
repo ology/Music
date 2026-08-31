@@ -27,8 +27,8 @@ sub phrase ($turtle, $score, $msn, $note, $direction) {
                 note_name   => $note->format('ISO'),
                 note_format => 'ISO',
                 offset      => rand > 0.5
-                    ? (rand > 0.5 ? 1 : -1)
-                    : (rand > 0.5 ? 2 : -2),
+                    ? (rand > 0.5 ? 2 : -2)
+                    : (rand > 0.5 ? 1 : -1),
             );
             $score->n($dura, midi_format($note->format('ISO')));
         }
