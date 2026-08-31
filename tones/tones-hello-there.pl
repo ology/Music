@@ -22,6 +22,8 @@ my @notes = (
   get_scale_MIDI('C', 3, 'minor'),
 );
 
+my $channel = 0;
+
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 24; # PPQN
@@ -52,6 +54,8 @@ $SIG{INT} = sub {
     exit;
 };
 
+my $programs = qw(0 1 3 8 9 10 16 17 19 40 41 42 49 64 66 72 73 74 80 81 104 105);
+
 my $loop = IO::Async::Loop->new;
 
 my $timer = IO::Async::Timer::Periodic->new(
@@ -61,12 +65,15 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % 16 == 0) {
-                push @queue, $notes[int rand @notes], $notes[int rand @notes], $notes[int rand @notes]; # every 16 beats, add 3 notes
+                push @queue, $notes[int rand @notes], $notes[int rand @notes], $notes[int rand @notes];
+                my $program = $programs[int rand @programs];
+                say "PC: $program";
+                $midi_out->program_change($channel, $program);
             }
-            # note_on!
             for my $note (@queue) {
+                say "N: $note";
                 $midi_out->note_on(
-                    0,  # channel
+                    $channel,
                     $note,
                     127 # velocity
                 );
@@ -77,7 +84,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             # drain the queue and send note_off msgs
             while (my $note = pop @queue) {
                 $midi_out->note_off(
-                    0,
+                    $channel,
                     $note,
                     0
                 );
