@@ -86,7 +86,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     for (1 .. 3) {
                         my $note = $pitches[int rand @pitches];
                         say "N: $note";
-                        $midi_out->note_on($channel, $note, 127); # velocity
+                        $midi_out->note_on($channel, $note, 127);
                         push @active, { note => $note, off_tick => $ticks + $note_duration_ticks };
                     }
                 })->retain; # keep the Future alive until it fires
