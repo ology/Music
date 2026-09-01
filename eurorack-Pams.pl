@@ -15,6 +15,7 @@ no warnings 'experimental::try';
 
 my $bpm  = shift || 70; # beats-per-minute
 my $port = shift || 'midithing'; # MIDI device
+my $seq  = shift || 'sq-1'; # MIDI device
 
 # choose the pitches to use
 my @pitches = (
@@ -37,6 +38,9 @@ my @active; # { note => $pitch, off_tick => $tick_when_it_should_stop }
 
 my $midi_out = out_port($port);
 $midi_out->start;
+
+my $device = out_port($seq);
+$device->start;
 
 $SIG{INT} = sub {
     say "\nStop";
