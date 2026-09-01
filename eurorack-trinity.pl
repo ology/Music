@@ -36,13 +36,11 @@ my $note_duration_ticks = $clocks_per_beat * $note_duration_beats;
 my $group_interval_beats = $beats / $divisions; # trigger a note group every N beats
 my @active; # { note => $pitch, off_tick => $tick_when_it_should_stop }
 
-# open the midi devices for output
 my $midi_out = out_port($port);
 
 $SIG{INT} = sub {
     say "\nStop";
     halt($midi_out);
-    # skip global destruction, as the cleanup has already been done
     _exit(0);
 };
 
