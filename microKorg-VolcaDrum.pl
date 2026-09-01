@@ -48,7 +48,7 @@ $SIG{INT} = sub {
     say "\nStop";
     halt($midi_out);
     halt($device);
-    # _exit skips global destruction, and the cleanup has been done.
+    # skip global destruction, as the cleanup has already been done
     _exit(0);
 };
 
