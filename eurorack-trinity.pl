@@ -37,6 +37,7 @@ my $group_interval_beats = $beats / $divisions; # trigger a note group every N b
 my @active; # { note => $pitch, off_tick => $tick_when_it_should_stop }
 
 my $midi_out = out_port($port);
+$midi_out->start;
 
 $SIG{INT} = sub {
     say "\nStop";
