@@ -34,6 +34,7 @@ my $beat_count = 0; # how many beats?
 
 my $note_duration_beats = 4; # how long each triggered note rings for
 my $note_duration_ticks = $clocks_per_beat * $note_duration_beats;
+my $group_interval_beats = $beats / $divisions; # trigger a note group every N beats
 my @active; # { note => $pitch, off_tick => $tick_when_it_should_stop }
 
 # open the midi devices for output
@@ -82,18 +83,25 @@ my $timer = IO::Async::Timer::Periodic->new(
                 # before it'll reliably respond. So delay_future()
                 # waits the same amount of time without blocking.
                 $loop->delay_future(after => 0.1)->on_done(sub {
-                    for (1 .. 3) {
-                        my $note = $pitches[int rand @pitches];
-                        say "N: $note";
-                        $midi_out->note_on($channel, $note, velocity(-10, 10, 110));
-                        push @active, { note => $note, off_tick => $ticks + $note_duration_ticks };
-                    }
+                    trigger_notes();
                 })->retain; # keep the Future alive until it fires
+            }
+            elsif ($beat_count % $group_interval_beats == 0) {
+                trigger_notes();
             }
             $beat_count++;
         }
     },
 );
+
+sub trigger_notes {
+    for (1 .. 3) {
+        my $note = $pitches[int rand @pitches];
+        say "N: $note";
+        $midi_out->note_on($channel, $note, velocity(-10, 10, 110));
+        push @active, { note => $note, off_tick => $ticks + $note_duration_ticks };
+    }
+}
 
 $timer->start;
 $loop->add($timer);
