@@ -5,7 +5,7 @@
 use v5.36;
 use feature 'try';
 use Data::Dumper::Compact qw(ddc);
-use MIDI::RtMidi::Util qw(out_port halt);
+use MIDI::RtMidi::Util qw(out_port stop_device);
 use MIDI::RtMidi::FFI::Device ();
 use Music::Scales qw(get_scale_MIDI);
 use IO::Async::Loop ();
@@ -44,8 +44,8 @@ $device->start;
 
 $SIG{INT} = sub {
     say "\nStop";
-    halt($midi_out);
-    halt($device);
+    stop_device($midi_out);
+    stop_device($device);
     _exit(0);
 };
 
