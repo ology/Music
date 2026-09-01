@@ -13,14 +13,13 @@ use IO::Async::Timer::Periodic ();
 use POSIX qw(_exit); # skip global destruction
 no warnings 'experimental::try';
 
-my $bpm     = shift || 70; # beats-per-minute
-my $port    = shift || 'midithing'; # MIDI device
-my $clocked = shift || 'trinity';   # MIDI device
+my $bpm  = shift || 70; # beats-per-minute
+my $port = shift || 'midithing'; # MIDI device
 
 # choose the pitches to use
 my @pitches = (
-  get_scale_MIDI('C', 2, 'pminor'),
-  get_scale_MIDI('C', 3, 'minor'),
+  get_scale_MIDI('C', 0, 'pminor'),
+  get_scale_MIDI('C', 1, 'minor'),
 );
 
 my $channel = 0;
@@ -41,18 +40,12 @@ my @active; # { note => $pitch, off_tick => $tick_when_it_should_stop }
 my $midi_out = out_port($port);
 $midi_out->start;
 
-my $device = out_port($clocked);
-$device->start;
-
 $SIG{INT} = sub {
     say "\nStop";
     halt($midi_out);
-    halt($device);
     # skip global destruction, as the cleanup has already been done
     _exit(0);
 };
-
-my @programs = (0 .. 127);
 
 my $loop = IO::Async::Loop->new;
 
@@ -60,7 +53,6 @@ my $timer = IO::Async::Timer::Periodic->new(
     interval => $clock_interval,
     on_tick  => sub {
         $midi_out->clock;
-        $device->clock;
         $ticks++;
 
         # release any notes whose time is up
@@ -73,11 +65,6 @@ my $timer = IO::Async::Timer::Periodic->new(
 
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) {
-                # change microKORG programs - why not?
-                my $program = $programs[int rand @programs];
-                say "PC: $program";
-                $midi_out->program_change($channel, $program);
-
                 # The microKORG needs real time to load the new patch
                 # before it'll reliably respond. So delay_future()
                 # waits the same amount of time without blocking.
