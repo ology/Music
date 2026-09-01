@@ -45,6 +45,7 @@ $device->start;
 $SIG{INT} = sub {
     say "\nStop";
     halt($midi_out);
+    halt($device);
     _exit(0);
 };
 
