@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# XXX String::Blender is broken
+
 use strict;
 use warnings;
 
