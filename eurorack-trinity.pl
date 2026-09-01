@@ -38,7 +38,6 @@ my @active; # { note => $pitch, off_tick => $tick_when_it_should_stop }
 
 # open the midi devices for output
 my $midi_out = out_port($port);
-$midi_out->start;
 
 $SIG{INT} = sub {
     say "\nStop";
