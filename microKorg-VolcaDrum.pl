@@ -10,6 +10,7 @@ use MIDI::RtMidi::FFI::Device ();
 use Music::Scales qw(get_scale_MIDI);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
+use POSIX qw(_exit);
 no warnings 'experimental::try';
 
 my $bpm     = shift || 70; # beats-per-minute
@@ -47,7 +48,8 @@ $SIG{INT} = sub {
     say "\nStop";
     halt($midi_out);
     halt($device);
-    exit;
+    # _exit skips Perl's global destruction phase, and the cleanup has been done.
+    _exit(0);
 };
 
 # microKORG arp'ing patches
