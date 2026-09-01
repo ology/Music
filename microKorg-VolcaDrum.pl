@@ -53,7 +53,7 @@ $SIG{INT} = sub {
 };
 
 # microKORG arp'ing patches
-my @programs = qw(0 1 3 8 10 17 19 40 73 74 104); # no: 9 16 41 42 49 64 72 74 80 81 105
+my @programs = qw(0 1 3 8 10 16 17 19 40 41 73 74 104 105);
 
 my $loop = IO::Async::Loop->new;
 
