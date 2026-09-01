@@ -10,7 +10,7 @@ use MIDI::RtMidi::FFI::Device ();
 use Music::Scales qw(get_scale_MIDI);
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
-use POSIX qw(_exit);
+use POSIX qw(_exit); # skip global destruction
 no warnings 'experimental::try';
 
 my $bpm     = shift || 70; # beats-per-minute
