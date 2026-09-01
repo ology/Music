@@ -43,7 +43,6 @@ $midi_out->start;
 my $device = out_port($clocked);
 $device->start;
 
-# redefine what happens on halt
 $SIG{INT} = sub {
     say "\nStop";
     halt($midi_out);
