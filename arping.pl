@@ -18,6 +18,7 @@ my $bpm      = shift || 70; # beats-per-minute
 my $port     = shift || 'se-02'; # MIDI device
 my $clocked  = shift || 'usb';   # MIDI device
 my $arp_type = shift || 'up';
+my $note_num = shift || 4; # number of arp notes
 
 # choose the pitches to use
 my @pitches = (
@@ -115,7 +116,7 @@ $loop->run;
 
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
-        map { $pitches[int rand @pitches] } 1 .. 4;
+        map { $pitches[int rand @pitches] } 1 .. $note_num;
     my $arped = $arper->arp(\@notes, 1, $arp_type);
     say "N,A: @notes => ", ddc $arped;
     for my $i (0 .. $#$arped) {
