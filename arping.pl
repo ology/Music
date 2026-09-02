@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Ex: perl arping.pl 60 pad usb
+# Ex: perl arping.pl 60 pad usb updown 4
 
 use v5.36;
 use feature 'try';
