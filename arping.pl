@@ -9,6 +9,7 @@ use MIDI::RtMidi::Util qw(out_port stop_device);
 use MIDI::RtMidi::FFI::Device ();
 use Music::MelodicDevice::Arpeggiation ();
 use Music::Scales qw(get_scale_MIDI);
+use Music::VoiceGen ();
 use IO::Async::Loop ();
 use IO::Async::Timer::Periodic ();
 use POSIX qw(_exit); # skip global destruction
@@ -17,7 +18,7 @@ no warnings 'experimental::try';
 my $bpm      = shift || 70; # beats-per-minute
 my $port     = shift || 'se-02'; # MIDI device
 my $clocked  = shift || 'usb';   # MIDI device
-my $arp_type = shift || 'up';
+my $arp_type = shift || 'converge';
 my $note_num = shift || 5; # number of arp notes
 
 # choose the pitches to use
@@ -61,7 +62,10 @@ $SIG{INT} = sub {
     _exit(0);
 };
 
-my @programs = (0 .. 127);
+my $programs = Music::VoiceGen->new(
+    pitches   => [0 .. 127],
+    intervals => [qw(-3 -2 -1 1 2 3)],
+);
 
 my $loop = IO::Async::Loop->new;
 
@@ -91,7 +95,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) {
                 # change microKORG programs - why not?
-                my $program = $programs[int rand @programs];
+                my $program = $programs->rand;
                 say "PC: $program";
                 $midi_out->program_change($channel, $program);
 
