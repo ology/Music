@@ -14,9 +14,10 @@ use IO::Async::Timer::Periodic ();
 use POSIX qw(_exit); # skip global destruction
 no warnings 'experimental::try';
 
-my $bpm     = shift || 70; # beats-per-minute
-my $port    = shift || 'se-02'; # MIDI device
-my $clocked = shift || 'usb';   # MIDI device
+my $bpm      = shift || 70; # beats-per-minute
+my $port     = shift || 'se-02'; # MIDI device
+my $clocked  = shift || 'usb';   # MIDI device
+my $arp_type = shift || 'up';
 
 # choose the pitches to use
 my @pitches = (
@@ -36,7 +37,9 @@ my $beat_count = 0; # how many beats?
 my $note_duration_beats = 4; # how long each triggered note rings for
 my $note_duration_ticks = $clocks_per_beat * $note_duration_beats;
 my $group_interval_beats = $beats / $divisions; # trigger a note group every N beats
-my @active; # { note => $pitch, off_tick => $tick_when_it_should_stop }
+my $arp_step_ticks = int($clocks_per_beat / 4); # spacing between arp notes (16th notes)
+my @active;  # { note => $pitch, off_tick => $tick_when_it_should_stop }
+my @pending; # { note => $pitch, on_tick => $tick_when_it_should_start }
 
 # open the midi devices for output
 my $midi_out = out_port($port);
@@ -74,6 +77,14 @@ my $timer = IO::Async::Timer::Periodic->new(
             }
         }
 
+        # fire any pending arp notes whose time has come
+        my @ready = grep { $ticks >= $_->{on_tick} } @pending;
+        @pending  = grep { $ticks <  $_->{on_tick} } @pending;
+        for my $p (@ready) {
+            $midi_out->note_on($channel, $p->{note}, velocity(-10, 10, 110));
+            push @active, { note => $p->{note}, off_tick => $ticks + $note_duration_ticks };
+        }
+
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) {
                 # change microKORG programs - why not?
@@ -102,11 +113,13 @@ $loop->run;
 
 sub trigger_notes {
     my @notes = ($pitches[int rand @pitches], $pitches[int rand @pitches], $pitches[int rand @pitches]);
-    my $arped = $arper->arp(\@notes, 1, 'updown');
+    my $arped = $arper->arp(\@notes, 1, $arp_type);
     say "N,A: @notes => ", ddc $arped;
-    for my $n (@$arped) {
-        $midi_out->note_on($channel, $n->[1], velocity(-10, 10, 110));
-        push @active, { note => $n->[1], off_tick => $ticks + $note_duration_ticks };
+    for my $i (0 .. $#$arped) {
+        push @pending, {
+            note    => $arped->[$i][1],
+            on_tick => $ticks + $i * $arp_step_ticks,
+        };
     }
 }
 
