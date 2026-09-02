@@ -48,7 +48,9 @@ $midi_out->start;
 my $device = out_port($clocked);
 $device->start;
 
-my $arper = Music::MelodicDevice::Arpeggiation->new;
+my $arper = Music::MelodicDevice::Arpeggiation->new(
+    repeats => 4,
+);
 
 $SIG{INT} = sub {
     say "\nStop";
