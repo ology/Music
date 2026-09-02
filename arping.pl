@@ -113,7 +113,7 @@ $loop->run;
 
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
-        ($pitches[int rand @pitches], $pitches[int rand @pitches], $pitches[int rand @pitches]);
+        map { $pitches[int rand @pitches] } 1 .. 4;
     my $arped = $arper->arp(\@notes, 1, $arp_type);
     say "N,A: @notes => ", ddc $arped;
     for my $i (0 .. $#$arped) {
