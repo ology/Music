@@ -94,12 +94,12 @@ my $timer = IO::Async::Timer::Periodic->new(
 
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) {
-                # change microKORG programs - why not?
+                # change programs - why not?
                 my $program = $programs->rand;
                 say "PC: $program";
                 $midi_out->program_change($channel, $program);
 
-                # The microKORG needs real time to load the new patch
+                # Synths need real time to load a new patch
                 # before it'll reliably respond. So delay_future()
                 # waits the same amount of time without blocking.
                 $loop->delay_future(after => 0.1)->on_done(sub {
