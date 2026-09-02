@@ -15,6 +15,8 @@ use IO::Async::Timer::Periodic ();
 use POSIX qw(_exit); # skip global destruction
 no warnings 'experimental::try';
 
+use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
+
 my $bpm      = shift || 70; # beats-per-minute
 my $port     = shift || 'se-02'; # MIDI device
 my $clocked  = shift || 'usb';   # MIDI device
@@ -36,10 +38,7 @@ my $clock_interval = 60 / $bpm / $clocks_per_beat; # time / bpm / ppqn
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 
-my $note_duration_beats = 4; # how long each triggered note rings for
-my $note_duration_ticks = $clocks_per_beat * $note_duration_beats;
 my $group_interval_beats = $beats / $divisions; # trigger a note group every N beats
-my $arp_step_ticks = int($clocks_per_beat / 4); # spacing between arp notes (16th notes)
 my @active;  # { note => $pitch, off_tick => $tick_when_it_should_stop }
 my @pending; # { note => $pitch, on_tick => $tick_when_it_should_start }
 
@@ -89,7 +88,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         @pending  = grep { $ticks <  $_->{on_tick} } @pending;
         for my $p (@ready) {
             $midi_out->note_on($channel, $p->{note}, velocity(-10, 10, 110));
-            push @active, { note => $p->{note}, off_tick => $ticks + $note_duration_ticks };
+            push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
         }
 
         if ($ticks % $clocks_per_beat == 0) {
@@ -123,11 +122,21 @@ sub trigger_notes {
         map { $pitches[int rand @pitches] } 1 .. $note_num;
     my $arped = $arper->arp(\@notes, 1, $arp_type);
     say "N,A: @notes => ", ddc $arped;
-    for my $i (0 .. $#$arped) {
+
+    my $on_tick = $ticks;
+    for my $n (@$arped) {
+        my ($dur_str, $note) = @$n;
+        my ($dur) = $dur_str =~ /^d(\d+)$/;
+
+        # convert from the arp's 96-ticks-per-quarter-note scale to our clock ticks
+        my $step_ticks = int($dur * $clocks_per_beat / ARP_TICKS) || 1;
+
         push @pending, {
-            note    => $arped->[$i][1],
-            on_tick => $ticks + $i * $arp_step_ticks,
+            note     => $note,
+            on_tick  => $on_tick,
+            off_tick => $on_tick + $step_ticks,
         };
+        $on_tick += $step_ticks;
     }
 }
 
