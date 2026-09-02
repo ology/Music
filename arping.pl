@@ -18,7 +18,7 @@ my $bpm      = shift || 70; # beats-per-minute
 my $port     = shift || 'se-02'; # MIDI device
 my $clocked  = shift || 'usb';   # MIDI device
 my $arp_type = shift || 'up';
-my $note_num = shift || 4; # number of arp notes
+my $note_num = shift || 5; # number of arp notes
 
 # choose the pitches to use
 my @pitches = (
@@ -50,7 +50,7 @@ my $device = out_port($clocked);
 $device->start;
 
 my $arper = Music::MelodicDevice::Arpeggiation->new(
-    repeats => 4,
+    repeats => 1,
 );
 
 $SIG{INT} = sub {
