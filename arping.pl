@@ -100,7 +100,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 $midi_out->program_change($channel, $program);
 
                 # Synths need real time to load a new patch
-                # before it'll reliably respond. So delay_future()
+                # before they'll reliably respond. So delay_future()
                 # waits the same amount of time without blocking.
                 $loop->delay_future(after => 0.1)->on_done(sub {
                     trigger_notes();
