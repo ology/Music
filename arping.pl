@@ -36,6 +36,7 @@ my %opt = (
     clk_port => 'usb',   # MIDI device (drums)
     arp_type => 'up',    # up, down, updown, converge, diverge
     note_num => '5,7',   # range of arp notes
+    repeats  => 1,       # number of arp-phrase repeats
     initial  => 1,       # within 0-based patch indices
     duration => 1,       # 0.1 .. 4 floats
     octave   => 1,       # initial octave of 3 hardcoded (0 .. 9 ints)
@@ -48,6 +49,7 @@ GetOptions(\%opt,
     'seq_port=s',
     'clk_port=s',
     'arp_type=s',
+    'repeats=s',
     'note_num=s',
     'initial=i',
     'duration=i',
@@ -89,7 +91,7 @@ my $device = out_port($opt{clk_port});
 $device->start;
 
 my $arper = Music::MelodicDevice::Arpeggiation->new(
-    repeats => 1,
+    repeats => $opt{repeats},
     verbose => 1,
 );
 
