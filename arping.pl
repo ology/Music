@@ -20,7 +20,7 @@ use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 my $bpm      = shift || 70; # beats-per-minute
 my $port     = shift || 'se-02'; # MIDI device
 my $clocked  = shift || 'usb';   # MIDI device
-my $arp_type = shift || 'converge';
+my $arp_type = shift || 'up';
 my $note_num = shift || 5; # number of arp notes
 
 # choose the pitches to use
