@@ -23,9 +23,10 @@ my $clocked  = shift || 'usb';   # MIDI device
 my $arp_type = shift || 'up';
 my $note_num = shift || 5; # number of arp notes
 my $initial  = shift // 63; # <- 127/2
-my $octave   = shift // 1; # <- 0 .. 9
+my $octave   = shift // 1; # <- 0 .. 9 ints
+my $duration = shift // 1; # <- 0.1 .. 4 floats
 
-my @patches = qw(18 21 23 27 31 70 64 57 58 67 72 75 80 83 84 76);
+my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 70 64 57 58 67 72 75 80 83 84 76);
 
 # choose the pitches to use
 my @pitches = (
@@ -127,7 +128,7 @@ $loop->run;
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
         map { $pitches[int rand @pitches] } 1 .. $note_num;
-    my $arped = $arper->arp(\@notes, 2, $arp_type);
+    my $arped = $arper->arp(\@notes, $duration, $arp_type);
     # say "N,A: @notes => ", ddc $arped;
 
     my $on_tick = $ticks;
