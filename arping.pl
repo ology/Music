@@ -3,7 +3,7 @@
 # Ex:
 # perl arping.pl # use defaults
 # perl arping.pl --bpm=60 --seq_port=keyboard --clk_port=midithing --arp_type=updown --note_num=4
-# perl arping.pl --b=80 --s=mate --a=converge --n=7 --i=42 --d=1 --o=2
+# perl arping.pl --b=80 --s=mate --a=converge --n=11 --i=10 --d=1 --o=2
 
 use v5.36;
 use feature 'try';
@@ -27,7 +27,7 @@ my %opt = (
     clk_port => 'usb',   # MIDI device (drums)
     arp_type => 'up',    # up, down, updown, converge, diverge
     note_num => 5,       # number of arp notes
-    initial  => 63,      # 127/2
+    initial  => 5,       # within the range of patch indices
     duration => 1,       # 0.1 .. 4 floats
     octave   => 1,       # 0 .. 9 ints
 );
@@ -42,7 +42,8 @@ GetOptions(\%opt,
     'octave=i',
 );
 
-my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 51 64 57 58 67 70 72 75 80 83 84 76);
+# microKorg
+my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 51 57 58 64 67 70 72 75 76 80 82 83 84 86 91 92 96 97 100 102 104 105 107 108 122);
 
 # choose the pitches to use
 my @pitches = (
@@ -85,7 +86,7 @@ $SIG{INT} = sub {
 };
 
 my $programs = Music::VoiceGen->new(
-    pitches   => [0 .. 127], #\@patches,
+    pitches   => [0 .. $#patches], #\@patches, #[0 .. 127],
     intervals => [qw(-3 -2 -1 1 2 3)],
 );
 $programs->context($opt{initial});
@@ -118,7 +119,8 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) {
                 # change programs - why not?
-                my $program = $programs->rand;
+                # my $program = $programs->rand;
+                my $program = $patches[ $programs->rand ];
                 say "PC: $program";
                 $midi_out->program_change($channel, $program);
 
