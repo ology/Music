@@ -25,8 +25,9 @@ my $note_num = shift || 5; # number of arp notes
 
 # choose the pitches to use
 my @pitches = (
-  get_scale_MIDI('C', 2, 'pminor'),
-  get_scale_MIDI('C', 3, 'minor'),
+  get_scale_MIDI('C', 0, 'pminor'),
+  get_scale_MIDI('C', 1, 'minor'),
+  get_scale_MIDI('C', 2, 'minor'),
 );
 
 my $channel = 0;
@@ -121,7 +122,7 @@ sub trigger_notes {
     my @notes = sort { $a <=> $b }
         map { $pitches[int rand @pitches] } 1 .. $note_num;
     my $arped = $arper->arp(\@notes, 2, $arp_type);
-    say "N,A: @notes => ", ddc $arped;
+    # say "N,A: @notes => ", ddc $arped;
 
     my $on_tick = $ticks;
     for my $n (@$arped) {
