@@ -114,7 +114,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         for my $p (@ready) {
             $midi_out->note_on($channel, $p->{note}, velocity(-10, 10, 110));
             push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
-            unless ($started) {
+            unless ($started) { # start the clocked device, if it hasn't
                 $device->start;
                 $started++;
             }
