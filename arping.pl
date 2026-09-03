@@ -26,9 +26,9 @@ my %opt = (
     clk_port => 'usb', # MIDI device
     arp_type => 'up', # up, down, updown, converge, diverge
     note_num => 5, # number of arp notes
-    initial  => 63, # <- 127/2
-    duration => 1, # <- 0.1 .. 4 floats
-    octave   => 1, # <- 0 .. 9 ints
+    initial  => 63, # 127/2
+    duration => 1, # 0.1 .. 4 floats
+    octave   => 1, # 0 .. 9 ints
 );
 GetOptions(\%opt,
     'bpm=i',
