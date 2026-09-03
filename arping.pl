@@ -112,12 +112,12 @@ my $timer = IO::Async::Timer::Periodic->new(
         my @ready = grep { $ticks >= $_->{on_tick} } @pending;
         @pending  = grep { $ticks <  $_->{on_tick} } @pending;
         for my $p (@ready) {
-            $midi_out->note_on($channel, $p->{note}, velocity(-10, 10, 110));
-            push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
             unless ($started) { # start the clocked device, if it's not
                 $device->start;
                 $started++;
             }
+            $midi_out->note_on($channel, $p->{note}, velocity(-10, 10, 110));
+            push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
         }
 
         if ($ticks % $clocks_per_beat == 0) {
