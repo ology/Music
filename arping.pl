@@ -22,7 +22,7 @@ my $port     = shift || 'se-02'; # MIDI device
 my $clocked  = shift || 'usb';   # MIDI device
 my $arp_type = shift || 'up';
 my $note_num = shift || 5; # number of arp notes
-my $initial  = shift || 63; # 127/2
+my $initial  = shift || 63; # <- 127/2. Microkorg b.17 == program_change#70 is way cool
 
 # choose the pitches to use
 my @pitches = (
