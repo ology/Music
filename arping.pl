@@ -24,7 +24,7 @@ my $arp_type = shift || 'up';
 my $note_num = shift || 5; # number of arp notes
 my $initial  = shift // 63; # <- 127/2
 my $octave   = shift // 1; # <- 0 .. 9 ints
-my $duration = shift // 1; # <- 0.1 .. 4 floats
+my $duration = shift || 1; # <- 0.1 .. 4 floats
 
 my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 70 64 57 58 67 72 75 80 83 84 76);
 
