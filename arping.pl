@@ -5,6 +5,7 @@
 
 # Ex:
 # perl arping.pl # use defaults
+# perl arping.pl --initial=0 --patches='42,42' # for playing a single patch
 # perl arping.pl --bpm=60 --seq_port=keyboard --clk_port=midithing --arp_type=updown \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --patches=-1
 # perl arping.pl --b=80 --s=mate --c=usb --a=converge --d=1 --o=2 --i=10 --n=11
