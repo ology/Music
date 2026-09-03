@@ -70,7 +70,7 @@ my $midi_out = out_port($opt{seq_port});
 $midi_out->start;
 
 my $device = out_port($opt{clk_port});
-$device->start;
+my $started = 0;
 
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => 1,
@@ -112,6 +112,10 @@ my $timer = IO::Async::Timer::Periodic->new(
         my @ready = grep { $ticks >= $_->{on_tick} } @pending;
         @pending  = grep { $ticks <  $_->{on_tick} } @pending;
         for my $p (@ready) {
+            unless ($started) {
+                $device->start;
+                $started++;
+            }
             $midi_out->note_on($channel, $p->{note}, velocity(-10, 10, 110));
             push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
         }
