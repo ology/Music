@@ -90,11 +90,11 @@ my @pending; # { note => $pitch, on_tick => $when_it_should_start }
 # open the midi devices for output
 my $midi_out = out_port($opt{seq_port});
 $midi_out->start;
-say "Started $midi_out" if $opt{verbose};
+say "Started $opt{seq_port}" if $opt{verbose};
 
 my $device = out_port($opt{clk_port});
 $device->start;
-say "Started $device" if $opt{verbose};
+say "Started $opt{clk_port}" if $opt{verbose};
 
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => $opt{repeats},
