@@ -22,8 +22,8 @@ use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
     bpm      => 70,      # beats-per-minute
-    seq_port => 'se-02', # MIDI device
-    clk_port => 'usb',   # MIDI device
+    seq_port => 'se-02', # sequencer MIDI device
+    clk_port => 'usb',   # MIDI device (drums)
     arp_type => 'up',    # up, down, updown, converge, diverge
     note_num => 5,       # number of arp notes
     initial  => 63,      # 127/2
