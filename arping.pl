@@ -135,7 +135,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 my $program = $opt{patches} eq '-1'
                     ? $programs->rand
                     : $patches[ $programs->rand ];
-                say "* PC: $program";
+                say "\n* PC: $program";
                 $midi_out->program_change($channel, $program);
 
                 # Synths need real time to load a new patch
