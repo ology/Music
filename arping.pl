@@ -120,7 +120,7 @@ $loop->run;
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
         map { $pitches[int rand @pitches] } 1 .. $note_num;
-    my $arped = $arper->arp(\@notes, 1, $arp_type);
+    my $arped = $arper->arp(\@notes, 2, $arp_type);
     say "N,A: @notes => ", ddc $arped;
 
     my $on_tick = $ticks;
