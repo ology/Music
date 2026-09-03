@@ -1,10 +1,13 @@
 #!/usr/bin/env perl
 
-# Ex: perl arping.pl 60 pad usb updown 4
+# Ex:
+# perl arping.pl --bpm=60 --seq_port=pad --clk_port=usb --arp_type=updown --note_num=4
+# perl arping.pl --b=70 --s=mate --c=usb --a=converge --n=5 --i=46 --d=1 --o=2
 
 use v5.36;
 use feature 'try';
 use Data::Dumper::Compact qw(ddc);
+use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::Util qw(out_port stop_device);
 use MIDI::RtMidi::FFI::Device ();
 use Music::MelodicDevice::Arpeggiation ();
@@ -17,22 +20,34 @@ no warnings 'experimental::try';
 
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
-my $bpm      = shift || 70; # beats-per-minute
-my $port     = shift || 'se-02'; # MIDI device
-my $clocked  = shift || 'usb';   # MIDI device
-my $arp_type = shift || 'up';
-my $note_num = shift || 5; # number of arp notes
-my $initial  = shift // 63; # <- 127/2
-my $octave   = shift // 1; # <- 0 .. 9 ints
-my $duration = shift || 1; # <- 0.1 .. 4 floats
+my %opt = (
+    bpm      => 70, # beats-per-minute
+    seq_port => 'se-02', # MIDI device
+    clk_port => 'usb', # MIDI device
+    arp_type => 'up', # up, down, updown, converge, diverge
+    note_num => 5, # number of arp notes
+    initial  => 63, # <- 127/2
+    duration => 1, # <- 0.1 .. 4 floats
+    octave   => 1, # <- 0 .. 9 ints
+);
+GetOptions(\%opt,
+    'bpm=i',
+    'seq_port=s',
+    'clk_port=s',
+    'arp_type=s',
+    'note_num=i',
+    'initial=i',
+    'duration=i',
+    'octave=i',
+);
 
-my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 70 64 57 58 67 72 75 80 83 84 76);
+my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 51 64 57 58 67 70 72 75 80 83 84 76);
 
 # choose the pitches to use
 my @pitches = (
-  get_scale_MIDI('C', $octave, 'pminor'),
-  get_scale_MIDI('C', $octave + 1, 'minor'),
-  get_scale_MIDI('C', $octave + 2, 'minor'),
+  get_scale_MIDI('C', $opt{octave}, 'pminor'),
+  get_scale_MIDI('C', $opt{octave} + 1, 'minor'),
+  get_scale_MIDI('C', $opt{octave} + 2, 'minor'),
 );
 
 my $channel = 0;
@@ -40,7 +55,7 @@ my $channel = 0;
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 24; # PPQN
-my $clock_interval = 60 / $bpm / $clocks_per_beat; # time / bpm / ppqn
+my $clock_interval = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 
@@ -49,10 +64,10 @@ my @active;  # { note => $pitch, off_tick => $tick_when_it_should_stop }
 my @pending; # { note => $pitch, on_tick => $tick_when_it_should_start }
 
 # open the midi devices for output
-my $midi_out = out_port($port);
+my $midi_out = out_port($opt{seq_port});
 $midi_out->start;
 
-my $device = out_port($clocked);
+my $device = out_port($opt{clk_port});
 $device->start;
 
 my $arper = Music::MelodicDevice::Arpeggiation->new(
@@ -72,7 +87,7 @@ my $programs = Music::VoiceGen->new(
     pitches   => [0 .. 127],
     intervals => [qw(-3 -2 -1 1 2 3)],
 );
-$programs->context($initial);
+$programs->context($opt{initial});
 
 my $loop = IO::Async::Loop->new;
 
@@ -127,8 +142,8 @@ $loop->run;
 
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
-        map { $pitches[int rand @pitches] } 1 .. $note_num;
-    my $arped = $arper->arp(\@notes, $duration, $arp_type);
+        map { $pitches[int rand @pitches] } 1 .. $opt{note_num};
+    my $arped = $arper->arp(\@notes, $opt{duration}, $opt{arp_type});
     # say "N,A: @notes => ", ddc $arped;
 
     my $on_tick = $ticks;
