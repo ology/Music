@@ -5,10 +5,11 @@
 # perl arping.pl --bpm=60 --seq_port=keyboard --clk_port=midithing --arp_type=updown --note_num=5
 # perl arping.pl --b=80 --s=mate --a=converge --d=1 --o=2 --i=10 --n=11
 # perl arping.pl --b=80 --s=mate --a=converge --d=3 --o=2 --i=6 --n=12
+# perl arping.pl --b=80 --s=mate --a=converge --d=2 --o=2 --i=0 --n=6 --p='41,70'
 
 use v5.36;
 use feature 'try';
-# use Data::Dumper::Compact qw(ddc);
+use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::Util qw(out_port stop_device);
 use MIDI::RtMidi::FFI::Device ();
@@ -47,7 +48,7 @@ GetOptions(\%opt,
 
 # microKorg
 # my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 51 57 58 64 67 70 72 75 76 80 82 83 84 86 91 92 96 97 100 102 104 105 107 108 122);
-my @patches = $opt{patches} == -1 ? (0 .. 127) : split /,/, $opt{patches};
+my @patches = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
 
 # choose the pitches to use
 my @pitches = (
@@ -128,8 +129,9 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) {
                 # change programs - why not?
-                # my $program = $programs->rand;
-                my $program = $patches[ $programs->rand ];
+                my $program = $opt{patches} eq '-1'
+                    ? $programs->rand
+                    : $patches[ $programs->rand ];
                 say "* PC: $program";
                 $midi_out->program_change($channel, $program);
 
