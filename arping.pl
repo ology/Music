@@ -6,6 +6,7 @@
 # perl arping.pl --b=80 --s=mate --a=converge --d=1 --o=2 --i=10 --n=11
 # perl arping.pl --b=80 --s=mate --a=converge --d=3 --o=2 --i=6 --n=12
 # perl arping.pl --b=80 --s=mate --a=converge --d=2 --o=2 --i=0 --n=6 --p='41,70'
+# perl arping.pl --b=80 --s=mate --a=converge --d=2 --o=2 --i=0 --n='4,5,6,7'
 
 use v5.36;
 use feature 'try';
@@ -47,7 +48,6 @@ GetOptions(\%opt,
 );
 
 my @note_nums = split /,/, $opt{note_num};
-@note_nums = ($note_nums[0] .. $note_nums[-1]);
 
 # microKorg
 # my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 51 57 58 64 67 70 72 75 76 80 82 83 84 86 91 92 96 97 100 102 104 105 107 108 122);
