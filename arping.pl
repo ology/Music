@@ -46,7 +46,6 @@ my @pending; # { note => $pitch, on_tick => $tick_when_it_should_start }
 
 # open the midi devices for output
 my $midi_out = out_port($port);
-$midi_out->program_change($channel, $initial);
 $midi_out->start;
 
 my $device = out_port($clocked);
@@ -68,6 +67,7 @@ my $programs = Music::VoiceGen->new(
     pitches   => [0 .. 127],
     intervals => [qw(-3 -2 -1 1 2 3)],
 );
+$voice->context($initial);
 
 my $loop = IO::Async::Loop->new;
 
