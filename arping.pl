@@ -41,6 +41,7 @@ my %opt = (
     octave   => 1,       # initial octave of 3 hardcoded (0 .. 9 ints)
     # patches  => -1,      # -1 or CSV-string of patch numbers
     patches  => '0,2,3,12,16,18,19,21,23,27,31,37,40,41,51,57,58,64,67,70,72,75,76,80,82,83,84,86,91,92,96,97,100,102,104,105,107,108,122', # decent microKorg programs
+    jumps    => '-3,-2,-1,1,2,3', # allowed jumps between selected programs
 );
 GetOptions(\%opt,
     'bpm=i',
@@ -52,9 +53,11 @@ GetOptions(\%opt,
     'duration=i',
     'octave=i',
     'patches=s',
+    'jumps=s',
 );
 
 my @note_nums = split /,/, $opt{note_num};
+my @jumps     = split /,/, $opt{jumps};
 
 my @patches = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
 
@@ -100,7 +103,7 @@ $SIG{INT} = sub {
 
 my $programs = Music::VoiceGen->new(
     pitches   => [0 .. $#patches], #\@patches, #[0 .. 127],
-    intervals => [qw(-3 -2 -1 1 2 3)],
+    intervals => \@jumps,
 );
 $programs->context($opt{initial});
 
