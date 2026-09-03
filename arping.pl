@@ -143,7 +143,7 @@ $loop->run;
 
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
-        map { $pitches[int rand @pitches] } 1 .. $opt{note_num};
+        map { $pitches[int rand @pitches] } 1 .. $opt{note_num}; # XXX klunky
     my $arped = $arper->arp(\@notes, $opt{duration}, $opt{arp_type});
     # say "N,A: @notes => ", ddc $arped;
 
