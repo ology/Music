@@ -39,8 +39,8 @@ my %opt = (
     note_num => '5,7',  # range of arp notes
     repeats  => 1,      # number of arp-phrase repeats
     initial  => 1,      # within 0-based patch indices
-    duration => 1,      # 0.1 .. 4 floats
-    octave   => 1,      # initial octave of 3 hardcoded (0 .. 9 ints)
+    duration => 1,      # 0.1 .. 4 float
+    octave   => 1,      # initial octave of 3 hardcoded (0 .. 9 int)
     jumps    => '-3,-2,-1,1,2,3', # allowed jumps between selected programs
     # patches  => -1,     # -1=0..127 or CSV-string of patch numbers
     patches  => '0,2,3,12,16,18,19,21,23,27,31,37,40,41,51,57,58,64,67,70,72,75,76,80,82,83,84,86,91,92,96,97,100,102,104,105,107,108,122', # decent microKorg programs
