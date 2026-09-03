@@ -59,6 +59,7 @@ GetOptions(\%opt,
     'jumps=s',
 );
 
+my @arp_type  = split /,/, $opt{arp_type};
 my @note_nums = split /,/, $opt{note_num};
 my @jumps     = split /,/, $opt{jumps};
 
@@ -166,7 +167,7 @@ $loop->run;
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
         map { $pitches[int rand @pitches] } 1 .. $note_nums[int rand @note_nums]; # XXX klunky
-    my $arped = $arper->arp(\@notes, $opt{duration}, $opt{arp_type});
+    my $arped = $arper->arp(\@notes, $opt{duration}, $arp_type[int rand @arp_type]);
     # say "N,A: @notes => ", ddc $arped;
 
     my $on_tick = $ticks;
