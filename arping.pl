@@ -1,9 +1,9 @@
 #!/usr/bin/env perl
 
-# Play 2 MIDI devices with 1 clock - drums and a sequencer. Arpeggiate
-# the sequencer each bar of a 4-bar phrase.
+# Play 2 MIDI devices with a single clock - drums and a sequencer.
+# Arpeggiate the sequencer on the 1 of each bar of a 4-bar phrase.
 
-# Ex:
+# Examples:
 # perl arping.pl # use defaults
 # perl arping.pl --initial=0 --patches='42,42' # for playing a single patch
 # perl arping.pl --bpm=60 --seq_port=keyboard --clk_port=midithing --arp_type=updown \
