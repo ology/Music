@@ -65,7 +65,6 @@ my @jumps     = split /,/, $opt{jumps};
 
 my @patches = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
 
-# choose the pitches to use
 my @pitches = (
   get_scale_MIDI('C', $opt{octave}, 'pminor'),
   get_scale_MIDI('C', $opt{octave} + 1, 'minor'),
