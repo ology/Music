@@ -31,6 +31,7 @@ my %opt = (
     initial  => 5,       # within the range of patch indices
     duration => 1,       # 0.1 .. 4 floats
     octave   => 1,       # 0 .. 9 ints
+    patches  => -1,      # -1 or CSV-string of patch numbers
 );
 GetOptions(\%opt,
     'bpm=i',
@@ -41,10 +42,12 @@ GetOptions(\%opt,
     'initial=i',
     'duration=i',
     'octave=i',
+    'patches=s',
 );
 
 # microKorg
-my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 51 57 58 64 67 70 72 75 76 80 82 83 84 86 91 92 96 97 100 102 104 105 107 108 122);
+# my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 51 57 58 64 67 70 72 75 76 80 82 83 84 86 91 92 96 97 100 102 104 105 107 108 122);
+my @patches = $opt{patches} == -1 ? (0 .. 127) : split /,/, $opt{patches};
 
 # choose the pitches to use
 my @pitches = (
