@@ -85,7 +85,7 @@ $SIG{INT} = sub {
 };
 
 my $programs = Music::VoiceGen->new(
-    pitches   => [0 .. 127],
+    pitches   => [0 .. 127], #\@patches,
     intervals => [qw(-3 -2 -1 1 2 3)],
 );
 $programs->context($opt{initial});
