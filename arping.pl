@@ -22,13 +22,16 @@ my $port     = shift || 'se-02'; # MIDI device
 my $clocked  = shift || 'usb';   # MIDI device
 my $arp_type = shift || 'up';
 my $note_num = shift || 5; # number of arp notes
-my $initial  = shift || 63; # <- 127/2. Microkorg b.17 == program_change#70 is way cool
+my $initial  = shift // 63; # <- 127/2
+my $octave   = shift // 1; # <- 0 .. 9
+
+my @patches = qw(18 21 23 27 31 70 64 57 58 67 72 75 80 83 84 76);
 
 # choose the pitches to use
 my @pitches = (
-  get_scale_MIDI('C', 0, 'pminor'),
-  get_scale_MIDI('C', 1, 'minor'),
-  get_scale_MIDI('C', 2, 'minor'),
+  get_scale_MIDI('C', $octave, 'pminor'),
+  get_scale_MIDI('C', $octave + 1, 'minor'),
+  get_scale_MIDI('C', $octave + 2, 'minor'),
 );
 
 my $channel = 0;
@@ -53,6 +56,7 @@ $device->start;
 
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => 1,
+    verbose => 1,
 );
 
 $SIG{INT} = sub {
