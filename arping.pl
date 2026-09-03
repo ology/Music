@@ -77,7 +77,7 @@ my $midi_out = out_port($opt{seq_port});
 $midi_out->start;
 
 my $device = out_port($opt{clk_port});
-my $started = 0;
+$device->start;
 
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => 1,
@@ -119,15 +119,11 @@ my $timer = IO::Async::Timer::Periodic->new(
         my @ready = grep { $ticks >= $_->{on_tick} } @pending;
         @pending  = grep { $ticks <  $_->{on_tick} } @pending;
         for my $p (@ready) {
-            unless ($started) { # start the clocked device, if it's not
-                $device->start;
-                $started++;
-            }
             $midi_out->note_on($channel, $p->{note}, velocity(-10, 10, 110));
             push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
         }
 
-        if ($ticks % $clocks_per_beat == 0) {
+        if (($ticks - 1) % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) {
                 # change programs - why not?
                 my $program = $opt{patches} eq '-1'
