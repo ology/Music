@@ -33,8 +33,8 @@ use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
     bpm      => 70,      # beats-per-minute
-    seq_port => 'se-02', # sequencer MIDI device
-    clk_port => 'usb',   # MIDI device (drums)
+    seq_port => 'mate',  # sequencer MIDI device (microKorg)
+    clk_port => 'usb',   # MIDI device (volca drums)
     arp_type => 'up',    # any combination of 'up,down,updown,converge,diverge'
     note_num => '5,7',   # range of arp notes
     repeats  => 1,       # number of arp-phrase repeats
