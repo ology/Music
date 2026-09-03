@@ -4,6 +4,7 @@
 # perl arping.pl # use defaults
 # perl arping.pl --bpm=60 --seq_port=keyboard --clk_port=midithing --arp_type=updown --note_num=4
 # perl arping.pl --b=80 --s=mate --a=converge --n=11 --i=10 --d=1 --o=2
+# perl arping.pl --b=80 --s=mate --a=converge --d=3 --o=2 --i=6 --n=15
 
 use v5.36;
 use feature 'try';
