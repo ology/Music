@@ -2,7 +2,7 @@
 
 # Ex:
 # perl arping.pl --bpm=60 --seq_port=pad --clk_port=usb --arp_type=updown --note_num=4
-# perl arping.pl --b=70 --s=mate --c=usb --a=converge --n=5 --i=46 --d=1 --o=2
+# perl arping.pl --b=80 --s=mate --c=usb --a=converge --n=5 --i=46 --d=1 --o=2
 
 use v5.36;
 use feature 'try';
