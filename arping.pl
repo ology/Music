@@ -28,8 +28,8 @@ my %opt = (
     seq_port => 'se-02', # sequencer MIDI device
     clk_port => 'usb',   # MIDI device (drums)
     arp_type => 'up',    # up, down, updown, converge, diverge
-    note_num => 5,       # number of arp notes
-    initial  => 5,       # within the range of patch indices
+    note_num => '5,7',   # range of arp notes
+    initial  => 1,       # within 0-based patch indices
     duration => 1,       # 0.1 .. 4 floats
     octave   => 1,       # 0 .. 9 ints
     patches  => -1,      # -1 or CSV-string of patch numbers
@@ -39,12 +39,15 @@ GetOptions(\%opt,
     'seq_port=s',
     'clk_port=s',
     'arp_type=s',
-    'note_num=i',
+    'note_num=s',
     'initial=i',
     'duration=i',
     'octave=i',
     'patches=s',
 );
+
+my @note_nums = split /,/, $opt{note_num};
+@note_nums = ($note_nums[0] .. $note_nums[-1]);
 
 # microKorg
 # my @patches = qw(0 2 3 12 16 18 19 21 23 27 31 37 40 41 51 57 58 64 67 70 72 75 76 80 82 83 84 86 91 92 96 97 100 102 104 105 107 108 122);
@@ -156,7 +159,7 @@ $loop->run;
 
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
-        map { $pitches[int rand @pitches] } 1 .. $opt{note_num}; # XXX klunky
+        map { $pitches[int rand @pitches] } 1 .. $note_nums[int rand @note_nums]; # XXX klunky
     my $arped = $arper->arp(\@notes, $opt{duration}, $opt{arp_type});
     # say "N,A: @notes => ", ddc $arped;
 
