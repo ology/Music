@@ -22,6 +22,7 @@ my $port     = shift || 'se-02'; # MIDI device
 my $clocked  = shift || 'usb';   # MIDI device
 my $arp_type = shift || 'up';
 my $note_num = shift || 5; # number of arp notes
+my $initial  = shift || 63; # 127/2
 
 # choose the pitches to use
 my @pitches = (
@@ -45,6 +46,7 @@ my @pending; # { note => $pitch, on_tick => $tick_when_it_should_start }
 
 # open the midi devices for output
 my $midi_out = out_port($port);
+$midi_out->program_change($channel, $initial);
 $midi_out->start;
 
 my $device = out_port($clocked);
