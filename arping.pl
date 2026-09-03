@@ -61,8 +61,8 @@ my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 
 my $group_interval_beats = $beats / $divisions; # trigger a note group every N beats
-my @active;  # { note => $pitch, off_tick => $tick_when_it_should_stop }
-my @pending; # { note => $pitch, on_tick => $tick_when_it_should_start }
+my @active;  # { note => $pitch, off_tick => $when_it_should_stop }
+my @pending; # { note => $pitch, on_tick => $when_it_should_start }
 
 # open the midi devices for output
 my $midi_out = out_port($opt{seq_port});
