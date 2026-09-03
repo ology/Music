@@ -67,7 +67,7 @@ my $programs = Music::VoiceGen->new(
     pitches   => [0 .. 127],
     intervals => [qw(-3 -2 -1 1 2 3)],
 );
-$voice->context($initial);
+$programs->context($initial);
 
 my $loop = IO::Async::Loop->new;
 
