@@ -44,6 +44,7 @@ my %opt = (
     jumps    => '-3,-2,-1,1,2,3', # allowed jumps between selected programs
     # patches  => -1,     # -1=0..127 or CSV-string of patch numbers
     patches  => '0,2,3,12,16,18,19,21,23,27,31,37,40,41,51,57,58,64,67,70,72,75,76,80,82,83,84,86,91,92,96,97,100,102,104,105,107,108,122', # decent microKorg programs
+    verbose  => 1,
 );
 GetOptions(\%opt,
     'bpm=i',
@@ -57,6 +58,7 @@ GetOptions(\%opt,
     'octave=i',
     'patches=s',
     'jumps=s',
+    'verbose',
 );
 
 my @arp_type  = split /,/, $opt{arp_type};
@@ -70,6 +72,7 @@ my @pitches = (
   get_scale_MIDI('C', $opt{octave} + 1, 'minor'),
   get_scale_MIDI('C', $opt{octave} + 2, 'minor'),
 );
+say "Pitches: @pitches" if $opt{verbose};
 
 my $channel = 0;
 
@@ -87,17 +90,19 @@ my @pending; # { note => $pitch, on_tick => $when_it_should_start }
 # open the midi devices for output
 my $midi_out = out_port($opt{seq_port});
 $midi_out->start;
+say "Started $midi_out" if $opt{verbose};
 
 my $device = out_port($opt{clk_port});
 $device->start;
+say "Started $device" if $opt{verbose};
 
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => $opt{repeats},
-    verbose => 1,
+    verbose => $opt{verbose},
 );
 
 $SIG{INT} = sub {
-    say "\nStop";
+    say "\nStop" if $opt{verbose};
     stop_device($midi_out);
     stop_device($device);
     # skip global destruction, as the cleanup has already been done
@@ -141,7 +146,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 my $program = $opt{patches} eq '-1'
                     ? $programs->rand
                     : $patches[ $programs->rand ];
-                say "\n* PC: $program";
+                say "\n* PC: $program" if $opt{verbose};
                 $midi_out->program_change($channel, $program);
 
                 # Synths need real time to load a new patch
@@ -167,7 +172,6 @@ sub trigger_notes {
     my @notes = sort { $a <=> $b }
         map { $pitches[int rand @pitches] } 1 .. $note_nums[int rand @note_nums]; # XXX klunky
     my $arped = $arper->arp(\@notes, $opt{duration}, $arp_type[int rand @arp_type]);
-    # say "N,A: @notes => ", ddc $arped;
 
     my $on_tick = $ticks;
     for my $n (@$arped) {
