@@ -8,10 +8,11 @@
 # perl arping.pl --initial=0 --patches='42,42' # for playing a single patch
 # perl arping.pl --bpm=60 --seq_port=keyboard --clk_port=midithing --arp_type=updown \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --patches=-1
-# perl arping.pl --b=80 --s=mate --c=usb --a=converge --d=1 --o=2 --i=10 --n=11
-# perl arping.pl --b=80 --s=mate --a=converge --d=3 --o=2 --i=6 --n=12
-# perl arping.pl --b=80 --s=mate --a=converge --d=2 --o=2 --i=0 --n=6 --p='41,70'
-# perl arping.pl --b=80 --s=mate --a=converge --d=2 --o=2 --i=0 --n='4,5,6,7'
+# Command-line arguments can be abbreviated to a single letter:
+# perl arping.pl --s=mate --c=usb --a=converge --d=1 --o=2 --i=10 --n=11
+# perl arping.pl --s=mate --a=converge --d=3 --o=2 --i=6 --n=12
+# perl arping.pl --s=mate --a=converge --d=2 --o=2 --i=0 --n=6 --p='41,70'
+# perl arping.pl --n='4,5,6,7' # with varying arp note values
 
 use v5.36;
 use feature 'try';
