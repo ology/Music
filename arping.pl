@@ -12,7 +12,7 @@
 # Command-line arguments can be abbreviated to a single letter:
 # perl arping.pl --s=mate --c=usb --a=converge --d=1 --o=2 --i=10 --n=11
 # perl arping.pl --s=mate --a=converge --d=3 --o=2 --i=6 --n=12
-# perl arping.pl --s=mate --a=converge --d=2 --o=2 --i=1 --n=6 --p='41,70'
+# perl arping.pl --s=mate --a=diverge --d=2 --o=2 --i=1 --n=6 --p='41,70'
 # perl arping.pl --n='4,5,6,7' # with varying arp note values
 
 use v5.36;
