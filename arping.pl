@@ -61,9 +61,9 @@ GetOptions(\%opt,
     'verbose',
 );
 
-my @arp_type  = split /,/, $opt{arp_type};
-my @note_nums = split /,/, $opt{note_num};
-my @jumps     = split /,/, $opt{jumps};
+my @arp_type = split /,/, $opt{arp_type};
+my @note_num = split /,/, $opt{note_num};
+my @jumps    = split /,/, $opt{jumps};
 
 my @patches = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
 
@@ -170,7 +170,7 @@ $loop->run;
 
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
-        map { $pitches[int rand @pitches] } 1 .. $note_nums[int rand @note_nums]; # XXX klunky
+        map { $pitches[int rand @pitches] } 1 .. $note_num[int rand @note_num]; # XXX klunky
     my $arped = $arper->arp(\@notes, $opt{duration}, $arp_type[int rand @arp_type]);
 
     my $on_tick = $ticks;
