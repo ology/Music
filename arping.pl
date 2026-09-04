@@ -88,6 +88,7 @@ if ($opt{verbose}) {
 
 my $channel = 0; # this code talks to a single channel
 
+# we are in 4/4 time...
 my $divisions       = 4; # divisions of a quarter-note into 16ths
 my $beats           = $divisions * $divisions; # beats in a phrase
 my $clocks_per_beat = 6 * $divisions; # PPQN
