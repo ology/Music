@@ -7,7 +7,7 @@
 # Examples:
 # perl arping.pl # use defaults
 # perl arping.pl --verbose --initial=1 --patches='42,42' # for playing a single patch
-# perl arping.pl --bpm=60 --seq_port=keyboard --clk_port=midithing --arp_type=updown \
+# perl arping.pl --bpm=60 --seq_port=keyboard --clk_port=modular --arp_type=updown \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --patches=-1 --verbose
 # Command-line arguments can be abbreviated to a single letter:
 # perl arping.pl --v --s=mate --c=usb --a=converge --d=1 --o=2 --i=10 --n=11
