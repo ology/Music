@@ -6,15 +6,15 @@
 
 # Examples:
 # perl arping.pl # use defaults
-# perl arping.pl --verbose --initial=1 --patches='42,42' # for playing a single patch
-# perl arping.pl --bpm=60 --y_port=keyboard --x_port=modular --arp_type=updown \
+# perl arping.pl --bpm=60 --x_port=modular --y_port=keyboard --arp_type=updown \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --patches=-1 --verbose
 # Command-line arguments can be abbreviated to a single letter:
-# perl arping.pl --v --y=mate --x=usb --a=converge --d=1 --o=2 --i=10 --n=11
-# perl arping.pl --v --y=mate --a=converge --d=3 --o=2 --i=6 --n=12
-# perl arping.pl --v --y=mate --a=diverge --d=2 --o=2 --i=1 --n=6 --p='41,70'
-# perl arping.pl --v --n='4,5,6,7' # with varying arp note values
-# perl arping.pl --v --x=-1 --y=synth # with no x_port MIDI device
+# perl arping.pl --v --x=modular --y=keyboard --i=1 --p='42,42' # for playing a single patch
+# perl arping.pl --v --x=usb --y=keys --a=converge --o=2 --i=10 --n=11
+# perl arping.pl --v --x=usb --y=keys --a=converge --d=3 --o=2 --i=6 --n=12
+# perl arping.pl --v --x=usb --y=keys --a=diverge --d=2 --o=2 --i=1 --n=6 --p='41,70'
+# perl arping.pl --v --x=usb --y=keys --n='4,5,6,7' # with varying arp note values
+# perl arping.pl --v --y=keys # with no x_port MIDI device
 
 use v5.36;
 use feature qw(try);
@@ -33,7 +33,7 @@ no warnings 'experimental::try';
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
-    y_port   => 'mate',  # REQUIRED sequencer MIDI device (microKorg)
+    y_port   => 'seq',   # REQUIRED sequencer MIDI device (e.g. microKorg)
     x_port   => '',      # optional MIDI device for drums
     bpm      => 70,      # beats-per-minute
     arp_type => 'up',    # any combination of 'up,down,updown,converge,diverge'
