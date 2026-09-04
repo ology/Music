@@ -7,7 +7,7 @@
 # Examples:
 # perl arping.pl # use defaults
 # perl arping.pl --verbose --initial=1 --patches='42,42' # for playing a single patch
-# perl arping.pl --bpm=60 --seq_port=keyboard --clk_port=modular --arp_type=updown \
+# perl arping.pl --bpm=60 --y_port=keyboard --x_port=modular --arp_type=updown \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --patches=-1 --verbose
 # Command-line arguments can be abbreviated to a single letter:
 # perl arping.pl --v --s=mate --c=usb --a=converge --d=1 --o=2 --i=10 --n=11
@@ -32,9 +32,9 @@ no warnings 'experimental::try';
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
+    y_port   => 'mate',  # REQUIRED sequencer MIDI device (microKorg)
+    x_port   => 'usb',   # optional MIDI device (volca drums)
     bpm      => 70,      # beats-per-minute
-    seq_port => 'mate',  # sequencer MIDI device (microKorg)
-    clk_port => 'usb',   # MIDI device (volca drums)
     arp_type => 'up',    # any combination of 'up,down,updown,converge,diverge'
     note_num => '5,7',   # number of arp notes
     repeats  => 1,       # number of arp-phrase repeats
@@ -50,8 +50,8 @@ my %opt = (
 );
 GetOptions(\%opt,
     'bpm=i',
-    'seq_port=s',
-    'clk_port=s',
+    'y_port=s',
+    'x_port=s',
     'arp_type=s',
     'repeats=s',
     'note_num=s',
@@ -66,7 +66,7 @@ GetOptions(\%opt,
 );
 
 die "Beats per minute required for 'bpm'\n" unless $opt{bpm};
-die "Open MIDI port required for 'seq_port'\n" unless $opt{seq_port};
+die "Open MIDI port required for 'y_port'\n" unless $opt{y_port};
 
 my @octave    = split /,/, $opt{octave};
 my @arp_types = split /,/, $opt{arp_type};
@@ -98,15 +98,15 @@ my @active;  # { note => $pitch, off_tick => $when_it_should_stop }
 my @pending; # { note => $pitch, on_tick => $when_it_should_start }
 
 # open the midi devices for output
-my $midi_out = out_port($opt{seq_port});
+my $midi_out = out_port($opt{y_port});
 $midi_out->start;
-say "Started $opt{seq_port}" if $opt{verbose};
+say "Started $opt{y_port}" if $opt{verbose};
 
 my $device;
-if ($opt{clk_port}) {
-    $device = out_port($opt{clk_port});
+if ($opt{x_port}) {
+    $device = out_port($opt{x_port});
     $device->start;
-    say "Started $opt{clk_port}" if $opt{verbose};
+    say "Started $opt{x_port}" if $opt{verbose};
 }
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => $opt{repeats},
@@ -116,7 +116,7 @@ my $arper = Music::MelodicDevice::Arpeggiation->new(
 $SIG{INT} = sub {
     say "\nStop" if $opt{verbose};
     stop_device($midi_out);
-    stop_device($device) if $opt{clk_port};
+    stop_device($device) if $opt{x_port};
     _exit(0);
 };
 
@@ -132,7 +132,7 @@ my $timer = IO::Async::Timer::Periodic->new(
     interval => $clock_interval,
     on_tick  => sub {
         $midi_out->clock;
-        $device->clock if $opt{clk_port};
+        $device->clock if $opt{x_port};
         $ticks++;
 
         # release any notes whose time is up
