@@ -16,7 +16,7 @@
 # perl arping.pl --v --n='4,5,6,7' # with varying arp note values
 
 use v5.36;
-use feature 'try';
+use feature qw(try);
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use MIDI::RtMidi::Util qw(out_port stop_device);
