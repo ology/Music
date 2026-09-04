@@ -41,7 +41,7 @@ my %opt = (
     repeats  => 1,       # number of arp-phrase repeats
     initial  => 1,       # within 0-based patch indices
     duration => 1,       # 0.1 .. 4 float
-    octave   => '1,2,3', # octave range (0 .. 9 ints)
+    octave   => '1,2,3', # octaves (0 .. 9 ints)
     scale    => 'minor', # scale name as known to Music::Scales
     tonic    => 'C',     # scale key base note
     patches  => undef,   # undef=0..127 or CSV-string of patch numbers
