@@ -66,7 +66,6 @@ GetOptions(\%opt,
     'verbose',
 );
 
-die "Beats per minute required for 'bpm'\n" unless $opt{bpm};
 die "Open MIDI port required for 'y_port'\n" unless $opt{y_port};
 
 # split things
