@@ -34,7 +34,7 @@ use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
     y_port   => undef,   # REQUIRED synth MIDI device (e.g. microKorg)
-    x_port   => undef,   # optional MIDI device for drums
+    x_port   => undef,   # optional MIDI device (e.g. for drums)
     bpm      => 70,      # beats-per-minute
     arp_type => 'up',    # any combination of up,down,updown,converge,diverge,pedal_up,pedal_down,pedal_updown
     note_num => '5,7',   # number of arp notes
