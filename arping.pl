@@ -160,9 +160,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if (($ticks - 1) % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) { # every 16th beat...
                 # change programs - why not?
-                my $program = $opt{patches}
-                    ? $programs->rand
-                    : $patches[ $programs->rand ];
+                my $program = $patches[ $programs->rand ];
                 say "\n* PC: $program" if $opt{verbose};
                 $midi_out->program_change($channel, $program);
 
