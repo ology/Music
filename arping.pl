@@ -87,13 +87,14 @@ if ($opt{verbose}) {
     say "Pitches: @pitches";
 }
 
-my $channel = 0;
+my $channel = 0; # this code talks to a single channel
 
-my $beats = 16; # beats in a phrase
-my $divisions = 4; # divisions of a quarter-note into 16ths
+my $beats           = 16; # beats in a phrase
+my $divisions       = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 24; # PPQN
-my $clock_interval = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
-my $ticks = 0; # clock ticks
+my $clock_interval  = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
+
+my $ticks      = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 
 my $group_interval_beats = $beats / $divisions; # trigger a note group every N beats
