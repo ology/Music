@@ -187,6 +187,7 @@ $loop->add($timer);
 $loop->run;
 
 sub trigger_notes {
+    # get a number of random pitches based on a random @note_nums value. Confused? :)
     my @notes = sort { $a <=> $b }
         map { $pitches[int rand @pitches] } 1 .. $note_nums[int rand @note_nums]; # XXX klunky
 
@@ -194,8 +195,9 @@ sub trigger_notes {
     my $arped = $arper->arp(\@notes, $opt{duration}, $arp_types[int rand @arp_types]);
 
     my $on_tick = $ticks;
+
     for my $n (@$arped) {
-        my ($dur_str, $note) = @$n;
+        my ($dur_str, $note) = @$n; # nb: a note is a duration and a pitch
         my ($dur) = $dur_str =~ /^d(\d+)$/;
 
         # convert from the arp's 96-ticks-per-quarter-note scale to our clock ticks
