@@ -5,7 +5,7 @@
 # per sequencer program.
 
 # Examples:
-# perl arping.pl --y_port=keys # use defaults
+# perl arping.pl --y_port=keyboard # use defaults
 # perl arping.pl --y_port=keyboard --x_port=modular --bpm=60 --arp_type=updown \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --patches=-1 --verbose
 # Command-line arguments can be abbreviated to a single letter:
