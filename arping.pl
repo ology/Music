@@ -58,10 +58,10 @@ GetOptions(\%opt,
     'initial=i',
     'duration=i',
     'octave=i',
-    'patches=s',
-    'jumps=s',
     'scale=s',
     'tonic=s',
+    'patches=s',
+    'jumps=s',
     'verbose',
 );
 
