@@ -9,7 +9,7 @@
 use strict;
 use warnings;
 use Data::Dumper::Compact qw(ddc);
-use Data::Dataset::ChordProgressions ();
+use Music::Dataset::ChordProgressions qw(as_hash $share_file);
 use MIDI::Drummer::Tiny ();
 use MIDI::Drummer::Tiny::Grooves ();
 use MIDI::Util qw(set_chan_patch midi_format);
@@ -33,6 +33,8 @@ my $octave  = 5;
 
 my @progressions;
 
+$share_file = '/Users/gene/sandbox/Data-Dataset-ChordProgressions/share/Chord-Progressions.csv';
+
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $bpm,
@@ -49,12 +51,15 @@ $d->sync(
 $d->write;
 
 sub drums {
-    my $grooves = MIDI::Drummer::Tiny::Grooves->new(drummer => $d);
+    my $grooves = MIDI::Drummer::Tiny::Grooves->new(
+        drummer    => $d,
+        share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt',
+    );
     my $set = $grooves->search({ cat => 'rock' });
     my @keys = keys %$set;
     for (1 .. $multi * $d->bars) {
         my $groove = $set->{ $keys[ rand @keys ] };
-        $groove->{groove}->();
+        $grooves->groove($groove->{groove});
     }
 
 }
@@ -64,7 +69,7 @@ sub chords {
 
     my $cn = Music::Chord::Note->new;
 
-    my %data = Data::Dataset::ChordProgressions::as_hash();
+    my %data = as_hash();
 
     my @accum; # Note accumulator
 
