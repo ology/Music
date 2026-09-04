@@ -18,16 +18,16 @@
 
 use v5.36;
 use feature qw(try);
-use Data::Dumper::Compact qw(ddc);
-use Getopt::Long qw(GetOptions);
-use IO::Async::Loop ();
-use IO::Async::Timer::Periodic ();
-use MIDI::RtMidi::FFI::Device ();
-use MIDI::RtMidi::Util qw(out_port stop_device);
-use Music::MelodicDevice::Arpeggiation ();
-use Music::Scales qw(get_scale_MIDI);
-use Music::VoiceGen ();
-use POSIX qw(_exit); # skip global destruction
+use Data::Dumper::Compact qw(ddc);               # debugging
+use Getopt::Long qw(GetOptions);                 # cli processing
+use IO::Async::Loop ();                          # async
+use IO::Async::Timer::Periodic ();               # async
+use MIDI::RtMidi::FFI::Device ();                # rt-midi
+use MIDI::RtMidi::Util qw(out_port stop_device); # rt-midi
+use Music::MelodicDevice::Arpeggiation ();       # arpeggiation
+use Music::Scales qw(get_scale_MIDI);            # pitches
+use Music::VoiceGen ();                          # program change
+use POSIX qw(_exit);                             # skip global destruction
 no warnings 'experimental::try';
 
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
