@@ -61,12 +61,6 @@ GetOptions(\%opt,
     'verbose',
 );
 
-if ($opt{verbose}) {
-    say "Arp types: $opt{arp_type}";
-    say "Arp nums: $opt{note_num}";
-    say "Arp jumps: $opt{jumps}";
-    say "Arp patches: $opt{patches}";
-}
 my @arp_types = split /,/, $opt{arp_type};
 my @note_nums = split /,/, $opt{note_num};
 my @jumps     = split /,/, $opt{jumps};
@@ -77,7 +71,13 @@ my @pitches = (
   get_scale_MIDI('C', $opt{octave} + 1, 'minor'),
   get_scale_MIDI('C', $opt{octave} + 2, 'minor'),
 );
-say "Pitches: @pitches" if $opt{verbose};
+if ($opt{verbose}) {
+    say "Arp types: $opt{arp_type}";
+    say "Arp nums: $opt{note_num}";
+    say "Arp jumps: $opt{jumps}";
+    say "Arp patches: $opt{patches}";
+    say "Pitches: @pitches";
+}
 
 my $channel = 0;
 
