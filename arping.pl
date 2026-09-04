@@ -61,13 +61,13 @@ GetOptions(\%opt,
     'verbose',
 );
 
-say "Arp types: $opt{arp_type}";
+say "Arp types: $opt{arp_type}" if $opt{verbose};
 my @arp_type = split /,/, $opt{arp_type};
-say "Arp nums: $opt{note_num}";
+say "Arp nums: $opt{note_num}" if $opt{verbose};
 my @note_num = split /,/, $opt{note_num};
-say "Arp jumps: $opt{jumps}";
+say "Arp jumps: $opt{jumps}" if $opt{verbose};
 my @jumps    = split /,/, $opt{jumps};
-say "Arp patches: $opt{patches}";
+say "Arp patches: $opt{patches}" if $opt{verbose};
 my @patches = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
 
 my @pitches = (
@@ -192,7 +192,7 @@ sub trigger_notes {
     }
 }
 
-sub velocity($min, $max, $offset) {
+sub velocity ($min, $max, $offset) {
     my $random = $offset + int(rand($max - $min + 1)) + $min;
     return $random;
 }
