@@ -56,7 +56,7 @@ GetOptions(\%opt,
     'repeats=s',
     'note_num=s',
     'initial=i',
-    'duration=i',
+    'duration=f',
     'octave=i',
     'scale=s',
     'tonic=s',
@@ -64,6 +64,9 @@ GetOptions(\%opt,
     'jumps=s',
     'verbose',
 );
+
+die "Beats per minute required for 'bpm'\n" unless $opt{bpm};
+die "Open MIDI port required for 'seq_port'\n" unless $opt{seq_port};
 
 my @octave    = split /,/, $opt{octave};
 my @arp_types = split /,/, $opt{arp_type};
@@ -99,10 +102,12 @@ my $midi_out = out_port($opt{seq_port});
 $midi_out->start;
 say "Started $opt{seq_port}" if $opt{verbose};
 
-my $device = out_port($opt{clk_port});
-$device->start;
-say "Started $opt{clk_port}" if $opt{verbose};
-
+my $device;
+if ($opt{clk_port}) {
+    $device = out_port($opt{clk_port});
+    $device->start;
+    say "Started $opt{clk_port}" if $opt{verbose};
+}
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => $opt{repeats},
     verbose => $opt{verbose},
@@ -111,7 +116,7 @@ my $arper = Music::MelodicDevice::Arpeggiation->new(
 $SIG{INT} = sub {
     say "\nStop" if $opt{verbose};
     stop_device($midi_out);
-    stop_device($device);
+    stop_device($device) if $opt{clk_port};
     _exit(0);
 };
 
@@ -127,7 +132,7 @@ my $timer = IO::Async::Timer::Periodic->new(
     interval => $clock_interval,
     on_tick  => sub {
         $midi_out->clock;
-        $device->clock;
+        $device->clock if $opt{clk_port};
         $ticks++;
 
         # release any notes whose time is up
