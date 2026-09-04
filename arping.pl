@@ -10,9 +10,9 @@
 # perl arping.pl --bpm=60 --y_port=keyboard --x_port=modular --arp_type=updown \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --patches=-1 --verbose
 # Command-line arguments can be abbreviated to a single letter:
-# perl arping.pl --v --s=mate --c=usb --a=converge --d=1 --o=2 --i=10 --n=11
-# perl arping.pl --v --s=mate --a=converge --d=3 --o=2 --i=6 --n=12
-# perl arping.pl --v --s=mate --a=diverge --d=2 --o=2 --i=1 --n=6 --p='41,70'
+# perl arping.pl --v --y=mate --x=usb --a=converge --d=1 --o=2 --i=10 --n=11
+# perl arping.pl --v --y=mate --a=converge --d=3 --o=2 --i=6 --n=12
+# perl arping.pl --v --y=mate --a=diverge --d=2 --o=2 --i=1 --n=6 --p='41,70'
 # perl arping.pl --v --n='4,5,6,7' # with varying arp note values
 
 use v5.36;
