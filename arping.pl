@@ -36,7 +36,7 @@ my %opt = (
     y_port   => undef,   # REQUIRED MIDI device (e.g. microKorg)
     x_port   => undef,   # optional MIDI device (e.g. volca drum)
     bpm      => 70,      # beats-per-minute
-    arp_type => 'up',    # up,down,updown,converge,diverge,pedal_up,pedal_down,pedal_updown
+    arp_type => 'any',   # 'any' or any known arp_type
     note_num => '5,7',   # number of arp notes
     repeats  => 1,       # number of arp-phrase repeats
     initial  => 1,       # number within the 0-based patch indices
@@ -68,12 +68,19 @@ GetOptions(\%opt,
 
 die "Open MIDI port name required for 'y_port'\n" unless $opt{y_port};
 
+my $arper = Music::MelodicDevice::Arpeggiation->new(
+    repeats => $opt{repeats},
+    verbose => $opt{verbose},
+);
+
 # split things
 my @octave    = split /,/, $opt{octave};
-my @arp_types = split /,/, $opt{arp_type};
 my @note_nums = split /,/, $opt{note_num};
 my @jumps     = split /,/, $opt{jumps};
 my @patches   = defined $opt{patches} ? split /,/, $opt{patches} : (0 .. 127);
+my @arp_types = $opt{arp_type} eq 'any'
+    ? sort keys $arper->arp_type->%*
+    : split /,/, $opt{arp_type};
 
 # get range of pitches by octave
 my @pitches = map { get_scale_MIDI($opt{tonic}, $_, $opt{scale}) } @octave;
@@ -117,11 +124,6 @@ if ($opt{x_port}) {
     $device->start;
     say "Started $opt{x_port}" if $opt{verbose};
 }
-
-my $arper = Music::MelodicDevice::Arpeggiation->new(
-    repeats => $opt{repeats},
-    verbose => $opt{verbose},
-);
 
 $SIG{INT} = sub {
     say "\nStop" if $opt{verbose};
