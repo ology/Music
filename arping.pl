@@ -5,16 +5,16 @@
 # per sequencer program.
 
 # Examples:
-# perl arping.pl --y_port=keyboard # use defaults
-# perl arping.pl --y_port=keyboard --x_port=modular --bpm=60 --arp_type=updown \
+# perl arping.pl --y_port=synth # use defaults
+# perl arping.pl --y_port=synth --x_port=drums --bpm=60 --arp_type=updown \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --patches=-1 --verbose
 # Command-line arguments can be abbreviated to a single letter:
-# perl arping.pl --v --x=modular --y=keyboard --p='42,42' # for playing a single patch
-# perl arping.pl --v --x=usb --y=keys --a=converge --o=2 --i=63 --n=11
-# perl arping.pl --v --x=usb --y=keys --a=converge --d=3 --o=2 --i=10 --n=12
-# perl arping.pl --v --x=usb --y=keys --a=diverge --d=2 --o=2 --n=6 --p='41,70'
-# perl arping.pl --v --x=usb --y=keys --n='4,5,6,7' # with varying arp note values
-# perl arping.pl --v --y=keys # with no x_port MIDI device
+# perl arping.pl --v --y=synth --x=usb  --p='42,42' # for playing a single patch
+# perl arping.pl --v --y=synth --x=usb --a=converge --o=2 --i=63 --n=11
+# perl arping.pl --v --y=synth --x=usb --a=converge --d=3 --o=2 --i=10 --n=12
+# perl arping.pl --v --y=synth --x=usb --a=diverge --d=2 --o=2 --n=6 --p='41,70'
+# perl arping.pl --v --y=synth --x=usb --n='4,5,6,7' # with varying arp note values
+# perl arping.pl --v --y=synth # with no x_port MIDI device
 
 use v5.36;
 use feature qw(try);
