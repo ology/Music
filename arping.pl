@@ -74,7 +74,7 @@ my @octave    = split /,/, $opt{octave};
 my @arp_types = split /,/, $opt{arp_type};
 my @note_nums = split /,/, $opt{note_num};
 my @jumps     = split /,/, $opt{jumps};
-my @patches   = $opt{patches} ? split /,/, $opt{patches} : (0 .. 127);
+my @patches   = defined $opt{patches} ? split /,/, $opt{patches} : (0 .. 127);
 
 # get range of pitches by octave
 my @pitches = map { get_scale_MIDI($opt{tonic}, $_, $opt{scale}) } @octave;
