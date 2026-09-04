@@ -208,6 +208,7 @@ sub trigger_notes {
             on_tick  => $on_tick,
             off_tick => $on_tick + $step_ticks,
         };
+
         $on_tick += $step_ticks;
     }
 }
