@@ -67,10 +67,10 @@ if ($opt{verbose}) {
     say "Arp jumps: $opt{jumps}";
     say "Arp patches: $opt{patches}";
 }
-my @arp_type = split /,/, $opt{arp_type};
-my @note_num = split /,/, $opt{note_num};
-my @jumps    = split /,/, $opt{jumps};
-my @patches = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
+my @arp_types = split /,/, $opt{arp_type};
+my @note_nums = split /,/, $opt{note_num};
+my @jumps     = split /,/, $opt{jumps};
+my @patches   = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
 
 my @pitches = (
   get_scale_MIDI('C', $opt{octave}, 'pminor'),
@@ -174,8 +174,8 @@ $loop->run;
 
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
-        map { $pitches[int rand @pitches] } 1 .. $note_num[int rand @note_num]; # XXX klunky
-    my $arped = $arper->arp(\@notes, $opt{duration}, $arp_type[int rand @arp_type]);
+        map { $pitches[int rand @pitches] } 1 .. $note_nums[int rand @note_nums]; # XXX klunky
+    my $arped = $arper->arp(\@notes, $opt{duration}, $arp_types[int rand @arp_types]);
 
     my $on_tick = $ticks;
     for my $n (@$arped) {
