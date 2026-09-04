@@ -34,7 +34,7 @@ use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
     y_port   => 'mate',  # REQUIRED sequencer MIDI device (microKorg)
-    x_port   => 'usb',   # optional MIDI device (volca drums)
+    x_port   => '',      # optional MIDI device for drums
     bpm      => 70,      # beats-per-minute
     arp_type => 'up',    # any combination of 'up,down,updown,converge,diverge'
     note_num => '5,7',   # number of arp notes
@@ -68,9 +68,6 @@ GetOptions(\%opt,
 
 die "Beats per minute required for 'bpm'\n" unless $opt{bpm};
 die "Open MIDI port required for 'y_port'\n" unless $opt{y_port};
-
-# do we have a MIDI port name?
-$opt{x_port} = $opt{x_port} ne '-1' ? $opt{x_port} : undef;
 
 # split things
 my @octave    = split /,/, $opt{octave};
