@@ -93,7 +93,6 @@ my $beats           = $divisions * $divisions; # beats in a phrase
 my $clocks_per_beat = 6 * $divisions; # PPQN
 my $clock_interval  = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
 
-my $group_interval_beats = $beats / $divisions; # trigger a note group every N beats
 my @active;  # { note => $pitch, off_tick => $when_it_should_stop }
 my @pending; # { note => $pitch, on_tick => $when_it_should_start }
 
@@ -170,8 +169,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     trigger_notes();
                 })->retain; # keep the Future alive until it fires
             }
-            # TODO explain this modulo
-            elsif ($beat_count % $group_interval_beats == 0) {
+            elsif ($beat_count % $divisions == 0) { # every div=4 beats
                 trigger_notes();
             }
             $beat_count++;
