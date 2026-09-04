@@ -19,13 +19,13 @@ use v5.36;
 use feature qw(try);
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
-use MIDI::RtMidi::Util qw(out_port stop_device);
+use IO::Async::Loop ();
+use IO::Async::Timer::Periodic ();
 use MIDI::RtMidi::FFI::Device ();
+use MIDI::RtMidi::Util qw(out_port stop_device);
 use Music::MelodicDevice::Arpeggiation ();
 use Music::Scales qw(get_scale_MIDI);
 use Music::VoiceGen ();
-use IO::Async::Loop ();
-use IO::Async::Timer::Periodic ();
 use POSIX qw(_exit); # skip global destruction
 no warnings 'experimental::try';
 
