@@ -100,6 +100,13 @@ my @pending; # { note => $pitch, on_tick => $when_it_should_start }
 my $ticks      = 0; # clock ticks
 my $beat_count = 0; # beats!
 
+# synths need real time to load a new patch before they'll reliably respond
+my $patch_load_secs    = 0.1;
+my $ticks_per_phrase   = $beats * $clocks_per_beat;
+my $lookahead_ticks    = int($patch_load_secs / $clock_interval) || 1;
+my $next_phrase_tick   = 1; # tick of the next phrase's downbeat (see the -1 alignment below)
+my $pc_sent_for_phrase = 0; # guard so the program change is only sent once per phrase
+
 # open the midi devices for output
 my $midi_out = out_port($opt{y_port});
 $midi_out->start;
@@ -155,21 +162,23 @@ my $timer = IO::Async::Timer::Periodic->new(
             push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
         }
 
+        # pre-load the next phrase's synth patch a little early, so it's
+        # ready by the time the new phrase's downbeat actually arrives
+        if (!$pc_sent_for_phrase && $ticks >= $next_phrase_tick - $lookahead_ticks) {
+            if (@patches > 2 || $patches[0] ne $patches[1]) {
+                my $program = $patches[ $programs->rand ];
+                say "\n* PC: $program" if $opt{verbose};
+                $midi_out->program_change($channel, $program);
+            }
+            $pc_sent_for_phrase = 1;
+        }
+
         # TODO explain this modulo
         if (($ticks - 1) % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) { # every 16th beat...
-                # change programs - why not?
-                if (@patches > 2 || $patches[0] ne $patches[1]) {
-                    my $program = $patches[ $programs->rand ];
-                    say "\n* PC: $program" if $opt{verbose};
-                    $midi_out->program_change($channel, $program);
-                }
-                # Synths need real time to load a new patch
-                # before they'll reliably respond. So delay_future()
-                # waits the same amount of time without blocking.
-                $loop->delay_future(after => 0.1)->on_done(sub {
-                    trigger_notes();
-                })->retain; # keep the Future alive until it fires
+                trigger_notes();
+                $next_phrase_tick += $ticks_per_phrase; # schedule the next phrase's pre-load point
+                $pc_sent_for_phrase = 0; # reset the guard for the next phrase
             }
             elsif ($beat_count % $divisions == 0) { # every div=4 beats
                 trigger_notes();
