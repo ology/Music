@@ -159,10 +159,11 @@ my $timer = IO::Async::Timer::Periodic->new(
         if (($ticks - 1) % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) { # every 16th beat...
                 # change programs - why not?
-                my $program = $patches[ $programs->rand ];
-                say "\n* PC: $program" if $opt{verbose};
-                $midi_out->program_change($channel, $program);
-
+                if (@patches > 2 || $patches[0] ne $patches[1]) {
+                    my $program = $patches[ $programs->rand ];
+                    say "\n* PC: $program" if $opt{verbose};
+                    $midi_out->program_change($channel, $program);
+                }
                 # Synths need real time to load a new patch
                 # before they'll reliably respond. So delay_future()
                 # waits the same amount of time without blocking.
