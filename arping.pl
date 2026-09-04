@@ -44,7 +44,7 @@ my %opt = (
     octave   => '1,2,3', # octave range (0 .. 9 ints)
     scale    => 'minor', # scale name as known to Music::Scales
     tonic    => 'C',     # scale key base note
-    patches  => -1,      # -1=0..127 or CSV-string of patch numbers
+    patches  => undef,   # undef=0..127 or CSV-string of patch numbers
     # patches  => '0,2,3,12,16,18,19,21,23,27,31,37,40,41,51,57,58,64,67,70,72,75,76,80,82,83,84,86,91,92,96,97,100,102,104,105,107,108,122', # decent microKorg programs
     jumps    => '-3,-2,-1,1,2,3', # allowed jumps to selected programs
     verbose  => 0,
@@ -74,7 +74,7 @@ my @octave    = split /,/, $opt{octave};
 my @arp_types = split /,/, $opt{arp_type};
 my @note_nums = split /,/, $opt{note_num};
 my @jumps     = split /,/, $opt{jumps};
-my @patches   = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
+my @patches   = $opt{patches} ? split /,/, $opt{patches} : (0 .. 127);
 
 # get range of pitches by octave
 my @pitches = map { get_scale_MIDI($opt{tonic}, $_, $opt{scale}) } @octave;
