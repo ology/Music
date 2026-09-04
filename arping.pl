@@ -89,17 +89,17 @@ if ($opt{verbose}) {
 
 my $channel = 0; # this code talks to a single channel
 
-my $beats           = 16; # beats in a phrase
 my $divisions       = 4; # divisions of a quarter-note into 16ths
-my $clocks_per_beat = 24; # PPQN
+my $beats           = $divisions * $divisions; # beats in a phrase
+my $clocks_per_beat = 6 * $divisions; # PPQN
 my $clock_interval  = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
-
-my $ticks      = 0; # clock ticks
-my $beat_count = 0; # how many beats?
 
 my $group_interval_beats = $beats / $divisions; # trigger a note group every N beats
 my @active;  # { note => $pitch, off_tick => $when_it_should_stop }
 my @pending; # { note => $pitch, on_tick => $when_it_should_start }
+
+my $ticks      = 0; # clock ticks
+my $beat_count = 0; # beats!
 
 # open the midi devices for output
 my $midi_out = out_port($opt{y_port});
