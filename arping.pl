@@ -66,7 +66,7 @@ GetOptions(\%opt,
     'verbose',
 );
 
-die "Open MIDI port required for 'y_port'\n" unless $opt{y_port};
+die "Open MIDI port name required for 'y_port'\n" unless $opt{y_port};
 
 # split things
 my @octave    = split /,/, $opt{octave};
