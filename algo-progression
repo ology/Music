@@ -2,9 +2,9 @@
 
 # Play a random rock progression with a randomized walking bassline.
 # Example:
-# $ perl algo-progression 120 1 Amv-Amc 2
-# $ perl algo-progression 70 2 Amv-DMc 1 42 35
-# $ timidity algo-progression.mid
+# > perl algo-progression 120 1 Amv-Amc 2
+# > perl algo-progression 70 2 Amv-DMc 1 42 35
+# > timidity algo-progression.mid
 
 use strict;
 use warnings;
