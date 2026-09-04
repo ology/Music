@@ -32,17 +32,19 @@ no warnings 'experimental::try';
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
-    bpm      => 70,     # beats-per-minute
-    seq_port => 'mate', # sequencer MIDI device (microKorg)
-    clk_port => 'usb',  # MIDI device (volca drums)
-    arp_type => 'up',   # any combination of 'up,down,updown,converge,diverge'
-    note_num => '5,7',  # range of arp notes
-    repeats  => 1,      # number of arp-phrase repeats
-    initial  => 1,      # within 0-based patch indices
-    duration => 1,      # 0.1 .. 4 float
-    octave   => 1,      # initial octave of 3 hardcoded (0 .. 9 int)
-    jumps    => '-3,-2,-1,1,2,3', # allowed jumps between selected programs
-    patches  => -1,     # -1=0..127 or CSV-string of patch numbers
+    bpm      => 70,      # beats-per-minute
+    seq_port => 'mate',  # sequencer MIDI device (microKorg)
+    clk_port => 'usb',   # MIDI device (volca drums)
+    arp_type => 'up',    # any combination of 'up,down,updown,converge,diverge'
+    note_num => '5,7',   # range of arp notes
+    repeats  => 1,       # number of arp-phrase repeats
+    initial  => 1,       # within 0-based patch indices
+    duration => 1,       # 0.1 .. 4 float
+    octave   => '1,2,3', # octave range (0 .. 9 ints)
+    jumps    => '-3,-2,-1,1,2,3', # allowed jumps to selected programs
+    scale    => 'minor', # scale name as known to Music::Scales
+    tonic    => 'C',     # scale key base note
+    patches  => -1,      # -1=0..127 or CSV-string of patch numbers
     # patches  => '0,2,3,12,16,18,19,21,23,27,31,37,40,41,51,57,58,64,67,70,72,75,76,80,82,83,84,86,91,92,96,97,100,102,104,105,107,108,122', # decent microKorg programs
     verbose  => 0,
 );
@@ -61,16 +63,13 @@ GetOptions(\%opt,
     'verbose',
 );
 
+my @octave    = split /,/, $opt{octave};
 my @arp_types = split /,/, $opt{arp_type};
 my @note_nums = split /,/, $opt{note_num};
 my @jumps     = split /,/, $opt{jumps};
 my @patches   = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
 
-my @pitches = (
-  get_scale_MIDI('C', $opt{octave}, 'pminor'),
-  get_scale_MIDI('C', $opt{octave} + 1, 'minor'),
-  get_scale_MIDI('C', $opt{octave} + 2, 'minor'),
-);
+my @pitches = map { get_scale_MIDI($opt{tonic}, $_, $opt{scale}) } @octave;
 
 if ($opt{verbose}) {
     say "Arp types: $opt{arp_type}";
