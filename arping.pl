@@ -108,7 +108,6 @@ $SIG{INT} = sub {
     say "\nStop" if $opt{verbose};
     stop_device($midi_out);
     stop_device($device);
-    # skip global destruction, as the cleanup has already been done
     _exit(0);
 };
 
