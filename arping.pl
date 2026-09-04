@@ -61,13 +61,15 @@ GetOptions(\%opt,
     'verbose',
 );
 
-say "Arp types: $opt{arp_type}" if $opt{verbose};
+if ($opt{verbose}) {
+    say "Arp types: $opt{arp_type}";
+    say "Arp nums: $opt{note_num}";
+    say "Arp jumps: $opt{jumps}";
+    say "Arp patches: $opt{patches}";
+}
 my @arp_type = split /,/, $opt{arp_type};
-say "Arp nums: $opt{note_num}" if $opt{verbose};
 my @note_num = split /,/, $opt{note_num};
-say "Arp jumps: $opt{jumps}" if $opt{verbose};
 my @jumps    = split /,/, $opt{jumps};
-say "Arp patches: $opt{patches}" if $opt{verbose};
 my @patches = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
 
 my @pitches = (
