@@ -71,6 +71,7 @@ my @pitches = (
   get_scale_MIDI('C', $opt{octave} + 1, 'minor'),
   get_scale_MIDI('C', $opt{octave} + 2, 'minor'),
 );
+
 if ($opt{verbose}) {
     say "Arp types: $opt{arp_type}";
     say "Arp nums: $opt{note_num}";
