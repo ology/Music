@@ -105,13 +105,13 @@ my $beat_count = 0; # beats!
 my $midi_out = out_port($opt{y_port});
 $midi_out->start;
 say "Started $opt{y_port}" if $opt{verbose};
-
 my $device;
 if ($opt{x_port}) {
     $device = out_port($opt{x_port});
     $device->start;
     say "Started $opt{x_port}" if $opt{verbose};
 }
+
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => $opt{repeats},
     verbose => $opt{verbose},
