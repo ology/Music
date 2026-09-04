@@ -14,6 +14,7 @@
 # perl arping.pl --v --y=mate --a=converge --d=3 --o=2 --i=6 --n=12
 # perl arping.pl --v --y=mate --a=diverge --d=2 --o=2 --i=1 --n=6 --p='41,70'
 # perl arping.pl --v --n='4,5,6,7' # with varying arp note values
+# perl arping.pl --v --x=-1 --y=synth # with no x_port MIDI device
 
 use v5.36;
 use feature qw(try);
@@ -67,6 +68,8 @@ GetOptions(\%opt,
 
 die "Beats per minute required for 'bpm'\n" unless $opt{bpm};
 die "Open MIDI port required for 'y_port'\n" unless $opt{y_port};
+
+$opt{x_port} = $opt{x_port} ne '-1' ? $opt{x_port} : undef;
 
 my @octave    = split /,/, $opt{octave};
 my @arp_types = split /,/, $opt{arp_type};
