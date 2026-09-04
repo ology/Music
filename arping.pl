@@ -33,7 +33,7 @@ no warnings 'experimental::try';
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
-    y_port   => 'synth', # REQUIRED synth MIDI device (e.g. microKorg)
+    y_port   => undef,   # REQUIRED synth MIDI device (e.g. microKorg)
     x_port   => '',      # optional MIDI device for drums
     bpm      => 70,      # beats-per-minute
     arp_type => 'up',    # any combination of up,down,updown,converge,diverge,pedal_up,pedal_down,pedal_updown
