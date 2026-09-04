@@ -69,14 +69,17 @@ GetOptions(\%opt,
 die "Beats per minute required for 'bpm'\n" unless $opt{bpm};
 die "Open MIDI port required for 'y_port'\n" unless $opt{y_port};
 
+# do we have a MIDI port name?
 $opt{x_port} = $opt{x_port} ne '-1' ? $opt{x_port} : undef;
 
+# split things
 my @octave    = split /,/, $opt{octave};
 my @arp_types = split /,/, $opt{arp_type};
 my @note_nums = split /,/, $opt{note_num};
 my @jumps     = split /,/, $opt{jumps};
 my @patches   = $opt{patches} eq '-1' ? (0 .. 127) : split /,/, $opt{patches};
 
+# get range of pitches by octave
 my @pitches = map { get_scale_MIDI($opt{tonic}, $_, $opt{scale}) } @octave;
 
 if ($opt{verbose}) {
@@ -123,6 +126,7 @@ $SIG{INT} = sub {
     _exit(0);
 };
 
+# synth programs are indexes into the patches list
 my $programs = Music::VoiceGen->new(
     pitches   => [0 .. $#patches], #\@patches, #[0 .. 127],
     intervals => \@jumps,
@@ -154,8 +158,9 @@ my $timer = IO::Async::Timer::Periodic->new(
             push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
         }
 
+        # TODO explain this modulo
         if (($ticks - 1) % $clocks_per_beat == 0) {
-            if ($beat_count % $beats == 0) {
+            if ($beat_count % $beats == 0) { # every 16th beat...
                 # change programs - why not?
                 my $program = $opt{patches} eq '-1'
                     ? $programs->rand
@@ -170,6 +175,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                     trigger_notes();
                 })->retain; # keep the Future alive until it fires
             }
+            # TODO explain this modulo
             elsif ($beat_count % $group_interval_beats == 0) {
                 trigger_notes();
             }
@@ -185,6 +191,8 @@ $loop->run;
 sub trigger_notes {
     my @notes = sort { $a <=> $b }
         map { $pitches[int rand @pitches] } 1 .. $note_nums[int rand @note_nums]; # XXX klunky
+
+    # get an arpeggiated note list given a random arp_type
     my $arped = $arper->arp(\@notes, $opt{duration}, $arp_types[int rand @arp_types]);
 
     my $on_tick = $ticks;
