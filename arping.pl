@@ -15,7 +15,6 @@
 # perl arping.pl --v --y=synth --x=usb --a=diverge --d=2 --o=2 --n=6 --p='41,70'
 # perl arping.pl --v --y=synth --x=usb --a='up,down,updown' --t=G --s=major
 # perl arping.pl --v --y=synth --x=usb --n='4,5,6,7' # with varying arp note values
-# perl arping.pl --v --y=synth --a=any # using any known arpeggio pattern
 # perl arping.pl --v --y=synth # with no x_port MIDI device
 
 use v5.36;
