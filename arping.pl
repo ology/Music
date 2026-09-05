@@ -4,7 +4,7 @@
 # Arpeggiate (with repeats) on the 1 of each bar of a 4-bar phrase
 # per sequencer program.
 
-# Examples using fluidsynth:
+# Examples using fluidsynth and a generic usb interface for ports:
 # perl arping.pl --verbose --y_port=synth # use defaults
 # perl arping.pl --verbose --y_port=synth --x_port=drums --bpm=60 \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --arp_type=updown
