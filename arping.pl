@@ -79,7 +79,7 @@ my @note_nums = split /,/, $opt{note_num};
 my @jumps     = split /,/, $opt{jumps};
 my @patches   = defined $opt{patches} ? split /,/, $opt{patches} : (0 .. 127);
 my @arp_types = $opt{arp_type} eq 'any'
-    ? sort keys $arper->arp_type->%*
+    ? keys $arper->arp_type->%*
     : split /,/, $opt{arp_type};
 
 # get range of pitches by octave
