@@ -167,11 +167,9 @@ my $timer = IO::Async::Timer::Periodic->new(
         # pre-load the next phrase's synth patch a little early, so it's
         # ready by the time the new phrase's downbeat actually arrives
         if (!$pc_sent_for_phrase && $ticks >= $next_phrase_tick - $lookahead_ticks) {
-            if (@patches > 2 || $patches[0] ne $patches[1]) {
-                my $program = $patches[ $programs->rand ];
-                say "\n* PC: $program" if $opt{verbose};
-                $midi_out->program_change($channel, $program);
-            }
+            my $program = $patches[ $programs->rand ];
+            say "\n* PC: $program" if $opt{verbose};
+            $midi_out->program_change($channel, $program);
             $pc_sent_for_phrase = 1;
         }
 
