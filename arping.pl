@@ -89,7 +89,7 @@ if ($opt{verbose}) {
     say "Arp types: $opt{arp_type}";
     say "Arp nums: $opt{note_num}";
     say "Arp jumps: $opt{jumps}";
-    say "Arp patches: $opt{patches}";
+    say "Arp patches: $opt{patches}" if $opt{patches};
     say "Pitches: @pitches";
 }
 
