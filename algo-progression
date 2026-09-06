@@ -38,7 +38,7 @@ my $divisions = 4;
 
 my @progressions;
 
-$share_file = '/Users/gene/sandbox/Data-Dataset-ChordProgressions/share/Chord-Progressions.csv';
+$share_file = '/Users/gene/sandbox/Data-Dataset-ChordProgressions/share/Chord-Progressions.csv'; # author only
 
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
@@ -58,7 +58,7 @@ $d->write;
 sub drums {
     my $grooves = MIDI::Drummer::Tiny::Grooves->new(
         drummer    => $d,
-        share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt',
+        share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt', # author only
     );
     my $set = $grooves->search({ cat => 'rock' });
     my @keys = keys %$set;
