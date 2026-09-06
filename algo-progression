@@ -43,7 +43,7 @@ $share_file = '/Users/gene/sandbox/Data-Dataset-ChordProgressions/share/Chord-Pr
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $bpm,
-    bars   => $divisions * @parts * $reps,
+    bars   => $divisions * @parts * $reps * 2,
     reverb => 10,
 );
 
@@ -139,11 +139,9 @@ sub arp_chords {
 
     my @accum; # Note accumulator
 
-    my $p = 0; # part number
+    my $p = 1; # part number
 
-    for my $part (@parts) {
-        $p++;
-
+    for my $part (@parts, @parts) {
         my ($note, $section, $scale, $pool);
         # Set the pool of possible progressions given scale and section
         if ($part =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
@@ -190,6 +188,7 @@ sub arp_chords {
                 }
             }
         }
+        $p++;
     }
     for my $j (1 .. $multi) {
         for my $n (@accum) {
