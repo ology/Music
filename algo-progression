@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Play a random rock progression with a randomized walking bassline.
+# Play a random "rock" like progression with a randomized walking bassline.
 
 # Example:
 # perl algo-progression --bpm=60 # use all other defaults
