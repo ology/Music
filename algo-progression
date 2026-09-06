@@ -1,9 +1,13 @@
 #!/usr/bin/env perl
 
 # Play a random rock progression with a randomized walking bassline.
+
 # Example:
 # perl algo-progression --bpm=60 # use all other defaults
 # perl algo-progression --bpm=111 --parts='Amv-Amc' --chords_patch=4 --arping=1 --verbose
+#
+# * parts are defined as hyphen-phrases of 3 sections: <Note><Major|minor><verse|chorus>
+# Example: DMv-AMv-Bmc-GMc
 
 use strict;
 use warnings;
