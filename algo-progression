@@ -11,7 +11,7 @@ Example:
 
 Parts are defined as hyphen-phrases of 3 sections:
 
-  q<Note><Major|minor><verse|chorus>
+  <Note><Major|minor><verse|chorus>
 
 Example:
 
