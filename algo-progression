@@ -6,7 +6,7 @@ Play a random "rock" like progression with a randomized walking bassline.
 
 Example:
 
-  perl algo-progression --bpm=60 # use all other defaults
+  perl algo-progression --bpm=60  # use all other defaults
   perl algo-progression --bpm=111 --parts='Amv-Amc' --chords_patch=4 --arping=1 --verbose
 
 Parts are defined as hyphen-phrases of 3 sections:
