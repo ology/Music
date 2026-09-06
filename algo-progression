@@ -76,9 +76,6 @@ sub chords {
 
     my %data = as_hash();
 
-    my $arp = Music::MelodicDevice::Arpeggiation->new(verbose => 1);
-    my @types = keys $arp->arp_type->%*;
-
     my @accum; # Note accumulator
 
     for my $part (@parts) {
@@ -134,12 +131,13 @@ sub arp_chords {
 
     my %data = as_hash();
 
-    my $arp = Music::MelodicDevice::Arpeggiation->new(verbose => 1);
-    my @types = keys $arp->arp_type->%*;
+    my $arp = Music::MelodicDevice::Arpeggiation->new;#(verbose => 1);
+    my @types = grep { $_ ne 'up' || $_ ne 'down' || $_ ne 'updown' } keys $arp->arp_type->%*;
 
     my @accum; # Note accumulator
 
     my $p = 1; # part number
+    my $q = 1; # duration accumulator
 
     for my $part (@parts, @parts) {
         my ($note, $section, $scale, $pool);
@@ -180,8 +178,9 @@ sub arp_chords {
                     my $nums = [];
                     push @$nums, Music::Note->new($_, 'ISO')->format('midinum')
                         for @notes;
-                    my $arped = $arp->arp($nums, 1, $types[int rand @types]);
+                    my $arped = $arp->arp($nums, $q % 2 == 0 ? 1 : 4, $types[int rand @types]);
                     push @accum, $arped;
+                    $q++;
                 }
                 else {
                     push @accum, \@notes;
@@ -201,7 +200,7 @@ sub arp_chords {
                     }
                 }
                 my $rest = $divisions * ticks($d->score) - $duration;
-                $d->rest('d' . $rest);
+                $d->rest('d' . $rest) if $rest > 0;
             }
             else {
                 $d->note($d->whole, @$n);
