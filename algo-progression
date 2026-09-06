@@ -132,7 +132,7 @@ sub arp_chords {
     my %data = as_hash();
 
     my $arp = Music::MelodicDevice::Arpeggiation->new;#(verbose => 1);
-    my @types = grep { $_ ne 'random' && $_ ne 'up' && $_ ne 'down' && $_ ne 'updown' } keys $arp->arp_type->%*;
+    my @types = grep { $_ ne 'random' && $_ ne 'up' && $_ ne 'down' } keys $arp->arp_type->%*;
 
     my @accum; # Note accumulator
 
