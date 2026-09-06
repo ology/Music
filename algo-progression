@@ -95,7 +95,6 @@ sub drums {
         my $groove = $set->{ $keys[ rand @keys ] };
         $grooves->groove($groove->{groove});
     }
-
 }
 
 sub arp_chords {
