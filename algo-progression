@@ -63,7 +63,7 @@ my $d = MIDI::Drummer::Tiny->new(
 );
 
 $d->sync(
-    \&drums,
+    \&drums, # should come first or the channel will need more manual adjusting
     \&arp_chords,
     \&bass,
 );
