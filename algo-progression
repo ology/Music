@@ -27,12 +27,12 @@ my %opt = (
     len          => 4, # The length of a phrase
     reps         => 1, # The number of times to repeat an individual phrase
     multi        => 1, # The number of times the phrases are repeated
-    chords_patch => 0,
-    bass_patch   => 35,
-    arping       => 0,
-    divisions    => 4,
-    channel      => 0,
-    octave       => 4,
+    chords_patch => 0, # the MIDI program for the chords parts
+    bass_patch   => 35, # the MIDI program for the bass part
+    arping       => 0, # are we arpeggiating or not?
+    divisions    => 4, # The number of divisions in this 4/4 composition
+    channel      => 0, # the MIDI channel
+    octave       => 5, # the octave of chords part
     verbose      => 0,
 );
 GetOptions(\%opt,
