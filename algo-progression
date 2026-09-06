@@ -11,7 +11,7 @@ use warnings;
 use Data::Dumper::Compact qw(ddc);
 use MIDI::Drummer::Tiny ();
 use MIDI::Drummer::Tiny::Grooves ();
-use MIDI::Util qw(set_chan_patch midi_format);
+use MIDI::Util qw(set_chan_patch midi_format ticks);
 use Music::Bassline::Generator ();
 use Music::Chord::Note ();
 use Music::Dataset::ChordProgressions qw(as_hash $share_file);
@@ -32,8 +32,9 @@ my $arping = shift // 0;
 
 my @parts = split /-/, $parts;
 
-my $channel = 0;
-my $octave  = 5;
+my $channel   = 0;
+my $octave    = 5;
+my $divisions = 4;
 
 my @progressions;
 
@@ -42,7 +43,7 @@ $share_file = '/Users/gene/sandbox/Data-Dataset-ChordProgressions/share/Chord-Pr
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $bpm,
-    bars   => 4 * @parts * $reps,
+    bars   => $divisions * @parts * $reps,
     reverb => 10,
 );
 
@@ -132,9 +133,15 @@ sub chords {
     for my $j (1 .. $multi) {
         if ($arping) {
             for my $i (@accum) {
+                my $duration = 0;
                 for my $j (@$i) {
                     $d->note(@$j);
+                    if ($j->[0] =~ /^d(\d+)$/) {
+                        $duration += $1;
+                    }
                 }
+                my $rest = $divisions * ticks($d->score) - $duration;
+                $d->rest('d' . $rest);
             }
         }
         else {
