@@ -129,7 +129,6 @@ sub chords {
             }
         }
     }
-    print "A: ", ddc \@accum;
     for my $j (1 .. $multi) {
         if ($arping) {
             for my $i (@accum) {
