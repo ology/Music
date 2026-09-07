@@ -97,11 +97,7 @@ sub drums {
     for (1 .. $opt{multi} * $d->bars) {
         my $groove = $set->{ $keys[rand @keys] };
         my $g      = $groove->{groove};
-        # too much crashing - ugh
-        if (!exists $g->{closed} && exists $g->{crash}) {
-            my $crash = delete $g->{crash};
-            $g->{closed} = { num => $grooves->closed, pat => $crash->{pat} };
-        }
+        $g = $grooves->swap_pat($g, 'crash', 'closed'); # too much crashing - ugh
         $grooves->groove($g);
     }
 }
