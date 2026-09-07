@@ -89,13 +89,20 @@ $d->write;
 sub drums {
     my $grooves = MIDI::Drummer::Tiny::Grooves->new(
         drummer    => $d,
-        share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt', # author only
+        share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt',
     );
-    my $set = $grooves->search({ cat => $opt{genre} });
+    my $set  = $grooves->search({ cat => $opt{genre} });
     my @keys = keys %$set;
+
     for (1 .. $opt{multi} * $d->bars) {
-        my $groove = $set->{ $keys[ rand @keys ] };
-        $grooves->groove($groove->{groove});
+        my $groove = $set->{ $keys[rand @keys] };
+        my $g      = $groove->{groove};
+        # too much crashing - ugh
+        if (!exists $g->{closed} && exists $g->{crash}) {
+            my $crash = delete $g->{crash};
+            $g->{closed} = { num => $grooves->closed, pat => $crash->{pat} };
+        }
+        $grooves->groove($g);
     }
 }
 
