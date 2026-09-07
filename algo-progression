@@ -36,6 +36,7 @@ use Music::Scales qw(get_scale_notes);
 
 my %opt = (
     bpm          => 100,
+    genre        => 'rock',
     parts        => 'DMv-AMv-Bmc-GMc', # <Note><Major|minor><verse|chorus>-... phrases
     len          => 4, # The length of a phrase
     reps         => 1, # The number of times to repeat an individual phrase
@@ -50,6 +51,7 @@ my %opt = (
 );
 GetOptions(\%opt,
     'bpm=i',
+    'genre=s',
     'parts=s',
     'len=i',
     'reps=i',
@@ -89,7 +91,7 @@ sub drums {
         drummer    => $d,
         share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt', # author only
     );
-    my $set = $grooves->search({ cat => 'rock' });
+    my $set = $grooves->search({ cat => $opt{genre} });
     my @keys = keys %$set;
     for (1 .. $opt{multi} * $d->bars) {
         my $groove = $set->{ $keys[ rand @keys ] };
