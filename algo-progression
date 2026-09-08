@@ -92,7 +92,13 @@ sub drums {
         drummer    => $d,
         share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt',
     );
-    my $set  = $grooves->all_grooves;#search({ cat => $opt{genre} });
+    my $set;
+    if ($opt{genre}) {
+        $set = $grooves->search({ cat => $opt{genre} });
+    }
+    else {
+        $set = $grooves->all_grooves;
+    }
     my @keys = keys %$set;
 
     my ($groove, $g);
