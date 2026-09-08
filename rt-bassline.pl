@@ -245,8 +245,9 @@ sub velocity ($base) {
 }
 
 sub flush_chord ($notes) {
-    my @names = map { Music::Note->new($_, 'midinum')->format('isobase') } @$notes;
-    my $name  = eval { chordname(@names) };
+    my @sorted = sort { $a <=> $b } @$notes; # lowest pitch = the real bass; list it first
+    my @names  = map { Music::Note->new($_, 'midinum')->format('isobase') } @sorted;
+    my $name   = eval { chordname(@names) };
     $name ||= $opt{chord};
     say "Chord: $name (@names)" if $opt{verbose};
     $current_chord = $name;
