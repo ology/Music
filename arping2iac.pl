@@ -1,20 +1,18 @@
 #!/usr/bin/env perl
 
-# Play 2 MIDI devices with a single clock - drums and a sequencer.
-# Arpeggiate (with repeats) on the 1 of each bar of a 4-bar phrase
-# per sequencer program.
+# Arpeggiate the Mac IAC MIDI device.
 
 # Examples using fluidsynth and a generic usb interface for ports:
-# perl arping2iac.pl --verbose --y_port=synth # use defaults
-# perl arping2iac.pl --verbose --y_port=synth --bpm=60 \
-#   --note_num=5 --initial=1 --duration=2 --octave=0 --arp_type=updown
+# perl arping2iac.pl --verbose --midi_port=synth # use defaults
+# perl arping2iac.pl --verbose --midi_port=synth --bpm=60 --note_num=5 \
+#   --initial=1 --duration=2 --octave=0 --arp_type=updown
 # Command-line arguments can be abbreviated to a single letter:
-# perl arping2iac.pl --v --y=synth --a=converge --o=2 --i=63 --n=11
-# perl arping2iac.pl --v --y=synth --a=converge --d=3 --o=2 --i=10 --n=12
-# perl arping2iac.pl --v --y=synth --a=diverge --d=2 --o=2 --n=6 --p='41,70'
-# perl arping2iac.pl --v --y=synth --a='up,down,updown' --t=G --s=major
-# perl arping2iac.pl --v --y=synth --n='4,5,6,7' --spread=3
-# perl arping2iac.pl --v --y=synth --p='42,42' # for playing a single patch
+# perl arping2iac.pl --v --m=synth --a=converge --o=2 --i=63 --n=11
+# perl arping2iac.pl --v --m=synth --a=converge --d=3 --o=2 --i=10 --n=12
+# perl arping2iac.pl --v --m=synth --a=diverge --d=2 --o=2 --n=6 --p='41,70'
+# perl arping2iac.pl --v --m=synth --a='up,down,updown' --t=G --s=major
+# perl arping2iac.pl --v --m=synth --n='4,5,6,7' --spread=3
+# perl arping2iac.pl --v --m=synth --p='42,42' # for playing a single patch
 
 # While running: press 'p' to pause/resume without closing the MIDI
 #ports, or 'q' to quit cleanly.
@@ -38,7 +36,7 @@ no warnings 'experimental::try';
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
-    y_port   => undef,   # REQUIRED MIDI device (e.g. microKorg)
+    midi_port   => undef,   # REQUIRED MIDI device (e.g. microKorg)
     bpm      => 70,      # beats-per-minute
     arp_type => 'any',   # 'any' or any known arp_type
     note_num => '5,7',   # number of arp notes
@@ -56,7 +54,7 @@ my %opt = (
 );
 GetOptions(\%opt,
     'bpm=i',
-    'y_port=s',
+    'midi_port=s',
     'arp_type=s',
     'repeats=s',
     'note_num=s',
@@ -71,7 +69,7 @@ GetOptions(\%opt,
     'verbose',
 );
 
-die "Open MIDI port name required for 'y_port'\n" unless $opt{y_port};
+die "Open MIDI port name required for 'midi_port'\n" unless $opt{midi_port};
 
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => $opt{repeats},
@@ -123,9 +121,9 @@ my $next_phrase_tick   = 1; # tick of the next phrase's downbeat (see the -1 ali
 my $pc_sent_for_phrase = 0; # guard so the program change is only sent once per phrase
 
 # open the midi device for output
-my $midi_out = out_port($opt{y_port});
+my $midi_out = out_port($opt{midi_port});
 $midi_out->start;
-say "Started $opt{y_port}" if $opt{verbose};
+say "Started $opt{midi_port}" if $opt{verbose};
 
 $SIG{INT} = \&shutdown_and_exit;
 
