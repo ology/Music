@@ -249,7 +249,8 @@ sub flush_chord ($notes) {
     my @names  = map { Music::Note->new($_, 'midinum')->format('isobase') } @sorted;
     my $name   = eval { chordname(@names) };
     $name =~ s/\s+//g; # some chords have spaces :\
-    # $name =~ s/o/dim/g; # TODO diminished
+    $name =~ s/b/-/g; # flat
+    $name =~ s/o\b/dim/g; # diminished
     say "Chord: $name (@names)" if $opt{verbose};
     $current_chord = $name;
 }
