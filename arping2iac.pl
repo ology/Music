@@ -5,19 +5,19 @@
 # per sequencer program.
 
 # Examples using fluidsynth and a generic usb interface for ports:
-# perl arping.pl --verbose --y_port=synth # use defaults
-# perl arping.pl --verbose --y_port=synth --x_port=drums --bpm=60 \
+# perl arping2iac.pl --verbose --y_port=synth # use defaults
+# perl arping2iac.pl --verbose --y_port=synth --x_port=drums --bpm=60 \
 #   --note_num=5 --initial=1 --duration=2 --octave=0 --arp_type=updown
 # Command-line arguments can be abbreviated to a single letter:
-# perl arping.pl --v --y=synth --x=usb --a=converge --o=2 --i=63 --n=11
-# perl arping.pl --v --y=synth --x=usb --a=converge --d=3 --o=2 --i=10 --n=12
-# perl arping.pl --v --y=synth --x=usb --a=diverge --d=2 --o=2 --n=6 --p='41,70'
-# perl arping.pl --v --y=synth --x=usb --a='up,down,updown' --t=G --s=major
-# perl arping.pl --v --y=synth --x=usb --n='4,5,6,7' --spread=3
-# perl arping.pl --v --y=synth --p='42,42' # for playing a single patch
+# perl arping2iac.pl --v --y=synth --x=usb --a=converge --o=2 --i=63 --n=11
+# perl arping2iac.pl --v --y=synth --x=usb --a=converge --d=3 --o=2 --i=10 --n=12
+# perl arping2iac.pl --v --y=synth --x=usb --a=diverge --d=2 --o=2 --n=6 --p='41,70'
+# perl arping2iac.pl --v --y=synth --x=usb --a='up,down,updown' --t=G --s=major
+# perl arping2iac.pl --v --y=synth --x=usb --n='4,5,6,7' --spread=3
+# perl arping2iac.pl --v --y=synth --p='42,42' # for playing a single patch
 
-# While running: press 'p' to pause/resume without closing the
-# MIDI ports, or 'q' to quit cleanly.
+# While running: press 'p' to pause/resume without closing the MIDI
+# ports, or 'q' to quit cleanly.
 
 use v5.36;
 use feature qw(try);
