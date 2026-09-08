@@ -217,6 +217,7 @@ $loop->run;
 
 sub trigger_bar {
     my $notes;
+    print "CC: $current_chord\n";
     $notes = eval { $bassline->generate($current_chord, $opt{notes_per_bar}) };
     @$notes = map { Music::Note->new($_, 'ISO')->format('midinum') } $cn->chord($opt{chord})
         unless $notes && @$notes;
@@ -248,7 +249,7 @@ sub flush_chord ($notes) {
     my @sorted = sort { $a <=> $b } @$notes; # lowest pitch = the real bass; list it first
     my @names  = map { Music::Note->new($_, 'midinum')->format('isobase') } @sorted;
     my $name   = eval { chordname(@names) };
-    $name ||= $opt{chord};
+    $name =~ s/\s+//g;
     say "Chord: $name (@names)" if $opt{verbose};
     $current_chord = $name;
 }
