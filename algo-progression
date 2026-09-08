@@ -33,6 +33,7 @@ use Music::Duration::Partition ();
 use Music::MelodicDevice::Arpeggiation ();
 use Music::Note ();
 use Music::Scales qw(get_scale_notes);
+use List::Util qw(uniq);
 
 my %opt = (
     bpm          => 100,
@@ -91,13 +92,17 @@ sub drums {
         drummer    => $d,
         share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt',
     );
-    my $set  = $grooves->search({ cat => $opt{genre} });
+    my $set  = $grooves->all_grooves;#search({ cat => $opt{genre} });
     my @keys = keys %$set;
 
-    for (1 .. $opt{multi} * $d->bars) {
-        my $groove = $set->{ $keys[rand @keys] };
-        my $g      = $groove->{groove};
-        $g = $grooves->swap_pat($g, 'crash', 'closed'); # too much crashing - ugh
+    my ($groove, $g);
+
+    for my $i (1 .. $opt{multi} * $d->bars) {
+        if ($i % 4 == 0) {
+            $groove = $set->{ $keys[rand @keys] };
+            $g = $groove->{groove};
+            $g = $grooves->swap_pat($g, 'crash', 'closed'); # too much crashing - ugh
+        }
         $grooves->groove($g);
     }
 }
