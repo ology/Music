@@ -217,7 +217,6 @@ $loop->run;
 
 sub trigger_bar {
     my $notes;
-    print "CC: $current_chord\n";
     $notes = eval { $bassline->generate($current_chord, $opt{notes_per_bar}) };
     @$notes = map { Music::Note->new($_, 'ISO')->format('midinum') } $cn->chord($opt{chord})
         unless $notes && @$notes;
