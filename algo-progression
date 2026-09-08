@@ -7,7 +7,8 @@ Play a random "rock" like progression with a randomized walking bassline.
 Example:
 
   perl algo-progression --bpm=60  # use all other defaults
-  perl algo-progression --bpm=111 --parts='Amv-Amc' --chords_patch=4 --arping=1 --verbose
+  perl algo-progression --bpm=111 --parts='Amv-Amc' --chords_patch=4 \
+  #  --arping=1 --genre=rock --verbose
 
 Parts are defined as hyphen-phrases of 3 sections:
 
@@ -37,7 +38,7 @@ use List::Util qw(uniq);
 
 my %opt = (
     bpm          => 100,
-    genre        => 'rock',
+    genre        => '', # a MIDI::Drummer::Tiny::Grooves category like 'rock'
     parts        => 'DMv-AMv-Bmc-GMc', # <Note><Major|minor><verse|chorus>-... phrases
     pairs        => 4, # The number of pairs of phrases
     reps         => 1, # The number of times to repeat an individual phrase
