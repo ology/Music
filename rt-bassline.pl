@@ -249,7 +249,7 @@ sub flush_chord ($notes) {
     my @sorted = sort { $a <=> $b } @$notes; # lowest pitch = the real bass; list it first
     my @names  = map { Music::Note->new($_, 'midinum')->format('isobase') } @sorted;
     my $name   = eval { chordname(@names) };
-    $name =~ s/\s+//g;
+    $name =~ s/\s+//g; # some chords have spaces :\
     say "Chord: $name (@names)" if $opt{verbose};
     $current_chord = $name;
 }
