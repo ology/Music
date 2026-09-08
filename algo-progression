@@ -39,7 +39,7 @@ my %opt = (
     bpm          => 100,
     genre        => 'rock',
     parts        => 'DMv-AMv-Bmc-GMc', # <Note><Major|minor><verse|chorus>-... phrases
-    len          => 4, # The length of a phrase
+    pairs        => 4, # The number of pairs of phrases
     reps         => 1, # The number of times to repeat an individual phrase
     multi        => 1, # The number of times the phrases are repeated
     chords_patch => 0, # the MIDI program for the chords parts
@@ -54,7 +54,7 @@ GetOptions(\%opt,
     'bpm=i',
     'genre=s',
     'parts=s',
-    'len=i',
+    'pairs=i',
     'reps=i',
     'multi=i',
     'chords_patch=i',
@@ -75,7 +75,7 @@ $share_file = '/Users/gene/sandbox/Data-Dataset-ChordProgressions/share/Chord-Pr
 my $d = MIDI::Drummer::Tiny->new(
     file   => "$0.mid",
     bpm    => $opt{bpm},
-    bars   => $opt{divisions} * @parts * $opt{reps} * $opt{len},
+    bars   => $opt{divisions} * @parts * $opt{reps} * $opt{pairs},
     reverb => 10,
 );
 
@@ -97,7 +97,7 @@ sub drums {
 
     my ($groove, $g);
 
-    for my $i (1 .. $opt{multi} * $d->bars) {
+    for my $i (1 .. $opt{multi} * $d->bars + ($opt{divisions} - 1)) {
         if ($i % 4 == 0) {
             $groove = $set->{ $keys[rand @keys] };
             $g = $groove->{groove};
@@ -122,7 +122,7 @@ sub arp_chords {
     my $p = 1; # part number
     my $q = 1; # duration accumulator
 
-    for my $part ( map { @parts } 1 .. $opt{len}) {
+    for my $part ( map { @parts } 1 .. $opt{pairs}) {
         my ($note, $section, $scale, $pool);
         # Set the pool of possible progressions given scale and section
         if ($part =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
