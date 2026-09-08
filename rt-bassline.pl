@@ -250,7 +250,8 @@ sub flush_chord ($notes) {
     my $name   = eval { chordname(@names) };
     $name =~ s/\s+//g; # some chords have spaces :\
     $name =~ s/b/-/g; # flat
-    $name =~ s/o\b/dim/g; # diminished
+    $name =~ s/o(?:\/|$)/dim/g; # diminished
+    $name =~ s/#5/(#5)/g;
     say "Chord: $name (@names)" if $opt{verbose};
     $current_chord = $name;
 }
