@@ -36,21 +36,21 @@ no warnings 'experimental::try';
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
-    midi_port   => undef,   # REQUIRED MIDI device (e.g. microKorg)
-    bpm      => 70,      # beats-per-minute
-    arp_type => 'any',   # 'any' or any known arp_type
-    note_num => '5,7',   # number of arp notes
-    repeats  => 1,       # number of arp-phrase repeats
-    initial  => 1,       # number within the 0-based patch indices
-    duration => 1,       # 0.1 .. 4 float
-    octave   => '1,2,3', # octaves (0 .. 9 ints)
-    scale    => 'minor', # scale name as known to Music::Scales
-    tonic    => 'C',     # scale key base note
-    patches  => undef,   # undef=0..127 or CSV-string of patch numbers
-    # patches  => '0,2,3,12,16,18,19,21,23,27,31,37,40,41,51,57,58,64,67,70,72,75,76,80,82,83,84,86,91,92,96,97,100,102,104,105,107,108,122', # decent microKorg programs
-    jumps    => '-3,-2,-1,1,2,3', # allowed jumps to selected programs
-    spread   => undef,   # beats an arp should stretch across (default: 1 bar); 0 = old one-shot timing
-    verbose  => 0,
+    midi_port => 'iac',   # REQUIRED MIDI device (e.g. IAC Bus)
+    bpm       => 70,      # beats-per-minute
+    arp_type  => 'any',   # 'any' or any known arp_type
+    note_num  => '5,7',   # number of arp notes
+    repeats   => 1,       # number of arp-phrase repeats
+    initial   => 1,       # number within the 0-based patch indices
+    duration  => 1,       # 0.1 .. 4 float
+    octave    => '1,2,3', # octaves (0 .. 9 ints)
+    scale     => 'minor', # scale name as known to Music::Scales
+    tonic     => 'C',     # scale key base note
+    patches   => undef,   # undef=0..127 or CSV-string of patch numbers
+    # patches   => '0,2,3,12,16,18,19,21,23,27,31,37,40,41,51,57,58,64,67,70,72,75,76,80,82,83,84,86,91,92,96,97,100,102,104,105,107,108,122', # decent microKorg programs
+    jumps     => '-3,-2,-1,1,2,3', # allowed jumps to selected programs
+    spread    => undef,   # beats an arp should stretch across (default: 1 bar); 0 = old one-shot timing
+    verbose   => 0,
 );
 GetOptions(\%opt,
     'bpm=i',
