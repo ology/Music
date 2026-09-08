@@ -48,7 +48,7 @@ my %opt = (
     tonic     => 'C',     # scale key base note
     patches   => undef,   # undef=0..127 or CSV-string of patch numbers
     jumps     => '-3,-2,-1,1,2,3', # allowed jumps to selected programs
-    spread    => undef,   # beats an arp should stretch across (default: 1 bar); 0 = old one-shot timing
+    spread    => 4,       # beats an arp should stretch across
     verbose   => 0,
 );
 GetOptions(\%opt,
