@@ -29,9 +29,10 @@ use Time::HiRes qw(time);
 no warnings 'experimental::try';
 
 use constant {
-    CHORD_WINDOW_TICKS => 3, # clock ticks of silence = chord is "done"
+    CHORD_SETTLE_SECS => 0.2, # wait this long after the last note before deciding "no more are coming"
     CHORD_WINDOW_SECS  => 1, # collect notes played within this many seconds
-    CHORD_MIN_NOTES    => 3, # this many distinct notes = a "chord"
+    CHORD_MIN_NOTES    => 3, # at least this many distinct notes = a "chord"
+    CHORD_MAX_NOTES    => 4, # at most this many distinct notes = a "chord"
 };
 
 my %opt = (
@@ -109,7 +110,6 @@ my $ticks = 0; # clock ticks
 my $current_chord = $opt{chord};
 
 my @chord_notes; # MIDI note numbers collected for the in-progress chord
-my $chord_last_tick = 0;
 
 my $cn = Music::Chord::Note->new;
 
@@ -141,6 +141,7 @@ if ($opt{z_port}) {
         input   => $opt{z_port},
         output  => $opt{y_port},
         loop    => $loop,
+        silent  => 1,
         verbose => 1,
     );
     say "Opened $opt{z_port}" if $opt{verbose};
@@ -159,9 +160,11 @@ $controller->add_filter(
         @chord_notes = grep { $now - $_->{time} <= CHORD_WINDOW_SECS } @chord_notes;
 
         my @unique = uniq map { $_->{note} } @chord_notes;
-        if (@unique >= CHORD_MIN_NOTES) {
-            flush_chord(\@unique);
-            @chord_notes = (); # require fresh notes for the next chord
+
+        # a 4-note chord is complete the moment the 4th distinct note lands
+        if (@unique >= CHORD_MAX_NOTES) {
+            flush_chord([ @unique[0 .. CHORD_MAX_NOTES - 1] ]);
+            @chord_notes = ();
         }
 
         return 0;
@@ -174,6 +177,16 @@ my $timer = IO::Async::Timer::Periodic->new(
         $midi_out->clock;
         $device->clock if $opt{x_port};
         $ticks++;
+
+        # a 3-note chord is only "done" once nothing new arrives for a bit
+        if (@chord_notes) {
+            my @unique     = uniq map { $_->{note} } @chord_notes;
+            my ($last_time) = sort { $b <=> $a } map { $_->{time} } @chord_notes;
+            if (@unique >= CHORD_MIN_NOTES && time() - $last_time > CHORD_SETTLE_SECS) {
+                flush_chord(\@unique);
+                @chord_notes = ();
+            }
+        }
 
         # release any notes whose time is up
         for my $i (reverse 0 .. $#active) {
@@ -207,7 +220,6 @@ sub trigger_bar {
     $notes = eval { $bassline->generate($current_chord, $opt{notes_per_bar}) };
     @$notes = map { Music::Note->new($_, 'ISO')->format('midinum') } $cn->chord($opt{chord})
         unless $notes && @$notes;
-    say "N: @$notes";
 
     if ($opt{verbose}) {
         say "\n* Bar: $current_chord";
