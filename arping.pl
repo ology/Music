@@ -13,7 +13,7 @@
 # perl arping.pl --v --y=synth --x=usb --a=converge --d=3 --o=2 --i=10 --n=12
 # perl arping.pl --v --y=synth --x=usb --a=diverge --d=2 --o=2 --n=6 --p='41,70'
 # perl arping.pl --v --y=synth --x=usb --a='up,down,updown' --t=G --s=major
-# perl arping.pl --v --y=synth --x=usb --n='4,5,6,7'
+# perl arping.pl --v --y=synth --x=usb --n='4,5,6,7' --spread=3
 # perl arping.pl --v --y=synth --p='42,42' # for playing a single patch
 
 use v5.36;
@@ -22,6 +22,7 @@ use Data::Dumper::Compact qw(ddc);               # debugging
 use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
+use List::Util qw(max sum0);                     # arp-duration scaling
 use MIDI::RtMidi::FFI::Device ();                # rt-midi
 use MIDI::RtMidi::Util qw(out_port stop_device); # rt-midi
 use Music::MelodicDevice::Arpeggiation ();       # arpeggiation
@@ -47,6 +48,7 @@ my %opt = (
     patches  => undef,   # undef=0..127 or CSV-string of patch numbers
     # patches  => '0,2,3,12,16,18,19,21,23,27,31,37,40,41,51,57,58,64,67,70,72,75,76,80,82,83,84,86,91,92,96,97,100,102,104,105,107,108,122', # decent microKorg programs
     jumps    => '-3,-2,-1,1,2,3', # allowed jumps to selected programs
+    spread   => undef,   # beats an arp should stretch across (default: 1 bar); 0 = old one-shot timing
     verbose  => 0,
 );
 GetOptions(\%opt,
@@ -63,6 +65,7 @@ GetOptions(\%opt,
     'tonic=s',
     'patches=s',
     'jumps=s',
+    'spread=i',
     'verbose',
 );
 
@@ -100,6 +103,8 @@ my $divisions       = 4; # divisions of a quarter-note into 16ths
 my $beats           = $divisions * $divisions; # beats in a phrase
 my $clocks_per_beat = 6 * $divisions; # PPQN
 my $clock_interval  = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
+
+$opt{spread} //= $divisions; # default: stretch each arp across one full bar
 
 my @active;  # { note => $pitch, off_tick => $when_it_should_stop }
 my @pending; # { note => $pitch, on_tick => $when_it_should_start }
@@ -200,14 +205,28 @@ sub trigger_notes {
     # get an arpeggiated note list given a random arp_type
     my $arped = $arper->arp(\@notes, $opt{duration}, $arp_types[int rand @arp_types]);
 
+    # convert from the arp's 96-ticks-per-quarter-note scale to our clock ticks
+    my @raw_ticks = map {
+        my ($dur) = $_->[0] =~ /^d(\d+)$/;
+        max(1, int($dur * $clocks_per_beat / ARP_TICKS));
+    } @$arped;
+
+    # instead of firing the whole arp back-to-back starting at the downbeat
+    # (a "one-shot"), stretch or squeeze it so it spans $opt{spread} beats -
+    # i.e. it keeps unfolding across the bar until the next trigger fires.
+    # $opt{spread} == 0 restores the original, unscaled timing.
+    my $scale = 1;
+    if ($opt{spread}) {
+        my $raw_total = sum0(@raw_ticks) || 1;
+        my $available = $opt{spread} * $clocks_per_beat;
+        $scale = $available / $raw_total;
+    }
+
     my $on_tick = $ticks;
 
-    for my $n (@$arped) {
-        my ($dur_str, $note) = @$n; # nb: a note is a duration and a pitch
-        my ($dur) = $dur_str =~ /^d(\d+)$/;
-
-        # convert from the arp's 96-ticks-per-quarter-note scale to our clock ticks
-        my $step_ticks = int($dur * $clocks_per_beat / ARP_TICKS) || 1;
+    for my $i (0 .. $#$arped) {
+        my (undef, $note) = @{ $arped->[$i] }; # nb: a note is a duration and a pitch
+        my $step_ticks = max(1, int($raw_ticks[$i] * $scale));
 
         push @pending, {
             note     => $note,
