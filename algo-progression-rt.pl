@@ -450,8 +450,7 @@ sub bass ($d, $progressions) {
         pool    => [qw/ dhn hn qn /],
         weights => [    1,  2, 3   ],
     );
-    my $motif1 = $mdp->motif;
-    my $motif2 = $mdp->motif;
+    my @motifs = $mdp->motifs(4);
 
     my $bassline = Music::Bassline::Generator->new(
         octave  => $opt{bass_octave},
@@ -469,7 +468,7 @@ sub bass ($d, $progressions) {
             for my $chord (@chords) {
                 $chord =~ s/6sus4/sus4/;
 
-                my $m = $i % 2 == 0 ? $motif2 : $motif1;
+                my $m = $motifs[int rand @motifs];
 
                 my $notes = $bassline->generate($chord, scalar(@$m));
 
