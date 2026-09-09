@@ -8,7 +8,7 @@
 
 =head1 DESCRIPTION
 
-Play an endless, ever-changing "rock" style progression with a randomized
+Play an endless, ever-changing progression with a randomized
 walking bassline and drums, live over a real MIDI port.
 
 Parts are defined as hyphen-phrases of 3 sections:
