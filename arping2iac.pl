@@ -29,7 +29,6 @@ use MIDI::RtMidi::FFI::Device ();                # rt-midi
 use MIDI::RtMidi::Util qw(out_port stop_device); # rt-midi
 use Music::MelodicDevice::Arpeggiation ();       # arpeggiation
 use Music::Scales qw(get_scale_MIDI);            # pitches
-use Music::VoiceGen ();                          # program change
 use POSIX qw(_exit);                             # skip global destruction
 use Term::TermKey::Async qw(FORMAT_VIM);         # keyboard control
 no warnings 'experimental::try';
@@ -118,7 +117,6 @@ my $patch_load_secs    = 0.1;
 my $ticks_per_phrase   = $beats * $clocks_per_beat;
 my $lookahead_ticks    = int($patch_load_secs / $clock_interval) || 1;
 my $next_phrase_tick   = 1; # tick of the next phrase's downbeat (see the -1 alignment below)
-my $pc_sent_for_phrase = 0; # guard so the program change is only sent once per phrase
 
 # open the midi device for output
 my $midi_out = out_port($opt{midi_port});
@@ -126,13 +124,6 @@ $midi_out->start;
 say "Started $opt{midi_port}" if $opt{verbose};
 
 $SIG{INT} = \&shutdown_and_exit;
-
-# synth programs are indexes into the patches list
-my $programs = Music::VoiceGen->new(
-    pitches   => [0 .. $#patches], #\@patches, #[0 .. 127],
-    intervals => \@jumps,
-);
-$programs->context($opt{initial});
 
 my $loop = IO::Async::Loop->new;
 
@@ -158,21 +149,11 @@ my $timer = IO::Async::Timer::Periodic->new(
             push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
         }
 
-        # pre-load the next phrase's synth patch a little early, so it's
-        # ready by the time the new phrase's downbeat actually arrives
-        if (!$pc_sent_for_phrase && $ticks >= $next_phrase_tick - $lookahead_ticks) {
-            my $program = $patches[ $programs->rand ];
-            say "\n* PC: $program" if $opt{verbose};
-            $midi_out->program_change($channel, $program);
-            $pc_sent_for_phrase = 1;
-        }
-
         # TODO explain this modulo
         if (($ticks - 1) % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) { # every 16th beat...
                 trigger_notes();
                 $next_phrase_tick += $ticks_per_phrase; # schedule the next phrase's pre-load point
-                $pc_sent_for_phrase = 0; # reset the guard for the next phrase
             }
             elsif ($beat_count % $divisions == 0) { # every div=4 beats
                 trigger_notes();
