@@ -116,7 +116,6 @@ my $beat_count = 0; # beats!
 my $patch_load_secs    = 0.1;
 my $ticks_per_phrase   = $beats * $clocks_per_beat;
 my $lookahead_ticks    = int($patch_load_secs / $clock_interval) || 1;
-my $next_phrase_tick   = 1; # tick of the next phrase's downbeat (see the -1 alignment below)
 
 # open the midi device for output
 my $midi_out = out_port($opt{midi_port});
@@ -153,7 +152,6 @@ my $timer = IO::Async::Timer::Periodic->new(
         if (($ticks - 1) % $clocks_per_beat == 0) {
             if ($beat_count % $beats == 0) { # every 16th beat...
                 trigger_notes();
-                $next_phrase_tick += $ticks_per_phrase; # schedule the next phrase's pre-load point
             }
             elsif ($beat_count % $divisions == 0) { # every div=4 beats
                 trigger_notes();
