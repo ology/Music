@@ -418,7 +418,6 @@ sub bass ($d, $progressions) {
             my $i = 0;
 
             for my $chord (@chords) {
-                $chord =~ s/sus2/add9/;
                 $chord =~ s/6sus4/sus4/;
 
                 my $m = $i % 2 == 0 ? $motif2 : $motif1;
