@@ -196,7 +196,7 @@ sub render_and_schedule_round {
     my @progressions; # scoped to this round only
 
     $d->sync(
-        sub { drums($d) },                    # should come first, per the original ordering note
+        sub { drums($d) },
         sub { arp_chords($d, \@progressions) },
         sub { bass($d, \@progressions) },
     );
@@ -314,7 +314,7 @@ sub arp_chords ($d, $progressions) {
 
     my %data = as_hash();
 
-    my $arp = Music::MelodicDevice::Arpeggiation->new;#(verbose => 1);
+    my $arp = Music::MelodicDevice::Arpeggiation->new(verbose => 1);
     my @types = keys $arp->arp_type->%*;
 
     my @accum; # note accumulator
