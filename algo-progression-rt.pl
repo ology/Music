@@ -57,7 +57,7 @@ use Term::TermKey::Async qw(FORMAT_VIM);         # keyboard control (pause/quit)
 
 my %opt = (
     midi_port    => 'iac',  # REQUIRED MIDI device (e.g. IAC Bus)
-    bpm          => 100,    # beats per minute
+    bpm          => 80,     # beats per minute
     genre        => '',     # a MIDI::Drummer::Tiny::Grooves category like 'rock'
     parts        => 'DMv-AMv-Bmc-GMc', # the top-level parts
     pairs        => 2,      # the number of pairs of phrases rendered per round
