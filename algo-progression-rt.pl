@@ -280,8 +280,6 @@ sub shutdown_and_exit {
     exit;
 }
 
-# --- unmodified generator logic below, just parameterized on $d/$progressions ---
-
 sub drums ($d) {
     my $grooves = MIDI::Drummer::Tiny::Grooves->new(
         drummer    => $d,
