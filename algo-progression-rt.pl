@@ -40,18 +40,18 @@ use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
 use MIDI ();                                     # parse the midi file into events
-use MIDI::Drummer::Tiny ();
-use MIDI::Drummer::Tiny::Grooves ();
+use MIDI::Drummer::Tiny ();                      # drums
+use MIDI::Drummer::Tiny::Grooves ();             # grooves
 use MIDI::RtMidi::FFI::Device ();                # rt-midi
 use MIDI::RtMidi::Util qw(out_port stop_device); # rt-midi
 use MIDI::Util qw(set_chan_patch midi_format ticks);
-use Music::Bassline::Generator ();
-use Music::Chord::Note ();
+use Music::Bassline::Generator ();               # bassline
+use Music::Chord::Note ();                       # conversion to notes
 use Music::Dataset::ChordProgressions qw(as_hash $share_file);
-use Music::Duration::Partition ();
-use Music::MelodicDevice::Arpeggiation ();
-use Music::Note ();
-use Music::Scales qw(get_scale_notes);
+use Music::Duration::Partition ();               # rhythmic phrases
+use Music::MelodicDevice::Arpeggiation ();       # arpeggio phrases
+use Music::Note ();                              # note format conversion
+use Music::Scales qw(get_scale_notes);           # known scale notes
 use Term::TermKey::Async qw(FORMAT_VIM);         # keyboard control (pause/quit)
 
 my %opt = (
