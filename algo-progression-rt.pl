@@ -105,6 +105,9 @@ $share_file = '/Users/gene/sandbox/Data-Dataset-ChordProgressions/share/Chord-Pr
 my $chords_channel = $opt{channel};
 my $bass_channel   = $opt{channel} + 1;
 
+# static reference data - load once, not on every round
+my %progression_data = as_hash();
+
 my $divisions_beat  = 4;                   # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 6 * $divisions_beat; # our own engine's PPQN
 my $clock_interval  = 60 / $opt{bpm} / $clocks_per_beat;
@@ -211,7 +214,7 @@ sub render_and_schedule_round {
 
     $d->sync(
         sub { drums($d) },
-        sub { arp_chords($d, \@progressions) },
+        sub { arp_chords($d, \@progressions, \%progression_data) },
         sub { bass($d, \@progressions) },
     );
 
@@ -357,12 +360,10 @@ sub drums ($d) {
     }
 }
 
-sub arp_chords ($d, $progressions) {
+sub arp_chords ($d, $progressions, $data) {
     set_chan_patch($d->score, $chords_channel, $opt{chord_patch});
 
     my $cn = Music::Chord::Note->new;
-
-    my %data = as_hash();
 
     my $arp = Music::MelodicDevice::Arpeggiation->new(verbose => 1);
     my @types = keys $arp->arp_type->%*;
@@ -379,7 +380,7 @@ sub arp_chords ($d, $progressions) {
             ($note, $scale, $section) = ($1, $2, $3);
             $scale   = $scale eq 'M' ? 'major' : 'minor';
             $section = $section eq 'v' ? 'verse' : 'chorus';
-            $pool    = $data{rock}{$scale}{$section};
+            $pool    = $data->{rock}{$scale}{$section};
         }
 
         # Set the transposition map
