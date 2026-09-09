@@ -4,7 +4,7 @@
 
   perl algo-progression-rt --midi_port=synth --bpm=100 --verbose
   perl algo-progression-rt --midi_port=synth --parts='Amv-Amc' \
-    --chord_patch=4 --arping=1 --genre=rock --verbose
+    --chord_patch=4 --arping --genre=rock --verbose
 
 =head1 DESCRIPTION
 
@@ -66,9 +66,9 @@ my %opt = (
     bass_patch   => 35,     # the MIDI program for the bass part
     chord_octave => 5,      # the octave of the chords part
     bass_octave  => 2,      # the octave of the bass part
-    arping       => 0,      # are we arpeggiating or not?
     divisions    => 4,      # the number of divisions in this 4/4 composition
     channel      => 0,      # the MIDI channel the chords part starts on
+    arping       => 0,      # are we arpeggiating or not?
     verbose      => 0,
 );
 GetOptions(\%opt,
@@ -83,9 +83,9 @@ GetOptions(\%opt,
     'bass_patch=i',
     'chord_octave=i',
     'bass_octave=i',
-    'arping=i',
     'divisions=i',
     'channel=i',
+    'arping',
     'verbose',
 );
 
