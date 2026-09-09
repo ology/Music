@@ -193,9 +193,10 @@ render_and_schedule_round();
 
 $loop->run;
 
-# One "round" = one full pass through --parts, --pairs times, rendered by the
-# *unmodified* offline generator subs into a throwaway Standard MIDI File,
-# which is then parsed back and appended onto the live clock schedule.
+# One "round" = one full pass through --parts, --pairs times,
+# rendered by the *unmodified* offline generator subs into a
+# throwaway MIDI File, which is then parsed back and appended onto
+# the live clock schedule.
 sub render_and_schedule_round {
     my (undef, $filename) = tempfile(SUFFIX => '.mid', UNLINK => 0);
 
@@ -206,7 +207,7 @@ sub render_and_schedule_round {
         reverb => 10,
     );
 
-    my @progressions; # scoped to this round only
+    my @progressions;
 
     $d->sync(
         sub { drums($d) },
@@ -226,7 +227,7 @@ sub schedule_midi {
 
     my $opus              = MIDI::Opus->new({ from_file => $filename });
     my $midi_ticks_per_qn = $opus->ticks; # the rendered file's own PPQN
-    my $scale             = $clocks_per_beat / $midi_ticks_per_qn; # -> our engine's ticks
+    my $scale             = $clocks_per_beat / $midi_ticks_per_qn; # our engine's ticks
 
     my $round_start_tick = $next_insert_tick;
     my $round_end_tick   = $round_start_tick;
@@ -272,7 +273,7 @@ sub toggle_pause {
     $paused = !$paused;
 
     if ($paused) {
-        $timer->stop; # clock ticks (and therefore note on/off scheduling) freeze here
+        $timer->stop; # clock ticks freeze here
 
         # silence anything currently sounding so nothing gets stuck on
         for my $n (@active) {
