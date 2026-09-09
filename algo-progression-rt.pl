@@ -20,7 +20,8 @@ Example:
   --parts='DMv-AMv-Bmc-GMc'
 
 While running: press 'p' to pause/resume without closing the MIDI port,
-or 'q' to quit cleanly.
+'r' to restart the progression from the beginning, or 'q' to quit
+cleanly.
 
 =head1 CAVEATS
 
@@ -166,6 +167,9 @@ my $tka = Term::TermKey::Async->new(
         if ($keystr eq 'p' || $keystr eq 'Space') {
             toggle_pause();
         }
+        elsif ($keystr eq 'r') {
+            restart_performance();
+        }
         elsif ($keystr eq 'q' || $keystr eq 'C-c' || $keystr eq 'Escape') {
             shutdown_and_exit();
         }
@@ -173,7 +177,7 @@ my $tka = Term::TermKey::Async->new(
 );
 $loop->add($tka);
 
-say "Press 'p' to pause/resume, 'q' to quit" if $opt{verbose};
+say "Press 'p' to pause/resume, 'r' to restart, 'q' to quit" if $opt{verbose};
 
 # prime the buffer with the first round before the clock has anything to play
 render_and_schedule_round();
@@ -273,6 +277,21 @@ sub toggle_pause {
         $timer->start; # resumes from the same $ticks count, port stays open throughout
         say "-- Resumed --" if $opt{verbose};
     }
+}
+
+sub restart_performance {
+    # silence anything currently sounding so nothing gets stuck on
+    for my $n (@active) {
+        $midi_out->note_off($n->{channel}, $n->{note}, 0);
+    }
+    @active  = ();
+    @pending = (); # drop the rest of the currently-buffered round too
+
+    $next_insert_tick = $ticks; # anchor the fresh round to right now, not the old buffer's tail
+
+    say "\n-- Restarting --" if $opt{verbose};
+
+    render_and_schedule_round(); # arp_chords() always starts back at part 1 within a round
 }
 
 sub shutdown_and_exit {
