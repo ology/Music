@@ -67,7 +67,8 @@ my %opt = (
     arping       => 0,      # are we arpeggiating or not?
     divisions    => 4,      # the number of divisions in this 4/4 composition
     channel      => 0,      # the MIDI channel the chords part starts on
-    octave       => 5,      # the octave of the chords part
+    chord_octave => 5,      # the octave of the chords part
+    bass_octave  => 2,      # the octave of the bass part
     verbose      => 0,
 );
 GetOptions(\%opt,
@@ -83,7 +84,7 @@ GetOptions(\%opt,
     'arping=i',
     'divisions=i',
     'channel=i',
-    'octave=i',
+    'chord_octave=i',
     'verbose',
 );
 
@@ -352,7 +353,7 @@ sub arp_chords ($d, $progressions) {
             for my $chord (@chords) {
                 $chord =~ s/sus2/add9/;
                 $chord =~ s/6sus4/sus4/;
-                my @notes = $cn->chord_with_octave($chord, $opt{octave});
+                my @notes = $cn->chord_with_octave($chord, $opt{chord_octave});
                 @notes = midi_format(@notes);
                 print "N: @notes\n" if $opt{verbose};
                 if ($opt{arping} && $p % 2 == 0) {
@@ -402,10 +403,10 @@ sub bass ($d, $progressions) {
     my $motif2 = $mdp->motif;
 
     my $bassline = Music::Bassline::Generator->new(
-        octave  => 2,
+        octave  => $opt{bass_octave},
         guitar  => 1,
-        verbose => $opt{verbose},
         scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+        verbose => $opt{verbose},
     );
 
     for (1 .. $opt{reps} * $opt{multi}) {
