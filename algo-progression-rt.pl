@@ -19,9 +19,9 @@ Example:
 
   --parts='DMv-AMv-Bmc-GMc'
 
-While running: press 'p' to pause/resume without closing the MIDI port,
-'r' to restart the progression from the beginning, or 'q' to quit
-cleanly.
+While running: press 'p' to pause/resume without closing the MIDI
+port, 'r' to restart the progression from the beginning, press 'n'
+for a new progression, or 'q' to quit.
 
 =head1 CAVEATS
 
@@ -60,7 +60,7 @@ my %opt = (
     bpm          => 80,     # beats per minute
     genre        => '',     # a MIDI::Drummer::Tiny::Grooves category like 'rock'
     parts        => 'DMv-AMv-Bmc-GMc', # the top-level parts
-    pairs        => 2,      # the number of pairs of phrases rendered per round
+    pairs        => 1,      # the number of pairs of phrases rendered per round
     reps         => 1,      # the number of times to repeat an individual phrase
     multi        => 1,      # the number of times the phrases are repeated
     chord_patch  => 0,      # the MIDI program for the chords part
@@ -93,6 +93,11 @@ GetOptions(\%opt,
 die "Open MIDI port name required for 'midi_port'\n" unless $opt{midi_port};
 
 my @parts = split /-/, $opt{parts};
+
+# Pools for progressive randomization
+my @allowed_notes   = qw(A Bb B C Db D Eb E F Gb G Ab);
+my @scale_qualities = qw(M m); 
+my @song_sections   = qw(v c);
 
 # author only - set the local share_file for Music::Dataset::ChordProgressions
 $share_file = '/Users/gene/sandbox/Data-Dataset-ChordProgressions/share/Chord-Progressions.csv';
@@ -166,6 +171,10 @@ my $tka = Term::TermKey::Async->new(
 
         if ($keystr eq 'p' || $keystr eq 'Space') {
             toggle_pause();
+        }
+        elsif ($keystr eq 'n') {
+            make_new_progression();
+            restart_performance();
         }
         elsif ($keystr eq 'r') {
             restart_performance();
@@ -279,6 +288,25 @@ sub toggle_pause {
     }
 }
 
+sub make_new_progression {
+    my $num_sections = scalar(@parts) || 4;
+    my @new_parts;
+
+    for (1 .. $num_sections) {
+        my $random_note    = $allowed_notes[int rand @allowed_notes];
+        my $random_quality = $scale_qualities[int rand @scale_qualities];
+        my $random_section = $song_sections[int rand @song_sections];
+
+        push @new_parts, "$random_note$random_quality$random_section";
+    }
+
+    @parts = @new_parts;
+
+    if ($opt{verbose}) {
+        say "\nGenerated New Parts: " . join('-', @parts);
+    }
+}
+
 sub restart_performance {
     # silence anything currently sounding so nothing gets stuck on
     for my $n (@active) {
@@ -287,7 +315,9 @@ sub restart_performance {
     @active  = ();
     @pending = (); # drop the rest of the currently-buffered round too
 
-    $next_insert_tick = $ticks; # anchor the fresh round to right now, not the old buffer's tail
+    # $next_insert_tick = $ticks; # anchor the fresh round to right now, not the old buffer's tail
+    # cushion the scheduling line slightly to safely avoid CPU clock race conditions
+    $next_insert_tick = $ticks + 2;
 
     say "\n-- Restarting --" if $opt{verbose};
 
