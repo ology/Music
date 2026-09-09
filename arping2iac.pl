@@ -46,8 +46,6 @@ my %opt = (
     octave    => '1,2,3', # octaves (0 .. 9 ints)
     scale     => 'minor', # scale name as known to Music::Scales
     tonic     => 'C',     # scale key base note
-    patches   => undef,   # undef=0..127 or CSV-string of patch numbers
-    jumps     => '-3,-2,-1,1,2,3', # allowed jumps to selected programs
     spread    => 4,       # beats an arp should stretch across
     verbose   => 0,
 );
@@ -62,8 +60,6 @@ GetOptions(\%opt,
     'octave=s',
     'scale=s',
     'tonic=s',
-    'patches=s',
-    'jumps=s',
     'spread=i',
     'verbose',
 );
@@ -78,8 +74,6 @@ my $arper = Music::MelodicDevice::Arpeggiation->new(
 # split things
 my @octave    = split /,/, $opt{octave};
 my @note_nums = split /,/, $opt{note_num};
-my @jumps     = split /,/, $opt{jumps};
-my @patches   = defined $opt{patches} ? split /,/, $opt{patches} : (0 .. 127);
 my @arp_types = $opt{arp_type} eq 'any'
     ? keys $arper->arp_type->%*
     : split /,/, $opt{arp_type};
@@ -90,8 +84,6 @@ my @pitches = map { get_scale_MIDI($opt{tonic}, $_, $opt{scale}) } @octave;
 if ($opt{verbose}) {
     say "Arp types: $opt{arp_type}";
     say "Arp nums: $opt{note_num}";
-    say "Arp jumps: $opt{jumps}";
-    say "Arp patches: $opt{patches}" if $opt{patches};
     say "Pitches: @pitches";
 }
 
