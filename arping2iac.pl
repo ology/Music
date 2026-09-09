@@ -7,13 +7,13 @@
 # perl arping2iac.pl --verbose --midi_port=synth --bpm=60 --note_num=5 \
 #   --initial=1 --duration=2 --octave=0 --arp_type=updown
 # Command-line arguments can be abbreviated to a single letter:
-# perl arping2iac.pl --v --m=synth --a=converge --o=2 --i=63 --n=11
-# perl arping2iac.pl --v --m=synth --a=converge --d=3 --o=2 --i=10 --n=12
-# perl arping2iac.pl --v --m=synth --a=diverge --d=2 --o=2 --n=6 --p='41,70'
-# perl arping2iac.pl --v --m=synth --a='up,down,updown' --t=G --s=major
-# perl arping2iac.pl --v --m=synth --n='4,5,6,7' --spread=3
-# perl arping2iac.pl --v --m=iac --bpm=70 --n='4,5,6,7' --scale=wholetone
-# perl arping2iac.pl --v --m=synth --p='42,42' # for playing a single patch
+# perl arping2iac.pl --v --a=converge --o=2 --i=63 --n=11
+# perl arping2iac.pl --v --a=converge --d=3 --o=2 --i=10 --n=12
+# perl arping2iac.pl --v --a=diverge --d=2 --o=2 --n=6 --p='41,70'
+# perl arping2iac.pl --v --a='up,down,updown' --t=G --s=major
+# perl arping2iac.pl --v --n='4,5,6,7' --spread=3
+# perl arping2iac.pl --v --bpm=70 --n='4,5,6,7' --scale=wholetone
+# perl arping2iac.pl --v --p='42,42' # for playing a single patch
 
 # While running: press 'p' to pause/resume without closing the MIDI
 #ports, or 'q' to quit cleanly.
