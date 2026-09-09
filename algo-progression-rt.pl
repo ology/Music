@@ -4,7 +4,7 @@
 
   perl algo-progression-rt --midi_port=synth --bpm=100 --verbose
   perl algo-progression-rt --midi_port=synth --parts='Amv-Amc' \
-    --chords_patch=4 --arping=1 --genre=rock --verbose
+    --chord_patch=4 --arping=1 --genre=rock --verbose
 
 =head1 DESCRIPTION
 
@@ -62,7 +62,7 @@ my %opt = (
     pairs        => 2,      # the number of pairs of phrases rendered per round
     reps         => 1,      # the number of times to repeat an individual phrase
     multi        => 1,      # the number of times the phrases are repeated
-    chords_patch => 0,      # the MIDI program for the chords part
+    chord_patch  => 0,      # the MIDI program for the chords part
     bass_patch   => 35,     # the MIDI program for the bass part
     arping       => 0,      # are we arpeggiating or not?
     divisions    => 4,      # the number of divisions in this 4/4 composition
@@ -79,7 +79,7 @@ GetOptions(\%opt,
     'pairs=i',
     'reps=i',
     'multi=i',
-    'chords_patch=i',
+    'chord_patch=i',
     'bass_patch=i',
     'arping=i',
     'divisions=i',
@@ -115,7 +115,7 @@ my $midi_out = out_port($opt{midi_port});
 $midi_out->start;
 say "Started $opt{midi_port}" if $opt{verbose};
 
-$midi_out->program_change($chords_channel, $opt{chords_patch});
+$midi_out->program_change($chords_channel, $opt{chord_patch});
 $midi_out->program_change($bass_channel,   $opt{bass_patch});
 # NOTE: MIDI::Drummer::Tiny sets its own drum channel/patch internally
 # inside each round's rendered file, so we don't send one for it here.
@@ -307,7 +307,7 @@ sub drums ($d) {
 }
 
 sub arp_chords ($d, $progressions) {
-    set_chan_patch($d->score, $chords_channel, $opt{chords_patch});
+    set_chan_patch($d->score, $chords_channel, $opt{chord_patch});
 
     my $cn = Music::Chord::Note->new;
 
