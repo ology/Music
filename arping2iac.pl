@@ -219,9 +219,7 @@ sub trigger_notes {
     } @$arped;
 
     # instead of firing the whole arp back-to-back starting at the downbeat
-    # (a "one-shot"), stretch or squeeze it so it spans $opt{spread} beats -
-    # i.e. it keeps unfolding across the bar until the next trigger fires.
-    # $opt{spread} == 0 restores the original, unscaled timing.
+    # (a "one-shot"), stretch or squeeze it so it spans $opt{spread} beats.
     my $scale = 1;
     if ($opt{spread}) {
         my $raw_total = sum0(@raw_ticks) || 1;
