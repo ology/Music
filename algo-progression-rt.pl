@@ -25,11 +25,11 @@ or 'q' to quit cleanly.
 =head1 CAVEATS
 
 Rendering a round (calling into Music::Dataset::ChordProgressions,
-Music::Bassline::Generator, MIDI::Drummer::Tiny::Grooves, and writing +
-re-parsing a Standard MIDI File) briefly blocks this program's single
-event loop. With the default --pairs=4 a round is many bars long, so this
-happens rarely, but if you hear a stutter when a new round is generated,
-lower --pairs (e.g. --pairs=1) for smaller, cheaper, more frequent rounds.
+Music::Bassline::Generator, MIDI::Drummer::Tiny::Grooves, and writing
+and re-parsing a MIDI File) briefly blocks this program's single
+event loop. With the default C<--pairs=4> a round is many bars long,
+so if you hear a stutter when a new round is generated, lower
+C<--pairs>.
 
 =cut
 
