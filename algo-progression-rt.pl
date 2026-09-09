@@ -1,0 +1,240 @@
+#!/usr/bin/env perl
+
+=head1 DESCRIPTION
+
+Play a random "rock" like progression with a randomized walking bassline.
+
+Example:
+
+  perl algo-progression --bpm=60  # use all other defaults
+  perl algo-progression --bpm=111 --parts='Amv-Amc' --chords_patch=4 \
+  #  --arping=1 --genre=rock --verbose
+
+Parts are defined as hyphen-phrases of 3 sections:
+
+  <Note><Major|minor><verse|chorus>
+
+Example:
+
+  DMv-AMv-Bmc-GMc
+
+=cut
+
+use strict;
+use warnings;
+use Data::Dumper::Compact qw(ddc);
+use Getopt::Long qw(GetOptions);
+use MIDI::Drummer::Tiny ();
+use MIDI::Drummer::Tiny::Grooves ();
+use MIDI::Util qw(set_chan_patch midi_format ticks);
+use Music::Bassline::Generator ();
+use Music::Chord::Note ();
+use Music::Dataset::ChordProgressions qw(as_hash $share_file);
+use Music::Duration::Partition ();
+use Music::MelodicDevice::Arpeggiation ();
+use Music::Note ();
+use Music::Scales qw(get_scale_notes);
+use List::Util qw(uniq);
+
+my %opt = (
+    bpm          => 100,
+    genre        => '', # a MIDI::Drummer::Tiny::Grooves category like 'rock'
+    parts        => 'DMv-AMv-Bmc-GMc', # <Note><Major|minor><verse|chorus>-... phrases
+    pairs        => 4, # The number of pairs of phrases
+    reps         => 1, # The number of times to repeat an individual phrase
+    multi        => 1, # The number of times the phrases are repeated
+    chords_patch => 0, # the MIDI program for the chords parts
+    bass_patch   => 35, # the MIDI program for the bass part
+    arping       => 0, # are we arpeggiating or not?
+    divisions    => 4, # The number of divisions in this 4/4 composition
+    channel      => 0, # the MIDI channel
+    octave       => 5, # the octave of chords part
+    verbose      => 0,
+);
+GetOptions(\%opt,
+    'bpm=i',
+    'genre=s',
+    'parts=s',
+    'pairs=i',
+    'reps=i',
+    'multi=i',
+    'chords_patch=i',
+    'bass_patch=i',
+    'arping=i',
+    'divisions=i',
+    'channel=i',
+    'verbose',
+);
+
+my @parts = split /-/, $opt{parts};
+
+my @progressions; # 
+
+# author only - set the local share_file for Music::Dataset::ChordProgressions
+$share_file = '/Users/gene/sandbox/Data-Dataset-ChordProgressions/share/Chord-Progressions.csv';
+
+my $d = MIDI::Drummer::Tiny->new(
+    file   => "$0.mid",
+    bpm    => $opt{bpm},
+    bars   => $opt{divisions} * @parts * $opt{reps} * $opt{pairs},
+    reverb => 10,
+);
+
+$d->sync(
+    \&drums, # should come first or the channel will need more manual adjusting
+    \&arp_chords,
+    \&bass,
+);
+
+$d->write;
+
+sub drums {
+    my $grooves = MIDI::Drummer::Tiny::Grooves->new(
+        drummer    => $d,
+        share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt',
+    );
+    my $set;
+    if ($opt{genre}) {
+        $set = $grooves->search({ cat => $opt{genre} });
+    }
+    else {
+        $set = $grooves->all_grooves;
+    }
+    my @keys = keys %$set;
+
+    my ($groove, $g);
+
+    for my $i (1 .. $opt{multi} * $d->bars + ($opt{divisions} - 1)) {
+        if ($i % 4 == 0) {
+            $groove = $set->{ $keys[rand @keys] };
+            $g = $groove->{groove};
+            $g = $grooves->swap_pat($g, 'crash', 'closed'); # too much crashing - ugh
+        }
+        $grooves->groove($g);
+    }
+}
+
+sub arp_chords {
+    set_chan_patch($d->score, $opt{channel}++, $opt{chords_patch});
+
+    my $cn = Music::Chord::Note->new;
+
+    my %data = as_hash();
+
+    my $arp = Music::MelodicDevice::Arpeggiation->new;#(verbose => 1);
+    my @types = keys $arp->arp_type->%*;
+
+    my @accum; # Note accumulator
+
+    my $p = 1; # part number
+    my $q = 1; # duration accumulator
+
+    for my $part ( map { @parts } 1 .. $opt{pairs}) {
+        my ($note, $section, $scale, $pool);
+        # Set the pool of possible progressions given scale and section
+        if ($part =~ /^([A-G][#b]?)(M|m)(v|c)$/) {
+            ($note, $scale, $section) = ($1, $2, $3);
+            $scale   = $scale eq 'M' ? 'major' : 'minor';
+            $section = $section eq 'v' ? 'verse' : 'chorus';
+            $pool    = $data{rock}{$scale}{$section};
+        }
+
+        # Set the transposition map
+        my %note_map;
+        @note_map{ get_scale_notes('C', $scale) } = get_scale_notes($note, $scale);
+
+        # Get a random progression
+        my $progression = $pool->[int rand @$pool];
+
+        # Transpose the progression chords from C
+        (my $named = $progression->[0]) =~ s/([A-G][#b]?)/$note_map{$1}/g;
+
+        # Keep track of the progressions used
+        push @progressions, $named;
+
+        print "$p. $note $scale: $named, $progression->[1]\n";
+
+        my @chords = split /-/, $named;
+
+        # Add each chord to the score
+        for my $j (1 .. $opt{reps}) {
+            for my $chord (@chords) {
+                $chord =~ s/sus2/add9/;
+                $chord =~ s/6sus4/sus4/;
+                my @notes = $cn->chord_with_octave($chord, $opt{octave});
+                @notes = midi_format(@notes);
+                print "N: @notes\n" if $opt{verbose};
+                if ($opt{arping} && $p % 2 == 0) {
+                    my $nums = [];
+                    push @$nums, Music::Note->new($_, 'ISO')->format('midinum')
+                        for @notes;
+                    my $arped = $arp->arp($nums, $q % 2 == 0 ? 1 : 4, $types[int rand @types]);
+                    push @accum, $arped;
+                    $q++;
+                }
+                else {
+                    push @accum, \@notes;
+                }
+            }
+        }
+        $p++;
+    }
+    for my $j (1 .. $opt{multi}) {
+        for my $n (@accum) {
+            if (ref $n->[0] eq 'ARRAY') {
+                my $duration = 0;
+                for my $j (@$n) {
+                    $d->note(@$j);
+                    if ($j->[0] =~ /^d(\d+)$/) {
+                        $duration += $1;
+                    }
+                }
+                my $rest = $opt{divisions} * ticks($d->score) - $duration;
+                $d->rest('d' . $rest) if $rest > 0;
+            }
+            else {
+                $d->note($d->whole, @$n);
+            }
+        }
+    }
+}
+
+sub bass {
+    set_chan_patch($d->score, $opt{channel}++, $opt{bass_patch});
+
+    my $mdp = Music::Duration::Partition->new(
+        size    => $opt{divisions},
+        pool    => [qw/ dhn hn qn /],
+        weights => [    1,  2, 3   ],
+    );
+    my $motif1 = $mdp->motif;
+    my $motif2 = $mdp->motif;
+
+    my $bassline = Music::Bassline::Generator->new(
+        octave  => 2,
+        guitar  => 1,
+        verbose => $opt{verbose},
+        scale   => sub { $_[0] =~ /^[A-G][#b]?m/ ? 'pminor' : 'pentatonic' },
+    );
+
+    for (1 .. $opt{reps} * $opt{multi}) {
+        for my $p (@progressions) {
+            my @chords = split /-/, $p;
+
+            my $i = 0;
+
+            for my $chord (@chords) {
+                $chord =~ s/sus2/add9/;
+                $chord =~ s/6sus4/sus4/;
+
+                my $m = $i % 2 == 0 ? $motif2 : $motif1;
+
+                my $notes = $bassline->generate($chord, scalar(@$m));
+
+                $mdp->add_to_score($d->score, $m, $notes);
+
+                $i++;
+            }
+        }
+    }
+}
