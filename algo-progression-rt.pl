@@ -35,12 +35,11 @@ C<--pairs>.
 
 use v5.36;
 use Data::Dumper::Compact qw(ddc);               # debugging
-use File::Temp qw(tempfile);                     # throwaway per-round SMF
+use File::Temp qw(tempfile);                     # throwaway per-round midi file
 use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
-use List::Util qw(uniq);
-use MIDI ();                                     # parse the rendered SMF back into events
+use MIDI ();                                     # parse the midi file into events
 use MIDI::Drummer::Tiny ();
 use MIDI::Drummer::Tiny::Grooves ();
 use MIDI::RtMidi::FFI::Device ();                # rt-midi
@@ -202,17 +201,17 @@ sub render_and_schedule_round {
 
     $d->write;
 
-    schedule_smf($filename);
+    schedule_midi($filename);
 
     unlink $filename;
 }
 
-sub schedule_smf {
+sub schedule_midi {
     my ($filename) = @_;
 
-    my $opus             = MIDI::Opus->new({ from_file => $filename });
-    my $smf_ticks_per_qn = $opus->ticks; # the rendered file's own PPQN
-    my $scale            = $clocks_per_beat / $smf_ticks_per_qn; # -> our engine's ticks
+    my $opus              = MIDI::Opus->new({ from_file => $filename });
+    my $midi_ticks_per_qn = $opus->ticks; # the rendered file's own PPQN
+    my $scale             = $clocks_per_beat / $midi_ticks_per_qn; # -> our engine's ticks
 
     my $round_start_tick = $next_insert_tick;
     my $round_end_tick   = $round_start_tick;
