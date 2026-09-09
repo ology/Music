@@ -56,19 +56,19 @@ use Music::Scales qw(get_scale_notes);
 use Term::TermKey::Async qw(FORMAT_VIM);         # keyboard control (pause/quit)
 
 my %opt = (
-    midi_port    => 'iac', # REQUIRED MIDI device (e.g. IAC Bus)
-    bpm          => 100,
-    genre        => '', # a MIDI::Drummer::Tiny::Grooves category like 'rock'
-    parts        => 'DMv-AMv-Bmc-GMc', # <Note><Major|minor><verse|chorus>-... phrases
-    pairs        => 4, # the number of pairs of phrases rendered per round
-    reps         => 1, # the number of times to repeat an individual phrase
-    multi        => 1, # the number of times the phrases are repeated
-    chords_patch => 0, # the MIDI program for the chords part
-    bass_patch   => 35, # the MIDI program for the bass part
-    arping       => 0, # are we arpeggiating or not?
-    divisions    => 4, # the number of divisions in this 4/4 composition
-    channel      => 0, # the MIDI channel the chords part starts on (bass = channel+1)
-    octave       => 5, # the octave of the chords part
+    midi_port    => 'iac',  # REQUIRED MIDI device (e.g. IAC Bus)
+    bpm          => 100,    # beats per minute
+    genre        => '',     # a MIDI::Drummer::Tiny::Grooves category like 'rock'
+    parts        => 'DMv-AMv-Bmc-GMc', # the top-level parts
+    pairs        => 4,      # the number of pairs of phrases rendered per round
+    reps         => 1,      # the number of times to repeat an individual phrase
+    multi        => 1,      # the number of times the phrases are repeated
+    chords_patch => 0,      # the MIDI program for the chords part
+    bass_patch   => 35,     # the MIDI program for the bass part
+    arping       => 0,      # are we arpeggiating or not?
+    divisions    => 4,      # the number of divisions in this 4/4 composition
+    channel      => 0,      # the MIDI channel the chords part starts on
+    octave       => 5,      # the octave of the chords part
     verbose      => 0,
 );
 GetOptions(\%opt,
