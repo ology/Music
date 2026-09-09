@@ -59,6 +59,7 @@ my %opt = (
     midi_port    => 'iac',  # REQUIRED MIDI device (e.g. IAC Bus)
     bpm          => 80,     # beats per minute
     genre        => '',     # a MIDI::Drummer::Tiny::Grooves category like 'rock'
+    tonic        => 'C',    # the tonic note for recreating new parts
     allowed      => 'minor', # allowed notes for recreating new parts
     parts        => 'DMv-AMv-Bmc-GMc', # the top-level parts
     pairs        => 1,      # the number of pairs of phrases rendered per round
@@ -77,6 +78,8 @@ GetOptions(\%opt,
     'midi_port=s',
     'bpm=i',
     'genre=s',
+    'tonic=s',
+    'allowed=s',
     'parts=s',
     'pairs=i',
     'reps=i',
@@ -96,7 +99,7 @@ die "Open MIDI port name required for 'midi_port'\n" unless $opt{midi_port};
 my @parts = split /-/, $opt{parts};
 
 # Pools for progressive randomization
-my @allowed_notes   = get_scale_notes($note, $opt{allowed});
+my @allowed_notes   = get_scale_notes($opt{tonic}, $opt{allowed});
 my @scale_qualities = qw(M m); 
 my @song_sections   = qw(v c);
 
