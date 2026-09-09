@@ -64,11 +64,11 @@ my %opt = (
     multi        => 1,      # the number of times the phrases are repeated
     chord_patch  => 0,      # the MIDI program for the chords part
     bass_patch   => 35,     # the MIDI program for the bass part
+    chord_octave => 5,      # the octave of the chords part
+    bass_octave  => 2,      # the octave of the bass part
     arping       => 0,      # are we arpeggiating or not?
     divisions    => 4,      # the number of divisions in this 4/4 composition
     channel      => 0,      # the MIDI channel the chords part starts on
-    chord_octave => 5,      # the octave of the chords part
-    bass_octave  => 2,      # the octave of the bass part
     verbose      => 0,
 );
 GetOptions(\%opt,
@@ -81,10 +81,11 @@ GetOptions(\%opt,
     'multi=i',
     'chord_patch=i',
     'bass_patch=i',
+    'chord_octave=i',
+    'bass_octave=i',
     'arping=i',
     'divisions=i',
     'channel=i',
-    'chord_octave=i',
     'verbose',
 );
 
