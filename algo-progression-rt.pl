@@ -337,7 +337,7 @@ sub shutdown_and_exit {
 sub drums ($d) {
     my $grooves = MIDI::Drummer::Tiny::Grooves->new(
         drummer    => $d,
-        share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt',
+        share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt', # author only
     );
     my $set;
     if ($opt{genre}) {
