@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Arpeggiate the Mac IAC MIDI device.
+# Arpeggiate an open MIDI device (e.g. the Mac IAC Bus).
 
 # Examples using fluidsynth and a generic usb interface for ports:
 # perl arping2iac.pl --verbose --midi_port=synth # use defaults
