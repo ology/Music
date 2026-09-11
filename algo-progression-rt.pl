@@ -333,6 +333,7 @@ sub drums ($d) {
     my $grooves = MIDI::Drummer::Tiny::Grooves->new(
         drummer    => $d,
         share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt', # author only
+        verbose    => $opt{verbose},
     );
     my $set;
     if ($opt{genre}) {
