@@ -9,9 +9,9 @@
 =head1 DESCRIPTION
 
 Play an endless, ever-changing progression with a randomized
-walking bassline and drums, live over a real MIDI port.
+walking bassline and drums, live over a single MIDI port.
 
-Parts are defined as hyphen-phrases of 3 sections:
+Parts are defined as hyphen-phrases of 3 parts:
 
   <Note><Major|minor><verse|chorus>
 
