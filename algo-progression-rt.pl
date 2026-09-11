@@ -3,9 +3,8 @@
 =head1 SYNOPSIS
 
   perl algo-progression-rt.pl --midi=synth --bpm=100 --verbose
-  perl algo-progression-rt.pl --midi=synth --chord_p=5 --genre=rock --arping
-  perl algo-progression-rt.pl --midi=synth --parts='Amv-Amc' \
-    --chord_patch=4 --arping --genre=rock --verbose
+  perl algo-progression-rt.pl --midi=synth --chord_patch=5 --genre=rock --arping
+  perl algo-progression-rt.pl --midi=synth --chord_p=4 --genre=rock --arping  --parts='Amv-Amc'
 
 =head1 DESCRIPTION
 
