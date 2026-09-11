@@ -47,22 +47,22 @@ use Music::Scales qw(get_scale_notes);           # known scale notes
 use Term::TermKey::Async qw(FORMAT_VIM);         # keyboard control
 
 my %opt = (
-    midi_port    => 'iac',  # REQUIRED MIDI device (e.g. IAC Bus)
-    bpm          => 80,     # beats per minute
-    genre        => '',     # a MIDI::Drummer::Tiny::Grooves category like 'rock'
-    tonic        => 'A',    # the tonic note for recreating new parts
+    midi_port    => 'iac',   # REQUIRED MIDI device (e.g. IAC Bus)
+    bpm          => 80,      # beats per minute
+    genre        => '',      # a MIDI::Drummer::Tiny::Grooves category like 'rock'
+    tonic        => 'A',     # the tonic note for recreating new parts
     allowed      => 'minor', # allowed scale notes for recreating new parts
     parts        => 'DMv-AMv-Bmc-GMc', # the top-level parts
-    pairs        => 1,      # the number of pairs of phrases rendered per round
-    reps         => 1,      # the number of times to repeat an individual phrase
-    multi        => 1,      # the number of times the phrases are repeated
-    chord_patch  => 0,      # the MIDI program for the chords part
-    bass_patch   => 35,     # the MIDI program for the bass part
-    chord_octave => 5,      # the octave of the chords part
-    bass_octave  => 2,      # the octave of the bass part
-    divisions    => 4,      # the number of divisions in this 4/4 composition
-    channel      => 0,      # the MIDI channel the chords part starts on
-    arping       => 0,      # are we arpeggiating or not?
+    pairs        => 1,       # the number of pairs of phrases rendered per round
+    reps         => 1,       # the number of times to repeat an individual phrase
+    multi        => 1,       # the number of times the phrases are repeated
+    chord_patch  => 0,       # the MIDI program for the chords part
+    bass_patch   => 35,      # the MIDI program for the bass part
+    chord_octave => 5,       # the octave of the chords part
+    bass_octave  => 2,       # the octave of the bass part
+    divisions    => 4,       # the number of divisions in this 4/4 composition
+    channel      => 0,       # the MIDI channel the chords part starts on
+    arping       => 0,       # are we arpeggiating or not?
     verbose      => 0,
 );
 GetOptions(\%opt,
