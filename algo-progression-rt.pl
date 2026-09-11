@@ -23,15 +23,6 @@ While running, press 'p' to pause/resume without closing the MIDI
 port, 'r' to restart the progression from the beginning, 'n' for a
 # new progression, or 'q' to quit.
 
-=head1 CAVEATS
-
-Rendering a round (calling into Music::Dataset::ChordProgressions,
-Music::Bassline::Generator, MIDI::Drummer::Tiny::Grooves, and writing
-and re-parsing a MIDI File) briefly blocks this program's single
-event loop. With the default C<--pairs=4> a round is many bars long,
-so if you hear a stutter when a new round is generated, lower
-C<--pairs>.
-
 =cut
 
 use v5.36;
