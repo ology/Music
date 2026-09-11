@@ -324,7 +324,6 @@ sub restart_performance {
     @active  = ();
     @pending = (); # drop the rest of the currently-buffered round too
 
-    # $next_insert_tick = $ticks; # anchor the fresh round to right now, not the old buffer's tail
     # cushion the scheduling line slightly to safely avoid CPU clock race conditions
     $next_insert_tick = $ticks + 2;
 
