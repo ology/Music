@@ -27,7 +27,7 @@ port, 'r' to restart the progression from the beginning, 'n' for a
 
 use v5.36;
 use Data::Dumper::Compact qw(ddc);               # debugging
-use File::Temp qw(tempfile);                     # throwaway per-round midi file
+use File::Temp qw(tempfile);                     # per-round midi file
 use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
