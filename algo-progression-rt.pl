@@ -19,7 +19,7 @@ Example:
 
   --parts='DMv-AMv-Bmc-GMc'
 
-While running: press 'p' to pause/resume without closing the MIDI
+While running, press 'p' to pause/resume without closing the MIDI
 port, 'r' to restart the progression from the beginning, press 'n'
 for a new progression, or 'q' to quit.
 
