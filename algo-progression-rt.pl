@@ -208,10 +208,11 @@ sub render_and_schedule_round {
     my (undef, $filename) = tempfile(SUFFIX => '.mid', UNLINK => 0);
 
     my $d = MIDI::Drummer::Tiny->new(
-        file   => $filename,
-        bpm    => $opt{bpm},
-        bars   => $opt{divisions} * @parts * $opt{reps} * $opt{pairs},
-        reverb => 10,
+        file    => $filename,
+        bpm     => $opt{bpm},
+        bars    => $opt{divisions} * @parts * $opt{reps} * $opt{pairs},
+        reverb  => 10,
+        verbose => $opt{verbose},
     );
 
     my @progressions;
@@ -288,11 +289,11 @@ sub toggle_pause {
         }
         @active = ();
 
-        say "\n-- Paused --" if $opt{verbose};
+        say "\n-- Paused --";# if $opt{verbose};
     }
     else {
         $timer->start; # resumes from the same $ticks count, port stays open throughout
-        say "-- Resumed --" if $opt{verbose};
+        say "-- Resumed --";# if $opt{verbose};
     }
 }
 
@@ -311,7 +312,7 @@ sub make_new_progression {
     @parts = @new_parts;
 
     if ($opt{verbose}) {
-        say "\nGenerated New Parts: " . join('-', @parts);
+        say "\nGenerated New Parts: " . join('-', @parts) if $opt{verbose};
     }
 }
 
@@ -327,13 +328,13 @@ sub restart_performance {
     # cushion the scheduling line slightly to safely avoid CPU clock race conditions
     $next_insert_tick = $ticks + 2;
 
-    say "\n-- Restarting --" if $opt{verbose};
+    say "\n-- Restarting --";# if $opt{verbose};
 
     render_and_schedule_round(); # arp_chords() always starts back at part 1 within a round
 }
 
 sub shutdown_and_exit {
-    say "\nStop" if $opt{verbose};
+    say "\nStop";
     stop_device($midi_out);
     exit;
 }
@@ -369,7 +370,7 @@ sub arp_chords ($d, $progressions, $data) {
 
     my $cn = Music::Chord::Note->new;
 
-    my $arp = Music::MelodicDevice::Arpeggiation->new(verbose => 1);
+    my $arp = Music::MelodicDevice::Arpeggiation->new(verbose => $opt{verbose});
     my @types = keys $arp->arp_type->%*;
 
     my @accum; # note accumulator
@@ -400,7 +401,7 @@ sub arp_chords ($d, $progressions, $data) {
         # Keep track of the progressions used
         push @$progressions, $named;
 
-        print "$p. $note $scale: $named, $progression->[1]\n";
+        say "$p. $note $scale: $named, $progression->[1]" if $opt{verbose};
 
         my @chords = split /-/, $named;
 
@@ -411,7 +412,7 @@ sub arp_chords ($d, $progressions, $data) {
                 $chord =~ s/6sus4/sus4/;
                 my @notes = $cn->chord_with_octave($chord, $opt{chord_octave});
                 @notes = midi_format(@notes);
-                print "N: @notes\n" if $opt{verbose};
+                say "N: @notes" if $opt{verbose};
                 if ($opt{arping} && $p % 2 == 0) {
                     my $nums = [];
                     push @$nums, Music::Note->new($_, 'ISO')->format('midinum')
