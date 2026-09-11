@@ -35,7 +35,7 @@ use MIDI ();                                     # parse midi into events
 use MIDI::Drummer::Tiny ();                      # drums
 use MIDI::Drummer::Tiny::Grooves ();             # grooves
 use MIDI::RtMidi::FFI::Device ();                # rt-midi
-use MIDI::RtMidi::Util qw(out_port stop_device); # rt-midi
+use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes); # rt-midi
 use MIDI::Util qw(set_chan_patch midi_format ticks);
 use Music::Bassline::Generator ();               # bassline
 use Music::Chord::Note ();                       # conversion to notes
@@ -326,6 +326,7 @@ sub restart_performance {
 sub shutdown_and_exit {
     say "\nStop";
     stop_device($midi_out);
+    stop_all_notes($midi_out);
     exit;
 }
 
