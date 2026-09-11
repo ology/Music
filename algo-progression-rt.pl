@@ -44,7 +44,7 @@ use Music::Duration::Partition ();               # rhythmic phrases
 use Music::MelodicDevice::Arpeggiation ();       # arpeggio phrases
 use Music::Note ();                              # note format conversion
 use Music::Scales qw(get_scale_notes);           # known scale notes
-use Term::TermKey::Async qw(FORMAT_VIM);         # keyboard control (pause/quit)
+use Term::TermKey::Async qw(FORMAT_VIM);         # keyboard control
 
 my %opt = (
     midi_port    => 'iac',  # REQUIRED MIDI device (e.g. IAC Bus)
