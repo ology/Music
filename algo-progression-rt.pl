@@ -31,7 +31,7 @@ use File::Temp qw(tempfile);                     # per-round midi file
 use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
-use MIDI ();                                     # parse the midi file into events
+use MIDI ();                                     # parse midi into events
 use MIDI::Drummer::Tiny ();                      # drums
 use MIDI::Drummer::Tiny::Grooves ();             # grooves
 use MIDI::RtMidi::FFI::Device ();                # rt-midi
