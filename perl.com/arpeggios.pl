@@ -6,10 +6,10 @@ use v5.36;
 use Data::Dumper::Compact qw(ddc);         # debugging
 use IO::Async::Loop ();                    # async
 use IO::Async::Timer::Periodic ();         # async
-use List::Util qw(max sum0);               # arp-duration scaling
+use List::Util qw(max sum0);               # duration scaling
 use MIDI::RtMidi::FFI::Device ();          # rt-midi
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes); # rt-midi
-use Music::MelodicDevice::Arpeggiation (); # arpeggiation
+use Music::MelodicDevice::Arpeggiation (); # arpeggios
 use Music::Scales qw(get_scale_MIDI);      # pitches
 
 # used to rescale durations
@@ -18,14 +18,14 @@ use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 my %opt = (
     port     => 'synth', # REQUIRED MIDI device (e.g. microKorg)
     bpm      => 80,      # beats-per-minute
-    arp_type => 'any',   # 'any' or any known arp_type
-    note_num => '5,7',   # number of arp notes
-    repeats  => 1,       # number of arp-phrase repeats
-    duration => 1,       # 0.1 .. 4 float
+    arp_type => 'any',   # 'any' or any known to the arp module
+    note_num => '5,7',   # arp notes pool
+    repeats  => 1,       # arp repeats before the next one begins
+    duration => 1,       # number of beats taken to arp
+    spread   => 4,       # beats an arp should stretch across given bpm
     octave   => '3,4,5', # octaves (0 .. 9 ints)
-    scale    => 'minor', # scale name as known to Music::Scales
     tonic    => 'C',     # scale key base note
-    spread   => 4,       # beats an arp should stretch across
+    scale    => 'minor', # scale name as known to Music::Scales
 );
 
 die "Open MIDI port name required for 'port'\n" unless $opt{port};
