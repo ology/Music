@@ -23,7 +23,7 @@ my %opt = (
     repeats  => 1,       # arp repeats before the next one begins
     duration => 1,       # number of beats taken to arp
     spread   => 4,       # beats an arp should stretch across given bpm
-    octave   => '3,4,5', # octaves (0 .. 9 ints)
+    octave   => '3,4,5', # octaves (0 .. 9)
     tonic    => 'C',     # scale key base note
     scale    => 'minor', # scale name as known to Music::Scales
 );
