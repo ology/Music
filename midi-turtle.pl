@@ -6,10 +6,15 @@ use Data::Turtle;
 use MIDI::Util qw(setup_score midi_format);
 use Music::ScaleNote;
 
+my $bpm    = shift || 120;
+my $note   = shift || 'C';
+my $scale  = shift || 'major';
+my $octave = shift || 4;
+
 my $turtle = Data::Turtle->new;
-my $score  = setup_score(bpm => 120);
-my $msn    = Music::ScaleNote->new(scale_note => 'C', scale_name => 'major');
-my $note   = Music::Note->new('C4', 'ISO');
+my $score  = setup_score(bpm => $bpm);
+my $msn    = Music::ScaleNote->new(scale_note => $note, scale_name => $scale);
+my $note   = Music::Note->new($note . $octave, 'ISO');
 
 for (1 .. 4) {
     phrase($turtle, $score, $msn, $note, 'right');
