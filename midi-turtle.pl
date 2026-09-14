@@ -23,6 +23,7 @@ for (1 .. 4) {
     phrase($turtle, $score, $msn, $note, 'right');
     phrase($turtle, $score, $msn, $note, 'left');
 }
+$score->n('wn', $base . $octave);
 
 $score->write_score($0 . '.mid');
 
