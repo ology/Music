@@ -2,8 +2,11 @@
 
 # Play arpeggios on a MIDI device with a clock.
 
+# Example(s) using fluidsynth:
+# perl arpeggios.pl --y_port=synth # use defaults
+
 use v5.36;
-# use Data::Dumper::Compact qw(ddc);               # debugging
+use Data::Dumper::Compact qw(ddc);               # debugging
 use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
 use List::Util qw(max sum0);                     # arp-duration scaling
@@ -12,6 +15,7 @@ use MIDI::RtMidi::Util qw(out_port stop_device); # rt-midi
 use Music::MelodicDevice::Arpeggiation ();       # arpeggiation
 use Music::Scales qw(get_scale_MIDI);            # pitches
 
+# used to rescale durations
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
@@ -29,6 +33,7 @@ my %opt = (
 
 die "Open MIDI port name required for 'y_port'\n" unless $opt{y_port};
 
+# one arpeggiator instance is reused
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => $opt{repeats},
     verbose => 1,
@@ -41,7 +46,7 @@ my @arp_types = $opt{arp_type} eq 'any'
     ? keys $arper->arp_type->%*
     : split /,/, $opt{arp_type};
 
-# get range of pitches by octave
+# get full range of pitches by octave
 my @pitches = map { get_scale_MIDI($opt{tonic}, $_, $opt{scale}) } @octave;
 
 say "Arp types: $opt{arp_type}";
@@ -55,6 +60,7 @@ my $divisions       = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 6 * $divisions; # PPQN
 my $clock_interval  = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
 
+# when spread is falsy, fall back to one bar's worth of beats
 my $phrase_beats = $opt{spread} || $divisions;
 
 my @active;  # { note => $pitch, off_tick => $when_it_should_stop }
@@ -68,41 +74,48 @@ my $midi_out = out_port($opt{y_port});
 $midi_out->start;
 say "Started $opt{y_port}";
 
+# Ctrl-C clean shutdown
 $SIG{INT} = sub {
     say "\nStop";
     stop_device($midi_out);
     exit(0);
 };
 
+# loop object to own and drive all timers/events
 my $loop = IO::Async::Loop->new;
 
+# drive the whole sequencer — clock out, note off, note on, retrigger
 my $timer = IO::Async::Timer::Periodic->new(
     interval => $clock_interval,
     on_tick  => sub {
-        $midi_out->clock;
-        $ticks++;
+        $midi_out->clock; # emit a MIDI clock tick
+        $ticks++; # advance the master tick counter
 
         # release any notes whose time is up
         for my $i (reverse 0 .. $#active) {
+            # iterate in reverse so splice() below doesn't invalidate remaining indices
             if ($ticks >= $active[$i]{off_tick}) {
                 $midi_out->note_off($channel, $active[$i]{note}, 0);
-                splice @active, $i, 1;
+                splice @active, $i, 1; # remove from the "currently sounding" list
             }
         }
 
-        # fire any pending arp notes whose time has come
+        # collect every pending note whose start time has arrived
         my @ready = grep { $ticks >= $_->{on_tick} } @pending;
+        # keep the notes still waiting for a future tick
         @pending  = grep { $ticks <  $_->{on_tick} } @pending;
         for my $p (@ready) {
-            $midi_out->note_on($channel, $p->{note}, velocity());
+            $midi_out->note_on($channel, $p->{note}, velocity(-10, 10, 110));
+            # remember the note, so the release loop above can turn it off at the right tick
             push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
         }
 
+        # align to fire exactly on beat boundaries
         if (($ticks - 1) % $clocks_per_beat == 0) {
             if ($beat_count % $phrase_beats == 0) { # retrigger every $phrase_beats beats
-                trigger_notes();
+                trigger_notes(); # start a new arp phrase!
             }
-            $beat_count++;
+            $beat_count++; # only increment on beat boundaries
         }
     },
 );
@@ -112,7 +125,7 @@ $loop->add($timer);
 $loop->run;
 
 sub trigger_notes {
-    # get a number of random pitches based on a random @note_nums value. Confused? :)
+    # pick a random note count, then that many random pitches, sorted low-to-high for the arpeggiator
     my @notes = sort { $a <=> $b }
         map { $pitches[int rand @pitches] } 1 .. $note_nums[int rand @note_nums]; # XXX klunky
 
@@ -121,35 +134,43 @@ sub trigger_notes {
 
     # convert from the arp's 96-ticks-per-quarter-note scale to our clock ticks
     my @raw_ticks = map {
-        my ($dur) = $_->[0] =~ /^d(\d+)$/;
+        my ($dur) = $_->[0] =~ /^d(\d+)$/; # duration encoded as a string like "d96"
+        # rescale from the module's tick resolution to our own clock's ticks-per-beat
         max(1, int($dur * $clocks_per_beat / ARP_TICKS));
     } @$arped;
 
-    # stretch or squeeze the arp, so it spans the 'spread' number of beats
-    my $scale = 1;
+    my $scale = 1; # default multiplier: 1 = no rescaling, used as-is when spread is 0
     if ($opt{spread}) {
+        # total unscaled duration of the arp
         my $raw_total = sum0(@raw_ticks) || 1;
+        # convert the desired spread (in beats) into tick units
         my $available = $opt{spread} * $clocks_per_beat;
+        # factor that stretches or squeezes the arp's total length to exactly fill the available ticks
         $scale = $available / $raw_total;
     }
 
-    my $on_tick = $ticks + 1;
+    # anchor the first note of this phrase to "right now" of the master clock
+    my $on_tick = $ticks;
 
     for my $i (0 .. $#$arped) {
-        my (undef, $note) = @{ $arped->[$i] }; # nb: a note is a duration and a pitch
+        my (undef, $note) = @{ $arped->[$i] }; # a note is a duration and a list of pitches
+        # note's scaled length, floored at 1 tick
         my $step_ticks = max(1, int($raw_ticks[$i] * $scale));
 
+        # schedule the note to be turned on/off
         push @pending, {
             note     => $note,
             on_tick  => $on_tick,
             off_tick => $on_tick + $step_ticks,
         };
 
+        # advance the cursor so the next note in the arp starts right where this one ends
         $on_tick += $step_ticks;
     }
 }
 
-sub velocity ($min=-10, $max=10, $offset=110) {
+sub velocity ($min, $max, $offset) {
+    # generate a randomized velocity within [min+offset, max+offset]
     my $random = $offset + int(rand($max - $min + 1)) + $min;
     return $random;
 }
