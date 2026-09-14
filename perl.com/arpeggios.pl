@@ -3,7 +3,7 @@
 # Play arpeggios on a MIDI device with a clock.
 
 # Example(s) using fluidsynth:
-# perl arpeggios.pl --y_port=synth # use defaults
+# perl arpeggios.pl --port=synth # use defaults
 
 use v5.36;
 use Data::Dumper::Compact qw(ddc);               # debugging
@@ -11,7 +11,7 @@ use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
 use List::Util qw(max sum0);                     # arp-duration scaling
 use MIDI::RtMidi::FFI::Device ();                # rt-midi
-use MIDI::RtMidi::Util qw(out_port stop_device); # rt-midi
+use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes); # rt-midi
 use Music::MelodicDevice::Arpeggiation ();       # arpeggiation
 use Music::Scales qw(get_scale_MIDI);            # pitches
 
@@ -19,7 +19,7 @@ use Music::Scales qw(get_scale_MIDI);            # pitches
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
 my %opt = (
-    y_port   => 'synth', # REQUIRED MIDI device (e.g. microKorg)
+    port     => 'synth', # REQUIRED MIDI device (e.g. microKorg)
     bpm      => 80,      # beats-per-minute
     arp_type => 'any',   # 'any' or any known arp_type
     note_num => '5,7',   # number of arp notes
@@ -31,7 +31,7 @@ my %opt = (
     spread   => 4,       # beats an arp should stretch across
 );
 
-die "Open MIDI port name required for 'y_port'\n" unless $opt{y_port};
+die "Open MIDI port name required for 'port'\n" unless $opt{port};
 
 # one arpeggiator instance is reused
 my $arper = Music::MelodicDevice::Arpeggiation->new(
@@ -69,15 +69,14 @@ my @pending; # { note => $pitch, on_tick => $when_it_should_start }
 my $ticks      = 0; # clock ticks
 my $beat_count = 0; # beats!
 
-# open the midi devices for output
-my $midi_out = out_port($opt{y_port});
-$midi_out->start;
-say "Started $opt{y_port}";
+# open the midi device for output
+my $midi_out = out_port($opt{port});
+say "Opened $opt{port}";
 
 # Ctrl-C clean shutdown
 $SIG{INT} = sub {
     say "\nStop";
-    stop_device($midi_out);
+    stop_all_notes($midi_out); # make sure all notes are off
     exit(0);
 };
 
