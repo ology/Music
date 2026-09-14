@@ -6,14 +6,14 @@
 # perl arpeggios.pl --port=synth # use defaults
 
 use v5.36;
-use Data::Dumper::Compact qw(ddc);               # debugging
-use IO::Async::Loop ();                          # async
-use IO::Async::Timer::Periodic ();               # async
-use List::Util qw(max sum0);                     # arp-duration scaling
-use MIDI::RtMidi::FFI::Device ();                # rt-midi
+use Data::Dumper::Compact qw(ddc);         # debugging
+use IO::Async::Loop ();                    # async
+use IO::Async::Timer::Periodic ();         # async
+use List::Util qw(max sum0);               # arp-duration scaling
+use MIDI::RtMidi::FFI::Device ();          # rt-midi
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes); # rt-midi
-use Music::MelodicDevice::Arpeggiation ();       # arpeggiation
-use Music::Scales qw(get_scale_MIDI);            # pitches
+use Music::MelodicDevice::Arpeggiation (); # arpeggiation
+use Music::Scales qw(get_scale_MIDI);      # pitches
 
 # used to rescale durations
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
