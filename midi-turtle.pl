@@ -9,8 +9,8 @@ use Music::ScaleNote;
 my $bpm     = shift || 120;
 my $base    = shift || 'C';
 my $scale   = shift || 'major';
-my $octave  = shift || 4;
-my $verbose = shift || 1;
+my $octave  = shift // 4;
+my $verbose = shift // 1;
 
 my $turtle = Data::Turtle->new;
 my $score  = setup_score(bpm => $bpm);
