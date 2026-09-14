@@ -2,9 +2,6 @@
 
 # Play arpeggios on a MIDI device with a clock.
 
-# Example(s) using fluidsynth:
-# perl arpeggios.pl --port=synth # use defaults
-
 use v5.36;
 use Data::Dumper::Compact qw(ddc);         # debugging
 use IO::Async::Loop ();                    # async
