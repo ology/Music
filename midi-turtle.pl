@@ -38,9 +38,9 @@ sub phrase ($turtle, $score, $msn, $note, $direction) {
                     ? (rand > 0.5 ? 2 : -2)
                     : (rand > 0.5 ? 1 : -1),
             );
-            my $n = midi_format($note->format('ISO'));
-            say "Note: $dura, $n" if $verbose;
-            $score->n($dura, $n);
+            my @n = midi_format($note->format('ISO'));
+            say "Note: $dura, @n" if $verbose;
+            $score->n($dura, @n);
         }
         else {
             say "Rest: $dura" if $verbose;
