@@ -11,10 +11,12 @@ my $score  = setup_score(bpm => 120);
 my $msn    = Music::ScaleNote->new(scale_note => 'C', scale_name => 'major');
 my $note   = Music::Note->new('C4', 'ISO');
 
-phrase($turtle, $score, $msn, $note, 'right');
-phrase($turtle, $score, $msn, $note, 'left');
-phrase($turtle, $score, $msn, $note, 'right');
-phrase($turtle, $score, $msn, $note, 'left');
+for (1 .. 4) {
+    phrase($turtle, $score, $msn, $note, 'right');
+    phrase($turtle, $score, $msn, $note, 'left');
+    phrase($turtle, $score, $msn, $note, 'right');
+    phrase($turtle, $score, $msn, $note, 'left');
+}
 
 $score->write_score($0 . '.mid');
 
