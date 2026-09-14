@@ -6,10 +6,11 @@ use Data::Turtle;
 use MIDI::Util qw(setup_score midi_format);
 use Music::ScaleNote;
 
-my $bpm    = shift || 120;
-my $base   = shift || 'C';
-my $scale  = shift || 'major';
-my $octave = shift || 4;
+my $bpm     = shift || 120;
+my $base    = shift || 'C';
+my $scale   = shift || 'major';
+my $octave  = shift || 4;
+my $verbose = shift || 1;
 
 my $turtle = Data::Turtle->new;
 my $score  = setup_score(bpm => $bpm);
@@ -37,9 +38,12 @@ sub phrase ($turtle, $score, $msn, $note, $direction) {
                     ? (rand > 0.5 ? 2 : -2)
                     : (rand > 0.5 ? 1 : -1),
             );
-            $score->n($dura, midi_format($note->format('ISO')));
+            my $n = midi_format($note->format('ISO'));
+            say "Note: $dura, $n";
+            $score->n($dura, $n) if $verbose;
         }
         else {
+            say "Rest: $dura" if $verbose;
             $score->r($dura);
         }
         $turtle->$direction(45);
