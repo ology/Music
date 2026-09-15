@@ -23,7 +23,7 @@ my %opt = (
     octave   => '3,4,5', # octaves (0 .. 9)
     tonic    => 'C',     # scale key base note
     scale    => 'minor', # scale name as known to Music::Scales
-    program  => 21,       # program to set the synth to
+    program  => 0,       # program to set the synth to
 );
 
 die "Open MIDI port name required for 'port'\n" unless $opt{port};
