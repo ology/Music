@@ -25,6 +25,7 @@ my %opt = (
     scale    => 'minor', # scale name as known to Music::Scales
     program  => 0,       # program to set the synth to
 );
+# GetOptions(\%opt, ...); # TODO use Getop::Long
 
 die "Open MIDI port name required for 'port'\n" unless $opt{port};
 
