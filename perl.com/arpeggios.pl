@@ -8,7 +8,7 @@ use IO::Async::Loop ();                    # async
 use IO::Async::Timer::Periodic ();         # async
 use List::Util qw(max sum0);               # duration scaling
 use MIDI::RtMidi::FFI::Device ();          # rt-midi
-use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes); # rt-midi
+use MIDI::RtMidi::Util qw(out_port stop_all_notes); # rt-midi
 use Music::MelodicDevice::Arpeggiation (); # arpeggios
 use Music::Scales qw(get_scale_MIDI);      # pitches
 
@@ -23,6 +23,7 @@ my %opt = (
     octave   => '3,4,5', # octaves (0 .. 9)
     tonic    => 'C',     # scale key base note
     scale    => 'minor', # scale name as known to Music::Scales
+    program  => 21,       # program to set the synth to
 );
 
 die "Open MIDI port name required for 'port'\n" unless $opt{port};
@@ -33,7 +34,7 @@ my $arper = Music::MelodicDevice::Arpeggiation->new(
     verbose => 1,
 );
 # used to rescale durations
-my $arp_ticks => Music::MelodicDevice::Arpeggiation::TICKS();
+my $arp_ticks = Music::MelodicDevice::Arpeggiation::TICKS();
 
 # split things
 my @octave    = split /,/, $opt{octave};
@@ -67,7 +68,8 @@ my $beat_count = 0; # beats!
 
 # open the midi device for output
 my $midi_out = out_port($opt{port});
-say "Opened $opt{port}";
+$midi_out->program_change($channel, $opt{program});
+say "Opened $opt{port} on program $opt{program}";
 
 # Ctrl-C clean shutdown
 $SIG{INT} = sub {
