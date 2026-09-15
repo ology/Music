@@ -12,9 +12,6 @@ use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes); # rt-midi
 use Music::MelodicDevice::Arpeggiation (); # arpeggios
 use Music::Scales qw(get_scale_MIDI);      # pitches
 
-# used to rescale durations
-use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
-
 my %opt = (
     port     => 'synth', # REQUIRED MIDI device (e.g. microKorg)
     bpm      => 80,      # beats-per-minute
@@ -35,6 +32,8 @@ my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => $opt{repeats},
     verbose => 1,
 );
+# used to rescale durations
+my $arp_ticks => Music::MelodicDevice::Arpeggiation::TICKS();
 
 # split things
 my @octave    = split /,/, $opt{octave};
@@ -132,7 +131,7 @@ sub trigger_notes {
     my @raw_ticks = map {
         my ($dur) = $_->[0] =~ /^d(\d+)$/; # duration encoded as a string like "d96"
         # rescale from the module's tick resolution to our own clock's ticks-per-beat
-        max(1, int($dur * $clocks_per_beat / ARP_TICKS));
+        max(1, int($dur * $clocks_per_beat / $arp_ticks));
     } @$arped;
 
     my $scale = 1; # default multiplier: 1 = no rescaling, used as-is when spread is 0
