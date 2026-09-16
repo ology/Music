@@ -13,7 +13,7 @@ use Music::MelodicDevice::Arpeggiation (); # arpeggios
 use Music::Scales qw(get_scale_MIDI);      # pitches
 
 my %opt = (
-    port     => 'synth', # REQUIRED MIDI device (e.g. microKorg)
+    port     => 'usb', # REQUIRED MIDI device (e.g. microKorg)
     bpm      => 80,      # beats-per-minute
     arp_type => 'any',   # 'any' or any known to the arp module
     note_num => '5,7',   # arp notes pool
@@ -23,6 +23,7 @@ my %opt = (
     tonic    => 'C',     # scale key base note
     scale    => 'minor', # scale name as known to Music::Scales
     program  => 0,       # program to set the synth to
+    channel  => 0,       # the midi channel
 );
 # GetOptions(\%opt, ...); # TODO use Getopt::Long
 
@@ -50,8 +51,6 @@ say "Arp types: $opt{arp_type}";
 say "Arp nums: $opt{note_num}";
 say "Pitches: @pitches";
 
-my $channel = 0; # this code talks to a single channel
-
 # we are in 4/4 time...
 my $divisions       = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 6 * $divisions; # PPQN
@@ -68,7 +67,7 @@ my $beat_count = 0; # beats!
 
 # open the midi device for output
 my $midi_out = out_port($opt{port});
-$midi_out->program_change($channel, $opt{program});
+$midi_out->program_change($opt{channel}, $opt{program});
 say "Opened $opt{port} on program $opt{program}";
 
 # Ctrl-C clean shutdown
@@ -92,7 +91,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         for my $i (reverse 0 .. $#active) {
             # iterate in reverse so splice() below doesn't invalidate remaining indices
             if ($ticks >= $active[$i]{off_tick}) {
-                $midi_out->note_off($channel, $active[$i]{note}, 0);
+                $midi_out->note_off($opt{channel}, $active[$i]{note}, 0);
                 splice @active, $i, 1; # remove from the "currently sounding" list
             }
         }
@@ -102,7 +101,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         # keep the notes still waiting for a future tick
         @pending  = grep { $ticks <  $_->{on_tick} } @pending;
         for my $p (@ready) {
-            $midi_out->note_on($channel, $p->{note}, velocity(-10, 10, 110));
+            $midi_out->note_on($opt{channel}, $p->{note}, velocity(-10, 10, 110));
             # remember the note, so the release loop above can turn it off at the right tick
             push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
         }
