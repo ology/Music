@@ -7,7 +7,7 @@
 # Examples using fluidsynth and a generic usb interface for ports:
 # perl arping.pl --verbose --y_port=synth # use defaults
 # perl arping.pl --verbose --y_port=synth --x_port=drums --bpm=60 \
-#   --note_num=5 --initial=1 --duration=2 --octave=0 --arp_type=updown
+#   --note_num=5 --initial=63 --duration=2 --octave=0 --arp_type=updown
 # Command-line arguments can be abbreviated to a single letter:
 # perl arping.pl --v --y=synth --x=usb --a=converge --o=2 --i=63 --n=11
 # perl arping.pl --v --y=synth --x=usb --a=converge --d=3 --o=2 --i=10 --n=12
