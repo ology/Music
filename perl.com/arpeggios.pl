@@ -13,7 +13,7 @@ use Music::MelodicDevice::Arpeggiation (); # arpeggios
 use Music::Scales qw(get_scale_MIDI);      # pitches
 
 my %opt = (
-    port     => 'usb', # REQUIRED MIDI device (e.g. microKorg)
+    port     => 'synth', # REQUIRED MIDI device (e.g. microKorg)
     bpm      => 80,      # beats-per-minute
     arp_type => 'any',   # 'any' or any known to the arp module
     note_num => '5,7',   # arp notes pool
