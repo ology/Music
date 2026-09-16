@@ -27,8 +27,6 @@ my %opt = (
 );
 # GetOptions(\%opt, ...); # TODO use Getopt::Long
 
-die "Open MIDI port name required for 'port'\n" unless $opt{port};
-
 # one arpeggiator instance is reused
 my $arper = Music::MelodicDevice::Arpeggiation->new(
     repeats => $opt{repeats},
@@ -96,6 +94,14 @@ my $timer = IO::Async::Timer::Periodic->new(
             }
         }
 
+        # align to fire exactly on beat boundaries
+        if (($ticks - 1) % $clocks_per_beat == 0) {
+            if ($beat_count % $phrase_beats == 0) { # retrigger every $phrase_beats beats
+                trigger_notes(); # start a new arp phrase!
+            }
+            $beat_count++; # only increment on beat boundaries
+        }
+
         # collect every pending note whose start time has arrived
         my @ready = grep { $ticks >= $_->{on_tick} } @pending;
         # keep the notes still waiting for a future tick
@@ -104,14 +110,6 @@ my $timer = IO::Async::Timer::Periodic->new(
             $midi_out->note_on($opt{channel}, $p->{note}, velocity(-10, 10, 110));
             # remember the note, so the release loop above can turn it off at the right tick
             push @active, { note => $p->{note}, off_tick => $p->{off_tick} };
-        }
-
-        # align to fire exactly on beat boundaries
-        if (($ticks - 1) % $clocks_per_beat == 0) {
-            if ($beat_count % $phrase_beats == 0) { # retrigger every $phrase_beats beats
-                trigger_notes(); # start a new arp phrase!
-            }
-            $beat_count++; # only increment on beat boundaries
         }
     },
 );
