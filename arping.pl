@@ -147,8 +147,9 @@ $programs->context($opt{initial});
 my $loop = IO::Async::Loop->new;
 
 my $timer = IO::Async::Timer::Periodic->new(
-    interval => $clock_interval,
-    on_tick  => sub {
+    interval   => $clock_interval,
+    reschedule => 'hard', # anchor to a fixed schedule, don't let tempo drift
+    on_tick    => sub {
         $midi_out->clock;
         $device->clock if $opt{x_port};
         $ticks++;
