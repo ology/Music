@@ -87,6 +87,7 @@ my @arp_types = $opt{arp_type} eq 'any'
 
 # get range of pitches by octave
 my @pitches = map { get_scale_MIDI($opt{tonic}, $_, $opt{scale}) } @octave;
+die "No pitches for tonic=$opt{tonic} scale=$opt{scale}\n" unless @pitches;
 
 if ($opt{verbose}) {
     say "Arp types: $opt{arp_type}";
