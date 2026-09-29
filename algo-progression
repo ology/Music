@@ -7,7 +7,8 @@ Play a random "rock" like progression with a randomized walking bassline.
 Example:
 
   perl algo-progression --bpm=60  # use all other defaults
-  perl algo-progression --bpm=111 --parts='Amv-Amc' --chords_patch=4 --arping=1 --verbose
+  perl algo-progression --bpm=111 --parts='Amv-Amc' --chords_patch=4 \
+  #  --arping=1 --genre=rock --verbose
 
 Parts are defined as hyphen-phrases of 3 sections:
 
@@ -33,10 +34,11 @@ use Music::Duration::Partition ();
 use Music::MelodicDevice::Arpeggiation ();
 use Music::Note ();
 use Music::Scales qw(get_scale_notes);
+use List::Util qw(uniq);
 
 my %opt = (
     bpm          => 100,
-    genre        => 'rock',
+    genre        => '', # a MIDI::Drummer::Tiny::Grooves category like 'rock'
     parts        => 'DMv-AMv-Bmc-GMc', # <Note><Major|minor><verse|chorus>-... phrases
     pairs        => 4, # The number of pairs of phrases
     reps         => 1, # The number of times to repeat an individual phrase
@@ -66,8 +68,6 @@ GetOptions(\%opt,
 
 my @parts = split /-/, $opt{parts};
 
-die "No parts given\n" unless @parts;
-
 my @progressions; # 
 
 # author only - set the local share_file for Music::Dataset::ChordProgressions
@@ -93,7 +93,13 @@ sub drums {
         drummer    => $d,
         share_file => '/Users/gene/sandbox/MIDI-Drummer-Tiny/share/drum-pattern-bit-strings.txt',
     );
-    my $set  = $grooves->all_grooves;#search({ cat => $opt{genre} });
+    my $set;
+    if ($opt{genre}) {
+        $set = $grooves->search({ cat => $opt{genre} });
+    }
+    else {
+        $set = $grooves->all_grooves;
+    }
     my @keys = keys %$set;
 
     my ($groove, $g);
@@ -120,7 +126,6 @@ sub arp_chords {
 
     my @accum; # Note accumulator
 
-    my $k = 0; # non-arp increment
     my $p = 1; # part number
     my $q = 1; # duration accumulator
 
@@ -174,25 +179,21 @@ sub arp_chords {
         }
         $p++;
     }
-    for (1 .. $opt{multi}) {
+    for my $j (1 .. $opt{multi}) {
         for my $n (@accum) {
             if (ref $n->[0] eq 'ARRAY') {
                 my $duration = 0;
-                for my $event (@$n) {
-                    $d->note(@$event);
-                    $duration += $1 if $event->[0] =~ /^d(\d+)$/;
+                for my $j (@$n) {
+                    $d->note(@$j);
+                    if ($j->[0] =~ /^d(\d+)$/) {
+                        $duration += $1;
+                    }
                 }
                 my $rest = $opt{divisions} * ticks($d->score) - $duration;
                 $d->rest('d' . $rest) if $rest > 0;
             }
             else {
-                if ($k % 2 == 0) {
-                    $d->note($d->whole, @$n);
-                }
-                else {
-                    $d->note($d->quarter, @$n) for 1 .. 4;
-                }
-                $k++;
+                $d->note($d->whole, @$n);
             }
         }
     }
