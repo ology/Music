@@ -34,7 +34,6 @@ use Music::Duration::Partition ();
 use Music::MelodicDevice::Arpeggiation ();
 use Music::Note ();
 use Music::Scales qw(get_scale_notes);
-use List::Util qw(uniq);
 
 my %opt = (
     bpm          => 100,
