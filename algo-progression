@@ -125,7 +125,7 @@ sub arp_chords {
     my @types = keys $arp->arp_type->%*;
 
     my @accum; # Note accumulator
-
+    my $k = 0;
     my $p = 1; # part number
     my $q = 1; # duration accumulator
 
@@ -193,7 +193,13 @@ sub arp_chords {
                 $d->rest('d' . $rest) if $rest > 0;
             }
             else {
-                $d->note($d->whole, @$n);
+                if ($k % 4 == 0) {
+                    $d->note($d->quarter, @$n) for 1 .. 4;
+                }
+                else {
+                    $d->note($d->whole, @$n);                    
+                }
+                $k++;
             }
         }
     }
