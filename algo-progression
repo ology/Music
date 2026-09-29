@@ -197,7 +197,6 @@ sub arp_chords {
                     $d->note($d->whole, @$n);
                 }
                 else {
-                    print "HELLO?\n";
                     $d->note($d->quarter, @$n) for 1 .. 4;
                 }
                 $k++;
