@@ -12,7 +12,7 @@ use Statistics::Basic qw(mean);
 use WebService::AcousticBrainz;
 use WebService::MusicBrainz;
 
-use constant PATH => $ENV{HOME} . '/tmp/radial/'; # Where the charts will be created
+use constant PATH => $ENV{HOME} . '/tmp/'; # Where the charts will be created
 use constant SIZE => 700; # Chart pixel dimensions
 
 my $mbid_file = shift || ''; # Optional. Use __DATA__ if not given
