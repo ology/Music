@@ -6,7 +6,7 @@ use v5.36;
 use Music::SimpleDrumMachine ();
 
 my $port = shift || 'usb';
-my $bpm  = shift || 120;
+my $bpm  = shift || 90;
 my $chan = shift // 9;
 
 my $dm = Music::SimpleDrumMachine->new(
