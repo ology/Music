@@ -15,10 +15,10 @@ my $dm = Music::SimpleDrumMachine->new(
     chan      => $chan,
     bars      => 1,
     parts     => {
-        part_A => \&part_A,
-        part_B => \&part_B,
+        A => \&part_A,
+        B => \&part_B,
     },
-    next_part => 'part_A',
+    next_part => 'A',
     verbose   => 1,
 );
 
@@ -29,7 +29,7 @@ sub part_A {
         kick   => [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0)],
         snare  => [qw(1 0 0 0 1 0 0 0 1 0 0 0 1 1 1 0)],
     );
-    my $next = 'part_B';
+    my $next = 'B';
     return $next, \%patterns;
 }
 sub part_B {
@@ -40,6 +40,6 @@ sub part_B {
         snare  => [qw(1 0 0 0 1 0 0 0 1 0 0 0 1 1 1 1)],
         # crash => [qw(1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)], # change 2
     );
-    my $next = 'part_A';
+    my $next = 'A';
     return $next, \%patterns;
 }
