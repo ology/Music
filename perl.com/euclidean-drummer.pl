@@ -6,6 +6,7 @@
 #   perl euclidean-drummer.pl fluid 90 # with fluidsynth
 #   perl euclidean-drummer.pl usb 100 -1 # multi-timbral device
 
+use v5.36;
 use Music::CreatingRhythms (); # for euclidean beats
 use Music::SimpleDrumMachine ();
 
