@@ -54,7 +54,7 @@ sub part_A {
 
 sub part_B {
     say 'Part B';
-    # choose a random prime to use for the closed hihat
+    # choose the first (all) prime list to use for the closed hihat
     my ($p) = primes_list();
     my %patterns = (
         closed => $mcr->euclid($p, $beats),
@@ -67,7 +67,7 @@ sub part_B {
 
 sub part_C {
     say 'Part C';
-    # choose random primes to use for the closed and open hihats
+    # choose primes to use for the closed and open hihats
     my ($p, $q) = primes_list();
     my %patterns = (
         closed => $mcr->euclid($p, $beats),
