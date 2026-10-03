@@ -1,6 +1,10 @@
 #!/usr/bin/env perl
 
-# Use no fills and only play parts.
+# Play and clock a MIDI device, like a drum machine or sequencer.
+# Examples:
+#   perl little-drummer.pl 'gs wavetable' 90 # on windows
+#   perl little-drummer.pl fluid 90 # with fluidsynth
+#   perl little-drummer.pl usb 100 -1 # multi-timbral device
 
 use v5.36;
 use Music::SimpleDrumMachine ();
