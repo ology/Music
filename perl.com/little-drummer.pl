@@ -3,7 +3,7 @@
 # Play and clock a MIDI device, like a drum machine or sequencer.
 # Examples:
 #   perl little-drummer.pl 'gs wavetable' 90 # on windows
-#   perl little-drummer.pl fluid 90 # with fluidsynth
+#   perl little-drummer.pl synth 90 # with fluidsynth
 #   perl little-drummer.pl usb 100 -1 # multi-timbral device
 
 use v5.36;
@@ -22,7 +22,7 @@ my $dm = Music::SimpleDrumMachine->new(
         A => \&part_A,
         B => \&part_B,
     },
-    next_part => 'A',
+    next_part => 'A', # start-off with this part
     verbose   => 1,
 );
 
