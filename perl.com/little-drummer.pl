@@ -9,9 +9,9 @@
 use v5.36;
 use Music::SimpleDrumMachine ();
 
-my $port = shift || 'usb';
-my $bpm  = shift || 90;
-my $chan = shift // 9;
+my $port = shift || 'usb'; # unique part of the open MIDI port name
+my $bpm  = shift || 90;    # beats-per-minute
+my $chan = shift // 9;     # MIDI channel 0-15
 
 my $dm = Music::SimpleDrumMachine->new(
     port_name => $port,
@@ -34,7 +34,7 @@ sub part_A {
         snare  => [qw(1 0 0 0 1 0 0 0 1 0 0 0 1 1 1 0)],
     );
     my $next = 'B';
-    return $next, \%patterns;
+    return $next, \%patterns; # required return arguments
 }
 
 sub part_B {
