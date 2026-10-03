@@ -17,11 +17,10 @@ my $bpm  = shift || 90;
 my $chan = shift // 9;
 
 my $beats  = 16;
-my @primes = primes($beats);
 my %primes = ( # for computing patterns
-    all  => \@primes,
-    to_5 => [@primes[0 .. 2]],
-    to_7 => [@primes[0 .. 3]],
+    all  => [primes($beats)],
+    to_5 => [primes(5)],
+    to_7 => [primes(7)],
 );
 
 my $mcr = Music::CreatingRhythms->new;
