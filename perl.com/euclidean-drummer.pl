@@ -8,6 +8,7 @@
 
 use v5.36;
 
+use Math::Prime::XS qw(primes);
 use Music::CreatingRhythms (); # for euclidean beats
 use Music::SimpleDrumMachine ();
 
@@ -16,10 +17,11 @@ my $bpm  = shift || 90;
 my $chan = shift // 9;
 
 my $beats  = 16;
+my @primes = primes($beats);
 my %primes = ( # for computing patterns
-    all  => [qw(2 3 5 7 11 13)],
-    to_5 => [qw(2 3 5)],
-    to_7 => [qw(2 3 5 7)],
+    all  => \@primes,
+    to_5 => [@primes[0 .. 2]],
+    to_7 => [@primes[0 .. 3]],
 );
 
 my $mcr = Music::CreatingRhythms->new;
@@ -53,7 +55,7 @@ sub part_A {
 sub part_B {
     say 'Part B';
     # choose a random prime to use by the hihat
-    my ($p) = primes_list(\%primes);
+    my ($p) = primes_list();
     my %patterns = (
         closed => $mcr->euclid($p, $beats),
         kick   => [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1)],
@@ -66,7 +68,7 @@ sub part_B {
 sub part_C {
     say 'Part C';
     # choose random primes to use by the hihat
-    my ($p, $q) = primes_list(\%primes);
+    my ($p, $q) = primes_list();
     my %patterns = (
         closed => $mcr->euclid($p, $beats),
         open   => $mcr->euclid($q, $beats),
@@ -77,6 +79,6 @@ sub part_C {
     return $next, \%patterns;
 }
 
-sub primes_list($primes) {
-    return map { $primes->{$_}[ int rand $primes->{$_}->@* ] } sort keys %$primes;
+sub primes_list {
+    return map { $primes{$_}[ int rand $primes{$_}->@* ] } sort keys %primes;
 }
