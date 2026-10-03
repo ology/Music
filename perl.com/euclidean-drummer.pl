@@ -7,6 +7,7 @@
 #   perl euclidean-drummer.pl usb 100 -1        # multi-timbral device
 
 use v5.36;
+
 use Music::CreatingRhythms (); # for euclidean beats
 use Music::SimpleDrumMachine ();
 
@@ -27,7 +28,8 @@ my $dm = Music::SimpleDrumMachine->new(
     port_name => $port,
     bpm       => $bpm,
     chan      => $chan,
-    bars      => 1, # change 1: 4
+    filling   => 0, # change 1: comment
+    bars      => 4, # measures per part
     parts     => {
         A => \&part_A,
         B => \&part_B,
@@ -49,7 +51,7 @@ sub part_A {
 }
 
 sub part_B {
-    say 'part B';
+    say 'Part B';
     # choose a random prime to use by the hihat
     my ($p) = primes_list(\%primes);
     my %patterns = (
@@ -62,7 +64,7 @@ sub part_B {
 }
 
 sub part_C {
-    say 'part C';
+    say 'Part C';
     # choose a random prime to use by the hihat
     my ($p, $q) = primes_list(\%primes);
     my %patterns = (
