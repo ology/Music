@@ -36,6 +36,7 @@ sub part_A {
     my $next = 'B';
     return $next, \%patterns;
 }
+
 sub part_B {
     say 'Part B';
     my %patterns = (
