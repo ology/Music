@@ -38,7 +38,7 @@ my $dm = Music::SimpleDrumMachine->new(
         B => \&part_B,
         C => \&part_C,
     },
-    next_part => $next_part, # change 2: comment
+    next_part => 'A', # change 2: use $next_part
     verbose   => 1,
 );
 
@@ -49,7 +49,7 @@ sub part_A {
         kick   => [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0)],
         snare  => [qw(1 0 0 0 1 0 0 0 1 0 0 0 1 1 1 0)],
     );
-    $next_part = 'B';
+    $next_part = 'B'; # change 2: comment
     return $next_part, \%patterns;
 }
 
