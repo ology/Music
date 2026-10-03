@@ -23,6 +23,8 @@ my %primes = ( # for computing patterns
     to_7 => [primes(7)],
 );
 
+my $next_part;# = { A => 4, B => 3, C => 2 }; # change 2
+
 my $mcr = Music::CreatingRhythms->new;
 
 my $dm = Music::SimpleDrumMachine->new(
@@ -36,7 +38,7 @@ my $dm = Music::SimpleDrumMachine->new(
         B => \&part_B,
         C => \&part_C,
     },
-    next_part => 'A',
+    next_part => $next_part, # change 2: comment
     verbose   => 1,
 );
 
@@ -47,8 +49,8 @@ sub part_A {
         kick   => [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0)],
         snare  => [qw(1 0 0 0 1 0 0 0 1 0 0 0 1 1 1 0)],
     );
-    my $next = 'B';
-    return $next, \%patterns;
+    $next_part = 'B';
+    return $next_part, \%patterns;
 }
 
 sub part_B {
@@ -60,8 +62,8 @@ sub part_B {
         kick   => [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1)],
         snare  => [qw(0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0)],
     );
-    my $next = 'C';
-    return $next, \%patterns;
+    $next_part = 'C'; # change 2: comment
+    return $next_part, \%patterns;
 }
 
 sub part_C {
@@ -74,8 +76,8 @@ sub part_C {
         kick   => [qw(1 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0)],
         snare  => [qw(0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0)],
     );
-    my $next = 'A';
-    return $next, \%patterns;
+    $next_part = 'A'; # change 2: comment
+    return $next_part, \%patterns;
 }
 
 # return the primes sorted by key name
