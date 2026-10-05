@@ -2,9 +2,9 @@
 
 # Play and clock a MIDI device, like a drum machine or sequencer.
 # Examples:
-#   perl little-drummer.pl 'gs wavetable' 90 # on windows
-#   perl little-drummer.pl synth 90          # with fluidsynth
-#   perl little-drummer.pl usb 100 -1        # multi-timbral device
+#   perl little-drummer.pl wavetable 90  # on windows
+#   perl little-drummer.pl fluidsynth 90 # with fluidsynth
+#   perl little-drummer.pl usb 100 -1    # multi-timbral device
 
 use v5.36;
 
