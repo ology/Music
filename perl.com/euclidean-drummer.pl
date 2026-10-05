@@ -39,7 +39,7 @@ my $dm = Music::SimpleDrumMachine->new(
         C => \&part_C,
     },
     next_part => 'A', # change 2: use $next_part
-    save      => 'little-drummer.mid',
+    save      => 'euclidean-drummer.mid',
     verbose   => 1,
 );
 

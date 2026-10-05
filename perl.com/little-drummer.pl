@@ -24,6 +24,7 @@ my $dm = Music::SimpleDrumMachine->new(
         B => \&part_B,
     },
     next_part => 'A', # start-off with this part
+    save      => 'little-drummer.mid',
     verbose   => 1,
 );
 
