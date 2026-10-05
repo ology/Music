@@ -43,7 +43,8 @@ sub part_B {
     say 'Part B';
     my %patterns = (
         closed => [qw(1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0)],
-        kick   => [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0)], # change 1: 1 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0
+        kick   => [qw(1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0)], # change 1: comment
+        # kick   => [qw(1 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0)], # change 1: uncomment
         snare  => [qw(1 0 0 0 1 0 0 0 1 0 0 0 1 1 1 1)],
         # crash => [qw(1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)], # change 2
     );
