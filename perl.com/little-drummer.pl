@@ -10,9 +10,9 @@ use v5.36;
 
 use Music::SimpleDrumMachine ();
 
-my $port = shift || 'usb'; # unique part of the open MIDI port name
-my $bpm  = shift || 90;    # beats-per-minute
-my $chan = shift // 9;     # MIDI channel 0-15
+my $port = shift || 'fluidsynth'; # unique part of the open MIDI port name
+my $bpm  = shift || 90;           # beats-per-minute
+my $chan = shift // 9;            # MIDI channel 0-15
 
 my $dm = Music::SimpleDrumMachine->new(
     port_name => $port,

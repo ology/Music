@@ -12,7 +12,7 @@ use Math::Prime::XS qw(primes);
 use Music::CreatingRhythms (); # for euclidean beats
 use Music::SimpleDrumMachine ();
 
-my $port = shift || 'usb';
+my $port = shift || 'fluidsynth';
 my $bpm  = shift || 90;
 my $chan = shift // 9;
 
