@@ -8,7 +8,7 @@
 
 use v5.36;
 
-use Math::Prime::XS qw(primes);
+use Math::Prime::Util qw(primes);
 use Music::CreatingRhythms (); # for euclidean beats
 use Music::SimpleDrumMachine ();
 
@@ -18,9 +18,9 @@ my $chan = shift // 9;
 
 my $beats  = 16;
 my %primes = ( # for computing patterns
-    all  => [primes($beats)],
-    to_5 => [primes(5)],
-    to_7 => [primes(7)],
+    all  => primes($beats),
+    to_5 => primes(5),
+    to_7 => primes(7),
 );
 
 my $next_part;# = { A => 4, B => 3, C => 2 }; # change 2
