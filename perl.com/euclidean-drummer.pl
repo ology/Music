@@ -81,7 +81,7 @@ sub part_C {
     return $next_part, \%patterns;
 }
 
-# return the primes sorted by key name
+# return the primes sorted by key name - way overcomplicated
 sub primes_list {
     return map { $primes{$_}[ int rand $primes{$_}->@* ] } sort keys %primes;
 }
