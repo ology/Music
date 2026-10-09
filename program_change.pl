@@ -1,7 +1,4 @@
 #!/usr/bin/env perl
-
-# Play Volca Drum parts.
-
 use v5.36;
 use feature 'try';
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
