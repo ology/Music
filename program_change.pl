@@ -10,24 +10,12 @@ use Data::Dumper::Compact qw(ddc);
 use IO::Async::Loop;
 use IO::Async::Timer::Periodic;
 
-my $name    = shift || 'GP-100';
+my $port    = shift || 'GP-100';
+my $chan    = shift // 0;
 my $program = shift // 0;
 my $bank    = shift // 0;
-my $chan    = shift // 0;
 
-my $device = out_port($name);
-
-$SIG{INT} = sub {
-    say "\nStop";
-    try {
-        stop_device($device);
-        stop_all_notes($device);
-    }
-    catch ($e) {
-        warn "Can't halt MIDI out device '$device': $e\n";
-    }
-    exit;
-};
+my $device = out_port($port);
 
 try {
     $device->control_change($chan, 0, $bank);
