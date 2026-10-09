@@ -12,6 +12,7 @@ use IO::Async::Timer::Periodic;
 
 my $name    = shift || 'GP-100';
 my $program = shift // 0;
+my $bank    = shift // 0;
 
 my $device = out_port($name);
 
@@ -28,7 +29,7 @@ $SIG{INT} = sub {
 };
 
 try {
-    $device->control_change(0, 0, 0);
+    $device->control_change(0, 0, $bank);
     $device->program_change(0, $program);
 }
 catch ($e) {
