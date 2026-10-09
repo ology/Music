@@ -5,7 +5,7 @@
 use v5.36;
 use feature 'try';
 use Array::Circular ();
-use MIDI::RtMidi::FFI::Device ();
+use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 use Data::Dumper::Compact qw(ddc);
 use IO::Async::Loop;
 use IO::Async::Timer::Periodic;
@@ -22,20 +22,7 @@ my $sixteenth = $clocks_per_beat / $divisions; # clocks per 16th-note
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 
-my $device = RtMidiOut->new;
-
-END {
-  halt($device);
-}
-$SIG{INT} = sub {
-  halt($device);
-};
-
-try { # this will die on Windows but is needed for Mac
-  $device->open_virtual_port('RtMidiOut');
-}
-catch ($e) {}
-$device->open_port_by_name(qr/\Q$name/i);
+my $device = out_port($name);
 
 my $program = Array::Circular->new(split /,/, $programs);
 
@@ -49,6 +36,18 @@ catch ($e) {
 }
 
 my $loop = IO::Async::Loop->new;
+
+$loop->watch_signal(INT => sub {
+    say "\nStop";
+    try {
+        stop_device($device);
+        stop_all_notes($device);
+    }
+    catch ($e) {
+        warn "Can't halt MIDI out device '$device': $e\n";
+    }
+    $loop->stop;
+});
 
 my $timer = IO::Async::Timer::Periodic->new(
     interval => $clock_interval,
