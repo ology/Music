@@ -30,7 +30,6 @@ $SIG{INT} = sub {
 try {
     $device->control_change(0, 0, 0);
     $device->program_change(0, $program);
-    sleep 1;
 }
 catch ($e) {
     die "ERROR: $e\n";
