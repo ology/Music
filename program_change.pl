@@ -4,11 +4,7 @@
 
 use v5.36;
 use feature 'try';
-use Array::Circular ();
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
-use Data::Dumper::Compact qw(ddc);
-use IO::Async::Loop;
-use IO::Async::Timer::Periodic;
 
 my $port    = shift || 'GP-100';
 my $chan    = shift // 0;
@@ -24,3 +20,13 @@ try {
 catch ($e) {
     die "ERROR: $e\n";
 }
+
+__END__
+Bank Select (CC# 0 & CC# 32):
+
+The GP-100 contains 400 total patches (User 1–200 and Preset 201–400), Bank Select messages (CC# 0 MSB combined with CC# 32 LSB):
+
+    Bank 0: Patches 1–128
+    Bank 1: Patches 101–228
+    Bank 2: Patches 201–328
+    Bank 3: Patches 301–400
