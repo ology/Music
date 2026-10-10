@@ -13,7 +13,7 @@ use IO::Async::Timer::Periodic;
 
 my $bpm      = shift || 120;
 my $programs = shift || '1,2,3,4';
-my $name     = shift || 'volca-drum';
+my $name     = shift || 'drum';
 
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
