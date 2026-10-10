@@ -28,7 +28,7 @@ my $device = out_port($name);
 my $program = Array::Circular->new(split /,/, $programs);
 
 try {
-  program_changer($device, $program->next);
+  program_changer($device, $program->current);
   $device->start;
 }
 catch ($e) {
