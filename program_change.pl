@@ -3,16 +3,17 @@ use v5.36;
 use feature 'try';
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 
-my $port    = shift || 'GP-100';
-my $chan    = shift // 0;
-my $program = shift // 0;
-my $bank    = shift // 0;
+my $port     = shift || 'GP-100';
+my $chan     = shift // 0;
+my $program  = shift // 0;
+my $msb_bank = shift // 0;
+my $lsb_bank = shift // undef;
 
 my $device = out_port($port);
 
 try {
-    $device->control_change($chan, 0, $bank); # MSB
-    # $device->control_change($chan, 32, $bank); # LSB
+    $device->control_change($chan, 0, $msb_bank);
+    $device->control_change($chan, 32, $lsb_bank) if $lsb_bank;
     $device->program_change($chan, $program);
 }
 catch ($e) {
