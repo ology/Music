@@ -1,24 +1,17 @@
 #!/usr/bin/env perl
 use v5.36;
 use feature 'try';
-use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
+use MIDI::RtMidi::Util qw(out_port program_changer);
 
 my $port     = shift || 'GP-100';
-my $chan     = shift // 0;
+my $channel  = shift // 0;
 my $program  = shift // 0;
 my $msb_bank = shift // 0;
 my $lsb_bank = shift // undef;
 
 my $device = out_port($port);
 
-try {
-    $device->control_change($chan, 0, $msb_bank);
-    $device->control_change($chan, 32, $lsb_bank) if $lsb_bank;
-    $device->program_change($chan, $program);
-}
-catch ($e) {
-    die "ERROR: $e\n";
-}
+$device->program_changer($program, $channel, $msb_bank, $lsb_bank);
 
 __END__
 The GP-100 contains 400 patches (User 1–200 & Preset 201–400), Bank Select messages (CC# 0 MSB combined with CC# 32 LSB).
