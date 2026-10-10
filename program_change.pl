@@ -11,7 +11,7 @@ my $lsb_bank = shift // undef;
 
 my $device = out_port($port);
 
-$device->program_changer($program, $channel, $msb_bank, $lsb_bank);
+program_changer($device, $program, $channel, $msb_bank, $lsb_bank);
 
 __END__
 The GP-100 contains 400 patches (User 1–200 & Preset 201–400), Bank Select messages (CC# 0 MSB combined with CC# 32 LSB).
