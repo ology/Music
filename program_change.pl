@@ -11,7 +11,8 @@ my $bank    = shift // 0;
 my $device = out_port($port);
 
 try {
-    $device->control_change($chan, 0, $bank);
+    $device->control_change($chan, 0, $bank); # MSB
+    # $device->control_change($chan, 32, $bank); # LSB
     $device->program_change($chan, $program);
 }
 catch ($e) {
