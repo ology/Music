@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Play Volca Drum parts.
+# Play a drum machine or sequencer and change programs every 4 bars.
 
 use v5.40;
 # use Data::Dumper::Compact qw(ddc);
