@@ -2,13 +2,12 @@
 
 # Play Volca Drum parts.
 
-use v5.36;
-use feature 'try';
+use v5.40;
+# use Data::Dumper::Compact qw(ddc);
 use Array::Circular ();
 use MIDI::RtMidi::Util qw(
   out_port stop_device stop_all_notes program_changer
 );
-# use Data::Dumper::Compact qw(ddc);
 use IO::Async::Loop;
 use IO::Async::Timer::Periodic;
 
