@@ -1,6 +1,5 @@
 #!/usr/bin/env perl
-use v5.36;
-use feature 'try';
+use v5.40;
 use MIDI::RtMidi::Util qw(out_port program_changer);
 
 my $port     = shift || 'GP-100';
