@@ -4,7 +4,7 @@ use feature 'try';
 use MIDI::RtMidi::Util qw(out_port program_changer);
 
 my $port     = shift || 'GP-100';
-my $program  = shift // 1;
+my $program  = shift || 1;
 my $channel  = shift // 0;
 my $msb_bank = shift // 0;
 my $lsb_bank = shift // undef;
