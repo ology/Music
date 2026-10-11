@@ -7,7 +7,7 @@ my $port     = shift || 'GP-100';
 my $program  = shift || 1;
 my $channel  = shift // 0;
 my $msb_bank = shift // undef;
-my $lsb_bank = shift // undef;
+my $lsb_bank = shift // undef; # nb: change this value *each* time!
 
 my $device = out_port($port);
 
