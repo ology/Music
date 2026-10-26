@@ -29,7 +29,7 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
     my $type = $msg->[0];
     my $cc   = $msg->[2];
     my $val  = $msg->[3];
-    if ($msg && $type eq 'note_on') {
+    if ($msg && $type && $type eq 'note_on') {
         print ddc($msg);
         if ($cc == 85) {
             assign_settings([qw(0 1 5 74 71 59)]);
@@ -40,11 +40,12 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
         elsif ($cc == 87) {
             assign_settings([qw(73 75 56 48 49 50)]);
         }
-        elsif ($cc == 87) {
+        elsif ($cc == 88) {
             assign_settings([qw(48 49 50 16 17 18)]);
         }
     }
-    elsif ($msg && $type eq 'control_change') {
+    elsif ($msg && $type && defined $cc && $type eq 'control_change') {
+        say "$cc, $settings{$cc}, $val";
         $midi_out->cc(0, $settings{$cc}, $val);
     }
 }
