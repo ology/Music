@@ -4,6 +4,7 @@
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);
+use Math::Utils qw(uniform_scaling);
 use MIDI::RtMidi::Util qw(in_port out_port);
 
 my $in_name  = shift || 'joystick';
@@ -44,7 +45,12 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
             assign_settings([qw(48 49 50 16 17 18)]);
         }
     }
-    elsif ($msg && $type && defined $cc && $type eq 'control_change') {
+    elsif ($msg && $type && defined $cc && $type eq 'pitch_wheel_change') {
+        my ($scaled) = uniform_scaling([-8192, 8192], [0, 127], $cc);
+        say "P: $cc => $scaled";
+        $midi_out->cc(0, 0, $scaled);
+    }
+    elsif ($msg && $type && defined $cc && defined $val && $type eq 'control_change') {
         say "$cc, $settings{$cc}, $val";
         $midi_out->cc(0, $settings{$cc}, $val);
     }
