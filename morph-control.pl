@@ -33,10 +33,10 @@ while (1) {
     if ($msg && $msg->[0] eq 'note_on') {
         print ddc($msg);
         if ($msg->[2] == 85) {
-            say 'Sending 85 to $midi_out...';
+            say 'Detected 85...';
         }
         elsif ($msg->[2] == 86) {
-            say 'Sending 86 to $midi_out...';
+            say 'Detected 86...';
         }
     }
 }
