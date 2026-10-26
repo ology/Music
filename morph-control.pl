@@ -7,7 +7,7 @@ use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::Util qw(in_port out_port);
 
 my $in_name  = shift || 'joystick';
-my $out_name = shift || 'usb';
+my $out_name = shift || 'se-02';
 
 my %settings = (
      0 => 0, # y = pitch_wheel_change
