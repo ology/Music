@@ -10,12 +10,12 @@ my $in_name  = shift || 'joystick';
 my $out_name = shift || 'usb';
 
 my %settings = (
-     0 => 74, # y = pitch_wheel_change
-     1 => 71, # x = modwheel
-    10 => 59, # z = twist
-    16 => 73, # " with button
-    17 => 75, # "
-    18 => 56, # "
+     0 => 0, # y = pitch_wheel_change
+     1 => 1, # x = modwheel
+    10 => 10, # z = twist
+    16 => 16, # " with button
+    17 => 17, # "
+    18 => 18, # "
 );
 my @joystick_ccs = sort { $a <=> $b } keys %settings;
 
