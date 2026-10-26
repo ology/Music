@@ -8,14 +8,6 @@ use MIDI::RtMidi::Util qw(in_port out_port);
 
 my $in_name  = shift || 'joystick';
 my $out_name = shift || 'usb';
-my $bpm      = shift || 60;
-
-my $divisions       = 4;
-my $clocks_per_beat = 6 * $divisions; # PPQN
-my $clock_interval  = 60 / $bpm / $clocks_per_beat; # time / bpm / ppqn
-
-my $ticks      = 0;
-my $beat_count = 0;
 
 my $midi_in = in_port($in_name);
 say "Opened $midi_in for MIDI input.";
