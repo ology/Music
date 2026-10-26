@@ -28,7 +28,3 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
         }
     }
 }
-
-sub send_it ($port, $event) {
-    $port->send_event($event->@*);
-}
