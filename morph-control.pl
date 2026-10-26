@@ -26,23 +26,24 @@ say "Opened $midi_out for MIDI output.";
 
 while (1) { # TODO use IO::Async::Loop and friends, instead
     my $msg = $midi_in->get_message_decoded;
+    my $cc = $msg->[2];
     if ($msg && $msg->[0] eq 'note_on') {
         print ddc($msg);
-        if ($msg->[2] == 85) {
+        if ($cc == 85) {
             assign_settings([qw(0 1 5 74 71 59)]);
         }
-        elsif ($msg->[2] == 86) {
+        elsif ($cc == 86) {
             assign_settings([qw(74 71 59 73 75 56)]);
         }
-        elsif ($msg->[2] == 87) {
+        elsif ($cc == 87) {
             assign_settings([qw(73 75 56 48 49 50)]);
         }
-        elsif ($msg->[2] == 87) {
+        elsif ($cc == 87) {
             assign_settings([qw(48 49 50 16 17 18)]);
         }
     }
     elsif ($msg && $msg->[0] eq 'control_change') {
-        $midi_out->cc(0, $settings{ $msg->[2] }, $msg->[3]);
+        $midi_out->cc(0, $settings{$cc}, $msg->[3]);
     }
 }
 
