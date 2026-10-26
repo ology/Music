@@ -7,7 +7,7 @@ use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::Util qw(in_port out_port stop_all_notes);
 
 my $in_name  = shift || 'joystick';
-my $out_name = shift || 'iac';
+my $out_name = shift || 'usb';
 my $bpm      = shift || 60;
 
 my $divisions       = 4;
@@ -33,10 +33,14 @@ while (1) {
     if ($msg && $msg->[0] eq 'note_on') {
         print ddc($msg);
         if ($msg->[2] == 85) {
-            say 'Sending 85 to $midi_out';
+            say 'Sending 85 to $midi_out...';
         }
         elsif ($msg->[2] == 86) {
-            say 'Sending 86 to $midi_out';
+            say 'Sending 86 to $midi_out...';
         }
     }
+}
+
+sub send_it ($port, $event) {
+    $port->send_event($event->@*);
 }
