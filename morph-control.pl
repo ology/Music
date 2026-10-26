@@ -34,9 +34,11 @@ while (1) {
         print ddc($msg);
         if ($msg->[2] == 85) {
             say 'Detected 85...';
+            $midi_out->cc(0, 71, 127);
         }
         elsif ($msg->[2] == 86) {
             say 'Detected 86...';
+            $midi_out->cc(0, 71, 0);
         }
     }
 }
