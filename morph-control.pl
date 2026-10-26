@@ -26,11 +26,13 @@ my $midi_out = out_port($out_name);
 say "Opened $midi_out for MIDI output.";
 
 while (1) { # TODO use IO::Async::Loop and friends, instead
-    my $msg  = $midi_in->get_message_decoded;
+    my $msg = $midi_in->get_message_decoded;
+    next unless $msg;
     my $type = $msg->[0];
+    # my $chan = $msg->[1];
     my $cc   = $msg->[2];
     my $val  = $msg->[3];
-    if ($msg && $type && $type eq 'note_on') {
+    if ($type && $type eq 'note_on') {
         if ($cc == 85) {
             assign_settings([qw(0 1 5 74 71 59)]);
         }
@@ -44,12 +46,12 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
             assign_settings([qw(48 49 50 16 17 18)]);
         }
     }
-    elsif ($msg && $type && defined $cc && $type eq 'pitch_wheel_change') {
+    elsif ($type && defined $cc && $type eq 'pitch_wheel_change') {
         my ($scaled) = uniform_scaling([-8192, 8192], [0, 127], $cc);
         say "P: $cc => $scaled";
         $midi_out->cc(0, 0, $scaled);
     }
-    elsif ($msg && $type && defined $cc && defined $val && $type eq 'control_change') {
+    elsif ($type && defined $cc && defined $val && $type eq 'control_change') {
         say "C: $cc, $settings{$cc}, $val";
         $midi_out->cc(0, $settings{$cc}, $val);
     }
