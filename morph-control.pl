@@ -47,13 +47,13 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
                 74 71 59
                 47 52 53
                 60 62 56
-                102 103 105
             )]);
         }
         elsif ($cc == 86) { # red
             assign_settings([qw(
                 74 71 59
                 73 75 56
+                102 103 105
                 82 83 91
             )]);
         }
