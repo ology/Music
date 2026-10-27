@@ -41,13 +41,13 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
     elsif ($type eq 'pitch_wheel_change') {
         my ($bend) = @args;
         my $val = ($bend + 8192) >> 7; # -8192..8191 => 0..127
-        say "P: $bend => $val";
+        # say "P: $bend => $val";
         $midi_out->cc(0, $settings{0}, $val);
     }
     elsif ($type eq 'control_change') {
         my ($cc, $val) = @args;
         my $out_cc = $settings{$cc} // next; # ignore unmapped CCs
-        say "C: $cc => $out_cc, $val";
+        # say "C: $cc => $out_cc, $val";
         $midi_out->cc(0, $out_cc, $val);
     }
 }
@@ -55,6 +55,7 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
 sub assign_settings ($ccs) {
     die "Too many CCs (" . @$ccs . ") for " . @joystick_ccs . " joystick controls\n"
         if @$ccs > @joystick_ccs;
+    say 'Assign settings';
     %settings = map { $_ => $_ } @joystick_ccs;
     @settings{ @joystick_ccs[ 0 .. $#$ccs ] } = @$ccs;
 }
