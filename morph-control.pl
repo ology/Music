@@ -29,7 +29,7 @@ say "Opened $midi_out for MIDI output.";
 while (1) { # TODO use IO::Async::Loop and friends, instead
     my $msg = $midi_in->get_message_decoded;
     unless ($msg && @$msg) {
-        sleep 0.001;
+        sleep 0.001; # TODO why?
         next;
     }
     my ($type, $chan, @args) = @$msg;
