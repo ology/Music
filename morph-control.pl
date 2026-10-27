@@ -12,7 +12,7 @@ my $out_name = shift || 'se-02';
 # mode1=down: 0-18. mode2=up: 19-24
 my @joystick_ccs = (0, 1, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24);
 
-# Button note => CC list for each joystick CC above (in order).
+# Button => CC list
 my %modes = (
     85 => [qw(  0  1  5  74 71 59   47  52  53  60 62 56 )], # green
     86 => [qw( 74 71 59  73 75 56  102 103 105  82 83 91 )], # red
