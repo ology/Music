@@ -54,6 +54,7 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
             assign_settings([qw(
                 74 71 59
                 73 75 56
+                82 83 91
             )]);
         }
         elsif ($cc == 87) { # blue
