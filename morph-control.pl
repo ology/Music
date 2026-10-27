@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# TODO Adjust joystick CC values.
+# Adjust joystick CC value sending.
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);
