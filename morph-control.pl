@@ -3,30 +3,24 @@
 # Adjust joystick CC value sending.
 
 use v5.40;
-use Data::Dumper::Compact qw(ddc);
-use Math::Utils qw(uniform_scaling);
+use Time::HiRes qw(sleep);
 use MIDI::RtMidi::Util qw(in_port out_port);
 
 my $in_name  = shift || 'joystick';
 my $out_name = shift || 'se-02';
 
-my %settings = (
-    # mode=up
-     1 => 1,  # x = modwheel
-     0 => 0,  # y = pitch_wheel_change
-    10 => 10, # z = twist
-    16 => 16, # " with button
-    17 => 17, # "
-    18 => 18, # "
-    # mode=down
-    19 => 19, # x
-    20 => 20, # y
-    21 => 21, # z
-    22 => 22, # " with button
-    23 => 23,
-    24 => 24,
+# Joystick CCs, in the order the mode lists below assign them.
+#   mode1=down: 0-18. mode2=up: 19-24
+my @joystick_ccs = (0, 1, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24);
+
+# Button note => CC list for each joystick CC above (in order).
+my %modes = (
+    85 => [qw(  0  1  5  74 71 59   47  52  53  60 62 56 )], # green
+    86 => [qw( 74 71 59  73 75 56  102 103 105  82 83 91 )], # red
+    87 => [qw( 73 75 56  48 49 50 )],                        # blue
+    88 => [qw( 48 49 50  16 17 18 )],                        # yellow
 );
-my @joystick_ccs = sort { $a <=> $b } keys %settings;
+my %settings = map { $_ => $_ } @joystick_ccs;   # default: pass-through
 
 my $midi_in = in_port($in_name);
 say "Opened $midi_in for MIDI input.";
@@ -35,55 +29,33 @@ say "Opened $midi_out for MIDI output.";
 
 while (1) { # TODO use IO::Async::Loop and friends, instead
     my $msg = $midi_in->get_message_decoded;
-    next unless $msg;
-    my $type = $msg->[0];
-    # my $chan = $msg->[1];
-    my $cc   = $msg->[2];
-    my $val  = $msg->[3];
-    if ($type && $type eq 'note_on') {
-        if ($cc == 85) { # green
-            assign_settings([qw(
-                0 1 5
-                74 71 59
-                47 52 53
-                60 62 56
-            )]);
-        }
-        elsif ($cc == 86) { # red
-            assign_settings([qw(
-                74 71 59
-                73 75 56
-                102 103 105
-                82 83 91
-            )]);
-        }
-        elsif ($cc == 87) { # blue
-            assign_settings([qw(
-                73 75 56
-                48 49 50
-            )]);
-        }
-        elsif ($cc == 88) { # yellow
-            assign_settings([qw(
-                48 49 50
-                16 17 18
-            )]);
-        }
+    unless ($msg && @$msg) {
+        sleep 0.001;
+        next;
     }
-    elsif ($type && defined $cc && $type eq 'pitch_wheel_change') {
-        my ($scaled) = uniform_scaling([-8192, 8192], [0, 127], $cc);
-        say "P: $cc => $scaled";
-        $midi_out->cc(0, $settings{0}, $scaled);
+    my ($type, $chan, @args) = @$msg;
+
+    if ($type eq 'note_on') {
+        my ($note) = @args;
+        assign_settings($modes{$note}) if exists $modes{$note};
     }
-    elsif ($type && defined $cc && defined $val && $type eq 'control_change') {
-        say "C: $cc, $settings{$cc}, $val";
-        $midi_out->cc(0, $settings{$cc}, $val);
+    elsif ($type eq 'pitch_wheel_change') {
+        my ($bend) = @args;
+        my $val = ($bend + 8192) >> 7; # -8192..8191 => 0..127
+        say "P: $bend => $val";
+        $midi_out->cc(0, $settings{0}, $val);
+    }
+    elsif ($type eq 'control_change') {
+        my ($cc, $val) = @args;
+        my $out_cc = $settings{$cc} // next; # ignore unmapped CCs
+        say "C: $cc => $out_cc, $val";
+        $midi_out->cc(0, $out_cc, $val);
     }
 }
 
 sub assign_settings ($ccs) {
-    my $i = 0;
-    for my $cc (@$ccs) {
-        $settings{ $joystick_ccs[ $i++ ] } = $cc;
-    }
+    die "Too many CCs (" . @$ccs . ") for " . @joystick_ccs . " joystick controls\n"
+        if @$ccs > @joystick_ccs;
+    %settings = map { $_ => $_ } @joystick_ccs;
+    @settings{ @joystick_ccs[ 0 .. $#$ccs ] } = @$ccs;
 }
