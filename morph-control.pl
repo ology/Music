@@ -41,7 +41,7 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
     my $cc   = $msg->[2];
     my $val  = $msg->[3];
     if ($type && $type eq 'note_on') {
-        if ($cc == 85) {
+        if ($cc == 85) { # green
             assign_settings([qw(
                 0 1 5
                 74 71 59
@@ -50,19 +50,19 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
                 102 103 105
             )]);
         }
-        elsif ($cc == 86) {
+        elsif ($cc == 86) { # red
             assign_settings([qw(
                 74 71 59
                 73 75 56
             )]);
         }
-        elsif ($cc == 87) {
+        elsif ($cc == 87) { # blue
             assign_settings([qw(
                 73 75 56
                 48 49 50
             )]);
         }
-        elsif ($cc == 88) {
+        elsif ($cc == 88) { # yellow
             assign_settings([qw(
                 48 49 50
                 16 17 18
