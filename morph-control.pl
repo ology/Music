@@ -7,7 +7,7 @@ use Time::HiRes qw(sleep);
 use MIDI::RtMidi::Util qw(in_port out_port);
 
 my $in_name  = shift || 'joystick';
-my $out_name = shift || 'se-02';
+my $out_name = shift || 'iac';
 
 # mode1=down: 0-18. mode2=up: 19-24
 my @joystick_ccs = (0, 1, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24);
