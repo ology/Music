@@ -22,9 +22,9 @@ my %modes = (
 my %settings = map { $_ => $_ } @joystick_ccs;   # default: pass-through
 
 my $midi_in = in_port($in_name);
-say "Opened $midi_in for MIDI input.";
+say "Opened $in_name for MIDI input.";
 my $midi_out = out_port($out_name);
-say "Opened $midi_out for MIDI output.";
+say "Opened $out_name for MIDI output.";
 
 while (1) { # TODO use IO::Async::Loop and friends, instead
     my $msg = $midi_in->get_message_decoded;
