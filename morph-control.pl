@@ -19,7 +19,7 @@ my %modes = (
     87 => [qw( 73 75 56  48 49 50 )],                        # blue
     88 => [qw( 48 49 50  16 17 18 )],                        # yellow
 );
-my %settings = map { $_ => $_ } @joystick_ccs;   # default: pass-through
+my %settings = map { $_ => $_ } @joystick_ccs;
 
 my $midi_in = in_port($in_name);
 say "Opened $in_name for MIDI input.";
