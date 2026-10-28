@@ -33,7 +33,6 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
         next;
     }
     my ($type, $chan, @args) = @$msg;
-
     if ($type eq 'note_on') {
         my ($note) = @args;
         assign_settings($modes{$note}) if exists $modes{$note};
