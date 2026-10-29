@@ -4,7 +4,7 @@
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);
-use MIDI::RtMidi::Util qw(in_port all_notes_off);
+use MIDI::RtMidi::Util qw(in_port);
 use Path::Tiny;
 
 # get audio as a midi note-numbered sample map
@@ -13,7 +13,7 @@ my $dir = path('cartoon');
 my $iter = $dir->iterator;
 while (my $path = $iter->()) {
     next if $path->is_dir;
-    next unless lc($path->extname) eq 'mp3';
+    next unless $path =~ /\.mp3$/;
     push @files, $path;
 }
 my %sample_map = map { $_ => $files[$_] } 0 .. 63;
@@ -23,9 +23,8 @@ my $midi_in = in_port('pad'); # open the midi input port
 # ^c halt
 $SIG{INT} = sub {
     say "\nStop";
-    all_notes_off($midi_out);
     exit;
-}
+};
 
 while (1) {
     my $msg = $midi_in->get_message_decoded;
