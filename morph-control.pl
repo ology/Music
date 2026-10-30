@@ -3,38 +3,45 @@
 # Adjust joystick CC value sending.
 
 use v5.40;
-use Time::HiRes qw(sleep);
+use Data::Dumper::Compact qw(ddc);
 use MIDI::Device ();
 use MIDI::RtMidi::Util qw(in_port out_port);
+use Time::HiRes qw(sleep);
 
 use constant CC => 'control_change';
 
 my $in_name  = shift || 'joystick';
 my $out_name = shift || 'iac';
 
-my $joystick = MIDI::Device->new(name => 'midi-rock-stone');
+my $joystick = MIDI::Device->new(
+    name   => 'midi-rock-stone',
+    shared => $ENV{HOME} . '/sandbox/MIDI-Device/share/',
+);
 my @joystick_ccs = (
-    0,                                   # pitch-bend
-    $joystick->find(CC, 'x mode 1'),     # 1
-    $joystick->find(CC, 'twist mode 1'), # 10
+    0,                                  # pitch-bend
+    find_it($joystick, 'x mode 1'),     # 1
+    find_it($joystick, 'twist mode 1'), # 10
 
-    $joystick->find(CC, 'x mode 1 button'),     # 16
-    $joystick->find(CC, 'y mode 1 button'),     # 17
-    $joystick->find(CC, 'twist mode 1 button'), # 18
+    find_it($joystick, 'x mode 1 button'),     # 16
+    find_it($joystick, 'y mode 1 button'),     # 17
+    find_it($joystick, 'twist mode 1 button'), # 18
 
-    $joystick->find(CC, 'x mode 2'),     # 19
-    $joystick->find(CC, 'y mode 2'),     # 20
-    $joystick->find(CC, 'twist mode 2'), # 21
+    find_it($joystick, 'x mode 2'),     # 19
+    find_it($joystick, 'y mode 2'),     # 20
+    find_it($joystick, 'twist mode 2'), # 21
 
-    $joystick->find(CC, 'x mode 2 button'),     # 22
-    $joystick->find(CC, 'y mode 2 button'),     # 23
-    $joystick->find(CC, 'twist mode 2 button'), # 24
+    find_it($joystick, 'x mode 2 button'),     # 22
+    find_it($joystick, 'y mode 2 button'),     # 23
+    find_it($joystick, 'twist mode 2 button'), # 24
 );
 
 my %settings = map { $_ => $_ } @joystick_ccs;
 
-my $se02 = MIDI::Device->new(name => 'se-02');
-my $sets => {
+my $se02 = MIDI::Device->new(
+    name   => 'se-02',
+    shared => $ENV{HOME} . '/sandbox/MIDI-Device/share/',
+);
+my $sets = {
     filter => [
         $se02->find(CC, 'Filter Cutoff Frequency'),     # 74
         $se02->find(CC, 'Filter Emphasis (Resonance)'), # 71
@@ -79,10 +86,10 @@ my $sets => {
 
 # set values keyed by midi note number
 my %modes = (
-    85 => [ $sets->{qw(filter filter1 filter1 filter)}->@* ], # green
-    86 => [ $sets->{qw(lfo filter2 filter2 lfo)}->@* ], # red
-    87 => [ $sets->{qw(delay osc osc delay)}->@* ], # blue
-    88 => [ $sets->{qw(xmod misc misc xmod)}->@* ], # yellow
+    85 => [ @$sets{qw(filter filter1 filter1 filter)} ], # green
+    86 => [ @$sets{qw(lfo filter2 filter2 lfo)} ], # red
+    87 => [ @$sets{qw(delay osc osc delay)} ], # blue
+    88 => [ @$sets{qw(xmod misc misc xmod)} ], # yellow
 );
 
 my $midi_in = in_port($in_name);
@@ -121,4 +128,8 @@ sub assign_settings ($ccs) {
     say 'Assign settings';
     %settings = map { $_ => $_ } @joystick_ccs;
     @settings{ @joystick_ccs[ 0 .. $#$ccs ] } = @$ccs;
+}
+
+sub find_it ($device, $note) {
+    return $device->find(CC, $note)->[0]{number};
 }
