@@ -8,15 +8,16 @@ use MIDI::RtMidi::Util qw(in_port);
 use Path::Tiny;
 
 # get audio as a midi note-numbered sample map
-my @files;
 my $dir = path('cartoon');
 my $iter = $dir->iterator;
+my %sample_map;
+my $i = 0;
 while (my $path = $iter->()) {
     next if $path->is_dir;
     next unless $path =~ /\.mp3$/;
-    push @files, $path;
+    $sample_map{ $i++ } = $path;
+    last if $i >= 64;
 }
-my %sample_map = map { $_ => $files[$_] } 0 .. 63;
 
 my $midi_in = in_port('pad'); # open the midi input port
 
