@@ -9,6 +9,8 @@ use Path::Tiny;
 
 my $port_name = shift || 'pad';
 
+my $midi_in = in_port($port_name);
+
 # get audio as a midi note-numbered sample map
 my $dir = path('cartoon');
 my $iter = $dir->iterator;
@@ -20,8 +22,6 @@ while (my $path = $iter->()) {
     $sample_map{ $i++ } = $path;
     last if $i >= 64;
 }
-
-my $midi_in = in_port($port_name);
 
 # ^c halt
 $SIG{INT} = sub {
