@@ -4,20 +4,71 @@
 
 use v5.40;
 use Time::HiRes qw(sleep);
+use MIDI::Device ();
 use MIDI::RtMidi::Util qw(in_port out_port);
+
+use constant CC => 'control_change';
 
 my $in_name  = shift || 'joystick';
 my $out_name = shift || 'iac';
 
-# mode1=down: 0-18. mode2=up: 19-24
-my @joystick_ccs = (0, 1, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24);
+my $joystick = MIDI::Device->new(name => 'midi-rock-stone');
+my @joystick_ccs = (
+    0, 1, 10,
+    16, 17, 18,
+    19, 20, 21,
+    22, 23, 24
+);
 
-# Button => CC list
+my $se02 = MIDI::Device->new(name => 'se-02');
+my $sets => {
+    filter => [
+        $se02->find(CC, 'Filter Cutoff Frequency'),     # 74
+        $se02->find(CC, 'Filter Emphasis (Resonance)'), # 71
+        $se02->find(CC, 'Filter Contour'),              # 59
+    ],
+    filter1 => [
+        $se02->find(CC, 'Filter Attack 1'),  # 47
+        $se02->find(CC, 'Filter Decay 1'),   # 52
+        $se02->find(CC, 'Filter Sustain 1'), # 53
+    ],
+    filter2 => [
+        $se02->find(CC, 'Filter Attack 2'),  # 73
+        $se02->find(CC, 'Filter Decay 2'),   # 75
+        $se02->find(CC, 'Filter Sustain 2'), # 56
+    ],
+    lfo => [
+        $se02->find(CC, 'LFO Rate'),         # 102
+        $se02->find(CC, 'LFO OSC Depth'),    # 103
+        $se02->find(CC, 'LFO Filter Depth'), # 105
+    ],
+    delay => [
+        $se02->find(CC, 'Delay Time'),   # 82
+        $se02->find(CC, 'Delay Regen'),  # 83
+        $se02->find(CC, 'Delay Amount'), # 91
+    ],
+    osc => [
+        $se02->find(CC, 'OSC 1 Level'), # 48
+        $se02->find(CC, 'OSC 2 Level'), # 49
+        $se02->find(CC, 'OSC 3 Level'), # 50
+    ],
+    xmod => [
+        $se02->find(CC, 'XMOD O2 to Filter'),      # 16
+        $se02->find(CC, 'XMOD O3 to O2'),          # 17
+        $se02->find(CC, 'XMOD O3 to Pulse Width'), # 18
+    ],
+    misc => [
+        $se02->find(CC, 'Glide Time'),     # 5
+        $se02->find(CC, 'Feedback Level'), # 51
+        $se02->find(CC, 'Noise Level'),    # 41
+    ],
+};
+# set values keyed by midi note number
 my %modes = (
-    85 => [qw(  0  1  5  74 71 59   47  52  53  60 62 56 )], # green
-    86 => [qw( 74 71 59  73 75 56  102 103 105  82 83 91 )], # red
-    87 => [qw( 73 75 56  48 49 50 )],                        # blue
-    88 => [qw( 48 49 50  16 17 18 )],                        # yellow
+    85 => [ $sets->{qw(filter filter1 filter1 filter)}->@* ], # green
+    86 => [ $sets->{qw(lfo filter2 filter2 lfo)}->@* ], # red
+    87 => [ $sets->{qw(delay osc osc delay)}->@* ], # blue
+    88 => [ $sets->{qw(xmod misc misc xmod)}->@* ], # yellow
 );
 my %settings = map { $_ => $_ } @joystick_ccs;
 
