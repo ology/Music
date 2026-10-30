@@ -26,10 +26,12 @@ my @joystick_ccs = (
     $joystick->find(CC, 'y mode 2'),     # 20
     $joystick->find(CC, 'twist mode 2'), # 21
 
-    $joystick->find(CC, 'x mode 2 button'), # 22
-    $joystick->find(CC, 'y mode 2 button'), # 23
+    $joystick->find(CC, 'x mode 2 button'),     # 22
+    $joystick->find(CC, 'y mode 2 button'),     # 23
     $joystick->find(CC, 'twist mode 2 button'), # 24
 );
+
+my %settings = map { $_ => $_ } @joystick_ccs;
 
 my $se02 = MIDI::Device->new(name => 'se-02');
 my $sets => {
@@ -74,6 +76,7 @@ my $sets => {
         $se02->find(CC, 'Noise Level'),    # 41
     ],
 };
+
 # set values keyed by midi note number
 my %modes = (
     85 => [ $sets->{qw(filter filter1 filter1 filter)}->@* ], # green
@@ -81,7 +84,6 @@ my %modes = (
     87 => [ $sets->{qw(delay osc osc delay)}->@* ], # blue
     88 => [ $sets->{qw(xmod misc misc xmod)}->@* ], # yellow
 );
-my %settings = map { $_ => $_ } @joystick_ccs;
 
 my $midi_in = in_port($in_name);
 say "Opened $in_name for MIDI input.";
