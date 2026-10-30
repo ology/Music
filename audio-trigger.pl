@@ -7,6 +7,8 @@ use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::Util qw(in_port);
 use Path::Tiny;
 
+my $port_name = shift || 'pad';
+
 # get audio as a midi note-numbered sample map
 my $dir = path('cartoon');
 my $iter = $dir->iterator;
@@ -19,7 +21,7 @@ while (my $path = $iter->()) {
     last if $i >= 64;
 }
 
-my $midi_in = in_port('pad'); # open the midi input port
+my $midi_in = in_port($port_name);
 
 # ^c halt
 $SIG{INT} = sub {
