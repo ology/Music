@@ -8,8 +8,6 @@ use MIDI::Device ();
 use MIDI::RtMidi::Util qw(in_port out_port);
 use Time::HiRes qw(sleep);
 
-use constant CC => 'control_change';
-
 my $in_name  = shift || 'joystick';
 my $out_name = shift || 'iac';
 
@@ -43,44 +41,44 @@ my $se02 = MIDI::Device->new(
 );
 my $sets = {
     filter => [
-        $se02->find(CC, 'Filter Cutoff Frequency'),     # 74
-        $se02->find(CC, 'Filter Emphasis (Resonance)'), # 71
-        $se02->find(CC, 'Filter Contour'),              # 59
+        find_it($se02, 'Filter Cutoff Frequency'),     # 74
+        find_it($se02, 'Filter Emphasis (Resonance)'), # 71
+        find_it($se02, 'Filter Contour'),              # 59
     ],
     filter1 => [
-        $se02->find(CC, 'Filter Attack 1'),  # 47
-        $se02->find(CC, 'Filter Decay 1'),   # 52
-        $se02->find(CC, 'Filter Sustain 1'), # 53
+        find_it($se02, 'Filter Attack 1'),  # 47
+        find_it($se02, 'Filter Decay 1'),   # 52
+        find_it($se02, 'Filter Sustain 1'), # 53
     ],
     filter2 => [
-        $se02->find(CC, 'Filter Attack 2'),  # 73
-        $se02->find(CC, 'Filter Decay 2'),   # 75
-        $se02->find(CC, 'Filter Sustain 2'), # 56
+        find_it($se02, 'Filter Attack 2'),  # 73
+        find_it($se02, 'Filter Decay 2'),   # 75
+        find_it($se02, 'Filter Sustain 2'), # 56
     ],
     lfo => [
-        $se02->find(CC, 'LFO Rate'),         # 102
-        $se02->find(CC, 'LFO OSC Depth'),    # 103
-        $se02->find(CC, 'LFO Filter Depth'), # 105
+        find_it($se02, 'LFO Rate'),         # 102
+        find_it($se02, 'LFO OSC Depth'),    # 103
+        find_it($se02, 'LFO Filter Depth'), # 105
     ],
     delay => [
-        $se02->find(CC, 'Delay Time'),   # 82
-        $se02->find(CC, 'Delay Regen'),  # 83
-        $se02->find(CC, 'Delay Amount'), # 91
+        find_it($se02, 'Delay Time'),   # 82
+        find_it($se02, 'Delay Regen'),  # 83
+        find_it($se02, 'Delay Amount'), # 91
     ],
     osc => [
-        $se02->find(CC, 'OSC 1 Level'), # 48
-        $se02->find(CC, 'OSC 2 Level'), # 49
-        $se02->find(CC, 'OSC 3 Level'), # 50
+        find_it($se02, 'OSC 1 Level'), # 48
+        find_it($se02, 'OSC 2 Level'), # 49
+        find_it($se02, 'OSC 3 Level'), # 50
     ],
     xmod => [
-        $se02->find(CC, 'XMOD O2 to Filter'),      # 16
-        $se02->find(CC, 'XMOD O3 to O2'),          # 17
-        $se02->find(CC, 'XMOD O3 to Pulse Width'), # 18
+        find_it($se02, 'XMOD O2 to Filter'),      # 16
+        find_it($se02, 'XMOD O3 to O2'),          # 17
+        find_it($se02, 'XMOD O3 to Pulse Width'), # 18
     ],
     misc => [
-        $se02->find(CC, 'Glide Time'),     # 5
-        $se02->find(CC, 'Feedback Level'), # 51
-        $se02->find(CC, 'Noise Level'),    # 41
+        find_it($se02, 'Glide Time'),     # 5
+        find_it($se02, 'Feedback Level'), # 51
+        find_it($se02, 'Noise Level'),    # 41
     ],
 };
 
@@ -131,5 +129,5 @@ sub assign_settings ($ccs) {
 }
 
 sub find_it ($device, $note) {
-    return $device->find(CC, $note)->[0]{number};
+    return $device->find('control_change', $note)->[0]{number};
 }
