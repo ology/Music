@@ -14,10 +14,21 @@ my $out_name = shift || 'iac';
 
 my $joystick = MIDI::Device->new(name => 'midi-rock-stone');
 my @joystick_ccs = (
-    0, 1, 10,
-    16, 17, 18,
-    19, 20, 21,
-    22, 23, 24
+    0,                                   # pitch-bend
+    $joystick->find(CC, 'x mode 1'),     # 1
+    $joystick->find(CC, 'twist mode 1'), # 10
+
+    $joystick->find(CC, 'x mode 1 button'),     # 16
+    $joystick->find(CC, 'y mode 1 button'),     # 17
+    $joystick->find(CC, 'twist mode 1 button'), # 18
+
+    $joystick->find(CC, 'x mode 2'),     # 19
+    $joystick->find(CC, 'y mode 2'),     # 20
+    $joystick->find(CC, 'twist mode 2'), # 21
+
+    $joystick->find(CC, 'x mode 2 button'), # 22
+    $joystick->find(CC, 'y mode 2 button'), # 23
+    $joystick->find(CC, 'twist mode 2 button'), # 24
 );
 
 my $se02 = MIDI::Device->new(name => 'se-02');
