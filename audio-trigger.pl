@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Windows mp3 trigger samples in a subdirectory of audio.
+# Windows program to trigger samples in a subdirectory of mp3 audio.
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);

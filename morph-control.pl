@@ -102,6 +102,7 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
         next;
     }
     my ($type, $chan, @args) = @$msg;
+    say ddc $msg;
     if ($type eq 'note_on') {
         my ($note) = @args;
         assign_settings($modes{$note}) if exists $modes{$note};
@@ -110,12 +111,14 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
         my ($bend) = @args;
         my $val = ($bend + 8192) >> 7; # -8192..8191 => 0..127
         say "P: $bend => $val";
+        say ddc \%settings;
         $midi_out->cc(0, $settings{0}, $val);
     }
     elsif ($type eq 'control_change') {
         my ($cc, $val) = @args;
         my $out_cc = $settings{$cc} // next; # ignore unmapped CCs
         say "C: $cc => $out_cc, $val";
+        say ddc \%settings;
         $midi_out->cc(0, $out_cc, $val);
     }
 }
@@ -123,7 +126,7 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
 sub assign_settings ($ccs) {
     die "Too many CCs (" . @$ccs . ") for " . @joystick_ccs . " joystick controls\n"
         if @$ccs > @joystick_ccs;
-    say 'Assign settings';
+    say "Assign settings: @$ccs";
     %settings = map { $_ => $_ } @joystick_ccs;
     @settings{ @joystick_ccs[ 0 .. $#$ccs ] } = @$ccs;
 }
