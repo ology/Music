@@ -32,7 +32,7 @@ $SIG{INT} = sub {
 while (1) {
     my $msg = $midi_in->get_message_decoded;
     unless ($msg && @$msg) {
-        sleep 0.002; # TODO why?
+        sleep 0.002; # don't churn the cpu
         next;
     }
     my ($type, $chan, $note) = @$msg;
