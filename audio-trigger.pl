@@ -12,7 +12,7 @@ my $port_name = shift || 'pad';
 my $midi_in = in_port($port_name);
 
 # get audio as a midi note-numbered sample map
-my $dir = path('cartoon');
+my $dir = path('../cartoon');
 my $iter = $dir->iterator;
 my %sample_map;
 my $i = 0;
