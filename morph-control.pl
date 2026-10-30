@@ -41,9 +41,9 @@ my $se02 = MIDI::Device->new(
 );
 my $sets = {
     filter => [
-        find_it($se02, 'Filter Cutoff Frequency'),     # 74
-        find_it($se02, 'Filter Emphasis (Resonance)'), # 71
-        find_it($se02, 'Filter Contour'),              # 59
+        find_it($se02, 'Filter Cutoff Frequency'), # 74
+        find_it($se02, 'Filter Emphasis'),         # 71
+        find_it($se02, 'Filter Contour'),          # 59
     ],
     filter1 => [
         find_it($se02, 'Filter Attack 1'),  # 47
@@ -84,10 +84,10 @@ my $sets = {
 
 # set values keyed by midi note number
 my %modes = (
-    85 => [ @$sets{qw(filter filter1 filter1 filter)} ], # green
-    86 => [ @$sets{qw(lfo filter2 filter2 lfo)} ], # red
-    87 => [ @$sets{qw(delay osc osc delay)} ], # blue
-    88 => [ @$sets{qw(xmod misc misc xmod)} ], # yellow
+    85 => [ $sets->@{qw(filter filter1 filter1 filter)} ], # green
+    86 => [ $sets->@{qw(lfo filter2 filter2 lfo)} ], # red
+    87 => [ $sets->@{qw(delay osc osc delay)} ], # blue
+    88 => [ $sets->@{qw(xmod misc misc xmod)} ], # yellow
 );
 
 my $midi_in = in_port($in_name);
@@ -109,13 +109,13 @@ while (1) { # TODO use IO::Async::Loop and friends, instead
     elsif ($type eq 'pitch_wheel_change') {
         my ($bend) = @args;
         my $val = ($bend + 8192) >> 7; # -8192..8191 => 0..127
-        # say "P: $bend => $val";
+        say "P: $bend => $val";
         $midi_out->cc(0, $settings{0}, $val);
     }
     elsif ($type eq 'control_change') {
         my ($cc, $val) = @args;
         my $out_cc = $settings{$cc} // next; # ignore unmapped CCs
-        # say "C: $cc => $out_cc, $val";
+        say "C: $cc => $out_cc, $val";
         $midi_out->cc(0, $out_cc, $val);
     }
 }
