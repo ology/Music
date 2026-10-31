@@ -49,7 +49,8 @@ while (1) {
             my $sample = $sample_map{$note};
             say "Note: $note -> Trigger: $sample";
             my @cmd = ('mpg123', '-q', $sample);
-            system(@cmd) == 0 or warn "WARNING: system @cmd failed: $?";
+            my $pid = system 1, @cmd;
+            warn "WARNING: can't start @cmd: $!\n" if $pid <= 0;
         } else {
             say "Unknown note: $note";
         }
