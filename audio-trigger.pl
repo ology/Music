@@ -48,7 +48,7 @@ while (1) {
         next unless $velocity;
         if (exists $sample_map{$note}) {
             my $sample = $sample_map{$note};
-            say "Match: $note -> Triggering: $sample";
+            say "Note: $note -> Trigger: $sample";
             my @cmd = $^O eq 'MSWin32'
                 ? ('start', '', $sample)
                 : ('mpg123', $sample);
