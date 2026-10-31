@@ -12,6 +12,8 @@ use Time::HiRes qw(sleep);
 my $port_name = shift // 'pad';
 my $samples   = shift // '../cartoon';
 
+my $max_samples = 64;
+
 die "No sample directory" unless -e $samples;
 
 my $midi_in = in_port($port_name);
@@ -25,7 +27,7 @@ while (my $path = $iter->()) {
     next if $path->is_dir;
     next unless $path =~ /\.(mp3|wav)\z/i;
     $sample_map{ $i++ } = $path;
-    last if $i >= 64;
+    last if $i >= $max_samples;
 }
 
 # ^c halt
