@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 # Trigger samples in a directory of mp3 or wav audio.
-# This works either on Windows or by using `mpg123`.
+# This works by using `mpg123`. So install that first.
 
 use v5.40;
 # use Data::Dumper::Compact qw(ddc);
@@ -49,9 +49,7 @@ while (1) {
         if (exists $sample_map{$note}) {
             my $sample = $sample_map{$note};
             say "Note: $note -> Trigger: $sample";
-            my @cmd = $^O eq 'MSWin32'
-                ? ('start', '', $sample)
-                : ('mpg123', $sample);
+            my @cmd = ('mpg123', $sample);
             system(@cmd) == 0 or warn "WARNING: system @cmd failed: $?";
         } else {
             say "Unknown note: $note";
