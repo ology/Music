@@ -38,9 +38,9 @@ while (1) {
     my ($type, $chan, $note) = @$msg;
     if ($type eq 'note_on') {
         if (exists $sample_map{$note}) {
-            my $mp3 = $sample_map{$note};
-            say "Note Match: $note -> Triggering: $mp3";
-            my @cmd = ('start', $mp3);
+            my $sample = $sample_map{$note};
+            say "Match: $note -> Triggering: $sample";
+            my @cmd = ('start', $sample);
             try {
                 system @cmd;
             }
