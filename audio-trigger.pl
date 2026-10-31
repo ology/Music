@@ -41,7 +41,7 @@ while (1) {
         if (exists $sample_map{$note}) {
             my $sample = $sample_map{$note};
             say "Match: $note -> Triggering: $sample";
-            my @cmd = ('cmd', '/c', 'start', '', $sample);
+            my @cmd = ('start', '', $sample);
             system(@cmd) == 0 or die "system @cmd failed: $?";
         } else {
             say "Unknown note: $note";
