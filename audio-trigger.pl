@@ -8,7 +8,7 @@ use MIDI::RtMidi::Util qw(in_port);
 use Path::Tiny;
 use Time::HiRes qw(sleep);
 
-my $port_name = shift || 'pad';
+my $port_name = shift // 'pad';
 
 my $midi_in = in_port($port_name);
 
@@ -19,7 +19,7 @@ my %sample_map;
 my $i = 0;
 while (my $path = $iter->()) {
     next if $path->is_dir;
-    next unless $path =~ /\.mp3$/;
+    next unless $path =~ /\.mp3\z/i;
     $sample_map{ $i++ } = $path;
     last if $i >= 64;
 }
