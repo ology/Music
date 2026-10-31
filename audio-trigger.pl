@@ -49,7 +49,7 @@ while (1) {
         if (exists $sample_map{$note}) {
             my $sample = $sample_map{$note};
             say "Note: $note -> Trigger: $sample";
-            my @cmd = ('mpg123', $sample);
+            my @cmd = ('mpg123', '-q', $sample);
             system(@cmd) == 0 or warn "WARNING: system @cmd failed: $?";
         } else {
             say "Unknown note: $note";
