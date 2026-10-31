@@ -14,7 +14,7 @@ my $samples   = shift // '../cartoon';
 
 my $max_samples = 64;
 
-die "No sample directory" unless -e $samples;
+die "No sample directory" unless -d $samples;
 
 my $midi_in = in_port($port_name);
 
