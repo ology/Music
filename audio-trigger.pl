@@ -16,7 +16,7 @@ die "No sample directory" unless -d $samples;
 
 my $midi_in = in_port($port_name);
 
-# get audio as a midi note-numbered sample map
+# get audio as a midi note-numbered sample filename map
 my $max_samples = 64;
 my $dir = path($samples);
 my $iter = $dir->iterator;
