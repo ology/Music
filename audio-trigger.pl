@@ -43,7 +43,7 @@ while (1) {
             my $sample = $sample_map{$note};
             say "Match: $note -> Triggering: $sample";
             my @cmd = ('start', '', $sample);
-            system(@cmd) == 0 or die "system @cmd failed: $?";
+            system(@cmd) == 0 or warn "WARNING: system @cmd failed: $?";
         } else {
             say "Unknown note: $note";
         }
