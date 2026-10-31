@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Trigger samples in a directory of mp3 audio.
+# Trigger samples in a directory of mp3 or wav audio.
 # This works either on Windows or by using `mpg123`.
 
 use v5.40;
