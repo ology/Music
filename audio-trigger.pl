@@ -6,6 +6,7 @@ use v5.40;
 # use Data::Dumper::Compact qw(ddc);
 use MIDI::RtMidi::Util qw(in_port);
 use Path::Tiny;
+use Time::HiRes qw(sleep);
 
 my $port_name = shift || 'pad';
 
