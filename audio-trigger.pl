@@ -12,13 +12,12 @@ use Time::HiRes qw(sleep);
 my $port_name = shift // 'pad';
 my $samples   = shift // '../cartoon';
 
-my $max_samples = 64;
-
 die "No sample directory" unless -d $samples;
 
 my $midi_in = in_port($port_name);
 
 # get audio as a midi note-numbered sample map
+my $max_samples = 64;
 my $dir = path($samples);
 my $iter = $dir->iterator;
 my %sample_map;
