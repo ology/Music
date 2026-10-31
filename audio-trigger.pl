@@ -36,8 +36,9 @@ while (1) {
         sleep 0.002; # don't churn the cpu
         next;
     }
-    my ($type, undef, $note, $velocity) = @$msg;
+    my ($type, undef, @args) = @$msg;
     if ($type eq 'note_on') {
+        my ($note, $velocity) = @args;
         next unless $velocity;
         if (exists $sample_map{$note}) {
             my $sample = $sample_map{$note};
