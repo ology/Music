@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
-# Windows program to trigger samples in a subdirectory of mp3 audio.
+# Trigger samples in a directory of mp3 audio.
+# This works either on Windows or by using `mpg123`.
 
 use v5.40;
 # use Data::Dumper::Compact qw(ddc);
@@ -9,11 +10,12 @@ use Path::Tiny;
 use Time::HiRes qw(sleep);
 
 my $port_name = shift // 'pad';
+my $samples   = shift // '../cartoon';
 
 my $midi_in = in_port($port_name);
 
 # get audio as a midi note-numbered sample map
-my $dir = path('../cartoon');
+my $dir = path($samples);
 my $iter = $dir->iterator;
 my %sample_map;
 my $i = 0;
@@ -43,7 +45,9 @@ while (1) {
         if (exists $sample_map{$note}) {
             my $sample = $sample_map{$note};
             say "Match: $note -> Triggering: $sample";
-            my @cmd = ('start', '', $sample);
+            my @cmd = $^O eq 'MSWin32'
+                ? ('start', '', $sample)
+                : ('mpg123', $sample);
             system(@cmd) == 0 or warn "WARNING: system @cmd failed: $?";
         } else {
             say "Unknown note: $note";
