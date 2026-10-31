@@ -36,8 +36,9 @@ while (1) {
         sleep 0.002; # don't churn the cpu
         next;
     }
-    my ($type, $chan, $note) = @$msg;
+    my ($type, undef, $note, $velocity) = @$msg;
     if ($type eq 'note_on') {
+        next unless $velocity;
         if (exists $sample_map{$note}) {
             my $sample = $sample_map{$note};
             say "Match: $note -> Triggering: $sample";
