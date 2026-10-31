@@ -23,7 +23,7 @@ my %sample_map;
 my $i = 0;
 while (my $path = $iter->()) {
     next if $path->is_dir;
-    next unless $path =~ /\.mp3\z/i;
+    next unless $path =~ /\.(mp3|wav)\z/i;
     $sample_map{ $i++ } = $path;
     last if $i >= 64;
 }
