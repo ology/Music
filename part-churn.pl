@@ -48,6 +48,7 @@ if ($programs =~ /^-\d+$/) { # randomization
 my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
 
 program_change($device, $channel, $program->current);
+say 'Start: ', $beat_count, ', Program: ', $program->current;
 
 my $loop = IO::Async::Loop->new;
 
@@ -65,10 +66,10 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             $beat_count++;
-            say '1/16th: ', $beat_count, ', Program: ', $program->current;
+            say '1/16th: ', $beat_count;
             if ($beat_count % ($beats * $divisions / $factor) == 0) {
-              say '1/4th: ', $beat_count;
               program_change($device, $channel, $program->next);
+              say '1/4th: ', $beat_count, ', Program: ', $program->current;
             }
         }
     },
