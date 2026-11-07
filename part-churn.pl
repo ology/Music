@@ -34,11 +34,11 @@ catch ($e) {
   die "ERROR: $e\n";
 }
 
+my $loop = IO::Async::Loop->new;
+
 my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
 
 program_change($device, $channel, $program->current);
-
-my $loop = IO::Async::Loop->new;
 
 trigger_notes();
 
