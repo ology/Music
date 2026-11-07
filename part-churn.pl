@@ -4,18 +4,16 @@
 
 use v5.40;
 use Array::Circular ();
-use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 use Data::Dumper::Compact qw(ddc);
 use IO::Async::Loop;
 use IO::Async::Timer::Countdown;
 use IO::Async::Timer::Periodic;
+use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 
 my $bpm      = shift || 100;
 my $programs = shift || '1,2,3,4'; # or a negative number of random choices
 my $name     = shift || 'T-8';
 my $channel  = shift // 15;
-
-my @notes = map { $_ - 24 } qw(60 64 65 67 69 72);
 
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
@@ -34,8 +32,6 @@ catch ($e) {
   die "ERROR: $e\n";
 }
 
-my $loop = IO::Async::Loop->new;
-
 if ($programs =~ /^-\d+$/) { # randomization
   $programs = -$programs;
   my @progs = (1 .. $programs);
@@ -46,7 +42,7 @@ my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
 
 program_change($device, $channel, $program->current);
 
-trigger_notes();
+my $loop = IO::Async::Loop->new;
 
 $loop->watch_signal(INT => sub {
     say "\nStop";
@@ -66,7 +62,6 @@ my $timer = IO::Async::Timer::Periodic->new(
             if ($beat_count % ($beats * $divisions) == 0) {
               say '1/4th: ', $beat_count;
               program_change($device, $channel, $program->next);
-              trigger_notes();
             }
         }
     },
@@ -75,22 +70,6 @@ my $timer = IO::Async::Timer::Periodic->new(
 $timer->start;
 $loop->add($timer);
 $loop->run;
-
-sub trigger_notes {
-  for (1 .. 3) {
-      my $note = $notes[int rand @notes];
-      say "note_on: $note";
-      $device->note_on(1, $note, 127);
-
-      $loop->add(IO::Async::Timer::Countdown->new(
-          delay     => $clock_interval * $sixteenth,
-          on_expire => sub {
-              say "note_off: $note";
-              $device->note_off(1, $note);
-          },
-      )->start);
-  }
-}
 
 sub program_change ($device, $chan, $program) {
   try {
