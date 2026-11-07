@@ -27,6 +27,13 @@ my $beat_count = 0; # how many beats?
 
 my $device = out_port($name);
 
+try {
+  $device->start;
+}
+catch ($e) {
+  die "ERROR: $e\n";
+}
+
 my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
 
 program_change($device, $channel, $program->current);
@@ -34,13 +41,6 @@ program_change($device, $channel, $program->current);
 my $loop = IO::Async::Loop->new;
 
 trigger_notes();
-
-try {
-  $device->start;
-}
-catch ($e) {
-  die "ERROR: $e\n";
-}
 
 $loop->watch_signal(INT => sub {
     say "\nStop";
