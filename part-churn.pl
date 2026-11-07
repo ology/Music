@@ -15,6 +15,7 @@ use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 
 my $bpm      = shift || 100;
 my $programs = shift || '1,2,3,4'; # or a negative number of random choices
+my $factor   = shift || 1;
 my $name     = shift || 'T-8';
 my $channel  = shift // 15; # the T-8 changes patterns on channel 15
 
@@ -62,7 +63,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $sixteenth == 0) {
             $beat_count++;
             say '1/16th: ', $beat_count;
-            if ($beat_count % ($beats * $divisions) == 0) {
+            if ($beat_count % ($beats * $divisions / $factor) == 0) {
               say '1/4th: ', $beat_count;
               program_change($device, $channel, $program->next);
             }
