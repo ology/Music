@@ -15,7 +15,7 @@ use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 
 my $bpm      = shift || 100;
 my $programs = shift || '1,2,3,4'; # or a negative number of random choices
-my $factor   = shift || 1;
+my $factor   = shift || 1; # 1=change on 64 beats, 2=32, 4=16, 8=8 beats...
 my $name     = shift || 'T-8';
 my $channel  = shift // 15; # the T-8 changes patterns on channel 15
 
