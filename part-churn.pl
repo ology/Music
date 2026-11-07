@@ -27,7 +27,7 @@ my $beat_count = 0; # how many beats?
 
 my $device = out_port($name);
 
-my $program = Array::Circular->new(split /,/, $programs);
+my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
 
 program_change($device, $channel, $program->current);
 
