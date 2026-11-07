@@ -3,7 +3,10 @@
 # Play changing parts.
 
 # Examples:
-#  perl part-churn.pl 70 -42  # play 42 different patterns selected at random
+#  perl part-churn.pl # use the defaults
+#  perl part-churn.pl 120 '42,66,67' # play those 3 parts around and around 
+#  perl part-churn.pl 90 -42 # play 42 different patterns selected at random
+#  perl part-churn.pl 70 -4 2 # change patterns twice as fast
 
 use v5.40;
 use Array::Circular ();
