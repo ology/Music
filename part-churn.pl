@@ -41,7 +41,6 @@ if ($programs =~ /^-\d+$/) {
   my @progs = (1 .. $programs);
   my @rands = map { $progs[int rand @progs] } 1 .. $#progs;
   $programs = join ',', @rands;
-  # say "P: $programs";
 }
 my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
 
