@@ -65,7 +65,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             $beat_count++;
-            say '1/16th: ', $beat_count;
+            say '1/16th: ', $beat_count, ', Program: ', $program->current;
             if ($beat_count % ($beats * $divisions / $factor) == 0) {
               say '1/4th: ', $beat_count;
               program_change($device, $channel, $program->next);
