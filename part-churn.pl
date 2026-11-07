@@ -2,6 +2,8 @@
 
 # Play changing parts.
 
+# Ex: perl part-churn.pl 70 -42 # play 42 different patterns selected at random
+
 use v5.40;
 use Array::Circular ();
 use Data::Dumper::Compact qw(ddc);
