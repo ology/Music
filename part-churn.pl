@@ -11,7 +11,7 @@ use IO::Async::Timer::Countdown;
 use IO::Async::Timer::Periodic;
 
 my $bpm      = shift || 100;
-my $programs = shift || '1,2,3,4';
+my $programs = shift || '1,2,3,4'; # or a negative number of random choices
 my $name     = shift || 'T-8';
 my $channel  = shift // 15;
 
@@ -36,6 +36,13 @@ catch ($e) {
 
 my $loop = IO::Async::Loop->new;
 
+if ($programs =~ /^-\d+$/) {
+  $programs = -$programs;
+  my @progs = (1 .. $programs);
+  my @rands = map { $progs[int rand @progs] } 1 .. $#progs;
+  $programs = join ',', @rands;
+  # say "P: $programs";
+}
 my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
 
 program_change($device, $channel, $program->current);
