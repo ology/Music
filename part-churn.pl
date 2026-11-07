@@ -15,7 +15,7 @@ my $programs = shift || '1,2,3,4'; # or a negative number of random choices
 my $name     = shift || 'T-8';
 my $channel  = shift // 15;
 
-my @notes = qw(60 64 65 67 69 72);
+my @notes = map { $_ - 24 } qw(60 64 65 67 69 72);
 
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
@@ -80,13 +80,13 @@ sub trigger_notes {
   for (1 .. 3) {
       my $note = $notes[int rand @notes];
       say "note_on: $note";
-      $device->note_on($channel, $note, 127);
+      $device->note_on(1, $note, 127);
 
       $loop->add(IO::Async::Timer::Countdown->new(
           delay     => $clock_interval * $sixteenth,
           on_expire => sub {
               say "note_off: $note";
-              $device->note_off($channel, $note);
+              $device->note_off(1, $note);
           },
       )->start);
   }
