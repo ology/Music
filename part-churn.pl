@@ -31,7 +31,6 @@ my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 
 my $device = out_port($name);
-
 try {
   $device->start;
 }
@@ -46,7 +45,6 @@ if ($programs =~ /^-\d+$/) { # randomization
   $programs = join ',', @rands;
 }
 my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
-
 program_change($device, $channel, $program->current);
 say 'Start: ', $beat_count, ', Program: ', $program->current;
 
