@@ -13,7 +13,7 @@ use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 my $bpm      = shift || 100;
 my $programs = shift || '1,2,3,4'; # or a negative number of random choices
 my $name     = shift || 'T-8';
-my $channel  = shift // 15;
+my $channel  = shift // 15; # the T-8 changes patterns on channel 15
 
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
