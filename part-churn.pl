@@ -36,7 +36,7 @@ catch ($e) {
 
 my $loop = IO::Async::Loop->new;
 
-if ($programs =~ /^-\d+$/) {
+if ($programs =~ /^-\d+$/) { # randomization
   $programs = -$programs;
   my @progs = (1 .. $programs);
   my @rands = map { $progs[int rand @progs] } 1 .. $#progs;
