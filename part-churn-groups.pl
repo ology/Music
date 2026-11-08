@@ -11,23 +11,38 @@
 use v5.40;
 use Array::Circular ();
 use Data::Dumper::Compact qw(ddc);
+use Getopt::Long qw(GetOptions);
 use IO::Async::Loop;
 use IO::Async::Timer::Countdown;
 use IO::Async::Timer::Periodic;
 use List::Util qw(shuffle);
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 
-my $bpm      = shift || 100;
-my $programs = shift || '1,2,3,4'; # or a negative number of random choices
-my $factor   = shift || 1; # 1=change on 64 beats, 2=32, 4=16, 8=8 beats...
-my $size     = shift || 2; # phrases to repeat
-my $name     = shift || 'T-8'; # open midi port name
-my $channel  = shift // 15; # the T-8 changes patterns on channel 15
+my %opt = (
+    port     => 'T-8', # REQUIRED MIDI device (e.g. IAC Bus)
+    bpm      => 70, # beats-per-minute
+    channel  => 15, # nb: the T-8 changes patterns on (zero-based) channel 15
+    factor   => 1, # 1=change on 64 beats, 2=32, 4=16, 8=8 beats...
+    programs => '1,2,3,4', # or a negative number of random choices
+    size     => 2, # phrases to repeat
+    verbose  => 0,
+);
+GetOptions(\%opt,
+    'port=s',
+    'bpm=i',
+    'channel=i',
+    'factor=i',
+    'programs=s',
+    'size=i',
+    'verbose',
+);
+
+die "Open MIDI port name required for 'port'\n" unless $opt{port};
 
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 24; # PPQN
-my $clock_interval = 60 / $bpm / $clocks_per_beat; # time / bpm / ppqn
+my $clock_interval = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
 my $sixteenth = $clocks_per_beat / $divisions; # clocks per 16th-note
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
@@ -37,7 +52,7 @@ my @group; # current program changes
 my $changes; # array::circular full group
 my $changes_inc = 0; # how many changes?
 
-my $device = out_port($name);
+my $device = out_port($opt{port});
 try {
   $device->start;
 }
@@ -45,16 +60,16 @@ catch ($e) {
   die "ERROR: $e\n";
 }
 
-if ($programs =~ /^-\d+$/) { # randomization
-  $programs = join ',', shuffle 1 .. -$programs;
+if ($opt{programs} =~ /^-\d+$/) { # randomization
+  $opt{programs} = join ',', shuffle 1 .. -$opt{programs};
 }
-my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
+my $program = Array::Circular->new(map { $_ - 1 } split /,/, $opt{programs});
 
-@group = draw_group($program, $size);
+@group = draw_group($program, $opt{size});
 $changes = Array::Circular->new(@group);
 $group_num++;
 $changes_inc++;
-program_change($device, $channel, $changes->current);
+program_change($device, $opt{channel}, $changes->current);
 say "Beat: $beat_count, Program: ", $changes->current, ", Group: $group_num";
 
 my $loop = IO::Async::Loop->new;
@@ -74,9 +89,9 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $sixteenth == 0) {
             $beat_count++;
             # say '1/16th: ', $beat_count;
-            if ($beat_count % ($beats * $divisions / $factor) == 0) {
-              if ($changes_inc >= $size * 2) {
-                @group = draw_group($program, $size);
+            if ($beat_count % ($beats * $divisions / $opt{factor}) == 0) {
+              if ($changes_inc >= $opt{size} * 2) {
+                @group = draw_group($program, $opt{size});
                 $changes = Array::Circular->new(@group);
                 $changes_inc = 0;
                 $group_num++;
@@ -85,7 +100,7 @@ my $timer = IO::Async::Timer::Periodic->new(
                 $changes->next;
               }
               $changes_inc++;
-              program_change($device, $channel, $changes->current);
+              program_change($device, $opt{channel}, $changes->current);
               say "Beat: $beat_count, Program: ", $changes->current, ", Group: $group_num";
             }
         }
