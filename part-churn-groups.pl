@@ -14,6 +14,7 @@ use Data::Dumper::Compact qw(ddc);
 use IO::Async::Loop;
 use IO::Async::Timer::Countdown;
 use IO::Async::Timer::Periodic;
+use List::Util qw(shuffle);
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 
 my $bpm      = shift || 100;
@@ -45,15 +46,16 @@ catch ($e) {
 }
 
 if ($programs =~ /^-\d+$/) { # randomization
-  $programs = -$programs;
-  my @progs = (1 .. $programs);
-  my @rands = map { $progs[int rand @progs] } 1 .. $#progs;
-  $programs = join ',', @rands;
+  $programs = join ',', shuffle 1 .. -$programs;
 }
 my $program = Array::Circular->new(map { $_ - 1 } split /,/, $programs);
-program_change($device, $channel, $program->current);
+
+@group = draw_group($program, $size);
+$changes = Array::Circular->new(@group);
 $group_num++;
-say "Start: $beat_count, Program: ", $program->current, ", Group N: $group_num";
+$changes_inc++;
+program_change($device, $channel, $changes->current);
+say "Start: $beat_count, Program: ", $changes->current, ", Group N: $group_num";
 
 my $loop = IO::Async::Loop->new;
 
@@ -73,24 +75,18 @@ my $timer = IO::Async::Timer::Periodic->new(
             $beat_count++;
             # say '1/16th: ', $beat_count;
             if ($beat_count % ($beats * $divisions / $factor) == 0) {
-              program_change($device, $channel, $program->next); # TODO below?
-              if ($group_num >= $size) {
-                if (($changes_inc + 1) >= $size) {
-                  @group = ($program->current);
-                  $group_num = 1;
-                  # program_change($device, $channel, $program->next);
-                }
-                else {
-                  # program_change($device, $channel, $changes->next);
-                }
+              if ($changes_inc >= $size * 2) {
+                @group = draw_group($program, $size);
+                $changes = Array::Circular->new(@group);
+                $changes_inc = 0;
+                $group_num++;
               }
               else {
-                # program_change($device, $channel, $program->next);
-                $group_num++;
-                push @group, $program->current;
-                # $changes = Array::Circular->new(@group) if @group == $size;
+                $changes->next;
               }
-              say "Change: $beat_count, Program: ", $program->current, ", Group N: $group_num";
+              $changes_inc++;
+              program_change($device, $channel, $changes->current);
+              say "Change: $beat_count, Program: ", $changes->current, ", Group N: $group_num";
             }
         }
     },
@@ -99,6 +95,13 @@ my $timer = IO::Async::Timer::Periodic->new(
 $timer->start;
 $loop->add($timer);
 $loop->run;
+
+sub draw_group ($pool, $n) {
+  my @drawn = $pool->current;
+  push @drawn, $pool->next for 2 .. $n;
+  $pool->next;
+  return @drawn;
+}
 
 sub program_change ($device, $chan, $program) {
   try {
