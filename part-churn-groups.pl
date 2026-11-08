@@ -19,12 +19,12 @@ use List::Util qw(shuffle);
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
 
 my %opt = (
-    port     => 'T-8', # REQUIRED MIDI device (e.g. IAC Bus)
-    bpm      => 70, # beats-per-minute
-    channel  => 15, # nb: the T-8 changes patterns on (zero-based) channel 15
-    factor   => 1, # 1=change on 64 beats, 2=32, 4=16, 8=8 beats...
+    port     => 'T-8',     # REQUIRED MIDI device (e.g. IAC Bus)
+    bpm      => 70,        # beats-per-minute
+    channel  => 15,        # nb: the T-8 changes patterns on (zero-based) channel 15
+    factor   => 1,         # 1=change on 64 beats, 2=32, 4=16, 8=8 beats...
     programs => '1,2,3,4', # or a negative number of random choices
-    size     => 2, # phrases to repeat
+    size     => 2,         # phrases to repeat
     verbose  => 0,
 );
 GetOptions(\%opt,
