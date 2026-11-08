@@ -37,7 +37,7 @@ GetOptions(\%opt,
     'verbose',
 );
 
-die "Open MIDI port name required for 'port'\n" unless $opt{port};
+die "Open MIDI port name missing\n" unless $opt{port};
 
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
