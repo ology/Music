@@ -4,9 +4,9 @@
 
 # Examples:
 #  perl part-churn-groups.pl # use the defaults
-#  perl part-churn-groups.pl 120 '42,66,67' # play those 3 parts around and around 
-#  perl part-churn-groups.pl 90 -42 # play 42 different patterns selected at random
-#  perl part-churn-groups.pl 90 -42 2 # change patterns twice as fast
+#  perl part-churn-groups.pl --bpm=120 --programs='42,66,67' # play those 3 parts around and around 
+#  perl part-churn-groups.pl --bpm=90 --programs=-42 # play 42 different patterns selected at random
+#  perl part-churn-groups.pl --bpm=90 --programs=-42 --factor=2 # change patterns twice as fast
 
 use v5.40;
 use Array::Circular ();
