@@ -55,7 +55,7 @@ $changes = Array::Circular->new(@group);
 $group_num++;
 $changes_inc++;
 program_change($device, $channel, $changes->current);
-say "Start: $beat_count, Program: ", $changes->current, ", Group N: $group_num";
+say "Beat: $beat_count, Program: ", $changes->current, ", Group N: $group_num";
 
 my $loop = IO::Async::Loop->new;
 
@@ -86,7 +86,7 @@ my $timer = IO::Async::Timer::Periodic->new(
               }
               $changes_inc++;
               program_change($device, $channel, $changes->current);
-              say "Change: $beat_count, Program: ", $changes->current, ", Group N: $group_num";
+              say "Beat: $beat_count, Program: ", $changes->current, ", Group N: $group_num";
             }
         }
     },
