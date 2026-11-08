@@ -18,8 +18,7 @@
 # While running: press 'p' to pause/resume without closing the MIDI
 #ports, or 'q' to quit cleanly.
 
-use v5.36;
-use feature qw(try);
+use v5.40;
 use Data::Dumper::Compact qw(ddc);               # debugging
 use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
@@ -31,7 +30,6 @@ use Music::MelodicDevice::Arpeggiation ();       # arpeggiation
 use Music::Scales qw(get_scale_MIDI);            # pitches
 use POSIX qw(_exit);                             # skip global destruction
 use Term::TermKey::Async qw(FORMAT_VIM);         # keyboard control
-no warnings 'experimental::try';
 
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
