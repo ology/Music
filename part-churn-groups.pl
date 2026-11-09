@@ -14,7 +14,6 @@ use Array::Circular ();
 use Data::Dumper::Compact qw(ddc);
 use Getopt::Long qw(GetOptions);
 use IO::Async::Loop;
-use IO::Async::Timer::Countdown;
 use IO::Async::Timer::Periodic;
 use List::Util qw(shuffle);
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
