@@ -4,9 +4,9 @@
 
 # Examples:
 #  perl part-churn-groups.pl # use the defaults
-#  perl part-churn-groups.pl --bpm=120 --programs='42,66,67' --size=2 # 3 parts round and round in pairs
-#  perl part-churn-groups.pl --bpm=90 --programs=-42 # play 42 different patterns selected at random
-#  perl part-churn-groups.pl --bpm=90 --programs=-42 --factor=2 # change patterns twice as fast
+#  perl part-churn-groups.pl --verbose --bpm=120 --programs='42,66,67' --size=2 # 3 parts round and round in pairs
+#  perl part-churn-groups.pl --verbose --bpm=90 --programs=-42 # play 42 different patterns selected at random
+#  perl part-churn-groups.pl --verbose --bpm=90 --programs=-42 --factor=2 # change patterns twice as fast
 
 use v5.40;
 use Array::Circular ();
@@ -63,6 +63,7 @@ catch ($e) {
 if ($opt{programs} =~ /^-\d+$/) { # randomization
   $opt{programs} = join ',', shuffle 1 .. -$opt{programs};
 }
+say "Programs: $opt{programs}" if $opt{verbose};
 my $program = Array::Circular->new(map { $_ - 1 } split /,/, $opt{programs});
 
 @group = draw_group($program, $opt{size});
@@ -70,12 +71,13 @@ $changes = Array::Circular->new(@group);
 $group_num++;
 $changes_inc++;
 program_change($device, $opt{channel}, $changes->current);
-say "Beat: $beat_count, Program: ", $changes->current, ", Group: $group_num";
+say "Beat: $beat_count, Program: ", $changes->current, ", Group: $group_num"
+  if $opt{verbose};
 
 my $loop = IO::Async::Loop->new;
 
 $loop->watch_signal(INT => sub {
-    say "\nStop";
+    say "\nStop" if $opt{verbose};
     stop_device($device);
     stop_all_notes($device);
     $loop->stop;
@@ -88,7 +90,7 @@ my $timer = IO::Async::Timer::Periodic->new(
         $ticks++;
         if ($ticks % $sixteenth == 0) {
             $beat_count++;
-            # say '1/16th: ', $beat_count;
+            # say '1/16th: ', $beat_count if $opt{verbose};
             if ($beat_count % ($beats * $divisions / $opt{factor}) == 0) {
               if ($changes_inc >= $opt{size} * 2) {
                 @group = draw_group($program, $opt{size});
@@ -101,7 +103,8 @@ my $timer = IO::Async::Timer::Periodic->new(
               }
               $changes_inc++;
               program_change($device, $opt{channel}, $changes->current);
-              say "Beat: $beat_count, Program: ", $changes->current, ", Group: $group_num";
+              say "Beat: $beat_count, Program: ", $changes->current, ", Group: $group_num"
+                if $opt{verbose};
             }
         }
     },
