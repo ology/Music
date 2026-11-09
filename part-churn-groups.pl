@@ -39,6 +39,7 @@ GetOptions(\%opt,
 
 die "Open MIDI port name missing\n" unless $opt{port};
 
+# Timing:
 my $beats = 16; # beats in a phrase
 my $divisions = 4; # divisions of a quarter-note into 16ths
 my $clocks_per_beat = 24; # PPQN
@@ -47,11 +48,13 @@ my $sixteenth = $clocks_per_beat / $divisions; # clocks per 16th-note
 my $ticks = 0; # clock ticks
 my $beat_count = 0; # how many beats?
 
+# Groupings:
 my $group_num = 0; # program change counter
 my @group; # current program changes
 my $changes; # array::circular full group
 my $changes_inc = 0; # how many changes?
 
+# Device:
 my $device = out_port($opt{port});
 try {
   $device->start;
@@ -60,12 +63,14 @@ catch ($e) {
   die "ERROR: $e\n";
 }
 
+# Programs:
 if ($opt{programs} =~ /^-\d+$/) { # randomization
   $opt{programs} = join ',', shuffle 1 .. -$opt{programs};
 }
 say "Programs: $opt{programs}" if $opt{verbose};
 my $program = Array::Circular->new(map { $_ - 1 } split /,/, $opt{programs});
 
+# Initial change:
 @group = draw_group($program, $opt{size});
 $changes = Array::Circular->new(@group);
 $group_num++;
@@ -76,6 +81,7 @@ say "Beat: $beat_count, Program: ", $changes->current, ", Group: $group_num"
 
 my $loop = IO::Async::Loop->new;
 
+# Graceful ^C:
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
     stop_device($device);
@@ -92,7 +98,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             $beat_count++;
             # say '1/16th: ', $beat_count if $opt{verbose};
             if ($beat_count % ($beats * $divisions / $opt{factor}) == 0) {
-              if ($changes_inc >= $opt{size} * 2) {
+              if ($changes_inc >= $opt{size} * 2) { # fresh group
                 @group = draw_group($program, $opt{size});
                 $changes = Array::Circular->new(@group);
                 $changes_inc = 0;
@@ -114,6 +120,7 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
+# Collect a grouping
 sub draw_group ($pool, $n) {
   my @drawn = $pool->current;
   push @drawn, $pool->next for 2 .. $n;
