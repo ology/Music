@@ -7,7 +7,7 @@
 #  perl part-churn-groups.pl --verbose --bpm=120 --programs='42,66,67' --size=2 # 3 parts round and round in pairs
 #  perl part-churn-groups.pl --verbose --bpm=90 --programs=-42 # play 42 different patterns selected at random
 #  perl part-churn-groups.pl --verbose --bpm=90 --programs=-42 --factor=2 # change patterns twice as fast
-#  perl part-churn-groups.pl --v --b=90 --pr=-42 --f=2 # same abbreviated
+#  perl part-churn-groups.pl --v --b=90 --pr=-42 --f=2 # same but abbreviated
 
 use v5.40;
 use Array::Circular ();
