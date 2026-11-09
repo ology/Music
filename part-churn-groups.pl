@@ -4,7 +4,7 @@
 
 # Examples:
 #  perl part-churn-groups.pl # use the defaults
-#  perl part-churn-groups.pl --bpm=120 --programs='42,66,67' # play those 3 parts around and around 
+#  perl part-churn-groups.pl --bpm=120 --programs='42,66,67' --size=2 # 3 parts round and round in pairs
 #  perl part-churn-groups.pl --bpm=90 --programs=-42 # play 42 different patterns selected at random
 #  perl part-churn-groups.pl --bpm=90 --programs=-42 --factor=2 # change patterns twice as fast
 
