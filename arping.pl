@@ -16,8 +16,7 @@
 # perl arping.pl --v --y=synth --x=usb --n='4,5,6,7' --spread=3
 # perl arping.pl --v --y=synth --p='42,42' # for playing a single patch
 
-use v5.36;
-use feature qw(try);
+use v5.40;
 use Data::Dumper::Compact qw(ddc);               # debugging
 use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
@@ -29,7 +28,6 @@ use Music::MelodicDevice::Arpeggiation ();       # arpeggiation
 use Music::Scales qw(get_scale_MIDI);            # pitches
 use Music::VoiceGen ();                          # program change
 use POSIX qw(_exit);                             # skip global destruction
-no warnings 'experimental::try';
 
 use constant ARP_TICKS => Music::MelodicDevice::Arpeggiation::TICKS();
 
