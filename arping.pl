@@ -129,13 +129,6 @@ if ($opt{x_port}) {
     say "Started $opt{x_port}" if $opt{verbose};
 }
 
-$SIG{INT} = sub {
-    say "\nStop" if $opt{verbose};
-    stop_device($midi_out);
-    stop_device($device) if $opt{x_port};
-    _exit(0);
-};
-
 # synth programs are indexes into the patches list
 my $programs = Music::VoiceGen->new(
     pitches   => [0 .. $#patches], #\@patches, #[0 .. 127],
@@ -144,6 +137,14 @@ my $programs = Music::VoiceGen->new(
 $programs->context($opt{initial});
 
 my $loop = IO::Async::Loop->new;
+
+# Graceful ^C:
+$loop->watch_signal(INT => sub {
+    say "\nStop" if $opt{verbose};
+    stop_device($midi_out);
+    stop_device($device) if $opt{x_port};
+    $loop->stop;
+});
 
 my $timer = IO::Async::Timer::Periodic->new(
     interval   => $clock_interval,
