@@ -109,7 +109,7 @@ $loop->run;
 sub trigger_notes {
     my @notes = map { $voice->rand } 1 .. $divisions;
     my $on_tick = $ticks;
-    my $step_ticks = 1;
+    my $step_ticks = $divisions;
     for my $n (@notes) {
         push @pending, {
             note     => $n,
