@@ -6,13 +6,13 @@
 # perl interval-hop.pl --verbose --port=synth
 
 use v5.40;
-use Data::Dumper::Compact qw(ddc);               # debugging
-use Getopt::Long qw(GetOptions);                 # cli processing
-use IO::Async::Loop ();                          # async
-use IO::Async::Timer::Periodic ();               # async
+use Data::Dumper::Compact qw(ddc);    # debugging
+use Getopt::Long qw(GetOptions);      # cli processing
+use IO::Async::Loop ();               # async
+use IO::Async::Timer::Periodic ();    # async
 use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes); # rt-midi
-use Music::Scales qw(get_scale_MIDI);            # pitches
-use Music::VoiceGen ();                          # voices!
+use Music::Scales qw(get_scale_MIDI); # pitches
+use Music::VoiceGen ();               # voices!
 
 my %opt = (
     port     => undef,       # required MIDI device name fragment
