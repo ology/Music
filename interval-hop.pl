@@ -4,6 +4,7 @@
 
 # Examples:
 # perl interval-hop.pl --verbose --port=synth
+# perl interval-hop.pl --v --b=90 --c=2 --po=nvision
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);    # debugging
