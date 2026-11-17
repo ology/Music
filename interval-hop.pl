@@ -10,7 +10,7 @@ use Data::Dumper::Compact qw(ddc);               # debugging
 use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
-use MIDI::RtMidi::Util qw(out_port stop_device); # rt-midi
+use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes); # rt-midi
 use Music::Scales qw(get_scale_MIDI);            # pitches
 use Music::VoiceGen ();                          # voices!
 
@@ -68,6 +68,7 @@ my $loop = IO::Async::Loop->new;
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
     stop_device($midi_out);
+    stop_all_notes($midi_out);
     $loop->stop;
 });
 
