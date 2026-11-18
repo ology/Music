@@ -11,7 +11,7 @@ use Data::Dumper::Compact qw(ddc);    # debugging
 use Getopt::Long qw(GetOptions);      # cli processing
 use IO::Async::Loop ();               # async
 use IO::Async::Timer::Periodic ();    # async
-use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes); # rt-midi
+use MIDI::RtMidi::Util qw(out_port stop_all_notes); # rt-midi
 use Music::Scales qw(get_scale_MIDI); # pitches
 use Music::VoiceGen ();               # voices!
 
@@ -60,15 +60,13 @@ my $voice = Music::VoiceGen->new(
 
 # open the midi devices for output
 my $midi_out = out_port($opt{port});
-$midi_out->start;
-say "Started '$opt{port}' for MIDI output" if $opt{verbose};
+say "Opened '$opt{port}' for MIDI output" if $opt{verbose};
 
 my $loop = IO::Async::Loop->new;
 
 # Graceful ^C:
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
-    stop_device($midi_out);
     stop_all_notes($midi_out);
     $loop->stop;
 });
@@ -111,7 +109,7 @@ $loop->run;
 sub trigger_notes {
     my @notes = map { $voice->rand } 1 .. 5;
     my $on_tick = $ticks;
-    my $step_ticks = 8;
+    my $step_ticks = 4;
     for my $n (@notes) {
         push @pending, {
             note     => $n,
