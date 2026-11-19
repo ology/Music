@@ -1,8 +1,8 @@
 #!/usr/bin/env perl
 
 # Play a generative sequence that jumps by musical interval.
-# Each MIDI channel gets its own independent voice, and play
-# simultaneously.
+# Each MIDI channel gets its own independent voice and rhythm,
+# and they play simultaneously.
 
 # Examples:
 # perl interval-hop.pl --verbose --po=nvision
@@ -14,7 +14,7 @@ use Getopt::Long qw(GetOptions);      # cli processing
 use IO::Async::Loop ();               # async
 use IO::Async::Timer::Periodic ();    # async
 use MIDI::RtMidi::Util qw(out_port stop_all_notes); # rt-midi
-use MIDI::Util qw(dura_size);         # 
+use MIDI::Util qw(dura_size);         # duration name => ticks (96 per quarter)
 use Music::Duration::Partition ();    # rhythmic phrases
 use Music::Scales qw(get_scale_MIDI); # pitches
 use Music::VoiceGen ();               # voices!
@@ -44,23 +44,20 @@ GetOptions(\%opt,
 die "Open MIDI port name required for 'port'\n" unless $opt{port};
 
 my @channels = split /\s*,\s*/, $opt{channels};
+my @jumps    = split /\s*,\s*/, $opt{jumps};
 
 # we are in 4/4 time...
-my $divisions       = 4; # divisions of a quarter-note into 16ths
-my $beats           = $divisions * $divisions; # beats in a phrase
-my $clocks_per_beat = 6 * $divisions; # PPQN
-my $clock_interval  = 60 / $opt{bpm} / $clocks_per_beat; # time / bpm / ppqn
+my $ppqn           = 96;                      # internal ticks per quarter-note
+my $clock_divider  = $ppqn / 24;              # MIDI clock is always 24 per quarter
+my $clock_interval = 60 / $opt{bpm} / $ppqn;  # seconds per tick
 
 my @active;  # { channel => $ch, note => $pitch, off_tick => $when_it_should_stop }
 my @pending; # { channel => $ch, note => $pitch, on_tick => $when_it_should_start }
 
 my $ticks      = 0; # clock ticks
-my $beat_count = 0; # beats!
+my $beat_count = 0; # quarter-notes played
 
-my @jumps = split /,/, $opt{jumps};
-
-# one independent voice per channel, each with its own span of octaves,
-# staggered by one octave per channel
+# one independent voice per channel
 my %voice;
 for my $ch (@channels) {
     my @pool = map {
@@ -74,10 +71,12 @@ for my $ch (@channels) {
     );
 }
 
+# one independent rhythm generator per channel: each phrase fills
+# exactly one quarter-note, since a phrase is triggered every quarter
 my %phrase;
 for my $ch (@channels) {
     $phrase{$ch} = Music::Duration::Partition->new(
-        size => 4,
+        size => 1, # in quarter-notes
         pool => [qw(qn en sn)],
         # weights => [   0.7, 0.3 ],
         # groups => [   1, 1, 3   ],
@@ -102,8 +101,14 @@ my $timer = IO::Async::Timer::Periodic->new(
     interval   => $clock_interval,
     reschedule => 'hard', # anchor to a fixed schedule, don't let tempo drift
     on_tick    => sub {
-        $midi_out->clock;
         $ticks++;
+
+        # $ticks starts at 1 on the first tick, so "$ticks - 1" is the
+        # zero-based tick count: 0, 1, 2, ...  A modulo of zero means we
+        # are exactly on a boundary.
+
+        # send MIDI clock 24 times per quarter-note
+        $midi_out->clock if ($ticks - 1) % $clock_divider == 0;
 
         # release any notes whose time is up
         for my $i (reverse 0 .. $#active) {
@@ -111,6 +116,12 @@ my $timer = IO::Async::Timer::Periodic->new(
                 $midi_out->note_off($active[$i]{channel}, $active[$i]{note}, 0);
                 splice @active, $i, 1;
             }
+        }
+
+        # start a new phrase on every quarter-note boundary
+        if (($ticks - 1) % $ppqn == 0) {
+            trigger_notes();
+            $beat_count++;
         }
 
         # fire any pending notes whose time has come
@@ -124,12 +135,6 @@ my $timer = IO::Async::Timer::Periodic->new(
                 off_tick => $p->{off_tick},
             };
         }
-
-        # TODO explain this modulo
-        if (($ticks - 1) % $clocks_per_beat == 0) {
-            trigger_notes();
-            $beat_count++;
-        }
     },
 );
 
@@ -141,8 +146,9 @@ sub trigger_notes {
     for my $ch (@channels) {
         my $motif   = $phrase{$ch}->motif;
         my $on_tick = $ticks;
-        for my $duration (@$motif) {
-            my $length = dura_size($duration);
+        for my $duration ($motif->@*) {
+            # dura_size() gives quarter-notes (qn = 1, en = 0.5, sn = 0.25)
+            my $length = int(dura_size($duration) * $ppqn + 0.5) || 1;
             push @pending, {
                 channel  => $ch,
                 note     => $voice{$ch}->rand,
@@ -151,7 +157,7 @@ sub trigger_notes {
             };
             $on_tick += $length;
         }
-        say "Channel $ch: @$motif" if $opt{verbose};
+        say "Channel $ch: ", join(' ', $motif->@*) if $opt{verbose};
     }
 }
 
