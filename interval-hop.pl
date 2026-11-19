@@ -1,8 +1,6 @@
 #!/usr/bin/env perl
 
-# Play a generative sequence that jumps by musical interval.
-# Each MIDI channel gets its own independent voice and rhythm,
-# and they play simultaneously.
+# Bi-timbral generative sequence of phrases
 
 # Examples:
 # perl interval-hop.pl --verbose --po=nvision
