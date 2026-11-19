@@ -76,7 +76,7 @@ my $loop = IO::Async::Loop->new;
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
     stop_all_notes($midi_out);
-    $midi_out->cc($_, 123, 0) for @channels;
+    $midi_out->cc($_, 123, 0) for @channels; # XXX ->panic() ?
     $loop->stop;
 });
 
