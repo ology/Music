@@ -14,6 +14,8 @@ use Getopt::Long qw(GetOptions);      # cli processing
 use IO::Async::Loop ();               # async
 use IO::Async::Timer::Periodic ();    # async
 use MIDI::RtMidi::Util qw(out_port stop_all_notes); # rt-midi
+use MIDI::Util qw(dura_size);         # 
+use Music::Duration::Partition ();    # rhythmic phrases
 use Music::Scales qw(get_scale_MIDI); # pitches
 use Music::VoiceGen ();               # voices!
 
@@ -21,7 +23,7 @@ my %opt = (
     port     => undef,       # required MIDI device name fragment
     bpm      => 70,          # beats-per-minute
     channels => '1,2',       # two or more distinct midi channels (0 .. 15)
-    octave   => 4,           # 0 .. 9
+    octave   => 2,           # 0 .. 9
     scale    => 'minor',     # scale name
     tonic    => 'C',         # scale key base note
     pitches  => 3,           # number of octaves
@@ -55,16 +57,32 @@ my @pending; # { channel => $ch, note => $pitch, on_tick => $when_it_should_star
 my $ticks      = 0; # clock ticks
 my $beat_count = 0; # beats!
 
-my @pitches = map { get_scale_MIDI($opt{tonic}, $opt{octave}, $opt{scale}) } 1 .. $opt{pitches};
 my @jumps = split /,/, $opt{jumps};
 
-# one independent voice per channel
-my %voice = map {
-    $_ => Music::VoiceGen->new(
-        pitches   => \@pitches,
+# one independent voice per channel, each with its own span of octaves,
+# staggered by one octave per channel
+my %voice;
+for my $ch (@channels) {
+    my @pool = map {
+        get_scale_MIDI($opt{tonic}, $opt{octave} + $_, $opt{scale}),
+        get_scale_MIDI($opt{tonic}, $opt{octave} + $_, $opt{scale}),
+        get_scale_MIDI($opt{tonic}, $opt{octave} + $_, $opt{scale})
+    } 0 .. $opt{pitches} - 1;
+    $voice{$ch} = Music::VoiceGen->new(
+        pitches   => \@pool,
         intervals => \@jumps,
-    )
-} @channels;
+    );
+}
+
+my %phrase;
+for my $ch (@channels) {
+    $phrase{$ch} = Music::Duration::Partition->new(
+        size => 4,
+        pool => [qw(qn en sn)],
+        # weights => [   0.7, 0.3 ],
+        # groups => [   1, 1, 3   ],
+    );
+}
 
 # open the midi devices for output
 my $midi_out = out_port($opt{port});
@@ -120,19 +138,20 @@ $loop->add($timer);
 $loop->run;
 
 sub trigger_notes {
-    my $step_ticks = 4;
     for my $ch (@channels) {
-        my @notes   = map { $voice{$ch}->rand } 1 .. 4;
+        my $motif   = $phrase{$ch}->motif;
         my $on_tick = $ticks;
-        for my $n (@notes) {
+        for my $duration (@$motif) {
+            my $length = dura_size($duration);
             push @pending, {
                 channel  => $ch,
-                note     => $n,
+                note     => $voice{$ch}->rand,
                 on_tick  => $on_tick,
-                off_tick => $on_tick + $step_ticks,
+                off_tick => $on_tick + $length,
             };
-            $on_tick += $step_ticks;
+            $on_tick += $length;
         }
+        say "Channel $ch: @$motif" if $opt{verbose};
     }
 }
 
