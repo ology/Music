@@ -72,8 +72,6 @@ for my $ch (@channels) {
     $phrase{$ch} = Music::Duration::Partition->new(
         size => 4, # in quarter-notes
         pool => [qw(wn dhn hn dqn qn den en sn)],
-        # weights => [   0.7, 0.3 ],
-        # groups => [   1, 1, 3   ],
     );
 }
 
