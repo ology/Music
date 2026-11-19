@@ -20,12 +20,12 @@ use Music::VoiceGen ();               # voices!
 
 my %opt = (
     port     => 'nvision',   # required MIDI device name fragment
-    bpm      => 70,          # beats-per-minute
     channels => '1,2',       # two or more distinct midi channels (0 .. 15)
+    bpm      => 70,          # beats-per-minute
     octave   => 2,           # 0 .. 9
+    pitches  => 3,           # number of octaves
     scale    => 'minor',     # scale name
     tonic    => 'C',         # scale key base note
-    pitches  => 3,           # number of octaves
     jumps    => '-3,-2,2,3', # allowed interval jumps
     verbose  => 0,
 );
