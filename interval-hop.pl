@@ -87,7 +87,7 @@ my $loop = IO::Async::Loop->new;
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
     stop_all_notes($midi_out); # XXX Does ->panic this redundant?
-    $midi_out->->panic();
+    $midi_out->panic();
     $loop->stop;
 });
 
