@@ -40,8 +40,6 @@ GetOptions(\%opt,
     'verbose',
 );
 
-die "Open MIDI port name required for 'port'\n" unless $opt{port};
-
 my @channels = split /\s*,\s*/, $opt{channels};
 my @jumps    = split /\s*,\s*/, $opt{jumps};
 
