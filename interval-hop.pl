@@ -77,7 +77,7 @@ for my $ch (@channels) {
     );
 }
 
-# open the midi devices for output
+# open the midi device
 my $midi_out = out_port($opt{port});
 say "Opened '$opt{port}' for MIDI output" if $opt{verbose};
 
