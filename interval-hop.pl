@@ -13,7 +13,7 @@ use Getopt::Long qw(GetOptions);                    # cli processing
 use IO::Async::Loop ();                             # async
 use IO::Async::Timer::Periodic ();                  # async
 use MIDI::RtMidi::Util qw(out_port stop_all_notes); # rt-midi
-use MIDI::Util qw(dura_size);                       # motif durations
+use MIDI::Util qw(dura_size TICKS);                 # motif durations
 use Music::Duration::Partition ();                  # rhythmic phrases
 use Music::Scales qw(get_scale_MIDI);               # pitches
 use Music::VoiceGen ();                             # voices!
@@ -44,7 +44,7 @@ my @channels = split /\s*,\s*/, $opt{channels};
 my @jumps    = split /\s*,\s*/, $opt{jumps};
 
 # we are in 4/4 time...
-my $ppqn           = 96;                      # internal ticks per quarter-note
+my $ppqn           = MIDI::Util::TICKS;       # internal ticks per quarter-note = 96
 my $clock_divider  = $ppqn / 24;              # MIDI clock is always 24 per quarter
 my $phrase_ticks   = 4 * $ppqn;               # whole note = 384 ticks
 my $clock_interval = 60 / $opt{bpm} / $ppqn;  # seconds per tick
