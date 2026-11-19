@@ -18,7 +18,7 @@ use Music::Scales qw(get_scale_MIDI); # pitches
 use Music::VoiceGen ();               # voices!
 
 my %opt = (
-    port     => undef,       # required MIDI device name fragment
+    port     => 'nvision',   # required MIDI device name fragment
     bpm      => 70,          # beats-per-minute
     channels => '1,2',       # two or more distinct midi channels (0 .. 15)
     octave   => 2,           # 0 .. 9
@@ -73,7 +73,7 @@ my %phrase;
 for my $ch (@channels) {
     $phrase{$ch} = Music::Duration::Partition->new(
         size => 4, # in quarter-notes
-        pool => [qw(qn en sn)],
+        pool => [qw(hn dqn qn den en sn)],
         # weights => [   0.7, 0.3 ],
         # groups => [   1, 1, 3   ],
     );
@@ -112,7 +112,7 @@ my $timer = IO::Async::Timer::Periodic->new(
 
         # start a new phrase on every quarter-note boundary
         if (($ticks - 1) % $phrase_ticks == 0) {
-            trigger_notes();
+            trigger_notes($phrase_count);
             $phrase_count++;
         }
 
@@ -134,7 +134,7 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-sub trigger_notes {
+sub trigger_notes ($i) {
     for my $ch (@channels) {
         my $motif   = $phrase{$ch}->motif;
         my $on_tick = $ticks;
@@ -148,7 +148,7 @@ sub trigger_notes {
             };
             $on_tick += $length;
         }
-        say "Channel $ch: ", join(' ', $motif->@*) if $opt{verbose};
+        say "$i. Channel $ch: ", join(' ', $motif->@*) if $opt{verbose};
     }
 }
 
