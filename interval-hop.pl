@@ -95,7 +95,7 @@ my $timer = IO::Async::Timer::Periodic->new(
             }
         }
 
-        # fire any pending arp notes whose time has come
+        # fire any pending notes whose time has come
         my @ready = grep { $ticks >= $_->{on_tick} } @pending;
         @pending  = grep { $ticks <  $_->{on_tick} } @pending;
         for my $p (@ready) {
