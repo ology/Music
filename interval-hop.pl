@@ -48,12 +48,11 @@ my $ppqn           = MIDI::Util::TICKS;       # internal ticks per quarter-note 
 my $clock_divider  = $ppqn / 24;              # MIDI clock is always 24 per quarter
 my $phrase_ticks   = 4 * $ppqn;               # whole note = 384 ticks
 my $clock_interval = 60 / $opt{bpm} / $ppqn;  # seconds per tick
+my $ticks          = 0;                       # clock ticks
+my $phrase_count   = 0;                       # quarter-notes played
 
 my @active;  # { channel => $ch, note => $pitch, off_tick => $when_it_should_stop }
 my @pending; # { channel => $ch, note => $pitch, on_tick => $when_it_should_start }
-
-my $ticks        = 0; # clock ticks
-my $phrase_count = 0; # quarter-notes played
 
 my %voice;
 for my $ch (@channels) {
