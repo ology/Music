@@ -49,13 +49,14 @@ my @jumps    = split /\s*,\s*/, $opt{jumps};
 # we are in 4/4 time...
 my $ppqn           = 96;                      # internal ticks per quarter-note
 my $clock_divider  = $ppqn / 24;              # MIDI clock is always 24 per quarter
+my $phrase_ticks   = 4 * $ppqn;               # whole note = 384 ticks
 my $clock_interval = 60 / $opt{bpm} / $ppqn;  # seconds per tick
 
 my @active;  # { channel => $ch, note => $pitch, off_tick => $when_it_should_stop }
 my @pending; # { channel => $ch, note => $pitch, on_tick => $when_it_should_start }
 
-my $ticks      = 0; # clock ticks
-my $beat_count = 0; # quarter-notes played
+my $ticks        = 0; # clock ticks
+my $phrase_count = 0; # quarter-notes played
 
 my %voice;
 for my $ch (@channels) {
@@ -73,7 +74,7 @@ for my $ch (@channels) {
 my %phrase;
 for my $ch (@channels) {
     $phrase{$ch} = Music::Duration::Partition->new(
-        size => 1, # in quarter-notes
+        size => 4, # in quarter-notes
         pool => [qw(qn en sn)],
         # weights => [   0.7, 0.3 ],
         # groups => [   1, 1, 3   ],
@@ -112,9 +113,9 @@ my $timer = IO::Async::Timer::Periodic->new(
         }
 
         # start a new phrase on every quarter-note boundary
-        if (($ticks - 1) % $ppqn == 0) {
+        if (($ticks - 1) % $phrase_ticks == 0) {
             trigger_notes();
-            $beat_count++;
+            $phrase_count++;
         }
 
         # fire any pending notes whose time has come
