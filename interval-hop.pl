@@ -55,11 +55,9 @@ my @active;  # { channel => $ch, note => $pitch, off_tick => $when_it_should_sto
 my @pending; # { channel => $ch, note => $pitch, on_tick => $when_it_should_start }
 
 my %voice;
-for my $ch (@channels) {
+for my ($i, $ch) (indexed @channels) {
     my @pool = map {
-        get_scale_MIDI($opt{tonic}, $opt{octave} + $_, $opt{scale}),
-        get_scale_MIDI($opt{tonic}, $opt{octave} + $_, $opt{scale}),
-        get_scale_MIDI($opt{tonic}, $opt{octave} + $_, $opt{scale})
+        get_scale_MIDI($opt{tonic}, $opt{octave} + $i + $_, $opt{scale})
     } 0 .. $opt{pitches} - 1;
     $voice{$ch} = Music::VoiceGen->new(
         pitches   => \@pool,
@@ -84,7 +82,7 @@ my $loop = IO::Async::Loop->new;
 # Graceful ^C:
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
-    stop_all_notes($midi_out); # TODO use ->PANIC when updated
+    $midi_out->panic; # TODO use ->PANIC when updated
     $loop->stop;
 });
 
