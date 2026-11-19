@@ -12,7 +12,7 @@ use Getopt::Long qw(GetOptions);      # cli processing
 use IO::Async::Loop ();               # async
 use IO::Async::Timer::Periodic ();    # async
 use MIDI::RtMidi::Util qw(out_port stop_all_notes); # rt-midi
-use MIDI::Util qw(dura_size);         # duration name => ticks (96 per quarter)
+use MIDI::Util qw(dura_size);         # motif durations
 use Music::Duration::Partition ();    # rhythmic phrases
 use Music::Scales qw(get_scale_MIDI); # pitches
 use Music::VoiceGen ();               # voices!
