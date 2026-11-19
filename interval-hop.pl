@@ -86,8 +86,8 @@ my $loop = IO::Async::Loop->new;
 # Graceful ^C:
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
-    stop_all_notes($midi_out);
-    $midi_out->cc($_, 123, 0) for @channels; # XXX ->panic() ?
+    stop_all_notes($midi_out); # XXX Does ->panic this redundant?
+    $midi_out->->panic();
     $loop->stop;
 });
 
