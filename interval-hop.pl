@@ -4,7 +4,7 @@
 
 # Examples:
 # perl interval-hop.pl --verbose
-# perl interval-hop.pl --v --b=90 --channels=0,1 --po=synth
+# perl interval-hop.pl --v --bpm=90 --channels=0,1 --port=synth
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);    # debugging
