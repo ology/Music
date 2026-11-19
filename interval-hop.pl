@@ -57,7 +57,6 @@ my @pending; # { channel => $ch, note => $pitch, on_tick => $when_it_should_star
 my $ticks      = 0; # clock ticks
 my $beat_count = 0; # quarter-notes played
 
-# one independent voice per channel
 my %voice;
 for my $ch (@channels) {
     my @pool = map {
@@ -71,8 +70,6 @@ for my $ch (@channels) {
     );
 }
 
-# one independent rhythm generator per channel: each phrase fills
-# exactly one quarter-note, since a phrase is triggered every quarter
 my %phrase;
 for my $ch (@channels) {
     $phrase{$ch} = Music::Duration::Partition->new(
@@ -102,10 +99,6 @@ my $timer = IO::Async::Timer::Periodic->new(
     reschedule => 'hard', # anchor to a fixed schedule, don't let tempo drift
     on_tick    => sub {
         $ticks++;
-
-        # $ticks starts at 1 on the first tick, so "$ticks - 1" is the
-        # zero-based tick count: 0, 1, 2, ...  A modulo of zero means we
-        # are exactly on a boundary.
 
         # send MIDI clock 24 times per quarter-note
         $midi_out->clock if ($ticks - 1) % $clock_divider == 0;
@@ -147,7 +140,6 @@ sub trigger_notes {
         my $motif   = $phrase{$ch}->motif;
         my $on_tick = $ticks;
         for my $duration ($motif->@*) {
-            # dura_size() gives quarter-notes (qn = 1, en = 0.5, sn = 0.25)
             my $length = int(dura_size($duration) * $ppqn + 0.5) || 1;
             push @pending, {
                 channel  => $ch,
