@@ -3,7 +3,7 @@
 # Bi-timbral generative sequence of phrases
 
 # Examples:
-# perl interval-hop.pl --verbose --po=nvision
+# perl interval-hop.pl --verbose
 # perl interval-hop.pl --v --b=90 --channels=0,1 --po=synth
 
 use v5.40;
