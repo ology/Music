@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Bi-timbral generative sequence of phrases
+# Bi-timbral generative sequence of tonal phrases and drum beats
 
 # Examples:
 # perl interval-hop-beats.pl --verbose
