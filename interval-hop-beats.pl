@@ -20,9 +20,9 @@ use Music::SimpleDrumMachine ();      # beats
 use Music::VoiceGen ();               # voices
 
 my %opt = (
-    port     => 'nvision',    # tonal synth name fragment
     drums    => 'fluidsynth', # drum synth name fragment
-    channels => '1,2',        # two or more distinct midi channels (0 .. 15)
+    port     => 'nvision',    # tonal synth name fragment
+    channels => '1,2',        # distinct midi channels (0 .. 15)
     bpm      => 70,           # beats-per-minute
     octave   => 2,            # 0 .. 9
     pitches  => 3,            # number of octaves
