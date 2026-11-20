@@ -35,6 +35,7 @@ my %opt = (
     tonic    => 'C',          # scale key base note
     jumps    => '-3,-2,2,3',  # allowed interval jumps
     remove   => 0,            # remove 7th degree notes from scales
+    fill     => 0,            # rest tonal notes on the fill bar
     verbose  => 0,
 );
 GetOptions(\%opt,
@@ -48,6 +49,7 @@ GetOptions(\%opt,
     'tonic=s',
     'jumps=s',
     'remove',
+    'fill',
     'verbose',
 );
 
@@ -119,8 +121,16 @@ my $timer = IO::Async::Timer::Periodic->new(
 
         $dm->tick; # drums
 
-        # a new phrase every whole note
-        trigger_notes($phrase_count++) if $ticks % $phrase_ticks == 0;
+        # a new phrase every whole note, except while the drums fill
+        if ($ticks % $phrase_ticks == 0) {
+            my $phrase = $phrase_count++;
+            if ($opt{fill} && fill_bar($phrase)) {
+                say "$phrase. Resting for the drum fill" if $opt{verbose};
+            }
+            else {
+                trigger_notes($phrase);
+            }
+        }
 
         # send everything scheduled for this tick
         if (my $events = delete $schedule{$ticks}) {
@@ -167,4 +177,10 @@ sub silence {
     %schedule = ();
     $midi_out->panic;
     $dm->stop;
+}
+
+# The drum machine fills on the last bar of each of its phrases (only
+# when filling is on and a phrase is longer than one bar).
+sub fill_bar ($phrase) {
+    return $dm->filling && $dm->bars > 1 && $phrase % $dm->bars == $dm->bars - 1;
 }
