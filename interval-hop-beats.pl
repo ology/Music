@@ -2,8 +2,7 @@
 
 # Bi-timbral generative sequence of tonal phrases and drum beats.
 # By default, this program uses Fluidsynth for the drums and the
-# Roland n/vision for the tones. So have those or something else
-# running.
+# tones. So have that or something else running! :)
 
 # Examples:
 # perl interval-hop-beats.pl --verbose  # use defaults
@@ -27,7 +26,7 @@ use Music::VoiceGen ();               # voices
 my %opt = (
     drums    => 'fluidsynth', # drum synth name fragment
     alt_chan => 9,            # drum midi channel. -1 means "multi-timbral"
-    port     => 'nvision',    # tonal synth name fragment
+    port     => 'fluidsynth', # tonal synth name fragment
     channels => '1,2',        # distinct midi channels (0 .. 15)
     bpm      => 70,           # beats-per-minute
     octave   => 2,            # 0 .. 9
