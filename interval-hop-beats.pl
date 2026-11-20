@@ -86,7 +86,7 @@ say "Opened '$opt{port}' for MIDI output" if $opt{verbose};
 
 my $loop = IO::Async::Loop->new;
 
-# the drum machine shares loop and clock
+# share loop and clock
 my $dm = Music::SimpleDrumMachine->new(
     port_name => $opt{drums},
     bpm       => $opt{bpm},
