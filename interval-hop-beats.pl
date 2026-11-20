@@ -28,6 +28,7 @@ my %opt = (
     alt_chan => 9,            # drum midi channel. -1 means "multi-timbral"
     port     => 'fluidsynth', # tonal synth name fragment
     channels => '0,1',        # distinct midi channels (0 .. 15)
+    list     => '36,0',       # tone patches (fretless & piano)
     bpm      => 70,           # beats-per-minute
     octave   => 2,            # 0 .. 9
     num_oct  => 2,            # number of octaves
@@ -43,6 +44,7 @@ GetOptions(\%opt,
     'alt_chan=s',
     'port=s',
     'channels=s',
+    'list=s',
     'bpm=i',
     'octave=i',
     'scale=s',
@@ -56,6 +58,7 @@ GetOptions(\%opt,
 my @channels = uniq grep { /^\d+$/ && $_ <= 15 } split /\s*,\s*/, $opt{channels};
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
 my @jumps = split /\s*,\s*/, $opt{jumps};
+my @progs = split /\s*,\s*/, $opt{list};
 
 # we are in 4/4 time...
 my $ppqn           = TICKS;                   # internal ticks per quarter-note = 96
@@ -88,6 +91,8 @@ my %phrase = map {
 
 my $midi_out = open_out($opt{port});
 say "Opened '$opt{port}' for MIDI output" if $opt{verbose};
+
+$midi_out->program_change($channels[$_], $progs[$_]) for (0 .. $#channels);
 
 my $loop = IO::Async::Loop->new;
 
