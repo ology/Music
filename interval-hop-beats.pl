@@ -160,8 +160,7 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-# Schedule a phrase for every channel: the channel's partition supplies
-# the rhythm and its voice supplies a pitch per duration.
+# schedule a phrase for every channel
 sub trigger_notes ($phrase) {
     for my $ch (@channels) {
         my $motif = $phrase{$ch}->motif;
