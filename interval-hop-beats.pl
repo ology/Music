@@ -11,7 +11,7 @@ use v5.40;
 use Getopt::Long qw(GetOptions);      # cli processing
 use IO::Async::Loop ();               # async
 use IO::Async::Timer::Periodic ();    # async
-use List::Util qw(uniq);              # channel cleanup
+use List::Util qw(uniq);              # channels
 use MIDI::RtMidi::FFI::Device ();     # rt-midi
 use MIDI::Util qw(dura_size TICKS);   # motif durations, ticks per quarter
 use Music::Duration::Partition ();    # rhythmic phrases
