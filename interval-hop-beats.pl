@@ -12,7 +12,7 @@ use Getopt::Long qw(GetOptions);      # cli processing
 use IO::Async::Loop ();               # async
 use IO::Async::Timer::Periodic ();    # async
 use List::Util qw(uniq);              # channel cleanup
-use MIDI::RtMidi::Util qw(out_port);  # rt-midi
+use MIDI::RtMidi::FFI::Device ();     # rt-midi
 use MIDI::Util qw(dura_size TICKS);   # motif durations, ticks per quarter
 use Music::Duration::Partition ();    # rhythmic phrases
 use Music::Scales qw(get_scale_MIDI); # pitches
@@ -75,7 +75,13 @@ my %phrase = map {
     )
 } @channels;
 
-my $midi_out = out_port($opt{port});
+sub open_out ($name) {
+    my $out = RtMidiOut->new;
+    try { $out->open_port_by_name(qr/\Q$name/i) }
+    catch ($e) { die "Can't open MIDI port: $name\n" }
+    return $out;
+}
+my $midi_out = open_out($opt{port});
 say "Opened '$opt{port}' for MIDI output" if $opt{verbose};
 
 my $loop = IO::Async::Loop->new;
@@ -87,6 +93,7 @@ my $dm = Music::SimpleDrumMachine->new(
     ppqn      => $ppqn,
     loop      => $loop,
     autoplay  => 0,
+    virtual   => 0,
     verbose   => $opt{verbose},
 );
 
