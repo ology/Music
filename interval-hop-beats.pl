@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# Bi-timbral generative sequence of tonal phrases and drum beats.
+# Multi-timbral generative sequence of tonal phrases and drum beats.
 # By default, this program uses Fluidsynth for the drums and the
 # tones. So have that or something else running! :)
 
