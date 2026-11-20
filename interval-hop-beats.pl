@@ -3,9 +3,10 @@
 # Bi-timbral generative sequence of tonal phrases and drum beats
 
 # Examples:
-# perl interval-hop-beats.pl --verbose
+# perl interval-hop-beats.pl --verbose  # use defaults
 # perl interval-hop-beats.pl --verbose --bpm=90 --channels=0,1 --port='se-02' --drums='T-8'
-# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d='T-8' # <- same
+# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d='T-8'  # same
+# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d=trinity -a=-1  # multi-timbral drums
 
 use v5.40;
 use Getopt::Long qw(GetOptions);      # cli processing
@@ -21,6 +22,7 @@ use Music::VoiceGen ();               # voices
 
 my %opt = (
     drums    => 'fluidsynth', # drum synth name fragment
+    alt_chan => 9,            # drum midi channel. -1 means "multitimbral"
     port     => 'nvision',    # tonal synth name fragment
     channels => '1,2',        # distinct midi channels (0 .. 15)
     bpm      => 70,           # beats-per-minute
@@ -90,6 +92,7 @@ my $loop = IO::Async::Loop->new;
 my $dm = Music::SimpleDrumMachine->new(
     port_name => $opt{drums},
     bpm       => $opt{bpm},
+    chan      => $opt{alt_chan},
     ppqn      => $ppqn,
     loop      => $loop,
     autoplay  => 0,
