@@ -1,20 +1,23 @@
 #!/usr/bin/env perl
 
-# Bi-timbral generative sequence of tonal phrases and drum beats
+# Bi-timbral generative sequence of tonal phrases and drum beats.
+# By default, this program uses Fluidsynth for the drums. So have
+# that or another drum machine running.
 
 # Examples:
 # perl interval-hop-beats.pl --verbose  # use defaults
 # perl interval-hop-beats.pl --verbose --bpm=90 --channels=0,1 --port='se-02' --drums='T-8'
 # perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d='T-8'  # same
-# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d=trinity --a=-1  # multi-timbral drums
+# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='fm-1' --d=trinity --a=-1  # multi-timbral drums
 
 use v5.40;
+use Data::Dumper::Compact qw(ddc);    # debugging
 use Getopt::Long qw(GetOptions);      # cli processing
 use IO::Async::Loop ();               # async
 use IO::Async::Timer::Periodic ();    # async
 use List::Util qw(uniq);              # channels
 use MIDI::RtMidi::FFI::Device ();     # rt-midi
-use MIDI::Util qw(dura_size TICKS);   # motif durations, ticks per quarter
+use MIDI::Util qw(dura_size remove_notes TICKS); # handy
 use Music::Duration::Partition ();    # rhythmic phrases
 use Music::Scales qw(get_scale_MIDI); # pitches
 use Music::SimpleDrumMachine ();      # beats
@@ -28,7 +31,7 @@ my %opt = (
     bpm      => 70,           # beats-per-minute
     octave   => 2,            # 0 .. 9
     pitches  => 3,            # number of octaves
-    scale    => 'minor',      # scale name
+    scale    => 'major',      # scale name
     tonic    => 'C',          # scale key base note
     jumps    => '-3,-2,2,3',  # allowed interval jumps
     verbose  => 0,
@@ -66,6 +69,7 @@ for my ($i, $ch) (indexed @channels) {
     my @pool = map {
         get_scale_MIDI($opt{tonic}, $opt{octave} + $i + $_, $opt{scale})
     } 0 .. $opt{pitches} - 1;
+    @pool = remove_notes([6,14,21], \@pool)->@*; # remove the 7th degrees
     $voice{$ch} = Music::VoiceGen->new(
         pitches   => \@pool,
         intervals => \@jumps,
