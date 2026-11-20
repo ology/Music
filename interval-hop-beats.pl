@@ -1,8 +1,9 @@
 #!/usr/bin/env perl
 
 # Bi-timbral generative sequence of tonal phrases and drum beats.
-# By default, this program uses Fluidsynth for the drums. So have
-# that or another drum machine running.
+# By default, this program uses Fluidsynth for the drums and the
+# Roland n/vision for the tones. So have those or something else
+# running.
 
 # Examples:
 # perl interval-hop-beats.pl --verbose  # use defaults
