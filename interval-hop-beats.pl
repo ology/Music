@@ -8,7 +8,8 @@
 # perl interval-hop-beats.pl --verbose  # use defaults
 # perl interval-hop-beats.pl --verbose --bpm=90 --channels=0,1 --port='se-02' --drums='T-8'
 # perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d='T-8'  # same
-# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='fm-1' --r --d=trinity --a=-1  # multi-timbral drums
+# verbose, bpm, channels, port, list, remove, (multi-timbral) drums, alt_chan:
+# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='nvision' --l=-1 --r --d=trinity --a=-1
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);    # debugging
@@ -58,7 +59,8 @@ GetOptions(\%opt,
 my @channels = uniq grep { /^\d+$/ && $_ <= 15 } split /\s*,\s*/, $opt{channels};
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
 my @jumps = split /\s*,\s*/, $opt{jumps};
-my @progs = split /\s*,\s*/, $opt{list};
+my @progs = $opt{list} eq '-1' ? () : split /\s*,\s*/, $opt{list};
+say ddc \@progs;
 
 # we are in 4/4 time...
 my $ppqn           = TICKS;                   # internal ticks per quarter-note = 96
@@ -92,7 +94,9 @@ my %phrase = map {
 my $midi_out = open_out($opt{port});
 say "Opened '$opt{port}' for MIDI output" if $opt{verbose};
 
-$midi_out->program_change($channels[$_], $progs[$_]) for (0 .. $#channels);
+if (@progs) {
+    $midi_out->program_change($channels[$_], $progs[$_]) for (0 .. $#channels);
+}
 
 my $loop = IO::Async::Loop->new;
 
