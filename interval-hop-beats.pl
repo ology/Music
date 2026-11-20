@@ -30,7 +30,7 @@ my %opt = (
     channels => '1,2',        # distinct midi channels (0 .. 15)
     bpm      => 70,           # beats-per-minute
     octave   => 2,            # 0 .. 9
-    pitches  => 2,            # number of octaves
+    num_oct  => 2,            # number of octaves
     scale    => 'major',      # scale name
     tonic    => 'C',          # scale key base note
     jumps    => '-3,-2,2,3',  # allowed interval jumps
@@ -72,7 +72,7 @@ my %voice;
 for my ($i, $ch) (indexed @channels) {
     my @pool = map {
         get_scale_MIDI($opt{tonic}, $opt{octave} + $i + $_, $opt{scale})
-    } 0 .. $opt{pitches} - 1;
+    } 0 .. $opt{num_oct} - 1;
     @pool = remove_notes([6,14,21], \@pool)->@* if $opt{remove};
     $voice{$ch} = Music::VoiceGen->new(
         pitches   => \@pool,
