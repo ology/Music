@@ -86,12 +86,6 @@ my %phrase = map {
     )
 } @channels;
 
-sub open_out ($name) {
-    my $out = RtMidiOut->new;
-    try { $out->open_port_by_name(qr/\Q$name/i) }
-    catch ($e) { die "Can't open MIDI port: $name\n" }
-    return $out;
-}
 my $midi_out = open_out($opt{port});
 say "Opened '$opt{port}' for MIDI output" if $opt{verbose};
 
@@ -177,6 +171,13 @@ sub silence {
     %schedule = ();
     $midi_out->panic;
     $dm->stop;
+}
+
+sub open_out ($name) {
+    my $out = RtMidiOut->new;
+    try { $out->open_port_by_name(qr/\Q$name/i) }
+    catch ($e) { die "Can't open MIDI port: $name\n" }
+    return $out;
 }
 
 # The drum machine fills on the last bar of each of its phrases (only
