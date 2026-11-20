@@ -6,10 +6,10 @@
 
 # Examples:
 # perl interval-hop-beats.pl --verbose  # use defaults
-# perl interval-hop-beats.pl --verbose --bpm=90 --channels=0,1 --port='se-02' --drums='T-8'
+# perl interval-hop-beats.pl --verbose --bpm=90 --channels='0,1' --port='se-02' --drums='T-8'
 # perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d='T-8'  # same
 # verbose, bpm, channels, port, list, remove, (multi-timbral) drums, alt_chan:
-# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='nvision' --l=-1 --r --d=trinity --a=-1
+# perl interval-hop-beats.pl --v --b=90 --c=3,4 --p='nvision' --l=-1 --r --d=trinity --a=-1
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);    # debugging
