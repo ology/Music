@@ -8,15 +8,15 @@
 # perl interval-hop.pl --v --b=90 --c=0,1 --p=synth # <- same
 
 use v5.40;
-use Data::Dumper::Compact qw(ddc);                  # debugging
-use Getopt::Long qw(GetOptions);                    # cli processing
-use IO::Async::Loop ();                             # async
-use IO::Async::Timer::Periodic ();                  # async
-use MIDI::RtMidi::Util qw(out_port stop_all_notes); # rt-midi
-use MIDI::Util qw(dura_size TICKS);                 # motif durations
-use Music::Duration::Partition ();                  # rhythmic phrases
-use Music::Scales qw(get_scale_MIDI);               # pitches
-use Music::VoiceGen ();                             # voices!
+use Data::Dumper::Compact qw(ddc);    # debugging
+use Getopt::Long qw(GetOptions);      # cli processing
+use IO::Async::Loop ();               # async
+use IO::Async::Timer::Periodic ();    # async
+use MIDI::RtMidi::Util qw(out_port);  # rt-midi
+use MIDI::Util qw(dura_size TICKS);   # motif durations
+use Music::Duration::Partition ();    # rhythmic phrases
+use Music::Scales qw(get_scale_MIDI); # pitches
+use Music::VoiceGen ();               # voices!
 
 my %opt = (
     port     => 'nvision',   # required MIDI device name fragment
@@ -82,7 +82,7 @@ my $loop = IO::Async::Loop->new;
 # Graceful ^C:
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
-    $midi_out->panic; # TODO use ->PANIC when updated
+    $midi_out->panic;
     $loop->stop;
 });
 

@@ -16,7 +16,7 @@ use Getopt::Long qw(GetOptions);
 use IO::Async::Loop;
 use IO::Async::Timer::Periodic;
 use List::Util qw(shuffle);
-use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
+use MIDI::RtMidi::Util qw(out_port stop_device);
 
 my %opt = (
     port     => 'T-8',     # REQUIRED MIDI device (e.g. IAC Bus)
@@ -85,7 +85,7 @@ my $loop = IO::Async::Loop->new;
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
     stop_device($device);
-    stop_all_notes($device);
+    $device->panic;
     $loop->stop;
 });
 

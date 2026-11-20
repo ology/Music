@@ -5,9 +5,7 @@
 use v5.40;
 # use Data::Dumper::Compact qw(ddc);
 use Array::Circular ();
-use MIDI::RtMidi::Util qw(
-  out_port stop_device stop_all_notes program_changer
-);
+use MIDI::RtMidi::Util qw(out_port stop_device program_changer);
 use IO::Async::Loop;
 use IO::Async::Timer::Periodic;
 
@@ -41,7 +39,7 @@ $loop->watch_signal(INT => sub {
     say "\nStop";
     try {
         stop_device($device);
-        stop_all_notes($device);
+        $device->panic;
     }
     catch ($e) {
         warn "Can't halt MIDI out device '$device': $e\n";

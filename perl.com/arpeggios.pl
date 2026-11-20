@@ -73,7 +73,7 @@ my $loop = IO::Async::Loop->new;
 # Ctrl-C clean shutdown
 $loop->watch_signal(INT => sub {
     say "\nStop";
-    stop_all_notes($midi_out);
+    $midi_out->panic;
     $loop->stop;
 });
 

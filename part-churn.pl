@@ -14,7 +14,7 @@ use Data::Dumper::Compact qw(ddc);
 use IO::Async::Loop;
 use IO::Async::Timer::Countdown;
 use IO::Async::Timer::Periodic;
-use MIDI::RtMidi::Util qw(out_port stop_device stop_all_notes);
+use MIDI::RtMidi::Util qw(out_port stop_device);
 
 my $bpm      = shift || 100;
 my $programs = shift || '1,2,3,4'; # or a negative number of random choices
@@ -53,7 +53,7 @@ my $loop = IO::Async::Loop->new;
 $loop->watch_signal(INT => sub {
     say "\nStop";
     stop_device($device);
-    stop_all_notes($device);
+    $device->panic;
     $loop->stop;
 });
 
