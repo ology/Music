@@ -34,10 +34,11 @@ my %opt = (
     verbose  => 0,
 );
 GetOptions(\%opt,
-    'port=s',
     'drums=s',
-    'bpm=i',
+    'alt_chan=s',
+    'port=s',
     'channels=s',
+    'bpm=i',
     'octave=i',
     'scale=s',
     'tonic=s',
