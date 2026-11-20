@@ -60,7 +60,6 @@ my @channels = uniq grep { /^\d+$/ && $_ <= 15 } split /\s*,\s*/, $opt{channels}
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
 my @jumps = split /\s*,\s*/, $opt{jumps};
 my @progs = $opt{list} eq '-1' ? () : split /\s*,\s*/, $opt{list};
-say ddc \@progs;
 
 # we are in 4/4 time...
 my $ppqn           = TICKS;                   # internal ticks per quarter-note = 96
