@@ -34,7 +34,7 @@ my %opt = (
     scale    => 'major',      # scale name
     tonic    => 'C',          # scale key base note
     jumps    => '-3,-2,2,3',  # allowed interval jumps
-    remove   => 0,            # remove notes from the scales
+    remove   => 0,            # remove 7th degree notes from scales
     verbose  => 0,
 );
 GetOptions(\%opt,
