@@ -58,6 +58,7 @@ GetOptions(\%opt,
 
 my @channels = uniq grep { /^\d+$/ && $_ <= 15 } split /\s*,\s*/, $opt{channels};
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
+
 my @jumps = split /\s*,\s*/, $opt{jumps};
 my @progs = $opt{list} eq '-1' ? () : split /\s*,\s*/, $opt{list};
 
@@ -110,6 +111,7 @@ my $dm = Music::SimpleDrumMachine->new(
     virtual   => 0,
     verbose   => $opt{verbose},
 );
+say "Opened '$opt{drums}' for MIDI output" if $opt{verbose};
 
 my $timer = IO::Async::Timer::Periodic->new(
     interval   => $clock_interval,
