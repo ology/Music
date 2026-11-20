@@ -8,7 +8,7 @@
 # perl interval-hop-beats.pl --verbose  # use defaults
 # perl interval-hop-beats.pl --verbose --bpm=90 --channels=0,1 --port='se-02' --drums='T-8'
 # perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d='T-8'  # same
-# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='fm-1' --d=trinity --a=-1  # multi-timbral drums
+# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='fm-1' --r --d=trinity --a=-1  # multi-timbral drums
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);    # debugging
@@ -34,6 +34,7 @@ my %opt = (
     scale    => 'major',      # scale name
     tonic    => 'C',          # scale key base note
     jumps    => '-3,-2,2,3',  # allowed interval jumps
+    remove   => 0,            # remove notes from the scales
     verbose  => 0,
 );
 GetOptions(\%opt,
@@ -46,6 +47,7 @@ GetOptions(\%opt,
     'scale=s',
     'tonic=s',
     'jumps=s',
+    'remove',
     'verbose',
 );
 
@@ -69,7 +71,7 @@ for my ($i, $ch) (indexed @channels) {
     my @pool = map {
         get_scale_MIDI($opt{tonic}, $opt{octave} + $i + $_, $opt{scale})
     } 0 .. $opt{pitches} - 1;
-    @pool = remove_notes([6,14,21], \@pool)->@*; # remove the 7th degrees
+    @pool = remove_notes([6,14,21], \@pool)->@* if $opt{remove};
     $voice{$ch} = Music::VoiceGen->new(
         pitches   => \@pool,
         intervals => \@jumps,
