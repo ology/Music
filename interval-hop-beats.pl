@@ -33,6 +33,7 @@ my %opt = (
 );
 GetOptions(\%opt,
     'port=s',
+    'drums=s',
     'bpm=i',
     'channels=s',
     'octave=i',
