@@ -4,8 +4,8 @@
 
 # Examples:
 # perl interval-hop-beats.pl --verbose
-# perl interval-hop-beats.pl --verbose --bpm=90 --channels=0,1 --port=synth
-# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p=synth # <- same
+# perl interval-hop-beats.pl --verbose --bpm=90 --channels=0,1 --port='se-02' --drums='T-8'
+# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d='T-8' # <- same
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);                  # debugging
