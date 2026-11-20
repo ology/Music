@@ -20,15 +20,15 @@ use Music::SimpleDrumMachine ();                    # beats
 use Music::VoiceGen ();                             # voices
 
 my %opt = (
-    port     => 'nvision',   # required MIDI device name fragment
-    drums    => 'fluidsynth' # drum synth port
-    channels => '1,2',       # two or more distinct midi channels (0 .. 15)
-    bpm      => 70,          # beats-per-minute
-    octave   => 2,           # 0 .. 9
-    pitches  => 3,           # number of octaves
-    scale    => 'minor',     # scale name
-    tonic    => 'C',         # scale key base note
-    jumps    => '-3,-2,2,3', # allowed interval jumps
+    port     => 'nvision',    # required MIDI device name fragment
+    drums    => 'fluidsynth', # drum synth port
+    channels => '1,2',        # two or more distinct midi channels (0 .. 15)
+    bpm      => 70,           # beats-per-minute
+    octave   => 2,            # 0 .. 9
+    pitches  => 3,            # number of octaves
+    scale    => 'minor',      # scale name
+    tonic    => 'C',          # scale key base note
+    jumps    => '-3,-2,2,3',  # allowed interval jumps
     verbose  => 0,
 );
 GetOptions(\%opt,
@@ -118,9 +118,6 @@ my $timer = IO::Async::Timer::Periodic->new(
     },
 );
 
-$timer->start;
-$loop->add($timer);
-
 # Graceful ^C, for when the drum machine isn't in the picture
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
@@ -141,6 +138,9 @@ $loop->later(sub {
         exit;
     };
 });
+
+$timer->start;
+$loop->add($timer);
 
 my $dm = Music::SimpleDrumMachine->new(
   port_name => $opt{drums},
