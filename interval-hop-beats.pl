@@ -6,10 +6,10 @@
 
 # Examples:
 # perl interval-hop-beats.pl --verbose  # use defaults
-# perl interval-hop-beats.pl --verbose --bpm=90 --channels='0,1' --port='se-02' --drums='T-8'
-# perl interval-hop-beats.pl --v --b=90 --c=0,1 --p='se-02' --d='T-8'  # same
-# verbose, bpm, channels, port, list, remove, (multi-timbral) drums, alt_chan:
-# perl interval-hop-beats.pl --v --b=90 --c=3,4 --p='nvision' --l=-1 --r --d=trinity --a=-1
+# perl interval-hop-beats.pl --verbose --bpm=90 --channels='1,2' --port='se-02' --drums='T-8'
+# perl interval-hop-beats.pl --v --b=90 --c=1,2 --p='se-02' --d='T-8'  # same
+# verbose, bpm, channels, port, list, remove, (multi-timbral) drums, alt_chan, (program) list:
+# perl interval-hop-beats.pl --v --b=90 --c='4,5' --p='nvision' --l=-1 --r --d=trinity --a=-1 --l='2,3'
 
 use v5.40;
 use Data::Dumper::Compact qw(ddc);    # debugging
@@ -56,11 +56,14 @@ GetOptions(\%opt,
     'verbose',
 );
 
-my @channels = uniq grep { /^\d+$/ && $_ <= 15 } split /\s*,\s*/, $opt{channels};
+# allowed midi channels and progran changes
+my @channels = split /\s*,\s*/, $opt{channels};
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
-
-my @jumps = split /\s*,\s*/, $opt{jumps};
+$_-- for @channels;
 my @progs = $opt{list} eq '-1' ? () : split /\s*,\s*/, $opt{list};
+$_-- for @progs;
+
+my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
 
 # we are in 4/4 time...
 my $ppqn           = TICKS;                   # internal ticks per quarter-note = 96
