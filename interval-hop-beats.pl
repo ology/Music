@@ -10,8 +10,8 @@
 # perl interval-hop-beats.pl --v --b=90 --c=1,2 --p='se-02' --d='T-8'  # same
 # verbose, bpm, channels, port, list, remove, (multi-timbral) drums, alt_chan, (program) list:
 # perl interval-hop-beats.pl --v --b=90 --c='4,5' --p='nvision' --l=-1 --r --d=trinity --a=-1 --l='2,3'
-# 2 of 4 channels at a time:
-# perl interval-hop-beats.pl --verbose --channels='1,2,3,4' --list='37,1,5,9' --hunk=2
+# 2 of 4 channels at a time, changing the group every 8 bars:
+# perl interval-hop-beats.pl --verbose --channels='1,2,3,4' --list='37,1,5,9' --hunk=2 --effect=8
 
 use v5.40;
 use Algorithm::Combinatorics qw(variations);     # channel hunk groups
@@ -41,6 +41,7 @@ my %opt = (
     groups   => '37=wn,dhn,hn,dqn,qn,en', # allowed durations per channel
     jumps    => '-3,-2,2,3',  # allowed interval jumps
     hunk     => 2,            # how many channels to play simultaneously
+    effect   => 4,            # how many bars to hold a hunk before changing it
     remove   => 0,            # remove 7th degree notes from scales
     fill     => 0,            # rest tonal notes on the fill bar
     verbose  => 0,
@@ -59,6 +60,7 @@ GetOptions(\%opt,
     'groups=s',
     'jumps=s',
     'hunk=i',
+    'effect=i',
     'remove',
     'fill',
     'verbose',
@@ -79,13 +81,15 @@ for my $group (@groups) {
 my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
 
 # a "hunk" is how many channels sound at once. The groups played are the
-# variations (ordered selections) of the channels of that size.
-die "--hunk must be at least 1\n" if $opt{hunk} < 1;
-my $hunk = $opt{hunk} > @channels ? scalar @channels : $opt{hunk};
+# variations (ordered selections) of the channels of that size. A hunk is
+# held for "effect" bars, then the next variation takes over.
+die "--hunk must be at least 1\n"   if $opt{hunk}   < 1;
+die "--effect must be at least 1\n" if $opt{effect} < 1;
+my $hunk  = $opt{hunk} > @channels ? scalar @channels : $opt{hunk};
 my @hunks = variations(\@channels, $hunk);
-my $hunk_index = 0; # which variation plays next
 say 'Hunk size ', $hunk, ' of ', scalar(@channels), ' channels: ',
-    scalar(@hunks), ' variations' if $opt{verbose};
+    scalar(@hunks), ' variations, changing every ', $opt{effect}, ' bars'
+    if $opt{verbose};
 
 # we are in 4/4 time...
 my $ppqn           = TICKS;                   # internal ticks per quarter-note = 96
@@ -93,7 +97,7 @@ my $clock_divider  = $ppqn / 24;              # MIDI clock is always 24 per quar
 my $phrase_ticks   = 4 * $ppqn;               # a phrase is a whole note = 384 ticks
 my $clock_interval = 60 / $opt{bpm} / $ppqn;  # seconds per tick
 my $ticks          = 0;                       # zero-based clock ticks
-my $phrase_count   = 0;                       # phrases played
+my $phrase_count   = 0;                       # phrases (bars) played
 
 my %schedule; # tick => [ [ method, @args ], ... ] of MIDI messages to send
 
@@ -187,10 +191,17 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-# schedule a phrase for each channel in the next hunk (variation)
+# schedule a phrase for each channel in the current hunk (variation)
 sub trigger_notes ($phrase) {
-    my $group = $hunks[ $hunk_index++ % @hunks ];
-    say "$phrase. Hunk: ", join(',', map { $_ + 1 } $group->@*) if $opt{verbose};
+    # the hunk only changes every "effect" bars
+    my $index = int($phrase / $opt{effect}) % @hunks;
+    my $group = $hunks[$index];
+
+    state $announced = -1;
+    if ($opt{verbose} && $announced != $index) {
+        say "$phrase. New hunk: ", join(',', map { $_ + 1 } $group->@*);
+        $announced = $index;
+    }
 
     for my $ch ($group->@*) {
         my $motif = $phrase{$ch}->motif;
