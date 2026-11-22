@@ -10,8 +10,11 @@
 # perl interval-hop-beats.pl --v --b=90 --c=1,2 --p='se-02' --d='T-8'  # same
 # verbose, bpm, channels, port, list, remove, (multi-timbral) drums, alt_chan, (program) list:
 # perl interval-hop-beats.pl --v --b=90 --c='4,5' --p='nvision' --l=-1 --r --d=trinity --a=-1 --l='2,3'
+# 2 of 4 channels at a time:
+# perl interval-hop-beats.pl --verbose --channels='1,2,3,4' --list='37,1,5,9' --hunk=2
 
 use v5.40;
+use Algorithm::Combinatorics qw(variations); # channel groups
 use Data::Dumper::Compact qw(ddc);    # debugging
 use Getopt::Long qw(GetOptions);      # cli processing
 use IO::Async::Loop ();               # async
@@ -50,23 +53,21 @@ GetOptions(\%opt,
     'list=s',
     'bpm=i',
     'octave=i',
-    'num_oct=i'
+    'num_oct=i',
     'scale=s',
     'tonic=s',
     'groups=s',
     'jumps=s',
-    'hunk=i'
+    'hunk=i',
     'remove',
     'fill',
     'verbose',
 );
 
-# allowed midi channels and progran changes
-my @channels = split /\s*,\s*/, $opt{channels};
+# allowed midi channels and program changes
+my @channels = map { $_ - 1 } split /\s*,\s*/, $opt{channels};
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
-$_-- for @channels;
-my @progs = $opt{list} eq '-1' ? () : split /\s*,\s*/, $opt{list};
-$_-- for @progs;
+my @progs = $opt{list} eq '-1' ? () : map { $_ - 1 } split /\s*,\s*/, $opt{list};
 
 my %pool;
 my @groups = split /;/, $opt{groups};
@@ -74,9 +75,17 @@ for my $group (@groups) {
     my ($chan, $durations) = split /=/, $group, 2;
     $pool{ $chan - 1 } = [ split /,/, $durations ];
 }
-say ddc \%pool;
 
 my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
+
+# a "hunk" is how many channels sound at once. The groups played are the
+# variations (ordered selections) of the channels of that size.
+die "--hunk must be at least 1\n" if $opt{hunk} < 1;
+my $hunk = $opt{hunk} > @channels ? scalar @channels : $opt{hunk};
+my @hunks = variations(\@channels, $hunk);
+my $hunk_index = 0; # which variation plays next
+say 'Hunk size ', $hunk, ' of ', scalar(@channels), ' channels: ',
+    scalar(@hunks), ' variations' if $opt{verbose};
 
 # we are in 4/4 time...
 my $ppqn           = TICKS;                   # internal ticks per quarter-note = 96
@@ -178,9 +187,12 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-# schedule a phrase for every channel
+# schedule a phrase for each channel in the next hunk (variation)
 sub trigger_notes ($phrase) {
-    for my $ch (@channels) {
+    my $group = $hunks[ $hunk_index++ % @hunks ];
+    say "$phrase. Hunk: ", join(',', map { $_ + 1 } $group->@*) if $opt{verbose};
+
+    for my $ch ($group->@*) {
         my $motif = $phrase{$ch}->motif;
         my $tick  = $ticks;
         for my $duration (@$motif) {
