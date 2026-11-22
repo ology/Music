@@ -138,7 +138,7 @@ my $dm = Music::SimpleDrumMachine->new(
     virtual   => 0,
     verbose   => $opt{verbose},
 );
-say "Opened '$opt{drums}' for percission MIDI output" if $opt{verbose};
+say "Opened '$opt{drums}' for percussion MIDI output" if $opt{verbose};
 
 my $timer = IO::Async::Timer::Periodic->new(
     interval   => $clock_interval,
