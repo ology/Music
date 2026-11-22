@@ -108,7 +108,9 @@ my $midi_out = open_out($opt{port});
 say "Opened '$opt{port}' for MIDI output" if $opt{verbose};
 
 if (@progs) {
-    $midi_out->program_change($channels[$_], $progs[$_]) for (0 .. $#channels);
+    for my ($i, $ch) (indexed @channels) {
+        $midi_out->program_change($ch, $progs[ $i % @progs ]);
+    }
 }
 
 my $loop = IO::Async::Loop->new;
