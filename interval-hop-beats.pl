@@ -14,18 +14,18 @@
 # perl interval-hop-beats.pl --verbose --channels='1,2,3,4' --list='37,1,5,9' --hunk=2
 
 use v5.40;
-use Algorithm::Combinatorics qw(variations); # channel groups
-use Data::Dumper::Compact qw(ddc);    # debugging
-use Getopt::Long qw(GetOptions);      # cli processing
-use IO::Async::Loop ();               # async
-use IO::Async::Timer::Periodic ();    # async
-use List::Util qw(any uniq);          # channels
-use MIDI::RtMidi::FFI::Device ();     # rt-midi
+use Algorithm::Combinatorics qw(variations);     # channel hunk groups
+use Data::Dumper::Compact qw(ddc);               # debugging
+use Getopt::Long qw(GetOptions);                 # cli processing
+use IO::Async::Loop ();                          # async
+use IO::Async::Timer::Periodic ();               # async
+use List::Util qw(any uniq);                     # channels
+use MIDI::RtMidi::FFI::Device ();                # rt-midi
 use MIDI::Util qw(dura_size remove_notes TICKS); # handy
-use Music::Duration::Partition ();    # rhythmic phrases
-use Music::Scales qw(get_scale_MIDI); # pitches
-use Music::SimpleDrumMachine ();      # beats
-use Music::VoiceGen ();               # voices
+use Music::Duration::Partition ();               # rhythmic phrases
+use Music::Scales qw(get_scale_MIDI);            # pitches
+use Music::SimpleDrumMachine ();                 # beats
+use Music::VoiceGen ();                          # voices
 
 my %opt = (
     drums    => 'fluidsynth', # drum synth name fragment
