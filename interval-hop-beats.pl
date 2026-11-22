@@ -117,7 +117,7 @@ my %phrase = map {
 } @channels;
 
 my $midi_out = open_out($opt{port});
-say "Opened '$opt{port}' for MIDI output" if $opt{verbose};
+say "Opened '$opt{port}' for tonal MIDI output" if $opt{verbose};
 
 if (@progs) {
     for my ($i, $ch) (indexed @channels) {
@@ -138,7 +138,7 @@ my $dm = Music::SimpleDrumMachine->new(
     virtual   => 0,
     verbose   => $opt{verbose},
 );
-say "Opened '$opt{drums}' for MIDI output" if $opt{verbose};
+say "Opened '$opt{drums}' for percission MIDI output" if $opt{verbose};
 
 my $timer = IO::Async::Timer::Periodic->new(
     interval   => $clock_interval,
