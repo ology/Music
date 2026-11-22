@@ -49,6 +49,7 @@ GetOptions(\%opt,
     'list=s',
     'bpm=i',
     'octave=i',
+    'num_oct=i'
     'scale=s',
     'tonic=s',
     'groups=s',
