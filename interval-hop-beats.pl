@@ -37,6 +37,7 @@ my %opt = (
     tonic    => 'C',          # scale key base note
     groups   => '37=wn,dhn,hn,dqn,qn,en', # allowed durations per channel
     jumps    => '-3,-2,2,3',  # allowed interval jumps
+    hunk     => 2,            # how many channels to play simultaneously
     remove   => 0,            # remove 7th degree notes from scales
     fill     => 0,            # rest tonal notes on the fill bar
     verbose  => 0,
@@ -54,6 +55,7 @@ GetOptions(\%opt,
     'tonic=s',
     'groups=s',
     'jumps=s',
+    'hunk=i'
     'remove',
     'fill',
     'verbose',
