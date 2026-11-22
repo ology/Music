@@ -16,7 +16,7 @@ use Data::Dumper::Compact qw(ddc);    # debugging
 use Getopt::Long qw(GetOptions);      # cli processing
 use IO::Async::Loop ();               # async
 use IO::Async::Timer::Periodic ();    # async
-use List::Util qw(uniq);              # channels
+use List::Util qw(any uniq);          # channels
 use MIDI::RtMidi::FFI::Device ();     # rt-midi
 use MIDI::Util qw(dura_size remove_notes TICKS); # handy
 use Music::Duration::Partition ();    # rhythmic phrases
@@ -35,6 +35,7 @@ my %opt = (
     num_oct  => 2,            # number of octaves
     scale    => 'major',      # scale name
     tonic    => 'C',          # scale key base note
+    groups   => '37=wn,dhn,hn,dqn,qn,en', # allowed durations per channel
     jumps    => '-3,-2,2,3',  # allowed interval jumps
     remove   => 0,            # remove 7th degree notes from scales
     fill     => 0,            # rest tonal notes on the fill bar
@@ -50,6 +51,7 @@ GetOptions(\%opt,
     'octave=i',
     'scale=s',
     'tonic=s',
+    'groups=s',
     'jumps=s',
     'remove',
     'fill',
@@ -62,6 +64,14 @@ die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
 $_-- for @channels;
 my @progs = $opt{list} eq '-1' ? () : split /\s*,\s*/, $opt{list};
 $_-- for @progs;
+
+my %pool;
+my @groups = split /;/, $opt{groups};
+for my $group (@groups) {
+    my ($chan, $durations) = split /=/, $group, 2;
+    $pool{ $chan - 1 } = [ split /,/, $durations ];
+}
+say ddc \%pool;
 
 my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
 
@@ -78,19 +88,19 @@ my %schedule; # tick => [ [ method, @args ], ... ] of MIDI messages to send
 # one independent voice (pitches) and phrase (rhythm) per channel
 my %voice;
 for my ($i, $ch) (indexed @channels) {
-    my @pool = map {
+    my @pitches = map {
         get_scale_MIDI($opt{tonic}, $opt{octave} + $i + $_, $opt{scale})
     } 0 .. $opt{num_oct} - 1;
-    @pool = remove_notes([6,14,21], \@pool)->@* if $opt{remove};
+    @pitches = remove_notes([6,14,21], \@pitches)->@* if $opt{remove};
     $voice{$ch} = Music::VoiceGen->new(
-        pitches   => \@pool,
+        pitches   => \@pitches,
         intervals => \@jumps,
     );
 }
 my %phrase = map {
     $_ => Music::Duration::Partition->new(
         size => 4, # in quarter-notes
-        pool => [qw(wn dhn hn dqn qn den en sn)],
+        pool => exists $pool{$_} ? $pool{$_} : [qw(wn dhn hn dqn qn den en sn)],
     )
 } @channels;
 
