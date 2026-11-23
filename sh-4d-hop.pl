@@ -26,6 +26,8 @@ use Music::Scales qw(get_scale_MIDI);            # pitches
 use Music::SimpleDrumMachine ();                 # beats
 use Music::VoiceGen ();                          # voices
 
+use constant VOLUME_CC => 7; # MIDI channel volume controller
+
 my %opt = (
     drums    => 'SH-4d',      # drum synth name fragment
     alt_chan => 9,            # drum midi channel. -1 means "multi-timbral"
@@ -229,13 +231,17 @@ sub next_pattern ($cycle) {
     return $last = $pattern;
 }
 
-# select a pattern: bank select MSB (85), bank select LSB (0), then
-# the program (patch) change
+# select a pattern: zero the tonal volume first, then bank select MSB (85),
+# bank select LSB (0), and the program (patch) change
 sub change_pattern ($pattern) {
     my $ch = $opt{klang};
+
+    $midi_out->control_change($_, VOLUME_CC, 0) for @channels;
+
     $midi_out->control_change($ch, 0,  85);
     $midi_out->control_change($ch, 32, 0);
     $midi_out->program_change($ch, $pattern);
+
     say 'Pattern: ', $pattern + 1 if $opt{verbose};
 }
 
