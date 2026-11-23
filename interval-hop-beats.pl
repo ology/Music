@@ -20,7 +20,7 @@ use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
 use List::Util qw(any uniq);                     # channels
-use MIDI::RtMidi::FFI::Device ();                # rt-midi
+use MIDI::RtMidi::Util qw(out_port);             # rt-midi
 use MIDI::Util qw(dura_size remove_notes TICKS); # handy
 use Music::Duration::Partition ();               # rhythmic phrases
 use Music::Scales qw(get_scale_MIDI);            # pitches
@@ -125,16 +125,18 @@ my %phrase = map {
     )
 } @channels;
 
-my $midi_out = open_out($opt{port});
+# open midi port for output
+my $midi_out = out_port($opt{port});
 say "Opened '$opt{port}' for tonal MIDI output" if $opt{verbose};
 
+# change programs if there are any
 if (@progs) {
     for my ($i, $ch) (indexed @channels) {
         $midi_out->program_change($ch, $progs[ $i % @progs ]);
     }
 }
 
-my $loop = IO::Async::Loop->new;
+my $loop = IO::Async::Loop->new; # all hail the loop!
 
 # share loop and clock
 my $dm = Music::SimpleDrumMachine->new(
@@ -226,13 +228,6 @@ sub silence {
     %schedule = ();
     $midi_out->panic;
     $dm->stop;
-}
-
-sub open_out ($name) {
-    my $out = RtMidiOut->new;
-    try { $out->open_port_by_name(qr/\Q$name/i) }
-    catch ($e) { die "Can't open MIDI port: $name\n" }
-    return $out;
 }
 
 # The drum machine fills on the last bar of each of its phrases (only
