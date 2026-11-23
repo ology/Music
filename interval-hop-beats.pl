@@ -86,7 +86,7 @@ my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
 # a "hunk" is how many channels sound at once. The groups played are the
 # combinations of the channels of that size. A hunk is
 # held for "effect" bars, then the next variation takes over.
-die "--hunk must be at least 1\n"   if $opt{hunk}   < 1;
+die "--hunk must be at least 1\n"   if $opt{hunk} < 1;
 die "--effect must be at least 1\n" if $opt{effect} < 1;
 my $hunk  = $opt{hunk} > @channels ? scalar @channels : $opt{hunk};
 my @hunks = combinations(\@channels, $hunk);
