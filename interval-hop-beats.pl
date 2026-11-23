@@ -71,7 +71,7 @@ my @channels = map { $_ - 1 } split /\s*,\s*/, $opt{channels};
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
 my @progs = $opt{list} eq '-1' ? () : map { $_ - 1 } split /\s*,\s*/, $opt{list};
 
-# per-channel allowed durations (empty means every channel uses the full pool)
+# per-channel allowed durations
 my %pool;
 my @groups = $opt{groups} eq '-1' ? () : split /;/, $opt{groups};
 for my $group (@groups) {
