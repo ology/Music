@@ -179,7 +179,7 @@ my $timer = IO::Async::Timer::Periodic->new(
 
         $dm->tick; # drums
 
-        # a new phrase every whole note, except while the drums fill
+        # a new phrase, except while the drums fill
         if ($ticks % $phrase_ticks == 0) {
             my $phrase = $phrase_count++;
 
