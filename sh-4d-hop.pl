@@ -278,13 +278,6 @@ sub silence {
     $dm->stop;
 }
 
-sub open_out ($name) {
-    my $out = RtMidiOut->new;
-    try { $out->open_port_by_name(qr/\Q$name/i) }
-    catch ($e) { die "Can't open MIDI port: $name\n" }
-    return $out;
-}
-
 # The drum machine fills on the last bar of each of its phrases (only
 # when filling is on and a phrase is longer than one bar).
 sub fill_bar ($phrase) {
