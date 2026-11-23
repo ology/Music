@@ -5,8 +5,8 @@
 # tones. So have that or something else 4x-timbral running! :)
 
 # Examples:
-# verbose, bpm, channels, (program) list, remove, alt_chan:
-# perl sh-4d-hop.pl --v --b=90 --l=-1 --r --a=-1
+# verbose, bpm, channels, (program) list, remove:
+# perl sh-4d-hop.pl --v --b=90 --l=-1 --r
 # 2 of 4 channels (default) at a time, changing the group every 8 bars:
 # perl sh-4d-hop.pl --verbose --hunk=2 --effect=8
 # change the pattern after every full cycle of groups, at random from the first 8:
@@ -30,7 +30,6 @@ use constant VOLUME_CC => 7; # MIDI channel volume controller
 
 my %opt = (
     drums    => 'SH-4d',      # drum synth name fragment
-    alt_chan => 9,            # drum midi channel. -1 means "multi-timbral"
     port     => 'SH-4d',      # multi-timbral tonal synth name fragment
     channels => '1,2,3,4',    # distinct midi channels (0 .. 15) to play
     list     => -1,           # '1,2,3' tone patches or -1 = off
@@ -52,7 +51,6 @@ my %opt = (
 );
 GetOptions(\%opt,
     'drums=s',
-    'alt_chan=s',
     'port=s',
     'channels=s',
     'list=s',
@@ -163,7 +161,6 @@ my $loop = IO::Async::Loop->new; # the all-important loop object!
 my $dm = Music::SimpleDrumMachine->new(
     port_name => $opt{drums},
     bpm       => $opt{bpm},
-    chan      => $opt{alt_chan},
     ppqn      => $ppqn,
     loop      => $loop,
     autoplay  => 0,
