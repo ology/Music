@@ -38,7 +38,7 @@ my %opt = (
     scale    => 'major',      # scale/mode name
     tonic    => 'C',          # scale key base note
     groups   => '',           # allowed durations per channel, like '37=wn,dhn,hn,dqn,qn,en'
-    jumps    => '-3,-2,2,3',  # allowed interval jumps
+    jumps    => '-4,-3,-2,2,3,4', # allowed interval jumps
     hunk     => 2,            # how many channels to play simultaneously
     effect   => 4,            # how many bars to hold before changing
     quilt    => 23,           # random patterns are drawn from 1 .. quilt (1 .. 128)
