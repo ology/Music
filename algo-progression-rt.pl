@@ -25,7 +25,7 @@ port, 'r' to restart the progression from the beginning, 'n' for a
 
 =cut
 
-use v5.36;
+use v5.40;
 use Data::Dumper::Compact qw(ddc);               # debugging
 use File::Temp qw(tempfile);                     # per-round midi file
 use Getopt::Long qw(GetOptions);                 # cli processing
