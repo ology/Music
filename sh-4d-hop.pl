@@ -29,7 +29,6 @@ use Music::VoiceGen ();                          # voices
 use constant VOLUME_CC => 7; # MIDI channel volume controller
 
 my %opt = (
-    drums    => 'SH-4d',      # drum synth name fragment
     port     => 'SH-4d',      # multi-timbral tonal synth name fragment
     channels => '1,2,3,4',    # distinct midi channels (0 .. 15) to play
     list     => -1,           # '1,2,3' tone patches or -1 = off
@@ -50,7 +49,6 @@ my %opt = (
     verbose  => 0,
 );
 GetOptions(\%opt,
-    'drums=s',
     'port=s',
     'channels=s',
     'list=s',
@@ -159,7 +157,7 @@ my $loop = IO::Async::Loop->new; # the all-important loop object!
 
 # open the percussion MIDI output port (and share the loop)
 my $dm = Music::SimpleDrumMachine->new(
-    port_name => $opt{drums},
+    port_name => $opt{port},
     bpm       => $opt{bpm},
     ppqn      => $ppqn,
     loop      => $loop,
@@ -167,7 +165,7 @@ my $dm = Music::SimpleDrumMachine->new(
     virtual   => 0,
     verbose   => $opt{verbose},
 );
-say "Opened '$opt{drums}' for percussion MIDI output" if $opt{verbose};
+say "Opened '$opt{port}' for percussion MIDI output" if $opt{verbose};
 
 my $timer = IO::Async::Timer::Periodic->new(
     interval   => $clock_interval,
