@@ -38,7 +38,7 @@ my %opt = (
     num_oct  => 2,            # number of octaves
     scale    => 'major',      # scale name
     tonic    => 'C',          # scale key base note
-    groups   => '37=wn,dhn,hn,dqn,qn,en', # allowed durations per channel
+    groups   => -1,           # ;-separated durations per channel or -1
     jumps    => '-3,-2,2,3',  # allowed interval jumps
     hunk     => 2,            # how many channels to play simultaneously
     effect   => 4,            # how many bars to hold a hunk before changing it
@@ -71,11 +71,14 @@ my @channels = map { $_ - 1 } split /\s*,\s*/, $opt{channels};
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
 my @progs = $opt{list} eq '-1' ? () : map { $_ - 1 } split /\s*,\s*/, $opt{list};
 
+# per-channel allowed durations (empty means every channel uses the full pool)
 my %pool;
-my @groups = split /;/, $opt{groups};
+my @groups = $opt{groups} eq '-1' ? () : split /;/, $opt{groups};
 for my $group (@groups) {
     my ($chan, $durations) = split /=/, $group, 2;
-    $pool{ $chan - 1 } = [ split /,/, $durations ];
+    die "--groups entries must look like '1=wn,hn;2=qn,en', or -1 for none\n"
+        unless defined $durations && $chan =~ /\A\d+\z/ && $chan >= 1;
+    $pool{ $chan - 1 } = [ split /\s*,\s*/, $durations ];
 }
 
 my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
