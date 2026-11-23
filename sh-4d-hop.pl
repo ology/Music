@@ -1,0 +1,259 @@
+#!/usr/bin/env perl
+
+# Multi-timbral generative sequence of tonal phrases and drum beats.
+# By default, this program uses the SH-4d for the drums and the
+# tones. So have that or something else 4x-timbral running! :)
+
+# Examples:
+# verbose, bpm, channels, (program) list, remove, alt_chan:
+# perl sh-4d-hop.pl.pl --v --b=90 --l=-1 --r --a=-1
+# 2 of 4 channels (default) at a time, changing the group every 8 bars:
+# perl sh-4d-hop.pl.pl --verbose --hunk=2 --effect=8
+# change the pattern every 2 bars, cycling through 8 patterns:
+# perl sh-4d-hop.pl.pl --verbose --increment=2 --quilt=8
+
+use v5.40;
+use Algorithm::Combinatorics qw(combinations);   # channel hunk groups
+use Getopt::Long qw(GetOptions);                 # cli processing
+use IO::Async::Loop ();                          # async
+use IO::Async::Timer::Periodic ();               # async
+use MIDI::RtMidi::FFI::Device ();                # rt-midi
+use MIDI::Util qw(dura_size remove_notes TICKS); # handy
+use Music::Duration::Partition ();               # rhythmic phrases
+use Music::Scales qw(get_scale_MIDI);            # pitches
+use Music::SimpleDrumMachine ();                 # beats
+use Music::VoiceGen ();                          # voices
+
+my %opt = (
+    drums        => 'SH-4d',      # drum synth name fragment
+    alt_chan     => 9,            # drum midi channel. -1 means "multi-timbral"
+    port         => 'SH-4d',      # tonal synth name fragment
+    channels     => '1,2,3,4',    # distinct midi channels (0 .. 15)
+    list         => -1,           # tone patches (-1 = off)
+    bpm          => 70,           # beats-per-minute
+    octave       => 2,            # 0 .. 9
+    num_oct      => 2,            # number of octaves
+    scale        => 'major',      # scale name
+    tonic        => 'C',          # scale key base note
+    groups       => '', #'37=wn,dhn,hn,dqn,qn,en', # allowed durations per channel
+    jumps        => '-3,-2,2,3',  # allowed interval jumps
+    hunk         => 2,            # how many channels to play simultaneously
+    effect       => 4,            # how many bars to hold a hunk before changing it
+    increment    => 4,            # how many bars to hold a pattern before changing it
+    quilt        => 16,           # how many patterns to cycle through (1 .. 16)
+    klang        => 15,           # midi channel that selects the patterns (0 .. 15)
+    remove       => 0,            # remove 7th degree notes from scales
+    fill         => 0,            # rest tonal notes on the fill bar
+    verbose      => 0,
+);
+GetOptions(\%opt,
+    'drums=s',
+    'alt_chan=s',
+    'port=s',
+    'channels=s',
+    'list=s',
+    'bpm=i',
+    'octave=i',
+    'num_oct=i',
+    'scale=s',
+    'tonic=s',
+    'groups=s',
+    'jumps=s',
+    'hunk=i',
+    'effect=i',
+    'increment=i',
+    'quilt=i',
+    'klang=i',
+    'remove',
+    'fill',
+    'verbose',
+);
+
+# allowed midi channels and program changes
+my @channels = map { $_ - 1 } split /\s*,\s*/, $opt{channels};
+die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
+my @progs = $opt{list} eq '-1' ? () : map { $_ - 1 } split /\s*,\s*/, $opt{list};
+
+my %pool;
+my @groups = split /;/, $opt{groups};
+for my $group (@groups) {
+    my ($chan, $durations) = split /=/, $group, 2;
+    $pool{ $chan - 1 } = [ split /,/, $durations ];
+}
+
+my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
+
+# a "hunk" is how many channels sound at once. The groups played are the
+# combinations of the channels of that size. A hunk is held for "effect"
+# bars, then the next combination takes over.
+die "--hunk must be at least 1\n"      if $opt{hunk}      < 1;
+die "--effect must be at least 1\n"    if $opt{effect}    < 1;
+die "--increment must be at least 1\n" if $opt{increment} < 1;
+die "--quilt must be 1 .. 16\n"    if $opt{quilt} < 1 || $opt{quilt} > 16;
+die "--klang must be 0 .. 15\n" if $opt{klang} < 0 || $opt{klang} > 15;
+my $hunk  = $opt{hunk} > @channels ? scalar @channels : $opt{hunk};
+my @hunks = combinations(\@channels, $hunk);
+say 'Hunk size ', $hunk, ' of ', scalar(@channels), ' channels: ',
+    scalar(@hunks), ' combinations, changing every ', $opt{effect}, ' bars'
+    if $opt{verbose};
+
+# we are in 4/4 time...
+my $ppqn           = TICKS;                   # internal ticks per quarter-note = 96
+my $clock_divider  = $ppqn / 24;              # MIDI clock is always 24 per quarter
+my $phrase_ticks   = 4 * $ppqn;               # a phrase is a whole note = 384 ticks
+my $clock_interval = 60 / $opt{bpm} / $ppqn;  # seconds per tick
+my $ticks          = 0;                       # zero-based clock ticks
+my $phrase_count   = 0;                       # phrases (bars) played
+
+my %schedule; # tick => [ [ method, @args ], ... ] of MIDI messages to send
+
+# one independent voice (pitches) and phrase (rhythm) per channel
+my %voice;
+for my ($i, $ch) (indexed @channels) {
+    my @pitches = map {
+        get_scale_MIDI($opt{tonic}, $opt{octave} + $i + $_, $opt{scale})
+    } 0 .. $opt{num_oct} - 1;
+    @pitches = remove_notes([6,14,21], \@pitches)->@* if $opt{remove};
+    $voice{$ch} = Music::VoiceGen->new(
+        pitches   => \@pitches,
+        intervals => \@jumps,
+    );
+}
+my %phrase = map {
+    $_ => Music::Duration::Partition->new(
+        size => 4, # in quarter-notes
+        pool => exists $pool{$_} ? $pool{$_} : [qw(wn dhn hn dqn qn den en sn)],
+    )
+} @channels;
+
+my $midi_out = open_out($opt{port});
+say "Opened '$opt{port}' for tonal MIDI output" if $opt{verbose};
+
+if (@progs) {
+    for my ($i, $ch) (indexed @channels) {
+        $midi_out->program_change($ch, $progs[ $i % @progs ]);
+    }
+}
+
+my $loop = IO::Async::Loop->new;
+
+# share loop and clock
+my $dm = Music::SimpleDrumMachine->new(
+    port_name => $opt{drums},
+    bpm       => $opt{bpm},
+    chan      => $opt{alt_chan},
+    ppqn      => $ppqn,
+    loop      => $loop,
+    autoplay  => 0,
+    virtual   => 0,
+    verbose   => $opt{verbose},
+);
+say "Opened '$opt{drums}' for percussion MIDI output" if $opt{verbose};
+
+my $timer = IO::Async::Timer::Periodic->new(
+    interval   => $clock_interval,
+    reschedule => 'hard', # anchor to a fixed schedule, don't let tempo drift
+    on_tick    => sub {
+        # send MIDI clock to both devices
+        if ($ticks % $clock_divider == 0) {
+            $midi_out->clock;
+            $dm->clock;
+        }
+
+        $dm->tick; # drums
+
+        # a new phrase every whole note, except while the drums fill
+        if ($ticks % $phrase_ticks == 0) {
+            my $phrase = $phrase_count++;
+
+            # the drum pattern changes every "increment" bars
+            if ($phrase % $opt{increment} == 0) {
+                change_pattern(int($phrase / $opt{increment}) % $opt{quilt});
+            }
+
+            if ($opt{fill} && fill_bar($phrase)) {
+                say "$phrase. Resting for the drum fill" if $opt{verbose};
+            }
+            else {
+                trigger_notes($phrase);
+            }
+        }
+
+        # send everything scheduled for this tick
+        if (my $events = delete $schedule{$ticks}) {
+            for my $event ($events->@*) {
+                my ($method, @args) = $event->@*;
+                $midi_out->$method(@args);
+            }
+        }
+
+        $ticks++;
+    },
+);
+
+# Graceful ^C:
+$loop->watch_signal(INT => sub {
+    say "\nStop" if $opt{verbose};
+    $timer->stop;
+    silence();
+    $loop->stop;
+});
+
+$timer->start;
+$loop->add($timer);
+$loop->run;
+
+# select a drum pattern: bank select MSB (85), bank select LSB (0), then
+# the program (patch) change
+sub change_pattern ($pattern) {
+    my $ch = $opt{klang};
+    $midi_out->control_change($ch, 0,  85);
+    $midi_out->control_change($ch, 32, 0);
+    $midi_out->program_change($ch, $pattern);
+    say "Pattern: $pattern" if $opt{verbose};
+}
+
+# schedule a phrase for each channel in the current hunk (combination)
+sub trigger_notes ($phrase) {
+    # the hunk only changes every "effect" bars
+    my $index = int($phrase / $opt{effect}) % @hunks;
+    my $group = $hunks[$index];
+
+    state $announced = -1;
+    if ($opt{verbose} && $announced != $index) {
+        say "$phrase. New hunk: ", join(',', map { $_ + 1 } $group->@*);
+        $announced = $index;
+    }
+
+    for my $ch ($group->@*) {
+        my $motif = $phrase{$ch}->motif;
+        my $tick  = $ticks;
+        for my $duration (@$motif) {
+            my $note   = $voice{$ch}->rand;
+            my $length = int(dura_size($duration) * $ppqn + 0.5) || 1;
+            push    $schedule{$tick}->@*,           [ note_on  => $ch, $note, $dm->velocity ];
+            unshift $schedule{$tick + $length}->@*, [ note_off => $ch, $note, 0 ]; # offs first
+            $tick += $length;
+        }
+        say "$phrase. Channel $ch: ", join(' ', @$motif) if $opt{verbose};
+    }
+}
+
+sub silence {
+    %schedule = ();
+    $midi_out->panic;
+    $dm->stop;
+}
+
+sub open_out ($name) {
+    my $out = RtMidiOut->new;
+    try { $out->open_port_by_name(qr/\Q$name/i) }
+    catch ($e) { die "Can't open MIDI port: $name\n" }
+    return $out;
+}
+
+# The drum machine fills on the last bar of each of its phrases (only
+# when filling is on and a phrase is longer than one bar).
+sub fill_bar ($phrase) {
+    return $dm->filling && $dm->bars > 1 && $phrase % $dm->bars == $dm->bars - 1;
+}
