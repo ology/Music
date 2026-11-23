@@ -31,18 +31,18 @@ use constant VOLUME_CC => 7; # MIDI channel volume controller
 my %opt = (
     drums    => 'SH-4d',      # drum synth name fragment
     alt_chan => 9,            # drum midi channel. -1 means "multi-timbral"
-    port     => 'SH-4d',      # tonal synth name fragment
-    channels => '1,2,3,4',    # distinct midi channels (0 .. 15)
-    list     => -1,           # tone patches (-1 = off)
+    port     => 'SH-4d',      # multi-timbral tonal synth name fragment
+    channels => '1,2,3,4',    # distinct midi channels (0 .. 15) to play
+    list     => -1,           # '1,2,3' tone patches or -1 = off
     bpm      => 70,           # beats-per-minute
-    octave   => 2,            # 0 .. 9
+    octave   => 2,            # 0 to 9
     num_oct  => 2,            # number of octaves
-    scale    => 'major',      # scale name
+    scale    => 'major',      # scale/mode name
     tonic    => 'C',          # scale key base note
     groups   => '',           # allowed durations per channel, like '37=wn,dhn,hn,dqn,qn,en'
     jumps    => '-3,-2,2,3',  # allowed interval jumps
     hunk     => 2,            # how many channels to play simultaneously
-    effect   => 4,            # how many bars to hold a hunk before changing it
+    effect   => 4,            # how many bars to hold before changing
     quilt    => 128,          # random patterns are drawn from 1 .. quilt (1 .. 128)
     meta     => -1,           # '1,2,3' specific patterns (1 .. 128) or -1 for random
     klang    => 15,           # midi channel that selects the patterns (0 .. 15)
