@@ -9,8 +9,10 @@
 # perl sh-4d-hop.pl --v --b=90 --l=-1 --r --a=-1
 # 2 of 4 channels (default) at a time, changing the group every 8 bars:
 # perl sh-4d-hop.pl --verbose --hunk=2 --effect=8
-# change the pattern after every full cycle of groups, cycling through 8 patterns:
+# change the pattern after every full cycle of groups, at random from the first 8:
 # perl sh-4d-hop.pl --verbose --quilt=8
+# step through specific patterns instead (--quilt is ignored):
+# perl sh-4d-hop.pl --verbose --meta='11,23,4'
 
 use v5.40;
 use Algorithm::Combinatorics qw(combinations);   # channel hunk groups
@@ -39,7 +41,8 @@ my %opt = (
     jumps    => '-3,-2,2,3',  # allowed interval jumps
     hunk     => 2,            # how many channels to play simultaneously
     effect   => 4,            # how many bars to hold a hunk before changing it
-    quilt    => 128,          # how many patterns to cycle through (1 .. 128)
+    quilt    => 128,          # random patterns are drawn from 1 .. quilt (1 .. 128)
+    meta     => -1,           # '1,2,3' specific patterns (1 .. 128) or -1 for random
     klang    => 15,           # midi channel that selects the patterns (0 .. 15)
     remove   => 0,            # remove 7th degree notes from scales
     fill     => 0,            # rest tonal notes on the fill bar
@@ -61,6 +64,7 @@ GetOptions(\%opt,
     'hunk=i',
     'effect=i',
     'quilt=i',
+    'meta=s',
     'klang=i',
     'remove',
     'fill',
@@ -71,6 +75,14 @@ GetOptions(\%opt,
 my @channels = map { $_ - 1 } split /\s*,\s*/, $opt{channels};
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
 my @progs = $opt{list} eq '-1' ? () : map { $_ - 1 } split /\s*,\s*/, $opt{list};
+
+# specific patterns to step through (empty means pick them at random)
+my @meta = $opt{meta} eq '-1' ? () : split /\s*,\s*/, $opt{meta};
+for my $pattern (@meta) {
+    die "--meta patterns must be whole numbers 1 .. 128, or -1 for random\n"
+        unless $pattern =~ /\A\d+\z/ && $pattern >= 1 && $pattern <= 128;
+}
+@meta = map { $_ - 1 } @meta;
 
 my %pool;
 my @groups = split /;/, $opt{groups};
@@ -84,8 +96,8 @@ my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
 # a "hunk" is how many channels sound at once. The groups played are the
 # combinations of the channels of that size. A hunk is held for "effect"
 # bars, then the next combination takes over. Once every combination has
-# played, the cycle is complete and the next quilt pattern is selected.
-die "--hunk must be at least 1\n"   if $opt{hunk}   < 1;
+# played, the cycle is complete and the next pattern is selected.
+die "--hunk must be at least 1\n"   if $opt{hunk} < 1;
 die "--effect must be at least 1\n" if $opt{effect} < 1;
 die "--quilt must be 1 .. 128\n"    if $opt{quilt} < 1 || $opt{quilt} > 128;
 die "--klang must be 0 .. 15\n"     if $opt{klang} < 0 || $opt{klang} > 15;
@@ -94,7 +106,9 @@ my @hunks = combinations(\@channels, $hunk);
 my $cycle_bars = @hunks * $opt{effect}; # bars to exhaust all combinations
 say 'Hunk size ', $hunk, ' of ', scalar(@channels), ' channels: ',
     scalar(@hunks), ' combinations, changing every ', $opt{effect},
-    ' bars. Pattern changes every ', $cycle_bars, ' bars'
+    ' bars. Pattern changes every ', $cycle_bars, ' bars (',
+    (@meta ? 'stepping through ' . join(',', map { $_ + 1 } @meta)
+           : 'random from 1 .. ' . $opt{quilt}), ')'
     if $opt{verbose};
 
 # we are in 4/4 time...
@@ -168,7 +182,7 @@ my $timer = IO::Async::Timer::Periodic->new(
 
             # the pattern changes only when every hunk combination has played
             if ($phrase % $cycle_bars == 0) {
-                change_pattern(int($phrase / $cycle_bars) % $opt{quilt});
+                change_pattern(next_pattern(int($phrase / $cycle_bars)));
             }
 
             if ($opt{fill} && fill_bar($phrase)) {
@@ -202,6 +216,18 @@ $loop->watch_signal(INT => sub {
 $timer->start;
 $loop->add($timer);
 $loop->run;
+
+# choose the (zero-based) pattern for a given cycle: the next --meta entry,
+# wrapping around, or a random one that differs from the last
+sub next_pattern ($cycle) {
+    return $meta[ $cycle % @meta ] if @meta;
+
+    state $last = -1;
+    my $pattern;
+    do { $pattern = int rand $opt{quilt} }
+        while $pattern == $last && $opt{quilt} > 1;
+    return $last = $pattern;
+}
 
 # select a pattern: bank select MSB (85), bank select LSB (0), then
 # the program (patch) change
