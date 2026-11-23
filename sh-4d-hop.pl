@@ -6,11 +6,11 @@
 
 # Examples:
 # verbose, bpm, channels, (program) list, remove, alt_chan:
-# perl sh-4d-hop.pl.pl --v --b=90 --l=-1 --r --a=-1
+# perl sh-4d-hop.pl --v --b=90 --l=-1 --r --a=-1
 # 2 of 4 channels (default) at a time, changing the group every 8 bars:
-# perl sh-4d-hop.pl.pl --verbose --hunk=2 --effect=8
-# change the pattern every 2 bars, cycling through 8 patterns:
-# perl sh-4d-hop.pl.pl --verbose --increment=2 --quilt=8
+# perl sh-4d-hop.pl --verbose --hunk=2 --effect=8
+# change the pattern after every full cycle of groups, cycling through 8 patterns:
+# perl sh-4d-hop.pl --verbose --quilt=8
 
 use v5.40;
 use Algorithm::Combinatorics qw(combinations);   # channel hunk groups
@@ -25,26 +25,25 @@ use Music::SimpleDrumMachine ();                 # beats
 use Music::VoiceGen ();                          # voices
 
 my %opt = (
-    drums        => 'SH-4d',      # drum synth name fragment
-    alt_chan     => 9,            # drum midi channel. -1 means "multi-timbral"
-    port         => 'SH-4d',      # tonal synth name fragment
-    channels     => '1,2,3,4',    # distinct midi channels (0 .. 15)
-    list         => -1,           # tone patches (-1 = off)
-    bpm          => 70,           # beats-per-minute
-    octave       => 2,            # 0 .. 9
-    num_oct      => 2,            # number of octaves
-    scale        => 'major',      # scale name
-    tonic        => 'C',          # scale key base note
-    groups       => '', #'37=wn,dhn,hn,dqn,qn,en', # allowed durations per channel
-    jumps        => '-3,-2,2,3',  # allowed interval jumps
-    hunk         => 2,            # how many channels to play simultaneously
-    effect       => 4,            # how many bars to hold a hunk before changing it
-    increment    => 4,            # how many bars to hold a pattern before changing it
-    quilt        => 16,           # how many patterns to cycle through (1 .. 16)
-    klang        => 15,           # midi channel that selects the patterns (0 .. 15)
-    remove       => 0,            # remove 7th degree notes from scales
-    fill         => 0,            # rest tonal notes on the fill bar
-    verbose      => 0,
+    drums    => 'SH-4d',      # drum synth name fragment
+    alt_chan => 9,            # drum midi channel. -1 means "multi-timbral"
+    port     => 'SH-4d',      # tonal synth name fragment
+    channels => '1,2,3,4',    # distinct midi channels (0 .. 15)
+    list     => -1,           # tone patches (-1 = off)
+    bpm      => 70,           # beats-per-minute
+    octave   => 2,            # 0 .. 9
+    num_oct  => 2,            # number of octaves
+    scale    => 'major',      # scale name
+    tonic    => 'C',          # scale key base note
+    groups   => '',           # allowed durations per channel, like '37=wn,dhn,hn,dqn,qn,en'
+    jumps    => '-3,-2,2,3',  # allowed interval jumps
+    hunk     => 2,            # how many channels to play simultaneously
+    effect   => 4,            # how many bars to hold a hunk before changing it
+    quilt    => 16,           # how many patterns to cycle through (1 .. 16)
+    klang    => 15,           # midi channel that selects the patterns (0 .. 15)
+    remove   => 0,            # remove 7th degree notes from scales
+    fill     => 0,            # rest tonal notes on the fill bar
+    verbose  => 0,
 );
 GetOptions(\%opt,
     'drums=s',
@@ -61,7 +60,6 @@ GetOptions(\%opt,
     'jumps=s',
     'hunk=i',
     'effect=i',
-    'increment=i',
     'quilt=i',
     'klang=i',
     'remove',
@@ -85,16 +83,18 @@ my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
 
 # a "hunk" is how many channels sound at once. The groups played are the
 # combinations of the channels of that size. A hunk is held for "effect"
-# bars, then the next combination takes over.
-die "--hunk must be at least 1\n"      if $opt{hunk}      < 1;
-die "--effect must be at least 1\n"    if $opt{effect}    < 1;
-die "--increment must be at least 1\n" if $opt{increment} < 1;
-die "--quilt must be 1 .. 16\n"    if $opt{quilt} < 1 || $opt{quilt} > 16;
-die "--klang must be 0 .. 15\n" if $opt{klang} < 0 || $opt{klang} > 15;
+# bars, then the next combination takes over. Once every combination has
+# played, the cycle is complete and the next quilt pattern is selected.
+die "--hunk must be at least 1\n"   if $opt{hunk}   < 1;
+die "--effect must be at least 1\n" if $opt{effect} < 1;
+die "--quilt must be 1 .. 16\n"     if $opt{quilt} < 1 || $opt{quilt} > 16;
+die "--klang must be 0 .. 15\n"     if $opt{klang} < 0 || $opt{klang} > 15;
 my $hunk  = $opt{hunk} > @channels ? scalar @channels : $opt{hunk};
 my @hunks = combinations(\@channels, $hunk);
+my $cycle_bars = @hunks * $opt{effect}; # bars to exhaust all combinations
 say 'Hunk size ', $hunk, ' of ', scalar(@channels), ' channels: ',
-    scalar(@hunks), ' combinations, changing every ', $opt{effect}, ' bars'
+    scalar(@hunks), ' combinations, changing every ', $opt{effect},
+    ' bars. Pattern changes every ', $cycle_bars, ' bars'
     if $opt{verbose};
 
 # we are in 4/4 time...
@@ -166,9 +166,9 @@ my $timer = IO::Async::Timer::Periodic->new(
         if ($ticks % $phrase_ticks == 0) {
             my $phrase = $phrase_count++;
 
-            # the drum pattern changes every "increment" bars
-            if ($phrase % $opt{increment} == 0) {
-                change_pattern(int($phrase / $opt{increment}) % $opt{quilt});
+            # the pattern changes only when every hunk combination has played
+            if ($phrase % $cycle_bars == 0) {
+                change_pattern(int($phrase / $cycle_bars) % $opt{quilt});
             }
 
             if ($opt{fill} && fill_bar($phrase)) {
@@ -203,14 +203,14 @@ $timer->start;
 $loop->add($timer);
 $loop->run;
 
-# select a drum pattern: bank select MSB (85), bank select LSB (0), then
+# select a pattern: bank select MSB (85), bank select LSB (0), then
 # the program (patch) change
 sub change_pattern ($pattern) {
     my $ch = $opt{klang};
     $midi_out->control_change($ch, 0,  85);
     $midi_out->control_change($ch, 32, 0);
     $midi_out->program_change($ch, $pattern);
-    say "Pattern: $pattern" if $opt{verbose};
+    say 'Pattern: ', $pattern + 1 if $opt{verbose};
 }
 
 # schedule a phrase for each channel in the current hunk (combination)
