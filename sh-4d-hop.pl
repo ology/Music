@@ -78,7 +78,7 @@ my @channels = map { $_ - 1 } split /\s*,\s*/, $opt{channels};
 die "No valid MIDI channels (0 .. 15) given\n" unless @channels;
 my @progs = $opt{list} eq '-1' ? () : map { $_ - 1 } split /\s*,\s*/, $opt{list};
 
-# specific patterns to step through (empty means pick them at random)
+# specific patterns to step through
 my @meta = $opt{meta} eq '-1' ? () : split /\s*,\s*/, $opt{meta};
 for my $pattern (@meta) {
     die "--meta patterns must be whole numbers 1 .. 128, or -1 for random\n"
@@ -86,6 +86,7 @@ for my $pattern (@meta) {
 }
 @meta = map { $_ - 1 } @meta;
 
+# set the allowed durations per channel
 my %pool;
 my @groups = split /;/, $opt{groups};
 for my $group (@groups) {
@@ -93,7 +94,8 @@ for my $group (@groups) {
     $pool{ $chan - 1 } = [ split /,/, $durations ];
 }
 
-my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
+# set the allowed voice intervals
+my @jumps = split /\s*,\s*/, $opt{jumps};
 
 # a "hunk" is how many channels sound at once. The groups played are the
 # combinations of the channels of that size. A hunk is held for "effect"
@@ -123,7 +125,7 @@ my $phrase_count   = 0;                       # phrases (bars) played
 
 my %schedule; # tick => [ [ method, @args ], ... ] of MIDI messages to send
 
-# one independent voice (pitches) and phrase (rhythm) per channel
+# set one voice per channel
 my %voice;
 for my ($i, $ch) (indexed @channels) {
     my @pitches = map {
@@ -135,6 +137,8 @@ for my ($i, $ch) (indexed @channels) {
         intervals => \@jumps,
     );
 }
+
+# set one rhythmic phrase per channel
 my %phrase = map {
     $_ => Music::Duration::Partition->new(
         size => 4, # in quarter-notes
@@ -142,18 +146,20 @@ my %phrase = map {
     )
 } @channels;
 
+# open the tonal MIDI output port
 my $midi_out = open_out($opt{port});
 say "Opened '$opt{port}' for tonal MIDI output" if $opt{verbose};
 
+# set any program patches if given
 if (@progs) {
     for my ($i, $ch) (indexed @channels) {
         $midi_out->program_change($ch, $progs[ $i % @progs ]);
     }
 }
 
-my $loop = IO::Async::Loop->new;
+my $loop = IO::Async::Loop->new; # the all-important loop object!
 
-# share loop and clock
+# open the percussion MIDI output port (and share the loop)
 my $dm = Music::SimpleDrumMachine->new(
     port_name => $opt{drums},
     bpm       => $opt{bpm},
@@ -207,7 +213,7 @@ my $timer = IO::Async::Timer::Periodic->new(
     },
 );
 
-# Graceful ^C:
+# graceful ^C:
 $loop->watch_signal(INT => sub {
     say "\nStop" if $opt{verbose};
     $timer->stop;
