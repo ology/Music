@@ -39,7 +39,7 @@ my %opt = (
     jumps    => '-3,-2,2,3',  # allowed interval jumps
     hunk     => 2,            # how many channels to play simultaneously
     effect   => 4,            # how many bars to hold a hunk before changing it
-    quilt    => 16,           # how many patterns to cycle through (1 .. 16)
+    quilt    => 128,          # how many patterns to cycle through (1 .. 128)
     klang    => 15,           # midi channel that selects the patterns (0 .. 15)
     remove   => 0,            # remove 7th degree notes from scales
     fill     => 0,            # rest tonal notes on the fill bar
@@ -87,7 +87,7 @@ my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
 # played, the cycle is complete and the next quilt pattern is selected.
 die "--hunk must be at least 1\n"   if $opt{hunk}   < 1;
 die "--effect must be at least 1\n" if $opt{effect} < 1;
-die "--quilt must be 1 .. 16\n"     if $opt{quilt} < 1 || $opt{quilt} > 16;
+die "--quilt must be 1 .. 128\n"    if $opt{quilt} < 1 || $opt{quilt} > 128;
 die "--klang must be 0 .. 15\n"     if $opt{klang} < 0 || $opt{klang} > 15;
 my $hunk  = $opt{hunk} > @channels ? scalar @channels : $opt{hunk};
 my @hunks = combinations(\@channels, $hunk);
