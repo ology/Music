@@ -108,7 +108,7 @@ my @hunks = combinations(\@channels, $hunk);
 my $cycle_bars = @hunks * $opt{effect}; # bars to exhaust all combinations
 say 'Hunk size ', $hunk, ' of ', scalar(@channels), ' channels = ',
     scalar(@hunks), ' combinations, changing every ', $opt{effect},
-    ' bars. Pattern change every ', $cycle_bars, ' bars (',
+    " bars.\nPattern change every ", $cycle_bars, ' bars (',
     (@meta ? 'stepping through ' . join(',', map { $_ + 1 } @meta)
            : 'random from 1 .. ' . $opt{quilt}), ')'
     if $opt{verbose};
