@@ -104,7 +104,7 @@ my $phrase_count   = 0;                       # phrases (bars) played
 
 my %schedule; # tick => [ [ method, @args ], ... ] of MIDI messages to send
 
-# one independent voice and rhythmic phrase per channel
+# one independent voice per channel
 my %voice;
 for my ($i, $ch) (indexed @channels) {
     my @pitches = map {
@@ -116,6 +116,8 @@ for my ($i, $ch) (indexed @channels) {
         intervals => \@jumps,
     );
 }
+
+# rhythmic phrase per channel
 my %phrase = map {
     $_ => Music::Duration::Partition->new(
         size => 4, # in quarter-notes
