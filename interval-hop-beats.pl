@@ -11,7 +11,7 @@
 # verbose, bpm, channels, port, list, remove, (multi-timbral) drums, alt_chan, (program) list:
 # perl interval-hop-beats.pl --v --b=90 --c='4,5' --p='nvision' --l=-1 --r --d=trinity --a=-1 --l='2,3'
 # 2 of 4 channels at a time, changing the group every 8 bars:
-# perl interval-hop-beats.pl --verbose --channels='1,2,3,4' --list='37,1,5,9' --hunk=2 --effect=8
+# perl interval-hop-beats.pl --verbose --channels='1,2,3,4' --hunk=2 --effect=8
 
 use v5.40;
 use Algorithm::Combinatorics qw(variations);     # channel hunk groups
