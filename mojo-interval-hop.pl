@@ -47,7 +47,7 @@ my @fields = (
 );
 
 my $fork;       # the running Mojo::IOLoop::ReadWriteFork, if any
-my @log;        # recent output lines, replayed to new viewers
+my @log;        # output
 my %clients;    # connected WebSocket transactions
 
 sub broadcast ($msg) {
