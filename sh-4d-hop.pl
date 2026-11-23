@@ -19,7 +19,7 @@ use Algorithm::Combinatorics qw(combinations);   # channel hunk groups
 use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
 use IO::Async::Timer::Periodic ();               # async
-use MIDI::RtMidi::FFI::Device ();                # rt-midi
+use MIDI::RtMidi::Util qw(out_port);             # rt-midi
 use MIDI::Util qw(dura_size remove_notes TICKS); # handy
 use Music::Duration::Partition ();               # rhythmic phrases
 use Music::Scales qw(get_scale_MIDI);            # pitches
@@ -143,7 +143,7 @@ my %phrase = map {
 } @channels;
 
 # open the tonal MIDI output port
-my $midi_out = open_out($opt{port});
+my $midi_out = out_port($opt{port});
 say "Opened '$opt{port}' for tonal MIDI output" if $opt{verbose};
 
 # set any program patches if given
