@@ -14,7 +14,7 @@
 # perl interval-hop-beats.pl --verbose --channels='1,2,3,4' --hunk=2 --effect=8
 
 use v5.40;
-use Algorithm::Combinatorics qw(variations);     # channel hunk groups
+use Algorithm::Combinatorics qw(combinations);   # channel hunk groups
 use Data::Dumper::Compact qw(ddc);               # debugging
 use Getopt::Long qw(GetOptions);                 # cli processing
 use IO::Async::Loop ();                          # async
@@ -81,14 +81,14 @@ for my $group (@groups) {
 my @jumps = split /\s*,\s*/, $opt{jumps}; # allowed voice intervals
 
 # a "hunk" is how many channels sound at once. The groups played are the
-# variations (ordered selections) of the channels of that size. A hunk is
+# combinations of the channels of that size. A hunk is
 # held for "effect" bars, then the next variation takes over.
 die "--hunk must be at least 1\n"   if $opt{hunk}   < 1;
 die "--effect must be at least 1\n" if $opt{effect} < 1;
 my $hunk  = $opt{hunk} > @channels ? scalar @channels : $opt{hunk};
-my @hunks = variations(\@channels, $hunk);
+my @hunks = combinations(\@channels, $hunk);
 say 'Hunk size ', $hunk, ' of ', scalar(@channels), ' channels: ',
-    scalar(@hunks), ' variations, changing every ', $opt{effect}, ' bars'
+    scalar(@hunks), ' combinations, changing every ', $opt{effect}, ' bars'
     if $opt{verbose};
 
 # we are in 4/4 time...
