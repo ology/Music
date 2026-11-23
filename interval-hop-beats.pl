@@ -104,7 +104,7 @@ my $phrase_count   = 0;                       # phrases (bars) played
 
 my %schedule; # tick => [ [ method, @args ], ... ] of MIDI messages to send
 
-# one independent voice (pitches) and phrase (rhythm) per channel
+# one independent voice and rhythmic phrase per channel
 my %voice;
 for my ($i, $ch) (indexed @channels) {
     my @pitches = map {
